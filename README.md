@@ -23,15 +23,13 @@ https://app.stoplight.io/wk/AEknv6vzcpJa2H5ky/HGM8K52XAR5zJyhhe/f3eE5DeAt6TCSyQL
 There are desktop apps for this as well.  They can drive testing and validation.  I'm looking at as well.
 Make edits in the app and export the file to swagger.yml in the top directory. 
 
-## Generating the code
+## Generating the Server
 
 To generate code:
-* swagger generate server -f swagger.yaml
-* swagger generate client -f swagger.yaml
+* swagger generate server -P models.Principal -f swagger.yaml 
 
 This generates the following directories:
 
-* client
 * cmd
 * models
 * restapi
@@ -43,6 +41,26 @@ The file that we edit for the server is:
 This is not regenerated on generate calls. To see the original contents, move the file off and regenerate.  I've tried to make minimal changes to that file and put the code in other directories, i.e. provisioner, so that we can merge easily after generates.
 
 The swagger command has more things, but this is enough to start.
+
+
+## Generating the Client
+
+To generate the code:
+* swagger generate client -P models.Principal -f swagger.yaml 
+
+This generates the following directories:
+
+* client
+* cmd
+* models
+* restapi
+
+The file that we edit for the client is:
+
+* cmd/rocket-skates-client/main.go 
+
+This is completely our own file.
+
 
 ## Test Data
 
