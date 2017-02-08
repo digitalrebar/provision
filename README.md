@@ -11,6 +11,24 @@ We are using [swagger-ui](https://github.com/swagger-api/swagger-ui) for a quick
 
 * git clone https://github.com/swagger-api/swagger-ui
 
+And make this change:
+
+```
+diff --git a/dist/index.html b/dist/index.html
+index 14232f9..e4358e9 100644
+--- a/dist/index.html
++++ b/dist/index.html
+@@ -38,7 +38,7 @@
+       if (url && url.length > 1) {
+         url = decodeURIComponent(url[1]);
+       } else {
+-        url = "http://petstore.swagger.io/v2/swagger.json";
++        url = "https://127.0.0.1:8092/swagger.json";
+       }
+ 
+       hljs.configure({
+```
+
 *TODO* Make swagger-ui dir a config option.
 
 ## Swagger.yaml
