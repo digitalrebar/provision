@@ -20,9 +20,10 @@ func main() {
 
 	transport := httptransport.NewWithClient("127.0.0.1:8092", "/api/v3", []string{"https"}, hc)
 	ac := apiclient.New(transport, strfmt.Default)
+	basicAuth := httptransport.BasicAuth("rebar", "rebar1")
 
 	// make the request to get all items
-	resp, err := ac.Machines.ListMachines(&machines.ListMachinesParams{})
+	resp, err := ac.Machines.ListMachines(machines.NewListMachinesParams(), basicAuth)
 	if err != nil {
 		log.Fatalf("list machines error: %v\n", err)
 	}

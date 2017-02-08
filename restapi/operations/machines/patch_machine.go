@@ -11,16 +11,16 @@ import (
 )
 
 // PatchMachineHandlerFunc turns a function with the right signature into a patch machine handler
-type PatchMachineHandlerFunc func(PatchMachineParams) middleware.Responder
+type PatchMachineHandlerFunc func(PatchMachineParams, *models.Principal) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn PatchMachineHandlerFunc) Handle(params PatchMachineParams) middleware.Responder {
-	return fn(params)
+func (fn PatchMachineHandlerFunc) Handle(params PatchMachineParams, principal *models.Principal) middleware.Responder {
+	return fn(params, principal)
 }
 
 // PatchMachineHandler interface for that can handle valid patch machine params
 type PatchMachineHandler interface {
-	Handle(PatchMachineParams) middleware.Responder
+	Handle(PatchMachineParams, *models.Principal) middleware.Responder
 }
 
 // NewPatchMachine creates a new http.Handler for the patch machine operation
@@ -42,12 +42,22 @@ func (o *PatchMachine) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	route, _ := o.Context.RouteInfo(r)
 	var Params = NewPatchMachineParams()
 
+	uprinc, err := o.Context.Authorize(r, route)
+	if err != nil {
+		o.Context.Respond(rw, r, route.Produces, route, err)
+		return
+	}
+	var principal *models.Principal
+	if uprinc != nil {
+		principal = uprinc.(*models.Principal) // this is really a models.Principal, I promise
+	}
+
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
 		o.Context.Respond(rw, r, route.Produces, route, err)
 		return
 	}
 
-	res := o.Handler.Handle(Params) // actually handle the request
+	res := o.Handler.Handle(Params, principal) // actually handle the request
 
 	o.Context.Respond(rw, r, route.Produces, route, res)
 

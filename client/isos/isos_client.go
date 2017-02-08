@@ -27,7 +27,7 @@ type Client struct {
 /*
 DeleteIso deletes iso
 */
-func (a *Client) DeleteIso(params *DeleteIsoParams) (*DeleteIsoNoContent, error) {
+func (a *Client) DeleteIso(params *DeleteIsoParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteIsoNoContent, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDeleteIsoParams()
@@ -42,6 +42,7 @@ func (a *Client) DeleteIso(params *DeleteIsoParams) (*DeleteIsoNoContent, error)
 		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &DeleteIsoReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})
@@ -55,7 +56,7 @@ func (a *Client) DeleteIso(params *DeleteIsoParams) (*DeleteIsoNoContent, error)
 /*
 GetIso gets iso
 */
-func (a *Client) GetIso(params *GetIsoParams, writer io.Writer) (*GetIsoOK, error) {
+func (a *Client) GetIso(params *GetIsoParams, authInfo runtime.ClientAuthInfoWriter, writer io.Writer) (*GetIsoOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewGetIsoParams()
@@ -70,6 +71,7 @@ func (a *Client) GetIso(params *GetIsoParams, writer io.Writer) (*GetIsoOK, erro
 		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &GetIsoReader{formats: a.formats, writer: writer},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})
@@ -83,7 +85,7 @@ func (a *Client) GetIso(params *GetIsoParams, writer io.Writer) (*GetIsoOK, erro
 /*
 ListIsos lists isos
 */
-func (a *Client) ListIsos(params *ListIsosParams) (*ListIsosOK, error) {
+func (a *Client) ListIsos(params *ListIsosParams, authInfo runtime.ClientAuthInfoWriter) (*ListIsosOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewListIsosParams()
@@ -98,6 +100,7 @@ func (a *Client) ListIsos(params *ListIsosParams) (*ListIsosOK, error) {
 		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &ListIsosReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})
@@ -111,7 +114,7 @@ func (a *Client) ListIsos(params *ListIsosParams) (*ListIsosOK, error) {
 /*
 PostIso creates iso
 */
-func (a *Client) PostIso(params *PostIsoParams) (*PostIsoCreated, error) {
+func (a *Client) PostIso(params *PostIsoParams, authInfo runtime.ClientAuthInfoWriter) (*PostIsoCreated, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewPostIsoParams()
@@ -126,6 +129,7 @@ func (a *Client) PostIso(params *PostIsoParams) (*PostIsoCreated, error) {
 		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &PostIsoReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})

@@ -29,7 +29,7 @@ func NewTemplate(uuid string) *Template {
 	return &Template{models.TemplateOutput{models.TemplateInput{UUID: uuid}}, nil}
 }
 
-func TemplatePatch(params templates.PatchTemplateParams) middleware.Responder {
+func TemplatePatch(params templates.PatchTemplateParams, p *models.Principal) middleware.Responder {
 	newThing := NewTemplate(params.UUID)
 	patch, _ := json.Marshal(params.Body)
 	item, code, err := updateThing(newThing, patch)
@@ -46,7 +46,7 @@ func TemplatePatch(params templates.PatchTemplateParams) middleware.Responder {
 	return templates.NewPatchTemplateAccepted().WithPayload(&original)
 }
 
-func TemplateDelete(params templates.DeleteTemplateParams) middleware.Responder {
+func TemplateDelete(params templates.DeleteTemplateParams, p *models.Principal) middleware.Responder {
 	newThing := NewTemplate(params.UUID)
 	code, err := deleteThing(newThing)
 	if err != nil {
@@ -56,7 +56,7 @@ func TemplateDelete(params templates.DeleteTemplateParams) middleware.Responder 
 	return templates.NewDeleteTemplateNoContent()
 }
 
-func TemplateGet(params templates.GetTemplateParams) middleware.Responder {
+func TemplateGet(params templates.GetTemplateParams, p *models.Principal) middleware.Responder {
 	newThing := NewTemplate(params.UUID)
 	item, err := getThing(newThing)
 	if err != nil {
@@ -71,7 +71,7 @@ func TemplateGet(params templates.GetTemplateParams) middleware.Responder {
 	return templates.NewGetTemplateOK().WithPayload(&original)
 }
 
-func TemplateList(params templates.ListTemplatesParams) middleware.Responder {
+func TemplateList(params templates.ListTemplatesParams, p *models.Principal) middleware.Responder {
 	allthem, err := listThings(&Template{})
 	if err != nil {
 		r := &models.Result{Code: http.StatusInternalServerError, Messages: []string{err.Message}}
@@ -87,7 +87,7 @@ func TemplateList(params templates.ListTemplatesParams) middleware.Responder {
 	return templates.NewListTemplatesOK().WithPayload(data)
 }
 
-func TemplatePost(params templates.PostTemplateParams) middleware.Responder {
+func TemplatePost(params templates.PostTemplateParams, p *models.Principal) middleware.Responder {
 	item, code, err := createThing(CastTemplate(params.Body))
 	if err != nil {
 		r := &models.Result{Code: int64(code), Messages: []string{err.Message}}
@@ -101,7 +101,7 @@ func TemplatePost(params templates.PostTemplateParams) middleware.Responder {
 	return templates.NewPostTemplateCreated().WithPayload(&original)
 }
 
-func TemplateReplace(params templates.ReplaceTemplateParams) middleware.Responder {
+func TemplateReplace(params templates.ReplaceTemplateParams, p *models.Principal) middleware.Responder {
 	finalStatus := http.StatusCreated
 	oldThing := NewTemplate(params.UUID)
 	newThing := NewTemplate(params.UUID)
@@ -134,7 +134,7 @@ func TemplateReplace(params templates.ReplaceTemplateParams) middleware.Responde
 	return templates.NewReplaceTemplateCreated().WithPayload(&original)
 }
 
-func TemplatePut(params templates.PutTemplateParams) middleware.Responder {
+func TemplatePut(params templates.PutTemplateParams, p *models.Principal) middleware.Responder {
 	item, code, err := putThing(CastTemplate(params.Body))
 	if err != nil {
 		r := &models.Result{Code: int64(code), Messages: []string{err.Message}}

@@ -25,7 +25,7 @@ type Client struct {
 /*
 DeleteBootenv deletes bootenv
 */
-func (a *Client) DeleteBootenv(params *DeleteBootenvParams) (*DeleteBootenvNoContent, error) {
+func (a *Client) DeleteBootenv(params *DeleteBootenvParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteBootenvNoContent, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDeleteBootenvParams()
@@ -40,6 +40,7 @@ func (a *Client) DeleteBootenv(params *DeleteBootenvParams) (*DeleteBootenvNoCon
 		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &DeleteBootenvReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})
@@ -53,7 +54,7 @@ func (a *Client) DeleteBootenv(params *DeleteBootenvParams) (*DeleteBootenvNoCon
 /*
 GetBootenv gets bootenv
 */
-func (a *Client) GetBootenv(params *GetBootenvParams) (*GetBootenvOK, error) {
+func (a *Client) GetBootenv(params *GetBootenvParams, authInfo runtime.ClientAuthInfoWriter) (*GetBootenvOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewGetBootenvParams()
@@ -68,6 +69,7 @@ func (a *Client) GetBootenv(params *GetBootenvParams) (*GetBootenvOK, error) {
 		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &GetBootenvReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})
@@ -81,7 +83,7 @@ func (a *Client) GetBootenv(params *GetBootenvParams) (*GetBootenvOK, error) {
 /*
 ListBootenvs lists bootenvs
 */
-func (a *Client) ListBootenvs(params *ListBootenvsParams) (*ListBootenvsOK, error) {
+func (a *Client) ListBootenvs(params *ListBootenvsParams, authInfo runtime.ClientAuthInfoWriter) (*ListBootenvsOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewListBootenvsParams()
@@ -96,6 +98,7 @@ func (a *Client) ListBootenvs(params *ListBootenvsParams) (*ListBootenvsOK, erro
 		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &ListBootenvsReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})
@@ -109,7 +112,7 @@ func (a *Client) ListBootenvs(params *ListBootenvsParams) (*ListBootenvsOK, erro
 /*
 PatchBootenv patches bootenv
 */
-func (a *Client) PatchBootenv(params *PatchBootenvParams) (*PatchBootenvAccepted, error) {
+func (a *Client) PatchBootenv(params *PatchBootenvParams, authInfo runtime.ClientAuthInfoWriter) (*PatchBootenvAccepted, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewPatchBootenvParams()
@@ -124,6 +127,7 @@ func (a *Client) PatchBootenv(params *PatchBootenvParams) (*PatchBootenvAccepted
 		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &PatchBootenvReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})
@@ -137,7 +141,7 @@ func (a *Client) PatchBootenv(params *PatchBootenvParams) (*PatchBootenvAccepted
 /*
 PostBootenv creates bootenv
 */
-func (a *Client) PostBootenv(params *PostBootenvParams) (*PostBootenvCreated, error) {
+func (a *Client) PostBootenv(params *PostBootenvParams, authInfo runtime.ClientAuthInfoWriter) (*PostBootenvCreated, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewPostBootenvParams()
@@ -152,6 +156,7 @@ func (a *Client) PostBootenv(params *PostBootenvParams) (*PostBootenvCreated, er
 		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &PostBootenvReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})
@@ -165,7 +170,7 @@ func (a *Client) PostBootenv(params *PostBootenvParams) (*PostBootenvCreated, er
 /*
 PutBootenv updates bootenv
 */
-func (a *Client) PutBootenv(params *PutBootenvParams) (*PutBootenvOK, error) {
+func (a *Client) PutBootenv(params *PutBootenvParams, authInfo runtime.ClientAuthInfoWriter) (*PutBootenvOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewPutBootenvParams()
@@ -180,6 +185,7 @@ func (a *Client) PutBootenv(params *PutBootenvParams) (*PutBootenvOK, error) {
 		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &PutBootenvReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})

@@ -15,7 +15,7 @@ import (
 	"github.com/rackn/rocket-skates/restapi/operations/files"
 )
 
-func GetFile(params files.GetFileParams) middleware.Responder {
+func GetFile(params files.GetFileParams, p *models.Principal) middleware.Responder {
 	fileName := path.Join(ProvOpts.FileRoot, `files`, path.Clean(params.Path))
 	f, err := os.Open(fileName)
 	// GREG: errors and data are different types need to figure that out.
@@ -26,7 +26,7 @@ func GetFile(params files.GetFileParams) middleware.Responder {
 	return files.NewGetFileOK().WithPayload(f)
 }
 
-func ListFiles(params files.ListFilesParams) middleware.Responder {
+func ListFiles(params files.ListFilesParams, p *models.Principal) middleware.Responder {
 	pathPart := "/" // params.Path
 	res := []string{}
 	ents, err := ioutil.ReadDir(path.Join(ProvOpts.FileRoot, "files", path.Clean(pathPart)))
@@ -51,7 +51,7 @@ func ListFiles(params files.ListFilesParams) middleware.Responder {
 	return files.NewListFilesOK().WithPayload(res)
 }
 
-func UploadFile(params files.PostFileParams) middleware.Responder {
+func UploadFile(params files.PostFileParams, p *models.Principal) middleware.Responder {
 	name := params.Path
 	body := params.Body
 	amount := params.HTTPRequest.ContentLength
@@ -99,7 +99,7 @@ func UploadFile(params files.PostFileParams) middleware.Responder {
 	return files.NewPostFileCreated().WithPayload(files.PostFileCreatedBody{Name: &name, Size: &copied})
 }
 
-func DeleteFile(params files.DeleteFileParams) middleware.Responder {
+func DeleteFile(params files.DeleteFileParams, p *models.Principal) middleware.Responder {
 	fileName := path.Join(ProvOpts.FileRoot, `files`, path.Clean(params.Path))
 	if fileName == path.Join(ProvOpts.FileRoot, `files`) {
 		r := &models.Result{Code: int64(http.StatusForbidden),

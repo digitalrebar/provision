@@ -7,19 +7,20 @@ import (
 	"net/http"
 
 	middleware "github.com/go-openapi/runtime/middleware"
+	"github.com/rackn/rocket-skates/models"
 )
 
 // ListIsosHandlerFunc turns a function with the right signature into a list isos handler
-type ListIsosHandlerFunc func(ListIsosParams) middleware.Responder
+type ListIsosHandlerFunc func(ListIsosParams, *models.Principal) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn ListIsosHandlerFunc) Handle(params ListIsosParams) middleware.Responder {
-	return fn(params)
+func (fn ListIsosHandlerFunc) Handle(params ListIsosParams, principal *models.Principal) middleware.Responder {
+	return fn(params, principal)
 }
 
 // ListIsosHandler interface for that can handle valid list isos params
 type ListIsosHandler interface {
-	Handle(ListIsosParams) middleware.Responder
+	Handle(ListIsosParams, *models.Principal) middleware.Responder
 }
 
 // NewListIsos creates a new http.Handler for the list isos operation
@@ -41,12 +42,22 @@ func (o *ListIsos) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	route, _ := o.Context.RouteInfo(r)
 	var Params = NewListIsosParams()
 
+	uprinc, err := o.Context.Authorize(r, route)
+	if err != nil {
+		o.Context.Respond(rw, r, route.Produces, route, err)
+		return
+	}
+	var principal *models.Principal
+	if uprinc != nil {
+		principal = uprinc.(*models.Principal) // this is really a models.Principal, I promise
+	}
+
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
 		o.Context.Respond(rw, r, route.Produces, route, err)
 		return
 	}
 
-	res := o.Handler.Handle(Params) // actually handle the request
+	res := o.Handler.Handle(Params, principal) // actually handle the request
 
 	o.Context.Respond(rw, r, route.Produces, route, res)
 

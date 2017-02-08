@@ -11,16 +11,16 @@ import (
 )
 
 // PutMachineHandlerFunc turns a function with the right signature into a put machine handler
-type PutMachineHandlerFunc func(PutMachineParams) middleware.Responder
+type PutMachineHandlerFunc func(PutMachineParams, *models.Principal) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn PutMachineHandlerFunc) Handle(params PutMachineParams) middleware.Responder {
-	return fn(params)
+func (fn PutMachineHandlerFunc) Handle(params PutMachineParams, principal *models.Principal) middleware.Responder {
+	return fn(params, principal)
 }
 
 // PutMachineHandler interface for that can handle valid put machine params
 type PutMachineHandler interface {
-	Handle(PutMachineParams) middleware.Responder
+	Handle(PutMachineParams, *models.Principal) middleware.Responder
 }
 
 // NewPutMachine creates a new http.Handler for the put machine operation
@@ -42,12 +42,22 @@ func (o *PutMachine) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	route, _ := o.Context.RouteInfo(r)
 	var Params = NewPutMachineParams()
 
+	uprinc, err := o.Context.Authorize(r, route)
+	if err != nil {
+		o.Context.Respond(rw, r, route.Produces, route, err)
+		return
+	}
+	var principal *models.Principal
+	if uprinc != nil {
+		principal = uprinc.(*models.Principal) // this is really a models.Principal, I promise
+	}
+
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
 		o.Context.Respond(rw, r, route.Produces, route, err)
 		return
 	}
 
-	res := o.Handler.Handle(Params) // actually handle the request
+	res := o.Handler.Handle(Params, principal) // actually handle the request
 
 	o.Context.Respond(rw, r, route.Produces, route, res)
 

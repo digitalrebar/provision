@@ -15,7 +15,7 @@ import (
 	"github.com/rackn/rocket-skates/restapi/operations/isos"
 )
 
-func ListIsos(params isos.ListIsosParams) middleware.Responder {
+func ListIsos(params isos.ListIsosParams, p *models.Principal) middleware.Responder {
 	res := []string{}
 	ents, err := ioutil.ReadDir(path.Join(ProvOpts.FileRoot, "isos"))
 	if err != nil {
@@ -32,7 +32,7 @@ func ListIsos(params isos.ListIsosParams) middleware.Responder {
 	return isos.NewListIsosOK().WithPayload(res)
 }
 
-func GetIso(params isos.GetIsoParams) middleware.Responder {
+func GetIso(params isos.GetIsoParams, p *models.Principal) middleware.Responder {
 	fileName := path.Join(ProvOpts.FileRoot, `isos`, path.Base(params.Name))
 	f, err := os.Open(fileName)
 	// GREG: errors and data are different types need to figure that out.
@@ -59,7 +59,7 @@ func reloadBootenvsForIso(name string) {
 	}
 }
 
-func UploadIso(params isos.PostIsoParams) middleware.Responder {
+func UploadIso(params isos.PostIsoParams, p *models.Principal) middleware.Responder {
 	name := params.Name
 	body := params.Body
 	amount := params.HTTPRequest.ContentLength
@@ -97,7 +97,7 @@ func UploadIso(params isos.PostIsoParams) middleware.Responder {
 	return isos.NewPostIsoCreated().WithPayload(isos.PostIsoCreatedBody{Name: &name, Size: &copied})
 }
 
-func DeleteIso(params isos.DeleteIsoParams) middleware.Responder {
+func DeleteIso(params isos.DeleteIsoParams, p *models.Principal) middleware.Responder {
 	isoName := path.Join(ProvOpts.FileRoot, `isos`, path.Base(params.Name))
 	if err := os.Remove(isoName); err != nil {
 		r := &models.Result{Code: int64(http.StatusNotFound),
