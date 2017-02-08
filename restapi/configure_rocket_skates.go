@@ -2,16 +2,17 @@ package restapi
 
 import (
 	"crypto/tls"
+	"log"
 	"net/http"
 	"strings"
 
+	"github.com/dre1080/recover"
 	errors "github.com/go-openapi/errors"
 	runtime "github.com/go-openapi/runtime"
 	swag "github.com/go-openapi/swag"
 	graceful "github.com/tylerb/graceful"
 
 	provisioner "github.com/rackn/rocket-skates/provisioner"
-
 	"github.com/rackn/rocket-skates/restapi/operations"
 	"github.com/rackn/rocket-skates/restapi/operations/bootenvs"
 	"github.com/rackn/rocket-skates/restapi/operations/files"
@@ -108,7 +109,7 @@ func setupMiddlewares(handler http.Handler) http.Handler {
 // So this is a good place to plug in a panic handling middleware, logging and metrics
 func setupGlobalMiddleware(handler http.Handler) http.Handler {
 	// Serve the swagger UI
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	sui := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Shortcut helpers for swagger-ui
 		if r.URL.Path == "/swagger-ui" || r.URL.Path == "/api/help" {
 			http.Redirect(w, r, "/swagger-ui/", http.StatusFound)
@@ -121,4 +122,8 @@ func setupGlobalMiddleware(handler http.Handler) http.Handler {
 		}
 		handler.ServeHTTP(w, r)
 	})
+	recovery := recover.New(&recover.Options{
+		Log: log.Print,
+	})
+	return recovery(sui)
 }
