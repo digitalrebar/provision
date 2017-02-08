@@ -15,7 +15,7 @@ import (
 
 	strfmt "github.com/go-openapi/strfmt"
 
-	"github.com/galthaus/swagger-test/models"
+	"github.com/rackn/rocket-skates/models"
 )
 
 // NewPutBootenvParams creates a new PutBootenvParams object

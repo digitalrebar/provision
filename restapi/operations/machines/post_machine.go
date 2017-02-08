@@ -6,8 +6,8 @@ package machines
 import (
 	"net/http"
 
-	"github.com/galthaus/swagger-test/models"
 	middleware "github.com/go-openapi/runtime/middleware"
+	"github.com/rackn/rocket-skates/models"
 )
 
 // PostMachineHandlerFunc turns a function with the right signature into a post machine handler

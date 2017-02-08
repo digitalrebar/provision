@@ -12,8 +12,8 @@ import (
 
 	middleware "github.com/go-openapi/runtime/middleware"
 
-	"github.com/galthaus/swagger-test/models"
-	"github.com/galthaus/swagger-test/restapi/operations/machines"
+	"github.com/rackn/rocket-skates/models"
+	"github.com/rackn/rocket-skates/restapi/operations/machines"
 	"github.com/satori/go.uuid"
 )
 

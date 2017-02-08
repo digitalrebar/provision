@@ -3,7 +3,7 @@ info:
   version: v3.0
   title: rocket-skates
   description: Protocol for Bare Metal Provider
-host: 'localhost:8092'
+host: '127.0.0.1:8092'
 basePath: /api/v3
 schemes:
   - https

@@ -6,8 +6,8 @@ package machines
 import (
 	"net/http"
 
-	"github.com/galthaus/swagger-test/models"
 	middleware "github.com/go-openapi/runtime/middleware"
+	"github.com/rackn/rocket-skates/models"
 )
 
 // PatchMachineHandlerFunc turns a function with the right signature into a patch machine handler

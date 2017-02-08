@@ -5,7 +5,7 @@ Protocol for Bare Metal Provider
 
     Schemes:
       https
-    Host: localhost:8092
+    Host: 127.0.0.1:8092
     BasePath: /api/v3
     Version: v3.0
 

@@ -8,7 +8,7 @@ import (
 
 	"github.com/go-openapi/runtime"
 
-	"github.com/galthaus/swagger-test/models"
+	"github.com/rackn/rocket-skates/models"
 )
 
 /*GetMachineOK get machine o k
