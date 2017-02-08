@@ -9,11 +9,11 @@ import (
 
 	strfmt "github.com/go-openapi/strfmt"
 
-	"github.com/galthaus/swagger-test/client/bootenvs"
-	"github.com/galthaus/swagger-test/client/files"
-	"github.com/galthaus/swagger-test/client/isos"
-	"github.com/galthaus/swagger-test/client/machines"
-	"github.com/galthaus/swagger-test/client/templates"
+	"github.com/rackn/rocket-skates/client/bootenvs"
+	"github.com/rackn/rocket-skates/client/files"
+	"github.com/rackn/rocket-skates/client/isos"
+	"github.com/rackn/rocket-skates/client/machines"
+	"github.com/rackn/rocket-skates/client/templates"
 )
 
 // Default rocket skates HTTP client.
@@ -24,7 +24,7 @@ func NewHTTPClient(formats strfmt.Registry) *RocketSkates {
 	if formats == nil {
 		formats = strfmt.Default
 	}
-	transport := httptransport.New("localhost:8092", "/api/v3", []string{"https"})
+	transport := httptransport.New("127.0.0.1:8092", "/api/v3", []string{"https"})
 	return New(transport, formats)
 }
 

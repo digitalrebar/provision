@@ -11,7 +11,7 @@ import (
 
 	strfmt "github.com/go-openapi/strfmt"
 
-	"github.com/galthaus/swagger-test/models"
+	"github.com/rackn/rocket-skates/models"
 )
 
 // DeleteFileReader is a Reader for the DeleteFile structure.

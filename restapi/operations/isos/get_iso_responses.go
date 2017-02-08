@@ -9,7 +9,7 @@ import (
 
 	"github.com/go-openapi/runtime"
 
-	"github.com/galthaus/swagger-test/models"
+	"github.com/rackn/rocket-skates/models"
 )
 
 /*GetIsoOK get iso o k

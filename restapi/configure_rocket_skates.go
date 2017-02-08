@@ -7,18 +7,17 @@ import (
 
 	errors "github.com/go-openapi/errors"
 	runtime "github.com/go-openapi/runtime"
-	middleware "github.com/go-openapi/runtime/middleware"
 	swag "github.com/go-openapi/swag"
 	graceful "github.com/tylerb/graceful"
 
-	provisioner "github.com/galthaus/swagger-test/provisioner"
+	provisioner "github.com/rackn/rocket-skates/provisioner"
 
-	"github.com/galthaus/swagger-test/restapi/operations"
-	"github.com/galthaus/swagger-test/restapi/operations/bootenvs"
-	"github.com/galthaus/swagger-test/restapi/operations/files"
-	"github.com/galthaus/swagger-test/restapi/operations/isos"
-	"github.com/galthaus/swagger-test/restapi/operations/machines"
-	"github.com/galthaus/swagger-test/restapi/operations/templates"
+	"github.com/rackn/rocket-skates/restapi/operations"
+	"github.com/rackn/rocket-skates/restapi/operations/bootenvs"
+	"github.com/rackn/rocket-skates/restapi/operations/files"
+	"github.com/rackn/rocket-skates/restapi/operations/isos"
+	"github.com/rackn/rocket-skates/restapi/operations/machines"
+	"github.com/rackn/rocket-skates/restapi/operations/templates"
 )
 
 // This file is safe to edit. Once it exists it will not be overwritten
@@ -48,38 +47,26 @@ func configureAPI(api *operations.RocketSkatesAPI) http.Handler {
 	api.JSONProducer = runtime.JSONProducer()
 	api.BinProducer = runtime.ByteStreamProducer()
 
-	api.BootenvsDeleteBootenvHandler = bootenvs.DeleteBootenvHandlerFunc(func(params bootenvs.DeleteBootenvParams) middleware.Responder {
-		return middleware.NotImplemented("operation bootenvs.DeleteBootenv has not yet been implemented")
-	})
-	api.BootenvsGetBootenvHandler = bootenvs.GetBootenvHandlerFunc(func(params bootenvs.GetBootenvParams) middleware.Responder {
-		return middleware.NotImplemented("operation bootenvs.GetBootenv has not yet been implemented")
-	})
-	api.BootenvsListBootenvsHandler = bootenvs.ListBootenvsHandlerFunc(func(params bootenvs.ListBootenvsParams) middleware.Responder {
-		return middleware.NotImplemented("operation bootenvs.ListBootenvs has not yet been implemented")
-	})
-	api.BootenvsPatchBootenvHandler = bootenvs.PatchBootenvHandlerFunc(func(params bootenvs.PatchBootenvParams) middleware.Responder {
-		return middleware.NotImplemented("operation bootenvs.PatchBootenv has not yet been implemented")
-	})
-	api.BootenvsPostBootenvHandler = bootenvs.PostBootenvHandlerFunc(func(params bootenvs.PostBootenvParams) middleware.Responder {
-		return middleware.NotImplemented("operation bootenvs.PostBootenv has not yet been implemented")
-	})
-	api.BootenvsPutBootenvHandler = bootenvs.PutBootenvHandlerFunc(func(params bootenvs.PutBootenvParams) middleware.Responder {
-		return middleware.NotImplemented("operation bootenvs.PutBootenv has not yet been implemented")
-	})
+	api.BootenvsListBootenvsHandler = bootenvs.ListBootenvsHandlerFunc(provisioner.BootenvList)
+	api.BootenvsPostBootenvHandler = bootenvs.PostBootenvHandlerFunc(provisioner.BootenvPost)
+	api.BootenvsGetBootenvHandler = bootenvs.GetBootenvHandlerFunc(provisioner.BootenvGet)
+	api.BootenvsPutBootenvHandler = bootenvs.PutBootenvHandlerFunc(provisioner.BootenvPut)
+	api.BootenvsPatchBootenvHandler = bootenvs.PatchBootenvHandlerFunc(provisioner.BootenvPatch)
+	api.BootenvsDeleteBootenvHandler = bootenvs.DeleteBootenvHandlerFunc(provisioner.BootenvDelete)
 
 	api.FilesListFilesHandler = files.ListFilesHandlerFunc(provisioner.ListFiles)
-	api.FilesGetFileHandler = files.GetFileHandlerFunc(provisioner.GetFile)
 	api.FilesPostFileHandler = files.PostFileHandlerFunc(provisioner.UploadFile)
+	api.FilesGetFileHandler = files.GetFileHandlerFunc(provisioner.GetFile)
 	api.FilesDeleteFileHandler = files.DeleteFileHandlerFunc(provisioner.DeleteFile)
 
 	api.IsosListIsosHandler = isos.ListIsosHandlerFunc(provisioner.ListIsos)
-	api.IsosGetIsoHandler = isos.GetIsoHandlerFunc(provisioner.GetIso)
 	api.IsosPostIsoHandler = isos.PostIsoHandlerFunc(provisioner.UploadIso)
+	api.IsosGetIsoHandler = isos.GetIsoHandlerFunc(provisioner.GetIso)
 	api.IsosDeleteIsoHandler = isos.DeleteIsoHandlerFunc(provisioner.DeleteIso)
 
 	api.TemplatesListTemplatesHandler = templates.ListTemplatesHandlerFunc(provisioner.TemplateList)
-	api.TemplatesGetTemplateHandler = templates.GetTemplateHandlerFunc(provisioner.TemplateGet)
 	api.TemplatesPostTemplateHandler = templates.PostTemplateHandlerFunc(provisioner.TemplatePost)
+	api.TemplatesGetTemplateHandler = templates.GetTemplateHandlerFunc(provisioner.TemplateGet)
 	api.TemplatesReplaceTemplateHandler = templates.ReplaceTemplateHandlerFunc(provisioner.TemplateReplace)
 	api.TemplatesPutTemplateHandler = templates.PutTemplateHandlerFunc(provisioner.TemplatePut)
 	api.TemplatesPatchTemplateHandler = templates.PatchTemplateHandlerFunc(provisioner.TemplatePatch)

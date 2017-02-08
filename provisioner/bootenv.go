@@ -20,9 +20,9 @@ import (
 	"time"
 
 	"github.com/digitalrebar/digitalrebar/go/rebar-api/api"
-	"github.com/galthaus/swagger-test/models"
-	"github.com/galthaus/swagger-test/restapi/operations/bootenvs"
 	middleware "github.com/go-openapi/runtime/middleware"
+	"github.com/rackn/rocket-skates/models"
+	"github.com/rackn/rocket-skates/restapi/operations/bootenvs"
 )
 
 // RenderData is the struct that is passed to templates as a source of

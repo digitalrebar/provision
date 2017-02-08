@@ -11,8 +11,8 @@ import (
 
 	middleware "github.com/go-openapi/runtime/middleware"
 
-	"github.com/galthaus/swagger-test/models"
-	"github.com/galthaus/swagger-test/restapi/operations/templates"
+	"github.com/rackn/rocket-skates/models"
+	"github.com/rackn/rocket-skates/restapi/operations/templates"
 )
 
 // Template represents a template that will be associated with a boot environment.

@@ -15,11 +15,11 @@ import (
 	strfmt "github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 
-	"github.com/galthaus/swagger-test/restapi/operations/bootenvs"
-	"github.com/galthaus/swagger-test/restapi/operations/files"
-	"github.com/galthaus/swagger-test/restapi/operations/isos"
-	"github.com/galthaus/swagger-test/restapi/operations/machines"
-	"github.com/galthaus/swagger-test/restapi/operations/templates"
+	"github.com/rackn/rocket-skates/restapi/operations/bootenvs"
+	"github.com/rackn/rocket-skates/restapi/operations/files"
+	"github.com/rackn/rocket-skates/restapi/operations/isos"
+	"github.com/rackn/rocket-skates/restapi/operations/machines"
+	"github.com/rackn/rocket-skates/restapi/operations/templates"
 )
 
 // NewRocketSkatesAPI creates a new RocketSkates instance
