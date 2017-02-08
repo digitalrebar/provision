@@ -84,12 +84,24 @@ This is completely our own file.
 
 There is a test-data with a cert,key,validator and directories to run a simple instance of *rocket-skates*.  Please don't put big things here.
 
-## Building
+## Building Server
 
 * go build -o rocket-skates cmd/rocket-skates-server/main.go
 
-To Run locally:
+## Running Server
 
 * sudo ./rocket-skates  --tls-certificate=test-data/server.crt --tls-key=test-data/server.key --tls-port=8092 --backend=directory --file-root=test-data/tftpboot --data-root=test-data/digitalrebar
 
 NOTE: I need the sudo to bind the tftp port.  This is configurable, i.e.  *--tftp-port=30000*  
+
+
+## Building Client
+
+* go build -o rscli cmd/rocket-skates-client/main.go
+
+## Running Server
+
+* ./rscli
+
+This is a really stupid client but shows how to make the calls and get back structures.
+
