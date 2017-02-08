@@ -11,10 +11,12 @@ import (
 	loads "github.com/go-openapi/loads"
 	runtime "github.com/go-openapi/runtime"
 	middleware "github.com/go-openapi/runtime/middleware"
+	security "github.com/go-openapi/runtime/security"
 	spec "github.com/go-openapi/spec"
 	strfmt "github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 
+	"github.com/rackn/rocket-skates/models"
 	"github.com/rackn/rocket-skates/restapi/operations/bootenvs"
 	"github.com/rackn/rocket-skates/restapi/operations/files"
 	"github.com/rackn/rocket-skates/restapi/operations/isos"
@@ -52,6 +54,18 @@ type RocketSkatesAPI struct {
 	JSONProducer runtime.Producer
 	// BinProducer registers a producer for a "application/octet-stream" mime type
 	BinProducer runtime.Producer
+
+	// RebarAuth registers a function that takes username and password and returns a principal
+	// it performs authentication with basic auth
+	RebarAuth func(string, string) (*models.Principal, error)
+
+	// AuthorizationAuth registers a function that takes a token and returns a principal
+	// it performs authentication based on an api key Authorization provided in the header
+	AuthorizationAuth func(string) (*models.Principal, error)
+
+	// AuthTokenAuth registers a function that takes a token and returns a principal
+	// it performs authentication based on an api key auth_token provided in the query
+	AuthTokenAuth func(string) (*models.Principal, error)
 
 	// BootenvsDeleteBootenvHandler sets the operation handler for the delete bootenv operation
 	BootenvsDeleteBootenvHandler bootenvs.DeleteBootenvHandler
@@ -178,6 +192,18 @@ func (o *RocketSkatesAPI) Validate() error {
 		unregistered = append(unregistered, "BinProducer")
 	}
 
+	if o.RebarAuth == nil {
+		unregistered = append(unregistered, "RebarAuth")
+	}
+
+	if o.AuthorizationAuth == nil {
+		unregistered = append(unregistered, "AuthorizationAuth")
+	}
+
+	if o.AuthTokenAuth == nil {
+		unregistered = append(unregistered, "AuthTokenAuth")
+	}
+
 	if o.BootenvsDeleteBootenvHandler == nil {
 		unregistered = append(unregistered, "bootenvs.DeleteBootenvHandler")
 	}
@@ -301,7 +327,31 @@ func (o *RocketSkatesAPI) ServeErrorFor(operationID string) func(http.ResponseWr
 // AuthenticatorsFor gets the authenticators for the specified security schemes
 func (o *RocketSkatesAPI) AuthenticatorsFor(schemes map[string]spec.SecurityScheme) map[string]runtime.Authenticator {
 
-	return nil
+	result := make(map[string]runtime.Authenticator)
+	for name, scheme := range schemes {
+		switch name {
+
+		case "rebar":
+			_ = scheme
+			result[name] = security.BasicAuth(func(username, password string) (interface{}, error) {
+				return o.RebarAuth(username, password)
+			})
+
+		case "Authorization":
+
+			result[name] = security.APIKeyAuth(scheme.Name, scheme.In, func(token string) (interface{}, error) {
+				return o.AuthorizationAuth(token)
+			})
+
+		case "auth_token":
+
+			result[name] = security.APIKeyAuth(scheme.Name, scheme.In, func(token string) (interface{}, error) {
+				return o.AuthTokenAuth(token)
+			})
+
+		}
+	}
+	return result
 
 }
 

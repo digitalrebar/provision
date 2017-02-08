@@ -7,19 +7,20 @@ import (
 	"net/http"
 
 	middleware "github.com/go-openapi/runtime/middleware"
+	"github.com/rackn/rocket-skates/models"
 )
 
 // PutBootenvHandlerFunc turns a function with the right signature into a put bootenv handler
-type PutBootenvHandlerFunc func(PutBootenvParams) middleware.Responder
+type PutBootenvHandlerFunc func(PutBootenvParams, *models.Principal) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn PutBootenvHandlerFunc) Handle(params PutBootenvParams) middleware.Responder {
-	return fn(params)
+func (fn PutBootenvHandlerFunc) Handle(params PutBootenvParams, principal *models.Principal) middleware.Responder {
+	return fn(params, principal)
 }
 
 // PutBootenvHandler interface for that can handle valid put bootenv params
 type PutBootenvHandler interface {
-	Handle(PutBootenvParams) middleware.Responder
+	Handle(PutBootenvParams, *models.Principal) middleware.Responder
 }
 
 // NewPutBootenv creates a new http.Handler for the put bootenv operation
@@ -41,12 +42,22 @@ func (o *PutBootenv) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	route, _ := o.Context.RouteInfo(r)
 	var Params = NewPutBootenvParams()
 
+	uprinc, err := o.Context.Authorize(r, route)
+	if err != nil {
+		o.Context.Respond(rw, r, route.Produces, route, err)
+		return
+	}
+	var principal *models.Principal
+	if uprinc != nil {
+		principal = uprinc.(*models.Principal) // this is really a models.Principal, I promise
+	}
+
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
 		o.Context.Respond(rw, r, route.Produces, route, err)
 		return
 	}
 
-	res := o.Handler.Handle(Params) // actually handle the request
+	res := o.Handler.Handle(Params, principal) // actually handle the request
 
 	o.Context.Respond(rw, r, route.Produces, route, res)
 

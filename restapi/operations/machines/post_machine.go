@@ -11,16 +11,16 @@ import (
 )
 
 // PostMachineHandlerFunc turns a function with the right signature into a post machine handler
-type PostMachineHandlerFunc func(PostMachineParams) middleware.Responder
+type PostMachineHandlerFunc func(PostMachineParams, *models.Principal) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn PostMachineHandlerFunc) Handle(params PostMachineParams) middleware.Responder {
-	return fn(params)
+func (fn PostMachineHandlerFunc) Handle(params PostMachineParams, principal *models.Principal) middleware.Responder {
+	return fn(params, principal)
 }
 
 // PostMachineHandler interface for that can handle valid post machine params
 type PostMachineHandler interface {
-	Handle(PostMachineParams) middleware.Responder
+	Handle(PostMachineParams, *models.Principal) middleware.Responder
 }
 
 // NewPostMachine creates a new http.Handler for the post machine operation
@@ -42,12 +42,22 @@ func (o *PostMachine) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	route, _ := o.Context.RouteInfo(r)
 	var Params = NewPostMachineParams()
 
+	uprinc, err := o.Context.Authorize(r, route)
+	if err != nil {
+		o.Context.Respond(rw, r, route.Produces, route, err)
+		return
+	}
+	var principal *models.Principal
+	if uprinc != nil {
+		principal = uprinc.(*models.Principal) // this is really a models.Principal, I promise
+	}
+
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
 		o.Context.Respond(rw, r, route.Produces, route, err)
 		return
 	}
 
-	res := o.Handler.Handle(Params) // actually handle the request
+	res := o.Handler.Handle(Params, principal) // actually handle the request
 
 	o.Context.Respond(rw, r, route.Produces, route, res)
 

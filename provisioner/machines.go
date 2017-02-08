@@ -33,7 +33,7 @@ func CastMachine(m1 *models.MachineInput) *Machine {
 	return &Machine{models.MachineOutput{*m1}}
 }
 
-func MachinePatch(params machines.PatchMachineParams) middleware.Responder {
+func MachinePatch(params machines.PatchMachineParams, p *models.Principal) middleware.Responder {
 	newThing := PopMachine(params.UUID)
 	patch, _ := json.Marshal(params.Body)
 	item, code, err := updateThing(newThing, patch)
@@ -52,7 +52,7 @@ func MachinePatch(params machines.PatchMachineParams) middleware.Responder {
 	return machines.NewPatchMachineAccepted().WithPayload(m)
 }
 
-func MachineDelete(params machines.DeleteMachineParams) middleware.Responder {
+func MachineDelete(params machines.DeleteMachineParams, p *models.Principal) middleware.Responder {
 	code, err := deleteThing(PopMachine(params.UUID))
 	if err != nil {
 		r := &models.Result{Code: int64(code), Messages: []string{err.Message}}
@@ -61,7 +61,7 @@ func MachineDelete(params machines.DeleteMachineParams) middleware.Responder {
 	return machines.NewDeleteMachineNoContent()
 }
 
-func MachineGet(params machines.GetMachineParams) middleware.Responder {
+func MachineGet(params machines.GetMachineParams, p *models.Principal) middleware.Responder {
 	item, err := getThing(PopMachine(params.UUID))
 	if err != nil {
 		r := &models.Result{Code: http.StatusNotFound, Messages: []string{err.Message}}
@@ -77,7 +77,7 @@ func MachineGet(params machines.GetMachineParams) middleware.Responder {
 	return machines.NewGetMachineOK().WithPayload(m)
 }
 
-func MachineList(params machines.ListMachinesParams) middleware.Responder {
+func MachineList(params machines.ListMachinesParams, p *models.Principal) middleware.Responder {
 	allthem, err := listThings(&Machine{})
 	if err != nil {
 		r := &models.Result{Code: http.StatusInternalServerError, Messages: []string{err.Message}}
@@ -94,7 +94,7 @@ func MachineList(params machines.ListMachinesParams) middleware.Responder {
 	return machines.NewListMachinesOK().WithPayload(machines.ListMachinesOKBody{Result: r, Data: data})
 }
 
-func MachinePost(params machines.PostMachineParams) middleware.Responder {
+func MachinePost(params machines.PostMachineParams, p *models.Principal) middleware.Responder {
 	item, code, err := createThing(CastMachine(params.Body))
 	if err != nil {
 		r := &models.Result{Code: int64(code), Messages: []string{err.Message}}
@@ -110,7 +110,7 @@ func MachinePost(params machines.PostMachineParams) middleware.Responder {
 	return machines.NewPostMachineCreated().WithPayload(m)
 }
 
-func MachinePut(params machines.PutMachineParams) middleware.Responder {
+func MachinePut(params machines.PutMachineParams, p *models.Principal) middleware.Responder {
 	item, code, err := putThing(CastMachine(params.Body))
 	if err != nil {
 		r := &models.Result{Code: int64(code), Messages: []string{err.Message}}

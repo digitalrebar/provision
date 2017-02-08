@@ -25,7 +25,7 @@ type Client struct {
 /*
 DeleteMachine deletes machine
 */
-func (a *Client) DeleteMachine(params *DeleteMachineParams) (*DeleteMachineNoContent, error) {
+func (a *Client) DeleteMachine(params *DeleteMachineParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteMachineNoContent, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDeleteMachineParams()
@@ -40,6 +40,7 @@ func (a *Client) DeleteMachine(params *DeleteMachineParams) (*DeleteMachineNoCon
 		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &DeleteMachineReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})
@@ -53,7 +54,7 @@ func (a *Client) DeleteMachine(params *DeleteMachineParams) (*DeleteMachineNoCon
 /*
 GetMachine gets machine
 */
-func (a *Client) GetMachine(params *GetMachineParams) (*GetMachineOK, error) {
+func (a *Client) GetMachine(params *GetMachineParams, authInfo runtime.ClientAuthInfoWriter) (*GetMachineOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewGetMachineParams()
@@ -68,6 +69,7 @@ func (a *Client) GetMachine(params *GetMachineParams) (*GetMachineOK, error) {
 		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &GetMachineReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})
@@ -81,7 +83,7 @@ func (a *Client) GetMachine(params *GetMachineParams) (*GetMachineOK, error) {
 /*
 ListMachines lists machines
 */
-func (a *Client) ListMachines(params *ListMachinesParams) (*ListMachinesOK, error) {
+func (a *Client) ListMachines(params *ListMachinesParams, authInfo runtime.ClientAuthInfoWriter) (*ListMachinesOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewListMachinesParams()
@@ -96,6 +98,7 @@ func (a *Client) ListMachines(params *ListMachinesParams) (*ListMachinesOK, erro
 		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &ListMachinesReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})
@@ -109,7 +112,7 @@ func (a *Client) ListMachines(params *ListMachinesParams) (*ListMachinesOK, erro
 /*
 PatchMachine patches machine
 */
-func (a *Client) PatchMachine(params *PatchMachineParams) (*PatchMachineAccepted, error) {
+func (a *Client) PatchMachine(params *PatchMachineParams, authInfo runtime.ClientAuthInfoWriter) (*PatchMachineAccepted, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewPatchMachineParams()
@@ -124,6 +127,7 @@ func (a *Client) PatchMachine(params *PatchMachineParams) (*PatchMachineAccepted
 		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &PatchMachineReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})
@@ -137,7 +141,7 @@ func (a *Client) PatchMachine(params *PatchMachineParams) (*PatchMachineAccepted
 /*
 PostMachine creates machine
 */
-func (a *Client) PostMachine(params *PostMachineParams) (*PostMachineCreated, error) {
+func (a *Client) PostMachine(params *PostMachineParams, authInfo runtime.ClientAuthInfoWriter) (*PostMachineCreated, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewPostMachineParams()
@@ -152,6 +156,7 @@ func (a *Client) PostMachine(params *PostMachineParams) (*PostMachineCreated, er
 		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &PostMachineReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})
@@ -165,7 +170,7 @@ func (a *Client) PostMachine(params *PostMachineParams) (*PostMachineCreated, er
 /*
 PutMachine updates machine
 */
-func (a *Client) PutMachine(params *PutMachineParams) (*PutMachineOK, error) {
+func (a *Client) PutMachine(params *PutMachineParams, authInfo runtime.ClientAuthInfoWriter) (*PutMachineOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewPutMachineParams()
@@ -180,6 +185,7 @@ func (a *Client) PutMachine(params *PutMachineParams) (*PutMachineOK, error) {
 		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &PutMachineReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})

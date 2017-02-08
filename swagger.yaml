@@ -998,3 +998,10 @@ definitions:
           Path: '{{.Machine.Path}}/unattend.xml'
           UUID: 2012r2-unattend.xml.tmpl
       TenantId: 1
+  principal:
+    title: Principal
+    type: string
+security:
+  - Authorization: []
+  - auth_token: []
+  - rebar: []

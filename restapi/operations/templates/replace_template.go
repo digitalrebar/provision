@@ -7,19 +7,20 @@ import (
 	"net/http"
 
 	middleware "github.com/go-openapi/runtime/middleware"
+	"github.com/rackn/rocket-skates/models"
 )
 
 // ReplaceTemplateHandlerFunc turns a function with the right signature into a replace template handler
-type ReplaceTemplateHandlerFunc func(ReplaceTemplateParams) middleware.Responder
+type ReplaceTemplateHandlerFunc func(ReplaceTemplateParams, *models.Principal) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn ReplaceTemplateHandlerFunc) Handle(params ReplaceTemplateParams) middleware.Responder {
-	return fn(params)
+func (fn ReplaceTemplateHandlerFunc) Handle(params ReplaceTemplateParams, principal *models.Principal) middleware.Responder {
+	return fn(params, principal)
 }
 
 // ReplaceTemplateHandler interface for that can handle valid replace template params
 type ReplaceTemplateHandler interface {
-	Handle(ReplaceTemplateParams) middleware.Responder
+	Handle(ReplaceTemplateParams, *models.Principal) middleware.Responder
 }
 
 // NewReplaceTemplate creates a new http.Handler for the replace template operation
@@ -41,12 +42,22 @@ func (o *ReplaceTemplate) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	route, _ := o.Context.RouteInfo(r)
 	var Params = NewReplaceTemplateParams()
 
+	uprinc, err := o.Context.Authorize(r, route)
+	if err != nil {
+		o.Context.Respond(rw, r, route.Produces, route, err)
+		return
+	}
+	var principal *models.Principal
+	if uprinc != nil {
+		principal = uprinc.(*models.Principal) // this is really a models.Principal, I promise
+	}
+
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
 		o.Context.Respond(rw, r, route.Produces, route, err)
 		return
 	}
 
-	res := o.Handler.Handle(Params) // actually handle the request
+	res := o.Handler.Handle(Params, principal) // actually handle the request
 
 	o.Context.Respond(rw, r, route.Produces, route, res)
 

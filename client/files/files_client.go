@@ -27,7 +27,7 @@ type Client struct {
 /*
 DeleteFile deletes file
 */
-func (a *Client) DeleteFile(params *DeleteFileParams) (*DeleteFileNoContent, error) {
+func (a *Client) DeleteFile(params *DeleteFileParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteFileNoContent, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDeleteFileParams()
@@ -42,6 +42,7 @@ func (a *Client) DeleteFile(params *DeleteFileParams) (*DeleteFileNoContent, err
 		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &DeleteFileReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})
@@ -55,7 +56,7 @@ func (a *Client) DeleteFile(params *DeleteFileParams) (*DeleteFileNoContent, err
 /*
 GetFile gets file
 */
-func (a *Client) GetFile(params *GetFileParams, writer io.Writer) (*GetFileOK, error) {
+func (a *Client) GetFile(params *GetFileParams, authInfo runtime.ClientAuthInfoWriter, writer io.Writer) (*GetFileOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewGetFileParams()
@@ -70,6 +71,7 @@ func (a *Client) GetFile(params *GetFileParams, writer io.Writer) (*GetFileOK, e
 		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &GetFileReader{formats: a.formats, writer: writer},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})
@@ -83,7 +85,7 @@ func (a *Client) GetFile(params *GetFileParams, writer io.Writer) (*GetFileOK, e
 /*
 ListFiles lists files
 */
-func (a *Client) ListFiles(params *ListFilesParams) (*ListFilesOK, error) {
+func (a *Client) ListFiles(params *ListFilesParams, authInfo runtime.ClientAuthInfoWriter) (*ListFilesOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewListFilesParams()
@@ -98,6 +100,7 @@ func (a *Client) ListFiles(params *ListFilesParams) (*ListFilesOK, error) {
 		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &ListFilesReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})
@@ -111,7 +114,7 @@ func (a *Client) ListFiles(params *ListFilesParams) (*ListFilesOK, error) {
 /*
 PostFile creates file
 */
-func (a *Client) PostFile(params *PostFileParams) (*PostFileCreated, error) {
+func (a *Client) PostFile(params *PostFileParams, authInfo runtime.ClientAuthInfoWriter) (*PostFileCreated, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewPostFileParams()
@@ -126,6 +129,7 @@ func (a *Client) PostFile(params *PostFileParams) (*PostFileCreated, error) {
 		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &PostFileReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})

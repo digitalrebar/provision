@@ -25,7 +25,7 @@ type Client struct {
 /*
 DeleteTemplate deletes template
 */
-func (a *Client) DeleteTemplate(params *DeleteTemplateParams) (*DeleteTemplateNoContent, error) {
+func (a *Client) DeleteTemplate(params *DeleteTemplateParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteTemplateNoContent, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDeleteTemplateParams()
@@ -40,6 +40,7 @@ func (a *Client) DeleteTemplate(params *DeleteTemplateParams) (*DeleteTemplateNo
 		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &DeleteTemplateReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})
@@ -53,7 +54,7 @@ func (a *Client) DeleteTemplate(params *DeleteTemplateParams) (*DeleteTemplateNo
 /*
 GetTemplate gets template
 */
-func (a *Client) GetTemplate(params *GetTemplateParams) (*GetTemplateOK, error) {
+func (a *Client) GetTemplate(params *GetTemplateParams, authInfo runtime.ClientAuthInfoWriter) (*GetTemplateOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewGetTemplateParams()
@@ -68,6 +69,7 @@ func (a *Client) GetTemplate(params *GetTemplateParams) (*GetTemplateOK, error) 
 		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &GetTemplateReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})
@@ -81,7 +83,7 @@ func (a *Client) GetTemplate(params *GetTemplateParams) (*GetTemplateOK, error) 
 /*
 ListTemplates lists templates
 */
-func (a *Client) ListTemplates(params *ListTemplatesParams) (*ListTemplatesOK, error) {
+func (a *Client) ListTemplates(params *ListTemplatesParams, authInfo runtime.ClientAuthInfoWriter) (*ListTemplatesOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewListTemplatesParams()
@@ -96,6 +98,7 @@ func (a *Client) ListTemplates(params *ListTemplatesParams) (*ListTemplatesOK, e
 		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &ListTemplatesReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})
@@ -109,7 +112,7 @@ func (a *Client) ListTemplates(params *ListTemplatesParams) (*ListTemplatesOK, e
 /*
 PatchTemplate patches template
 */
-func (a *Client) PatchTemplate(params *PatchTemplateParams) (*PatchTemplateAccepted, error) {
+func (a *Client) PatchTemplate(params *PatchTemplateParams, authInfo runtime.ClientAuthInfoWriter) (*PatchTemplateAccepted, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewPatchTemplateParams()
@@ -124,6 +127,7 @@ func (a *Client) PatchTemplate(params *PatchTemplateParams) (*PatchTemplateAccep
 		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &PatchTemplateReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})
@@ -137,7 +141,7 @@ func (a *Client) PatchTemplate(params *PatchTemplateParams) (*PatchTemplateAccep
 /*
 PostTemplate creates template
 */
-func (a *Client) PostTemplate(params *PostTemplateParams) (*PostTemplateCreated, error) {
+func (a *Client) PostTemplate(params *PostTemplateParams, authInfo runtime.ClientAuthInfoWriter) (*PostTemplateCreated, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewPostTemplateParams()
@@ -152,6 +156,7 @@ func (a *Client) PostTemplate(params *PostTemplateParams) (*PostTemplateCreated,
 		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &PostTemplateReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})
@@ -165,7 +170,7 @@ func (a *Client) PostTemplate(params *PostTemplateParams) (*PostTemplateCreated,
 /*
 PutTemplate updates template
 */
-func (a *Client) PutTemplate(params *PutTemplateParams) (*PutTemplateOK, error) {
+func (a *Client) PutTemplate(params *PutTemplateParams, authInfo runtime.ClientAuthInfoWriter) (*PutTemplateOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewPutTemplateParams()
@@ -180,6 +185,7 @@ func (a *Client) PutTemplate(params *PutTemplateParams) (*PutTemplateOK, error) 
 		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &PutTemplateReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})
@@ -193,7 +199,7 @@ func (a *Client) PutTemplate(params *PutTemplateParams) (*PutTemplateOK, error) 
 /*
 ReplaceTemplate replaces template
 */
-func (a *Client) ReplaceTemplate(params *ReplaceTemplateParams) (*ReplaceTemplateCreated, *ReplaceTemplateAccepted, error) {
+func (a *Client) ReplaceTemplate(params *ReplaceTemplateParams, authInfo runtime.ClientAuthInfoWriter) (*ReplaceTemplateCreated, *ReplaceTemplateAccepted, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewReplaceTemplateParams()
@@ -208,6 +214,7 @@ func (a *Client) ReplaceTemplate(params *ReplaceTemplateParams) (*ReplaceTemplat
 		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &ReplaceTemplateReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})

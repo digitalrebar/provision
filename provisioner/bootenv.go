@@ -101,7 +101,7 @@ func NewBootenv(name string) *BootEnv {
 	return &BootEnv{models.BootenvInput{Name: name}, nil, nil}
 }
 
-func BootenvDelete(params bootenvs.DeleteBootenvParams) middleware.Responder {
+func BootenvDelete(params bootenvs.DeleteBootenvParams, p *models.Principal) middleware.Responder {
 	code, err := deleteThing(NewBootenv(params.Name))
 	if err != nil {
 		r := &models.Result{Code: int64(code), Messages: []string{err.Message}}
@@ -110,7 +110,7 @@ func BootenvDelete(params bootenvs.DeleteBootenvParams) middleware.Responder {
 	return bootenvs.NewDeleteBootenvNoContent()
 }
 
-func BootenvGet(params bootenvs.GetBootenvParams) middleware.Responder {
+func BootenvGet(params bootenvs.GetBootenvParams, p *models.Principal) middleware.Responder {
 	item, err := getThing(NewBootenv(params.Name))
 	if err != nil {
 		r := &models.Result{Code: http.StatusNotFound, Messages: []string{err.Message}}
@@ -124,7 +124,7 @@ func BootenvGet(params bootenvs.GetBootenvParams) middleware.Responder {
 	return bootenvs.NewGetBootenvOK().WithPayload(&original)
 }
 
-func BootenvList(params bootenvs.ListBootenvsParams) middleware.Responder {
+func BootenvList(params bootenvs.ListBootenvsParams, p *models.Principal) middleware.Responder {
 	allthem, err := listThings(&BootEnv{})
 	if err != nil {
 		r := &models.Result{Code: http.StatusInternalServerError, Messages: []string{err.Message}}
@@ -140,7 +140,7 @@ func BootenvList(params bootenvs.ListBootenvsParams) middleware.Responder {
 	return bootenvs.NewListBootenvsOK().WithPayload(data)
 }
 
-func BootenvPost(params bootenvs.PostBootenvParams) middleware.Responder {
+func BootenvPost(params bootenvs.PostBootenvParams, p *models.Principal) middleware.Responder {
 	item, code, err := createThing(CastBootenv(params.Body))
 	if err != nil {
 		r := &models.Result{Code: int64(code), Messages: []string{err.Message}}
@@ -154,7 +154,7 @@ func BootenvPost(params bootenvs.PostBootenvParams) middleware.Responder {
 	return bootenvs.NewPostBootenvCreated().WithPayload(&original)
 }
 
-func BootenvPatch(params bootenvs.PatchBootenvParams) middleware.Responder {
+func BootenvPatch(params bootenvs.PatchBootenvParams, p *models.Principal) middleware.Responder {
 	newThing := NewBootenv(params.Name)
 	patch, _ := json.Marshal(params.Body)
 	item, code, err := updateThing(newThing, patch)
@@ -171,7 +171,7 @@ func BootenvPatch(params bootenvs.PatchBootenvParams) middleware.Responder {
 	return bootenvs.NewPatchBootenvAccepted().WithPayload(&original)
 }
 
-func BootenvPut(params bootenvs.PutBootenvParams) middleware.Responder {
+func BootenvPut(params bootenvs.PutBootenvParams, p *models.Principal) middleware.Responder {
 	item, code, err := putThing(CastBootenv(params.Body))
 	if err != nil {
 		r := &models.Result{Code: int64(code), Messages: []string{err.Message}}

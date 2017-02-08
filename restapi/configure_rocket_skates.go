@@ -12,6 +12,7 @@ import (
 	swag "github.com/go-openapi/swag"
 	graceful "github.com/tylerb/graceful"
 
+	"github.com/rackn/rocket-skates/models"
 	provisioner "github.com/rackn/rocket-skates/provisioner"
 	"github.com/rackn/rocket-skates/restapi/operations"
 	"github.com/rackn/rocket-skates/restapi/operations/bootenvs"
@@ -47,6 +48,36 @@ func configureAPI(api *operations.RocketSkatesAPI) http.Handler {
 	api.BinConsumer = runtime.ByteStreamConsumer()
 	api.JSONProducer = runtime.JSONProducer()
 	api.BinProducer = runtime.ByteStreamProducer()
+
+	// RebarAuth registers a function that takes username and password and returns a principal
+	// it performs authentication with basic auth
+	api.RebarAuth = func(u, p string) (*models.Principal, error) {
+		if u == "rebar" && p == "rebar1" {
+			prin := models.Principal(u)
+			return &prin, nil
+		}
+		return nil, errors.New(http.StatusUnauthorized, "Need a valid user/password")
+	}
+
+	// AuthorizationAuth registers a function that takes a token and returns a principal
+	// it performs authentication based on an api key Authorization provided in the header
+	api.AuthorizationAuth = func(token string) (*models.Principal, error) {
+		if token == "99887766" {
+			prin := models.Principal(token)
+			return &prin, nil
+		}
+		return nil, errors.New(http.StatusUnauthorized, "Need a valid auth token")
+	}
+
+	// AuthTokenAuth registers a function that takes a token and returns a principal
+	// it performs authentication based on an api key auth_token provided in the query
+	api.AuthTokenAuth = func(token string) (*models.Principal, error) {
+		if token == "99887766" {
+			prin := models.Principal(token)
+			return &prin, nil
+		}
+		return nil, errors.New(http.StatusUnauthorized, "Need a valid auth token")
+	}
 
 	api.BootenvsListBootenvsHandler = bootenvs.ListBootenvsHandlerFunc(provisioner.BootenvList)
 	api.BootenvsPostBootenvHandler = bootenvs.PostBootenvHandlerFunc(provisioner.BootenvPost)
