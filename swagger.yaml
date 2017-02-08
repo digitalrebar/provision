@@ -12,6 +12,14 @@ consumes:
 produces:
   - application/json
 securityDefinitions:
+  Authorization:
+    name: Authorization
+    type: apiKey
+    in: header
+  auth_token:
+    name: auth_token
+    type: apiKey
+    in: query
   rebar:
     type: basic
 paths:
