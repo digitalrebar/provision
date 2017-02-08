@@ -1,0 +1,992 @@
+swagger: '2.0'
+info:
+  version: v3.0
+  title: rocket-skates
+  description: Protocol for Bare Metal Provider
+host: 'localhost:8092'
+basePath: /api/v3
+schemes:
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+securityDefinitions:
+  rebar:
+    type: basic
+paths:
+  /files:
+    get:
+      operationId: list-files
+      summary: List Files
+      tags:
+        - Files
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              type: string
+        '401':
+          $ref: '#/responses/trait:commonGetResponses:401'
+        '404':
+          $ref: '#/responses/trait:commonGetResponses:404'
+        '500':
+          $ref: '#/responses/trait:commonGetResponses:500'
+  '/files/{path}':
+    parameters:
+      - name: path
+        in: path
+        required: true
+        type: string
+    post:
+      operationId: post-file
+      summary: Create File
+      tags:
+        - Files
+      consumes:
+        - application/octet-stream
+      parameters:
+        - name: body
+          in: body
+          schema:
+            format: binary
+      responses:
+        '201':
+          description: ''
+          schema:
+            type: object
+            properties:
+              Name:
+                type: string
+              Size:
+                type: integer
+        '400':
+          description: ''
+          schema:
+            $ref: '#/definitions/result'
+        '409':
+          description: ''
+          schema:
+            $ref: '#/definitions/result'
+        '507':
+          description: ''
+          schema:
+            $ref: '#/definitions/result'
+    get:
+      operationId: get-file
+      summary: Get File
+      tags:
+        - Files
+      produces:
+        - application/octet-stream
+      responses:
+        '200':
+          description: ''
+          schema:
+            format: binary
+        '401':
+          $ref: '#/responses/trait:commonGetResponses:401'
+        '404':
+          $ref: '#/responses/trait:commonGetResponses:404'
+        '500':
+          $ref: '#/responses/trait:commonGetResponses:500'
+    delete:
+      operationId: delete-file
+      summary: Delete File
+      tags:
+        - Files
+      responses:
+        '204':
+          description: ''
+        '403':
+          description: ''
+          schema:
+            $ref: '#/definitions/result'
+        '404':
+          $ref: '#/responses/trait:commonDeleteResponses:404'
+        '409':
+          $ref: '#/responses/trait:commonDeleteResponses:409'
+        '500':
+          $ref: '#/responses/trait:commonDeleteResponses:500'
+  /bootenvs:
+    get:
+      operationId: list-bootenvs
+      summary: List Bootenvs
+      tags:
+        - Bootenvs
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/bootenv-input'
+        '401':
+          $ref: '#/responses/trait:commonGetResponses:401'
+        '404':
+          $ref: '#/responses/trait:commonGetResponses:404'
+        '500':
+          $ref: '#/responses/trait:commonGetResponses:500'
+  /bootenv:
+    post:
+      operationId: post-bootenv
+      summary: Create Bootenv
+      tags:
+        - Bootenvs
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/bootenv-input'
+            example:
+              Available: false
+              BootParams: ''
+              Errors:
+                - 'bootenv: windows-2012r2-install: missing kernel wimboot (/tftpboot/windows-2012r2/install/wimboot)'
+                - 'bootenv: windows-2012r2-install: missing initrd boot/bcd (/tftpboot/windows-2012r2/install/boot/bcd)'
+                - 'bootenv: windows-2012r2-install: missing initrd boot/boot.sdi (/tftpboot/windows-2012r2/install/boot/boot.sdi)'
+                - 'bootenv: windows-2012r2-install: missing initrd rebar-winpe.wim (/tftpboot/windows-2012r2/install/rebar-winpe.wim)'
+              Initrds:
+                - boot/bcd
+                - boot/boot.sdi
+                - rebar-winpe.wim
+              Kernel: wimboot
+              Name: windows-2012r2-install
+              OS:
+                Codename: ''
+                Family: ''
+                Files: null
+                IsoFile: rebar-win2012r2.iso
+                IsoSha256: 8ce9f9b23aaf397913d927c7fda3343d411f6846ef7b94f29b51108e95c46f6e
+                IsoUrl: ''
+                Name: windows-2012r2
+                Version: ''
+              RequiredParams:
+                - logging_servers
+                - ntp_servers
+                - operating-system-disk
+                - provisioner-default-password-hash
+                - proxy-servers
+                - use-proxy
+                - rebar-access_keys
+                - rebar-machine_key
+                - operating-system-license-key
+                - operating-system-install-flavor
+              Templates:
+                - Name: pxelinux
+                  Path: 'pxelinux.cfg/{{.Machine.HexAddress}}'
+                  UUID: windows.pxelinux.tmpl
+                - Name: ipxe
+                  Path: '{{.Machine.Address}}.ipxe'
+                  UUID: windows.ipxe.tmpl
+                - Name: start-install
+                  Path: '{{.Machine.Path}}/stage1.ps1'
+                  UUID: stage1.cmd.tmpl
+                - Name: unattend.xml
+                  Path: '{{.Machine.Path}}/unattend.xml'
+                  UUID: 2012r2-unattend.xml.tmpl
+              TenantId: 1
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/bootenv-input'
+        '401':
+          $ref: '#/responses/trait:commonPostResponses:401'
+        '409':
+          $ref: '#/responses/trait:commonPostResponses:409'
+        '500':
+          $ref: '#/responses/trait:commonPostResponses:500'
+  '/bootenvs/{name}':
+    parameters:
+      - name: name
+        in: path
+        required: true
+        type: string
+    get:
+      operationId: get-bootenv
+      summary: Get Bootenv
+      tags:
+        - Bootenvs
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/bootenv-input'
+        '401':
+          $ref: '#/responses/trait:commonGetResponses:401'
+        '404':
+          $ref: '#/responses/trait:commonGetResponses:404'
+        '500':
+          $ref: '#/responses/trait:commonGetResponses:500'
+    patch:
+      operationId: patch-bootenv
+      summary: Patch Bootenv
+      tags:
+        - Bootenvs
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/patchinput'
+      responses:
+        '202':
+          description: ''
+          schema:
+            $ref: '#/definitions/bootenv-input'
+        '401':
+          $ref: '#/responses/trait:commonPatchResponses:401'
+        '404':
+          $ref: '#/responses/trait:commonPatchResponses:404'
+        '417':
+          $ref: '#/responses/trait:commonPatchResponses:417'
+        '500':
+          $ref: '#/responses/trait:commonPatchResponses:500'
+    put:
+      operationId: put-bootenv
+      summary: Update Bootenv
+      tags:
+        - Bootenvs
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/bootenv-input'
+            example:
+              Available: false
+              BootParams: ''
+              Errors:
+                - 'bootenv: windows-2012r2-install: missing kernel wimboot (/tftpboot/windows-2012r2/install/wimboot)'
+                - 'bootenv: windows-2012r2-install: missing initrd boot/bcd (/tftpboot/windows-2012r2/install/boot/bcd)'
+                - 'bootenv: windows-2012r2-install: missing initrd boot/boot.sdi (/tftpboot/windows-2012r2/install/boot/boot.sdi)'
+                - 'bootenv: windows-2012r2-install: missing initrd rebar-winpe.wim (/tftpboot/windows-2012r2/install/rebar-winpe.wim)'
+              Initrds:
+                - boot/bcd
+                - boot/boot.sdi
+                - rebar-winpe.wim
+              Kernel: wimboot
+              Name: windows-2012r2-install
+              OS:
+                Codename: ''
+                Family: ''
+                Files: null
+                IsoFile: rebar-win2012r2.iso
+                IsoSha256: 8ce9f9b23aaf397913d927c7fda3343d411f6846ef7b94f29b51108e95c46f6e
+                IsoUrl: ''
+                Name: windows-2012r2
+                Version: ''
+              RequiredParams:
+                - logging_servers
+                - ntp_servers
+                - operating-system-disk
+                - provisioner-default-password-hash
+                - proxy-servers
+                - use-proxy
+                - rebar-access_keys
+                - rebar-machine_key
+                - operating-system-license-key
+                - operating-system-install-flavor
+              Templates:
+                - Name: pxelinux
+                  Path: 'pxelinux.cfg/{{.Machine.HexAddress}}'
+                  UUID: windows.pxelinux.tmpl
+                - Name: ipxe
+                  Path: '{{.Machine.Address}}.ipxe'
+                  UUID: windows.ipxe.tmpl
+                - Name: start-install
+                  Path: '{{.Machine.Path}}/stage1.ps1'
+                  UUID: stage1.cmd.tmpl
+                - Name: unattend.xml
+                  Path: '{{.Machine.Path}}/unattend.xml'
+                  UUID: 2012r2-unattend.xml.tmpl
+              TenantId: 1
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/bootenv-input'
+        '401':
+          $ref: '#/responses/trait:commonPutResponses:401'
+        '404':
+          $ref: '#/responses/trait:commonPutResponses:404'
+        '500':
+          $ref: '#/responses/trait:commonPutResponses:500'
+    delete:
+      operationId: delete-bootenv
+      summary: Delete Bootenv
+      tags:
+        - Bootenvs
+      responses:
+        '204':
+          description: ''
+        '404':
+          $ref: '#/responses/trait:commonDeleteResponses:404'
+        '409':
+          $ref: '#/responses/trait:commonDeleteResponses:409'
+        '500':
+          $ref: '#/responses/trait:commonDeleteResponses:500'
+  /isos:
+    get:
+      operationId: list-isos
+      summary: List Isos
+      tags:
+        - Isos
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              type: string
+        '401':
+          $ref: '#/responses/trait:commonGetResponses:401'
+        '404':
+          $ref: '#/responses/trait:commonGetResponses:404'
+        '500':
+          $ref: '#/responses/trait:commonGetResponses:500'
+  '/isos/{name}':
+    parameters:
+      - name: name
+        in: path
+        required: true
+        type: string
+    post:
+      operationId: post-iso
+      summary: Create Iso
+      tags:
+        - Isos
+      consumes:
+        - application/octet-stream
+      parameters:
+        - name: body
+          in: body
+          schema:
+            format: binary
+      responses:
+        '201':
+          description: ''
+          schema:
+            type: object
+            properties:
+              Size:
+                type: integer
+              Name:
+                type: string
+        '400':
+          description: ''
+          schema:
+            $ref: '#/definitions/result'
+        '409':
+          description: ''
+          schema:
+            $ref: '#/definitions/result'
+        '507':
+          description: ''
+          schema:
+            $ref: '#/definitions/result'
+    get:
+      operationId: get-iso
+      summary: Get Iso
+      tags:
+        - Isos
+      produces:
+        - application/octet-stream
+      responses:
+        '200':
+          description: ''
+          schema:
+            format: binary
+        '401':
+          $ref: '#/responses/trait:commonGetResponses:401'
+        '404':
+          $ref: '#/responses/trait:commonGetResponses:404'
+        '500':
+          $ref: '#/responses/trait:commonGetResponses:500'
+    delete:
+      operationId: delete-iso
+      summary: Delete Iso
+      tags:
+        - Isos
+      responses:
+        '204':
+          description: ''
+        '404':
+          $ref: '#/responses/trait:commonDeleteResponses:404'
+        '409':
+          $ref: '#/responses/trait:commonDeleteResponses:409'
+        '500':
+          $ref: '#/responses/trait:commonDeleteResponses:500'
+  /templates:
+    get:
+      operationId: list-templates
+      summary: List Templates
+      tags:
+        - Templates
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/template-output'
+        '401':
+          $ref: '#/responses/trait:commonGetResponses:401'
+        '404':
+          $ref: '#/responses/trait:commonGetResponses:404'
+        '500':
+          $ref: '#/responses/trait:commonGetResponses:500'
+    post:
+      operationId: post-template
+      summary: Create Template
+      tags:
+        - Templates
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/template-input'
+            example:
+              Contents: |
+                net use Q: "\\{{.ProvisionerAddress}}\tftpboot"
+                Q:\{{.Env.OS.Name}}\install\setup.exe /unattend:Q:\machines\{{.Machine.UUID}}\unattend.xml
+              TenantId: 1
+              UUID: stage1.ps1.tmpl
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/template-output'
+        '401':
+          $ref: '#/responses/trait:commonPostResponses:401'
+        '409':
+          $ref: '#/responses/trait:commonPostResponses:409'
+        '500':
+          $ref: '#/responses/trait:commonPostResponses:500'
+  '/templates/{uuid}':
+    parameters:
+      - name: uuid
+        in: path
+        required: true
+        type: string
+    post:
+      operationId: replace-template
+      summary: Replace Template
+      tags:
+        - Templates
+      consumes:
+        - application/octet-stream
+      parameters:
+        - name: body
+          in: body
+          schema:
+            format: binary
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/template-output'
+        '202':
+          description: ''
+          schema:
+            $ref: '#/definitions/template-output'
+        '401':
+          $ref: '#/responses/trait:commonPostResponses:401'
+        '409':
+          $ref: '#/responses/trait:commonPostResponses:409'
+        '417':
+          description: ''
+          schema:
+            $ref: '#/definitions/result'
+        '500':
+          $ref: '#/responses/trait:commonPostResponses:500'
+    get:
+      operationId: get-template
+      summary: Get Template
+      tags:
+        - Templates
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/template-output'
+        '401':
+          $ref: '#/responses/trait:commonGetResponses:401'
+        '404':
+          $ref: '#/responses/trait:commonGetResponses:404'
+        '500':
+          $ref: '#/responses/trait:commonGetResponses:500'
+    put:
+      operationId: put-template
+      summary: Update Template
+      tags:
+        - Templates
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/template-input'
+            example:
+              Contents: |
+                net use Q: "\\{{.ProvisionerAddress}}\tftpboot"
+                Q:\{{.Env.OS.Name}}\install\setup.exe /unattend:Q:\machines\{{.Machine.UUID}}\unattend.xml
+              TenantId: 1
+              UUID: stage1.ps1.tmpl
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/template-output'
+        '401':
+          $ref: '#/responses/trait:commonGetResponses:401'
+        '404':
+          $ref: '#/responses/trait:commonGetResponses:404'
+        '500':
+          $ref: '#/responses/trait:commonGetResponses:500'
+    delete:
+      operationId: delete-template
+      summary: Delete Template
+      tags:
+        - Templates
+      responses:
+        '204':
+          description: ''
+        '404':
+          $ref: '#/responses/trait:commonDeleteResponses:404'
+        '409':
+          $ref: '#/responses/trait:commonDeleteResponses:409'
+        '500':
+          $ref: '#/responses/trait:commonDeleteResponses:500'
+  '/template/{uuid}':
+    parameters:
+      - name: uuid
+        in: path
+        required: true
+        type: string
+    patch:
+      operationId: patch-template
+      summary: Patch Template
+      tags:
+        - Templates
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/patchinput'
+      responses:
+        '202':
+          description: ''
+          schema:
+            $ref: '#/definitions/template-output'
+        '401':
+          $ref: '#/responses/trait:commonPatchResponses:401'
+        '404':
+          $ref: '#/responses/trait:commonPatchResponses:404'
+        '417':
+          $ref: '#/responses/trait:commonPatchResponses:417'
+        '500':
+          $ref: '#/responses/trait:commonPatchResponses:500'
+  /machines:
+    get:
+      operationId: list-machines
+      summary: List Machines
+      tags:
+        - Machines
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: object
+            properties:
+              Result:
+                $ref: '#/definitions/result'
+              Data:
+                type: array
+                items:
+                  $ref: '#/definitions/machine-output'
+        '401':
+          $ref: '#/responses/trait:commonGetResponses:401'
+        '404':
+          $ref: '#/responses/trait:commonGetResponses:404'
+        '500':
+          $ref: '#/responses/trait:commonGetResponses:500'
+    post:
+      operationId: post-machine
+      summary: Create Machine
+      tags:
+        - Machines
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/machine-input'
+            example:
+              Address: 192.168.124.84
+              BootEnv: local
+              Name: d52-54-3d-49-00-00.local.neode.org
+              Params: {}
+              TenantId: 1
+              Uuid: 0f2a8f98-af51-415e-ad4f-cfea69adaed3
+      responses:
+        '201':
+          description: ''
+          schema:
+            type: object
+            properties:
+              Result:
+                $ref: '#/definitions/result'
+              Data:
+                $ref: '#/definitions/machine-output'
+        '401':
+          $ref: '#/responses/trait:commonPostResponses:401'
+        '409':
+          $ref: '#/responses/trait:commonPostResponses:409'
+        '500':
+          $ref: '#/responses/trait:commonPostResponses:500'
+  '/machines/{uuid}':
+    parameters:
+      - name: uuid
+        in: path
+        required: true
+        type: string
+    get:
+      operationId: get-machine
+      summary: Get Machine
+      tags:
+        - Machines
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: object
+            properties:
+              Data:
+                $ref: '#/definitions/machine-output'
+              Result:
+                $ref: '#/definitions/result'
+        '401':
+          $ref: '#/responses/trait:commonGetResponses:401'
+        '404':
+          $ref: '#/responses/trait:commonGetResponses:404'
+        '500':
+          $ref: '#/responses/trait:commonGetResponses:500'
+    put:
+      operationId: put-machine
+      summary: Update Machine
+      tags:
+        - Machines
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/machine-input'
+            example:
+              Address: 192.168.124.84
+              BootEnv: local
+              Name: d52-54-3d-49-00-00.local.neode.org
+              Params: {}
+              TenantId: 1
+              Uuid: 0f2a8f98-af51-415e-ad4f-cfea69adaed3
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: object
+            properties:
+              Result:
+                $ref: '#/definitions/result'
+              Data:
+                $ref: '#/definitions/machine-output'
+        '401':
+          $ref: '#/responses/trait:commonPutResponses:401'
+        '404':
+          $ref: '#/responses/trait:commonPutResponses:404'
+        '500':
+          $ref: '#/responses/trait:commonPutResponses:500'
+    patch:
+      operationId: patch-machine
+      summary: Patch Machine
+      tags:
+        - Machines
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/patchinput'
+      responses:
+        '202':
+          description: ''
+          schema:
+            type: object
+            properties:
+              Result:
+                $ref: '#/definitions/result'
+              Data:
+                $ref: '#/definitions/machine-output'
+        '401':
+          $ref: '#/responses/trait:commonPatchResponses:401'
+        '404':
+          $ref: '#/responses/trait:commonPatchResponses:404'
+        '417':
+          $ref: '#/responses/trait:commonPatchResponses:417'
+        '500':
+          $ref: '#/responses/trait:commonPatchResponses:500'
+    delete:
+      operationId: delete-machine
+      summary: Delete Machine
+      tags:
+        - Machines
+      responses:
+        '204':
+          description: ''
+        '404':
+          $ref: '#/responses/trait:commonDeleteResponses:404'
+        '409':
+          $ref: '#/responses/trait:commonDeleteResponses:409'
+        '500':
+          $ref: '#/responses/trait:commonDeleteResponses:500'
+responses:
+  'trait:commonGetResponses:401':
+    description: ''
+    schema:
+      $ref: '#/definitions/result'
+  'trait:commonGetResponses:404':
+    description: ''
+    schema:
+      $ref: '#/definitions/result'
+  'trait:commonGetResponses:500':
+    description: ''
+    schema:
+      $ref: '#/definitions/result'
+  'trait:commonDeleteResponses:404':
+    description: ''
+    schema:
+      $ref: '#/definitions/result'
+  'trait:commonDeleteResponses:409':
+    description: ''
+    schema:
+      $ref: '#/definitions/result'
+  'trait:commonDeleteResponses:500':
+    description: ''
+    schema:
+      $ref: '#/definitions/result'
+  'trait:commonPostResponses:401':
+    description: ''
+    schema:
+      $ref: '#/definitions/result'
+  'trait:commonPostResponses:409':
+    description: ''
+    schema:
+      $ref: '#/definitions/result'
+  'trait:commonPostResponses:500':
+    description: ''
+    schema:
+      $ref: '#/definitions/result'
+  'trait:commonPutResponses:401':
+    description: ''
+    schema:
+      $ref: '#/definitions/result'
+  'trait:commonPutResponses:404':
+    description: ''
+    schema:
+      $ref: '#/definitions/result'
+  'trait:commonPutResponses:500':
+    description: ''
+    schema:
+      $ref: '#/definitions/result'
+  'trait:commonPatchResponses:401':
+    description: ''
+    schema:
+      $ref: '#/definitions/result'
+  'trait:commonPatchResponses:404':
+    description: ''
+    schema:
+      $ref: '#/definitions/result'
+  'trait:commonPatchResponses:417':
+    description: ''
+    schema:
+      $ref: '#/definitions/result'
+  'trait:commonPatchResponses:500':
+    description: ''
+    schema:
+      $ref: '#/definitions/result'
+definitions:
+  machine-input:
+    title: Machine Input
+    type: object
+    properties:
+      Address:
+        type: string
+        format: ipv4
+      BootEnv:
+        type: string
+      Name:
+        type: string
+        format: hostname
+      Params:
+        $ref: '#/definitions/parameterobjectmap'
+      TenantId:
+        type: integer
+      Uuid:
+        type: string
+        format: uuid
+    example:
+      Address: 192.168.124.84
+      BootEnv: local
+      Name: d52-54-3d-49-00-00.local.neode.org
+      Params: {}
+      TenantId: 1
+      Uuid: 0f2a8f98-af51-415e-ad4f-cfea69adaed3
+  machine-output:
+    title: Machine Output
+    allOf:
+      - $ref: '#/definitions/machine-input'
+  parameterobjectmap:
+    title: ParameterObjectMap
+    AdditionalProperties:
+      type: object
+  result:
+    title: Result
+    type: object
+    properties:
+      Code:
+        type: integer
+      Messages:
+        type: array
+        items:
+          type: string
+  template-input:
+    title: Template Input
+    type: object
+    properties:
+      Contents:
+        type: string
+      UUID:
+        type: string
+    example:
+      Contents: |
+        net use Q: "\\{{.ProvisionerAddress}}\tftpboot"
+        Q:\{{.Env.OS.Name}}\install\setup.exe /unattend:Q:\machines\{{.Machine.UUID}}\unattend.xml
+      TenantId: 1
+      UUID: stage1.ps1.tmpl
+  patchinput:
+    title: PatchInput
+    type: array
+    items:
+      $ref: '#/definitions/patchline'
+  patchline:
+    title: PatchLine
+    type: object
+    properties:
+      Op:
+        type: string
+      Path:
+        type: string
+      From:
+        type: string
+      Value: {}
+  template-output:
+    title: Template Output
+    allOf:
+      - $ref: '#/definitions/template-input'
+  bootenv-input:
+    title: Bootenv Input
+    type: object
+    properties:
+      Available:
+        type: boolean
+      BootParams:
+        type: string
+      Errors:
+        type: array
+        items:
+          type: string
+      Initrds:
+        type: array
+        items:
+          type: string
+      Kernel:
+        type: string
+      Name:
+        type: string
+      OS:
+        type: object
+        properties:
+          Codename:
+            type: string
+          Family:
+            type: string
+          IsoFile:
+            type: string
+          IsoSha256:
+            type: string
+          IsoUrl:
+            type: string
+          Name:
+            type: string
+          Version:
+            type: string
+      RequiredParams:
+        type: array
+        items:
+          type: string
+      Templates:
+        type: array
+        items:
+          type: object
+          properties:
+            Name:
+              type: string
+            Path:
+              type: string
+            UUID:
+              type: string
+    example:
+      Available: false
+      BootParams: ''
+      Errors:
+        - 'bootenv: windows-2012r2-install: missing kernel wimboot (/tftpboot/windows-2012r2/install/wimboot)'
+        - 'bootenv: windows-2012r2-install: missing initrd boot/bcd (/tftpboot/windows-2012r2/install/boot/bcd)'
+        - 'bootenv: windows-2012r2-install: missing initrd boot/boot.sdi (/tftpboot/windows-2012r2/install/boot/boot.sdi)'
+        - 'bootenv: windows-2012r2-install: missing initrd rebar-winpe.wim (/tftpboot/windows-2012r2/install/rebar-winpe.wim)'
+      Initrds:
+        - boot/bcd
+        - boot/boot.sdi
+        - rebar-winpe.wim
+      Kernel: wimboot
+      Name: windows-2012r2-install
+      OS:
+        Codename: ''
+        Family: ''
+        Files: []
+        IsoFile: rebar-win2012r2.iso
+        IsoSha256: 8ce9f9b23aaf397913d927c7fda3343d411f6846ef7b94f29b51108e95c46f6e
+        IsoUrl: ''
+        Name: windows-2012r2
+        Version: ''
+      RequiredParams:
+        - logging_servers
+        - ntp_servers
+        - operating-system-disk
+        - provisioner-default-password-hash
+        - proxy-servers
+        - use-proxy
+        - rebar-access_keys
+        - rebar-machine_key
+        - operating-system-license-key
+        - operating-system-install-flavor
+      Templates:
+        - Name: pxelinux
+          Path: 'pxelinux.cfg/{{.Machine.HexAddress}}'
+          UUID: windows.pxelinux.tmpl
+        - Name: ipxe
+          Path: '{{.Machine.Address}}.ipxe'
+          UUID: windows.ipxe.tmpl
+        - Name: start-install
+          Path: '{{.Machine.Path}}/stage1.ps1'
+          UUID: stage1.cmd.tmpl
+        - Name: unattend.xml
+          Path: '{{.Machine.Path}}/unattend.xml'
+          UUID: 2012r2-unattend.xml.tmpl
+      TenantId: 1
