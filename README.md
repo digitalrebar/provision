@@ -12,6 +12,7 @@ File here:  https://github.com/go-swagger/go-swagger#static-binary
 I'm using version 0.8.0
 
 And this: https://github.com/swagger-api/swagger-ui
+git clone https://github.com/swagger-api/swagger-ui
 
 To edit the swagger.yaml: Use STOPLIGHT
 
