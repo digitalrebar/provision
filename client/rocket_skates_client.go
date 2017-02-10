@@ -11,6 +11,8 @@ import (
 
 	"github.com/rackn/rocket-skates/client/bootenvs"
 	"github.com/rackn/rocket-skates/client/dhcp_leases"
+	"github.com/rackn/rocket-skates/client/dhcp_reservations"
+	"github.com/rackn/rocket-skates/client/dhcp_subnets"
 	"github.com/rackn/rocket-skates/client/files"
 	"github.com/rackn/rocket-skates/client/isos"
 	"github.com/rackn/rocket-skates/client/machines"
@@ -38,6 +40,10 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *RocketSkat
 
 	cli.DhcpLeases = dhcp_leases.New(transport, formats)
 
+	cli.DhcpReservations = dhcp_reservations.New(transport, formats)
+
+	cli.DhcpSubnets = dhcp_subnets.New(transport, formats)
+
 	cli.Files = files.New(transport, formats)
 
 	cli.Isos = isos.New(transport, formats)
@@ -54,6 +60,10 @@ type RocketSkates struct {
 	Bootenvs *bootenvs.Client
 
 	DhcpLeases *dhcp_leases.Client
+
+	DhcpReservations *dhcp_reservations.Client
+
+	DhcpSubnets *dhcp_subnets.Client
 
 	Files *files.Client
 
@@ -73,6 +83,10 @@ func (c *RocketSkates) SetTransport(transport runtime.ClientTransport) {
 	c.Bootenvs.SetTransport(transport)
 
 	c.DhcpLeases.SetTransport(transport)
+
+	c.DhcpReservations.SetTransport(transport)
+
+	c.DhcpSubnets.SetTransport(transport)
 
 	c.Files.SetTransport(transport)
 

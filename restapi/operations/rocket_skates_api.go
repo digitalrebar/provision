@@ -19,6 +19,8 @@ import (
 	"github.com/rackn/rocket-skates/models"
 	"github.com/rackn/rocket-skates/restapi/operations/bootenvs"
 	"github.com/rackn/rocket-skates/restapi/operations/dhcp_leases"
+	"github.com/rackn/rocket-skates/restapi/operations/dhcp_reservations"
+	"github.com/rackn/rocket-skates/restapi/operations/dhcp_subnets"
 	"github.com/rackn/rocket-skates/restapi/operations/files"
 	"github.com/rackn/rocket-skates/restapi/operations/isos"
 	"github.com/rackn/rocket-skates/restapi/operations/machines"
@@ -68,6 +70,26 @@ type RocketSkatesAPI struct {
 	// it performs authentication based on an api key auth_token provided in the query
 	AuthTokenAuth func(string) (*models.Principal, error)
 
+	// DhcpReservationsDELETEDhcpReservationHandler sets the operation handler for the d e l e t e dhcp reservation operation
+	DhcpReservationsDELETEDhcpReservationHandler dhcp_reservations.DELETEDhcpReservationHandler
+	// DhcpSubnetsDELETEDhcpSubnetHandler sets the operation handler for the d e l e t e dhcp subnet operation
+	DhcpSubnetsDELETEDhcpSubnetHandler dhcp_subnets.DELETEDhcpSubnetHandler
+	// DhcpReservationsGETDhcpReservationHandler sets the operation handler for the g e t dhcp reservation operation
+	DhcpReservationsGETDhcpReservationHandler dhcp_reservations.GETDhcpReservationHandler
+	// DhcpSubnetsGETDhcpSubnetHandler sets the operation handler for the g e t dhcp subnet operation
+	DhcpSubnetsGETDhcpSubnetHandler dhcp_subnets.GETDhcpSubnetHandler
+	// DhcpReservationsLISTDhcpReservationsHandler sets the operation handler for the l i s t dhcp reservations operation
+	DhcpReservationsLISTDhcpReservationsHandler dhcp_reservations.LISTDhcpReservationsHandler
+	// DhcpSubnetsLISTDhcpSubnetsHandler sets the operation handler for the l i s t dhcp subnets operation
+	DhcpSubnetsLISTDhcpSubnetsHandler dhcp_subnets.LISTDhcpSubnetsHandler
+	// DhcpReservationsPOSTDhcpReservationHandler sets the operation handler for the p o s t dhcp reservation operation
+	DhcpReservationsPOSTDhcpReservationHandler dhcp_reservations.POSTDhcpReservationHandler
+	// DhcpSubnetsPOSTDhcpSubnetHandler sets the operation handler for the p o s t dhcp subnet operation
+	DhcpSubnetsPOSTDhcpSubnetHandler dhcp_subnets.POSTDhcpSubnetHandler
+	// DhcpReservationsPUTDhcpReservationHandler sets the operation handler for the p u t dhcp reservation operation
+	DhcpReservationsPUTDhcpReservationHandler dhcp_reservations.PUTDhcpReservationHandler
+	// DhcpSubnetsPUTDhcpSubnetHandler sets the operation handler for the p u t dhcp subnet operation
+	DhcpSubnetsPUTDhcpSubnetHandler dhcp_subnets.PUTDhcpSubnetHandler
 	// BootenvsDeleteBootenvHandler sets the operation handler for the delete bootenv operation
 	BootenvsDeleteBootenvHandler bootenvs.DeleteBootenvHandler
 	// DhcpLeasesDeleteDhcpLeaseHandler sets the operation handler for the delete dhcp lease operation
@@ -213,6 +235,46 @@ func (o *RocketSkatesAPI) Validate() error {
 
 	if o.AuthTokenAuth == nil {
 		unregistered = append(unregistered, "AuthTokenAuth")
+	}
+
+	if o.DhcpReservationsDELETEDhcpReservationHandler == nil {
+		unregistered = append(unregistered, "dhcp_reservations.DELETEDhcpReservationHandler")
+	}
+
+	if o.DhcpSubnetsDELETEDhcpSubnetHandler == nil {
+		unregistered = append(unregistered, "dhcp_subnets.DELETEDhcpSubnetHandler")
+	}
+
+	if o.DhcpReservationsGETDhcpReservationHandler == nil {
+		unregistered = append(unregistered, "dhcp_reservations.GETDhcpReservationHandler")
+	}
+
+	if o.DhcpSubnetsGETDhcpSubnetHandler == nil {
+		unregistered = append(unregistered, "dhcp_subnets.GETDhcpSubnetHandler")
+	}
+
+	if o.DhcpReservationsLISTDhcpReservationsHandler == nil {
+		unregistered = append(unregistered, "dhcp_reservations.LISTDhcpReservationsHandler")
+	}
+
+	if o.DhcpSubnetsLISTDhcpSubnetsHandler == nil {
+		unregistered = append(unregistered, "dhcp_subnets.LISTDhcpSubnetsHandler")
+	}
+
+	if o.DhcpReservationsPOSTDhcpReservationHandler == nil {
+		unregistered = append(unregistered, "dhcp_reservations.POSTDhcpReservationHandler")
+	}
+
+	if o.DhcpSubnetsPOSTDhcpSubnetHandler == nil {
+		unregistered = append(unregistered, "dhcp_subnets.POSTDhcpSubnetHandler")
+	}
+
+	if o.DhcpReservationsPUTDhcpReservationHandler == nil {
+		unregistered = append(unregistered, "dhcp_reservations.PUTDhcpReservationHandler")
+	}
+
+	if o.DhcpSubnetsPUTDhcpSubnetHandler == nil {
+		unregistered = append(unregistered, "dhcp_subnets.PUTDhcpSubnetHandler")
 	}
 
 	if o.BootenvsDeleteBootenvHandler == nil {
@@ -452,6 +514,56 @@ func (o *RocketSkatesAPI) initHandlerCache() {
 	if o.handlers == nil {
 		o.handlers = make(map[string]map[string]http.Handler)
 	}
+
+	if o.handlers["DELETE"] == nil {
+		o.handlers[strings.ToUpper("DELETE")] = make(map[string]http.Handler)
+	}
+	o.handlers["DELETE"]["/reservations/{id}"] = dhcp_reservations.NewDELETEDhcpReservation(o.context, o.DhcpReservationsDELETEDhcpReservationHandler)
+
+	if o.handlers["DELETE"] == nil {
+		o.handlers[strings.ToUpper("DELETE")] = make(map[string]http.Handler)
+	}
+	o.handlers["DELETE"]["/subnets/{id}"] = dhcp_subnets.NewDELETEDhcpSubnet(o.context, o.DhcpSubnetsDELETEDhcpSubnetHandler)
+
+	if o.handlers["GET"] == nil {
+		o.handlers[strings.ToUpper("GET")] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/reservations/{id}"] = dhcp_reservations.NewGETDhcpReservation(o.context, o.DhcpReservationsGETDhcpReservationHandler)
+
+	if o.handlers["GET"] == nil {
+		o.handlers[strings.ToUpper("GET")] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/subnets/{id}"] = dhcp_subnets.NewGETDhcpSubnet(o.context, o.DhcpSubnetsGETDhcpSubnetHandler)
+
+	if o.handlers["GET"] == nil {
+		o.handlers[strings.ToUpper("GET")] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/reservations"] = dhcp_reservations.NewLISTDhcpReservations(o.context, o.DhcpReservationsLISTDhcpReservationsHandler)
+
+	if o.handlers["GET"] == nil {
+		o.handlers[strings.ToUpper("GET")] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/subnets"] = dhcp_subnets.NewLISTDhcpSubnets(o.context, o.DhcpSubnetsLISTDhcpSubnetsHandler)
+
+	if o.handlers["POST"] == nil {
+		o.handlers[strings.ToUpper("POST")] = make(map[string]http.Handler)
+	}
+	o.handlers["POST"]["/reservations"] = dhcp_reservations.NewPOSTDhcpReservation(o.context, o.DhcpReservationsPOSTDhcpReservationHandler)
+
+	if o.handlers["POST"] == nil {
+		o.handlers[strings.ToUpper("POST")] = make(map[string]http.Handler)
+	}
+	o.handlers["POST"]["/subnets"] = dhcp_subnets.NewPOSTDhcpSubnet(o.context, o.DhcpSubnetsPOSTDhcpSubnetHandler)
+
+	if o.handlers["PUT"] == nil {
+		o.handlers[strings.ToUpper("PUT")] = make(map[string]http.Handler)
+	}
+	o.handlers["PUT"]["/reservations/{id}"] = dhcp_reservations.NewPUTDhcpReservation(o.context, o.DhcpReservationsPUTDhcpReservationHandler)
+
+	if o.handlers["PUT"] == nil {
+		o.handlers[strings.ToUpper("PUT")] = make(map[string]http.Handler)
+	}
+	o.handlers["PUT"]["/subnets/{id}"] = dhcp_subnets.NewPUTDhcpSubnet(o.context, o.DhcpSubnetsPUTDhcpSubnetHandler)
 
 	if o.handlers["DELETE"] == nil {
 		o.handlers[strings.ToUpper("DELETE")] = make(map[string]http.Handler)

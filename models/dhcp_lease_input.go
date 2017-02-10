@@ -5,7 +5,6 @@ package models
 
 import (
 	strfmt "github.com/go-openapi/strfmt"
-	"github.com/go-openapi/swag"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/validate"
@@ -27,14 +26,8 @@ type DhcpLeaseInput struct {
 	// Required: true
 	// Max Length: 17
 	// Min Length: 17
-	// Pattern: ^(([0-9a-f]){2}):){5}[0-9a-f]{2}$
+	// Pattern: ^([0-9a-f]{2}):{5}[0-9a-f]{2}$
 	MacAddress *string `json:"MacAddress"`
-
-	// next server
-	NextServer strfmt.IPv4 `json:"NextServer,omitempty"`
-
-	// options
-	Options []*Dhcpoption `json:"Options"`
 
 	// valid
 	// Required: true
@@ -56,11 +49,6 @@ func (m *DhcpLeaseInput) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateMacAddress(formats); err != nil {
-		// prop
-		res = append(res, err)
-	}
-
-	if err := m.validateOptions(formats); err != nil {
 		// prop
 		res = append(res, err)
 	}
@@ -108,32 +96,8 @@ func (m *DhcpLeaseInput) validateMacAddress(formats strfmt.Registry) error {
 		return err
 	}
 
-	if err := validate.Pattern("MacAddress", "body", string(*m.MacAddress), `^(([0-9a-f]){2}):){5}[0-9a-f]{2}$`); err != nil {
+	if err := validate.Pattern("MacAddress", "body", string(*m.MacAddress), `^([0-9a-f]{2}):{5}[0-9a-f]{2}$`); err != nil {
 		return err
-	}
-
-	return nil
-}
-
-func (m *DhcpLeaseInput) validateOptions(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.Options) { // not required
-		return nil
-	}
-
-	for i := 0; i < len(m.Options); i++ {
-
-		if swag.IsZero(m.Options[i]) { // not required
-			continue
-		}
-
-		if m.Options[i] != nil {
-
-			if err := m.Options[i].Validate(formats); err != nil {
-				return err
-			}
-		}
-
 	}
 
 	return nil
