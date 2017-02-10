@@ -31,7 +31,7 @@ index 14232f9..e4358e9 100644
 
 *TODO* Make swagger-ui dir a config option.
 
-## Swagger.yaml
+## Swagger.json
 
 We are using an API specification file.  This files real content for the moment lives in StopLight.  The tool also for collobartive editting of the file, testing, and other things.  We will edit there and store the updated copy in github.  StopLight has a git commit style of tracking changes as well.
 
@@ -44,7 +44,7 @@ Make edits in the app and export the file to swagger.yml in the top directory.
 ## Generating the Server
 
 To generate code:
-* swagger generate server -P models.Principal -f swagger.yaml 
+* swagger generate server -P models.Principal -f swagger.json 
 
 This generates the following directories:
 
@@ -64,7 +64,7 @@ The swagger command has more things, but this is enough to start.
 ## Generating the Client
 
 To generate the code:
-* swagger generate client -P models.Principal -f swagger.yaml 
+* swagger generate client -P models.Principal -f swagger.json 
 
 This generates the following directories:
 
