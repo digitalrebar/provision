@@ -10,37 +10,37 @@ import (
 	"github.com/rackn/rocket-skates/models"
 )
 
-// GETDhcpLeaseHandlerFunc turns a function with the right signature into a g e t dhcp lease handler
-type GETDhcpLeaseHandlerFunc func(GETDhcpLeaseParams, *models.Principal) middleware.Responder
+// GetDhcpLeaseHandlerFunc turns a function with the right signature into a get dhcp lease handler
+type GetDhcpLeaseHandlerFunc func(GetDhcpLeaseParams, *models.Principal) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn GETDhcpLeaseHandlerFunc) Handle(params GETDhcpLeaseParams, principal *models.Principal) middleware.Responder {
+func (fn GetDhcpLeaseHandlerFunc) Handle(params GetDhcpLeaseParams, principal *models.Principal) middleware.Responder {
 	return fn(params, principal)
 }
 
-// GETDhcpLeaseHandler interface for that can handle valid g e t dhcp lease params
-type GETDhcpLeaseHandler interface {
-	Handle(GETDhcpLeaseParams, *models.Principal) middleware.Responder
+// GetDhcpLeaseHandler interface for that can handle valid get dhcp lease params
+type GetDhcpLeaseHandler interface {
+	Handle(GetDhcpLeaseParams, *models.Principal) middleware.Responder
 }
 
-// NewGETDhcpLease creates a new http.Handler for the g e t dhcp lease operation
-func NewGETDhcpLease(ctx *middleware.Context, handler GETDhcpLeaseHandler) *GETDhcpLease {
-	return &GETDhcpLease{Context: ctx, Handler: handler}
+// NewGetDhcpLease creates a new http.Handler for the get dhcp lease operation
+func NewGetDhcpLease(ctx *middleware.Context, handler GetDhcpLeaseHandler) *GetDhcpLease {
+	return &GetDhcpLease{Context: ctx, Handler: handler}
 }
 
-/*GETDhcpLease swagger:route GET /leases/{id} Dhcp leases gETDhcpLease
+/*GetDhcpLease swagger:route GET /leases/{id} Dhcp leases getDhcpLease
 
 Get DHCP Lease
 
 */
-type GETDhcpLease struct {
+type GetDhcpLease struct {
 	Context *middleware.Context
-	Handler GETDhcpLeaseHandler
+	Handler GetDhcpLeaseHandler
 }
 
-func (o *GETDhcpLease) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
+func (o *GetDhcpLease) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	route, _ := o.Context.RouteInfo(r)
-	var Params = NewGETDhcpLeaseParams()
+	var Params = NewGetDhcpLeaseParams()
 
 	uprinc, err := o.Context.Authorize(r, route)
 	if err != nil {

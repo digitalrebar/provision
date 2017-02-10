@@ -10,37 +10,37 @@ import (
 	"github.com/rackn/rocket-skates/models"
 )
 
-// POSTDhcpLeaseHandlerFunc turns a function with the right signature into a p o s t dhcp lease handler
-type POSTDhcpLeaseHandlerFunc func(POSTDhcpLeaseParams, *models.Principal) middleware.Responder
+// PostDhcpLeaseHandlerFunc turns a function with the right signature into a post dhcp lease handler
+type PostDhcpLeaseHandlerFunc func(PostDhcpLeaseParams, *models.Principal) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn POSTDhcpLeaseHandlerFunc) Handle(params POSTDhcpLeaseParams, principal *models.Principal) middleware.Responder {
+func (fn PostDhcpLeaseHandlerFunc) Handle(params PostDhcpLeaseParams, principal *models.Principal) middleware.Responder {
 	return fn(params, principal)
 }
 
-// POSTDhcpLeaseHandler interface for that can handle valid p o s t dhcp lease params
-type POSTDhcpLeaseHandler interface {
-	Handle(POSTDhcpLeaseParams, *models.Principal) middleware.Responder
+// PostDhcpLeaseHandler interface for that can handle valid post dhcp lease params
+type PostDhcpLeaseHandler interface {
+	Handle(PostDhcpLeaseParams, *models.Principal) middleware.Responder
 }
 
-// NewPOSTDhcpLease creates a new http.Handler for the p o s t dhcp lease operation
-func NewPOSTDhcpLease(ctx *middleware.Context, handler POSTDhcpLeaseHandler) *POSTDhcpLease {
-	return &POSTDhcpLease{Context: ctx, Handler: handler}
+// NewPostDhcpLease creates a new http.Handler for the post dhcp lease operation
+func NewPostDhcpLease(ctx *middleware.Context, handler PostDhcpLeaseHandler) *PostDhcpLease {
+	return &PostDhcpLease{Context: ctx, Handler: handler}
 }
 
-/*POSTDhcpLease swagger:route POST /leases Dhcp leases pOSTDhcpLease
+/*PostDhcpLease swagger:route POST /leases Dhcp leases postDhcpLease
 
 Create DHCP Lease
 
 */
-type POSTDhcpLease struct {
+type PostDhcpLease struct {
 	Context *middleware.Context
-	Handler POSTDhcpLeaseHandler
+	Handler PostDhcpLeaseHandler
 }
 
-func (o *POSTDhcpLease) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
+func (o *PostDhcpLease) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	route, _ := o.Context.RouteInfo(r)
-	var Params = NewPOSTDhcpLeaseParams()
+	var Params = NewPostDhcpLeaseParams()
 
 	uprinc, err := o.Context.Authorize(r, route)
 	if err != nil {

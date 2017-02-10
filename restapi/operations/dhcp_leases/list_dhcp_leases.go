@@ -10,37 +10,37 @@ import (
 	"github.com/rackn/rocket-skates/models"
 )
 
-// LISTDhcpLeasesHandlerFunc turns a function with the right signature into a l i s t dhcp leases handler
-type LISTDhcpLeasesHandlerFunc func(LISTDhcpLeasesParams, *models.Principal) middleware.Responder
+// ListDhcpLeasesHandlerFunc turns a function with the right signature into a list dhcp leases handler
+type ListDhcpLeasesHandlerFunc func(ListDhcpLeasesParams, *models.Principal) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn LISTDhcpLeasesHandlerFunc) Handle(params LISTDhcpLeasesParams, principal *models.Principal) middleware.Responder {
+func (fn ListDhcpLeasesHandlerFunc) Handle(params ListDhcpLeasesParams, principal *models.Principal) middleware.Responder {
 	return fn(params, principal)
 }
 
-// LISTDhcpLeasesHandler interface for that can handle valid l i s t dhcp leases params
-type LISTDhcpLeasesHandler interface {
-	Handle(LISTDhcpLeasesParams, *models.Principal) middleware.Responder
+// ListDhcpLeasesHandler interface for that can handle valid list dhcp leases params
+type ListDhcpLeasesHandler interface {
+	Handle(ListDhcpLeasesParams, *models.Principal) middleware.Responder
 }
 
-// NewLISTDhcpLeases creates a new http.Handler for the l i s t dhcp leases operation
-func NewLISTDhcpLeases(ctx *middleware.Context, handler LISTDhcpLeasesHandler) *LISTDhcpLeases {
-	return &LISTDhcpLeases{Context: ctx, Handler: handler}
+// NewListDhcpLeases creates a new http.Handler for the list dhcp leases operation
+func NewListDhcpLeases(ctx *middleware.Context, handler ListDhcpLeasesHandler) *ListDhcpLeases {
+	return &ListDhcpLeases{Context: ctx, Handler: handler}
 }
 
-/*LISTDhcpLeases swagger:route GET /leases Dhcp leases lISTDhcpLeases
+/*ListDhcpLeases swagger:route GET /leases Dhcp leases listDhcpLeases
 
 List Dhcp leases
 
 */
-type LISTDhcpLeases struct {
+type ListDhcpLeases struct {
 	Context *middleware.Context
-	Handler LISTDhcpLeasesHandler
+	Handler ListDhcpLeasesHandler
 }
 
-func (o *LISTDhcpLeases) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
+func (o *ListDhcpLeases) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	route, _ := o.Context.RouteInfo(r)
-	var Params = NewLISTDhcpLeasesParams()
+	var Params = NewListDhcpLeasesParams()
 
 	uprinc, err := o.Context.Authorize(r, route)
 	if err != nil {

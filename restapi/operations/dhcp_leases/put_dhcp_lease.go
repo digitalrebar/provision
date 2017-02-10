@@ -10,37 +10,37 @@ import (
 	"github.com/rackn/rocket-skates/models"
 )
 
-// PUTDhcpLeaseHandlerFunc turns a function with the right signature into a p u t dhcp lease handler
-type PUTDhcpLeaseHandlerFunc func(PUTDhcpLeaseParams, *models.Principal) middleware.Responder
+// PutDhcpLeaseHandlerFunc turns a function with the right signature into a put dhcp lease handler
+type PutDhcpLeaseHandlerFunc func(PutDhcpLeaseParams, *models.Principal) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn PUTDhcpLeaseHandlerFunc) Handle(params PUTDhcpLeaseParams, principal *models.Principal) middleware.Responder {
+func (fn PutDhcpLeaseHandlerFunc) Handle(params PutDhcpLeaseParams, principal *models.Principal) middleware.Responder {
 	return fn(params, principal)
 }
 
-// PUTDhcpLeaseHandler interface for that can handle valid p u t dhcp lease params
-type PUTDhcpLeaseHandler interface {
-	Handle(PUTDhcpLeaseParams, *models.Principal) middleware.Responder
+// PutDhcpLeaseHandler interface for that can handle valid put dhcp lease params
+type PutDhcpLeaseHandler interface {
+	Handle(PutDhcpLeaseParams, *models.Principal) middleware.Responder
 }
 
-// NewPUTDhcpLease creates a new http.Handler for the p u t dhcp lease operation
-func NewPUTDhcpLease(ctx *middleware.Context, handler PUTDhcpLeaseHandler) *PUTDhcpLease {
-	return &PUTDhcpLease{Context: ctx, Handler: handler}
+// NewPutDhcpLease creates a new http.Handler for the put dhcp lease operation
+func NewPutDhcpLease(ctx *middleware.Context, handler PutDhcpLeaseHandler) *PutDhcpLease {
+	return &PutDhcpLease{Context: ctx, Handler: handler}
 }
 
-/*PUTDhcpLease swagger:route PUT /leases/{id} Dhcp leases pUTDhcpLease
+/*PutDhcpLease swagger:route PUT /leases/{id} Dhcp leases putDhcpLease
 
 Update DHCP Lease
 
 */
-type PUTDhcpLease struct {
+type PutDhcpLease struct {
 	Context *middleware.Context
-	Handler PUTDhcpLeaseHandler
+	Handler PutDhcpLeaseHandler
 }
 
-func (o *PUTDhcpLease) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
+func (o *PutDhcpLease) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	route, _ := o.Context.RouteInfo(r)
-	var Params = NewPUTDhcpLeaseParams()
+	var Params = NewPutDhcpLeaseParams()
 
 	uprinc, err := o.Context.Authorize(r, route)
 	if err != nil {

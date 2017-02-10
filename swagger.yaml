@@ -30,7 +30,7 @@ paths:
         required: true
         type: string
     get:
-      operationId: GET-dhcp-lease
+      operationId: get-dhcp-lease
       summary: Get DHCP Lease
       tags:
         - Dhcp leases
@@ -39,8 +39,14 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/dhcp-lease-input'
+        '401':
+          $ref: '#/responses/trait:commonGetResponses:401'
+        '404':
+          $ref: '#/responses/trait:commonGetResponses:404'
+        '500':
+          $ref: '#/responses/trait:commonGetResponses:500'
     put:
-      operationId: PUT-dhcp-lease
+      operationId: put-dhcp-lease
       summary: Update DHCP Lease
       tags:
         - Dhcp leases
@@ -54,17 +60,33 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/dhcp-lease-input'
+        '401':
+          $ref: '#/responses/trait:commonPutResponses:401'
+        '404':
+          $ref: '#/responses/trait:commonPutResponses:404'
+        '409':
+          $ref: '#/responses/trait:commonPutResponses:409'
+        '500':
+          $ref: '#/responses/trait:commonPutResponses:500'
     delete:
-      operationId: DELETE-dhcp-lease
+      operationId: delete-dhcp-lease
       summary: Delete DHCP Lease
       tags:
         - Dhcp leases
       responses:
         '204':
           description: ''
+        '401':
+          $ref: '#/responses/trait:commonDeleteResponses:401'
+        '404':
+          $ref: '#/responses/trait:commonDeleteResponses:404'
+        '409':
+          $ref: '#/responses/trait:commonDeleteResponses:409'
+        '500':
+          $ref: '#/responses/trait:commonDeleteResponses:500'
   /leases:
     get:
-      operationId: LIST-dhcp-leases
+      operationId: list-dhcp-leases
       summary: List Dhcp leases
       tags:
         - Dhcp leases
@@ -75,8 +97,14 @@ paths:
             type: array
             items:
               $ref: '#/definitions/dhcp-lease-input'
+        '401':
+          $ref: '#/responses/trait:commonGetResponses:401'
+        '404':
+          $ref: '#/responses/trait:commonGetResponses:404'
+        '500':
+          $ref: '#/responses/trait:commonGetResponses:500'
     post:
-      operationId: POST-dhcp-lease
+      operationId: post-dhcp-lease
       summary: Create DHCP Lease
       tags:
         - Dhcp leases
@@ -90,6 +118,12 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/dhcp-lease-input'
+        '401':
+          $ref: '#/responses/trait:commonPostResponses:401'
+        '409':
+          $ref: '#/responses/trait:commonPostResponses:409'
+        '500':
+          $ref: '#/responses/trait:commonPostResponses:500'
   /files:
     get:
       operationId: list-files

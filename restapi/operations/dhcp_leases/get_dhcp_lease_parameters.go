@@ -12,18 +12,18 @@ import (
 	strfmt "github.com/go-openapi/strfmt"
 )
 
-// NewDELETEDhcpLeaseParams creates a new DELETEDhcpLeaseParams object
+// NewGetDhcpLeaseParams creates a new GetDhcpLeaseParams object
 // with the default values initialized.
-func NewDELETEDhcpLeaseParams() DELETEDhcpLeaseParams {
+func NewGetDhcpLeaseParams() GetDhcpLeaseParams {
 	var ()
-	return DELETEDhcpLeaseParams{}
+	return GetDhcpLeaseParams{}
 }
 
-// DELETEDhcpLeaseParams contains all the bound params for the d e l e t e dhcp lease operation
+// GetDhcpLeaseParams contains all the bound params for the get dhcp lease operation
 // typically these are obtained from a http.Request
 //
-// swagger:parameters DELETE-dhcp-lease
-type DELETEDhcpLeaseParams struct {
+// swagger:parameters get-dhcp-lease
+type GetDhcpLeaseParams struct {
 
 	// HTTP Request Object
 	HTTPRequest *http.Request
@@ -37,7 +37,7 @@ type DELETEDhcpLeaseParams struct {
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
 // for simple values it will use straight method calls
-func (o *DELETEDhcpLeaseParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
+func (o *GetDhcpLeaseParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
 	var res []error
 	o.HTTPRequest = r
 
@@ -52,7 +52,7 @@ func (o *DELETEDhcpLeaseParams) BindRequest(r *http.Request, route *middleware.M
 	return nil
 }
 
-func (o *DELETEDhcpLeaseParams) bindID(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *GetDhcpLeaseParams) bindID(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]

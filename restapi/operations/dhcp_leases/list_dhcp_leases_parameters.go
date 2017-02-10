@@ -10,18 +10,18 @@ import (
 	"github.com/go-openapi/runtime/middleware"
 )
 
-// NewLISTDhcpLeasesParams creates a new LISTDhcpLeasesParams object
+// NewListDhcpLeasesParams creates a new ListDhcpLeasesParams object
 // with the default values initialized.
-func NewLISTDhcpLeasesParams() LISTDhcpLeasesParams {
+func NewListDhcpLeasesParams() ListDhcpLeasesParams {
 	var ()
-	return LISTDhcpLeasesParams{}
+	return ListDhcpLeasesParams{}
 }
 
-// LISTDhcpLeasesParams contains all the bound params for the l i s t dhcp leases operation
+// ListDhcpLeasesParams contains all the bound params for the list dhcp leases operation
 // typically these are obtained from a http.Request
 //
-// swagger:parameters LIST-dhcp-leases
-type LISTDhcpLeasesParams struct {
+// swagger:parameters list-dhcp-leases
+type ListDhcpLeasesParams struct {
 
 	// HTTP Request Object
 	HTTPRequest *http.Request
@@ -29,7 +29,7 @@ type LISTDhcpLeasesParams struct {
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
 // for simple values it will use straight method calls
-func (o *LISTDhcpLeasesParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
+func (o *ListDhcpLeasesParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
 	var res []error
 	o.HTTPRequest = r
 

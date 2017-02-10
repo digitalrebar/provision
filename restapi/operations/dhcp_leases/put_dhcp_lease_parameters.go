@@ -7,27 +7,34 @@ import (
 	"net/http"
 
 	"github.com/go-openapi/errors"
+	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/middleware"
 
 	strfmt "github.com/go-openapi/strfmt"
+
+	"github.com/rackn/rocket-skates/models"
 )
 
-// NewGETDhcpLeaseParams creates a new GETDhcpLeaseParams object
+// NewPutDhcpLeaseParams creates a new PutDhcpLeaseParams object
 // with the default values initialized.
-func NewGETDhcpLeaseParams() GETDhcpLeaseParams {
+func NewPutDhcpLeaseParams() PutDhcpLeaseParams {
 	var ()
-	return GETDhcpLeaseParams{}
+	return PutDhcpLeaseParams{}
 }
 
-// GETDhcpLeaseParams contains all the bound params for the g e t dhcp lease operation
+// PutDhcpLeaseParams contains all the bound params for the put dhcp lease operation
 // typically these are obtained from a http.Request
 //
-// swagger:parameters GET-dhcp-lease
-type GETDhcpLeaseParams struct {
+// swagger:parameters put-dhcp-lease
+type PutDhcpLeaseParams struct {
 
 	// HTTP Request Object
 	HTTPRequest *http.Request
 
+	/*
+	  In: body
+	*/
+	Body *models.DhcpLeaseInput
 	/*
 	  Required: true
 	  In: path
@@ -37,9 +44,26 @@ type GETDhcpLeaseParams struct {
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
 // for simple values it will use straight method calls
-func (o *GETDhcpLeaseParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
+func (o *PutDhcpLeaseParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
 	var res []error
 	o.HTTPRequest = r
+
+	if runtime.HasBody(r) {
+		defer r.Body.Close()
+		var body models.DhcpLeaseInput
+		if err := route.Consumer.Consume(r.Body, &body); err != nil {
+			res = append(res, errors.NewParseError("body", "body", "", err))
+		} else {
+			if err := body.Validate(route.Formats); err != nil {
+				res = append(res, err)
+			}
+
+			if len(res) == 0 {
+				o.Body = &body
+			}
+		}
+
+	}
 
 	rID, rhkID, _ := route.Params.GetOK("id")
 	if err := o.bindID(rID, rhkID, route.Formats); err != nil {
@@ -52,7 +76,7 @@ func (o *GETDhcpLeaseParams) BindRequest(r *http.Request, route *middleware.Matc
 	return nil
 }
 
-func (o *GETDhcpLeaseParams) bindID(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *PutDhcpLeaseParams) bindID(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]

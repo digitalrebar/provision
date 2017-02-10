@@ -7,17 +7,22 @@ import (
 	"errors"
 	"net/url"
 	golangswaggerpaths "path"
+	"strings"
 )
 
-// POSTDhcpLeaseURL generates an URL for the p o s t dhcp lease operation
-type POSTDhcpLeaseURL struct {
+// GetDhcpLeaseURL generates an URL for the get dhcp lease operation
+type GetDhcpLeaseURL struct {
+	ID string
+
 	_basePath string
+	// avoid unkeyed usage
+	_ struct{}
 }
 
 // WithBasePath sets the base path for this url builder, only required when it's different from the
 // base path specified in the swagger spec.
 // When the value of the base path is an empty string
-func (o *POSTDhcpLeaseURL) WithBasePath(bp string) *POSTDhcpLeaseURL {
+func (o *GetDhcpLeaseURL) WithBasePath(bp string) *GetDhcpLeaseURL {
 	o.SetBasePath(bp)
 	return o
 }
@@ -25,16 +30,22 @@ func (o *POSTDhcpLeaseURL) WithBasePath(bp string) *POSTDhcpLeaseURL {
 // SetBasePath sets the base path for this url builder, only required when it's different from the
 // base path specified in the swagger spec.
 // When the value of the base path is an empty string
-func (o *POSTDhcpLeaseURL) SetBasePath(bp string) {
+func (o *GetDhcpLeaseURL) SetBasePath(bp string) {
 	o._basePath = bp
 }
 
 // Build a url path and query string
-func (o *POSTDhcpLeaseURL) Build() (*url.URL, error) {
+func (o *GetDhcpLeaseURL) Build() (*url.URL, error) {
 	var result url.URL
 
-	var _path = "/leases"
+	var _path = "/leases/{id}"
 
+	id := o.ID
+	if id != "" {
+		_path = strings.Replace(_path, "{id}", id, -1)
+	} else {
+		return nil, errors.New("ID is required on GetDhcpLeaseURL")
+	}
 	_basePath := o._basePath
 	if _basePath == "" {
 		_basePath = "/api/v3"
@@ -45,7 +56,7 @@ func (o *POSTDhcpLeaseURL) Build() (*url.URL, error) {
 }
 
 // Must is a helper function to panic when the url builder returns an error
-func (o *POSTDhcpLeaseURL) Must(u *url.URL, err error) *url.URL {
+func (o *GetDhcpLeaseURL) Must(u *url.URL, err error) *url.URL {
 	if err != nil {
 		panic(err)
 	}
@@ -56,17 +67,17 @@ func (o *POSTDhcpLeaseURL) Must(u *url.URL, err error) *url.URL {
 }
 
 // String returns the string representation of the path with query string
-func (o *POSTDhcpLeaseURL) String() string {
+func (o *GetDhcpLeaseURL) String() string {
 	return o.Must(o.Build()).String()
 }
 
 // BuildFull builds a full url with scheme, host, path and query string
-func (o *POSTDhcpLeaseURL) BuildFull(scheme, host string) (*url.URL, error) {
+func (o *GetDhcpLeaseURL) BuildFull(scheme, host string) (*url.URL, error) {
 	if scheme == "" {
-		return nil, errors.New("scheme is required for a full url on POSTDhcpLeaseURL")
+		return nil, errors.New("scheme is required for a full url on GetDhcpLeaseURL")
 	}
 	if host == "" {
-		return nil, errors.New("host is required for a full url on POSTDhcpLeaseURL")
+		return nil, errors.New("host is required for a full url on GetDhcpLeaseURL")
 	}
 
 	base, err := o.Build()
@@ -80,6 +91,6 @@ func (o *POSTDhcpLeaseURL) BuildFull(scheme, host string) (*url.URL, error) {
 }
 
 // StringFull returns the string representation of a complete url
-func (o *POSTDhcpLeaseURL) StringFull(scheme, host string) string {
+func (o *GetDhcpLeaseURL) StringFull(scheme, host string) string {
 	return o.Must(o.BuildFull(scheme, host)).String()
 }

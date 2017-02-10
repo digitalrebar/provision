@@ -23,23 +23,23 @@ type Client struct {
 }
 
 /*
-DELETEDhcpLease deletes d h c p lease
+DeleteDhcpLease deletes d h c p lease
 */
-func (a *Client) DELETEDhcpLease(params *DELETEDhcpLeaseParams, authInfo runtime.ClientAuthInfoWriter) (*DELETEDhcpLeaseNoContent, error) {
+func (a *Client) DeleteDhcpLease(params *DeleteDhcpLeaseParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteDhcpLeaseNoContent, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
-		params = NewDELETEDhcpLeaseParams()
+		params = NewDeleteDhcpLeaseParams()
 	}
 
 	result, err := a.transport.Submit(&runtime.ClientOperation{
-		ID:                 "DELETE-dhcp-lease",
+		ID:                 "delete-dhcp-lease",
 		Method:             "DELETE",
 		PathPattern:        "/leases/{id}",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"https"},
 		Params:             params,
-		Reader:             &DELETEDhcpLeaseReader{formats: a.formats},
+		Reader:             &DeleteDhcpLeaseReader{formats: a.formats},
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
@@ -47,28 +47,28 @@ func (a *Client) DELETEDhcpLease(params *DELETEDhcpLeaseParams, authInfo runtime
 	if err != nil {
 		return nil, err
 	}
-	return result.(*DELETEDhcpLeaseNoContent), nil
+	return result.(*DeleteDhcpLeaseNoContent), nil
 
 }
 
 /*
-GETDhcpLease gets d h c p lease
+GetDhcpLease gets d h c p lease
 */
-func (a *Client) GETDhcpLease(params *GETDhcpLeaseParams, authInfo runtime.ClientAuthInfoWriter) (*GETDhcpLeaseOK, error) {
+func (a *Client) GetDhcpLease(params *GetDhcpLeaseParams, authInfo runtime.ClientAuthInfoWriter) (*GetDhcpLeaseOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
-		params = NewGETDhcpLeaseParams()
+		params = NewGetDhcpLeaseParams()
 	}
 
 	result, err := a.transport.Submit(&runtime.ClientOperation{
-		ID:                 "GET-dhcp-lease",
+		ID:                 "get-dhcp-lease",
 		Method:             "GET",
 		PathPattern:        "/leases/{id}",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"https"},
 		Params:             params,
-		Reader:             &GETDhcpLeaseReader{formats: a.formats},
+		Reader:             &GetDhcpLeaseReader{formats: a.formats},
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
@@ -76,28 +76,28 @@ func (a *Client) GETDhcpLease(params *GETDhcpLeaseParams, authInfo runtime.Clien
 	if err != nil {
 		return nil, err
 	}
-	return result.(*GETDhcpLeaseOK), nil
+	return result.(*GetDhcpLeaseOK), nil
 
 }
 
 /*
-LISTDhcpLeases lists dhcp leases
+ListDhcpLeases lists dhcp leases
 */
-func (a *Client) LISTDhcpLeases(params *LISTDhcpLeasesParams, authInfo runtime.ClientAuthInfoWriter) (*LISTDhcpLeasesOK, error) {
+func (a *Client) ListDhcpLeases(params *ListDhcpLeasesParams, authInfo runtime.ClientAuthInfoWriter) (*ListDhcpLeasesOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
-		params = NewLISTDhcpLeasesParams()
+		params = NewListDhcpLeasesParams()
 	}
 
 	result, err := a.transport.Submit(&runtime.ClientOperation{
-		ID:                 "LIST-dhcp-leases",
+		ID:                 "list-dhcp-leases",
 		Method:             "GET",
 		PathPattern:        "/leases",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"https"},
 		Params:             params,
-		Reader:             &LISTDhcpLeasesReader{formats: a.formats},
+		Reader:             &ListDhcpLeasesReader{formats: a.formats},
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
@@ -105,28 +105,28 @@ func (a *Client) LISTDhcpLeases(params *LISTDhcpLeasesParams, authInfo runtime.C
 	if err != nil {
 		return nil, err
 	}
-	return result.(*LISTDhcpLeasesOK), nil
+	return result.(*ListDhcpLeasesOK), nil
 
 }
 
 /*
-POSTDhcpLease creates d h c p lease
+PostDhcpLease creates d h c p lease
 */
-func (a *Client) POSTDhcpLease(params *POSTDhcpLeaseParams, authInfo runtime.ClientAuthInfoWriter) (*POSTDhcpLeaseCreated, error) {
+func (a *Client) PostDhcpLease(params *PostDhcpLeaseParams, authInfo runtime.ClientAuthInfoWriter) (*PostDhcpLeaseCreated, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
-		params = NewPOSTDhcpLeaseParams()
+		params = NewPostDhcpLeaseParams()
 	}
 
 	result, err := a.transport.Submit(&runtime.ClientOperation{
-		ID:                 "POST-dhcp-lease",
+		ID:                 "post-dhcp-lease",
 		Method:             "POST",
 		PathPattern:        "/leases",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"https"},
 		Params:             params,
-		Reader:             &POSTDhcpLeaseReader{formats: a.formats},
+		Reader:             &PostDhcpLeaseReader{formats: a.formats},
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
@@ -134,28 +134,28 @@ func (a *Client) POSTDhcpLease(params *POSTDhcpLeaseParams, authInfo runtime.Cli
 	if err != nil {
 		return nil, err
 	}
-	return result.(*POSTDhcpLeaseCreated), nil
+	return result.(*PostDhcpLeaseCreated), nil
 
 }
 
 /*
-PUTDhcpLease updates d h c p lease
+PutDhcpLease updates d h c p lease
 */
-func (a *Client) PUTDhcpLease(params *PUTDhcpLeaseParams, authInfo runtime.ClientAuthInfoWriter) (*PUTDhcpLeaseOK, error) {
+func (a *Client) PutDhcpLease(params *PutDhcpLeaseParams, authInfo runtime.ClientAuthInfoWriter) (*PutDhcpLeaseOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
-		params = NewPUTDhcpLeaseParams()
+		params = NewPutDhcpLeaseParams()
 	}
 
 	result, err := a.transport.Submit(&runtime.ClientOperation{
-		ID:                 "PUT-dhcp-lease",
+		ID:                 "put-dhcp-lease",
 		Method:             "PUT",
 		PathPattern:        "/leases/{id}",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"https"},
 		Params:             params,
-		Reader:             &PUTDhcpLeaseReader{formats: a.formats},
+		Reader:             &PutDhcpLeaseReader{formats: a.formats},
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
@@ -163,7 +163,7 @@ func (a *Client) PUTDhcpLease(params *PUTDhcpLeaseParams, authInfo runtime.Clien
 	if err != nil {
 		return nil, err
 	}
-	return result.(*PUTDhcpLeaseOK), nil
+	return result.(*PutDhcpLeaseOK), nil
 
 }
 
