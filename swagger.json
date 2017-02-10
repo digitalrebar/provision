@@ -32,6 +32,326 @@
         }
     },
     "paths": {
+        "/reservations/{id}": {
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "operationId": "GET-dhcp-reservation",
+                "summary": "Get DHCP Reservation",
+                "tags": [
+                    "Dhcp reservations"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/dhcp-reservation-input"
+                        }
+                    }
+                },
+                "x-stoplight": {
+                    "id": "GET-dhcp-reservation",
+                    "beforeScript": null,
+                    "afterScript": null,
+                    "public": true,
+                    "mock": {
+                        "enabled": false,
+                        "dynamic": false,
+                        "statusCode": 200
+                    }
+                }
+            },
+            "put": {
+                "operationId": "PUT-dhcp-reservation",
+                "summary": "Update DHCP Reservation",
+                "tags": [
+                    "Dhcp reservations"
+                ],
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/dhcp-reservation-input"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/dhcp-reservation-input"
+                        }
+                    }
+                },
+                "x-stoplight": {
+                    "id": "PUT-dhcp-reservation",
+                    "beforeScript": null,
+                    "afterScript": null,
+                    "public": true,
+                    "mock": {
+                        "enabled": false,
+                        "dynamic": false,
+                        "statusCode": 200
+                    }
+                }
+            },
+            "delete": {
+                "operationId": "DELETE-dhcp-reservation",
+                "summary": "Delete DHCP Reservation",
+                "tags": [
+                    "Dhcp reservations"
+                ],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "x-stoplight": {
+                    "id": "DELETE-dhcp-reservation",
+                    "beforeScript": null,
+                    "afterScript": null,
+                    "public": true,
+                    "mock": {
+                        "enabled": false,
+                        "dynamic": false,
+                        "statusCode": 200
+                    }
+                }
+            }
+        },
+        "/reservations": {
+            "get": {
+                "operationId": "LIST-dhcp-reservations",
+                "summary": "List Dhcp reservations",
+                "tags": [
+                    "Dhcp reservations"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dhcp-reservation-input"
+                            }
+                        }
+                    }
+                },
+                "x-stoplight": {
+                    "id": "LIST-dhcp-reservations",
+                    "beforeScript": null,
+                    "afterScript": null,
+                    "public": true,
+                    "mock": {
+                        "enabled": false,
+                        "dynamic": false,
+                        "statusCode": 200
+                    }
+                }
+            },
+            "post": {
+                "operationId": "POST-dhcp-reservation",
+                "summary": "Create DHCP Reservation",
+                "tags": [
+                    "Dhcp reservations"
+                ],
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/dhcp-reservation-input"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/dhcp-reservation-input"
+                        }
+                    }
+                },
+                "x-stoplight": {
+                    "id": "POST-dhcp-reservation",
+                    "beforeScript": null,
+                    "afterScript": null,
+                    "public": true,
+                    "mock": {
+                        "enabled": false,
+                        "dynamic": false,
+                        "statusCode": 200
+                    }
+                }
+            }
+        },
+        "/subnets/{id}": {
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "operationId": "GET-dhcp-subnet",
+                "summary": "Get DHCP Subnet",
+                "tags": [
+                    "Dhcp subnets"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/dhcp-subnet-input"
+                        }
+                    }
+                },
+                "x-stoplight": {
+                    "id": "GET-dhcp-subnet",
+                    "beforeScript": null,
+                    "afterScript": null,
+                    "public": true,
+                    "mock": {
+                        "enabled": false,
+                        "dynamic": false,
+                        "statusCode": 200
+                    }
+                }
+            },
+            "put": {
+                "operationId": "PUT-dhcp-subnet",
+                "summary": "Update DHCP Subnet",
+                "tags": [
+                    "Dhcp subnets"
+                ],
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/dhcp-subnet-input"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/dhcp-subnet-input"
+                        }
+                    }
+                },
+                "x-stoplight": {
+                    "id": "PUT-dhcp-subnet",
+                    "beforeScript": null,
+                    "afterScript": null,
+                    "public": true,
+                    "mock": {
+                        "enabled": false,
+                        "dynamic": false,
+                        "statusCode": 200
+                    }
+                }
+            },
+            "delete": {
+                "operationId": "DELETE-dhcp-subnet",
+                "summary": "Delete DHCP Subnet",
+                "tags": [
+                    "Dhcp subnets"
+                ],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "x-stoplight": {
+                    "id": "DELETE-dhcp-subnet",
+                    "beforeScript": null,
+                    "afterScript": null,
+                    "public": true,
+                    "mock": {
+                        "enabled": false,
+                        "dynamic": false,
+                        "statusCode": 200
+                    }
+                }
+            }
+        },
+        "/subnets": {
+            "get": {
+                "operationId": "LIST-dhcp-subnets",
+                "summary": "List Dhcp subnets",
+                "tags": [
+                    "Dhcp subnets"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dhcp-subnet-input"
+                            }
+                        }
+                    }
+                },
+                "x-stoplight": {
+                    "id": "LIST-dhcp-subnets",
+                    "beforeScript": null,
+                    "afterScript": null,
+                    "public": true,
+                    "mock": {
+                        "enabled": false,
+                        "dynamic": false,
+                        "statusCode": 200
+                    }
+                }
+            },
+            "post": {
+                "operationId": "POST-dhcp-subnet",
+                "summary": "Create DHCP Subnet",
+                "tags": [
+                    "Dhcp subnets"
+                ],
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/dhcp-subnet-input"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/dhcp-subnet-input"
+                        }
+                    }
+                },
+                "x-stoplight": {
+                    "id": "POST-dhcp-subnet",
+                    "beforeScript": null,
+                    "afterScript": null,
+                    "public": true,
+                    "mock": {
+                        "enabled": false,
+                        "dynamic": false,
+                        "statusCode": 200
+                    }
+                }
+            }
+        },
         "/leases/{id}": {
             "parameters": [
                 {
@@ -1841,7 +2161,7 @@
         },
         "parameterobjectmap": {
             "title": "ParameterObjectMap",
-            "AdditionalProperties": {
+            "additionalProperties": {
                 "type": "object"
             },
             "x-stoplight": {
@@ -2131,7 +2451,7 @@
                     "type": "string",
                     "minLength": 17,
                     "maxLength": 17,
-                    "pattern": "^(([0-9a-f]){2}):){5}[0-9a-f]{2}$"
+                    "pattern": "^([0-9a-f]{2}):{5}[0-9a-f]{2}$"
                 },
                 "Valid": {
                     "type": "boolean"
@@ -2139,16 +2459,6 @@
                 "ExpireTime": {
                     "type": "string",
                     "format": "date-time"
-                },
-                "NextServer": {
-                    "type": "string",
-                    "format": "ipv4"
-                },
-                "Options": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/dhcpoption"
-                    }
                 }
             },
             "required": [
@@ -2183,6 +2493,94 @@
                 "name": "DhcpOption",
                 "public": true
             }
+        },
+        "dhcp-subnet-input": {
+            "title": "DHCP Subnet Input",
+            "type": "object",
+            "properties": {
+                "Name": {
+                    "type": "string"
+                },
+                "Subnet": {
+                    "type": "string",
+                    "pattern": "^([0-9]{1-3}\\.){,3}[0-9]{,3}/[0-9]{,2}$"
+                },
+                "NextServer": {
+                    "type": "string",
+                    "format": "ipv4"
+                },
+                "ActiveStart": {
+                    "type": "string",
+                    "format": "ipv4"
+                },
+                "ActiveEnd": {
+                    "type": "string",
+                    "format": "ipv4"
+                },
+                "ActiveLeaseTime": {
+                    "type": "integer",
+                    "default": 300
+                },
+                "ReservedLeaseTime": {
+                    "type": "integer",
+                    "default": 7200
+                },
+                "OnlyBoundLeases": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "Options": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dhcpoption"
+                    }
+                }
+            },
+            "required": [
+                "Name",
+                "Subnet",
+                "ActiveStart",
+                "ActiveEnd",
+                "ActiveLeaseTime",
+                "ReservedLeaseTime"
+            ],
+            "x-stoplight": {
+                "id": "dhcp-subnet-input",
+                "name": "DHCP Subnet Input",
+                "public": true
+            }
+        },
+        "dhcp-reservation-input": {
+            "title": "DHCP Reservation Input",
+            "type": "object",
+            "properties": {
+                "IpAddress": {
+                    "type": "string",
+                    "format": "ipv4"
+                },
+                "MacAddress": {
+                    "type": "string"
+                },
+                "Options": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dhcpoption"
+                    }
+                },
+                "NextServer": {
+                    "type": "string",
+                    "format": "ipv4"
+                }
+            },
+            "required": [
+                "IpAddress",
+                "MacAddress"
+            ],
+            "x-stoplight": {
+                "id": "dhcp-reservation-input",
+                "name": "DHCP Reservation Input",
+                "public": true
+            }
         }
     },
     "x-stoplight": {
@@ -2194,6 +2592,58 @@
                 "tests": [],
                 "traits": [],
                 "docs": [
+                    {
+                        "items": [
+                            {
+                                "type": "endpoints",
+                                "_id": "GET-dhcp-reservation"
+                            },
+                            {
+                                "type": "endpoints",
+                                "_id": "LIST-dhcp-reservations"
+                            },
+                            {
+                                "type": "endpoints",
+                                "_id": "PUT-dhcp-reservation"
+                            },
+                            {
+                                "type": "endpoints",
+                                "_id": "POST-dhcp-reservation"
+                            },
+                            {
+                                "type": "endpoints",
+                                "_id": "DELETE-dhcp-reservation"
+                            }
+                        ],
+                        "divider": false,
+                        "name": "Dhcp reservations"
+                    },
+                    {
+                        "items": [
+                            {
+                                "type": "endpoints",
+                                "_id": "GET-dhcp-subnet"
+                            },
+                            {
+                                "type": "endpoints",
+                                "_id": "LIST-dhcp-subnets"
+                            },
+                            {
+                                "type": "endpoints",
+                                "_id": "PUT-dhcp-subnet"
+                            },
+                            {
+                                "type": "endpoints",
+                                "_id": "POST-dhcp-subnet"
+                            },
+                            {
+                                "type": "endpoints",
+                                "_id": "DELETE-dhcp-subnet"
+                            }
+                        ],
+                        "divider": false,
+                        "name": "Dhcp subnets"
+                    },
                     {
                         "items": [
                             {
@@ -2411,6 +2861,14 @@
                             {
                                 "type": "schemas",
                                 "_id": "dhcpoption"
+                            },
+                            {
+                                "type": "schemas",
+                                "_id": "dhcp-subnet-input"
+                            },
+                            {
+                                "type": "schemas",
+                                "_id": "dhcp-reservation-input"
                             }
                         ],
                         "divider": false,
