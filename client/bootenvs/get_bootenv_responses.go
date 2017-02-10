@@ -66,7 +66,7 @@ func NewGetBootenvOK() *GetBootenvOK {
 GetBootenvOK get bootenv o k
 */
 type GetBootenvOK struct {
-	Payload *models.BootenvInput
+	Payload *models.BootenvOutput
 }
 
 func (o *GetBootenvOK) Error() string {
@@ -75,7 +75,7 @@ func (o *GetBootenvOK) Error() string {
 
 func (o *GetBootenvOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.BootenvInput)
+	o.Payload = new(models.BootenvOutput)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -95,7 +95,7 @@ func NewGetBootenvUnauthorized() *GetBootenvUnauthorized {
 GetBootenvUnauthorized get bootenv unauthorized
 */
 type GetBootenvUnauthorized struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *GetBootenvUnauthorized) Error() string {
@@ -104,7 +104,7 @@ func (o *GetBootenvUnauthorized) Error() string {
 
 func (o *GetBootenvUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -124,7 +124,7 @@ func NewGetBootenvNotFound() *GetBootenvNotFound {
 GetBootenvNotFound get bootenv not found
 */
 type GetBootenvNotFound struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *GetBootenvNotFound) Error() string {
@@ -133,7 +133,7 @@ func (o *GetBootenvNotFound) Error() string {
 
 func (o *GetBootenvNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -153,7 +153,7 @@ func NewGetBootenvInternalServerError() *GetBootenvInternalServerError {
 GetBootenvInternalServerError get bootenv internal server error
 */
 type GetBootenvInternalServerError struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *GetBootenvInternalServerError) Error() string {
@@ -162,7 +162,7 @@ func (o *GetBootenvInternalServerError) Error() string {
 
 func (o *GetBootenvInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {

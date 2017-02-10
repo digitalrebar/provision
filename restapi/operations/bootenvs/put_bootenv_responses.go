@@ -20,7 +20,7 @@ type PutBootenvOK struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.BootenvInput `json:"body,omitempty"`
+	Payload *models.BootenvOutput `json:"body,omitempty"`
 }
 
 // NewPutBootenvOK creates PutBootenvOK with default headers values
@@ -29,13 +29,13 @@ func NewPutBootenvOK() *PutBootenvOK {
 }
 
 // WithPayload adds the payload to the put bootenv o k response
-func (o *PutBootenvOK) WithPayload(payload *models.BootenvInput) *PutBootenvOK {
+func (o *PutBootenvOK) WithPayload(payload *models.BootenvOutput) *PutBootenvOK {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the put bootenv o k response
-func (o *PutBootenvOK) SetPayload(payload *models.BootenvInput) {
+func (o *PutBootenvOK) SetPayload(payload *models.BootenvOutput) {
 	o.Payload = payload
 }
 
@@ -60,7 +60,7 @@ type PutBootenvUnauthorized struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewPutBootenvUnauthorized creates PutBootenvUnauthorized with default headers values
@@ -69,13 +69,13 @@ func NewPutBootenvUnauthorized() *PutBootenvUnauthorized {
 }
 
 // WithPayload adds the payload to the put bootenv unauthorized response
-func (o *PutBootenvUnauthorized) WithPayload(payload *models.Result) *PutBootenvUnauthorized {
+func (o *PutBootenvUnauthorized) WithPayload(payload *models.Error) *PutBootenvUnauthorized {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the put bootenv unauthorized response
-func (o *PutBootenvUnauthorized) SetPayload(payload *models.Result) {
+func (o *PutBootenvUnauthorized) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -100,7 +100,7 @@ type PutBootenvNotFound struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewPutBootenvNotFound creates PutBootenvNotFound with default headers values
@@ -109,13 +109,13 @@ func NewPutBootenvNotFound() *PutBootenvNotFound {
 }
 
 // WithPayload adds the payload to the put bootenv not found response
-func (o *PutBootenvNotFound) WithPayload(payload *models.Result) *PutBootenvNotFound {
+func (o *PutBootenvNotFound) WithPayload(payload *models.Error) *PutBootenvNotFound {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the put bootenv not found response
-func (o *PutBootenvNotFound) SetPayload(payload *models.Result) {
+func (o *PutBootenvNotFound) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -123,6 +123,46 @@ func (o *PutBootenvNotFound) SetPayload(payload *models.Result) {
 func (o *PutBootenvNotFound) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
 	rw.WriteHeader(404)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
+/*PutBootenvConflict put bootenv conflict
+
+swagger:response putBootenvConflict
+*/
+type PutBootenvConflict struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewPutBootenvConflict creates PutBootenvConflict with default headers values
+func NewPutBootenvConflict() *PutBootenvConflict {
+	return &PutBootenvConflict{}
+}
+
+// WithPayload adds the payload to the put bootenv conflict response
+func (o *PutBootenvConflict) WithPayload(payload *models.Error) *PutBootenvConflict {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the put bootenv conflict response
+func (o *PutBootenvConflict) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *PutBootenvConflict) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(409)
 	if o.Payload != nil {
 		payload := o.Payload
 		if err := producer.Produce(rw, payload); err != nil {
@@ -140,7 +180,7 @@ type PutBootenvInternalServerError struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewPutBootenvInternalServerError creates PutBootenvInternalServerError with default headers values
@@ -149,13 +189,13 @@ func NewPutBootenvInternalServerError() *PutBootenvInternalServerError {
 }
 
 // WithPayload adds the payload to the put bootenv internal server error response
-func (o *PutBootenvInternalServerError) WithPayload(payload *models.Result) *PutBootenvInternalServerError {
+func (o *PutBootenvInternalServerError) WithPayload(payload *models.Error) *PutBootenvInternalServerError {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the put bootenv internal server error response
-func (o *PutBootenvInternalServerError) SetPayload(payload *models.Result) {
+func (o *PutBootenvInternalServerError) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 

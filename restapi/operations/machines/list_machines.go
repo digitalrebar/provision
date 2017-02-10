@@ -62,16 +62,3 @@ func (o *ListMachines) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }
-
-// ListMachinesOKBody list machines o k body
-// swagger:model ListMachinesOKBody
-type ListMachinesOKBody struct {
-
-	// data
-	// Required: true
-	Data []*models.MachineOutput `json:"Data"`
-
-	// result
-	// Required: true
-	Result *models.Result `json:"Result"`
-}

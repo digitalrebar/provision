@@ -112,7 +112,7 @@ func (a *Client) ListTemplates(params *ListTemplatesParams, authInfo runtime.Cli
 /*
 PatchTemplate patches template
 */
-func (a *Client) PatchTemplate(params *PatchTemplateParams, authInfo runtime.ClientAuthInfoWriter) (*PatchTemplateAccepted, error) {
+func (a *Client) PatchTemplate(params *PatchTemplateParams, authInfo runtime.ClientAuthInfoWriter) (*PatchTemplateOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewPatchTemplateParams()
@@ -134,14 +134,14 @@ func (a *Client) PatchTemplate(params *PatchTemplateParams, authInfo runtime.Cli
 	if err != nil {
 		return nil, err
 	}
-	return result.(*PatchTemplateAccepted), nil
+	return result.(*PatchTemplateOK), nil
 
 }
 
 /*
 PostTemplate creates template
 */
-func (a *Client) PostTemplate(params *PostTemplateParams, authInfo runtime.ClientAuthInfoWriter) (*PostTemplateCreated, error) {
+func (a *Client) PostTemplate(params *PostTemplateParams, authInfo runtime.ClientAuthInfoWriter) (*PostTemplateOK, *PostTemplateCreated, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewPostTemplateParams()
@@ -161,9 +161,15 @@ func (a *Client) PostTemplate(params *PostTemplateParams, authInfo runtime.Clien
 		Client:             params.HTTPClient,
 	})
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	return result.(*PostTemplateCreated), nil
+	switch value := result.(type) {
+	case *PostTemplateOK:
+		return value, nil, nil
+	case *PostTemplateCreated:
+		return nil, value, nil
+	}
+	return nil, nil, nil
 
 }
 
@@ -199,7 +205,7 @@ func (a *Client) PutTemplate(params *PutTemplateParams, authInfo runtime.ClientA
 /*
 ReplaceTemplate replaces template
 */
-func (a *Client) ReplaceTemplate(params *ReplaceTemplateParams, authInfo runtime.ClientAuthInfoWriter) (*ReplaceTemplateCreated, *ReplaceTemplateAccepted, error) {
+func (a *Client) ReplaceTemplate(params *ReplaceTemplateParams, authInfo runtime.ClientAuthInfoWriter) (*ReplaceTemplateOK, *ReplaceTemplateCreated, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewReplaceTemplateParams()
@@ -222,9 +228,9 @@ func (a *Client) ReplaceTemplate(params *ReplaceTemplateParams, authInfo runtime
 		return nil, nil, err
 	}
 	switch value := result.(type) {
-	case *ReplaceTemplateCreated:
+	case *ReplaceTemplateOK:
 		return value, nil, nil
-	case *ReplaceTemplateAccepted:
+	case *ReplaceTemplateCreated:
 		return nil, value, nil
 	}
 	return nil, nil, nil

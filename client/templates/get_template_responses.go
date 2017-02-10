@@ -95,7 +95,7 @@ func NewGetTemplateUnauthorized() *GetTemplateUnauthorized {
 GetTemplateUnauthorized get template unauthorized
 */
 type GetTemplateUnauthorized struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *GetTemplateUnauthorized) Error() string {
@@ -104,7 +104,7 @@ func (o *GetTemplateUnauthorized) Error() string {
 
 func (o *GetTemplateUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -124,7 +124,7 @@ func NewGetTemplateNotFound() *GetTemplateNotFound {
 GetTemplateNotFound get template not found
 */
 type GetTemplateNotFound struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *GetTemplateNotFound) Error() string {
@@ -133,7 +133,7 @@ func (o *GetTemplateNotFound) Error() string {
 
 func (o *GetTemplateNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -153,7 +153,7 @@ func NewGetTemplateInternalServerError() *GetTemplateInternalServerError {
 GetTemplateInternalServerError get template internal server error
 */
 type GetTemplateInternalServerError struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *GetTemplateInternalServerError) Error() string {
@@ -162,7 +162,7 @@ func (o *GetTemplateInternalServerError) Error() string {
 
 func (o *GetTemplateInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {

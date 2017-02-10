@@ -60,7 +60,7 @@ type GetFileUnauthorized struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewGetFileUnauthorized creates GetFileUnauthorized with default headers values
@@ -69,13 +69,13 @@ func NewGetFileUnauthorized() *GetFileUnauthorized {
 }
 
 // WithPayload adds the payload to the get file unauthorized response
-func (o *GetFileUnauthorized) WithPayload(payload *models.Result) *GetFileUnauthorized {
+func (o *GetFileUnauthorized) WithPayload(payload *models.Error) *GetFileUnauthorized {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the get file unauthorized response
-func (o *GetFileUnauthorized) SetPayload(payload *models.Result) {
+func (o *GetFileUnauthorized) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -100,7 +100,7 @@ type GetFileNotFound struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewGetFileNotFound creates GetFileNotFound with default headers values
@@ -109,13 +109,13 @@ func NewGetFileNotFound() *GetFileNotFound {
 }
 
 // WithPayload adds the payload to the get file not found response
-func (o *GetFileNotFound) WithPayload(payload *models.Result) *GetFileNotFound {
+func (o *GetFileNotFound) WithPayload(payload *models.Error) *GetFileNotFound {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the get file not found response
-func (o *GetFileNotFound) SetPayload(payload *models.Result) {
+func (o *GetFileNotFound) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -140,7 +140,7 @@ type GetFileInternalServerError struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewGetFileInternalServerError creates GetFileInternalServerError with default headers values
@@ -149,13 +149,13 @@ func NewGetFileInternalServerError() *GetFileInternalServerError {
 }
 
 // WithPayload adds the payload to the get file internal server error response
-func (o *GetFileInternalServerError) WithPayload(payload *models.Result) *GetFileInternalServerError {
+func (o *GetFileInternalServerError) WithPayload(payload *models.Error) *GetFileInternalServerError {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the get file internal server error response
-func (o *GetFileInternalServerError) SetPayload(payload *models.Result) {
+func (o *GetFileInternalServerError) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 

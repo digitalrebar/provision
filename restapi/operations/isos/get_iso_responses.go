@@ -60,7 +60,7 @@ type GetIsoUnauthorized struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewGetIsoUnauthorized creates GetIsoUnauthorized with default headers values
@@ -69,13 +69,13 @@ func NewGetIsoUnauthorized() *GetIsoUnauthorized {
 }
 
 // WithPayload adds the payload to the get iso unauthorized response
-func (o *GetIsoUnauthorized) WithPayload(payload *models.Result) *GetIsoUnauthorized {
+func (o *GetIsoUnauthorized) WithPayload(payload *models.Error) *GetIsoUnauthorized {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the get iso unauthorized response
-func (o *GetIsoUnauthorized) SetPayload(payload *models.Result) {
+func (o *GetIsoUnauthorized) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -100,7 +100,7 @@ type GetIsoNotFound struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewGetIsoNotFound creates GetIsoNotFound with default headers values
@@ -109,13 +109,13 @@ func NewGetIsoNotFound() *GetIsoNotFound {
 }
 
 // WithPayload adds the payload to the get iso not found response
-func (o *GetIsoNotFound) WithPayload(payload *models.Result) *GetIsoNotFound {
+func (o *GetIsoNotFound) WithPayload(payload *models.Error) *GetIsoNotFound {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the get iso not found response
-func (o *GetIsoNotFound) SetPayload(payload *models.Result) {
+func (o *GetIsoNotFound) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -140,7 +140,7 @@ type GetIsoInternalServerError struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewGetIsoInternalServerError creates GetIsoInternalServerError with default headers values
@@ -149,13 +149,13 @@ func NewGetIsoInternalServerError() *GetIsoInternalServerError {
 }
 
 // WithPayload adds the payload to the get iso internal server error response
-func (o *GetIsoInternalServerError) WithPayload(payload *models.Result) *GetIsoInternalServerError {
+func (o *GetIsoInternalServerError) WithPayload(payload *models.Error) *GetIsoInternalServerError {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the get iso internal server error response
-func (o *GetIsoInternalServerError) SetPayload(payload *models.Result) {
+func (o *GetIsoInternalServerError) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 

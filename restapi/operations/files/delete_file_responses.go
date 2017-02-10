@@ -29,6 +29,46 @@ func (o *DeleteFileNoContent) WriteResponse(rw http.ResponseWriter, producer run
 	rw.WriteHeader(204)
 }
 
+/*DeleteFileUnauthorized delete file unauthorized
+
+swagger:response deleteFileUnauthorized
+*/
+type DeleteFileUnauthorized struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewDeleteFileUnauthorized creates DeleteFileUnauthorized with default headers values
+func NewDeleteFileUnauthorized() *DeleteFileUnauthorized {
+	return &DeleteFileUnauthorized{}
+}
+
+// WithPayload adds the payload to the delete file unauthorized response
+func (o *DeleteFileUnauthorized) WithPayload(payload *models.Error) *DeleteFileUnauthorized {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the delete file unauthorized response
+func (o *DeleteFileUnauthorized) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *DeleteFileUnauthorized) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(401)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
 /*DeleteFileForbidden delete file forbidden
 
 swagger:response deleteFileForbidden
@@ -38,7 +78,7 @@ type DeleteFileForbidden struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewDeleteFileForbidden creates DeleteFileForbidden with default headers values
@@ -47,13 +87,13 @@ func NewDeleteFileForbidden() *DeleteFileForbidden {
 }
 
 // WithPayload adds the payload to the delete file forbidden response
-func (o *DeleteFileForbidden) WithPayload(payload *models.Result) *DeleteFileForbidden {
+func (o *DeleteFileForbidden) WithPayload(payload *models.Error) *DeleteFileForbidden {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the delete file forbidden response
-func (o *DeleteFileForbidden) SetPayload(payload *models.Result) {
+func (o *DeleteFileForbidden) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -78,7 +118,7 @@ type DeleteFileNotFound struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewDeleteFileNotFound creates DeleteFileNotFound with default headers values
@@ -87,13 +127,13 @@ func NewDeleteFileNotFound() *DeleteFileNotFound {
 }
 
 // WithPayload adds the payload to the delete file not found response
-func (o *DeleteFileNotFound) WithPayload(payload *models.Result) *DeleteFileNotFound {
+func (o *DeleteFileNotFound) WithPayload(payload *models.Error) *DeleteFileNotFound {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the delete file not found response
-func (o *DeleteFileNotFound) SetPayload(payload *models.Result) {
+func (o *DeleteFileNotFound) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -118,7 +158,7 @@ type DeleteFileConflict struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewDeleteFileConflict creates DeleteFileConflict with default headers values
@@ -127,13 +167,13 @@ func NewDeleteFileConflict() *DeleteFileConflict {
 }
 
 // WithPayload adds the payload to the delete file conflict response
-func (o *DeleteFileConflict) WithPayload(payload *models.Result) *DeleteFileConflict {
+func (o *DeleteFileConflict) WithPayload(payload *models.Error) *DeleteFileConflict {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the delete file conflict response
-func (o *DeleteFileConflict) SetPayload(payload *models.Result) {
+func (o *DeleteFileConflict) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -158,7 +198,7 @@ type DeleteFileInternalServerError struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewDeleteFileInternalServerError creates DeleteFileInternalServerError with default headers values
@@ -167,13 +207,13 @@ func NewDeleteFileInternalServerError() *DeleteFileInternalServerError {
 }
 
 // WithPayload adds the payload to the delete file internal server error response
-func (o *DeleteFileInternalServerError) WithPayload(payload *models.Result) *DeleteFileInternalServerError {
+func (o *DeleteFileInternalServerError) WithPayload(payload *models.Error) *DeleteFileInternalServerError {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the delete file internal server error response
-func (o *DeleteFileInternalServerError) SetPayload(payload *models.Result) {
+func (o *DeleteFileInternalServerError) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 

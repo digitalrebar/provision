@@ -23,15 +23,15 @@ type ReplaceTemplateReader struct {
 func (o *ReplaceTemplateReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
 
-	case 201:
-		result := NewReplaceTemplateCreated()
+	case 200:
+		result := NewReplaceTemplateOK()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
 
-	case 202:
-		result := NewReplaceTemplateAccepted()
+	case 201:
+		result := NewReplaceTemplateCreated()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -70,6 +70,35 @@ func (o *ReplaceTemplateReader) ReadResponse(response runtime.ClientResponse, co
 	}
 }
 
+// NewReplaceTemplateOK creates a ReplaceTemplateOK with default headers values
+func NewReplaceTemplateOK() *ReplaceTemplateOK {
+	return &ReplaceTemplateOK{}
+}
+
+/*ReplaceTemplateOK handles this case with default header values.
+
+ReplaceTemplateOK replace template o k
+*/
+type ReplaceTemplateOK struct {
+	Payload *models.TemplateOutput
+}
+
+func (o *ReplaceTemplateOK) Error() string {
+	return fmt.Sprintf("[POST /templates/{uuid}][%d] replaceTemplateOK  %+v", 200, o.Payload)
+}
+
+func (o *ReplaceTemplateOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.TemplateOutput)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
 // NewReplaceTemplateCreated creates a ReplaceTemplateCreated with default headers values
 func NewReplaceTemplateCreated() *ReplaceTemplateCreated {
 	return &ReplaceTemplateCreated{}
@@ -99,35 +128,6 @@ func (o *ReplaceTemplateCreated) readResponse(response runtime.ClientResponse, c
 	return nil
 }
 
-// NewReplaceTemplateAccepted creates a ReplaceTemplateAccepted with default headers values
-func NewReplaceTemplateAccepted() *ReplaceTemplateAccepted {
-	return &ReplaceTemplateAccepted{}
-}
-
-/*ReplaceTemplateAccepted handles this case with default header values.
-
-ReplaceTemplateAccepted replace template accepted
-*/
-type ReplaceTemplateAccepted struct {
-	Payload *models.TemplateOutput
-}
-
-func (o *ReplaceTemplateAccepted) Error() string {
-	return fmt.Sprintf("[POST /templates/{uuid}][%d] replaceTemplateAccepted  %+v", 202, o.Payload)
-}
-
-func (o *ReplaceTemplateAccepted) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
-
-	o.Payload = new(models.TemplateOutput)
-
-	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
-		return err
-	}
-
-	return nil
-}
-
 // NewReplaceTemplateUnauthorized creates a ReplaceTemplateUnauthorized with default headers values
 func NewReplaceTemplateUnauthorized() *ReplaceTemplateUnauthorized {
 	return &ReplaceTemplateUnauthorized{}
@@ -138,7 +138,7 @@ func NewReplaceTemplateUnauthorized() *ReplaceTemplateUnauthorized {
 ReplaceTemplateUnauthorized replace template unauthorized
 */
 type ReplaceTemplateUnauthorized struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *ReplaceTemplateUnauthorized) Error() string {
@@ -147,7 +147,7 @@ func (o *ReplaceTemplateUnauthorized) Error() string {
 
 func (o *ReplaceTemplateUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -167,7 +167,7 @@ func NewReplaceTemplateConflict() *ReplaceTemplateConflict {
 ReplaceTemplateConflict replace template conflict
 */
 type ReplaceTemplateConflict struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *ReplaceTemplateConflict) Error() string {
@@ -176,7 +176,7 @@ func (o *ReplaceTemplateConflict) Error() string {
 
 func (o *ReplaceTemplateConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -196,7 +196,7 @@ func NewReplaceTemplateExpectationFailed() *ReplaceTemplateExpectationFailed {
 ReplaceTemplateExpectationFailed replace template expectation failed
 */
 type ReplaceTemplateExpectationFailed struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *ReplaceTemplateExpectationFailed) Error() string {
@@ -205,7 +205,7 @@ func (o *ReplaceTemplateExpectationFailed) Error() string {
 
 func (o *ReplaceTemplateExpectationFailed) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -225,7 +225,7 @@ func NewReplaceTemplateInternalServerError() *ReplaceTemplateInternalServerError
 ReplaceTemplateInternalServerError replace template internal server error
 */
 type ReplaceTemplateInternalServerError struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *ReplaceTemplateInternalServerError) Error() string {
@@ -234,7 +234,7 @@ func (o *ReplaceTemplateInternalServerError) Error() string {
 
 func (o *ReplaceTemplateInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {

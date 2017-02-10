@@ -11,6 +11,46 @@ import (
 	"github.com/rackn/rocket-skates/models"
 )
 
+/*PostBootenvOK post bootenv o k
+
+swagger:response postBootenvOK
+*/
+type PostBootenvOK struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.BootenvOutput `json:"body,omitempty"`
+}
+
+// NewPostBootenvOK creates PostBootenvOK with default headers values
+func NewPostBootenvOK() *PostBootenvOK {
+	return &PostBootenvOK{}
+}
+
+// WithPayload adds the payload to the post bootenv o k response
+func (o *PostBootenvOK) WithPayload(payload *models.BootenvOutput) *PostBootenvOK {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the post bootenv o k response
+func (o *PostBootenvOK) SetPayload(payload *models.BootenvOutput) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *PostBootenvOK) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(200)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
 /*PostBootenvCreated post bootenv created
 
 swagger:response postBootenvCreated
@@ -20,7 +60,7 @@ type PostBootenvCreated struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.BootenvInput `json:"body,omitempty"`
+	Payload *models.BootenvOutput `json:"body,omitempty"`
 }
 
 // NewPostBootenvCreated creates PostBootenvCreated with default headers values
@@ -29,13 +69,13 @@ func NewPostBootenvCreated() *PostBootenvCreated {
 }
 
 // WithPayload adds the payload to the post bootenv created response
-func (o *PostBootenvCreated) WithPayload(payload *models.BootenvInput) *PostBootenvCreated {
+func (o *PostBootenvCreated) WithPayload(payload *models.BootenvOutput) *PostBootenvCreated {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the post bootenv created response
-func (o *PostBootenvCreated) SetPayload(payload *models.BootenvInput) {
+func (o *PostBootenvCreated) SetPayload(payload *models.BootenvOutput) {
 	o.Payload = payload
 }
 
@@ -60,7 +100,7 @@ type PostBootenvUnauthorized struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewPostBootenvUnauthorized creates PostBootenvUnauthorized with default headers values
@@ -69,13 +109,13 @@ func NewPostBootenvUnauthorized() *PostBootenvUnauthorized {
 }
 
 // WithPayload adds the payload to the post bootenv unauthorized response
-func (o *PostBootenvUnauthorized) WithPayload(payload *models.Result) *PostBootenvUnauthorized {
+func (o *PostBootenvUnauthorized) WithPayload(payload *models.Error) *PostBootenvUnauthorized {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the post bootenv unauthorized response
-func (o *PostBootenvUnauthorized) SetPayload(payload *models.Result) {
+func (o *PostBootenvUnauthorized) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -100,7 +140,7 @@ type PostBootenvConflict struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewPostBootenvConflict creates PostBootenvConflict with default headers values
@@ -109,13 +149,13 @@ func NewPostBootenvConflict() *PostBootenvConflict {
 }
 
 // WithPayload adds the payload to the post bootenv conflict response
-func (o *PostBootenvConflict) WithPayload(payload *models.Result) *PostBootenvConflict {
+func (o *PostBootenvConflict) WithPayload(payload *models.Error) *PostBootenvConflict {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the post bootenv conflict response
-func (o *PostBootenvConflict) SetPayload(payload *models.Result) {
+func (o *PostBootenvConflict) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -140,7 +180,7 @@ type PostBootenvInternalServerError struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewPostBootenvInternalServerError creates PostBootenvInternalServerError with default headers values
@@ -149,13 +189,13 @@ func NewPostBootenvInternalServerError() *PostBootenvInternalServerError {
 }
 
 // WithPayload adds the payload to the post bootenv internal server error response
-func (o *PostBootenvInternalServerError) WithPayload(payload *models.Result) *PostBootenvInternalServerError {
+func (o *PostBootenvInternalServerError) WithPayload(payload *models.Error) *PostBootenvInternalServerError {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the post bootenv internal server error response
-func (o *PostBootenvInternalServerError) SetPayload(payload *models.Result) {
+func (o *PostBootenvInternalServerError) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 

@@ -62,16 +62,3 @@ func (o *PutMachine) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }
-
-// PutMachineOKBody put machine o k body
-// swagger:model PutMachineOKBody
-type PutMachineOKBody struct {
-
-	// data
-	// Required: true
-	Data *models.MachineOutput `json:"Data"`
-
-	// result
-	// Required: true
-	Result *models.Result `json:"Result"`
-}

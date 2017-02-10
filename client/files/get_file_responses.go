@@ -96,7 +96,7 @@ func NewGetFileUnauthorized() *GetFileUnauthorized {
 GetFileUnauthorized get file unauthorized
 */
 type GetFileUnauthorized struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *GetFileUnauthorized) Error() string {
@@ -105,7 +105,7 @@ func (o *GetFileUnauthorized) Error() string {
 
 func (o *GetFileUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -125,7 +125,7 @@ func NewGetFileNotFound() *GetFileNotFound {
 GetFileNotFound get file not found
 */
 type GetFileNotFound struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *GetFileNotFound) Error() string {
@@ -134,7 +134,7 @@ func (o *GetFileNotFound) Error() string {
 
 func (o *GetFileNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -154,7 +154,7 @@ func NewGetFileInternalServerError() *GetFileInternalServerError {
 GetFileInternalServerError get file internal server error
 */
 type GetFileInternalServerError struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *GetFileInternalServerError) Error() string {
@@ -163,7 +163,7 @@ func (o *GetFileInternalServerError) Error() string {
 
 func (o *GetFileInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {

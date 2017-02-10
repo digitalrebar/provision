@@ -30,6 +30,13 @@ func (o *DeleteFileReader) ReadResponse(response runtime.ClientResponse, consume
 		}
 		return result, nil
 
+	case 401:
+		result := NewDeleteFileUnauthorized()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+
 	case 403:
 		result := NewDeleteFileForbidden()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -84,6 +91,35 @@ func (o *DeleteFileNoContent) readResponse(response runtime.ClientResponse, cons
 	return nil
 }
 
+// NewDeleteFileUnauthorized creates a DeleteFileUnauthorized with default headers values
+func NewDeleteFileUnauthorized() *DeleteFileUnauthorized {
+	return &DeleteFileUnauthorized{}
+}
+
+/*DeleteFileUnauthorized handles this case with default header values.
+
+DeleteFileUnauthorized delete file unauthorized
+*/
+type DeleteFileUnauthorized struct {
+	Payload *models.Error
+}
+
+func (o *DeleteFileUnauthorized) Error() string {
+	return fmt.Sprintf("[DELETE /files/{path}][%d] deleteFileUnauthorized  %+v", 401, o.Payload)
+}
+
+func (o *DeleteFileUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.Error)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
 // NewDeleteFileForbidden creates a DeleteFileForbidden with default headers values
 func NewDeleteFileForbidden() *DeleteFileForbidden {
 	return &DeleteFileForbidden{}
@@ -94,7 +130,7 @@ func NewDeleteFileForbidden() *DeleteFileForbidden {
 DeleteFileForbidden delete file forbidden
 */
 type DeleteFileForbidden struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *DeleteFileForbidden) Error() string {
@@ -103,7 +139,7 @@ func (o *DeleteFileForbidden) Error() string {
 
 func (o *DeleteFileForbidden) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -123,7 +159,7 @@ func NewDeleteFileNotFound() *DeleteFileNotFound {
 DeleteFileNotFound delete file not found
 */
 type DeleteFileNotFound struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *DeleteFileNotFound) Error() string {
@@ -132,7 +168,7 @@ func (o *DeleteFileNotFound) Error() string {
 
 func (o *DeleteFileNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -152,7 +188,7 @@ func NewDeleteFileConflict() *DeleteFileConflict {
 DeleteFileConflict delete file conflict
 */
 type DeleteFileConflict struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *DeleteFileConflict) Error() string {
@@ -161,7 +197,7 @@ func (o *DeleteFileConflict) Error() string {
 
 func (o *DeleteFileConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -181,7 +217,7 @@ func NewDeleteFileInternalServerError() *DeleteFileInternalServerError {
 DeleteFileInternalServerError delete file internal server error
 */
 type DeleteFileInternalServerError struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *DeleteFileInternalServerError) Error() string {
@@ -190,7 +226,7 @@ func (o *DeleteFileInternalServerError) Error() string {
 
 func (o *DeleteFileInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {

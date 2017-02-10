@@ -20,9 +20,6 @@ type BootenvInput struct {
 	// boot params
 	BootParams string `json:"BootParams,omitempty"`
 
-	// errors
-	Errors []string `json:"Errors"`
-
 	// initrds
 	Initrds []string `json:"Initrds"`
 
@@ -45,11 +42,6 @@ type BootenvInput struct {
 // Validate validates this bootenv input
 func (m *BootenvInput) Validate(formats strfmt.Registry) error {
 	var res []error
-
-	if err := m.validateErrors(formats); err != nil {
-		// prop
-		res = append(res, err)
-	}
 
 	if err := m.validateInitrds(formats); err != nil {
 		// prop
@@ -74,15 +66,6 @@ func (m *BootenvInput) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
-	return nil
-}
-
-func (m *BootenvInput) validateErrors(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.Errors) { // not required
-		return nil
-	}
-
 	return nil
 }
 

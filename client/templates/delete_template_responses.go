@@ -30,6 +30,13 @@ func (o *DeleteTemplateReader) ReadResponse(response runtime.ClientResponse, con
 		}
 		return result, nil
 
+	case 401:
+		result := NewDeleteTemplateUnauthorized()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+
 	case 404:
 		result := NewDeleteTemplateNotFound()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -77,6 +84,35 @@ func (o *DeleteTemplateNoContent) readResponse(response runtime.ClientResponse, 
 	return nil
 }
 
+// NewDeleteTemplateUnauthorized creates a DeleteTemplateUnauthorized with default headers values
+func NewDeleteTemplateUnauthorized() *DeleteTemplateUnauthorized {
+	return &DeleteTemplateUnauthorized{}
+}
+
+/*DeleteTemplateUnauthorized handles this case with default header values.
+
+DeleteTemplateUnauthorized delete template unauthorized
+*/
+type DeleteTemplateUnauthorized struct {
+	Payload *models.Error
+}
+
+func (o *DeleteTemplateUnauthorized) Error() string {
+	return fmt.Sprintf("[DELETE /templates/{uuid}][%d] deleteTemplateUnauthorized  %+v", 401, o.Payload)
+}
+
+func (o *DeleteTemplateUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.Error)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
 // NewDeleteTemplateNotFound creates a DeleteTemplateNotFound with default headers values
 func NewDeleteTemplateNotFound() *DeleteTemplateNotFound {
 	return &DeleteTemplateNotFound{}
@@ -87,7 +123,7 @@ func NewDeleteTemplateNotFound() *DeleteTemplateNotFound {
 DeleteTemplateNotFound delete template not found
 */
 type DeleteTemplateNotFound struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *DeleteTemplateNotFound) Error() string {
@@ -96,7 +132,7 @@ func (o *DeleteTemplateNotFound) Error() string {
 
 func (o *DeleteTemplateNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -116,7 +152,7 @@ func NewDeleteTemplateConflict() *DeleteTemplateConflict {
 DeleteTemplateConflict delete template conflict
 */
 type DeleteTemplateConflict struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *DeleteTemplateConflict) Error() string {
@@ -125,7 +161,7 @@ func (o *DeleteTemplateConflict) Error() string {
 
 func (o *DeleteTemplateConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -145,7 +181,7 @@ func NewDeleteTemplateInternalServerError() *DeleteTemplateInternalServerError {
 DeleteTemplateInternalServerError delete template internal server error
 */
 type DeleteTemplateInternalServerError struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *DeleteTemplateInternalServerError) Error() string {
@@ -154,7 +190,7 @@ func (o *DeleteTemplateInternalServerError) Error() string {
 
 func (o *DeleteTemplateInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {

@@ -11,43 +11,44 @@ import (
 	"github.com/rackn/rocket-skates/models"
 )
 
-/*PatchMachineAccepted patch machine accepted
+/*PatchMachineOK patch machine o k
 
-swagger:response patchMachineAccepted
+swagger:response patchMachineOK
 */
-type PatchMachineAccepted struct {
+type PatchMachineOK struct {
 
 	/*
 	  In: Body
 	*/
-	Payload PatchMachineAcceptedBody `json:"body,omitempty"`
+	Payload *models.MachineOutput `json:"body,omitempty"`
 }
 
-// NewPatchMachineAccepted creates PatchMachineAccepted with default headers values
-func NewPatchMachineAccepted() *PatchMachineAccepted {
-	return &PatchMachineAccepted{}
+// NewPatchMachineOK creates PatchMachineOK with default headers values
+func NewPatchMachineOK() *PatchMachineOK {
+	return &PatchMachineOK{}
 }
 
-// WithPayload adds the payload to the patch machine accepted response
-func (o *PatchMachineAccepted) WithPayload(payload PatchMachineAcceptedBody) *PatchMachineAccepted {
+// WithPayload adds the payload to the patch machine o k response
+func (o *PatchMachineOK) WithPayload(payload *models.MachineOutput) *PatchMachineOK {
 	o.Payload = payload
 	return o
 }
 
-// SetPayload sets the payload to the patch machine accepted response
-func (o *PatchMachineAccepted) SetPayload(payload PatchMachineAcceptedBody) {
+// SetPayload sets the payload to the patch machine o k response
+func (o *PatchMachineOK) SetPayload(payload *models.MachineOutput) {
 	o.Payload = payload
 }
 
 // WriteResponse to the client
-func (o *PatchMachineAccepted) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+func (o *PatchMachineOK) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
-	rw.WriteHeader(202)
-	payload := o.Payload
-	if err := producer.Produce(rw, payload); err != nil {
-		panic(err) // let the recovery middleware deal with this
+	rw.WriteHeader(200)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
 	}
-
 }
 
 /*PatchMachineUnauthorized patch machine unauthorized
@@ -59,7 +60,7 @@ type PatchMachineUnauthorized struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewPatchMachineUnauthorized creates PatchMachineUnauthorized with default headers values
@@ -68,13 +69,13 @@ func NewPatchMachineUnauthorized() *PatchMachineUnauthorized {
 }
 
 // WithPayload adds the payload to the patch machine unauthorized response
-func (o *PatchMachineUnauthorized) WithPayload(payload *models.Result) *PatchMachineUnauthorized {
+func (o *PatchMachineUnauthorized) WithPayload(payload *models.Error) *PatchMachineUnauthorized {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the patch machine unauthorized response
-func (o *PatchMachineUnauthorized) SetPayload(payload *models.Result) {
+func (o *PatchMachineUnauthorized) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -99,7 +100,7 @@ type PatchMachineNotFound struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewPatchMachineNotFound creates PatchMachineNotFound with default headers values
@@ -108,13 +109,13 @@ func NewPatchMachineNotFound() *PatchMachineNotFound {
 }
 
 // WithPayload adds the payload to the patch machine not found response
-func (o *PatchMachineNotFound) WithPayload(payload *models.Result) *PatchMachineNotFound {
+func (o *PatchMachineNotFound) WithPayload(payload *models.Error) *PatchMachineNotFound {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the patch machine not found response
-func (o *PatchMachineNotFound) SetPayload(payload *models.Result) {
+func (o *PatchMachineNotFound) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -122,6 +123,46 @@ func (o *PatchMachineNotFound) SetPayload(payload *models.Result) {
 func (o *PatchMachineNotFound) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
 	rw.WriteHeader(404)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
+/*PatchMachineConflict patch machine conflict
+
+swagger:response patchMachineConflict
+*/
+type PatchMachineConflict struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewPatchMachineConflict creates PatchMachineConflict with default headers values
+func NewPatchMachineConflict() *PatchMachineConflict {
+	return &PatchMachineConflict{}
+}
+
+// WithPayload adds the payload to the patch machine conflict response
+func (o *PatchMachineConflict) WithPayload(payload *models.Error) *PatchMachineConflict {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the patch machine conflict response
+func (o *PatchMachineConflict) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *PatchMachineConflict) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(409)
 	if o.Payload != nil {
 		payload := o.Payload
 		if err := producer.Produce(rw, payload); err != nil {
@@ -139,7 +180,7 @@ type PatchMachineExpectationFailed struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewPatchMachineExpectationFailed creates PatchMachineExpectationFailed with default headers values
@@ -148,13 +189,13 @@ func NewPatchMachineExpectationFailed() *PatchMachineExpectationFailed {
 }
 
 // WithPayload adds the payload to the patch machine expectation failed response
-func (o *PatchMachineExpectationFailed) WithPayload(payload *models.Result) *PatchMachineExpectationFailed {
+func (o *PatchMachineExpectationFailed) WithPayload(payload *models.Error) *PatchMachineExpectationFailed {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the patch machine expectation failed response
-func (o *PatchMachineExpectationFailed) SetPayload(payload *models.Result) {
+func (o *PatchMachineExpectationFailed) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -179,7 +220,7 @@ type PatchMachineInternalServerError struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewPatchMachineInternalServerError creates PatchMachineInternalServerError with default headers values
@@ -188,13 +229,13 @@ func NewPatchMachineInternalServerError() *PatchMachineInternalServerError {
 }
 
 // WithPayload adds the payload to the patch machine internal server error response
-func (o *PatchMachineInternalServerError) WithPayload(payload *models.Result) *PatchMachineInternalServerError {
+func (o *PatchMachineInternalServerError) WithPayload(payload *models.Error) *PatchMachineInternalServerError {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the patch machine internal server error response
-func (o *PatchMachineInternalServerError) SetPayload(payload *models.Result) {
+func (o *PatchMachineInternalServerError) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 

@@ -112,7 +112,7 @@ func (a *Client) ListMachines(params *ListMachinesParams, authInfo runtime.Clien
 /*
 PatchMachine patches machine
 */
-func (a *Client) PatchMachine(params *PatchMachineParams, authInfo runtime.ClientAuthInfoWriter) (*PatchMachineAccepted, error) {
+func (a *Client) PatchMachine(params *PatchMachineParams, authInfo runtime.ClientAuthInfoWriter) (*PatchMachineOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewPatchMachineParams()
@@ -134,14 +134,14 @@ func (a *Client) PatchMachine(params *PatchMachineParams, authInfo runtime.Clien
 	if err != nil {
 		return nil, err
 	}
-	return result.(*PatchMachineAccepted), nil
+	return result.(*PatchMachineOK), nil
 
 }
 
 /*
 PostMachine creates machine
 */
-func (a *Client) PostMachine(params *PostMachineParams, authInfo runtime.ClientAuthInfoWriter) (*PostMachineCreated, error) {
+func (a *Client) PostMachine(params *PostMachineParams, authInfo runtime.ClientAuthInfoWriter) (*PostMachineOK, *PostMachineCreated, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewPostMachineParams()
@@ -161,9 +161,15 @@ func (a *Client) PostMachine(params *PostMachineParams, authInfo runtime.ClientA
 		Client:             params.HTTPClient,
 	})
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	return result.(*PostMachineCreated), nil
+	switch value := result.(type) {
+	case *PostMachineOK:
+		return value, nil, nil
+	case *PostMachineCreated:
+		return nil, value, nil
+	}
+	return nil, nil, nil
 
 }
 

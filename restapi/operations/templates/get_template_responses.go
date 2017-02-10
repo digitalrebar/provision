@@ -60,7 +60,7 @@ type GetTemplateUnauthorized struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewGetTemplateUnauthorized creates GetTemplateUnauthorized with default headers values
@@ -69,13 +69,13 @@ func NewGetTemplateUnauthorized() *GetTemplateUnauthorized {
 }
 
 // WithPayload adds the payload to the get template unauthorized response
-func (o *GetTemplateUnauthorized) WithPayload(payload *models.Result) *GetTemplateUnauthorized {
+func (o *GetTemplateUnauthorized) WithPayload(payload *models.Error) *GetTemplateUnauthorized {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the get template unauthorized response
-func (o *GetTemplateUnauthorized) SetPayload(payload *models.Result) {
+func (o *GetTemplateUnauthorized) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -100,7 +100,7 @@ type GetTemplateNotFound struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewGetTemplateNotFound creates GetTemplateNotFound with default headers values
@@ -109,13 +109,13 @@ func NewGetTemplateNotFound() *GetTemplateNotFound {
 }
 
 // WithPayload adds the payload to the get template not found response
-func (o *GetTemplateNotFound) WithPayload(payload *models.Result) *GetTemplateNotFound {
+func (o *GetTemplateNotFound) WithPayload(payload *models.Error) *GetTemplateNotFound {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the get template not found response
-func (o *GetTemplateNotFound) SetPayload(payload *models.Result) {
+func (o *GetTemplateNotFound) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -140,7 +140,7 @@ type GetTemplateInternalServerError struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewGetTemplateInternalServerError creates GetTemplateInternalServerError with default headers values
@@ -149,13 +149,13 @@ func NewGetTemplateInternalServerError() *GetTemplateInternalServerError {
 }
 
 // WithPayload adds the payload to the get template internal server error response
-func (o *GetTemplateInternalServerError) WithPayload(payload *models.Result) *GetTemplateInternalServerError {
+func (o *GetTemplateInternalServerError) WithPayload(payload *models.Error) *GetTemplateInternalServerError {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the get template internal server error response
-func (o *GetTemplateInternalServerError) SetPayload(payload *models.Result) {
+func (o *GetTemplateInternalServerError) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 

@@ -23,8 +23,8 @@ type PatchBootenvReader struct {
 func (o *PatchBootenvReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
 
-	case 202:
-		result := NewPatchBootenvAccepted()
+	case 200:
+		result := NewPatchBootenvOK()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -39,6 +39,13 @@ func (o *PatchBootenvReader) ReadResponse(response runtime.ClientResponse, consu
 
 	case 404:
 		result := NewPatchBootenvNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+
+	case 409:
+		result := NewPatchBootenvConflict()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -63,26 +70,26 @@ func (o *PatchBootenvReader) ReadResponse(response runtime.ClientResponse, consu
 	}
 }
 
-// NewPatchBootenvAccepted creates a PatchBootenvAccepted with default headers values
-func NewPatchBootenvAccepted() *PatchBootenvAccepted {
-	return &PatchBootenvAccepted{}
+// NewPatchBootenvOK creates a PatchBootenvOK with default headers values
+func NewPatchBootenvOK() *PatchBootenvOK {
+	return &PatchBootenvOK{}
 }
 
-/*PatchBootenvAccepted handles this case with default header values.
+/*PatchBootenvOK handles this case with default header values.
 
-PatchBootenvAccepted patch bootenv accepted
+PatchBootenvOK patch bootenv o k
 */
-type PatchBootenvAccepted struct {
-	Payload *models.BootenvInput
+type PatchBootenvOK struct {
+	Payload *models.BootenvOutput
 }
 
-func (o *PatchBootenvAccepted) Error() string {
-	return fmt.Sprintf("[PATCH /bootenvs/{name}][%d] patchBootenvAccepted  %+v", 202, o.Payload)
+func (o *PatchBootenvOK) Error() string {
+	return fmt.Sprintf("[PATCH /bootenvs/{name}][%d] patchBootenvOK  %+v", 200, o.Payload)
 }
 
-func (o *PatchBootenvAccepted) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+func (o *PatchBootenvOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.BootenvInput)
+	o.Payload = new(models.BootenvOutput)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -102,7 +109,7 @@ func NewPatchBootenvUnauthorized() *PatchBootenvUnauthorized {
 PatchBootenvUnauthorized patch bootenv unauthorized
 */
 type PatchBootenvUnauthorized struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *PatchBootenvUnauthorized) Error() string {
@@ -111,7 +118,7 @@ func (o *PatchBootenvUnauthorized) Error() string {
 
 func (o *PatchBootenvUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -131,7 +138,7 @@ func NewPatchBootenvNotFound() *PatchBootenvNotFound {
 PatchBootenvNotFound patch bootenv not found
 */
 type PatchBootenvNotFound struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *PatchBootenvNotFound) Error() string {
@@ -140,7 +147,36 @@ func (o *PatchBootenvNotFound) Error() string {
 
 func (o *PatchBootenvNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewPatchBootenvConflict creates a PatchBootenvConflict with default headers values
+func NewPatchBootenvConflict() *PatchBootenvConflict {
+	return &PatchBootenvConflict{}
+}
+
+/*PatchBootenvConflict handles this case with default header values.
+
+PatchBootenvConflict patch bootenv conflict
+*/
+type PatchBootenvConflict struct {
+	Payload *models.Error
+}
+
+func (o *PatchBootenvConflict) Error() string {
+	return fmt.Sprintf("[PATCH /bootenvs/{name}][%d] patchBootenvConflict  %+v", 409, o.Payload)
+}
+
+func (o *PatchBootenvConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -160,7 +196,7 @@ func NewPatchBootenvExpectationFailed() *PatchBootenvExpectationFailed {
 PatchBootenvExpectationFailed patch bootenv expectation failed
 */
 type PatchBootenvExpectationFailed struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *PatchBootenvExpectationFailed) Error() string {
@@ -169,7 +205,7 @@ func (o *PatchBootenvExpectationFailed) Error() string {
 
 func (o *PatchBootenvExpectationFailed) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -189,7 +225,7 @@ func NewPatchBootenvInternalServerError() *PatchBootenvInternalServerError {
 PatchBootenvInternalServerError patch bootenv internal server error
 */
 type PatchBootenvInternalServerError struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *PatchBootenvInternalServerError) Error() string {
@@ -198,7 +234,7 @@ func (o *PatchBootenvInternalServerError) Error() string {
 
 func (o *PatchBootenvInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {

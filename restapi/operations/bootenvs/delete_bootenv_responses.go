@@ -29,6 +29,46 @@ func (o *DeleteBootenvNoContent) WriteResponse(rw http.ResponseWriter, producer 
 	rw.WriteHeader(204)
 }
 
+/*DeleteBootenvUnauthorized delete bootenv unauthorized
+
+swagger:response deleteBootenvUnauthorized
+*/
+type DeleteBootenvUnauthorized struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewDeleteBootenvUnauthorized creates DeleteBootenvUnauthorized with default headers values
+func NewDeleteBootenvUnauthorized() *DeleteBootenvUnauthorized {
+	return &DeleteBootenvUnauthorized{}
+}
+
+// WithPayload adds the payload to the delete bootenv unauthorized response
+func (o *DeleteBootenvUnauthorized) WithPayload(payload *models.Error) *DeleteBootenvUnauthorized {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the delete bootenv unauthorized response
+func (o *DeleteBootenvUnauthorized) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *DeleteBootenvUnauthorized) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(401)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
 /*DeleteBootenvNotFound delete bootenv not found
 
 swagger:response deleteBootenvNotFound
@@ -38,7 +78,7 @@ type DeleteBootenvNotFound struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewDeleteBootenvNotFound creates DeleteBootenvNotFound with default headers values
@@ -47,13 +87,13 @@ func NewDeleteBootenvNotFound() *DeleteBootenvNotFound {
 }
 
 // WithPayload adds the payload to the delete bootenv not found response
-func (o *DeleteBootenvNotFound) WithPayload(payload *models.Result) *DeleteBootenvNotFound {
+func (o *DeleteBootenvNotFound) WithPayload(payload *models.Error) *DeleteBootenvNotFound {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the delete bootenv not found response
-func (o *DeleteBootenvNotFound) SetPayload(payload *models.Result) {
+func (o *DeleteBootenvNotFound) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -78,7 +118,7 @@ type DeleteBootenvConflict struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewDeleteBootenvConflict creates DeleteBootenvConflict with default headers values
@@ -87,13 +127,13 @@ func NewDeleteBootenvConflict() *DeleteBootenvConflict {
 }
 
 // WithPayload adds the payload to the delete bootenv conflict response
-func (o *DeleteBootenvConflict) WithPayload(payload *models.Result) *DeleteBootenvConflict {
+func (o *DeleteBootenvConflict) WithPayload(payload *models.Error) *DeleteBootenvConflict {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the delete bootenv conflict response
-func (o *DeleteBootenvConflict) SetPayload(payload *models.Result) {
+func (o *DeleteBootenvConflict) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -118,7 +158,7 @@ type DeleteBootenvInternalServerError struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewDeleteBootenvInternalServerError creates DeleteBootenvInternalServerError with default headers values
@@ -127,13 +167,13 @@ func NewDeleteBootenvInternalServerError() *DeleteBootenvInternalServerError {
 }
 
 // WithPayload adds the payload to the delete bootenv internal server error response
-func (o *DeleteBootenvInternalServerError) WithPayload(payload *models.Result) *DeleteBootenvInternalServerError {
+func (o *DeleteBootenvInternalServerError) WithPayload(payload *models.Error) *DeleteBootenvInternalServerError {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the delete bootenv internal server error response
-func (o *DeleteBootenvInternalServerError) SetPayload(payload *models.Result) {
+func (o *DeleteBootenvInternalServerError) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 

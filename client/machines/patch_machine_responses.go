@@ -23,8 +23,8 @@ type PatchMachineReader struct {
 func (o *PatchMachineReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
 
-	case 202:
-		result := NewPatchMachineAccepted()
+	case 200:
+		result := NewPatchMachineOK()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -39,6 +39,13 @@ func (o *PatchMachineReader) ReadResponse(response runtime.ClientResponse, consu
 
 	case 404:
 		result := NewPatchMachineNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+
+	case 409:
+		result := NewPatchMachineConflict()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -63,27 +70,29 @@ func (o *PatchMachineReader) ReadResponse(response runtime.ClientResponse, consu
 	}
 }
 
-// NewPatchMachineAccepted creates a PatchMachineAccepted with default headers values
-func NewPatchMachineAccepted() *PatchMachineAccepted {
-	return &PatchMachineAccepted{}
+// NewPatchMachineOK creates a PatchMachineOK with default headers values
+func NewPatchMachineOK() *PatchMachineOK {
+	return &PatchMachineOK{}
 }
 
-/*PatchMachineAccepted handles this case with default header values.
+/*PatchMachineOK handles this case with default header values.
 
-PatchMachineAccepted patch machine accepted
+PatchMachineOK patch machine o k
 */
-type PatchMachineAccepted struct {
-	Payload PatchMachineAcceptedBody
+type PatchMachineOK struct {
+	Payload *models.MachineOutput
 }
 
-func (o *PatchMachineAccepted) Error() string {
-	return fmt.Sprintf("[PATCH /machines/{uuid}][%d] patchMachineAccepted  %+v", 202, o.Payload)
+func (o *PatchMachineOK) Error() string {
+	return fmt.Sprintf("[PATCH /machines/{uuid}][%d] patchMachineOK  %+v", 200, o.Payload)
 }
 
-func (o *PatchMachineAccepted) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+func (o *PatchMachineOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.MachineOutput)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), &o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
 		return err
 	}
 
@@ -100,7 +109,7 @@ func NewPatchMachineUnauthorized() *PatchMachineUnauthorized {
 PatchMachineUnauthorized patch machine unauthorized
 */
 type PatchMachineUnauthorized struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *PatchMachineUnauthorized) Error() string {
@@ -109,7 +118,7 @@ func (o *PatchMachineUnauthorized) Error() string {
 
 func (o *PatchMachineUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -129,7 +138,7 @@ func NewPatchMachineNotFound() *PatchMachineNotFound {
 PatchMachineNotFound patch machine not found
 */
 type PatchMachineNotFound struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *PatchMachineNotFound) Error() string {
@@ -138,7 +147,36 @@ func (o *PatchMachineNotFound) Error() string {
 
 func (o *PatchMachineNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewPatchMachineConflict creates a PatchMachineConflict with default headers values
+func NewPatchMachineConflict() *PatchMachineConflict {
+	return &PatchMachineConflict{}
+}
+
+/*PatchMachineConflict handles this case with default header values.
+
+PatchMachineConflict patch machine conflict
+*/
+type PatchMachineConflict struct {
+	Payload *models.Error
+}
+
+func (o *PatchMachineConflict) Error() string {
+	return fmt.Sprintf("[PATCH /machines/{uuid}][%d] patchMachineConflict  %+v", 409, o.Payload)
+}
+
+func (o *PatchMachineConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -158,7 +196,7 @@ func NewPatchMachineExpectationFailed() *PatchMachineExpectationFailed {
 PatchMachineExpectationFailed patch machine expectation failed
 */
 type PatchMachineExpectationFailed struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *PatchMachineExpectationFailed) Error() string {
@@ -167,7 +205,7 @@ func (o *PatchMachineExpectationFailed) Error() string {
 
 func (o *PatchMachineExpectationFailed) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -187,7 +225,7 @@ func NewPatchMachineInternalServerError() *PatchMachineInternalServerError {
 PatchMachineInternalServerError patch machine internal server error
 */
 type PatchMachineInternalServerError struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *PatchMachineInternalServerError) Error() string {
@@ -196,7 +234,7 @@ func (o *PatchMachineInternalServerError) Error() string {
 
 func (o *PatchMachineInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -204,18 +242,4 @@ func (o *PatchMachineInternalServerError) readResponse(response runtime.ClientRe
 	}
 
 	return nil
-}
-
-/*PatchMachineAcceptedBody patch machine accepted body
-swagger:model PatchMachineAcceptedBody
-*/
-type PatchMachineAcceptedBody struct {
-
-	// data
-	// Required: true
-	Data *models.MachineOutput `json:"Data"`
-
-	// result
-	// Required: true
-	Result *models.Result `json:"Result"`
 }

@@ -37,8 +37,22 @@ func (o *PostFileReader) ReadResponse(response runtime.ClientResponse, consumer 
 		}
 		return nil, result
 
+	case 401:
+		result := NewPostFileUnauthorized()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+
 	case 409:
 		result := NewPostFileConflict()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+
+	case 500:
+		result := NewPostFileInternalServerError()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -93,7 +107,7 @@ func NewPostFileBadRequest() *PostFileBadRequest {
 PostFileBadRequest post file bad request
 */
 type PostFileBadRequest struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *PostFileBadRequest) Error() string {
@@ -102,7 +116,36 @@ func (o *PostFileBadRequest) Error() string {
 
 func (o *PostFileBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewPostFileUnauthorized creates a PostFileUnauthorized with default headers values
+func NewPostFileUnauthorized() *PostFileUnauthorized {
+	return &PostFileUnauthorized{}
+}
+
+/*PostFileUnauthorized handles this case with default header values.
+
+PostFileUnauthorized post file unauthorized
+*/
+type PostFileUnauthorized struct {
+	Payload *models.Error
+}
+
+func (o *PostFileUnauthorized) Error() string {
+	return fmt.Sprintf("[POST /files/{path}][%d] postFileUnauthorized  %+v", 401, o.Payload)
+}
+
+func (o *PostFileUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -122,7 +165,7 @@ func NewPostFileConflict() *PostFileConflict {
 PostFileConflict post file conflict
 */
 type PostFileConflict struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *PostFileConflict) Error() string {
@@ -131,7 +174,36 @@ func (o *PostFileConflict) Error() string {
 
 func (o *PostFileConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewPostFileInternalServerError creates a PostFileInternalServerError with default headers values
+func NewPostFileInternalServerError() *PostFileInternalServerError {
+	return &PostFileInternalServerError{}
+}
+
+/*PostFileInternalServerError handles this case with default header values.
+
+PostFileInternalServerError post file internal server error
+*/
+type PostFileInternalServerError struct {
+	Payload *models.Error
+}
+
+func (o *PostFileInternalServerError) Error() string {
+	return fmt.Sprintf("[POST /files/{path}][%d] postFileInternalServerError  %+v", 500, o.Payload)
+}
+
+func (o *PostFileInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -151,7 +223,7 @@ func NewPostFileInsufficientStorage() *PostFileInsufficientStorage {
 PostFileInsufficientStorage post file insufficient storage
 */
 type PostFileInsufficientStorage struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *PostFileInsufficientStorage) Error() string {
@@ -160,7 +232,7 @@ func (o *PostFileInsufficientStorage) Error() string {
 
 func (o *PostFileInsufficientStorage) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {

@@ -20,7 +20,7 @@ type ListBootenvsOK struct {
 	/*
 	  In: Body
 	*/
-	Payload []*models.BootenvInput `json:"body,omitempty"`
+	Payload []*models.BootenvOutput `json:"body,omitempty"`
 }
 
 // NewListBootenvsOK creates ListBootenvsOK with default headers values
@@ -29,13 +29,13 @@ func NewListBootenvsOK() *ListBootenvsOK {
 }
 
 // WithPayload adds the payload to the list bootenvs o k response
-func (o *ListBootenvsOK) WithPayload(payload []*models.BootenvInput) *ListBootenvsOK {
+func (o *ListBootenvsOK) WithPayload(payload []*models.BootenvOutput) *ListBootenvsOK {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the list bootenvs o k response
-func (o *ListBootenvsOK) SetPayload(payload []*models.BootenvInput) {
+func (o *ListBootenvsOK) SetPayload(payload []*models.BootenvOutput) {
 	o.Payload = payload
 }
 
@@ -45,7 +45,7 @@ func (o *ListBootenvsOK) WriteResponse(rw http.ResponseWriter, producer runtime.
 	rw.WriteHeader(200)
 	payload := o.Payload
 	if payload == nil {
-		payload = make([]*models.BootenvInput, 0, 50)
+		payload = make([]*models.BootenvOutput, 0, 50)
 	}
 
 	if err := producer.Produce(rw, payload); err != nil {
@@ -63,7 +63,7 @@ type ListBootenvsUnauthorized struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewListBootenvsUnauthorized creates ListBootenvsUnauthorized with default headers values
@@ -72,13 +72,13 @@ func NewListBootenvsUnauthorized() *ListBootenvsUnauthorized {
 }
 
 // WithPayload adds the payload to the list bootenvs unauthorized response
-func (o *ListBootenvsUnauthorized) WithPayload(payload *models.Result) *ListBootenvsUnauthorized {
+func (o *ListBootenvsUnauthorized) WithPayload(payload *models.Error) *ListBootenvsUnauthorized {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the list bootenvs unauthorized response
-func (o *ListBootenvsUnauthorized) SetPayload(payload *models.Result) {
+func (o *ListBootenvsUnauthorized) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -103,7 +103,7 @@ type ListBootenvsNotFound struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewListBootenvsNotFound creates ListBootenvsNotFound with default headers values
@@ -112,13 +112,13 @@ func NewListBootenvsNotFound() *ListBootenvsNotFound {
 }
 
 // WithPayload adds the payload to the list bootenvs not found response
-func (o *ListBootenvsNotFound) WithPayload(payload *models.Result) *ListBootenvsNotFound {
+func (o *ListBootenvsNotFound) WithPayload(payload *models.Error) *ListBootenvsNotFound {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the list bootenvs not found response
-func (o *ListBootenvsNotFound) SetPayload(payload *models.Result) {
+func (o *ListBootenvsNotFound) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -143,7 +143,7 @@ type ListBootenvsInternalServerError struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewListBootenvsInternalServerError creates ListBootenvsInternalServerError with default headers values
@@ -152,13 +152,13 @@ func NewListBootenvsInternalServerError() *ListBootenvsInternalServerError {
 }
 
 // WithPayload adds the payload to the list bootenvs internal server error response
-func (o *ListBootenvsInternalServerError) WithPayload(payload *models.Result) *ListBootenvsInternalServerError {
+func (o *ListBootenvsInternalServerError) WithPayload(payload *models.Error) *ListBootenvsInternalServerError {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the list bootenvs internal server error response
-func (o *ListBootenvsInternalServerError) SetPayload(payload *models.Result) {
+func (o *ListBootenvsInternalServerError) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 

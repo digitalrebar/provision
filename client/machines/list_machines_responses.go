@@ -66,7 +66,7 @@ func NewListMachinesOK() *ListMachinesOK {
 ListMachinesOK list machines o k
 */
 type ListMachinesOK struct {
-	Payload ListMachinesOKBody
+	Payload []*models.MachineOutput
 }
 
 func (o *ListMachinesOK) Error() string {
@@ -93,7 +93,7 @@ func NewListMachinesUnauthorized() *ListMachinesUnauthorized {
 ListMachinesUnauthorized list machines unauthorized
 */
 type ListMachinesUnauthorized struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *ListMachinesUnauthorized) Error() string {
@@ -102,7 +102,7 @@ func (o *ListMachinesUnauthorized) Error() string {
 
 func (o *ListMachinesUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -122,7 +122,7 @@ func NewListMachinesNotFound() *ListMachinesNotFound {
 ListMachinesNotFound list machines not found
 */
 type ListMachinesNotFound struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *ListMachinesNotFound) Error() string {
@@ -131,7 +131,7 @@ func (o *ListMachinesNotFound) Error() string {
 
 func (o *ListMachinesNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -151,7 +151,7 @@ func NewListMachinesInternalServerError() *ListMachinesInternalServerError {
 ListMachinesInternalServerError list machines internal server error
 */
 type ListMachinesInternalServerError struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *ListMachinesInternalServerError) Error() string {
@@ -160,7 +160,7 @@ func (o *ListMachinesInternalServerError) Error() string {
 
 func (o *ListMachinesInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -168,18 +168,4 @@ func (o *ListMachinesInternalServerError) readResponse(response runtime.ClientRe
 	}
 
 	return nil
-}
-
-/*ListMachinesOKBody list machines o k body
-swagger:model ListMachinesOKBody
-*/
-type ListMachinesOKBody struct {
-
-	// data
-	// Required: true
-	Data []*models.MachineOutput `json:"Data"`
-
-	// result
-	// Required: true
-	Result *models.Result `json:"Result"`
 }

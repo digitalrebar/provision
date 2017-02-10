@@ -23,6 +23,107 @@ securityDefinitions:
   rebar:
     type: basic
 paths:
+  '/leases/{id}':
+    parameters:
+      - name: id
+        in: path
+        required: true
+        type: string
+    get:
+      operationId: get-dhcp-lease
+      summary: Get DHCP Lease
+      tags:
+        - Dhcp leases
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/dhcp-lease-input'
+        '401':
+          $ref: '#/responses/trait:commonGetResponses:401'
+        '404':
+          $ref: '#/responses/trait:commonGetResponses:404'
+        '500':
+          $ref: '#/responses/trait:commonGetResponses:500'
+    put:
+      operationId: put-dhcp-lease
+      summary: Update DHCP Lease
+      tags:
+        - Dhcp leases
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/dhcp-lease-input'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/dhcp-lease-input'
+        '401':
+          $ref: '#/responses/trait:commonPutResponses:401'
+        '404':
+          $ref: '#/responses/trait:commonPutResponses:404'
+        '409':
+          $ref: '#/responses/trait:commonPutResponses:409'
+        '500':
+          $ref: '#/responses/trait:commonPutResponses:500'
+    delete:
+      operationId: delete-dhcp-lease
+      summary: Delete DHCP Lease
+      tags:
+        - Dhcp leases
+      responses:
+        '204':
+          description: ''
+        '401':
+          $ref: '#/responses/trait:commonDeleteResponses:401'
+        '404':
+          $ref: '#/responses/trait:commonDeleteResponses:404'
+        '409':
+          $ref: '#/responses/trait:commonDeleteResponses:409'
+        '500':
+          $ref: '#/responses/trait:commonDeleteResponses:500'
+  /leases:
+    get:
+      operationId: list-dhcp-leases
+      summary: List Dhcp leases
+      tags:
+        - Dhcp leases
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/dhcp-lease-input'
+        '401':
+          $ref: '#/responses/trait:commonGetResponses:401'
+        '404':
+          $ref: '#/responses/trait:commonGetResponses:404'
+        '500':
+          $ref: '#/responses/trait:commonGetResponses:500'
+    post:
+      operationId: post-dhcp-lease
+      summary: Create DHCP Lease
+      tags:
+        - Dhcp leases
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/dhcp-lease-input'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/dhcp-lease-input'
+        '401':
+          $ref: '#/responses/trait:commonPostResponses:401'
+        '409':
+          $ref: '#/responses/trait:commonPostResponses:409'
+        '500':
+          $ref: '#/responses/trait:commonPostResponses:500'
   /files:
     get:
       operationId: list-files
@@ -73,15 +174,19 @@ paths:
         '400':
           description: ''
           schema:
-            $ref: '#/definitions/result'
+            $ref: '#/definitions/error'
+        '401':
+          $ref: '#/responses/trait:commonPostResponses:401'
         '409':
           description: ''
           schema:
-            $ref: '#/definitions/result'
+            $ref: '#/definitions/error'
+        '500':
+          $ref: '#/responses/trait:commonPostResponses:500'
         '507':
           description: ''
           schema:
-            $ref: '#/definitions/result'
+            $ref: '#/definitions/error'
     get:
       operationId: get-file
       summary: Get File
@@ -108,10 +213,12 @@ paths:
       responses:
         '204':
           description: ''
+        '401':
+          $ref: '#/responses/trait:commonDeleteResponses:401'
         '403':
           description: ''
           schema:
-            $ref: '#/definitions/result'
+            $ref: '#/definitions/error'
         '404':
           $ref: '#/responses/trait:commonDeleteResponses:404'
         '409':
@@ -130,7 +237,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/bootenv-input'
+              $ref: '#/definitions/bootenv-output'
         '401':
           $ref: '#/responses/trait:commonGetResponses:401'
         '404':
@@ -197,10 +304,14 @@ paths:
                   UUID: 2012r2-unattend.xml.tmpl
               TenantId: 1
       responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/bootenv-output'
         '201':
           description: ''
           schema:
-            $ref: '#/definitions/bootenv-input'
+            $ref: '#/definitions/bootenv-output'
         '401':
           $ref: '#/responses/trait:commonPostResponses:401'
         '409':
@@ -222,7 +333,7 @@ paths:
         '200':
           description: ''
           schema:
-            $ref: '#/definitions/bootenv-input'
+            $ref: '#/definitions/bootenv-output'
         '401':
           $ref: '#/responses/trait:commonGetResponses:401'
         '404':
@@ -240,14 +351,16 @@ paths:
           schema:
             $ref: '#/definitions/patchinput'
       responses:
-        '202':
+        '200':
           description: ''
           schema:
-            $ref: '#/definitions/bootenv-input'
+            $ref: '#/definitions/bootenv-output'
         '401':
           $ref: '#/responses/trait:commonPatchResponses:401'
         '404':
           $ref: '#/responses/trait:commonPatchResponses:404'
+        '409':
+          $ref: '#/responses/trait:commonPatchResponses:409'
         '417':
           $ref: '#/responses/trait:commonPatchResponses:417'
         '500':
@@ -314,11 +427,13 @@ paths:
         '200':
           description: ''
           schema:
-            $ref: '#/definitions/bootenv-input'
+            $ref: '#/definitions/bootenv-output'
         '401':
           $ref: '#/responses/trait:commonPutResponses:401'
         '404':
           $ref: '#/responses/trait:commonPutResponses:404'
+        '409':
+          $ref: '#/responses/trait:commonPutResponses:409'
         '500':
           $ref: '#/responses/trait:commonPutResponses:500'
     delete:
@@ -329,6 +444,8 @@ paths:
       responses:
         '204':
           description: ''
+        '401':
+          $ref: '#/responses/trait:commonDeleteResponses:401'
         '404':
           $ref: '#/responses/trait:commonDeleteResponses:404'
         '409':
@@ -385,15 +502,19 @@ paths:
         '400':
           description: ''
           schema:
-            $ref: '#/definitions/result'
+            $ref: '#/definitions/error'
+        '401':
+          $ref: '#/responses/trait:commonPostResponses:401'
         '409':
           description: ''
           schema:
-            $ref: '#/definitions/result'
+            $ref: '#/definitions/error'
+        '500':
+          $ref: '#/responses/trait:commonPostResponses:500'
         '507':
           description: ''
           schema:
-            $ref: '#/definitions/result'
+            $ref: '#/definitions/error'
     get:
       operationId: get-iso
       summary: Get Iso
@@ -420,6 +541,8 @@ paths:
       responses:
         '204':
           description: ''
+        '401':
+          $ref: '#/responses/trait:commonDeleteResponses:401'
         '404':
           $ref: '#/responses/trait:commonDeleteResponses:404'
         '409':
@@ -462,6 +585,10 @@ paths:
               TenantId: 1
               UUID: stage1.ps1.tmpl
       responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/template-output'
         '201':
           description: ''
           schema:
@@ -491,11 +618,11 @@ paths:
           schema:
             format: binary
       responses:
-        '201':
+        '200':
           description: ''
           schema:
             $ref: '#/definitions/template-output'
-        '202':
+        '201':
           description: ''
           schema:
             $ref: '#/definitions/template-output'
@@ -506,7 +633,7 @@ paths:
         '417':
           description: ''
           schema:
-            $ref: '#/definitions/result'
+            $ref: '#/definitions/error'
         '500':
           $ref: '#/responses/trait:commonPostResponses:500'
     get:
@@ -547,11 +674,13 @@ paths:
           schema:
             $ref: '#/definitions/template-output'
         '401':
-          $ref: '#/responses/trait:commonGetResponses:401'
+          $ref: '#/responses/trait:commonPutResponses:401'
         '404':
-          $ref: '#/responses/trait:commonGetResponses:404'
+          $ref: '#/responses/trait:commonPutResponses:404'
+        '409':
+          $ref: '#/responses/trait:commonPutResponses:409'
         '500':
-          $ref: '#/responses/trait:commonGetResponses:500'
+          $ref: '#/responses/trait:commonPutResponses:500'
     delete:
       operationId: delete-template
       summary: Delete Template
@@ -560,6 +689,8 @@ paths:
       responses:
         '204':
           description: ''
+        '401':
+          $ref: '#/responses/trait:commonDeleteResponses:401'
         '404':
           $ref: '#/responses/trait:commonDeleteResponses:404'
         '409':
@@ -583,7 +714,7 @@ paths:
           schema:
             $ref: '#/definitions/patchinput'
       responses:
-        '202':
+        '200':
           description: ''
           schema:
             $ref: '#/definitions/template-output'
@@ -591,6 +722,8 @@ paths:
           $ref: '#/responses/trait:commonPatchResponses:401'
         '404':
           $ref: '#/responses/trait:commonPatchResponses:404'
+        '409':
+          $ref: '#/responses/trait:commonPatchResponses:409'
         '417':
           $ref: '#/responses/trait:commonPatchResponses:417'
         '500':
@@ -605,14 +738,9 @@ paths:
         '200':
           description: ''
           schema:
-            type: object
-            properties:
-              Result:
-                $ref: '#/definitions/result'
-              Data:
-                type: array
-                items:
-                  $ref: '#/definitions/machine-output'
+            type: array
+            items:
+              $ref: '#/definitions/machine-output'
         '401':
           $ref: '#/responses/trait:commonGetResponses:401'
         '404':
@@ -637,15 +765,14 @@ paths:
               TenantId: 1
               Uuid: 0f2a8f98-af51-415e-ad4f-cfea69adaed3
       responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/machine-output'
         '201':
           description: ''
           schema:
-            type: object
-            properties:
-              Result:
-                $ref: '#/definitions/result'
-              Data:
-                $ref: '#/definitions/machine-output'
+            $ref: '#/definitions/machine-output'
         '401':
           $ref: '#/responses/trait:commonPostResponses:401'
         '409':
@@ -667,12 +794,7 @@ paths:
         '200':
           description: ''
           schema:
-            type: object
-            properties:
-              Data:
-                $ref: '#/definitions/machine-output'
-              Result:
-                $ref: '#/definitions/result'
+            $ref: '#/definitions/machine-output'
         '401':
           $ref: '#/responses/trait:commonGetResponses:401'
         '404':
@@ -700,16 +822,13 @@ paths:
         '200':
           description: ''
           schema:
-            type: object
-            properties:
-              Result:
-                $ref: '#/definitions/result'
-              Data:
-                $ref: '#/definitions/machine-output'
+            $ref: '#/definitions/machine-output'
         '401':
           $ref: '#/responses/trait:commonPutResponses:401'
         '404':
           $ref: '#/responses/trait:commonPutResponses:404'
+        '409':
+          $ref: '#/responses/trait:commonPutResponses:409'
         '500':
           $ref: '#/responses/trait:commonPutResponses:500'
     patch:
@@ -723,19 +842,16 @@ paths:
           schema:
             $ref: '#/definitions/patchinput'
       responses:
-        '202':
+        '200':
           description: ''
           schema:
-            type: object
-            properties:
-              Result:
-                $ref: '#/definitions/result'
-              Data:
-                $ref: '#/definitions/machine-output'
+            $ref: '#/definitions/machine-output'
         '401':
           $ref: '#/responses/trait:commonPatchResponses:401'
         '404':
           $ref: '#/responses/trait:commonPatchResponses:404'
+        '409':
+          $ref: '#/responses/trait:commonPatchResponses:409'
         '417':
           $ref: '#/responses/trait:commonPatchResponses:417'
         '500':
@@ -748,6 +864,8 @@ paths:
       responses:
         '204':
           description: ''
+        '401':
+          $ref: '#/responses/trait:commonDeleteResponses:401'
         '404':
           $ref: '#/responses/trait:commonDeleteResponses:404'
         '409':
@@ -758,67 +876,79 @@ responses:
   'trait:commonGetResponses:401':
     description: ''
     schema:
-      $ref: '#/definitions/result'
+      $ref: '#/definitions/error'
   'trait:commonGetResponses:404':
     description: ''
     schema:
-      $ref: '#/definitions/result'
+      $ref: '#/definitions/error'
   'trait:commonGetResponses:500':
     description: ''
     schema:
-      $ref: '#/definitions/result'
+      $ref: '#/definitions/error'
+  'trait:commonDeleteResponses:401':
+    description: ''
+    schema:
+      $ref: '#/definitions/error'
   'trait:commonDeleteResponses:404':
     description: ''
     schema:
-      $ref: '#/definitions/result'
+      $ref: '#/definitions/error'
   'trait:commonDeleteResponses:409':
     description: ''
     schema:
-      $ref: '#/definitions/result'
+      $ref: '#/definitions/error'
   'trait:commonDeleteResponses:500':
     description: ''
     schema:
-      $ref: '#/definitions/result'
+      $ref: '#/definitions/error'
   'trait:commonPostResponses:401':
     description: ''
     schema:
-      $ref: '#/definitions/result'
+      $ref: '#/definitions/error'
   'trait:commonPostResponses:409':
     description: ''
     schema:
-      $ref: '#/definitions/result'
+      $ref: '#/definitions/error'
   'trait:commonPostResponses:500':
     description: ''
     schema:
-      $ref: '#/definitions/result'
+      $ref: '#/definitions/error'
   'trait:commonPutResponses:401':
     description: ''
     schema:
-      $ref: '#/definitions/result'
+      $ref: '#/definitions/error'
   'trait:commonPutResponses:404':
     description: ''
     schema:
-      $ref: '#/definitions/result'
+      $ref: '#/definitions/error'
+  'trait:commonPutResponses:409':
+    description: ''
+    schema:
+      $ref: '#/definitions/error'
   'trait:commonPutResponses:500':
     description: ''
     schema:
-      $ref: '#/definitions/result'
+      $ref: '#/definitions/error'
   'trait:commonPatchResponses:401':
     description: ''
     schema:
-      $ref: '#/definitions/result'
+      $ref: '#/definitions/error'
   'trait:commonPatchResponses:404':
     description: ''
     schema:
-      $ref: '#/definitions/result'
+      $ref: '#/definitions/error'
+  'trait:commonPatchResponses:409':
+    description: ''
+    schema:
+      $ref: '#/definitions/error'
   'trait:commonPatchResponses:417':
     description: ''
     schema:
-      $ref: '#/definitions/result'
+      $ref: '#/definitions/error'
   'trait:commonPatchResponses:500':
     description: ''
     schema:
-      $ref: '#/definitions/result'
+      $ref: '#/definitions/error'
 definitions:
   machine-input:
     title: Machine Input
@@ -850,20 +980,24 @@ definitions:
     title: Machine Output
     allOf:
       - $ref: '#/definitions/machine-input'
+      - type: object
+        properties:
+          Errors:
+            type: array
+            items:
+              type: string
   parameterobjectmap:
     title: ParameterObjectMap
     AdditionalProperties:
       type: object
-  result:
-    title: Result
+  error:
+    title: Error
     type: object
     properties:
-      Code:
+      code:
         type: integer
-      Messages:
-        type: array
-        items:
-          type: string
+      message:
+        type: string
   template-input:
     title: Template Input
     type: object
@@ -898,6 +1032,12 @@ definitions:
     title: Template Output
     allOf:
       - $ref: '#/definitions/template-input'
+      - type: object
+        properties:
+          Errors:
+            type: array
+            items:
+              type: string
   bootenv-input:
     title: Bootenv Input
     type: object
@@ -906,10 +1046,6 @@ definitions:
         type: boolean
       BootParams:
         type: string
-      Errors:
-        type: array
-        items:
-          type: string
       Initrds:
         type: array
         items:
@@ -1001,6 +1137,56 @@ definitions:
   principal:
     title: Principal
     type: string
+  bootenv-output:
+    title: Bootenv  Output
+    allOf:
+      - $ref: '#/definitions/bootenv-input'
+      - type: object
+        properties:
+          Errors:
+            type: array
+            items:
+              type: string
+  dhcp-lease-input:
+    title: DHCP Lease Input
+    type: object
+    properties:
+      IpAddress:
+        type: string
+        format: ipv4
+      MacAddress:
+        type: string
+        minLength: 17
+        maxLength: 17
+        pattern: '^(([0-9a-f]){2}):){5}[0-9a-f]{2}$'
+      Valid:
+        type: boolean
+      ExpireTime:
+        type: string
+        format: date-time
+      NextServer:
+        type: string
+        format: ipv4
+      Options:
+        type: array
+        items:
+          $ref: '#/definitions/dhcpoption'
+    required:
+      - IpAddress
+      - MacAddress
+      - Valid
+      - ExpireTime
+  dhcpoption:
+    title: DhcpOption
+    type: object
+    properties:
+      Code:
+        type: integer
+      Value:
+        type: string
+    required:
+      - Code
+      - Value
 security:
   - Authorization: []
   - auth_token: []

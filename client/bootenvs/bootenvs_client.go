@@ -112,7 +112,7 @@ func (a *Client) ListBootenvs(params *ListBootenvsParams, authInfo runtime.Clien
 /*
 PatchBootenv patches bootenv
 */
-func (a *Client) PatchBootenv(params *PatchBootenvParams, authInfo runtime.ClientAuthInfoWriter) (*PatchBootenvAccepted, error) {
+func (a *Client) PatchBootenv(params *PatchBootenvParams, authInfo runtime.ClientAuthInfoWriter) (*PatchBootenvOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewPatchBootenvParams()
@@ -134,14 +134,14 @@ func (a *Client) PatchBootenv(params *PatchBootenvParams, authInfo runtime.Clien
 	if err != nil {
 		return nil, err
 	}
-	return result.(*PatchBootenvAccepted), nil
+	return result.(*PatchBootenvOK), nil
 
 }
 
 /*
 PostBootenv creates bootenv
 */
-func (a *Client) PostBootenv(params *PostBootenvParams, authInfo runtime.ClientAuthInfoWriter) (*PostBootenvCreated, error) {
+func (a *Client) PostBootenv(params *PostBootenvParams, authInfo runtime.ClientAuthInfoWriter) (*PostBootenvOK, *PostBootenvCreated, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewPostBootenvParams()
@@ -161,9 +161,15 @@ func (a *Client) PostBootenv(params *PostBootenvParams, authInfo runtime.ClientA
 		Client:             params.HTTPClient,
 	})
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	return result.(*PostBootenvCreated), nil
+	switch value := result.(type) {
+	case *PostBootenvOK:
+		return value, nil, nil
+	case *PostBootenvCreated:
+		return nil, value, nil
+	}
+	return nil, nil, nil
 
 }
 

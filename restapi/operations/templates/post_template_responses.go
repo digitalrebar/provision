@@ -11,6 +11,46 @@ import (
 	"github.com/rackn/rocket-skates/models"
 )
 
+/*PostTemplateOK post template o k
+
+swagger:response postTemplateOK
+*/
+type PostTemplateOK struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.TemplateOutput `json:"body,omitempty"`
+}
+
+// NewPostTemplateOK creates PostTemplateOK with default headers values
+func NewPostTemplateOK() *PostTemplateOK {
+	return &PostTemplateOK{}
+}
+
+// WithPayload adds the payload to the post template o k response
+func (o *PostTemplateOK) WithPayload(payload *models.TemplateOutput) *PostTemplateOK {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the post template o k response
+func (o *PostTemplateOK) SetPayload(payload *models.TemplateOutput) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *PostTemplateOK) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(200)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
 /*PostTemplateCreated post template created
 
 swagger:response postTemplateCreated
@@ -60,7 +100,7 @@ type PostTemplateUnauthorized struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewPostTemplateUnauthorized creates PostTemplateUnauthorized with default headers values
@@ -69,13 +109,13 @@ func NewPostTemplateUnauthorized() *PostTemplateUnauthorized {
 }
 
 // WithPayload adds the payload to the post template unauthorized response
-func (o *PostTemplateUnauthorized) WithPayload(payload *models.Result) *PostTemplateUnauthorized {
+func (o *PostTemplateUnauthorized) WithPayload(payload *models.Error) *PostTemplateUnauthorized {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the post template unauthorized response
-func (o *PostTemplateUnauthorized) SetPayload(payload *models.Result) {
+func (o *PostTemplateUnauthorized) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -100,7 +140,7 @@ type PostTemplateConflict struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewPostTemplateConflict creates PostTemplateConflict with default headers values
@@ -109,13 +149,13 @@ func NewPostTemplateConflict() *PostTemplateConflict {
 }
 
 // WithPayload adds the payload to the post template conflict response
-func (o *PostTemplateConflict) WithPayload(payload *models.Result) *PostTemplateConflict {
+func (o *PostTemplateConflict) WithPayload(payload *models.Error) *PostTemplateConflict {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the post template conflict response
-func (o *PostTemplateConflict) SetPayload(payload *models.Result) {
+func (o *PostTemplateConflict) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -140,7 +180,7 @@ type PostTemplateInternalServerError struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewPostTemplateInternalServerError creates PostTemplateInternalServerError with default headers values
@@ -149,13 +189,13 @@ func NewPostTemplateInternalServerError() *PostTemplateInternalServerError {
 }
 
 // WithPayload adds the payload to the post template internal server error response
-func (o *PostTemplateInternalServerError) WithPayload(payload *models.Result) *PostTemplateInternalServerError {
+func (o *PostTemplateInternalServerError) WithPayload(payload *models.Error) *PostTemplateInternalServerError {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the post template internal server error response
-func (o *PostTemplateInternalServerError) SetPayload(payload *models.Result) {
+func (o *PostTemplateInternalServerError) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 

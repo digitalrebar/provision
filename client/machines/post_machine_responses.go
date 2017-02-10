@@ -23,6 +23,13 @@ type PostMachineReader struct {
 func (o *PostMachineReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
 
+	case 200:
+		result := NewPostMachineOK()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return result, nil
+
 	case 201:
 		result := NewPostMachineCreated()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -56,6 +63,35 @@ func (o *PostMachineReader) ReadResponse(response runtime.ClientResponse, consum
 	}
 }
 
+// NewPostMachineOK creates a PostMachineOK with default headers values
+func NewPostMachineOK() *PostMachineOK {
+	return &PostMachineOK{}
+}
+
+/*PostMachineOK handles this case with default header values.
+
+PostMachineOK post machine o k
+*/
+type PostMachineOK struct {
+	Payload *models.MachineOutput
+}
+
+func (o *PostMachineOK) Error() string {
+	return fmt.Sprintf("[POST /machines][%d] postMachineOK  %+v", 200, o.Payload)
+}
+
+func (o *PostMachineOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.MachineOutput)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
 // NewPostMachineCreated creates a PostMachineCreated with default headers values
 func NewPostMachineCreated() *PostMachineCreated {
 	return &PostMachineCreated{}
@@ -66,7 +102,7 @@ func NewPostMachineCreated() *PostMachineCreated {
 PostMachineCreated post machine created
 */
 type PostMachineCreated struct {
-	Payload PostMachineCreatedBody
+	Payload *models.MachineOutput
 }
 
 func (o *PostMachineCreated) Error() string {
@@ -75,8 +111,10 @@ func (o *PostMachineCreated) Error() string {
 
 func (o *PostMachineCreated) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
+	o.Payload = new(models.MachineOutput)
+
 	// response payload
-	if err := consumer.Consume(response.Body(), &o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
 		return err
 	}
 
@@ -93,7 +131,7 @@ func NewPostMachineUnauthorized() *PostMachineUnauthorized {
 PostMachineUnauthorized post machine unauthorized
 */
 type PostMachineUnauthorized struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *PostMachineUnauthorized) Error() string {
@@ -102,7 +140,7 @@ func (o *PostMachineUnauthorized) Error() string {
 
 func (o *PostMachineUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -122,7 +160,7 @@ func NewPostMachineConflict() *PostMachineConflict {
 PostMachineConflict post machine conflict
 */
 type PostMachineConflict struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *PostMachineConflict) Error() string {
@@ -131,7 +169,7 @@ func (o *PostMachineConflict) Error() string {
 
 func (o *PostMachineConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -151,7 +189,7 @@ func NewPostMachineInternalServerError() *PostMachineInternalServerError {
 PostMachineInternalServerError post machine internal server error
 */
 type PostMachineInternalServerError struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *PostMachineInternalServerError) Error() string {
@@ -160,7 +198,7 @@ func (o *PostMachineInternalServerError) Error() string {
 
 func (o *PostMachineInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -168,18 +206,4 @@ func (o *PostMachineInternalServerError) readResponse(response runtime.ClientRes
 	}
 
 	return nil
-}
-
-/*PostMachineCreatedBody post machine created body
-swagger:model PostMachineCreatedBody
-*/
-type PostMachineCreatedBody struct {
-
-	// data
-	// Required: true
-	Data *models.MachineOutput `json:"Data"`
-
-	// result
-	// Required: true
-	Result *models.Result `json:"Result"`
 }

@@ -62,16 +62,3 @@ func (o *PatchMachine) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }
-
-// PatchMachineAcceptedBody patch machine accepted body
-// swagger:model PatchMachineAcceptedBody
-type PatchMachineAcceptedBody struct {
-
-	// data
-	// Required: true
-	Data *models.MachineOutput `json:"Data"`
-
-	// result
-	// Required: true
-	Result *models.Result `json:"Result"`
-}

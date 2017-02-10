@@ -20,7 +20,7 @@ type GetBootenvOK struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.BootenvInput `json:"body,omitempty"`
+	Payload *models.BootenvOutput `json:"body,omitempty"`
 }
 
 // NewGetBootenvOK creates GetBootenvOK with default headers values
@@ -29,13 +29,13 @@ func NewGetBootenvOK() *GetBootenvOK {
 }
 
 // WithPayload adds the payload to the get bootenv o k response
-func (o *GetBootenvOK) WithPayload(payload *models.BootenvInput) *GetBootenvOK {
+func (o *GetBootenvOK) WithPayload(payload *models.BootenvOutput) *GetBootenvOK {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the get bootenv o k response
-func (o *GetBootenvOK) SetPayload(payload *models.BootenvInput) {
+func (o *GetBootenvOK) SetPayload(payload *models.BootenvOutput) {
 	o.Payload = payload
 }
 
@@ -60,7 +60,7 @@ type GetBootenvUnauthorized struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewGetBootenvUnauthorized creates GetBootenvUnauthorized with default headers values
@@ -69,13 +69,13 @@ func NewGetBootenvUnauthorized() *GetBootenvUnauthorized {
 }
 
 // WithPayload adds the payload to the get bootenv unauthorized response
-func (o *GetBootenvUnauthorized) WithPayload(payload *models.Result) *GetBootenvUnauthorized {
+func (o *GetBootenvUnauthorized) WithPayload(payload *models.Error) *GetBootenvUnauthorized {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the get bootenv unauthorized response
-func (o *GetBootenvUnauthorized) SetPayload(payload *models.Result) {
+func (o *GetBootenvUnauthorized) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -100,7 +100,7 @@ type GetBootenvNotFound struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewGetBootenvNotFound creates GetBootenvNotFound with default headers values
@@ -109,13 +109,13 @@ func NewGetBootenvNotFound() *GetBootenvNotFound {
 }
 
 // WithPayload adds the payload to the get bootenv not found response
-func (o *GetBootenvNotFound) WithPayload(payload *models.Result) *GetBootenvNotFound {
+func (o *GetBootenvNotFound) WithPayload(payload *models.Error) *GetBootenvNotFound {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the get bootenv not found response
-func (o *GetBootenvNotFound) SetPayload(payload *models.Result) {
+func (o *GetBootenvNotFound) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -140,7 +140,7 @@ type GetBootenvInternalServerError struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewGetBootenvInternalServerError creates GetBootenvInternalServerError with default headers values
@@ -149,13 +149,13 @@ func NewGetBootenvInternalServerError() *GetBootenvInternalServerError {
 }
 
 // WithPayload adds the payload to the get bootenv internal server error response
-func (o *GetBootenvInternalServerError) WithPayload(payload *models.Result) *GetBootenvInternalServerError {
+func (o *GetBootenvInternalServerError) WithPayload(payload *models.Error) *GetBootenvInternalServerError {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the get bootenv internal server error response
-func (o *GetBootenvInternalServerError) SetPayload(payload *models.Result) {
+func (o *GetBootenvInternalServerError) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 

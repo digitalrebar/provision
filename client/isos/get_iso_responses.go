@@ -96,7 +96,7 @@ func NewGetIsoUnauthorized() *GetIsoUnauthorized {
 GetIsoUnauthorized get iso unauthorized
 */
 type GetIsoUnauthorized struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *GetIsoUnauthorized) Error() string {
@@ -105,7 +105,7 @@ func (o *GetIsoUnauthorized) Error() string {
 
 func (o *GetIsoUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -125,7 +125,7 @@ func NewGetIsoNotFound() *GetIsoNotFound {
 GetIsoNotFound get iso not found
 */
 type GetIsoNotFound struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *GetIsoNotFound) Error() string {
@@ -134,7 +134,7 @@ func (o *GetIsoNotFound) Error() string {
 
 func (o *GetIsoNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -154,7 +154,7 @@ func NewGetIsoInternalServerError() *GetIsoInternalServerError {
 GetIsoInternalServerError get iso internal server error
 */
 type GetIsoInternalServerError struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *GetIsoInternalServerError) Error() string {
@@ -163,7 +163,7 @@ func (o *GetIsoInternalServerError) Error() string {
 
 func (o *GetIsoInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {

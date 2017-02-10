@@ -59,7 +59,7 @@ type PostFileBadRequest struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewPostFileBadRequest creates PostFileBadRequest with default headers values
@@ -68,13 +68,13 @@ func NewPostFileBadRequest() *PostFileBadRequest {
 }
 
 // WithPayload adds the payload to the post file bad request response
-func (o *PostFileBadRequest) WithPayload(payload *models.Result) *PostFileBadRequest {
+func (o *PostFileBadRequest) WithPayload(payload *models.Error) *PostFileBadRequest {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the post file bad request response
-func (o *PostFileBadRequest) SetPayload(payload *models.Result) {
+func (o *PostFileBadRequest) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -82,6 +82,46 @@ func (o *PostFileBadRequest) SetPayload(payload *models.Result) {
 func (o *PostFileBadRequest) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
 	rw.WriteHeader(400)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
+/*PostFileUnauthorized post file unauthorized
+
+swagger:response postFileUnauthorized
+*/
+type PostFileUnauthorized struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewPostFileUnauthorized creates PostFileUnauthorized with default headers values
+func NewPostFileUnauthorized() *PostFileUnauthorized {
+	return &PostFileUnauthorized{}
+}
+
+// WithPayload adds the payload to the post file unauthorized response
+func (o *PostFileUnauthorized) WithPayload(payload *models.Error) *PostFileUnauthorized {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the post file unauthorized response
+func (o *PostFileUnauthorized) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *PostFileUnauthorized) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(401)
 	if o.Payload != nil {
 		payload := o.Payload
 		if err := producer.Produce(rw, payload); err != nil {
@@ -99,7 +139,7 @@ type PostFileConflict struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewPostFileConflict creates PostFileConflict with default headers values
@@ -108,13 +148,13 @@ func NewPostFileConflict() *PostFileConflict {
 }
 
 // WithPayload adds the payload to the post file conflict response
-func (o *PostFileConflict) WithPayload(payload *models.Result) *PostFileConflict {
+func (o *PostFileConflict) WithPayload(payload *models.Error) *PostFileConflict {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the post file conflict response
-func (o *PostFileConflict) SetPayload(payload *models.Result) {
+func (o *PostFileConflict) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -122,6 +162,46 @@ func (o *PostFileConflict) SetPayload(payload *models.Result) {
 func (o *PostFileConflict) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
 	rw.WriteHeader(409)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
+/*PostFileInternalServerError post file internal server error
+
+swagger:response postFileInternalServerError
+*/
+type PostFileInternalServerError struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewPostFileInternalServerError creates PostFileInternalServerError with default headers values
+func NewPostFileInternalServerError() *PostFileInternalServerError {
+	return &PostFileInternalServerError{}
+}
+
+// WithPayload adds the payload to the post file internal server error response
+func (o *PostFileInternalServerError) WithPayload(payload *models.Error) *PostFileInternalServerError {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the post file internal server error response
+func (o *PostFileInternalServerError) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *PostFileInternalServerError) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(500)
 	if o.Payload != nil {
 		payload := o.Payload
 		if err := producer.Produce(rw, payload); err != nil {
@@ -139,7 +219,7 @@ type PostFileInsufficientStorage struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewPostFileInsufficientStorage creates PostFileInsufficientStorage with default headers values
@@ -148,13 +228,13 @@ func NewPostFileInsufficientStorage() *PostFileInsufficientStorage {
 }
 
 // WithPayload adds the payload to the post file insufficient storage response
-func (o *PostFileInsufficientStorage) WithPayload(payload *models.Result) *PostFileInsufficientStorage {
+func (o *PostFileInsufficientStorage) WithPayload(payload *models.Error) *PostFileInsufficientStorage {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the post file insufficient storage response
-func (o *PostFileInsufficientStorage) SetPayload(payload *models.Result) {
+func (o *PostFileInsufficientStorage) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 

@@ -23,6 +23,13 @@ type PostBootenvReader struct {
 func (o *PostBootenvReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
 
+	case 200:
+		result := NewPostBootenvOK()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return result, nil
+
 	case 201:
 		result := NewPostBootenvCreated()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -56,6 +63,35 @@ func (o *PostBootenvReader) ReadResponse(response runtime.ClientResponse, consum
 	}
 }
 
+// NewPostBootenvOK creates a PostBootenvOK with default headers values
+func NewPostBootenvOK() *PostBootenvOK {
+	return &PostBootenvOK{}
+}
+
+/*PostBootenvOK handles this case with default header values.
+
+PostBootenvOK post bootenv o k
+*/
+type PostBootenvOK struct {
+	Payload *models.BootenvOutput
+}
+
+func (o *PostBootenvOK) Error() string {
+	return fmt.Sprintf("[POST /bootenv][%d] postBootenvOK  %+v", 200, o.Payload)
+}
+
+func (o *PostBootenvOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.BootenvOutput)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
 // NewPostBootenvCreated creates a PostBootenvCreated with default headers values
 func NewPostBootenvCreated() *PostBootenvCreated {
 	return &PostBootenvCreated{}
@@ -66,7 +102,7 @@ func NewPostBootenvCreated() *PostBootenvCreated {
 PostBootenvCreated post bootenv created
 */
 type PostBootenvCreated struct {
-	Payload *models.BootenvInput
+	Payload *models.BootenvOutput
 }
 
 func (o *PostBootenvCreated) Error() string {
@@ -75,7 +111,7 @@ func (o *PostBootenvCreated) Error() string {
 
 func (o *PostBootenvCreated) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.BootenvInput)
+	o.Payload = new(models.BootenvOutput)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -95,7 +131,7 @@ func NewPostBootenvUnauthorized() *PostBootenvUnauthorized {
 PostBootenvUnauthorized post bootenv unauthorized
 */
 type PostBootenvUnauthorized struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *PostBootenvUnauthorized) Error() string {
@@ -104,7 +140,7 @@ func (o *PostBootenvUnauthorized) Error() string {
 
 func (o *PostBootenvUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -124,7 +160,7 @@ func NewPostBootenvConflict() *PostBootenvConflict {
 PostBootenvConflict post bootenv conflict
 */
 type PostBootenvConflict struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *PostBootenvConflict) Error() string {
@@ -133,7 +169,7 @@ func (o *PostBootenvConflict) Error() string {
 
 func (o *PostBootenvConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -153,7 +189,7 @@ func NewPostBootenvInternalServerError() *PostBootenvInternalServerError {
 PostBootenvInternalServerError post bootenv internal server error
 */
 type PostBootenvInternalServerError struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *PostBootenvInternalServerError) Error() string {
@@ -162,7 +198,7 @@ func (o *PostBootenvInternalServerError) Error() string {
 
 func (o *PostBootenvInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {

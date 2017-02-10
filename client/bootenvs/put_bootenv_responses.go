@@ -44,6 +44,13 @@ func (o *PutBootenvReader) ReadResponse(response runtime.ClientResponse, consume
 		}
 		return nil, result
 
+	case 409:
+		result := NewPutBootenvConflict()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+
 	case 500:
 		result := NewPutBootenvInternalServerError()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -66,7 +73,7 @@ func NewPutBootenvOK() *PutBootenvOK {
 PutBootenvOK put bootenv o k
 */
 type PutBootenvOK struct {
-	Payload *models.BootenvInput
+	Payload *models.BootenvOutput
 }
 
 func (o *PutBootenvOK) Error() string {
@@ -75,7 +82,7 @@ func (o *PutBootenvOK) Error() string {
 
 func (o *PutBootenvOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.BootenvInput)
+	o.Payload = new(models.BootenvOutput)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -95,7 +102,7 @@ func NewPutBootenvUnauthorized() *PutBootenvUnauthorized {
 PutBootenvUnauthorized put bootenv unauthorized
 */
 type PutBootenvUnauthorized struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *PutBootenvUnauthorized) Error() string {
@@ -104,7 +111,7 @@ func (o *PutBootenvUnauthorized) Error() string {
 
 func (o *PutBootenvUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -124,7 +131,7 @@ func NewPutBootenvNotFound() *PutBootenvNotFound {
 PutBootenvNotFound put bootenv not found
 */
 type PutBootenvNotFound struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *PutBootenvNotFound) Error() string {
@@ -133,7 +140,36 @@ func (o *PutBootenvNotFound) Error() string {
 
 func (o *PutBootenvNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewPutBootenvConflict creates a PutBootenvConflict with default headers values
+func NewPutBootenvConflict() *PutBootenvConflict {
+	return &PutBootenvConflict{}
+}
+
+/*PutBootenvConflict handles this case with default header values.
+
+PutBootenvConflict put bootenv conflict
+*/
+type PutBootenvConflict struct {
+	Payload *models.Error
+}
+
+func (o *PutBootenvConflict) Error() string {
+	return fmt.Sprintf("[PUT /bootenvs/{name}][%d] putBootenvConflict  %+v", 409, o.Payload)
+}
+
+func (o *PutBootenvConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -153,7 +189,7 @@ func NewPutBootenvInternalServerError() *PutBootenvInternalServerError {
 PutBootenvInternalServerError put bootenv internal server error
 */
 type PutBootenvInternalServerError struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *PutBootenvInternalServerError) Error() string {
@@ -162,7 +198,7 @@ func (o *PutBootenvInternalServerError) Error() string {
 
 func (o *PutBootenvInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {

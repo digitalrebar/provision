@@ -30,6 +30,13 @@ func (o *DeleteBootenvReader) ReadResponse(response runtime.ClientResponse, cons
 		}
 		return result, nil
 
+	case 401:
+		result := NewDeleteBootenvUnauthorized()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+
 	case 404:
 		result := NewDeleteBootenvNotFound()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -77,6 +84,35 @@ func (o *DeleteBootenvNoContent) readResponse(response runtime.ClientResponse, c
 	return nil
 }
 
+// NewDeleteBootenvUnauthorized creates a DeleteBootenvUnauthorized with default headers values
+func NewDeleteBootenvUnauthorized() *DeleteBootenvUnauthorized {
+	return &DeleteBootenvUnauthorized{}
+}
+
+/*DeleteBootenvUnauthorized handles this case with default header values.
+
+DeleteBootenvUnauthorized delete bootenv unauthorized
+*/
+type DeleteBootenvUnauthorized struct {
+	Payload *models.Error
+}
+
+func (o *DeleteBootenvUnauthorized) Error() string {
+	return fmt.Sprintf("[DELETE /bootenvs/{name}][%d] deleteBootenvUnauthorized  %+v", 401, o.Payload)
+}
+
+func (o *DeleteBootenvUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.Error)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
 // NewDeleteBootenvNotFound creates a DeleteBootenvNotFound with default headers values
 func NewDeleteBootenvNotFound() *DeleteBootenvNotFound {
 	return &DeleteBootenvNotFound{}
@@ -87,7 +123,7 @@ func NewDeleteBootenvNotFound() *DeleteBootenvNotFound {
 DeleteBootenvNotFound delete bootenv not found
 */
 type DeleteBootenvNotFound struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *DeleteBootenvNotFound) Error() string {
@@ -96,7 +132,7 @@ func (o *DeleteBootenvNotFound) Error() string {
 
 func (o *DeleteBootenvNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -116,7 +152,7 @@ func NewDeleteBootenvConflict() *DeleteBootenvConflict {
 DeleteBootenvConflict delete bootenv conflict
 */
 type DeleteBootenvConflict struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *DeleteBootenvConflict) Error() string {
@@ -125,7 +161,7 @@ func (o *DeleteBootenvConflict) Error() string {
 
 func (o *DeleteBootenvConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -145,7 +181,7 @@ func NewDeleteBootenvInternalServerError() *DeleteBootenvInternalServerError {
 DeleteBootenvInternalServerError delete bootenv internal server error
 */
 type DeleteBootenvInternalServerError struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *DeleteBootenvInternalServerError) Error() string {
@@ -154,7 +190,7 @@ func (o *DeleteBootenvInternalServerError) Error() string {
 
 func (o *DeleteBootenvInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {

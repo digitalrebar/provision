@@ -10,6 +10,7 @@ import (
 	strfmt "github.com/go-openapi/strfmt"
 
 	"github.com/rackn/rocket-skates/client/bootenvs"
+	"github.com/rackn/rocket-skates/client/dhcp_leases"
 	"github.com/rackn/rocket-skates/client/files"
 	"github.com/rackn/rocket-skates/client/isos"
 	"github.com/rackn/rocket-skates/client/machines"
@@ -35,6 +36,8 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *RocketSkat
 
 	cli.Bootenvs = bootenvs.New(transport, formats)
 
+	cli.DhcpLeases = dhcp_leases.New(transport, formats)
+
 	cli.Files = files.New(transport, formats)
 
 	cli.Isos = isos.New(transport, formats)
@@ -49,6 +52,8 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *RocketSkat
 // RocketSkates is a client for rocket skates
 type RocketSkates struct {
 	Bootenvs *bootenvs.Client
+
+	DhcpLeases *dhcp_leases.Client
 
 	Files *files.Client
 
@@ -66,6 +71,8 @@ func (c *RocketSkates) SetTransport(transport runtime.ClientTransport) {
 	c.Transport = transport
 
 	c.Bootenvs.SetTransport(transport)
+
+	c.DhcpLeases.SetTransport(transport)
 
 	c.Files.SetTransport(transport)
 

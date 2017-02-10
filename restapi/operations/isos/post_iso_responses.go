@@ -59,7 +59,7 @@ type PostIsoBadRequest struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewPostIsoBadRequest creates PostIsoBadRequest with default headers values
@@ -68,13 +68,13 @@ func NewPostIsoBadRequest() *PostIsoBadRequest {
 }
 
 // WithPayload adds the payload to the post iso bad request response
-func (o *PostIsoBadRequest) WithPayload(payload *models.Result) *PostIsoBadRequest {
+func (o *PostIsoBadRequest) WithPayload(payload *models.Error) *PostIsoBadRequest {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the post iso bad request response
-func (o *PostIsoBadRequest) SetPayload(payload *models.Result) {
+func (o *PostIsoBadRequest) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -82,6 +82,46 @@ func (o *PostIsoBadRequest) SetPayload(payload *models.Result) {
 func (o *PostIsoBadRequest) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
 	rw.WriteHeader(400)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
+/*PostIsoUnauthorized post iso unauthorized
+
+swagger:response postIsoUnauthorized
+*/
+type PostIsoUnauthorized struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewPostIsoUnauthorized creates PostIsoUnauthorized with default headers values
+func NewPostIsoUnauthorized() *PostIsoUnauthorized {
+	return &PostIsoUnauthorized{}
+}
+
+// WithPayload adds the payload to the post iso unauthorized response
+func (o *PostIsoUnauthorized) WithPayload(payload *models.Error) *PostIsoUnauthorized {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the post iso unauthorized response
+func (o *PostIsoUnauthorized) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *PostIsoUnauthorized) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(401)
 	if o.Payload != nil {
 		payload := o.Payload
 		if err := producer.Produce(rw, payload); err != nil {
@@ -99,7 +139,7 @@ type PostIsoConflict struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewPostIsoConflict creates PostIsoConflict with default headers values
@@ -108,13 +148,13 @@ func NewPostIsoConflict() *PostIsoConflict {
 }
 
 // WithPayload adds the payload to the post iso conflict response
-func (o *PostIsoConflict) WithPayload(payload *models.Result) *PostIsoConflict {
+func (o *PostIsoConflict) WithPayload(payload *models.Error) *PostIsoConflict {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the post iso conflict response
-func (o *PostIsoConflict) SetPayload(payload *models.Result) {
+func (o *PostIsoConflict) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -122,6 +162,46 @@ func (o *PostIsoConflict) SetPayload(payload *models.Result) {
 func (o *PostIsoConflict) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
 	rw.WriteHeader(409)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
+/*PostIsoInternalServerError post iso internal server error
+
+swagger:response postIsoInternalServerError
+*/
+type PostIsoInternalServerError struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewPostIsoInternalServerError creates PostIsoInternalServerError with default headers values
+func NewPostIsoInternalServerError() *PostIsoInternalServerError {
+	return &PostIsoInternalServerError{}
+}
+
+// WithPayload adds the payload to the post iso internal server error response
+func (o *PostIsoInternalServerError) WithPayload(payload *models.Error) *PostIsoInternalServerError {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the post iso internal server error response
+func (o *PostIsoInternalServerError) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *PostIsoInternalServerError) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(500)
 	if o.Payload != nil {
 		payload := o.Payload
 		if err := producer.Produce(rw, payload); err != nil {
@@ -139,7 +219,7 @@ type PostIsoInsufficientStorage struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewPostIsoInsufficientStorage creates PostIsoInsufficientStorage with default headers values
@@ -148,13 +228,13 @@ func NewPostIsoInsufficientStorage() *PostIsoInsufficientStorage {
 }
 
 // WithPayload adds the payload to the post iso insufficient storage response
-func (o *PostIsoInsufficientStorage) WithPayload(payload *models.Result) *PostIsoInsufficientStorage {
+func (o *PostIsoInsufficientStorage) WithPayload(payload *models.Error) *PostIsoInsufficientStorage {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the post iso insufficient storage response
-func (o *PostIsoInsufficientStorage) SetPayload(payload *models.Result) {
+func (o *PostIsoInsufficientStorage) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 

@@ -63,7 +63,7 @@ type ListTemplatesUnauthorized struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewListTemplatesUnauthorized creates ListTemplatesUnauthorized with default headers values
@@ -72,13 +72,13 @@ func NewListTemplatesUnauthorized() *ListTemplatesUnauthorized {
 }
 
 // WithPayload adds the payload to the list templates unauthorized response
-func (o *ListTemplatesUnauthorized) WithPayload(payload *models.Result) *ListTemplatesUnauthorized {
+func (o *ListTemplatesUnauthorized) WithPayload(payload *models.Error) *ListTemplatesUnauthorized {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the list templates unauthorized response
-func (o *ListTemplatesUnauthorized) SetPayload(payload *models.Result) {
+func (o *ListTemplatesUnauthorized) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -103,7 +103,7 @@ type ListTemplatesNotFound struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewListTemplatesNotFound creates ListTemplatesNotFound with default headers values
@@ -112,13 +112,13 @@ func NewListTemplatesNotFound() *ListTemplatesNotFound {
 }
 
 // WithPayload adds the payload to the list templates not found response
-func (o *ListTemplatesNotFound) WithPayload(payload *models.Result) *ListTemplatesNotFound {
+func (o *ListTemplatesNotFound) WithPayload(payload *models.Error) *ListTemplatesNotFound {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the list templates not found response
-func (o *ListTemplatesNotFound) SetPayload(payload *models.Result) {
+func (o *ListTemplatesNotFound) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -143,7 +143,7 @@ type ListTemplatesInternalServerError struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewListTemplatesInternalServerError creates ListTemplatesInternalServerError with default headers values
@@ -152,13 +152,13 @@ func NewListTemplatesInternalServerError() *ListTemplatesInternalServerError {
 }
 
 // WithPayload adds the payload to the list templates internal server error response
-func (o *ListTemplatesInternalServerError) WithPayload(payload *models.Result) *ListTemplatesInternalServerError {
+func (o *ListTemplatesInternalServerError) WithPayload(payload *models.Error) *ListTemplatesInternalServerError {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the list templates internal server error response
-func (o *ListTemplatesInternalServerError) SetPayload(payload *models.Result) {
+func (o *ListTemplatesInternalServerError) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
