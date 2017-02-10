@@ -62,16 +62,3 @@ func (o *PostMachine) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }
-
-// PostMachineCreatedBody post machine created body
-// swagger:model PostMachineCreatedBody
-type PostMachineCreatedBody struct {
-
-	// data
-	// Required: true
-	Data *models.MachineOutput `json:"Data"`
-
-	// result
-	// Required: true
-	Result *models.Result `json:"Result"`
-}

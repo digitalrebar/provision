@@ -23,6 +23,13 @@ type PostTemplateReader struct {
 func (o *PostTemplateReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
 
+	case 200:
+		result := NewPostTemplateOK()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return result, nil
+
 	case 201:
 		result := NewPostTemplateCreated()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -54,6 +61,35 @@ func (o *PostTemplateReader) ReadResponse(response runtime.ClientResponse, consu
 	default:
 		return nil, runtime.NewAPIError("unknown error", response, response.Code())
 	}
+}
+
+// NewPostTemplateOK creates a PostTemplateOK with default headers values
+func NewPostTemplateOK() *PostTemplateOK {
+	return &PostTemplateOK{}
+}
+
+/*PostTemplateOK handles this case with default header values.
+
+PostTemplateOK post template o k
+*/
+type PostTemplateOK struct {
+	Payload *models.TemplateOutput
+}
+
+func (o *PostTemplateOK) Error() string {
+	return fmt.Sprintf("[POST /templates][%d] postTemplateOK  %+v", 200, o.Payload)
+}
+
+func (o *PostTemplateOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.TemplateOutput)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
 }
 
 // NewPostTemplateCreated creates a PostTemplateCreated with default headers values
@@ -95,7 +131,7 @@ func NewPostTemplateUnauthorized() *PostTemplateUnauthorized {
 PostTemplateUnauthorized post template unauthorized
 */
 type PostTemplateUnauthorized struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *PostTemplateUnauthorized) Error() string {
@@ -104,7 +140,7 @@ func (o *PostTemplateUnauthorized) Error() string {
 
 func (o *PostTemplateUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -124,7 +160,7 @@ func NewPostTemplateConflict() *PostTemplateConflict {
 PostTemplateConflict post template conflict
 */
 type PostTemplateConflict struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *PostTemplateConflict) Error() string {
@@ -133,7 +169,7 @@ func (o *PostTemplateConflict) Error() string {
 
 func (o *PostTemplateConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -153,7 +189,7 @@ func NewPostTemplateInternalServerError() *PostTemplateInternalServerError {
 PostTemplateInternalServerError post template internal server error
 */
 type PostTemplateInternalServerError struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *PostTemplateInternalServerError) Error() string {
@@ -162,7 +198,7 @@ func (o *PostTemplateInternalServerError) Error() string {
 
 func (o *PostTemplateInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {

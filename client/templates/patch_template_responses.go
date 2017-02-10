@@ -23,8 +23,8 @@ type PatchTemplateReader struct {
 func (o *PatchTemplateReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
 
-	case 202:
-		result := NewPatchTemplateAccepted()
+	case 200:
+		result := NewPatchTemplateOK()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -39,6 +39,13 @@ func (o *PatchTemplateReader) ReadResponse(response runtime.ClientResponse, cons
 
 	case 404:
 		result := NewPatchTemplateNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+
+	case 409:
+		result := NewPatchTemplateConflict()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -63,24 +70,24 @@ func (o *PatchTemplateReader) ReadResponse(response runtime.ClientResponse, cons
 	}
 }
 
-// NewPatchTemplateAccepted creates a PatchTemplateAccepted with default headers values
-func NewPatchTemplateAccepted() *PatchTemplateAccepted {
-	return &PatchTemplateAccepted{}
+// NewPatchTemplateOK creates a PatchTemplateOK with default headers values
+func NewPatchTemplateOK() *PatchTemplateOK {
+	return &PatchTemplateOK{}
 }
 
-/*PatchTemplateAccepted handles this case with default header values.
+/*PatchTemplateOK handles this case with default header values.
 
-PatchTemplateAccepted patch template accepted
+PatchTemplateOK patch template o k
 */
-type PatchTemplateAccepted struct {
+type PatchTemplateOK struct {
 	Payload *models.TemplateOutput
 }
 
-func (o *PatchTemplateAccepted) Error() string {
-	return fmt.Sprintf("[PATCH /template/{uuid}][%d] patchTemplateAccepted  %+v", 202, o.Payload)
+func (o *PatchTemplateOK) Error() string {
+	return fmt.Sprintf("[PATCH /template/{uuid}][%d] patchTemplateOK  %+v", 200, o.Payload)
 }
 
-func (o *PatchTemplateAccepted) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+func (o *PatchTemplateOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	o.Payload = new(models.TemplateOutput)
 
@@ -102,7 +109,7 @@ func NewPatchTemplateUnauthorized() *PatchTemplateUnauthorized {
 PatchTemplateUnauthorized patch template unauthorized
 */
 type PatchTemplateUnauthorized struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *PatchTemplateUnauthorized) Error() string {
@@ -111,7 +118,7 @@ func (o *PatchTemplateUnauthorized) Error() string {
 
 func (o *PatchTemplateUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -131,7 +138,7 @@ func NewPatchTemplateNotFound() *PatchTemplateNotFound {
 PatchTemplateNotFound patch template not found
 */
 type PatchTemplateNotFound struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *PatchTemplateNotFound) Error() string {
@@ -140,7 +147,36 @@ func (o *PatchTemplateNotFound) Error() string {
 
 func (o *PatchTemplateNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewPatchTemplateConflict creates a PatchTemplateConflict with default headers values
+func NewPatchTemplateConflict() *PatchTemplateConflict {
+	return &PatchTemplateConflict{}
+}
+
+/*PatchTemplateConflict handles this case with default header values.
+
+PatchTemplateConflict patch template conflict
+*/
+type PatchTemplateConflict struct {
+	Payload *models.Error
+}
+
+func (o *PatchTemplateConflict) Error() string {
+	return fmt.Sprintf("[PATCH /template/{uuid}][%d] patchTemplateConflict  %+v", 409, o.Payload)
+}
+
+func (o *PatchTemplateConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -160,7 +196,7 @@ func NewPatchTemplateExpectationFailed() *PatchTemplateExpectationFailed {
 PatchTemplateExpectationFailed patch template expectation failed
 */
 type PatchTemplateExpectationFailed struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *PatchTemplateExpectationFailed) Error() string {
@@ -169,7 +205,7 @@ func (o *PatchTemplateExpectationFailed) Error() string {
 
 func (o *PatchTemplateExpectationFailed) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -189,7 +225,7 @@ func NewPatchTemplateInternalServerError() *PatchTemplateInternalServerError {
 PatchTemplateInternalServerError patch template internal server error
 */
 type PatchTemplateInternalServerError struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *PatchTemplateInternalServerError) Error() string {
@@ -198,7 +234,7 @@ func (o *PatchTemplateInternalServerError) Error() string {
 
 func (o *PatchTemplateInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {

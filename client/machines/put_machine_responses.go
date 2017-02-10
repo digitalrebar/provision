@@ -44,6 +44,13 @@ func (o *PutMachineReader) ReadResponse(response runtime.ClientResponse, consume
 		}
 		return nil, result
 
+	case 409:
+		result := NewPutMachineConflict()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+
 	case 500:
 		result := NewPutMachineInternalServerError()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -66,7 +73,7 @@ func NewPutMachineOK() *PutMachineOK {
 PutMachineOK put machine o k
 */
 type PutMachineOK struct {
-	Payload PutMachineOKBody
+	Payload *models.MachineOutput
 }
 
 func (o *PutMachineOK) Error() string {
@@ -75,8 +82,10 @@ func (o *PutMachineOK) Error() string {
 
 func (o *PutMachineOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
+	o.Payload = new(models.MachineOutput)
+
 	// response payload
-	if err := consumer.Consume(response.Body(), &o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
 		return err
 	}
 
@@ -93,7 +102,7 @@ func NewPutMachineUnauthorized() *PutMachineUnauthorized {
 PutMachineUnauthorized put machine unauthorized
 */
 type PutMachineUnauthorized struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *PutMachineUnauthorized) Error() string {
@@ -102,7 +111,7 @@ func (o *PutMachineUnauthorized) Error() string {
 
 func (o *PutMachineUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -122,7 +131,7 @@ func NewPutMachineNotFound() *PutMachineNotFound {
 PutMachineNotFound put machine not found
 */
 type PutMachineNotFound struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *PutMachineNotFound) Error() string {
@@ -131,7 +140,36 @@ func (o *PutMachineNotFound) Error() string {
 
 func (o *PutMachineNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewPutMachineConflict creates a PutMachineConflict with default headers values
+func NewPutMachineConflict() *PutMachineConflict {
+	return &PutMachineConflict{}
+}
+
+/*PutMachineConflict handles this case with default header values.
+
+PutMachineConflict put machine conflict
+*/
+type PutMachineConflict struct {
+	Payload *models.Error
+}
+
+func (o *PutMachineConflict) Error() string {
+	return fmt.Sprintf("[PUT /machines/{uuid}][%d] putMachineConflict  %+v", 409, o.Payload)
+}
+
+func (o *PutMachineConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -151,7 +189,7 @@ func NewPutMachineInternalServerError() *PutMachineInternalServerError {
 PutMachineInternalServerError put machine internal server error
 */
 type PutMachineInternalServerError struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *PutMachineInternalServerError) Error() string {
@@ -160,7 +198,7 @@ func (o *PutMachineInternalServerError) Error() string {
 
 func (o *PutMachineInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -168,18 +206,4 @@ func (o *PutMachineInternalServerError) readResponse(response runtime.ClientResp
 	}
 
 	return nil
-}
-
-/*PutMachineOKBody put machine o k body
-swagger:model PutMachineOKBody
-*/
-type PutMachineOKBody struct {
-
-	// data
-	// Required: true
-	Data *models.MachineOutput `json:"Data"`
-
-	// result
-	// Required: true
-	Result *models.Result `json:"Result"`
 }

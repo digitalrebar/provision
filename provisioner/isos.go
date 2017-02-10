@@ -19,9 +19,9 @@ func ListIsos(params isos.ListIsosParams, p *models.Principal) middleware.Respon
 	res := []string{}
 	ents, err := ioutil.ReadDir(path.Join(ProvOpts.FileRoot, "isos"))
 	if err != nil {
-		r := &models.Result{Code: int64(http.StatusNotFound),
-			Messages: []string{fmt.Sprintf("list: error listing isos: %v", err)}}
-		return isos.NewListIsosNotFound().WithPayload(r)
+		e := NewError(http.StatusNotFound,
+			fmt.Sprintf("list: error listing isos: %v", err))
+		return isos.NewListIsosNotFound().WithPayload(e)
 	}
 	for _, ent := range ents {
 		if !ent.Mode().IsRegular() {
@@ -30,17 +30,6 @@ func ListIsos(params isos.ListIsosParams, p *models.Principal) middleware.Respon
 		res = append(res, ent.Name())
 	}
 	return isos.NewListIsosOK().WithPayload(res)
-}
-
-func GetIso(params isos.GetIsoParams, p *models.Principal) middleware.Responder {
-	fileName := path.Join(ProvOpts.FileRoot, `isos`, path.Base(params.Name))
-	f, err := os.Open(fileName)
-	// GREG: errors and data are different types need to figure that out.
-	if err != nil {
-		r := &models.Result{Code: int64(404), Messages: []string{err.Error()}}
-		return isos.NewGetIsoNotFound().WithPayload(r)
-	}
-	return isos.NewGetIsoOK().WithPayload(f)
 }
 
 func reloadBootenvsForIso(name string) {
@@ -67,29 +56,29 @@ func UploadIso(params isos.PostIsoParams, p *models.Principal) middleware.Respon
 	isoTmpName := path.Join(ProvOpts.FileRoot, `isos`, fmt.Sprintf(`.%s.part`, path.Base(name)))
 	isoName := path.Join(ProvOpts.FileRoot, `isos`, path.Base(name))
 	if _, err := os.Open(isoTmpName); err == nil {
-		r := &models.Result{Code: int64(http.StatusConflict),
-			Messages: []string{fmt.Sprintf("upload: iso %s already uploading", name)}}
-		return isos.NewPostIsoConflict().WithPayload(r)
+		e := NewError(http.StatusConflict,
+			fmt.Sprintf("upload: iso %s already uploading", name))
+		return isos.NewPostIsoConflict().WithPayload(e)
 	}
 	tgt, err := os.Create(isoTmpName)
 	if err != nil {
-		r := &models.Result{Code: int64(http.StatusConflict),
-			Messages: []string{fmt.Sprintf("upload: Unable to upload %s: %v", name, err)}}
-		return isos.NewPostIsoConflict().WithPayload(r)
+		e := NewError(http.StatusConflict,
+			fmt.Sprintf("upload: Unable to upload %s: %v", name, err))
+		return isos.NewPostIsoConflict().WithPayload(e)
 	}
 
 	copied, err := io.Copy(tgt, body)
 	if err != nil {
 		os.Remove(isoTmpName)
-		r := &models.Result{Code: int64(http.StatusInsufficientStorage),
-			Messages: []string{fmt.Sprintf("upload: Failed to upload %s: %v", name, err)}}
-		return isos.NewPostIsoInsufficientStorage().WithPayload(r)
+		e := NewError(http.StatusInsufficientStorage,
+			fmt.Sprintf("upload: Failed to upload %s: %v", name, err))
+		return isos.NewPostIsoInsufficientStorage().WithPayload(e)
 	}
 	if amount != 0 && copied != amount {
 		os.Remove(isoTmpName)
-		r := &models.Result{Code: int64(http.StatusBadRequest),
-			Messages: []string{fmt.Sprintf("upload: Failed to upload entire file %s: %d bytes expected, %d bytes recieved", name, amount, copied)}}
-		return isos.NewPostIsoBadRequest().WithPayload(r)
+		e := NewError(http.StatusBadRequest,
+			fmt.Sprintf("upload: Failed to upload entire file %s: %d bytes expected, %d bytes recieved", name, amount, copied))
+		return isos.NewPostIsoBadRequest().WithPayload(e)
 	}
 	os.Remove(isoName)
 	os.Rename(isoTmpName, isoName)
@@ -97,12 +86,23 @@ func UploadIso(params isos.PostIsoParams, p *models.Principal) middleware.Respon
 	return isos.NewPostIsoCreated().WithPayload(isos.PostIsoCreatedBody{Name: &name, Size: &copied})
 }
 
+func GetIso(params isos.GetIsoParams, p *models.Principal) middleware.Responder {
+	fileName := path.Join(ProvOpts.FileRoot, `isos`, path.Base(params.Name))
+	f, err := os.Open(fileName)
+	// GREG: errors and data are different types need to figure that out.
+	if err != nil {
+		e := NewError(http.StatusNotFound, err.Error())
+		return isos.NewGetIsoNotFound().WithPayload(e)
+	}
+	return isos.NewGetIsoOK().WithPayload(f)
+}
+
 func DeleteIso(params isos.DeleteIsoParams, p *models.Principal) middleware.Responder {
 	isoName := path.Join(ProvOpts.FileRoot, `isos`, path.Base(params.Name))
 	if err := os.Remove(isoName); err != nil {
-		r := &models.Result{Code: int64(http.StatusNotFound),
-			Messages: []string{fmt.Sprintf("delete: unable to delete %s: %v", params.Name, err)}}
-		return isos.NewDeleteIsoNotFound().WithPayload(r)
+		e := NewError(http.StatusNotFound,
+			fmt.Sprintf("delete: unable to delete %s: %v", params.Name, err))
+		return isos.NewDeleteIsoNotFound().WithPayload(e)
 	}
 	return isos.NewDeleteIsoNoContent()
 }

@@ -20,7 +20,7 @@ type PutMachineOK struct {
 	/*
 	  In: Body
 	*/
-	Payload PutMachineOKBody `json:"body,omitempty"`
+	Payload *models.MachineOutput `json:"body,omitempty"`
 }
 
 // NewPutMachineOK creates PutMachineOK with default headers values
@@ -29,13 +29,13 @@ func NewPutMachineOK() *PutMachineOK {
 }
 
 // WithPayload adds the payload to the put machine o k response
-func (o *PutMachineOK) WithPayload(payload PutMachineOKBody) *PutMachineOK {
+func (o *PutMachineOK) WithPayload(payload *models.MachineOutput) *PutMachineOK {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the put machine o k response
-func (o *PutMachineOK) SetPayload(payload PutMachineOKBody) {
+func (o *PutMachineOK) SetPayload(payload *models.MachineOutput) {
 	o.Payload = payload
 }
 
@@ -43,11 +43,12 @@ func (o *PutMachineOK) SetPayload(payload PutMachineOKBody) {
 func (o *PutMachineOK) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
 	rw.WriteHeader(200)
-	payload := o.Payload
-	if err := producer.Produce(rw, payload); err != nil {
-		panic(err) // let the recovery middleware deal with this
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
 	}
-
 }
 
 /*PutMachineUnauthorized put machine unauthorized
@@ -59,7 +60,7 @@ type PutMachineUnauthorized struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewPutMachineUnauthorized creates PutMachineUnauthorized with default headers values
@@ -68,13 +69,13 @@ func NewPutMachineUnauthorized() *PutMachineUnauthorized {
 }
 
 // WithPayload adds the payload to the put machine unauthorized response
-func (o *PutMachineUnauthorized) WithPayload(payload *models.Result) *PutMachineUnauthorized {
+func (o *PutMachineUnauthorized) WithPayload(payload *models.Error) *PutMachineUnauthorized {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the put machine unauthorized response
-func (o *PutMachineUnauthorized) SetPayload(payload *models.Result) {
+func (o *PutMachineUnauthorized) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -99,7 +100,7 @@ type PutMachineNotFound struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewPutMachineNotFound creates PutMachineNotFound with default headers values
@@ -108,13 +109,13 @@ func NewPutMachineNotFound() *PutMachineNotFound {
 }
 
 // WithPayload adds the payload to the put machine not found response
-func (o *PutMachineNotFound) WithPayload(payload *models.Result) *PutMachineNotFound {
+func (o *PutMachineNotFound) WithPayload(payload *models.Error) *PutMachineNotFound {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the put machine not found response
-func (o *PutMachineNotFound) SetPayload(payload *models.Result) {
+func (o *PutMachineNotFound) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -122,6 +123,46 @@ func (o *PutMachineNotFound) SetPayload(payload *models.Result) {
 func (o *PutMachineNotFound) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
 	rw.WriteHeader(404)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
+/*PutMachineConflict put machine conflict
+
+swagger:response putMachineConflict
+*/
+type PutMachineConflict struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewPutMachineConflict creates PutMachineConflict with default headers values
+func NewPutMachineConflict() *PutMachineConflict {
+	return &PutMachineConflict{}
+}
+
+// WithPayload adds the payload to the put machine conflict response
+func (o *PutMachineConflict) WithPayload(payload *models.Error) *PutMachineConflict {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the put machine conflict response
+func (o *PutMachineConflict) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *PutMachineConflict) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(409)
 	if o.Payload != nil {
 		payload := o.Payload
 		if err := producer.Produce(rw, payload); err != nil {
@@ -139,7 +180,7 @@ type PutMachineInternalServerError struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewPutMachineInternalServerError creates PutMachineInternalServerError with default headers values
@@ -148,13 +189,13 @@ func NewPutMachineInternalServerError() *PutMachineInternalServerError {
 }
 
 // WithPayload adds the payload to the put machine internal server error response
-func (o *PutMachineInternalServerError) WithPayload(payload *models.Result) *PutMachineInternalServerError {
+func (o *PutMachineInternalServerError) WithPayload(payload *models.Error) *PutMachineInternalServerError {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the put machine internal server error response
-func (o *PutMachineInternalServerError) SetPayload(payload *models.Result) {
+func (o *PutMachineInternalServerError) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 

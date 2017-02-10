@@ -6,85 +6,87 @@ import (
 	"net/http"
 
 	"github.com/VictorLowther/jsonpatch"
+	"github.com/rackn/rocket-skates/models"
 )
 
-func listThings(thing keySaver) ([]interface{}, *pkgError) {
+func listThings(thing keySaver) ([]interface{}, *models.Error) {
 	things := backend.list(thing)
 	res := make([]interface{}, 0, len(things))
 	for _, obj := range things {
 		var buf interface{}
 		if err := json.Unmarshal(obj, &buf); err != nil {
-			return nil, NewError(fmt.Sprintf("list: error unmarshalling %v: %v", string(obj), err))
+			return nil, NewError(http.StatusInternalServerError,
+				fmt.Sprintf("list: error unmarshalling %v: %v", string(obj), err))
 		}
 		res = append(res, buf)
 	}
 	return res, nil
 }
 
-func createThing(newThing keySaver) (interface{}, int, *pkgError) {
+func createThing(newThing keySaver) (interface{}, int, *models.Error) {
 	finalStatus := http.StatusCreated
 	oldThing := newThing.newIsh()
 	if err := backend.load(oldThing); err == nil {
 		Logger.Printf("backend: Updating %v\n", oldThing.key())
 		Logger.Printf("backend: Updating new %v\n", newThing.key())
-		finalStatus = http.StatusAccepted
+		finalStatus = http.StatusOK
 	} else {
 		Logger.Printf("backend: Creating %v\n", newThing.key())
 		oldThing = nil
 	}
 	if err := backend.save(newThing, oldThing); err != nil {
 		Logger.Printf("backend: Save failed: %v\n", err)
-		return nil, http.StatusConflict, NewError(err.Error())
+		return nil, http.StatusConflict, NewError(http.StatusConflict, err.Error())
 	}
 	return newThing, finalStatus, nil
 }
 
-func getThing(thing keySaver) (interface{}, *pkgError) {
+func getThing(thing keySaver) (interface{}, *models.Error) {
 	if err := backend.load(thing); err != nil {
-		return nil, NewError(err.Error())
+		return nil, NewError(http.StatusNotFound, err.Error())
 	}
 	return thing, nil
 }
 
-func putThing(newThing keySaver) (interface{}, int, *pkgError) {
+func putThing(newThing keySaver) (interface{}, *models.Error) {
 	oldThing := newThing.newIsh()
 	if err := backend.load(oldThing); err != nil {
-		return nil, http.StatusNotFound, NewError(err.Error())
+		return nil, NewError(http.StatusNotFound, err.Error())
 	}
 	if err := backend.save(newThing, oldThing); err != nil {
 		Logger.Printf("backend: Save failed: %v\n", err)
-		return nil, http.StatusConflict, NewError(err.Error())
+		return nil, NewError(http.StatusConflict, err.Error())
 	}
-	return newThing, http.StatusOK, nil
+	return newThing, nil
 }
 
-func updateThing(oldThing keySaver, patch []byte) (interface{}, int, *pkgError) {
+func patchThing(oldThing keySaver, patch []byte) (interface{}, *models.Error) {
 	if err := backend.load(oldThing); err != nil {
-		return nil, http.StatusNotFound, NewError(err.Error())
+		return nil, NewError(http.StatusNotFound, err.Error())
 	}
 	var err error
 	newThing := &Template{}
 	oldThingBuf, _ := json.Marshal(oldThing)
 	newThingBuf, err, loc := jsonpatch.ApplyJSON(oldThingBuf, patch)
 	if err != nil {
-		return nil, http.StatusConflict, NewError(fmt.Sprintf("Failed to apply patch at %d: %v\n", loc, err))
+		return nil, NewError(http.StatusConflict, fmt.Sprintf("Failed to apply patch at %d: %v\n", loc, err))
 	}
 	if err := json.Unmarshal(newThingBuf, &newThing); err != nil {
-		return nil, http.StatusExpectationFailed, NewError(err.Error())
+		return nil, NewError(http.StatusExpectationFailed, err.Error())
 	}
 	if err := backend.save(newThing, oldThing); err != nil {
-		return nil, http.StatusConflict, NewError(err.Error())
+		return nil, NewError(http.StatusConflict, err.Error())
 	}
 
-	return newThing, http.StatusAccepted, nil
+	return newThing, nil
 }
 
-func deleteThing(thing keySaver) (int, *pkgError) {
+func deleteThing(thing keySaver) *models.Error {
 	if err := backend.load(thing); err != nil {
-		return http.StatusConflict, NewError(err.Error())
+		return NewError(http.StatusNotFound, err.Error())
 	}
 	if err := backend.remove(thing); err != nil {
-		return http.StatusConflict, NewError(fmt.Sprintf("Failed to delete %s: %v", thing.key(), err))
+		return NewError(http.StatusConflict, fmt.Sprintf("Failed to delete %s: %v", thing.key(), err))
 	}
-	return http.StatusOK, nil
+	return nil
 }

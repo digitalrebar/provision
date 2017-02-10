@@ -20,7 +20,7 @@ type GetMachineOK struct {
 	/*
 	  In: Body
 	*/
-	Payload GetMachineOKBody `json:"body,omitempty"`
+	Payload *models.MachineOutput `json:"body,omitempty"`
 }
 
 // NewGetMachineOK creates GetMachineOK with default headers values
@@ -29,13 +29,13 @@ func NewGetMachineOK() *GetMachineOK {
 }
 
 // WithPayload adds the payload to the get machine o k response
-func (o *GetMachineOK) WithPayload(payload GetMachineOKBody) *GetMachineOK {
+func (o *GetMachineOK) WithPayload(payload *models.MachineOutput) *GetMachineOK {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the get machine o k response
-func (o *GetMachineOK) SetPayload(payload GetMachineOKBody) {
+func (o *GetMachineOK) SetPayload(payload *models.MachineOutput) {
 	o.Payload = payload
 }
 
@@ -43,11 +43,12 @@ func (o *GetMachineOK) SetPayload(payload GetMachineOKBody) {
 func (o *GetMachineOK) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
 	rw.WriteHeader(200)
-	payload := o.Payload
-	if err := producer.Produce(rw, payload); err != nil {
-		panic(err) // let the recovery middleware deal with this
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
 	}
-
 }
 
 /*GetMachineUnauthorized get machine unauthorized
@@ -59,7 +60,7 @@ type GetMachineUnauthorized struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewGetMachineUnauthorized creates GetMachineUnauthorized with default headers values
@@ -68,13 +69,13 @@ func NewGetMachineUnauthorized() *GetMachineUnauthorized {
 }
 
 // WithPayload adds the payload to the get machine unauthorized response
-func (o *GetMachineUnauthorized) WithPayload(payload *models.Result) *GetMachineUnauthorized {
+func (o *GetMachineUnauthorized) WithPayload(payload *models.Error) *GetMachineUnauthorized {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the get machine unauthorized response
-func (o *GetMachineUnauthorized) SetPayload(payload *models.Result) {
+func (o *GetMachineUnauthorized) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -99,7 +100,7 @@ type GetMachineNotFound struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewGetMachineNotFound creates GetMachineNotFound with default headers values
@@ -108,13 +109,13 @@ func NewGetMachineNotFound() *GetMachineNotFound {
 }
 
 // WithPayload adds the payload to the get machine not found response
-func (o *GetMachineNotFound) WithPayload(payload *models.Result) *GetMachineNotFound {
+func (o *GetMachineNotFound) WithPayload(payload *models.Error) *GetMachineNotFound {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the get machine not found response
-func (o *GetMachineNotFound) SetPayload(payload *models.Result) {
+func (o *GetMachineNotFound) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -139,7 +140,7 @@ type GetMachineInternalServerError struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewGetMachineInternalServerError creates GetMachineInternalServerError with default headers values
@@ -148,13 +149,13 @@ func NewGetMachineInternalServerError() *GetMachineInternalServerError {
 }
 
 // WithPayload adds the payload to the get machine internal server error response
-func (o *GetMachineInternalServerError) WithPayload(payload *models.Result) *GetMachineInternalServerError {
+func (o *GetMachineInternalServerError) WithPayload(payload *models.Error) *GetMachineInternalServerError {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the get machine internal server error response
-func (o *GetMachineInternalServerError) SetPayload(payload *models.Result) {
+func (o *GetMachineInternalServerError) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 

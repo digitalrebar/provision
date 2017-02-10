@@ -93,7 +93,7 @@ func NewListIsosUnauthorized() *ListIsosUnauthorized {
 ListIsosUnauthorized list isos unauthorized
 */
 type ListIsosUnauthorized struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *ListIsosUnauthorized) Error() string {
@@ -102,7 +102,7 @@ func (o *ListIsosUnauthorized) Error() string {
 
 func (o *ListIsosUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -122,7 +122,7 @@ func NewListIsosNotFound() *ListIsosNotFound {
 ListIsosNotFound list isos not found
 */
 type ListIsosNotFound struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *ListIsosNotFound) Error() string {
@@ -131,7 +131,7 @@ func (o *ListIsosNotFound) Error() string {
 
 func (o *ListIsosNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -151,7 +151,7 @@ func NewListIsosInternalServerError() *ListIsosInternalServerError {
 ListIsosInternalServerError list isos internal server error
 */
 type ListIsosInternalServerError struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *ListIsosInternalServerError) Error() string {
@@ -160,7 +160,7 @@ func (o *ListIsosInternalServerError) Error() string {
 
 func (o *ListIsosInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {

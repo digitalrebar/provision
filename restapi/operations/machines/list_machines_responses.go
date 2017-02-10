@@ -20,7 +20,7 @@ type ListMachinesOK struct {
 	/*
 	  In: Body
 	*/
-	Payload ListMachinesOKBody `json:"body,omitempty"`
+	Payload []*models.MachineOutput `json:"body,omitempty"`
 }
 
 // NewListMachinesOK creates ListMachinesOK with default headers values
@@ -29,13 +29,13 @@ func NewListMachinesOK() *ListMachinesOK {
 }
 
 // WithPayload adds the payload to the list machines o k response
-func (o *ListMachinesOK) WithPayload(payload ListMachinesOKBody) *ListMachinesOK {
+func (o *ListMachinesOK) WithPayload(payload []*models.MachineOutput) *ListMachinesOK {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the list machines o k response
-func (o *ListMachinesOK) SetPayload(payload ListMachinesOKBody) {
+func (o *ListMachinesOK) SetPayload(payload []*models.MachineOutput) {
 	o.Payload = payload
 }
 
@@ -44,6 +44,10 @@ func (o *ListMachinesOK) WriteResponse(rw http.ResponseWriter, producer runtime.
 
 	rw.WriteHeader(200)
 	payload := o.Payload
+	if payload == nil {
+		payload = make([]*models.MachineOutput, 0, 50)
+	}
+
 	if err := producer.Produce(rw, payload); err != nil {
 		panic(err) // let the recovery middleware deal with this
 	}
@@ -59,7 +63,7 @@ type ListMachinesUnauthorized struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewListMachinesUnauthorized creates ListMachinesUnauthorized with default headers values
@@ -68,13 +72,13 @@ func NewListMachinesUnauthorized() *ListMachinesUnauthorized {
 }
 
 // WithPayload adds the payload to the list machines unauthorized response
-func (o *ListMachinesUnauthorized) WithPayload(payload *models.Result) *ListMachinesUnauthorized {
+func (o *ListMachinesUnauthorized) WithPayload(payload *models.Error) *ListMachinesUnauthorized {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the list machines unauthorized response
-func (o *ListMachinesUnauthorized) SetPayload(payload *models.Result) {
+func (o *ListMachinesUnauthorized) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -99,7 +103,7 @@ type ListMachinesNotFound struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewListMachinesNotFound creates ListMachinesNotFound with default headers values
@@ -108,13 +112,13 @@ func NewListMachinesNotFound() *ListMachinesNotFound {
 }
 
 // WithPayload adds the payload to the list machines not found response
-func (o *ListMachinesNotFound) WithPayload(payload *models.Result) *ListMachinesNotFound {
+func (o *ListMachinesNotFound) WithPayload(payload *models.Error) *ListMachinesNotFound {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the list machines not found response
-func (o *ListMachinesNotFound) SetPayload(payload *models.Result) {
+func (o *ListMachinesNotFound) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -139,7 +143,7 @@ type ListMachinesInternalServerError struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewListMachinesInternalServerError creates ListMachinesInternalServerError with default headers values
@@ -148,13 +152,13 @@ func NewListMachinesInternalServerError() *ListMachinesInternalServerError {
 }
 
 // WithPayload adds the payload to the list machines internal server error response
-func (o *ListMachinesInternalServerError) WithPayload(payload *models.Result) *ListMachinesInternalServerError {
+func (o *ListMachinesInternalServerError) WithPayload(payload *models.Error) *ListMachinesInternalServerError {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the list machines internal server error response
-func (o *ListMachinesInternalServerError) SetPayload(payload *models.Result) {
+func (o *ListMachinesInternalServerError) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 

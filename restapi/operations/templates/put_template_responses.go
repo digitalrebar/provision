@@ -60,7 +60,7 @@ type PutTemplateUnauthorized struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewPutTemplateUnauthorized creates PutTemplateUnauthorized with default headers values
@@ -69,13 +69,13 @@ func NewPutTemplateUnauthorized() *PutTemplateUnauthorized {
 }
 
 // WithPayload adds the payload to the put template unauthorized response
-func (o *PutTemplateUnauthorized) WithPayload(payload *models.Result) *PutTemplateUnauthorized {
+func (o *PutTemplateUnauthorized) WithPayload(payload *models.Error) *PutTemplateUnauthorized {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the put template unauthorized response
-func (o *PutTemplateUnauthorized) SetPayload(payload *models.Result) {
+func (o *PutTemplateUnauthorized) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -100,7 +100,7 @@ type PutTemplateNotFound struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewPutTemplateNotFound creates PutTemplateNotFound with default headers values
@@ -109,13 +109,13 @@ func NewPutTemplateNotFound() *PutTemplateNotFound {
 }
 
 // WithPayload adds the payload to the put template not found response
-func (o *PutTemplateNotFound) WithPayload(payload *models.Result) *PutTemplateNotFound {
+func (o *PutTemplateNotFound) WithPayload(payload *models.Error) *PutTemplateNotFound {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the put template not found response
-func (o *PutTemplateNotFound) SetPayload(payload *models.Result) {
+func (o *PutTemplateNotFound) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -123,6 +123,46 @@ func (o *PutTemplateNotFound) SetPayload(payload *models.Result) {
 func (o *PutTemplateNotFound) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
 	rw.WriteHeader(404)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
+/*PutTemplateConflict put template conflict
+
+swagger:response putTemplateConflict
+*/
+type PutTemplateConflict struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewPutTemplateConflict creates PutTemplateConflict with default headers values
+func NewPutTemplateConflict() *PutTemplateConflict {
+	return &PutTemplateConflict{}
+}
+
+// WithPayload adds the payload to the put template conflict response
+func (o *PutTemplateConflict) WithPayload(payload *models.Error) *PutTemplateConflict {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the put template conflict response
+func (o *PutTemplateConflict) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *PutTemplateConflict) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(409)
 	if o.Payload != nil {
 		payload := o.Payload
 		if err := producer.Produce(rw, payload); err != nil {
@@ -140,7 +180,7 @@ type PutTemplateInternalServerError struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewPutTemplateInternalServerError creates PutTemplateInternalServerError with default headers values
@@ -149,13 +189,13 @@ func NewPutTemplateInternalServerError() *PutTemplateInternalServerError {
 }
 
 // WithPayload adds the payload to the put template internal server error response
-func (o *PutTemplateInternalServerError) WithPayload(payload *models.Result) *PutTemplateInternalServerError {
+func (o *PutTemplateInternalServerError) WithPayload(payload *models.Error) *PutTemplateInternalServerError {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the put template internal server error response
-func (o *PutTemplateInternalServerError) SetPayload(payload *models.Result) {
+func (o *PutTemplateInternalServerError) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 

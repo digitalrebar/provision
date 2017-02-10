@@ -93,7 +93,7 @@ func NewListTemplatesUnauthorized() *ListTemplatesUnauthorized {
 ListTemplatesUnauthorized list templates unauthorized
 */
 type ListTemplatesUnauthorized struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *ListTemplatesUnauthorized) Error() string {
@@ -102,7 +102,7 @@ func (o *ListTemplatesUnauthorized) Error() string {
 
 func (o *ListTemplatesUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -122,7 +122,7 @@ func NewListTemplatesNotFound() *ListTemplatesNotFound {
 ListTemplatesNotFound list templates not found
 */
 type ListTemplatesNotFound struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *ListTemplatesNotFound) Error() string {
@@ -131,7 +131,7 @@ func (o *ListTemplatesNotFound) Error() string {
 
 func (o *ListTemplatesNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -151,7 +151,7 @@ func NewListTemplatesInternalServerError() *ListTemplatesInternalServerError {
 ListTemplatesInternalServerError list templates internal server error
 */
 type ListTemplatesInternalServerError struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *ListTemplatesInternalServerError) Error() string {
@@ -160,7 +160,7 @@ func (o *ListTemplatesInternalServerError) Error() string {
 
 func (o *ListTemplatesInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {

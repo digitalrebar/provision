@@ -66,7 +66,7 @@ func NewListBootenvsOK() *ListBootenvsOK {
 ListBootenvsOK list bootenvs o k
 */
 type ListBootenvsOK struct {
-	Payload []*models.BootenvInput
+	Payload []*models.BootenvOutput
 }
 
 func (o *ListBootenvsOK) Error() string {
@@ -93,7 +93,7 @@ func NewListBootenvsUnauthorized() *ListBootenvsUnauthorized {
 ListBootenvsUnauthorized list bootenvs unauthorized
 */
 type ListBootenvsUnauthorized struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *ListBootenvsUnauthorized) Error() string {
@@ -102,7 +102,7 @@ func (o *ListBootenvsUnauthorized) Error() string {
 
 func (o *ListBootenvsUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -122,7 +122,7 @@ func NewListBootenvsNotFound() *ListBootenvsNotFound {
 ListBootenvsNotFound list bootenvs not found
 */
 type ListBootenvsNotFound struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *ListBootenvsNotFound) Error() string {
@@ -131,7 +131,7 @@ func (o *ListBootenvsNotFound) Error() string {
 
 func (o *ListBootenvsNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -151,7 +151,7 @@ func NewListBootenvsInternalServerError() *ListBootenvsInternalServerError {
 ListBootenvsInternalServerError list bootenvs internal server error
 */
 type ListBootenvsInternalServerError struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *ListBootenvsInternalServerError) Error() string {
@@ -160,7 +160,7 @@ func (o *ListBootenvsInternalServerError) Error() string {
 
 func (o *ListBootenvsInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {

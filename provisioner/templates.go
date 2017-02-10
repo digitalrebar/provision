@@ -15,6 +15,8 @@ import (
 	"github.com/rackn/rocket-skates/restapi/operations/templates"
 )
 
+// GREG FIX multi-return code test
+
 // Template represents a template that will be associated with a boot environment.
 type Template struct {
 	models.TemplateOutput
@@ -22,60 +24,17 @@ type Template struct {
 }
 
 func CastTemplate(t1 *models.TemplateInput) *Template {
-	return &Template{models.TemplateOutput{*t1}, nil}
+	return &Template{models.TemplateOutput{*t1, make([]string, 0, 0)}, nil}
 }
 
 func NewTemplate(uuid string) *Template {
-	return &Template{models.TemplateOutput{models.TemplateInput{UUID: uuid}}, nil}
-}
-
-func TemplatePatch(params templates.PatchTemplateParams, p *models.Principal) middleware.Responder {
-	newThing := NewTemplate(params.UUID)
-	patch, _ := json.Marshal(params.Body)
-	item, code, err := updateThing(newThing, patch)
-	if err != nil {
-		r := &models.Result{Code: int64(code), Messages: []string{err.Message}}
-		return templates.NewPatchTemplateExpectationFailed().WithPayload(r)
-	}
-	original, ok := item.(models.TemplateOutput)
-	if !ok {
-		r := &models.Result{Code: http.StatusInternalServerError,
-			Messages: []string{"Failed to convert template"}}
-		return templates.NewPatchTemplateInternalServerError().WithPayload(r)
-	}
-	return templates.NewPatchTemplateAccepted().WithPayload(&original)
-}
-
-func TemplateDelete(params templates.DeleteTemplateParams, p *models.Principal) middleware.Responder {
-	newThing := NewTemplate(params.UUID)
-	code, err := deleteThing(newThing)
-	if err != nil {
-		r := &models.Result{Code: int64(code), Messages: []string{err.Message}}
-		return templates.NewDeleteTemplateConflict().WithPayload(r)
-	}
-	return templates.NewDeleteTemplateNoContent()
-}
-
-func TemplateGet(params templates.GetTemplateParams, p *models.Principal) middleware.Responder {
-	newThing := NewTemplate(params.UUID)
-	item, err := getThing(newThing)
-	if err != nil {
-		r := &models.Result{Code: http.StatusNotFound, Messages: []string{err.Message}}
-		return templates.NewGetTemplateNotFound().WithPayload(r)
-	}
-	original, ok := item.(models.TemplateOutput)
-	if !ok {
-		r := &models.Result{Code: http.StatusInternalServerError, Messages: []string{"Failed to convert template"}}
-		return templates.NewGetTemplateInternalServerError().WithPayload(r)
-	}
-	return templates.NewGetTemplateOK().WithPayload(&original)
+	return &Template{models.TemplateOutput{models.TemplateInput{UUID: uuid}, make([]string, 0, 0)}, nil}
 }
 
 func TemplateList(params templates.ListTemplatesParams, p *models.Principal) middleware.Responder {
 	allthem, err := listThings(&Template{})
 	if err != nil {
-		r := &models.Result{Code: http.StatusInternalServerError, Messages: []string{err.Message}}
-		return templates.NewListTemplatesInternalServerError().WithPayload(r)
+		return templates.NewListTemplatesInternalServerError().WithPayload(err)
 	}
 	data := make([]*models.TemplateOutput, 0, 0)
 	for _, j := range allthem {
@@ -90,13 +49,15 @@ func TemplateList(params templates.ListTemplatesParams, p *models.Principal) mid
 func TemplatePost(params templates.PostTemplateParams, p *models.Principal) middleware.Responder {
 	item, code, err := createThing(CastTemplate(params.Body))
 	if err != nil {
-		r := &models.Result{Code: int64(code), Messages: []string{err.Message}}
-		return templates.NewPostTemplateConflict().WithPayload(r)
+		return templates.NewPostTemplateConflict().WithPayload(err)
 	}
 	original, ok := item.(models.TemplateOutput)
 	if !ok {
-		r := &models.Result{Code: http.StatusInternalServerError, Messages: []string{"failed to cast template"}}
-		return templates.NewPostTemplateInternalServerError().WithPayload(r)
+		e := NewError(http.StatusInternalServerError, "failed to cast template")
+		return templates.NewPostTemplateInternalServerError().WithPayload(e)
+	}
+	if code == http.StatusOK {
+		return templates.NewPostTemplateOK().WithPayload(&original)
 	}
 	return templates.NewPostTemplateCreated().WithPayload(&original)
 }
@@ -106,47 +67,90 @@ func TemplateReplace(params templates.ReplaceTemplateParams, p *models.Principal
 	oldThing := NewTemplate(params.UUID)
 	newThing := NewTemplate(params.UUID)
 	if err := backend.load(oldThing); err == nil {
-		finalStatus = http.StatusAccepted
+		finalStatus = http.StatusOK
 	} else {
 		oldThing = nil
 	}
 	buf, err := ioutil.ReadAll(params.Body)
 	if err != nil {
-		r := &models.Result{Code: int64(http.StatusExpectationFailed),
-			Messages: []string{"template: failed to read request body"}}
-		return templates.NewReplaceTemplateExpectationFailed().WithPayload(r)
+		e := NewError(http.StatusExpectationFailed,
+			"template: failed to read request body")
+		return templates.NewReplaceTemplateExpectationFailed().WithPayload(e)
 	}
 	newThing.Contents = string(buf)
 	if err := backend.save(newThing, oldThing); err != nil {
-		r := &models.Result{Code: int64(http.StatusInternalServerError),
-			Messages: []string{err.Error()}}
-		return templates.NewReplaceTemplateInternalServerError().WithPayload(r)
+		e := NewError(http.StatusConflict, err.Error())
+		return templates.NewReplaceTemplateConflict().WithPayload(e)
 	}
 
 	original, ok := interface{}(newThing).(models.TemplateOutput)
 	if !ok {
-		r := &models.Result{Code: http.StatusInternalServerError, Messages: []string{"Failed to convert template"}}
-		return templates.NewGetTemplateInternalServerError().WithPayload(r)
+		e := NewError(http.StatusInternalServerError, "Failed to convert template")
+		return templates.NewGetTemplateInternalServerError().WithPayload(e)
 	}
-	if finalStatus == http.StatusAccepted {
-		return templates.NewReplaceTemplateAccepted().WithPayload(&original)
+	if finalStatus == http.StatusOK {
+		return templates.NewReplaceTemplateOK().WithPayload(&original)
 	}
 	return templates.NewReplaceTemplateCreated().WithPayload(&original)
 }
 
-func TemplatePut(params templates.PutTemplateParams, p *models.Principal) middleware.Responder {
-	item, code, err := putThing(CastTemplate(params.Body))
+func TemplateGet(params templates.GetTemplateParams, p *models.Principal) middleware.Responder {
+	newThing := NewTemplate(params.UUID)
+	item, err := getThing(newThing)
 	if err != nil {
-		r := &models.Result{Code: int64(code), Messages: []string{err.Message}}
-		return templates.NewPostTemplateConflict().WithPayload(r)
+		return templates.NewGetTemplateNotFound().WithPayload(err)
 	}
 	original, ok := item.(models.TemplateOutput)
 	if !ok {
-		r := &models.Result{Code: http.StatusInternalServerError,
-			Messages: []string{"failed to cast template"}}
-		return templates.NewPostTemplateInternalServerError().WithPayload(r)
+		e := NewError(http.StatusInternalServerError, "Failed to convert template")
+		return templates.NewGetTemplateInternalServerError().WithPayload(e)
+	}
+	return templates.NewGetTemplateOK().WithPayload(&original)
+}
+
+func TemplatePut(params templates.PutTemplateParams, p *models.Principal) middleware.Responder {
+	item, err := putThing(CastTemplate(params.Body))
+	if err != nil {
+		if err.Code == http.StatusNotFound {
+			return templates.NewPutTemplateNotFound().WithPayload(err)
+		}
+		return templates.NewPutTemplateConflict().WithPayload(err)
+	}
+	original, ok := item.(models.TemplateOutput)
+	if !ok {
+		e := NewError(http.StatusInternalServerError, "Failed to convert template")
+		return templates.NewPutTemplateInternalServerError().WithPayload(e)
 	}
 	return templates.NewPutTemplateOK().WithPayload(&original)
+}
+
+func TemplatePatch(params templates.PatchTemplateParams, p *models.Principal) middleware.Responder {
+	newThing := NewTemplate(params.UUID)
+	patch, _ := json.Marshal(params.Body)
+	item, err := patchThing(newThing, patch)
+	if err != nil {
+		if err.Code == http.StatusNotFound {
+			return templates.NewPatchTemplateNotFound().WithPayload(err)
+		}
+		if err.Code == http.StatusConflict {
+			return templates.NewPatchTemplateConflict().WithPayload(err)
+		}
+		return templates.NewPatchTemplateExpectationFailed().WithPayload(err)
+	}
+	original, ok := item.(models.TemplateOutput)
+	if !ok {
+		e := NewError(http.StatusInternalServerError, "Failed to convert template")
+		return templates.NewPatchTemplateInternalServerError().WithPayload(e)
+	}
+	return templates.NewPatchTemplateOK().WithPayload(&original)
+}
+
+func TemplateDelete(params templates.DeleteTemplateParams, p *models.Principal) middleware.Responder {
+	err := deleteThing(NewTemplate(params.UUID))
+	if err != nil {
+		return templates.NewDeleteTemplateConflict().WithPayload(err)
+	}
+	return templates.NewDeleteTemplateNoContent()
 }
 
 func (t *Template) prefix() string {
@@ -191,7 +195,7 @@ func (t *Template) onChange(oldThing interface{}) error {
 		if err == nil {
 			for _, machine := range machines {
 				reRender := false
-				bootEnv := &BootEnv{models.BootenvInput{Name: machine.BootEnv}, nil, nil}
+				bootEnv := NewBootenv(machine.BootEnv)
 				if err := backend.load(bootEnv); err == nil {
 					for ii, template := range bootEnv.Templates {
 						ti := bootEnv.TemplateInfo[ii]

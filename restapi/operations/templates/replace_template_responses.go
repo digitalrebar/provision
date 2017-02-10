@@ -11,6 +11,46 @@ import (
 	"github.com/rackn/rocket-skates/models"
 )
 
+/*ReplaceTemplateOK replace template o k
+
+swagger:response replaceTemplateOK
+*/
+type ReplaceTemplateOK struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.TemplateOutput `json:"body,omitempty"`
+}
+
+// NewReplaceTemplateOK creates ReplaceTemplateOK with default headers values
+func NewReplaceTemplateOK() *ReplaceTemplateOK {
+	return &ReplaceTemplateOK{}
+}
+
+// WithPayload adds the payload to the replace template o k response
+func (o *ReplaceTemplateOK) WithPayload(payload *models.TemplateOutput) *ReplaceTemplateOK {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the replace template o k response
+func (o *ReplaceTemplateOK) SetPayload(payload *models.TemplateOutput) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *ReplaceTemplateOK) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(200)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
 /*ReplaceTemplateCreated replace template created
 
 swagger:response replaceTemplateCreated
@@ -51,46 +91,6 @@ func (o *ReplaceTemplateCreated) WriteResponse(rw http.ResponseWriter, producer 
 	}
 }
 
-/*ReplaceTemplateAccepted replace template accepted
-
-swagger:response replaceTemplateAccepted
-*/
-type ReplaceTemplateAccepted struct {
-
-	/*
-	  In: Body
-	*/
-	Payload *models.TemplateOutput `json:"body,omitempty"`
-}
-
-// NewReplaceTemplateAccepted creates ReplaceTemplateAccepted with default headers values
-func NewReplaceTemplateAccepted() *ReplaceTemplateAccepted {
-	return &ReplaceTemplateAccepted{}
-}
-
-// WithPayload adds the payload to the replace template accepted response
-func (o *ReplaceTemplateAccepted) WithPayload(payload *models.TemplateOutput) *ReplaceTemplateAccepted {
-	o.Payload = payload
-	return o
-}
-
-// SetPayload sets the payload to the replace template accepted response
-func (o *ReplaceTemplateAccepted) SetPayload(payload *models.TemplateOutput) {
-	o.Payload = payload
-}
-
-// WriteResponse to the client
-func (o *ReplaceTemplateAccepted) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
-
-	rw.WriteHeader(202)
-	if o.Payload != nil {
-		payload := o.Payload
-		if err := producer.Produce(rw, payload); err != nil {
-			panic(err) // let the recovery middleware deal with this
-		}
-	}
-}
-
 /*ReplaceTemplateUnauthorized replace template unauthorized
 
 swagger:response replaceTemplateUnauthorized
@@ -100,7 +100,7 @@ type ReplaceTemplateUnauthorized struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewReplaceTemplateUnauthorized creates ReplaceTemplateUnauthorized with default headers values
@@ -109,13 +109,13 @@ func NewReplaceTemplateUnauthorized() *ReplaceTemplateUnauthorized {
 }
 
 // WithPayload adds the payload to the replace template unauthorized response
-func (o *ReplaceTemplateUnauthorized) WithPayload(payload *models.Result) *ReplaceTemplateUnauthorized {
+func (o *ReplaceTemplateUnauthorized) WithPayload(payload *models.Error) *ReplaceTemplateUnauthorized {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the replace template unauthorized response
-func (o *ReplaceTemplateUnauthorized) SetPayload(payload *models.Result) {
+func (o *ReplaceTemplateUnauthorized) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -140,7 +140,7 @@ type ReplaceTemplateConflict struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewReplaceTemplateConflict creates ReplaceTemplateConflict with default headers values
@@ -149,13 +149,13 @@ func NewReplaceTemplateConflict() *ReplaceTemplateConflict {
 }
 
 // WithPayload adds the payload to the replace template conflict response
-func (o *ReplaceTemplateConflict) WithPayload(payload *models.Result) *ReplaceTemplateConflict {
+func (o *ReplaceTemplateConflict) WithPayload(payload *models.Error) *ReplaceTemplateConflict {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the replace template conflict response
-func (o *ReplaceTemplateConflict) SetPayload(payload *models.Result) {
+func (o *ReplaceTemplateConflict) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -180,7 +180,7 @@ type ReplaceTemplateExpectationFailed struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewReplaceTemplateExpectationFailed creates ReplaceTemplateExpectationFailed with default headers values
@@ -189,13 +189,13 @@ func NewReplaceTemplateExpectationFailed() *ReplaceTemplateExpectationFailed {
 }
 
 // WithPayload adds the payload to the replace template expectation failed response
-func (o *ReplaceTemplateExpectationFailed) WithPayload(payload *models.Result) *ReplaceTemplateExpectationFailed {
+func (o *ReplaceTemplateExpectationFailed) WithPayload(payload *models.Error) *ReplaceTemplateExpectationFailed {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the replace template expectation failed response
-func (o *ReplaceTemplateExpectationFailed) SetPayload(payload *models.Result) {
+func (o *ReplaceTemplateExpectationFailed) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -220,7 +220,7 @@ type ReplaceTemplateInternalServerError struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewReplaceTemplateInternalServerError creates ReplaceTemplateInternalServerError with default headers values
@@ -229,13 +229,13 @@ func NewReplaceTemplateInternalServerError() *ReplaceTemplateInternalServerError
 }
 
 // WithPayload adds the payload to the replace template internal server error response
-func (o *ReplaceTemplateInternalServerError) WithPayload(payload *models.Result) *ReplaceTemplateInternalServerError {
+func (o *ReplaceTemplateInternalServerError) WithPayload(payload *models.Error) *ReplaceTemplateInternalServerError {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the replace template internal server error response
-func (o *ReplaceTemplateInternalServerError) SetPayload(payload *models.Result) {
+func (o *ReplaceTemplateInternalServerError) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 

@@ -30,6 +30,13 @@ func (o *DeleteIsoReader) ReadResponse(response runtime.ClientResponse, consumer
 		}
 		return result, nil
 
+	case 401:
+		result := NewDeleteIsoUnauthorized()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+
 	case 404:
 		result := NewDeleteIsoNotFound()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -77,6 +84,35 @@ func (o *DeleteIsoNoContent) readResponse(response runtime.ClientResponse, consu
 	return nil
 }
 
+// NewDeleteIsoUnauthorized creates a DeleteIsoUnauthorized with default headers values
+func NewDeleteIsoUnauthorized() *DeleteIsoUnauthorized {
+	return &DeleteIsoUnauthorized{}
+}
+
+/*DeleteIsoUnauthorized handles this case with default header values.
+
+DeleteIsoUnauthorized delete iso unauthorized
+*/
+type DeleteIsoUnauthorized struct {
+	Payload *models.Error
+}
+
+func (o *DeleteIsoUnauthorized) Error() string {
+	return fmt.Sprintf("[DELETE /isos/{name}][%d] deleteIsoUnauthorized  %+v", 401, o.Payload)
+}
+
+func (o *DeleteIsoUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.Error)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
 // NewDeleteIsoNotFound creates a DeleteIsoNotFound with default headers values
 func NewDeleteIsoNotFound() *DeleteIsoNotFound {
 	return &DeleteIsoNotFound{}
@@ -87,7 +123,7 @@ func NewDeleteIsoNotFound() *DeleteIsoNotFound {
 DeleteIsoNotFound delete iso not found
 */
 type DeleteIsoNotFound struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *DeleteIsoNotFound) Error() string {
@@ -96,7 +132,7 @@ func (o *DeleteIsoNotFound) Error() string {
 
 func (o *DeleteIsoNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -116,7 +152,7 @@ func NewDeleteIsoConflict() *DeleteIsoConflict {
 DeleteIsoConflict delete iso conflict
 */
 type DeleteIsoConflict struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *DeleteIsoConflict) Error() string {
@@ -125,7 +161,7 @@ func (o *DeleteIsoConflict) Error() string {
 
 func (o *DeleteIsoConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -145,7 +181,7 @@ func NewDeleteIsoInternalServerError() *DeleteIsoInternalServerError {
 DeleteIsoInternalServerError delete iso internal server error
 */
 type DeleteIsoInternalServerError struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *DeleteIsoInternalServerError) Error() string {
@@ -154,7 +190,7 @@ func (o *DeleteIsoInternalServerError) Error() string {
 
 func (o *DeleteIsoInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {

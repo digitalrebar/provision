@@ -30,6 +30,13 @@ func (o *DeleteMachineReader) ReadResponse(response runtime.ClientResponse, cons
 		}
 		return result, nil
 
+	case 401:
+		result := NewDeleteMachineUnauthorized()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+
 	case 404:
 		result := NewDeleteMachineNotFound()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -77,6 +84,35 @@ func (o *DeleteMachineNoContent) readResponse(response runtime.ClientResponse, c
 	return nil
 }
 
+// NewDeleteMachineUnauthorized creates a DeleteMachineUnauthorized with default headers values
+func NewDeleteMachineUnauthorized() *DeleteMachineUnauthorized {
+	return &DeleteMachineUnauthorized{}
+}
+
+/*DeleteMachineUnauthorized handles this case with default header values.
+
+DeleteMachineUnauthorized delete machine unauthorized
+*/
+type DeleteMachineUnauthorized struct {
+	Payload *models.Error
+}
+
+func (o *DeleteMachineUnauthorized) Error() string {
+	return fmt.Sprintf("[DELETE /machines/{uuid}][%d] deleteMachineUnauthorized  %+v", 401, o.Payload)
+}
+
+func (o *DeleteMachineUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.Error)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
 // NewDeleteMachineNotFound creates a DeleteMachineNotFound with default headers values
 func NewDeleteMachineNotFound() *DeleteMachineNotFound {
 	return &DeleteMachineNotFound{}
@@ -87,7 +123,7 @@ func NewDeleteMachineNotFound() *DeleteMachineNotFound {
 DeleteMachineNotFound delete machine not found
 */
 type DeleteMachineNotFound struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *DeleteMachineNotFound) Error() string {
@@ -96,7 +132,7 @@ func (o *DeleteMachineNotFound) Error() string {
 
 func (o *DeleteMachineNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -116,7 +152,7 @@ func NewDeleteMachineConflict() *DeleteMachineConflict {
 DeleteMachineConflict delete machine conflict
 */
 type DeleteMachineConflict struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *DeleteMachineConflict) Error() string {
@@ -125,7 +161,7 @@ func (o *DeleteMachineConflict) Error() string {
 
 func (o *DeleteMachineConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -145,7 +181,7 @@ func NewDeleteMachineInternalServerError() *DeleteMachineInternalServerError {
 DeleteMachineInternalServerError delete machine internal server error
 */
 type DeleteMachineInternalServerError struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *DeleteMachineInternalServerError) Error() string {
@@ -154,7 +190,7 @@ func (o *DeleteMachineInternalServerError) Error() string {
 
 func (o *DeleteMachineInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {

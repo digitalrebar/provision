@@ -18,6 +18,7 @@ import (
 
 	"github.com/rackn/rocket-skates/models"
 	"github.com/rackn/rocket-skates/restapi/operations/bootenvs"
+	"github.com/rackn/rocket-skates/restapi/operations/dhcp_leases"
 	"github.com/rackn/rocket-skates/restapi/operations/files"
 	"github.com/rackn/rocket-skates/restapi/operations/isos"
 	"github.com/rackn/rocket-skates/restapi/operations/machines"
@@ -67,6 +68,16 @@ type RocketSkatesAPI struct {
 	// it performs authentication based on an api key auth_token provided in the query
 	AuthTokenAuth func(string) (*models.Principal, error)
 
+	// DhcpLeasesDELETEDhcpLeaseHandler sets the operation handler for the d e l e t e dhcp lease operation
+	DhcpLeasesDELETEDhcpLeaseHandler dhcp_leases.DELETEDhcpLeaseHandler
+	// DhcpLeasesGETDhcpLeaseHandler sets the operation handler for the g e t dhcp lease operation
+	DhcpLeasesGETDhcpLeaseHandler dhcp_leases.GETDhcpLeaseHandler
+	// DhcpLeasesLISTDhcpLeasesHandler sets the operation handler for the l i s t dhcp leases operation
+	DhcpLeasesLISTDhcpLeasesHandler dhcp_leases.LISTDhcpLeasesHandler
+	// DhcpLeasesPOSTDhcpLeaseHandler sets the operation handler for the p o s t dhcp lease operation
+	DhcpLeasesPOSTDhcpLeaseHandler dhcp_leases.POSTDhcpLeaseHandler
+	// DhcpLeasesPUTDhcpLeaseHandler sets the operation handler for the p u t dhcp lease operation
+	DhcpLeasesPUTDhcpLeaseHandler dhcp_leases.PUTDhcpLeaseHandler
 	// BootenvsDeleteBootenvHandler sets the operation handler for the delete bootenv operation
 	BootenvsDeleteBootenvHandler bootenvs.DeleteBootenvHandler
 	// FilesDeleteFileHandler sets the operation handler for the delete file operation
@@ -202,6 +213,26 @@ func (o *RocketSkatesAPI) Validate() error {
 
 	if o.AuthTokenAuth == nil {
 		unregistered = append(unregistered, "AuthTokenAuth")
+	}
+
+	if o.DhcpLeasesDELETEDhcpLeaseHandler == nil {
+		unregistered = append(unregistered, "dhcp_leases.DELETEDhcpLeaseHandler")
+	}
+
+	if o.DhcpLeasesGETDhcpLeaseHandler == nil {
+		unregistered = append(unregistered, "dhcp_leases.GETDhcpLeaseHandler")
+	}
+
+	if o.DhcpLeasesLISTDhcpLeasesHandler == nil {
+		unregistered = append(unregistered, "dhcp_leases.LISTDhcpLeasesHandler")
+	}
+
+	if o.DhcpLeasesPOSTDhcpLeaseHandler == nil {
+		unregistered = append(unregistered, "dhcp_leases.POSTDhcpLeaseHandler")
+	}
+
+	if o.DhcpLeasesPUTDhcpLeaseHandler == nil {
+		unregistered = append(unregistered, "dhcp_leases.PUTDhcpLeaseHandler")
 	}
 
 	if o.BootenvsDeleteBootenvHandler == nil {
@@ -421,6 +452,31 @@ func (o *RocketSkatesAPI) initHandlerCache() {
 	if o.handlers == nil {
 		o.handlers = make(map[string]map[string]http.Handler)
 	}
+
+	if o.handlers["DELETE"] == nil {
+		o.handlers[strings.ToUpper("DELETE")] = make(map[string]http.Handler)
+	}
+	o.handlers["DELETE"]["/leases/{id}"] = dhcp_leases.NewDELETEDhcpLease(o.context, o.DhcpLeasesDELETEDhcpLeaseHandler)
+
+	if o.handlers["GET"] == nil {
+		o.handlers[strings.ToUpper("GET")] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/leases/{id}"] = dhcp_leases.NewGETDhcpLease(o.context, o.DhcpLeasesGETDhcpLeaseHandler)
+
+	if o.handlers["GET"] == nil {
+		o.handlers[strings.ToUpper("GET")] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/leases"] = dhcp_leases.NewLISTDhcpLeases(o.context, o.DhcpLeasesLISTDhcpLeasesHandler)
+
+	if o.handlers["POST"] == nil {
+		o.handlers[strings.ToUpper("POST")] = make(map[string]http.Handler)
+	}
+	o.handlers["POST"]["/leases"] = dhcp_leases.NewPOSTDhcpLease(o.context, o.DhcpLeasesPOSTDhcpLeaseHandler)
+
+	if o.handlers["PUT"] == nil {
+		o.handlers[strings.ToUpper("PUT")] = make(map[string]http.Handler)
+	}
+	o.handlers["PUT"]["/leases/{id}"] = dhcp_leases.NewPUTDhcpLease(o.context, o.DhcpLeasesPUTDhcpLeaseHandler)
 
 	if o.handlers["DELETE"] == nil {
 		o.handlers[strings.ToUpper("DELETE")] = make(map[string]http.Handler)

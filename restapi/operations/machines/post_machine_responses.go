@@ -11,6 +11,46 @@ import (
 	"github.com/rackn/rocket-skates/models"
 )
 
+/*PostMachineOK post machine o k
+
+swagger:response postMachineOK
+*/
+type PostMachineOK struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.MachineOutput `json:"body,omitempty"`
+}
+
+// NewPostMachineOK creates PostMachineOK with default headers values
+func NewPostMachineOK() *PostMachineOK {
+	return &PostMachineOK{}
+}
+
+// WithPayload adds the payload to the post machine o k response
+func (o *PostMachineOK) WithPayload(payload *models.MachineOutput) *PostMachineOK {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the post machine o k response
+func (o *PostMachineOK) SetPayload(payload *models.MachineOutput) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *PostMachineOK) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(200)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
 /*PostMachineCreated post machine created
 
 swagger:response postMachineCreated
@@ -20,7 +60,7 @@ type PostMachineCreated struct {
 	/*
 	  In: Body
 	*/
-	Payload PostMachineCreatedBody `json:"body,omitempty"`
+	Payload *models.MachineOutput `json:"body,omitempty"`
 }
 
 // NewPostMachineCreated creates PostMachineCreated with default headers values
@@ -29,13 +69,13 @@ func NewPostMachineCreated() *PostMachineCreated {
 }
 
 // WithPayload adds the payload to the post machine created response
-func (o *PostMachineCreated) WithPayload(payload PostMachineCreatedBody) *PostMachineCreated {
+func (o *PostMachineCreated) WithPayload(payload *models.MachineOutput) *PostMachineCreated {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the post machine created response
-func (o *PostMachineCreated) SetPayload(payload PostMachineCreatedBody) {
+func (o *PostMachineCreated) SetPayload(payload *models.MachineOutput) {
 	o.Payload = payload
 }
 
@@ -43,11 +83,12 @@ func (o *PostMachineCreated) SetPayload(payload PostMachineCreatedBody) {
 func (o *PostMachineCreated) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
 	rw.WriteHeader(201)
-	payload := o.Payload
-	if err := producer.Produce(rw, payload); err != nil {
-		panic(err) // let the recovery middleware deal with this
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
 	}
-
 }
 
 /*PostMachineUnauthorized post machine unauthorized
@@ -59,7 +100,7 @@ type PostMachineUnauthorized struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewPostMachineUnauthorized creates PostMachineUnauthorized with default headers values
@@ -68,13 +109,13 @@ func NewPostMachineUnauthorized() *PostMachineUnauthorized {
 }
 
 // WithPayload adds the payload to the post machine unauthorized response
-func (o *PostMachineUnauthorized) WithPayload(payload *models.Result) *PostMachineUnauthorized {
+func (o *PostMachineUnauthorized) WithPayload(payload *models.Error) *PostMachineUnauthorized {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the post machine unauthorized response
-func (o *PostMachineUnauthorized) SetPayload(payload *models.Result) {
+func (o *PostMachineUnauthorized) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -99,7 +140,7 @@ type PostMachineConflict struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewPostMachineConflict creates PostMachineConflict with default headers values
@@ -108,13 +149,13 @@ func NewPostMachineConflict() *PostMachineConflict {
 }
 
 // WithPayload adds the payload to the post machine conflict response
-func (o *PostMachineConflict) WithPayload(payload *models.Result) *PostMachineConflict {
+func (o *PostMachineConflict) WithPayload(payload *models.Error) *PostMachineConflict {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the post machine conflict response
-func (o *PostMachineConflict) SetPayload(payload *models.Result) {
+func (o *PostMachineConflict) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -139,7 +180,7 @@ type PostMachineInternalServerError struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewPostMachineInternalServerError creates PostMachineInternalServerError with default headers values
@@ -148,13 +189,13 @@ func NewPostMachineInternalServerError() *PostMachineInternalServerError {
 }
 
 // WithPayload adds the payload to the post machine internal server error response
-func (o *PostMachineInternalServerError) WithPayload(payload *models.Result) *PostMachineInternalServerError {
+func (o *PostMachineInternalServerError) WithPayload(payload *models.Error) *PostMachineInternalServerError {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the post machine internal server error response
-func (o *PostMachineInternalServerError) SetPayload(payload *models.Result) {
+func (o *PostMachineInternalServerError) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 

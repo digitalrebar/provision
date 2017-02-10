@@ -1,9 +1,7 @@
 package provisioner
 
-type pkgError struct {
-	Message string
-}
+import "github.com/rackn/rocket-skates/models"
 
-func NewError(s string) *pkgError {
-	return &pkgError{Message: s}
+func NewError(c int64, s string) *models.Error {
+	return &models.Error{Code: c, Message: s}
 }

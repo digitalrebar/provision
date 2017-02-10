@@ -63,7 +63,7 @@ type ListIsosUnauthorized struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewListIsosUnauthorized creates ListIsosUnauthorized with default headers values
@@ -72,13 +72,13 @@ func NewListIsosUnauthorized() *ListIsosUnauthorized {
 }
 
 // WithPayload adds the payload to the list isos unauthorized response
-func (o *ListIsosUnauthorized) WithPayload(payload *models.Result) *ListIsosUnauthorized {
+func (o *ListIsosUnauthorized) WithPayload(payload *models.Error) *ListIsosUnauthorized {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the list isos unauthorized response
-func (o *ListIsosUnauthorized) SetPayload(payload *models.Result) {
+func (o *ListIsosUnauthorized) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -103,7 +103,7 @@ type ListIsosNotFound struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewListIsosNotFound creates ListIsosNotFound with default headers values
@@ -112,13 +112,13 @@ func NewListIsosNotFound() *ListIsosNotFound {
 }
 
 // WithPayload adds the payload to the list isos not found response
-func (o *ListIsosNotFound) WithPayload(payload *models.Result) *ListIsosNotFound {
+func (o *ListIsosNotFound) WithPayload(payload *models.Error) *ListIsosNotFound {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the list isos not found response
-func (o *ListIsosNotFound) SetPayload(payload *models.Result) {
+func (o *ListIsosNotFound) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -143,7 +143,7 @@ type ListIsosInternalServerError struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewListIsosInternalServerError creates ListIsosInternalServerError with default headers values
@@ -152,13 +152,13 @@ func NewListIsosInternalServerError() *ListIsosInternalServerError {
 }
 
 // WithPayload adds the payload to the list isos internal server error response
-func (o *ListIsosInternalServerError) WithPayload(payload *models.Result) *ListIsosInternalServerError {
+func (o *ListIsosInternalServerError) WithPayload(payload *models.Error) *ListIsosInternalServerError {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the list isos internal server error response
-func (o *ListIsosInternalServerError) SetPayload(payload *models.Result) {
+func (o *ListIsosInternalServerError) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 

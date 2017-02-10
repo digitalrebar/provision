@@ -87,52 +87,28 @@ type TemplateInfo struct {
 // BootEnv encapsulates the machine-agnostic information needed by the
 // provisioner to set up a boot environment.
 type BootEnv struct {
-	models.BootenvInput
+	models.BootenvOutput
 
 	bootParamsTmpl *template.Template
 	TemplateInfo   []*TemplateInfo // The templates that should be expanded into files for the bot environment.
 }
 
 func CastBootenv(m1 *models.BootenvInput) *BootEnv {
-	return &BootEnv{*m1, nil, nil}
+	return &BootEnv{models.BootenvOutput{*m1, make([]string, 0, 0)}, nil, nil}
 }
 
 func NewBootenv(name string) *BootEnv {
-	return &BootEnv{models.BootenvInput{Name: name}, nil, nil}
-}
-
-func BootenvDelete(params bootenvs.DeleteBootenvParams, p *models.Principal) middleware.Responder {
-	code, err := deleteThing(NewBootenv(params.Name))
-	if err != nil {
-		r := &models.Result{Code: int64(code), Messages: []string{err.Message}}
-		return bootenvs.NewDeleteBootenvConflict().WithPayload(r)
-	}
-	return bootenvs.NewDeleteBootenvNoContent()
-}
-
-func BootenvGet(params bootenvs.GetBootenvParams, p *models.Principal) middleware.Responder {
-	item, err := getThing(NewBootenv(params.Name))
-	if err != nil {
-		r := &models.Result{Code: http.StatusNotFound, Messages: []string{err.Message}}
-		return bootenvs.NewGetBootenvNotFound().WithPayload(r)
-	}
-	original, ok := item.(models.BootenvInput)
-	if !ok {
-		r := &models.Result{Code: http.StatusInternalServerError, Messages: []string{err.Message}}
-		return bootenvs.NewGetBootenvInternalServerError().WithPayload(r)
-	}
-	return bootenvs.NewGetBootenvOK().WithPayload(&original)
+	return &BootEnv{models.BootenvOutput{models.BootenvInput{Name: name}, make([]string, 0, 0)}, nil, nil}
 }
 
 func BootenvList(params bootenvs.ListBootenvsParams, p *models.Principal) middleware.Responder {
 	allthem, err := listThings(&BootEnv{})
 	if err != nil {
-		r := &models.Result{Code: http.StatusInternalServerError, Messages: []string{err.Message}}
-		return bootenvs.NewListBootenvsInternalServerError().WithPayload(r)
+		return bootenvs.NewListBootenvsInternalServerError().WithPayload(err)
 	}
-	data := make([]*models.BootenvInput, 0, 0)
+	data := make([]*models.BootenvOutput, 0, 0)
 	for _, j := range allthem {
-		original, ok := j.(models.BootenvInput)
+		original, ok := j.(models.BootenvOutput)
 		if ok {
 			data = append(data, &original)
 		}
@@ -143,47 +119,78 @@ func BootenvList(params bootenvs.ListBootenvsParams, p *models.Principal) middle
 func BootenvPost(params bootenvs.PostBootenvParams, p *models.Principal) middleware.Responder {
 	item, code, err := createThing(CastBootenv(params.Body))
 	if err != nil {
-		r := &models.Result{Code: int64(code), Messages: []string{err.Message}}
-		return bootenvs.NewPostBootenvConflict().WithPayload(r)
+		return bootenvs.NewPostBootenvConflict().WithPayload(err)
 	}
-	original, ok := item.(models.BootenvInput)
+	original, ok := item.(models.BootenvOutput)
 	if !ok {
-		r := &models.Result{Code: http.StatusInternalServerError, Messages: []string{err.Message}}
-		return bootenvs.NewPostBootenvInternalServerError().WithPayload(r)
+		e := NewError(http.StatusInternalServerError, "Could not marshal bootenv")
+		return bootenvs.NewPostBootenvInternalServerError().WithPayload(e)
+	}
+	if code == http.StatusOK {
+		return bootenvs.NewPostBootenvOK().WithPayload(&original)
 	}
 	return bootenvs.NewPostBootenvCreated().WithPayload(&original)
+}
+
+func BootenvGet(params bootenvs.GetBootenvParams, p *models.Principal) middleware.Responder {
+	item, err := getThing(NewBootenv(params.Name))
+	if err != nil {
+		return bootenvs.NewGetBootenvNotFound().WithPayload(err)
+	}
+	original, ok := item.(models.BootenvOutput)
+	if !ok {
+		e := NewError(http.StatusInternalServerError, "Could not marshal bootenv")
+		return bootenvs.NewGetBootenvInternalServerError().WithPayload(e)
+	}
+	return bootenvs.NewGetBootenvOK().WithPayload(&original)
+}
+
+func BootenvPut(params bootenvs.PutBootenvParams, p *models.Principal) middleware.Responder {
+	item, err := putThing(CastBootenv(params.Body))
+	if err != nil {
+		if err.Code == http.StatusConflict {
+			return bootenvs.NewPutBootenvConflict().WithPayload(err)
+		}
+		return bootenvs.NewPutBootenvNotFound().WithPayload(err)
+	}
+	original, ok := item.(models.BootenvOutput)
+	if !ok {
+		e := NewError(http.StatusInternalServerError, "Could not marshal bootenv")
+		return bootenvs.NewPutBootenvInternalServerError().WithPayload(e)
+	}
+	return bootenvs.NewPutBootenvOK().WithPayload(&original)
 }
 
 func BootenvPatch(params bootenvs.PatchBootenvParams, p *models.Principal) middleware.Responder {
 	newThing := NewBootenv(params.Name)
 	patch, _ := json.Marshal(params.Body)
-	item, code, err := updateThing(newThing, patch)
+	item, err := patchThing(newThing, patch)
 	if err != nil {
-		r := &models.Result{Code: int64(code), Messages: []string{err.Message}}
-		return bootenvs.NewPatchBootenvExpectationFailed().WithPayload(r)
+		if err.Code == http.StatusNotFound {
+			return bootenvs.NewPatchBootenvNotFound().WithPayload(err)
+		}
+		if err.Code == http.StatusConflict {
+			return bootenvs.NewPatchBootenvConflict().WithPayload(err)
+		}
+		return bootenvs.NewPatchBootenvExpectationFailed().WithPayload(err)
 	}
-	original, ok := item.(models.BootenvInput)
+	original, ok := item.(models.BootenvOutput)
 	if !ok {
-		r := &models.Result{Code: http.StatusInternalServerError,
-			Messages: []string{"Failed to convert template"}}
-		return bootenvs.NewPatchBootenvInternalServerError().WithPayload(r)
+		e := NewError(http.StatusInternalServerError, "Could not marshal bootenv")
+		return bootenvs.NewPatchBootenvInternalServerError().WithPayload(e)
 	}
-	return bootenvs.NewPatchBootenvAccepted().WithPayload(&original)
+	return bootenvs.NewPatchBootenvOK().WithPayload(&original)
 }
 
-func BootenvPut(params bootenvs.PutBootenvParams, p *models.Principal) middleware.Responder {
-	item, code, err := putThing(CastBootenv(params.Body))
+func BootenvDelete(params bootenvs.DeleteBootenvParams, p *models.Principal) middleware.Responder {
+	err := deleteThing(NewBootenv(params.Name))
 	if err != nil {
-		r := &models.Result{Code: int64(code), Messages: []string{err.Message}}
-		return bootenvs.NewPutBootenvNotFound().WithPayload(r)
+		if err.Code == http.StatusNotFound {
+			return bootenvs.NewDeleteBootenvNotFound().WithPayload(err)
+		}
+		return bootenvs.NewDeleteBootenvConflict().WithPayload(err)
 	}
-	original, ok := item.(models.BootenvInput)
-	if !ok {
-		r := &models.Result{Code: http.StatusInternalServerError,
-			Messages: []string{"failed to cast template"}}
-		return bootenvs.NewPutBootenvInternalServerError().WithPayload(r)
-	}
-	return bootenvs.NewPutBootenvOK().WithPayload(&original)
+	return bootenvs.NewDeleteBootenvNoContent()
 }
 
 func (b *BootEnv) Error() string {
@@ -298,7 +305,7 @@ func (b *BootEnv) typeName() string {
 }
 
 func (b *BootEnv) newIsh() keySaver {
-	res := &BootEnv{models.BootenvInput{Name: b.Name}, nil, nil}
+	res := NewBootenv(b.Name)
 	return keySaver(res)
 }
 

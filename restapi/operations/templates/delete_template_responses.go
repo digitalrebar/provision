@@ -29,6 +29,46 @@ func (o *DeleteTemplateNoContent) WriteResponse(rw http.ResponseWriter, producer
 	rw.WriteHeader(204)
 }
 
+/*DeleteTemplateUnauthorized delete template unauthorized
+
+swagger:response deleteTemplateUnauthorized
+*/
+type DeleteTemplateUnauthorized struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewDeleteTemplateUnauthorized creates DeleteTemplateUnauthorized with default headers values
+func NewDeleteTemplateUnauthorized() *DeleteTemplateUnauthorized {
+	return &DeleteTemplateUnauthorized{}
+}
+
+// WithPayload adds the payload to the delete template unauthorized response
+func (o *DeleteTemplateUnauthorized) WithPayload(payload *models.Error) *DeleteTemplateUnauthorized {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the delete template unauthorized response
+func (o *DeleteTemplateUnauthorized) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *DeleteTemplateUnauthorized) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(401)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
 /*DeleteTemplateNotFound delete template not found
 
 swagger:response deleteTemplateNotFound
@@ -38,7 +78,7 @@ type DeleteTemplateNotFound struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewDeleteTemplateNotFound creates DeleteTemplateNotFound with default headers values
@@ -47,13 +87,13 @@ func NewDeleteTemplateNotFound() *DeleteTemplateNotFound {
 }
 
 // WithPayload adds the payload to the delete template not found response
-func (o *DeleteTemplateNotFound) WithPayload(payload *models.Result) *DeleteTemplateNotFound {
+func (o *DeleteTemplateNotFound) WithPayload(payload *models.Error) *DeleteTemplateNotFound {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the delete template not found response
-func (o *DeleteTemplateNotFound) SetPayload(payload *models.Result) {
+func (o *DeleteTemplateNotFound) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -78,7 +118,7 @@ type DeleteTemplateConflict struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewDeleteTemplateConflict creates DeleteTemplateConflict with default headers values
@@ -87,13 +127,13 @@ func NewDeleteTemplateConflict() *DeleteTemplateConflict {
 }
 
 // WithPayload adds the payload to the delete template conflict response
-func (o *DeleteTemplateConflict) WithPayload(payload *models.Result) *DeleteTemplateConflict {
+func (o *DeleteTemplateConflict) WithPayload(payload *models.Error) *DeleteTemplateConflict {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the delete template conflict response
-func (o *DeleteTemplateConflict) SetPayload(payload *models.Result) {
+func (o *DeleteTemplateConflict) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -118,7 +158,7 @@ type DeleteTemplateInternalServerError struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewDeleteTemplateInternalServerError creates DeleteTemplateInternalServerError with default headers values
@@ -127,13 +167,13 @@ func NewDeleteTemplateInternalServerError() *DeleteTemplateInternalServerError {
 }
 
 // WithPayload adds the payload to the delete template internal server error response
-func (o *DeleteTemplateInternalServerError) WithPayload(payload *models.Result) *DeleteTemplateInternalServerError {
+func (o *DeleteTemplateInternalServerError) WithPayload(payload *models.Error) *DeleteTemplateInternalServerError {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the delete template internal server error response
-func (o *DeleteTemplateInternalServerError) SetPayload(payload *models.Result) {
+func (o *DeleteTemplateInternalServerError) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 

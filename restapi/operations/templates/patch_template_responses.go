@@ -11,11 +11,11 @@ import (
 	"github.com/rackn/rocket-skates/models"
 )
 
-/*PatchTemplateAccepted patch template accepted
+/*PatchTemplateOK patch template o k
 
-swagger:response patchTemplateAccepted
+swagger:response patchTemplateOK
 */
-type PatchTemplateAccepted struct {
+type PatchTemplateOK struct {
 
 	/*
 	  In: Body
@@ -23,26 +23,26 @@ type PatchTemplateAccepted struct {
 	Payload *models.TemplateOutput `json:"body,omitempty"`
 }
 
-// NewPatchTemplateAccepted creates PatchTemplateAccepted with default headers values
-func NewPatchTemplateAccepted() *PatchTemplateAccepted {
-	return &PatchTemplateAccepted{}
+// NewPatchTemplateOK creates PatchTemplateOK with default headers values
+func NewPatchTemplateOK() *PatchTemplateOK {
+	return &PatchTemplateOK{}
 }
 
-// WithPayload adds the payload to the patch template accepted response
-func (o *PatchTemplateAccepted) WithPayload(payload *models.TemplateOutput) *PatchTemplateAccepted {
+// WithPayload adds the payload to the patch template o k response
+func (o *PatchTemplateOK) WithPayload(payload *models.TemplateOutput) *PatchTemplateOK {
 	o.Payload = payload
 	return o
 }
 
-// SetPayload sets the payload to the patch template accepted response
-func (o *PatchTemplateAccepted) SetPayload(payload *models.TemplateOutput) {
+// SetPayload sets the payload to the patch template o k response
+func (o *PatchTemplateOK) SetPayload(payload *models.TemplateOutput) {
 	o.Payload = payload
 }
 
 // WriteResponse to the client
-func (o *PatchTemplateAccepted) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+func (o *PatchTemplateOK) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
-	rw.WriteHeader(202)
+	rw.WriteHeader(200)
 	if o.Payload != nil {
 		payload := o.Payload
 		if err := producer.Produce(rw, payload); err != nil {
@@ -60,7 +60,7 @@ type PatchTemplateUnauthorized struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewPatchTemplateUnauthorized creates PatchTemplateUnauthorized with default headers values
@@ -69,13 +69,13 @@ func NewPatchTemplateUnauthorized() *PatchTemplateUnauthorized {
 }
 
 // WithPayload adds the payload to the patch template unauthorized response
-func (o *PatchTemplateUnauthorized) WithPayload(payload *models.Result) *PatchTemplateUnauthorized {
+func (o *PatchTemplateUnauthorized) WithPayload(payload *models.Error) *PatchTemplateUnauthorized {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the patch template unauthorized response
-func (o *PatchTemplateUnauthorized) SetPayload(payload *models.Result) {
+func (o *PatchTemplateUnauthorized) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -100,7 +100,7 @@ type PatchTemplateNotFound struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewPatchTemplateNotFound creates PatchTemplateNotFound with default headers values
@@ -109,13 +109,13 @@ func NewPatchTemplateNotFound() *PatchTemplateNotFound {
 }
 
 // WithPayload adds the payload to the patch template not found response
-func (o *PatchTemplateNotFound) WithPayload(payload *models.Result) *PatchTemplateNotFound {
+func (o *PatchTemplateNotFound) WithPayload(payload *models.Error) *PatchTemplateNotFound {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the patch template not found response
-func (o *PatchTemplateNotFound) SetPayload(payload *models.Result) {
+func (o *PatchTemplateNotFound) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -123,6 +123,46 @@ func (o *PatchTemplateNotFound) SetPayload(payload *models.Result) {
 func (o *PatchTemplateNotFound) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
 	rw.WriteHeader(404)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
+/*PatchTemplateConflict patch template conflict
+
+swagger:response patchTemplateConflict
+*/
+type PatchTemplateConflict struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewPatchTemplateConflict creates PatchTemplateConflict with default headers values
+func NewPatchTemplateConflict() *PatchTemplateConflict {
+	return &PatchTemplateConflict{}
+}
+
+// WithPayload adds the payload to the patch template conflict response
+func (o *PatchTemplateConflict) WithPayload(payload *models.Error) *PatchTemplateConflict {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the patch template conflict response
+func (o *PatchTemplateConflict) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *PatchTemplateConflict) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(409)
 	if o.Payload != nil {
 		payload := o.Payload
 		if err := producer.Produce(rw, payload); err != nil {
@@ -140,7 +180,7 @@ type PatchTemplateExpectationFailed struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewPatchTemplateExpectationFailed creates PatchTemplateExpectationFailed with default headers values
@@ -149,13 +189,13 @@ func NewPatchTemplateExpectationFailed() *PatchTemplateExpectationFailed {
 }
 
 // WithPayload adds the payload to the patch template expectation failed response
-func (o *PatchTemplateExpectationFailed) WithPayload(payload *models.Result) *PatchTemplateExpectationFailed {
+func (o *PatchTemplateExpectationFailed) WithPayload(payload *models.Error) *PatchTemplateExpectationFailed {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the patch template expectation failed response
-func (o *PatchTemplateExpectationFailed) SetPayload(payload *models.Result) {
+func (o *PatchTemplateExpectationFailed) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -180,7 +220,7 @@ type PatchTemplateInternalServerError struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewPatchTemplateInternalServerError creates PatchTemplateInternalServerError with default headers values
@@ -189,13 +229,13 @@ func NewPatchTemplateInternalServerError() *PatchTemplateInternalServerError {
 }
 
 // WithPayload adds the payload to the patch template internal server error response
-func (o *PatchTemplateInternalServerError) WithPayload(payload *models.Result) *PatchTemplateInternalServerError {
+func (o *PatchTemplateInternalServerError) WithPayload(payload *models.Error) *PatchTemplateInternalServerError {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the patch template internal server error response
-func (o *PatchTemplateInternalServerError) SetPayload(payload *models.Result) {
+func (o *PatchTemplateInternalServerError) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 

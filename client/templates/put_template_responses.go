@@ -44,6 +44,13 @@ func (o *PutTemplateReader) ReadResponse(response runtime.ClientResponse, consum
 		}
 		return nil, result
 
+	case 409:
+		result := NewPutTemplateConflict()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+
 	case 500:
 		result := NewPutTemplateInternalServerError()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -95,7 +102,7 @@ func NewPutTemplateUnauthorized() *PutTemplateUnauthorized {
 PutTemplateUnauthorized put template unauthorized
 */
 type PutTemplateUnauthorized struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *PutTemplateUnauthorized) Error() string {
@@ -104,7 +111,7 @@ func (o *PutTemplateUnauthorized) Error() string {
 
 func (o *PutTemplateUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -124,7 +131,7 @@ func NewPutTemplateNotFound() *PutTemplateNotFound {
 PutTemplateNotFound put template not found
 */
 type PutTemplateNotFound struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *PutTemplateNotFound) Error() string {
@@ -133,7 +140,36 @@ func (o *PutTemplateNotFound) Error() string {
 
 func (o *PutTemplateNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewPutTemplateConflict creates a PutTemplateConflict with default headers values
+func NewPutTemplateConflict() *PutTemplateConflict {
+	return &PutTemplateConflict{}
+}
+
+/*PutTemplateConflict handles this case with default header values.
+
+PutTemplateConflict put template conflict
+*/
+type PutTemplateConflict struct {
+	Payload *models.Error
+}
+
+func (o *PutTemplateConflict) Error() string {
+	return fmt.Sprintf("[PUT /templates/{uuid}][%d] putTemplateConflict  %+v", 409, o.Payload)
+}
+
+func (o *PutTemplateConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -153,7 +189,7 @@ func NewPutTemplateInternalServerError() *PutTemplateInternalServerError {
 PutTemplateInternalServerError put template internal server error
 */
 type PutTemplateInternalServerError struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *PutTemplateInternalServerError) Error() string {
@@ -162,7 +198,7 @@ func (o *PutTemplateInternalServerError) Error() string {
 
 func (o *PutTemplateInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {

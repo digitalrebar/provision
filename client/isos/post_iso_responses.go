@@ -37,8 +37,22 @@ func (o *PostIsoReader) ReadResponse(response runtime.ClientResponse, consumer r
 		}
 		return nil, result
 
+	case 401:
+		result := NewPostIsoUnauthorized()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+
 	case 409:
 		result := NewPostIsoConflict()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+
+	case 500:
+		result := NewPostIsoInternalServerError()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -93,7 +107,7 @@ func NewPostIsoBadRequest() *PostIsoBadRequest {
 PostIsoBadRequest post iso bad request
 */
 type PostIsoBadRequest struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *PostIsoBadRequest) Error() string {
@@ -102,7 +116,36 @@ func (o *PostIsoBadRequest) Error() string {
 
 func (o *PostIsoBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewPostIsoUnauthorized creates a PostIsoUnauthorized with default headers values
+func NewPostIsoUnauthorized() *PostIsoUnauthorized {
+	return &PostIsoUnauthorized{}
+}
+
+/*PostIsoUnauthorized handles this case with default header values.
+
+PostIsoUnauthorized post iso unauthorized
+*/
+type PostIsoUnauthorized struct {
+	Payload *models.Error
+}
+
+func (o *PostIsoUnauthorized) Error() string {
+	return fmt.Sprintf("[POST /isos/{name}][%d] postIsoUnauthorized  %+v", 401, o.Payload)
+}
+
+func (o *PostIsoUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -122,7 +165,7 @@ func NewPostIsoConflict() *PostIsoConflict {
 PostIsoConflict post iso conflict
 */
 type PostIsoConflict struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *PostIsoConflict) Error() string {
@@ -131,7 +174,36 @@ func (o *PostIsoConflict) Error() string {
 
 func (o *PostIsoConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewPostIsoInternalServerError creates a PostIsoInternalServerError with default headers values
+func NewPostIsoInternalServerError() *PostIsoInternalServerError {
+	return &PostIsoInternalServerError{}
+}
+
+/*PostIsoInternalServerError handles this case with default header values.
+
+PostIsoInternalServerError post iso internal server error
+*/
+type PostIsoInternalServerError struct {
+	Payload *models.Error
+}
+
+func (o *PostIsoInternalServerError) Error() string {
+	return fmt.Sprintf("[POST /isos/{name}][%d] postIsoInternalServerError  %+v", 500, o.Payload)
+}
+
+func (o *PostIsoInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -151,7 +223,7 @@ func NewPostIsoInsufficientStorage() *PostIsoInsufficientStorage {
 PostIsoInsufficientStorage post iso insufficient storage
 */
 type PostIsoInsufficientStorage struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *PostIsoInsufficientStorage) Error() string {
@@ -160,7 +232,7 @@ func (o *PostIsoInsufficientStorage) Error() string {
 
 func (o *PostIsoInsufficientStorage) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {

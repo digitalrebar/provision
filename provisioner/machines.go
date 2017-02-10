@@ -21,69 +21,25 @@ type Machine struct {
 	models.MachineOutput
 }
 
+func CastMachine(m1 *models.MachineInput) *Machine {
+	return &Machine{models.MachineOutput{*m1, make([]string, 0, 0)}}
+}
+
 func PopMachine(param string) *Machine {
 	if _, err := uuid.FromString(param); err == nil {
-		return &Machine{models.MachineOutput{models.MachineInput{UUID: strfmt.UUID(param)}}}
+		return &Machine{models.MachineOutput{models.MachineInput{UUID: strfmt.UUID(param)},
+			make([]string, 0, 0)}}
 	} else {
-		return &Machine{models.MachineOutput{models.MachineInput{Name: strfmt.Hostname(param)}}}
+		return &Machine{models.MachineOutput{models.MachineInput{Name: strfmt.Hostname(param)},
+			make([]string, 0, 0)}}
 	}
-}
-
-func CastMachine(m1 *models.MachineInput) *Machine {
-	return &Machine{models.MachineOutput{*m1}}
-}
-
-func MachinePatch(params machines.PatchMachineParams, p *models.Principal) middleware.Responder {
-	newThing := PopMachine(params.UUID)
-	patch, _ := json.Marshal(params.Body)
-	item, code, err := updateThing(newThing, patch)
-	if err != nil {
-		r := &models.Result{Code: int64(code), Messages: []string{err.Message}}
-		return machines.NewPatchMachineExpectationFailed().WithPayload(r)
-	}
-	original, ok := item.(models.MachineOutput)
-	if !ok {
-		r := &models.Result{Code: http.StatusInternalServerError,
-			Messages: []string{"Failed to convert template"}}
-		return machines.NewPatchMachineInternalServerError().WithPayload(r)
-	}
-	r := &models.Result{Code: int64(http.StatusOK), Messages: []string{}}
-	m := machines.PatchMachineAcceptedBody{Result: r, Data: &original}
-	return machines.NewPatchMachineAccepted().WithPayload(m)
-}
-
-func MachineDelete(params machines.DeleteMachineParams, p *models.Principal) middleware.Responder {
-	code, err := deleteThing(PopMachine(params.UUID))
-	if err != nil {
-		r := &models.Result{Code: int64(code), Messages: []string{err.Message}}
-		return machines.NewDeleteMachineConflict().WithPayload(r)
-	}
-	return machines.NewDeleteMachineNoContent()
-}
-
-func MachineGet(params machines.GetMachineParams, p *models.Principal) middleware.Responder {
-	item, err := getThing(PopMachine(params.UUID))
-	if err != nil {
-		r := &models.Result{Code: http.StatusNotFound, Messages: []string{err.Message}}
-		return machines.NewGetMachineNotFound().WithPayload(r)
-	}
-	r := &models.Result{Code: http.StatusOK, Messages: []string{}}
-	original, ok := item.(models.MachineOutput)
-	if !ok {
-		r := &models.Result{Code: http.StatusInternalServerError, Messages: []string{err.Message}}
-		return machines.NewGetMachineInternalServerError().WithPayload(r)
-	}
-	m := machines.GetMachineOKBody{Result: r, Data: &original}
-	return machines.NewGetMachineOK().WithPayload(m)
 }
 
 func MachineList(params machines.ListMachinesParams, p *models.Principal) middleware.Responder {
 	allthem, err := listThings(&Machine{})
 	if err != nil {
-		r := &models.Result{Code: http.StatusInternalServerError, Messages: []string{err.Message}}
-		return machines.NewListMachinesInternalServerError().WithPayload(r)
+		return machines.NewListMachinesInternalServerError().WithPayload(err)
 	}
-	r := &models.Result{Code: http.StatusOK, Messages: []string{}}
 	data := make([]*models.MachineOutput, 0, 0)
 	for _, j := range allthem {
 		original, ok := j.(models.MachineOutput)
@@ -91,40 +47,84 @@ func MachineList(params machines.ListMachinesParams, p *models.Principal) middle
 			data = append(data, &original)
 		}
 	}
-	return machines.NewListMachinesOK().WithPayload(machines.ListMachinesOKBody{Result: r, Data: data})
+	return machines.NewListMachinesOK().WithPayload(data)
 }
 
 func MachinePost(params machines.PostMachineParams, p *models.Principal) middleware.Responder {
 	item, code, err := createThing(CastMachine(params.Body))
 	if err != nil {
-		r := &models.Result{Code: int64(code), Messages: []string{err.Message}}
-		return machines.NewPostMachineConflict().WithPayload(r)
+		return machines.NewPostMachineConflict().WithPayload(err)
 	}
-	r := &models.Result{Code: http.StatusOK, Messages: []string{}}
 	original, ok := item.(models.MachineOutput)
 	if !ok {
-		r := &models.Result{Code: http.StatusInternalServerError, Messages: []string{err.Message}}
-		return machines.NewPostMachineInternalServerError().WithPayload(r)
+		e := NewError(http.StatusInternalServerError, "failed to marshall machine")
+		return machines.NewPostMachineInternalServerError().WithPayload(e)
 	}
-	m := machines.PostMachineCreatedBody{Result: r, Data: &original}
-	return machines.NewPostMachineCreated().WithPayload(m)
+	if code == http.StatusOK {
+		return machines.NewPostMachineOK().WithPayload(&original)
+	}
+	return machines.NewPostMachineCreated().WithPayload(&original)
+}
+
+func MachineGet(params machines.GetMachineParams, p *models.Principal) middleware.Responder {
+	item, err := getThing(PopMachine(params.UUID))
+	if err != nil {
+		return machines.NewGetMachineNotFound().WithPayload(err)
+	}
+	original, ok := item.(models.MachineOutput)
+	if !ok {
+		e := NewError(http.StatusInternalServerError, "failed to marshall machine")
+		return machines.NewGetMachineInternalServerError().WithPayload(e)
+	}
+	return machines.NewGetMachineOK().WithPayload(&original)
 }
 
 func MachinePut(params machines.PutMachineParams, p *models.Principal) middleware.Responder {
-	item, code, err := putThing(CastMachine(params.Body))
+	item, err := putThing(CastMachine(params.Body))
 	if err != nil {
-		r := &models.Result{Code: int64(code), Messages: []string{err.Message}}
-		return machines.NewPutMachineNotFound().WithPayload(r)
+		if err.Code == http.StatusNotFound {
+			return machines.NewPutMachineNotFound().WithPayload(err)
+		}
+		return machines.NewPutMachineConflict().WithPayload(err)
 	}
-	r := &models.Result{Code: http.StatusOK, Messages: []string{}}
 	original, ok := item.(models.MachineOutput)
 	if !ok {
-		r := &models.Result{Code: http.StatusInternalServerError,
-			Messages: []string{"failed to cast template"}}
-		return machines.NewPutMachineInternalServerError().WithPayload(r)
+		e := NewError(http.StatusInternalServerError, "failed to marshall machine")
+		return machines.NewPutMachineInternalServerError().WithPayload(e)
 	}
-	m := machines.PutMachineOKBody{Result: r, Data: &original}
-	return machines.NewPutMachineOK().WithPayload(m)
+	return machines.NewPutMachineOK().WithPayload(&original)
+}
+
+func MachinePatch(params machines.PatchMachineParams, p *models.Principal) middleware.Responder {
+	newThing := PopMachine(params.UUID)
+	patch, _ := json.Marshal(params.Body)
+	item, err := patchThing(newThing, patch)
+	if err != nil {
+		if err.Code == http.StatusNotFound {
+			return machines.NewPatchMachineNotFound().WithPayload(err)
+		}
+		if err.Code == http.StatusConflict {
+			return machines.NewPatchMachineConflict().WithPayload(err)
+		}
+		return machines.NewPatchMachineExpectationFailed().WithPayload(err)
+	}
+	original, ok := item.(models.MachineOutput)
+	if !ok {
+		e := NewError(http.StatusInternalServerError, "failed to marshall machine")
+		return machines.NewPatchMachineInternalServerError().WithPayload(e)
+	}
+	return machines.NewPatchMachineOK().WithPayload(&original)
+}
+
+func MachineDelete(params machines.DeleteMachineParams, p *models.Principal) middleware.Responder {
+	err := deleteThing(PopMachine(params.UUID))
+	if err != nil {
+		if err.Code == http.StatusNotFound {
+			return machines.NewDeleteMachineNotFound().WithPayload(err)
+		}
+		return machines.NewDeleteMachineConflict().WithPayload(err)
+	}
+	return machines.NewDeleteMachineNoContent()
 }
 
 // HexAddress returns Address in raw hexadecimal format, suitable for
@@ -179,7 +179,8 @@ func (n *Machine) typeName() string {
 }
 
 func (n *Machine) newIsh() keySaver {
-	res := &Machine{models.MachineOutput{models.MachineInput{Name: n.Name, UUID: n.MachineOutput.MachineInput.UUID}}}
+	res := &Machine{models.MachineOutput{models.MachineInput{Name: n.Name, UUID: strfmt.UUID(n.MachineOutput.MachineInput.UUID)},
+		make([]string, 0, 0)}}
 	return keySaver(res)
 }
 
@@ -192,7 +193,7 @@ func (n *Machine) onChange(oldThing interface{}) error {
 		} else if old.Name != n.Name {
 			return fmt.Errorf("machine: Cannot change name of machine %s", old.Name)
 		}
-		oldBootEnv := &BootEnv{models.BootenvInput{Name: old.BootEnv}, nil, nil}
+		oldBootEnv := NewBootenv(old.BootEnv)
 		if err := backend.load(oldBootEnv); err != nil {
 			return err
 		}
@@ -205,7 +206,7 @@ func (n *Machine) onChange(oldThing interface{}) error {
 	if addr == nil {
 		return fmt.Errorf("machine: %s  is not a valid IPv4 address", n.Address)
 	}
-	bootEnv := &BootEnv{models.BootenvInput{Name: n.BootEnv}, nil, nil}
+	bootEnv := NewBootenv(n.BootEnv)
 	if err := backend.load(bootEnv); err != nil {
 		return err
 	}
@@ -216,7 +217,7 @@ func (n *Machine) onChange(oldThing interface{}) error {
 }
 
 func (n *Machine) onDelete() error {
-	bootEnv := &BootEnv{models.BootenvInput{Name: n.BootEnv}, nil, nil}
+	bootEnv := NewBootenv(n.BootEnv)
 	if err := backend.load(bootEnv); err != nil {
 		return err
 	}

@@ -29,6 +29,46 @@ func (o *DeleteMachineNoContent) WriteResponse(rw http.ResponseWriter, producer 
 	rw.WriteHeader(204)
 }
 
+/*DeleteMachineUnauthorized delete machine unauthorized
+
+swagger:response deleteMachineUnauthorized
+*/
+type DeleteMachineUnauthorized struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewDeleteMachineUnauthorized creates DeleteMachineUnauthorized with default headers values
+func NewDeleteMachineUnauthorized() *DeleteMachineUnauthorized {
+	return &DeleteMachineUnauthorized{}
+}
+
+// WithPayload adds the payload to the delete machine unauthorized response
+func (o *DeleteMachineUnauthorized) WithPayload(payload *models.Error) *DeleteMachineUnauthorized {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the delete machine unauthorized response
+func (o *DeleteMachineUnauthorized) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *DeleteMachineUnauthorized) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(401)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
 /*DeleteMachineNotFound delete machine not found
 
 swagger:response deleteMachineNotFound
@@ -38,7 +78,7 @@ type DeleteMachineNotFound struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewDeleteMachineNotFound creates DeleteMachineNotFound with default headers values
@@ -47,13 +87,13 @@ func NewDeleteMachineNotFound() *DeleteMachineNotFound {
 }
 
 // WithPayload adds the payload to the delete machine not found response
-func (o *DeleteMachineNotFound) WithPayload(payload *models.Result) *DeleteMachineNotFound {
+func (o *DeleteMachineNotFound) WithPayload(payload *models.Error) *DeleteMachineNotFound {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the delete machine not found response
-func (o *DeleteMachineNotFound) SetPayload(payload *models.Result) {
+func (o *DeleteMachineNotFound) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -78,7 +118,7 @@ type DeleteMachineConflict struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewDeleteMachineConflict creates DeleteMachineConflict with default headers values
@@ -87,13 +127,13 @@ func NewDeleteMachineConflict() *DeleteMachineConflict {
 }
 
 // WithPayload adds the payload to the delete machine conflict response
-func (o *DeleteMachineConflict) WithPayload(payload *models.Result) *DeleteMachineConflict {
+func (o *DeleteMachineConflict) WithPayload(payload *models.Error) *DeleteMachineConflict {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the delete machine conflict response
-func (o *DeleteMachineConflict) SetPayload(payload *models.Result) {
+func (o *DeleteMachineConflict) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -118,7 +158,7 @@ type DeleteMachineInternalServerError struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewDeleteMachineInternalServerError creates DeleteMachineInternalServerError with default headers values
@@ -127,13 +167,13 @@ func NewDeleteMachineInternalServerError() *DeleteMachineInternalServerError {
 }
 
 // WithPayload adds the payload to the delete machine internal server error response
-func (o *DeleteMachineInternalServerError) WithPayload(payload *models.Result) *DeleteMachineInternalServerError {
+func (o *DeleteMachineInternalServerError) WithPayload(payload *models.Error) *DeleteMachineInternalServerError {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the delete machine internal server error response
-func (o *DeleteMachineInternalServerError) SetPayload(payload *models.Result) {
+func (o *DeleteMachineInternalServerError) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 

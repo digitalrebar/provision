@@ -63,7 +63,7 @@ type ListFilesUnauthorized struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewListFilesUnauthorized creates ListFilesUnauthorized with default headers values
@@ -72,13 +72,13 @@ func NewListFilesUnauthorized() *ListFilesUnauthorized {
 }
 
 // WithPayload adds the payload to the list files unauthorized response
-func (o *ListFilesUnauthorized) WithPayload(payload *models.Result) *ListFilesUnauthorized {
+func (o *ListFilesUnauthorized) WithPayload(payload *models.Error) *ListFilesUnauthorized {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the list files unauthorized response
-func (o *ListFilesUnauthorized) SetPayload(payload *models.Result) {
+func (o *ListFilesUnauthorized) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -103,7 +103,7 @@ type ListFilesNotFound struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewListFilesNotFound creates ListFilesNotFound with default headers values
@@ -112,13 +112,13 @@ func NewListFilesNotFound() *ListFilesNotFound {
 }
 
 // WithPayload adds the payload to the list files not found response
-func (o *ListFilesNotFound) WithPayload(payload *models.Result) *ListFilesNotFound {
+func (o *ListFilesNotFound) WithPayload(payload *models.Error) *ListFilesNotFound {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the list files not found response
-func (o *ListFilesNotFound) SetPayload(payload *models.Result) {
+func (o *ListFilesNotFound) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -143,7 +143,7 @@ type ListFilesInternalServerError struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewListFilesInternalServerError creates ListFilesInternalServerError with default headers values
@@ -152,13 +152,13 @@ func NewListFilesInternalServerError() *ListFilesInternalServerError {
 }
 
 // WithPayload adds the payload to the list files internal server error response
-func (o *ListFilesInternalServerError) WithPayload(payload *models.Result) *ListFilesInternalServerError {
+func (o *ListFilesInternalServerError) WithPayload(payload *models.Error) *ListFilesInternalServerError {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the list files internal server error response
-func (o *ListFilesInternalServerError) SetPayload(payload *models.Result) {
+func (o *ListFilesInternalServerError) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 

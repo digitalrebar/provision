@@ -93,7 +93,7 @@ func NewListFilesUnauthorized() *ListFilesUnauthorized {
 ListFilesUnauthorized list files unauthorized
 */
 type ListFilesUnauthorized struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *ListFilesUnauthorized) Error() string {
@@ -102,7 +102,7 @@ func (o *ListFilesUnauthorized) Error() string {
 
 func (o *ListFilesUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -122,7 +122,7 @@ func NewListFilesNotFound() *ListFilesNotFound {
 ListFilesNotFound list files not found
 */
 type ListFilesNotFound struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *ListFilesNotFound) Error() string {
@@ -131,7 +131,7 @@ func (o *ListFilesNotFound) Error() string {
 
 func (o *ListFilesNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -151,7 +151,7 @@ func NewListFilesInternalServerError() *ListFilesInternalServerError {
 ListFilesInternalServerError list files internal server error
 */
 type ListFilesInternalServerError struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *ListFilesInternalServerError) Error() string {
@@ -160,7 +160,7 @@ func (o *ListFilesInternalServerError) Error() string {
 
 func (o *ListFilesInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {

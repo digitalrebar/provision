@@ -11,38 +11,38 @@ import (
 	"github.com/rackn/rocket-skates/models"
 )
 
-/*PatchBootenvAccepted patch bootenv accepted
+/*PatchBootenvOK patch bootenv o k
 
-swagger:response patchBootenvAccepted
+swagger:response patchBootenvOK
 */
-type PatchBootenvAccepted struct {
+type PatchBootenvOK struct {
 
 	/*
 	  In: Body
 	*/
-	Payload *models.BootenvInput `json:"body,omitempty"`
+	Payload *models.BootenvOutput `json:"body,omitempty"`
 }
 
-// NewPatchBootenvAccepted creates PatchBootenvAccepted with default headers values
-func NewPatchBootenvAccepted() *PatchBootenvAccepted {
-	return &PatchBootenvAccepted{}
+// NewPatchBootenvOK creates PatchBootenvOK with default headers values
+func NewPatchBootenvOK() *PatchBootenvOK {
+	return &PatchBootenvOK{}
 }
 
-// WithPayload adds the payload to the patch bootenv accepted response
-func (o *PatchBootenvAccepted) WithPayload(payload *models.BootenvInput) *PatchBootenvAccepted {
+// WithPayload adds the payload to the patch bootenv o k response
+func (o *PatchBootenvOK) WithPayload(payload *models.BootenvOutput) *PatchBootenvOK {
 	o.Payload = payload
 	return o
 }
 
-// SetPayload sets the payload to the patch bootenv accepted response
-func (o *PatchBootenvAccepted) SetPayload(payload *models.BootenvInput) {
+// SetPayload sets the payload to the patch bootenv o k response
+func (o *PatchBootenvOK) SetPayload(payload *models.BootenvOutput) {
 	o.Payload = payload
 }
 
 // WriteResponse to the client
-func (o *PatchBootenvAccepted) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+func (o *PatchBootenvOK) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
-	rw.WriteHeader(202)
+	rw.WriteHeader(200)
 	if o.Payload != nil {
 		payload := o.Payload
 		if err := producer.Produce(rw, payload); err != nil {
@@ -60,7 +60,7 @@ type PatchBootenvUnauthorized struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewPatchBootenvUnauthorized creates PatchBootenvUnauthorized with default headers values
@@ -69,13 +69,13 @@ func NewPatchBootenvUnauthorized() *PatchBootenvUnauthorized {
 }
 
 // WithPayload adds the payload to the patch bootenv unauthorized response
-func (o *PatchBootenvUnauthorized) WithPayload(payload *models.Result) *PatchBootenvUnauthorized {
+func (o *PatchBootenvUnauthorized) WithPayload(payload *models.Error) *PatchBootenvUnauthorized {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the patch bootenv unauthorized response
-func (o *PatchBootenvUnauthorized) SetPayload(payload *models.Result) {
+func (o *PatchBootenvUnauthorized) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -100,7 +100,7 @@ type PatchBootenvNotFound struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewPatchBootenvNotFound creates PatchBootenvNotFound with default headers values
@@ -109,13 +109,13 @@ func NewPatchBootenvNotFound() *PatchBootenvNotFound {
 }
 
 // WithPayload adds the payload to the patch bootenv not found response
-func (o *PatchBootenvNotFound) WithPayload(payload *models.Result) *PatchBootenvNotFound {
+func (o *PatchBootenvNotFound) WithPayload(payload *models.Error) *PatchBootenvNotFound {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the patch bootenv not found response
-func (o *PatchBootenvNotFound) SetPayload(payload *models.Result) {
+func (o *PatchBootenvNotFound) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -123,6 +123,46 @@ func (o *PatchBootenvNotFound) SetPayload(payload *models.Result) {
 func (o *PatchBootenvNotFound) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
 	rw.WriteHeader(404)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
+/*PatchBootenvConflict patch bootenv conflict
+
+swagger:response patchBootenvConflict
+*/
+type PatchBootenvConflict struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewPatchBootenvConflict creates PatchBootenvConflict with default headers values
+func NewPatchBootenvConflict() *PatchBootenvConflict {
+	return &PatchBootenvConflict{}
+}
+
+// WithPayload adds the payload to the patch bootenv conflict response
+func (o *PatchBootenvConflict) WithPayload(payload *models.Error) *PatchBootenvConflict {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the patch bootenv conflict response
+func (o *PatchBootenvConflict) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *PatchBootenvConflict) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(409)
 	if o.Payload != nil {
 		payload := o.Payload
 		if err := producer.Produce(rw, payload); err != nil {
@@ -140,7 +180,7 @@ type PatchBootenvExpectationFailed struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewPatchBootenvExpectationFailed creates PatchBootenvExpectationFailed with default headers values
@@ -149,13 +189,13 @@ func NewPatchBootenvExpectationFailed() *PatchBootenvExpectationFailed {
 }
 
 // WithPayload adds the payload to the patch bootenv expectation failed response
-func (o *PatchBootenvExpectationFailed) WithPayload(payload *models.Result) *PatchBootenvExpectationFailed {
+func (o *PatchBootenvExpectationFailed) WithPayload(payload *models.Error) *PatchBootenvExpectationFailed {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the patch bootenv expectation failed response
-func (o *PatchBootenvExpectationFailed) SetPayload(payload *models.Result) {
+func (o *PatchBootenvExpectationFailed) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
@@ -180,7 +220,7 @@ type PatchBootenvInternalServerError struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Result `json:"body,omitempty"`
+	Payload *models.Error `json:"body,omitempty"`
 }
 
 // NewPatchBootenvInternalServerError creates PatchBootenvInternalServerError with default headers values
@@ -189,13 +229,13 @@ func NewPatchBootenvInternalServerError() *PatchBootenvInternalServerError {
 }
 
 // WithPayload adds the payload to the patch bootenv internal server error response
-func (o *PatchBootenvInternalServerError) WithPayload(payload *models.Result) *PatchBootenvInternalServerError {
+func (o *PatchBootenvInternalServerError) WithPayload(payload *models.Error) *PatchBootenvInternalServerError {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the patch bootenv internal server error response
-func (o *PatchBootenvInternalServerError) SetPayload(payload *models.Result) {
+func (o *PatchBootenvInternalServerError) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 

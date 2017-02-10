@@ -66,7 +66,7 @@ func NewGetMachineOK() *GetMachineOK {
 GetMachineOK get machine o k
 */
 type GetMachineOK struct {
-	Payload GetMachineOKBody
+	Payload *models.MachineOutput
 }
 
 func (o *GetMachineOK) Error() string {
@@ -75,8 +75,10 @@ func (o *GetMachineOK) Error() string {
 
 func (o *GetMachineOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
+	o.Payload = new(models.MachineOutput)
+
 	// response payload
-	if err := consumer.Consume(response.Body(), &o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
 		return err
 	}
 
@@ -93,7 +95,7 @@ func NewGetMachineUnauthorized() *GetMachineUnauthorized {
 GetMachineUnauthorized get machine unauthorized
 */
 type GetMachineUnauthorized struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *GetMachineUnauthorized) Error() string {
@@ -102,7 +104,7 @@ func (o *GetMachineUnauthorized) Error() string {
 
 func (o *GetMachineUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -122,7 +124,7 @@ func NewGetMachineNotFound() *GetMachineNotFound {
 GetMachineNotFound get machine not found
 */
 type GetMachineNotFound struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *GetMachineNotFound) Error() string {
@@ -131,7 +133,7 @@ func (o *GetMachineNotFound) Error() string {
 
 func (o *GetMachineNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -151,7 +153,7 @@ func NewGetMachineInternalServerError() *GetMachineInternalServerError {
 GetMachineInternalServerError get machine internal server error
 */
 type GetMachineInternalServerError struct {
-	Payload *models.Result
+	Payload *models.Error
 }
 
 func (o *GetMachineInternalServerError) Error() string {
@@ -160,7 +162,7 @@ func (o *GetMachineInternalServerError) Error() string {
 
 func (o *GetMachineInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Result)
+	o.Payload = new(models.Error)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -168,18 +170,4 @@ func (o *GetMachineInternalServerError) readResponse(response runtime.ClientResp
 	}
 
 	return nil
-}
-
-/*GetMachineOKBody get machine o k body
-swagger:model GetMachineOKBody
-*/
-type GetMachineOKBody struct {
-
-	// data
-	// Required: true
-	Data *models.MachineOutput `json:"Data"`
-
-	// result
-	// Required: true
-	Result *models.Result `json:"Result"`
 }
