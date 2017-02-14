@@ -11,6 +11,9 @@ import (
 	"github.com/rackn/rocket-skates/models"
 )
 
+// HTTP code for type ListBootenvsOK
+const ListBootenvsOKCode int = 200
+
 /*ListBootenvsOK list bootenvs o k
 
 swagger:response listBootenvsOK
@@ -54,6 +57,9 @@ func (o *ListBootenvsOK) WriteResponse(rw http.ResponseWriter, producer runtime.
 
 }
 
+// HTTP code for type ListBootenvsUnauthorized
+const ListBootenvsUnauthorizedCode int = 401
+
 /*ListBootenvsUnauthorized list bootenvs unauthorized
 
 swagger:response listBootenvsUnauthorized
@@ -94,6 +100,9 @@ func (o *ListBootenvsUnauthorized) WriteResponse(rw http.ResponseWriter, produce
 	}
 }
 
+// HTTP code for type ListBootenvsNotFound
+const ListBootenvsNotFoundCode int = 404
+
 /*ListBootenvsNotFound list bootenvs not found
 
 swagger:response listBootenvsNotFound
@@ -133,6 +142,9 @@ func (o *ListBootenvsNotFound) WriteResponse(rw http.ResponseWriter, producer ru
 		}
 	}
 }
+
+// HTTP code for type ListBootenvsInternalServerError
+const ListBootenvsInternalServerErrorCode int = 500
 
 /*ListBootenvsInternalServerError list bootenvs internal server error
 

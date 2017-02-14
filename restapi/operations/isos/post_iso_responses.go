@@ -11,6 +11,9 @@ import (
 	"github.com/rackn/rocket-skates/models"
 )
 
+// HTTP code for type PostIsoCreated
+const PostIsoCreatedCode int = 201
+
 /*PostIsoCreated post iso created
 
 swagger:response postIsoCreated
@@ -49,6 +52,9 @@ func (o *PostIsoCreated) WriteResponse(rw http.ResponseWriter, producer runtime.
 	}
 
 }
+
+// HTTP code for type PostIsoBadRequest
+const PostIsoBadRequestCode int = 400
 
 /*PostIsoBadRequest post iso bad request
 
@@ -90,6 +96,9 @@ func (o *PostIsoBadRequest) WriteResponse(rw http.ResponseWriter, producer runti
 	}
 }
 
+// HTTP code for type PostIsoUnauthorized
+const PostIsoUnauthorizedCode int = 401
+
 /*PostIsoUnauthorized post iso unauthorized
 
 swagger:response postIsoUnauthorized
@@ -129,6 +138,9 @@ func (o *PostIsoUnauthorized) WriteResponse(rw http.ResponseWriter, producer run
 		}
 	}
 }
+
+// HTTP code for type PostIsoConflict
+const PostIsoConflictCode int = 409
 
 /*PostIsoConflict post iso conflict
 
@@ -170,6 +182,9 @@ func (o *PostIsoConflict) WriteResponse(rw http.ResponseWriter, producer runtime
 	}
 }
 
+// HTTP code for type PostIsoInternalServerError
+const PostIsoInternalServerErrorCode int = 500
+
 /*PostIsoInternalServerError post iso internal server error
 
 swagger:response postIsoInternalServerError
@@ -209,6 +224,9 @@ func (o *PostIsoInternalServerError) WriteResponse(rw http.ResponseWriter, produ
 		}
 	}
 }
+
+// HTTP code for type PostIsoInsufficientStorage
+const PostIsoInsufficientStorageCode int = 507
 
 /*PostIsoInsufficientStorage post iso insufficient storage
 

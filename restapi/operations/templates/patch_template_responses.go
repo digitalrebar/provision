@@ -11,6 +11,9 @@ import (
 	"github.com/rackn/rocket-skates/models"
 )
 
+// HTTP code for type PatchTemplateOK
+const PatchTemplateOKCode int = 200
+
 /*PatchTemplateOK patch template o k
 
 swagger:response patchTemplateOK
@@ -50,6 +53,9 @@ func (o *PatchTemplateOK) WriteResponse(rw http.ResponseWriter, producer runtime
 		}
 	}
 }
+
+// HTTP code for type PatchTemplateUnauthorized
+const PatchTemplateUnauthorizedCode int = 401
 
 /*PatchTemplateUnauthorized patch template unauthorized
 
@@ -91,6 +97,9 @@ func (o *PatchTemplateUnauthorized) WriteResponse(rw http.ResponseWriter, produc
 	}
 }
 
+// HTTP code for type PatchTemplateNotFound
+const PatchTemplateNotFoundCode int = 404
+
 /*PatchTemplateNotFound patch template not found
 
 swagger:response patchTemplateNotFound
@@ -130,6 +139,9 @@ func (o *PatchTemplateNotFound) WriteResponse(rw http.ResponseWriter, producer r
 		}
 	}
 }
+
+// HTTP code for type PatchTemplateConflict
+const PatchTemplateConflictCode int = 409
 
 /*PatchTemplateConflict patch template conflict
 
@@ -171,6 +183,9 @@ func (o *PatchTemplateConflict) WriteResponse(rw http.ResponseWriter, producer r
 	}
 }
 
+// HTTP code for type PatchTemplateExpectationFailed
+const PatchTemplateExpectationFailedCode int = 417
+
 /*PatchTemplateExpectationFailed patch template expectation failed
 
 swagger:response patchTemplateExpectationFailed
@@ -210,6 +225,9 @@ func (o *PatchTemplateExpectationFailed) WriteResponse(rw http.ResponseWriter, p
 		}
 	}
 }
+
+// HTTP code for type PatchTemplateInternalServerError
+const PatchTemplateInternalServerErrorCode int = 500
 
 /*PatchTemplateInternalServerError patch template internal server error
 

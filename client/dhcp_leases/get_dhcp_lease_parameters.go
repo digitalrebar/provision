@@ -46,6 +46,15 @@ func NewGetDhcpLeaseParamsWithContext(ctx context.Context) *GetDhcpLeaseParams {
 	}
 }
 
+// NewGetDhcpLeaseParamsWithHTTPClient creates a new GetDhcpLeaseParams object
+// with the default values initialized, and the ability to set a custom HTTPClient for a request
+func NewGetDhcpLeaseParamsWithHTTPClient(client *http.Client) *GetDhcpLeaseParams {
+	var ()
+	return &GetDhcpLeaseParams{
+		HTTPClient: client,
+	}
+}
+
 /*GetDhcpLeaseParams contains all the parameters to send to the API endpoint
 for the get dhcp lease operation typically these are written to a http.Request
 */
@@ -79,6 +88,17 @@ func (o *GetDhcpLeaseParams) WithContext(ctx context.Context) *GetDhcpLeaseParam
 // SetContext adds the context to the get dhcp lease params
 func (o *GetDhcpLeaseParams) SetContext(ctx context.Context) {
 	o.Context = ctx
+}
+
+// WithHTTPClient adds the HTTPClient to the get dhcp lease params
+func (o *GetDhcpLeaseParams) WithHTTPClient(client *http.Client) *GetDhcpLeaseParams {
+	o.SetHTTPClient(client)
+	return o
+}
+
+// SetHTTPClient adds the HTTPClient to the get dhcp lease params
+func (o *GetDhcpLeaseParams) SetHTTPClient(client *http.Client) {
+	o.HTTPClient = client
 }
 
 // WithID adds the id to the get dhcp lease params

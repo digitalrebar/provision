@@ -48,6 +48,15 @@ func NewPatchMachineParamsWithContext(ctx context.Context) *PatchMachineParams {
 	}
 }
 
+// NewPatchMachineParamsWithHTTPClient creates a new PatchMachineParams object
+// with the default values initialized, and the ability to set a custom HTTPClient for a request
+func NewPatchMachineParamsWithHTTPClient(client *http.Client) *PatchMachineParams {
+	var ()
+	return &PatchMachineParams{
+		HTTPClient: client,
+	}
+}
+
 /*PatchMachineParams contains all the parameters to send to the API endpoint
 for the patch machine operation typically these are written to a http.Request
 */
@@ -83,6 +92,17 @@ func (o *PatchMachineParams) WithContext(ctx context.Context) *PatchMachineParam
 // SetContext adds the context to the patch machine params
 func (o *PatchMachineParams) SetContext(ctx context.Context) {
 	o.Context = ctx
+}
+
+// WithHTTPClient adds the HTTPClient to the patch machine params
+func (o *PatchMachineParams) WithHTTPClient(client *http.Client) *PatchMachineParams {
+	o.SetHTTPClient(client)
+	return o
+}
+
+// SetHTTPClient adds the HTTPClient to the patch machine params
+func (o *PatchMachineParams) SetHTTPClient(client *http.Client) {
+	o.HTTPClient = client
 }
 
 // WithBody adds the body to the patch machine params

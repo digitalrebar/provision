@@ -11,6 +11,9 @@ import (
 	"github.com/rackn/rocket-skates/models"
 )
 
+// HTTP code for type PatchMachineOK
+const PatchMachineOKCode int = 200
+
 /*PatchMachineOK patch machine o k
 
 swagger:response patchMachineOK
@@ -50,6 +53,9 @@ func (o *PatchMachineOK) WriteResponse(rw http.ResponseWriter, producer runtime.
 		}
 	}
 }
+
+// HTTP code for type PatchMachineUnauthorized
+const PatchMachineUnauthorizedCode int = 401
 
 /*PatchMachineUnauthorized patch machine unauthorized
 
@@ -91,6 +97,9 @@ func (o *PatchMachineUnauthorized) WriteResponse(rw http.ResponseWriter, produce
 	}
 }
 
+// HTTP code for type PatchMachineNotFound
+const PatchMachineNotFoundCode int = 404
+
 /*PatchMachineNotFound patch machine not found
 
 swagger:response patchMachineNotFound
@@ -130,6 +139,9 @@ func (o *PatchMachineNotFound) WriteResponse(rw http.ResponseWriter, producer ru
 		}
 	}
 }
+
+// HTTP code for type PatchMachineConflict
+const PatchMachineConflictCode int = 409
 
 /*PatchMachineConflict patch machine conflict
 
@@ -171,6 +183,9 @@ func (o *PatchMachineConflict) WriteResponse(rw http.ResponseWriter, producer ru
 	}
 }
 
+// HTTP code for type PatchMachineExpectationFailed
+const PatchMachineExpectationFailedCode int = 417
+
 /*PatchMachineExpectationFailed patch machine expectation failed
 
 swagger:response patchMachineExpectationFailed
@@ -210,6 +225,9 @@ func (o *PatchMachineExpectationFailed) WriteResponse(rw http.ResponseWriter, pr
 		}
 	}
 }
+
+// HTTP code for type PatchMachineInternalServerError
+const PatchMachineInternalServerErrorCode int = 500
 
 /*PatchMachineInternalServerError patch machine internal server error
 

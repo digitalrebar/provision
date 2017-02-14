@@ -11,6 +11,9 @@ import (
 	"github.com/rackn/rocket-skates/models"
 )
 
+// HTTP code for type ListTemplatesOK
+const ListTemplatesOKCode int = 200
+
 /*ListTemplatesOK list templates o k
 
 swagger:response listTemplatesOK
@@ -54,6 +57,9 @@ func (o *ListTemplatesOK) WriteResponse(rw http.ResponseWriter, producer runtime
 
 }
 
+// HTTP code for type ListTemplatesUnauthorized
+const ListTemplatesUnauthorizedCode int = 401
+
 /*ListTemplatesUnauthorized list templates unauthorized
 
 swagger:response listTemplatesUnauthorized
@@ -94,6 +100,9 @@ func (o *ListTemplatesUnauthorized) WriteResponse(rw http.ResponseWriter, produc
 	}
 }
 
+// HTTP code for type ListTemplatesNotFound
+const ListTemplatesNotFoundCode int = 404
+
 /*ListTemplatesNotFound list templates not found
 
 swagger:response listTemplatesNotFound
@@ -133,6 +142,9 @@ func (o *ListTemplatesNotFound) WriteResponse(rw http.ResponseWriter, producer r
 		}
 	}
 }
+
+// HTTP code for type ListTemplatesInternalServerError
+const ListTemplatesInternalServerErrorCode int = 500
 
 /*ListTemplatesInternalServerError list templates internal server error
 

@@ -46,6 +46,15 @@ func NewDeleteBootenvParamsWithContext(ctx context.Context) *DeleteBootenvParams
 	}
 }
 
+// NewDeleteBootenvParamsWithHTTPClient creates a new DeleteBootenvParams object
+// with the default values initialized, and the ability to set a custom HTTPClient for a request
+func NewDeleteBootenvParamsWithHTTPClient(client *http.Client) *DeleteBootenvParams {
+	var ()
+	return &DeleteBootenvParams{
+		HTTPClient: client,
+	}
+}
+
 /*DeleteBootenvParams contains all the parameters to send to the API endpoint
 for the delete bootenv operation typically these are written to a http.Request
 */
@@ -79,6 +88,17 @@ func (o *DeleteBootenvParams) WithContext(ctx context.Context) *DeleteBootenvPar
 // SetContext adds the context to the delete bootenv params
 func (o *DeleteBootenvParams) SetContext(ctx context.Context) {
 	o.Context = ctx
+}
+
+// WithHTTPClient adds the HTTPClient to the delete bootenv params
+func (o *DeleteBootenvParams) WithHTTPClient(client *http.Client) *DeleteBootenvParams {
+	o.SetHTTPClient(client)
+	return o
+}
+
+// SetHTTPClient adds the HTTPClient to the delete bootenv params
+func (o *DeleteBootenvParams) SetHTTPClient(client *http.Client) {
+	o.HTTPClient = client
 }
 
 // WithName adds the name to the delete bootenv params

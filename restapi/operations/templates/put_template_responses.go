@@ -11,6 +11,9 @@ import (
 	"github.com/rackn/rocket-skates/models"
 )
 
+// HTTP code for type PutTemplateOK
+const PutTemplateOKCode int = 200
+
 /*PutTemplateOK put template o k
 
 swagger:response putTemplateOK
@@ -50,6 +53,9 @@ func (o *PutTemplateOK) WriteResponse(rw http.ResponseWriter, producer runtime.P
 		}
 	}
 }
+
+// HTTP code for type PutTemplateUnauthorized
+const PutTemplateUnauthorizedCode int = 401
 
 /*PutTemplateUnauthorized put template unauthorized
 
@@ -91,6 +97,9 @@ func (o *PutTemplateUnauthorized) WriteResponse(rw http.ResponseWriter, producer
 	}
 }
 
+// HTTP code for type PutTemplateNotFound
+const PutTemplateNotFoundCode int = 404
+
 /*PutTemplateNotFound put template not found
 
 swagger:response putTemplateNotFound
@@ -131,6 +140,9 @@ func (o *PutTemplateNotFound) WriteResponse(rw http.ResponseWriter, producer run
 	}
 }
 
+// HTTP code for type PutTemplateConflict
+const PutTemplateConflictCode int = 409
+
 /*PutTemplateConflict put template conflict
 
 swagger:response putTemplateConflict
@@ -170,6 +182,9 @@ func (o *PutTemplateConflict) WriteResponse(rw http.ResponseWriter, producer run
 		}
 	}
 }
+
+// HTTP code for type PutTemplateInternalServerError
+const PutTemplateInternalServerErrorCode int = 500
 
 /*PutTemplateInternalServerError put template internal server error
 

@@ -11,6 +11,9 @@ import (
 	"github.com/rackn/rocket-skates/models"
 )
 
+// HTTP code for type ReplaceTemplateOK
+const ReplaceTemplateOKCode int = 200
+
 /*ReplaceTemplateOK replace template o k
 
 swagger:response replaceTemplateOK
@@ -50,6 +53,9 @@ func (o *ReplaceTemplateOK) WriteResponse(rw http.ResponseWriter, producer runti
 		}
 	}
 }
+
+// HTTP code for type ReplaceTemplateCreated
+const ReplaceTemplateCreatedCode int = 201
 
 /*ReplaceTemplateCreated replace template created
 
@@ -91,6 +97,9 @@ func (o *ReplaceTemplateCreated) WriteResponse(rw http.ResponseWriter, producer 
 	}
 }
 
+// HTTP code for type ReplaceTemplateUnauthorized
+const ReplaceTemplateUnauthorizedCode int = 401
+
 /*ReplaceTemplateUnauthorized replace template unauthorized
 
 swagger:response replaceTemplateUnauthorized
@@ -130,6 +139,9 @@ func (o *ReplaceTemplateUnauthorized) WriteResponse(rw http.ResponseWriter, prod
 		}
 	}
 }
+
+// HTTP code for type ReplaceTemplateConflict
+const ReplaceTemplateConflictCode int = 409
 
 /*ReplaceTemplateConflict replace template conflict
 
@@ -171,6 +183,9 @@ func (o *ReplaceTemplateConflict) WriteResponse(rw http.ResponseWriter, producer
 	}
 }
 
+// HTTP code for type ReplaceTemplateExpectationFailed
+const ReplaceTemplateExpectationFailedCode int = 417
+
 /*ReplaceTemplateExpectationFailed replace template expectation failed
 
 swagger:response replaceTemplateExpectationFailed
@@ -210,6 +225,9 @@ func (o *ReplaceTemplateExpectationFailed) WriteResponse(rw http.ResponseWriter,
 		}
 	}
 }
+
+// HTTP code for type ReplaceTemplateInternalServerError
+const ReplaceTemplateInternalServerErrorCode int = 500
 
 /*ReplaceTemplateInternalServerError replace template internal server error
 

@@ -11,6 +11,9 @@ import (
 	"github.com/rackn/rocket-skates/models"
 )
 
+// HTTP code for type DeleteTemplateNoContent
+const DeleteTemplateNoContentCode int = 204
+
 /*DeleteTemplateNoContent delete template no content
 
 swagger:response deleteTemplateNoContent
@@ -28,6 +31,9 @@ func (o *DeleteTemplateNoContent) WriteResponse(rw http.ResponseWriter, producer
 
 	rw.WriteHeader(204)
 }
+
+// HTTP code for type DeleteTemplateUnauthorized
+const DeleteTemplateUnauthorizedCode int = 401
 
 /*DeleteTemplateUnauthorized delete template unauthorized
 
@@ -69,6 +75,9 @@ func (o *DeleteTemplateUnauthorized) WriteResponse(rw http.ResponseWriter, produ
 	}
 }
 
+// HTTP code for type DeleteTemplateNotFound
+const DeleteTemplateNotFoundCode int = 404
+
 /*DeleteTemplateNotFound delete template not found
 
 swagger:response deleteTemplateNotFound
@@ -109,6 +118,9 @@ func (o *DeleteTemplateNotFound) WriteResponse(rw http.ResponseWriter, producer 
 	}
 }
 
+// HTTP code for type DeleteTemplateConflict
+const DeleteTemplateConflictCode int = 409
+
 /*DeleteTemplateConflict delete template conflict
 
 swagger:response deleteTemplateConflict
@@ -148,6 +160,9 @@ func (o *DeleteTemplateConflict) WriteResponse(rw http.ResponseWriter, producer 
 		}
 	}
 }
+
+// HTTP code for type DeleteTemplateInternalServerError
+const DeleteTemplateInternalServerErrorCode int = 500
 
 /*DeleteTemplateInternalServerError delete template internal server error
 

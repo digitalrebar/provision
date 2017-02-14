@@ -12,6 +12,9 @@ import (
 	"github.com/rackn/rocket-skates/models"
 )
 
+// HTTP code for type GetIsoOK
+const GetIsoOKCode int = 200
+
 /*GetIsoOK get iso o k
 
 swagger:response getIsoOK
@@ -50,6 +53,9 @@ func (o *GetIsoOK) WriteResponse(rw http.ResponseWriter, producer runtime.Produc
 	}
 
 }
+
+// HTTP code for type GetIsoUnauthorized
+const GetIsoUnauthorizedCode int = 401
 
 /*GetIsoUnauthorized get iso unauthorized
 
@@ -91,6 +97,9 @@ func (o *GetIsoUnauthorized) WriteResponse(rw http.ResponseWriter, producer runt
 	}
 }
 
+// HTTP code for type GetIsoNotFound
+const GetIsoNotFoundCode int = 404
+
 /*GetIsoNotFound get iso not found
 
 swagger:response getIsoNotFound
@@ -130,6 +139,9 @@ func (o *GetIsoNotFound) WriteResponse(rw http.ResponseWriter, producer runtime.
 		}
 	}
 }
+
+// HTTP code for type GetIsoInternalServerError
+const GetIsoInternalServerErrorCode int = 500
 
 /*GetIsoInternalServerError get iso internal server error
 

@@ -48,6 +48,15 @@ func NewPostDhcpLeaseParamsWithContext(ctx context.Context) *PostDhcpLeaseParams
 	}
 }
 
+// NewPostDhcpLeaseParamsWithHTTPClient creates a new PostDhcpLeaseParams object
+// with the default values initialized, and the ability to set a custom HTTPClient for a request
+func NewPostDhcpLeaseParamsWithHTTPClient(client *http.Client) *PostDhcpLeaseParams {
+	var ()
+	return &PostDhcpLeaseParams{
+		HTTPClient: client,
+	}
+}
+
 /*PostDhcpLeaseParams contains all the parameters to send to the API endpoint
 for the post dhcp lease operation typically these are written to a http.Request
 */
@@ -81,6 +90,17 @@ func (o *PostDhcpLeaseParams) WithContext(ctx context.Context) *PostDhcpLeasePar
 // SetContext adds the context to the post dhcp lease params
 func (o *PostDhcpLeaseParams) SetContext(ctx context.Context) {
 	o.Context = ctx
+}
+
+// WithHTTPClient adds the HTTPClient to the post dhcp lease params
+func (o *PostDhcpLeaseParams) WithHTTPClient(client *http.Client) *PostDhcpLeaseParams {
+	o.SetHTTPClient(client)
+	return o
+}
+
+// SetHTTPClient adds the HTTPClient to the post dhcp lease params
+func (o *PostDhcpLeaseParams) SetHTTPClient(client *http.Client) {
+	o.HTTPClient = client
 }
 
 // WithBody adds the body to the post dhcp lease params

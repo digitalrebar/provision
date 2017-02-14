@@ -11,6 +11,9 @@ import (
 	"github.com/rackn/rocket-skates/models"
 )
 
+// HTTP code for type PostMachineOK
+const PostMachineOKCode int = 200
+
 /*PostMachineOK post machine o k
 
 swagger:response postMachineOK
@@ -50,6 +53,9 @@ func (o *PostMachineOK) WriteResponse(rw http.ResponseWriter, producer runtime.P
 		}
 	}
 }
+
+// HTTP code for type PostMachineCreated
+const PostMachineCreatedCode int = 201
 
 /*PostMachineCreated post machine created
 
@@ -91,6 +97,9 @@ func (o *PostMachineCreated) WriteResponse(rw http.ResponseWriter, producer runt
 	}
 }
 
+// HTTP code for type PostMachineUnauthorized
+const PostMachineUnauthorizedCode int = 401
+
 /*PostMachineUnauthorized post machine unauthorized
 
 swagger:response postMachineUnauthorized
@@ -131,6 +140,9 @@ func (o *PostMachineUnauthorized) WriteResponse(rw http.ResponseWriter, producer
 	}
 }
 
+// HTTP code for type PostMachineConflict
+const PostMachineConflictCode int = 409
+
 /*PostMachineConflict post machine conflict
 
 swagger:response postMachineConflict
@@ -170,6 +182,9 @@ func (o *PostMachineConflict) WriteResponse(rw http.ResponseWriter, producer run
 		}
 	}
 }
+
+// HTTP code for type PostMachineInternalServerError
+const PostMachineInternalServerErrorCode int = 500
 
 /*PostMachineInternalServerError post machine internal server error
 

@@ -11,6 +11,9 @@ import (
 	"github.com/rackn/rocket-skates/models"
 )
 
+// HTTP code for type DeleteIsoNoContent
+const DeleteIsoNoContentCode int = 204
+
 /*DeleteIsoNoContent delete iso no content
 
 swagger:response deleteIsoNoContent
@@ -28,6 +31,9 @@ func (o *DeleteIsoNoContent) WriteResponse(rw http.ResponseWriter, producer runt
 
 	rw.WriteHeader(204)
 }
+
+// HTTP code for type DeleteIsoUnauthorized
+const DeleteIsoUnauthorizedCode int = 401
 
 /*DeleteIsoUnauthorized delete iso unauthorized
 
@@ -69,6 +75,9 @@ func (o *DeleteIsoUnauthorized) WriteResponse(rw http.ResponseWriter, producer r
 	}
 }
 
+// HTTP code for type DeleteIsoNotFound
+const DeleteIsoNotFoundCode int = 404
+
 /*DeleteIsoNotFound delete iso not found
 
 swagger:response deleteIsoNotFound
@@ -109,6 +118,9 @@ func (o *DeleteIsoNotFound) WriteResponse(rw http.ResponseWriter, producer runti
 	}
 }
 
+// HTTP code for type DeleteIsoConflict
+const DeleteIsoConflictCode int = 409
+
 /*DeleteIsoConflict delete iso conflict
 
 swagger:response deleteIsoConflict
@@ -148,6 +160,9 @@ func (o *DeleteIsoConflict) WriteResponse(rw http.ResponseWriter, producer runti
 		}
 	}
 }
+
+// HTTP code for type DeleteIsoInternalServerError
+const DeleteIsoInternalServerErrorCode int = 500
 
 /*DeleteIsoInternalServerError delete iso internal server error
 

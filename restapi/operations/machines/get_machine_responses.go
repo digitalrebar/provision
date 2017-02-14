@@ -11,6 +11,9 @@ import (
 	"github.com/rackn/rocket-skates/models"
 )
 
+// HTTP code for type GetMachineOK
+const GetMachineOKCode int = 200
+
 /*GetMachineOK get machine o k
 
 swagger:response getMachineOK
@@ -50,6 +53,9 @@ func (o *GetMachineOK) WriteResponse(rw http.ResponseWriter, producer runtime.Pr
 		}
 	}
 }
+
+// HTTP code for type GetMachineUnauthorized
+const GetMachineUnauthorizedCode int = 401
 
 /*GetMachineUnauthorized get machine unauthorized
 
@@ -91,6 +97,9 @@ func (o *GetMachineUnauthorized) WriteResponse(rw http.ResponseWriter, producer 
 	}
 }
 
+// HTTP code for type GetMachineNotFound
+const GetMachineNotFoundCode int = 404
+
 /*GetMachineNotFound get machine not found
 
 swagger:response getMachineNotFound
@@ -130,6 +139,9 @@ func (o *GetMachineNotFound) WriteResponse(rw http.ResponseWriter, producer runt
 		}
 	}
 }
+
+// HTTP code for type GetMachineInternalServerError
+const GetMachineInternalServerErrorCode int = 500
 
 /*GetMachineInternalServerError get machine internal server error
 

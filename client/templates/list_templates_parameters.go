@@ -46,6 +46,15 @@ func NewListTemplatesParamsWithContext(ctx context.Context) *ListTemplatesParams
 	}
 }
 
+// NewListTemplatesParamsWithHTTPClient creates a new ListTemplatesParams object
+// with the default values initialized, and the ability to set a custom HTTPClient for a request
+func NewListTemplatesParamsWithHTTPClient(client *http.Client) *ListTemplatesParams {
+
+	return &ListTemplatesParams{
+		HTTPClient: client,
+	}
+}
+
 /*ListTemplatesParams contains all the parameters to send to the API endpoint
 for the list templates operation typically these are written to a http.Request
 */
@@ -75,6 +84,17 @@ func (o *ListTemplatesParams) WithContext(ctx context.Context) *ListTemplatesPar
 // SetContext adds the context to the list templates params
 func (o *ListTemplatesParams) SetContext(ctx context.Context) {
 	o.Context = ctx
+}
+
+// WithHTTPClient adds the HTTPClient to the list templates params
+func (o *ListTemplatesParams) WithHTTPClient(client *http.Client) *ListTemplatesParams {
+	o.SetHTTPClient(client)
+	return o
+}
+
+// SetHTTPClient adds the HTTPClient to the list templates params
+func (o *ListTemplatesParams) SetHTTPClient(client *http.Client) {
+	o.HTTPClient = client
 }
 
 // WriteToRequest writes these params to a swagger request

@@ -46,6 +46,15 @@ func NewDELETEDhcpSubnetParamsWithContext(ctx context.Context) *DELETEDhcpSubnet
 	}
 }
 
+// NewDELETEDhcpSubnetParamsWithHTTPClient creates a new DELETEDhcpSubnetParams object
+// with the default values initialized, and the ability to set a custom HTTPClient for a request
+func NewDELETEDhcpSubnetParamsWithHTTPClient(client *http.Client) *DELETEDhcpSubnetParams {
+	var ()
+	return &DELETEDhcpSubnetParams{
+		HTTPClient: client,
+	}
+}
+
 /*DELETEDhcpSubnetParams contains all the parameters to send to the API endpoint
 for the d e l e t e dhcp subnet operation typically these are written to a http.Request
 */
@@ -79,6 +88,17 @@ func (o *DELETEDhcpSubnetParams) WithContext(ctx context.Context) *DELETEDhcpSub
 // SetContext adds the context to the d e l e t e dhcp subnet params
 func (o *DELETEDhcpSubnetParams) SetContext(ctx context.Context) {
 	o.Context = ctx
+}
+
+// WithHTTPClient adds the HTTPClient to the d e l e t e dhcp subnet params
+func (o *DELETEDhcpSubnetParams) WithHTTPClient(client *http.Client) *DELETEDhcpSubnetParams {
+	o.SetHTTPClient(client)
+	return o
+}
+
+// SetHTTPClient adds the HTTPClient to the d e l e t e dhcp subnet params
+func (o *DELETEDhcpSubnetParams) SetHTTPClient(client *http.Client) {
+	o.HTTPClient = client
 }
 
 // WithID adds the id to the d e l e t e dhcp subnet params

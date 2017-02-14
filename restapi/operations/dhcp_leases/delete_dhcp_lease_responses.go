@@ -11,6 +11,9 @@ import (
 	"github.com/rackn/rocket-skates/models"
 )
 
+// HTTP code for type DeleteDhcpLeaseNoContent
+const DeleteDhcpLeaseNoContentCode int = 204
+
 /*DeleteDhcpLeaseNoContent delete dhcp lease no content
 
 swagger:response deleteDhcpLeaseNoContent
@@ -28,6 +31,9 @@ func (o *DeleteDhcpLeaseNoContent) WriteResponse(rw http.ResponseWriter, produce
 
 	rw.WriteHeader(204)
 }
+
+// HTTP code for type DeleteDhcpLeaseUnauthorized
+const DeleteDhcpLeaseUnauthorizedCode int = 401
 
 /*DeleteDhcpLeaseUnauthorized delete dhcp lease unauthorized
 
@@ -69,6 +75,9 @@ func (o *DeleteDhcpLeaseUnauthorized) WriteResponse(rw http.ResponseWriter, prod
 	}
 }
 
+// HTTP code for type DeleteDhcpLeaseNotFound
+const DeleteDhcpLeaseNotFoundCode int = 404
+
 /*DeleteDhcpLeaseNotFound delete dhcp lease not found
 
 swagger:response deleteDhcpLeaseNotFound
@@ -109,6 +118,9 @@ func (o *DeleteDhcpLeaseNotFound) WriteResponse(rw http.ResponseWriter, producer
 	}
 }
 
+// HTTP code for type DeleteDhcpLeaseConflict
+const DeleteDhcpLeaseConflictCode int = 409
+
 /*DeleteDhcpLeaseConflict delete dhcp lease conflict
 
 swagger:response deleteDhcpLeaseConflict
@@ -148,6 +160,9 @@ func (o *DeleteDhcpLeaseConflict) WriteResponse(rw http.ResponseWriter, producer
 		}
 	}
 }
+
+// HTTP code for type DeleteDhcpLeaseInternalServerError
+const DeleteDhcpLeaseInternalServerErrorCode int = 500
 
 /*DeleteDhcpLeaseInternalServerError delete dhcp lease internal server error
 

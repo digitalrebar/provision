@@ -47,6 +47,15 @@ func NewPostIsoParamsWithContext(ctx context.Context) *PostIsoParams {
 	}
 }
 
+// NewPostIsoParamsWithHTTPClient creates a new PostIsoParams object
+// with the default values initialized, and the ability to set a custom HTTPClient for a request
+func NewPostIsoParamsWithHTTPClient(client *http.Client) *PostIsoParams {
+	var ()
+	return &PostIsoParams{
+		HTTPClient: client,
+	}
+}
+
 /*PostIsoParams contains all the parameters to send to the API endpoint
 for the post iso operation typically these are written to a http.Request
 */
@@ -82,6 +91,17 @@ func (o *PostIsoParams) WithContext(ctx context.Context) *PostIsoParams {
 // SetContext adds the context to the post iso params
 func (o *PostIsoParams) SetContext(ctx context.Context) {
 	o.Context = ctx
+}
+
+// WithHTTPClient adds the HTTPClient to the post iso params
+func (o *PostIsoParams) WithHTTPClient(client *http.Client) *PostIsoParams {
+	o.SetHTTPClient(client)
+	return o
+}
+
+// SetHTTPClient adds the HTTPClient to the post iso params
+func (o *PostIsoParams) SetHTTPClient(client *http.Client) {
+	o.HTTPClient = client
 }
 
 // WithBody adds the body to the post iso params

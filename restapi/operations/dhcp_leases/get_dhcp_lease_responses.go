@@ -11,6 +11,9 @@ import (
 	"github.com/rackn/rocket-skates/models"
 )
 
+// HTTP code for type GetDhcpLeaseOK
+const GetDhcpLeaseOKCode int = 200
+
 /*GetDhcpLeaseOK get dhcp lease o k
 
 swagger:response getDhcpLeaseOK
@@ -50,6 +53,9 @@ func (o *GetDhcpLeaseOK) WriteResponse(rw http.ResponseWriter, producer runtime.
 		}
 	}
 }
+
+// HTTP code for type GetDhcpLeaseUnauthorized
+const GetDhcpLeaseUnauthorizedCode int = 401
 
 /*GetDhcpLeaseUnauthorized get dhcp lease unauthorized
 
@@ -91,6 +97,9 @@ func (o *GetDhcpLeaseUnauthorized) WriteResponse(rw http.ResponseWriter, produce
 	}
 }
 
+// HTTP code for type GetDhcpLeaseNotFound
+const GetDhcpLeaseNotFoundCode int = 404
+
 /*GetDhcpLeaseNotFound get dhcp lease not found
 
 swagger:response getDhcpLeaseNotFound
@@ -130,6 +139,9 @@ func (o *GetDhcpLeaseNotFound) WriteResponse(rw http.ResponseWriter, producer ru
 		}
 	}
 }
+
+// HTTP code for type GetDhcpLeaseInternalServerError
+const GetDhcpLeaseInternalServerErrorCode int = 500
 
 /*GetDhcpLeaseInternalServerError get dhcp lease internal server error
 

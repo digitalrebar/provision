@@ -9,6 +9,9 @@ import (
 	"github.com/go-openapi/runtime"
 )
 
+// HTTP code for type DELETEDhcpSubnetNoContent
+const DELETEDhcpSubnetNoContentCode int = 204
+
 /*DELETEDhcpSubnetNoContent d e l e t e dhcp subnet no content
 
 swagger:response dELETEDhcpSubnetNoContent

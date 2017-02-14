@@ -48,6 +48,15 @@ func NewPOSTDhcpSubnetParamsWithContext(ctx context.Context) *POSTDhcpSubnetPara
 	}
 }
 
+// NewPOSTDhcpSubnetParamsWithHTTPClient creates a new POSTDhcpSubnetParams object
+// with the default values initialized, and the ability to set a custom HTTPClient for a request
+func NewPOSTDhcpSubnetParamsWithHTTPClient(client *http.Client) *POSTDhcpSubnetParams {
+	var ()
+	return &POSTDhcpSubnetParams{
+		HTTPClient: client,
+	}
+}
+
 /*POSTDhcpSubnetParams contains all the parameters to send to the API endpoint
 for the p o s t dhcp subnet operation typically these are written to a http.Request
 */
@@ -81,6 +90,17 @@ func (o *POSTDhcpSubnetParams) WithContext(ctx context.Context) *POSTDhcpSubnetP
 // SetContext adds the context to the p o s t dhcp subnet params
 func (o *POSTDhcpSubnetParams) SetContext(ctx context.Context) {
 	o.Context = ctx
+}
+
+// WithHTTPClient adds the HTTPClient to the p o s t dhcp subnet params
+func (o *POSTDhcpSubnetParams) WithHTTPClient(client *http.Client) *POSTDhcpSubnetParams {
+	o.SetHTTPClient(client)
+	return o
+}
+
+// SetHTTPClient adds the HTTPClient to the p o s t dhcp subnet params
+func (o *POSTDhcpSubnetParams) SetHTTPClient(client *http.Client) {
+	o.HTTPClient = client
 }
 
 // WithBody adds the body to the p o s t dhcp subnet params

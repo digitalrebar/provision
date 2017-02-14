@@ -47,6 +47,15 @@ func NewPostFileParamsWithContext(ctx context.Context) *PostFileParams {
 	}
 }
 
+// NewPostFileParamsWithHTTPClient creates a new PostFileParams object
+// with the default values initialized, and the ability to set a custom HTTPClient for a request
+func NewPostFileParamsWithHTTPClient(client *http.Client) *PostFileParams {
+	var ()
+	return &PostFileParams{
+		HTTPClient: client,
+	}
+}
+
 /*PostFileParams contains all the parameters to send to the API endpoint
 for the post file operation typically these are written to a http.Request
 */
@@ -82,6 +91,17 @@ func (o *PostFileParams) WithContext(ctx context.Context) *PostFileParams {
 // SetContext adds the context to the post file params
 func (o *PostFileParams) SetContext(ctx context.Context) {
 	o.Context = ctx
+}
+
+// WithHTTPClient adds the HTTPClient to the post file params
+func (o *PostFileParams) WithHTTPClient(client *http.Client) *PostFileParams {
+	o.SetHTTPClient(client)
+	return o
+}
+
+// SetHTTPClient adds the HTTPClient to the post file params
+func (o *PostFileParams) SetHTTPClient(client *http.Client) {
+	o.HTTPClient = client
 }
 
 // WithBody adds the body to the post file params

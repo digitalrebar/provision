@@ -11,6 +11,9 @@ import (
 	"github.com/rackn/rocket-skates/models"
 )
 
+// HTTP code for type POSTDhcpReservationCreated
+const POSTDhcpReservationCreatedCode int = 201
+
 /*POSTDhcpReservationCreated p o s t dhcp reservation created
 
 swagger:response pOSTDhcpReservationCreated

@@ -11,6 +11,9 @@ import (
 	"github.com/rackn/rocket-skates/models"
 )
 
+// HTTP code for type PostFileCreated
+const PostFileCreatedCode int = 201
+
 /*PostFileCreated post file created
 
 swagger:response postFileCreated
@@ -49,6 +52,9 @@ func (o *PostFileCreated) WriteResponse(rw http.ResponseWriter, producer runtime
 	}
 
 }
+
+// HTTP code for type PostFileBadRequest
+const PostFileBadRequestCode int = 400
 
 /*PostFileBadRequest post file bad request
 
@@ -90,6 +96,9 @@ func (o *PostFileBadRequest) WriteResponse(rw http.ResponseWriter, producer runt
 	}
 }
 
+// HTTP code for type PostFileUnauthorized
+const PostFileUnauthorizedCode int = 401
+
 /*PostFileUnauthorized post file unauthorized
 
 swagger:response postFileUnauthorized
@@ -129,6 +138,9 @@ func (o *PostFileUnauthorized) WriteResponse(rw http.ResponseWriter, producer ru
 		}
 	}
 }
+
+// HTTP code for type PostFileConflict
+const PostFileConflictCode int = 409
 
 /*PostFileConflict post file conflict
 
@@ -170,6 +182,9 @@ func (o *PostFileConflict) WriteResponse(rw http.ResponseWriter, producer runtim
 	}
 }
 
+// HTTP code for type PostFileInternalServerError
+const PostFileInternalServerErrorCode int = 500
+
 /*PostFileInternalServerError post file internal server error
 
 swagger:response postFileInternalServerError
@@ -209,6 +224,9 @@ func (o *PostFileInternalServerError) WriteResponse(rw http.ResponseWriter, prod
 		}
 	}
 }
+
+// HTTP code for type PostFileInsufficientStorage
+const PostFileInsufficientStorageCode int = 507
 
 /*PostFileInsufficientStorage post file insufficient storage
 

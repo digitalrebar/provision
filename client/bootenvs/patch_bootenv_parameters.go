@@ -48,6 +48,15 @@ func NewPatchBootenvParamsWithContext(ctx context.Context) *PatchBootenvParams {
 	}
 }
 
+// NewPatchBootenvParamsWithHTTPClient creates a new PatchBootenvParams object
+// with the default values initialized, and the ability to set a custom HTTPClient for a request
+func NewPatchBootenvParamsWithHTTPClient(client *http.Client) *PatchBootenvParams {
+	var ()
+	return &PatchBootenvParams{
+		HTTPClient: client,
+	}
+}
+
 /*PatchBootenvParams contains all the parameters to send to the API endpoint
 for the patch bootenv operation typically these are written to a http.Request
 */
@@ -83,6 +92,17 @@ func (o *PatchBootenvParams) WithContext(ctx context.Context) *PatchBootenvParam
 // SetContext adds the context to the patch bootenv params
 func (o *PatchBootenvParams) SetContext(ctx context.Context) {
 	o.Context = ctx
+}
+
+// WithHTTPClient adds the HTTPClient to the patch bootenv params
+func (o *PatchBootenvParams) WithHTTPClient(client *http.Client) *PatchBootenvParams {
+	o.SetHTTPClient(client)
+	return o
+}
+
+// SetHTTPClient adds the HTTPClient to the patch bootenv params
+func (o *PatchBootenvParams) SetHTTPClient(client *http.Client) {
+	o.HTTPClient = client
 }
 
 // WithBody adds the body to the patch bootenv params

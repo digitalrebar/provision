@@ -11,6 +11,9 @@ import (
 	"github.com/rackn/rocket-skates/models"
 )
 
+// HTTP code for type POSTDhcpSubnetCreated
+const POSTDhcpSubnetCreatedCode int = 201
+
 /*POSTDhcpSubnetCreated p o s t dhcp subnet created
 
 swagger:response pOSTDhcpSubnetCreated

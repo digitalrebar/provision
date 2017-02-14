@@ -11,6 +11,9 @@ import (
 	"github.com/rackn/rocket-skates/models"
 )
 
+// HTTP code for type PutDhcpLeaseOK
+const PutDhcpLeaseOKCode int = 200
+
 /*PutDhcpLeaseOK put dhcp lease o k
 
 swagger:response putDhcpLeaseOK
@@ -50,6 +53,9 @@ func (o *PutDhcpLeaseOK) WriteResponse(rw http.ResponseWriter, producer runtime.
 		}
 	}
 }
+
+// HTTP code for type PutDhcpLeaseUnauthorized
+const PutDhcpLeaseUnauthorizedCode int = 401
 
 /*PutDhcpLeaseUnauthorized put dhcp lease unauthorized
 
@@ -91,6 +97,9 @@ func (o *PutDhcpLeaseUnauthorized) WriteResponse(rw http.ResponseWriter, produce
 	}
 }
 
+// HTTP code for type PutDhcpLeaseNotFound
+const PutDhcpLeaseNotFoundCode int = 404
+
 /*PutDhcpLeaseNotFound put dhcp lease not found
 
 swagger:response putDhcpLeaseNotFound
@@ -131,6 +140,9 @@ func (o *PutDhcpLeaseNotFound) WriteResponse(rw http.ResponseWriter, producer ru
 	}
 }
 
+// HTTP code for type PutDhcpLeaseConflict
+const PutDhcpLeaseConflictCode int = 409
+
 /*PutDhcpLeaseConflict put dhcp lease conflict
 
 swagger:response putDhcpLeaseConflict
@@ -170,6 +182,9 @@ func (o *PutDhcpLeaseConflict) WriteResponse(rw http.ResponseWriter, producer ru
 		}
 	}
 }
+
+// HTTP code for type PutDhcpLeaseInternalServerError
+const PutDhcpLeaseInternalServerErrorCode int = 500
 
 /*PutDhcpLeaseInternalServerError put dhcp lease internal server error
 

@@ -7,7 +7,9 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
+	"github.com/go-openapi/validate"
 
 	strfmt "github.com/go-openapi/strfmt"
 
@@ -254,4 +256,42 @@ type PostIsoCreatedBody struct {
 	// size
 	// Required: true
 	Size *int64 `json:"Size"`
+}
+
+// Validate validates this post iso created body
+func (o *PostIsoCreatedBody) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := o.validateName(formats); err != nil {
+		// prop
+		res = append(res, err)
+	}
+
+	if err := o.validateSize(formats); err != nil {
+		// prop
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (o *PostIsoCreatedBody) validateName(formats strfmt.Registry) error {
+
+	if err := validate.Required("postIsoCreated"+"."+"Name", "body", o.Name); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (o *PostIsoCreatedBody) validateSize(formats strfmt.Registry) error {
+
+	if err := validate.Required("postIsoCreated"+"."+"Size", "body", o.Size); err != nil {
+		return err
+	}
+
+	return nil
 }

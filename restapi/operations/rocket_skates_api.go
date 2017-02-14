@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"strings"
 
+	errors "github.com/go-openapi/errors"
 	loads "github.com/go-openapi/loads"
 	runtime "github.com/go-openapi/runtime"
 	middleware "github.com/go-openapi/runtime/middleware"
@@ -36,6 +37,151 @@ func NewRocketSkatesAPI(spec *loads.Document) *RocketSkatesAPI {
 		defaultProduces: "application/json",
 		ServerShutdown:  func() {},
 		spec:            spec,
+		ServeError:      errors.ServeError,
+		JSONConsumer:    runtime.JSONConsumer(),
+		BinConsumer:     runtime.ByteStreamConsumer(),
+		JSONProducer:    runtime.JSONProducer(),
+		BinProducer:     runtime.ByteStreamProducer(),
+		DhcpReservationsDELETEDhcpReservationHandler: dhcp_reservations.DELETEDhcpReservationHandlerFunc(func(params dhcp_reservations.DELETEDhcpReservationParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation DhcpReservationsDELETEDhcpReservation has not yet been implemented")
+		}),
+		DhcpSubnetsDELETEDhcpSubnetHandler: dhcp_subnets.DELETEDhcpSubnetHandlerFunc(func(params dhcp_subnets.DELETEDhcpSubnetParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation DhcpSubnetsDELETEDhcpSubnet has not yet been implemented")
+		}),
+		DhcpReservationsGETDhcpReservationHandler: dhcp_reservations.GETDhcpReservationHandlerFunc(func(params dhcp_reservations.GETDhcpReservationParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation DhcpReservationsGETDhcpReservation has not yet been implemented")
+		}),
+		DhcpSubnetsGETDhcpSubnetHandler: dhcp_subnets.GETDhcpSubnetHandlerFunc(func(params dhcp_subnets.GETDhcpSubnetParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation DhcpSubnetsGETDhcpSubnet has not yet been implemented")
+		}),
+		DhcpReservationsLISTDhcpReservationsHandler: dhcp_reservations.LISTDhcpReservationsHandlerFunc(func(params dhcp_reservations.LISTDhcpReservationsParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation DhcpReservationsLISTDhcpReservations has not yet been implemented")
+		}),
+		DhcpSubnetsLISTDhcpSubnetsHandler: dhcp_subnets.LISTDhcpSubnetsHandlerFunc(func(params dhcp_subnets.LISTDhcpSubnetsParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation DhcpSubnetsLISTDhcpSubnets has not yet been implemented")
+		}),
+		DhcpReservationsPOSTDhcpReservationHandler: dhcp_reservations.POSTDhcpReservationHandlerFunc(func(params dhcp_reservations.POSTDhcpReservationParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation DhcpReservationsPOSTDhcpReservation has not yet been implemented")
+		}),
+		DhcpSubnetsPOSTDhcpSubnetHandler: dhcp_subnets.POSTDhcpSubnetHandlerFunc(func(params dhcp_subnets.POSTDhcpSubnetParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation DhcpSubnetsPOSTDhcpSubnet has not yet been implemented")
+		}),
+		DhcpReservationsPUTDhcpReservationHandler: dhcp_reservations.PUTDhcpReservationHandlerFunc(func(params dhcp_reservations.PUTDhcpReservationParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation DhcpReservationsPUTDhcpReservation has not yet been implemented")
+		}),
+		DhcpSubnetsPUTDhcpSubnetHandler: dhcp_subnets.PUTDhcpSubnetHandlerFunc(func(params dhcp_subnets.PUTDhcpSubnetParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation DhcpSubnetsPUTDhcpSubnet has not yet been implemented")
+		}),
+		BootenvsDeleteBootenvHandler: bootenvs.DeleteBootenvHandlerFunc(func(params bootenvs.DeleteBootenvParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation BootenvsDeleteBootenv has not yet been implemented")
+		}),
+		DhcpLeasesDeleteDhcpLeaseHandler: dhcp_leases.DeleteDhcpLeaseHandlerFunc(func(params dhcp_leases.DeleteDhcpLeaseParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation DhcpLeasesDeleteDhcpLease has not yet been implemented")
+		}),
+		FilesDeleteFileHandler: files.DeleteFileHandlerFunc(func(params files.DeleteFileParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation FilesDeleteFile has not yet been implemented")
+		}),
+		IsosDeleteIsoHandler: isos.DeleteIsoHandlerFunc(func(params isos.DeleteIsoParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation IsosDeleteIso has not yet been implemented")
+		}),
+		MachinesDeleteMachineHandler: machines.DeleteMachineHandlerFunc(func(params machines.DeleteMachineParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation MachinesDeleteMachine has not yet been implemented")
+		}),
+		TemplatesDeleteTemplateHandler: templates.DeleteTemplateHandlerFunc(func(params templates.DeleteTemplateParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation TemplatesDeleteTemplate has not yet been implemented")
+		}),
+		BootenvsGetBootenvHandler: bootenvs.GetBootenvHandlerFunc(func(params bootenvs.GetBootenvParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation BootenvsGetBootenv has not yet been implemented")
+		}),
+		DhcpLeasesGetDhcpLeaseHandler: dhcp_leases.GetDhcpLeaseHandlerFunc(func(params dhcp_leases.GetDhcpLeaseParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation DhcpLeasesGetDhcpLease has not yet been implemented")
+		}),
+		FilesGetFileHandler: files.GetFileHandlerFunc(func(params files.GetFileParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation FilesGetFile has not yet been implemented")
+		}),
+		IsosGetIsoHandler: isos.GetIsoHandlerFunc(func(params isos.GetIsoParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation IsosGetIso has not yet been implemented")
+		}),
+		MachinesGetMachineHandler: machines.GetMachineHandlerFunc(func(params machines.GetMachineParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation MachinesGetMachine has not yet been implemented")
+		}),
+		TemplatesGetTemplateHandler: templates.GetTemplateHandlerFunc(func(params templates.GetTemplateParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation TemplatesGetTemplate has not yet been implemented")
+		}),
+		BootenvsListBootenvsHandler: bootenvs.ListBootenvsHandlerFunc(func(params bootenvs.ListBootenvsParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation BootenvsListBootenvs has not yet been implemented")
+		}),
+		DhcpLeasesListDhcpLeasesHandler: dhcp_leases.ListDhcpLeasesHandlerFunc(func(params dhcp_leases.ListDhcpLeasesParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation DhcpLeasesListDhcpLeases has not yet been implemented")
+		}),
+		FilesListFilesHandler: files.ListFilesHandlerFunc(func(params files.ListFilesParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation FilesListFiles has not yet been implemented")
+		}),
+		IsosListIsosHandler: isos.ListIsosHandlerFunc(func(params isos.ListIsosParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation IsosListIsos has not yet been implemented")
+		}),
+		MachinesListMachinesHandler: machines.ListMachinesHandlerFunc(func(params machines.ListMachinesParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation MachinesListMachines has not yet been implemented")
+		}),
+		TemplatesListTemplatesHandler: templates.ListTemplatesHandlerFunc(func(params templates.ListTemplatesParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation TemplatesListTemplates has not yet been implemented")
+		}),
+		BootenvsPatchBootenvHandler: bootenvs.PatchBootenvHandlerFunc(func(params bootenvs.PatchBootenvParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation BootenvsPatchBootenv has not yet been implemented")
+		}),
+		MachinesPatchMachineHandler: machines.PatchMachineHandlerFunc(func(params machines.PatchMachineParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation MachinesPatchMachine has not yet been implemented")
+		}),
+		TemplatesPatchTemplateHandler: templates.PatchTemplateHandlerFunc(func(params templates.PatchTemplateParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation TemplatesPatchTemplate has not yet been implemented")
+		}),
+		BootenvsPostBootenvHandler: bootenvs.PostBootenvHandlerFunc(func(params bootenvs.PostBootenvParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation BootenvsPostBootenv has not yet been implemented")
+		}),
+		DhcpLeasesPostDhcpLeaseHandler: dhcp_leases.PostDhcpLeaseHandlerFunc(func(params dhcp_leases.PostDhcpLeaseParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation DhcpLeasesPostDhcpLease has not yet been implemented")
+		}),
+		FilesPostFileHandler: files.PostFileHandlerFunc(func(params files.PostFileParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation FilesPostFile has not yet been implemented")
+		}),
+		IsosPostIsoHandler: isos.PostIsoHandlerFunc(func(params isos.PostIsoParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation IsosPostIso has not yet been implemented")
+		}),
+		MachinesPostMachineHandler: machines.PostMachineHandlerFunc(func(params machines.PostMachineParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation MachinesPostMachine has not yet been implemented")
+		}),
+		TemplatesPostTemplateHandler: templates.PostTemplateHandlerFunc(func(params templates.PostTemplateParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation TemplatesPostTemplate has not yet been implemented")
+		}),
+		BootenvsPutBootenvHandler: bootenvs.PutBootenvHandlerFunc(func(params bootenvs.PutBootenvParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation BootenvsPutBootenv has not yet been implemented")
+		}),
+		DhcpLeasesPutDhcpLeaseHandler: dhcp_leases.PutDhcpLeaseHandlerFunc(func(params dhcp_leases.PutDhcpLeaseParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation DhcpLeasesPutDhcpLease has not yet been implemented")
+		}),
+		MachinesPutMachineHandler: machines.PutMachineHandlerFunc(func(params machines.PutMachineParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation MachinesPutMachine has not yet been implemented")
+		}),
+		TemplatesPutTemplateHandler: templates.PutTemplateHandlerFunc(func(params templates.PutTemplateParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation TemplatesPutTemplate has not yet been implemented")
+		}),
+		TemplatesReplaceTemplateHandler: templates.ReplaceTemplateHandlerFunc(func(params templates.ReplaceTemplateParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation TemplatesReplaceTemplate has not yet been implemented")
+		}),
+
+		// Applies when the Authorization header is set with the Basic scheme
+		RebarAuth: func(user string, pass string) (*models.Principal, error) {
+			return nil, errors.NotImplemented("basic auth  (rebar) has not yet been implemented")
+		},
+
+		// Applies when the "Authorization" header is set
+		AuthorizationAuth: func(token string) (*models.Principal, error) {
+			return nil, errors.NotImplemented("api key auth (Authorization) Authorization from header param [Authorization] has not yet been implemented")
+		},
+		// Applies when the "auth_token" query is set
+		AuthTokenAuth: func(token string) (*models.Principal, error) {
+			return nil, errors.NotImplemented("api key auth (auth_token) auth_token from query param [auth_token] has not yet been implemented")
+		},
 	}
 }
 
@@ -516,212 +662,212 @@ func (o *RocketSkatesAPI) initHandlerCache() {
 	}
 
 	if o.handlers["DELETE"] == nil {
-		o.handlers[strings.ToUpper("DELETE")] = make(map[string]http.Handler)
+		o.handlers["DELETE"] = make(map[string]http.Handler)
 	}
 	o.handlers["DELETE"]["/reservations/{id}"] = dhcp_reservations.NewDELETEDhcpReservation(o.context, o.DhcpReservationsDELETEDhcpReservationHandler)
 
 	if o.handlers["DELETE"] == nil {
-		o.handlers[strings.ToUpper("DELETE")] = make(map[string]http.Handler)
+		o.handlers["DELETE"] = make(map[string]http.Handler)
 	}
 	o.handlers["DELETE"]["/subnets/{id}"] = dhcp_subnets.NewDELETEDhcpSubnet(o.context, o.DhcpSubnetsDELETEDhcpSubnetHandler)
 
 	if o.handlers["GET"] == nil {
-		o.handlers[strings.ToUpper("GET")] = make(map[string]http.Handler)
+		o.handlers["GET"] = make(map[string]http.Handler)
 	}
 	o.handlers["GET"]["/reservations/{id}"] = dhcp_reservations.NewGETDhcpReservation(o.context, o.DhcpReservationsGETDhcpReservationHandler)
 
 	if o.handlers["GET"] == nil {
-		o.handlers[strings.ToUpper("GET")] = make(map[string]http.Handler)
+		o.handlers["GET"] = make(map[string]http.Handler)
 	}
 	o.handlers["GET"]["/subnets/{id}"] = dhcp_subnets.NewGETDhcpSubnet(o.context, o.DhcpSubnetsGETDhcpSubnetHandler)
 
 	if o.handlers["GET"] == nil {
-		o.handlers[strings.ToUpper("GET")] = make(map[string]http.Handler)
+		o.handlers["GET"] = make(map[string]http.Handler)
 	}
 	o.handlers["GET"]["/reservations"] = dhcp_reservations.NewLISTDhcpReservations(o.context, o.DhcpReservationsLISTDhcpReservationsHandler)
 
 	if o.handlers["GET"] == nil {
-		o.handlers[strings.ToUpper("GET")] = make(map[string]http.Handler)
+		o.handlers["GET"] = make(map[string]http.Handler)
 	}
 	o.handlers["GET"]["/subnets"] = dhcp_subnets.NewLISTDhcpSubnets(o.context, o.DhcpSubnetsLISTDhcpSubnetsHandler)
 
 	if o.handlers["POST"] == nil {
-		o.handlers[strings.ToUpper("POST")] = make(map[string]http.Handler)
+		o.handlers["POST"] = make(map[string]http.Handler)
 	}
 	o.handlers["POST"]["/reservations"] = dhcp_reservations.NewPOSTDhcpReservation(o.context, o.DhcpReservationsPOSTDhcpReservationHandler)
 
 	if o.handlers["POST"] == nil {
-		o.handlers[strings.ToUpper("POST")] = make(map[string]http.Handler)
+		o.handlers["POST"] = make(map[string]http.Handler)
 	}
 	o.handlers["POST"]["/subnets"] = dhcp_subnets.NewPOSTDhcpSubnet(o.context, o.DhcpSubnetsPOSTDhcpSubnetHandler)
 
 	if o.handlers["PUT"] == nil {
-		o.handlers[strings.ToUpper("PUT")] = make(map[string]http.Handler)
+		o.handlers["PUT"] = make(map[string]http.Handler)
 	}
 	o.handlers["PUT"]["/reservations/{id}"] = dhcp_reservations.NewPUTDhcpReservation(o.context, o.DhcpReservationsPUTDhcpReservationHandler)
 
 	if o.handlers["PUT"] == nil {
-		o.handlers[strings.ToUpper("PUT")] = make(map[string]http.Handler)
+		o.handlers["PUT"] = make(map[string]http.Handler)
 	}
 	o.handlers["PUT"]["/subnets/{id}"] = dhcp_subnets.NewPUTDhcpSubnet(o.context, o.DhcpSubnetsPUTDhcpSubnetHandler)
 
 	if o.handlers["DELETE"] == nil {
-		o.handlers[strings.ToUpper("DELETE")] = make(map[string]http.Handler)
+		o.handlers["DELETE"] = make(map[string]http.Handler)
 	}
 	o.handlers["DELETE"]["/bootenvs/{name}"] = bootenvs.NewDeleteBootenv(o.context, o.BootenvsDeleteBootenvHandler)
 
 	if o.handlers["DELETE"] == nil {
-		o.handlers[strings.ToUpper("DELETE")] = make(map[string]http.Handler)
+		o.handlers["DELETE"] = make(map[string]http.Handler)
 	}
 	o.handlers["DELETE"]["/leases/{id}"] = dhcp_leases.NewDeleteDhcpLease(o.context, o.DhcpLeasesDeleteDhcpLeaseHandler)
 
 	if o.handlers["DELETE"] == nil {
-		o.handlers[strings.ToUpper("DELETE")] = make(map[string]http.Handler)
+		o.handlers["DELETE"] = make(map[string]http.Handler)
 	}
 	o.handlers["DELETE"]["/files/{path}"] = files.NewDeleteFile(o.context, o.FilesDeleteFileHandler)
 
 	if o.handlers["DELETE"] == nil {
-		o.handlers[strings.ToUpper("DELETE")] = make(map[string]http.Handler)
+		o.handlers["DELETE"] = make(map[string]http.Handler)
 	}
 	o.handlers["DELETE"]["/isos/{name}"] = isos.NewDeleteIso(o.context, o.IsosDeleteIsoHandler)
 
 	if o.handlers["DELETE"] == nil {
-		o.handlers[strings.ToUpper("DELETE")] = make(map[string]http.Handler)
+		o.handlers["DELETE"] = make(map[string]http.Handler)
 	}
 	o.handlers["DELETE"]["/machines/{uuid}"] = machines.NewDeleteMachine(o.context, o.MachinesDeleteMachineHandler)
 
 	if o.handlers["DELETE"] == nil {
-		o.handlers[strings.ToUpper("DELETE")] = make(map[string]http.Handler)
+		o.handlers["DELETE"] = make(map[string]http.Handler)
 	}
 	o.handlers["DELETE"]["/templates/{uuid}"] = templates.NewDeleteTemplate(o.context, o.TemplatesDeleteTemplateHandler)
 
 	if o.handlers["GET"] == nil {
-		o.handlers[strings.ToUpper("GET")] = make(map[string]http.Handler)
+		o.handlers["GET"] = make(map[string]http.Handler)
 	}
 	o.handlers["GET"]["/bootenvs/{name}"] = bootenvs.NewGetBootenv(o.context, o.BootenvsGetBootenvHandler)
 
 	if o.handlers["GET"] == nil {
-		o.handlers[strings.ToUpper("GET")] = make(map[string]http.Handler)
+		o.handlers["GET"] = make(map[string]http.Handler)
 	}
 	o.handlers["GET"]["/leases/{id}"] = dhcp_leases.NewGetDhcpLease(o.context, o.DhcpLeasesGetDhcpLeaseHandler)
 
 	if o.handlers["GET"] == nil {
-		o.handlers[strings.ToUpper("GET")] = make(map[string]http.Handler)
+		o.handlers["GET"] = make(map[string]http.Handler)
 	}
 	o.handlers["GET"]["/files/{path}"] = files.NewGetFile(o.context, o.FilesGetFileHandler)
 
 	if o.handlers["GET"] == nil {
-		o.handlers[strings.ToUpper("GET")] = make(map[string]http.Handler)
+		o.handlers["GET"] = make(map[string]http.Handler)
 	}
 	o.handlers["GET"]["/isos/{name}"] = isos.NewGetIso(o.context, o.IsosGetIsoHandler)
 
 	if o.handlers["GET"] == nil {
-		o.handlers[strings.ToUpper("GET")] = make(map[string]http.Handler)
+		o.handlers["GET"] = make(map[string]http.Handler)
 	}
 	o.handlers["GET"]["/machines/{uuid}"] = machines.NewGetMachine(o.context, o.MachinesGetMachineHandler)
 
 	if o.handlers["GET"] == nil {
-		o.handlers[strings.ToUpper("GET")] = make(map[string]http.Handler)
+		o.handlers["GET"] = make(map[string]http.Handler)
 	}
 	o.handlers["GET"]["/templates/{uuid}"] = templates.NewGetTemplate(o.context, o.TemplatesGetTemplateHandler)
 
 	if o.handlers["GET"] == nil {
-		o.handlers[strings.ToUpper("GET")] = make(map[string]http.Handler)
+		o.handlers["GET"] = make(map[string]http.Handler)
 	}
 	o.handlers["GET"]["/bootenvs"] = bootenvs.NewListBootenvs(o.context, o.BootenvsListBootenvsHandler)
 
 	if o.handlers["GET"] == nil {
-		o.handlers[strings.ToUpper("GET")] = make(map[string]http.Handler)
+		o.handlers["GET"] = make(map[string]http.Handler)
 	}
 	o.handlers["GET"]["/leases"] = dhcp_leases.NewListDhcpLeases(o.context, o.DhcpLeasesListDhcpLeasesHandler)
 
 	if o.handlers["GET"] == nil {
-		o.handlers[strings.ToUpper("GET")] = make(map[string]http.Handler)
+		o.handlers["GET"] = make(map[string]http.Handler)
 	}
 	o.handlers["GET"]["/files"] = files.NewListFiles(o.context, o.FilesListFilesHandler)
 
 	if o.handlers["GET"] == nil {
-		o.handlers[strings.ToUpper("GET")] = make(map[string]http.Handler)
+		o.handlers["GET"] = make(map[string]http.Handler)
 	}
 	o.handlers["GET"]["/isos"] = isos.NewListIsos(o.context, o.IsosListIsosHandler)
 
 	if o.handlers["GET"] == nil {
-		o.handlers[strings.ToUpper("GET")] = make(map[string]http.Handler)
+		o.handlers["GET"] = make(map[string]http.Handler)
 	}
 	o.handlers["GET"]["/machines"] = machines.NewListMachines(o.context, o.MachinesListMachinesHandler)
 
 	if o.handlers["GET"] == nil {
-		o.handlers[strings.ToUpper("GET")] = make(map[string]http.Handler)
+		o.handlers["GET"] = make(map[string]http.Handler)
 	}
 	o.handlers["GET"]["/templates"] = templates.NewListTemplates(o.context, o.TemplatesListTemplatesHandler)
 
 	if o.handlers["PATCH"] == nil {
-		o.handlers[strings.ToUpper("PATCH")] = make(map[string]http.Handler)
+		o.handlers["PATCH"] = make(map[string]http.Handler)
 	}
 	o.handlers["PATCH"]["/bootenvs/{name}"] = bootenvs.NewPatchBootenv(o.context, o.BootenvsPatchBootenvHandler)
 
 	if o.handlers["PATCH"] == nil {
-		o.handlers[strings.ToUpper("PATCH")] = make(map[string]http.Handler)
+		o.handlers["PATCH"] = make(map[string]http.Handler)
 	}
 	o.handlers["PATCH"]["/machines/{uuid}"] = machines.NewPatchMachine(o.context, o.MachinesPatchMachineHandler)
 
 	if o.handlers["PATCH"] == nil {
-		o.handlers[strings.ToUpper("PATCH")] = make(map[string]http.Handler)
+		o.handlers["PATCH"] = make(map[string]http.Handler)
 	}
 	o.handlers["PATCH"]["/template/{uuid}"] = templates.NewPatchTemplate(o.context, o.TemplatesPatchTemplateHandler)
 
 	if o.handlers["POST"] == nil {
-		o.handlers[strings.ToUpper("POST")] = make(map[string]http.Handler)
+		o.handlers["POST"] = make(map[string]http.Handler)
 	}
 	o.handlers["POST"]["/bootenv"] = bootenvs.NewPostBootenv(o.context, o.BootenvsPostBootenvHandler)
 
 	if o.handlers["POST"] == nil {
-		o.handlers[strings.ToUpper("POST")] = make(map[string]http.Handler)
+		o.handlers["POST"] = make(map[string]http.Handler)
 	}
 	o.handlers["POST"]["/leases"] = dhcp_leases.NewPostDhcpLease(o.context, o.DhcpLeasesPostDhcpLeaseHandler)
 
 	if o.handlers["POST"] == nil {
-		o.handlers[strings.ToUpper("POST")] = make(map[string]http.Handler)
+		o.handlers["POST"] = make(map[string]http.Handler)
 	}
 	o.handlers["POST"]["/files/{path}"] = files.NewPostFile(o.context, o.FilesPostFileHandler)
 
 	if o.handlers["POST"] == nil {
-		o.handlers[strings.ToUpper("POST")] = make(map[string]http.Handler)
+		o.handlers["POST"] = make(map[string]http.Handler)
 	}
 	o.handlers["POST"]["/isos/{name}"] = isos.NewPostIso(o.context, o.IsosPostIsoHandler)
 
 	if o.handlers["POST"] == nil {
-		o.handlers[strings.ToUpper("POST")] = make(map[string]http.Handler)
+		o.handlers["POST"] = make(map[string]http.Handler)
 	}
 	o.handlers["POST"]["/machines"] = machines.NewPostMachine(o.context, o.MachinesPostMachineHandler)
 
 	if o.handlers["POST"] == nil {
-		o.handlers[strings.ToUpper("POST")] = make(map[string]http.Handler)
+		o.handlers["POST"] = make(map[string]http.Handler)
 	}
 	o.handlers["POST"]["/templates"] = templates.NewPostTemplate(o.context, o.TemplatesPostTemplateHandler)
 
 	if o.handlers["PUT"] == nil {
-		o.handlers[strings.ToUpper("PUT")] = make(map[string]http.Handler)
+		o.handlers["PUT"] = make(map[string]http.Handler)
 	}
 	o.handlers["PUT"]["/bootenvs/{name}"] = bootenvs.NewPutBootenv(o.context, o.BootenvsPutBootenvHandler)
 
 	if o.handlers["PUT"] == nil {
-		o.handlers[strings.ToUpper("PUT")] = make(map[string]http.Handler)
+		o.handlers["PUT"] = make(map[string]http.Handler)
 	}
 	o.handlers["PUT"]["/leases/{id}"] = dhcp_leases.NewPutDhcpLease(o.context, o.DhcpLeasesPutDhcpLeaseHandler)
 
 	if o.handlers["PUT"] == nil {
-		o.handlers[strings.ToUpper("PUT")] = make(map[string]http.Handler)
+		o.handlers["PUT"] = make(map[string]http.Handler)
 	}
 	o.handlers["PUT"]["/machines/{uuid}"] = machines.NewPutMachine(o.context, o.MachinesPutMachineHandler)
 
 	if o.handlers["PUT"] == nil {
-		o.handlers[strings.ToUpper("PUT")] = make(map[string]http.Handler)
+		o.handlers["PUT"] = make(map[string]http.Handler)
 	}
 	o.handlers["PUT"]["/templates/{uuid}"] = templates.NewPutTemplate(o.context, o.TemplatesPutTemplateHandler)
 
 	if o.handlers["POST"] == nil {
-		o.handlers[strings.ToUpper("POST")] = make(map[string]http.Handler)
+		o.handlers["POST"] = make(map[string]http.Handler)
 	}
 	o.handlers["POST"]["/templates/{uuid}"] = templates.NewReplaceTemplate(o.context, o.TemplatesReplaceTemplateHandler)
 

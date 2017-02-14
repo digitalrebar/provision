@@ -46,6 +46,15 @@ func NewDeleteIsoParamsWithContext(ctx context.Context) *DeleteIsoParams {
 	}
 }
 
+// NewDeleteIsoParamsWithHTTPClient creates a new DeleteIsoParams object
+// with the default values initialized, and the ability to set a custom HTTPClient for a request
+func NewDeleteIsoParamsWithHTTPClient(client *http.Client) *DeleteIsoParams {
+	var ()
+	return &DeleteIsoParams{
+		HTTPClient: client,
+	}
+}
+
 /*DeleteIsoParams contains all the parameters to send to the API endpoint
 for the delete iso operation typically these are written to a http.Request
 */
@@ -79,6 +88,17 @@ func (o *DeleteIsoParams) WithContext(ctx context.Context) *DeleteIsoParams {
 // SetContext adds the context to the delete iso params
 func (o *DeleteIsoParams) SetContext(ctx context.Context) {
 	o.Context = ctx
+}
+
+// WithHTTPClient adds the HTTPClient to the delete iso params
+func (o *DeleteIsoParams) WithHTTPClient(client *http.Client) *DeleteIsoParams {
+	o.SetHTTPClient(client)
+	return o
+}
+
+// SetHTTPClient adds the HTTPClient to the delete iso params
+func (o *DeleteIsoParams) SetHTTPClient(client *http.Client) {
+	o.HTTPClient = client
 }
 
 // WithName adds the name to the delete iso params

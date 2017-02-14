@@ -11,6 +11,9 @@ import (
 	"github.com/rackn/rocket-skates/models"
 )
 
+// HTTP code for type PatchBootenvOK
+const PatchBootenvOKCode int = 200
+
 /*PatchBootenvOK patch bootenv o k
 
 swagger:response patchBootenvOK
@@ -50,6 +53,9 @@ func (o *PatchBootenvOK) WriteResponse(rw http.ResponseWriter, producer runtime.
 		}
 	}
 }
+
+// HTTP code for type PatchBootenvUnauthorized
+const PatchBootenvUnauthorizedCode int = 401
 
 /*PatchBootenvUnauthorized patch bootenv unauthorized
 
@@ -91,6 +97,9 @@ func (o *PatchBootenvUnauthorized) WriteResponse(rw http.ResponseWriter, produce
 	}
 }
 
+// HTTP code for type PatchBootenvNotFound
+const PatchBootenvNotFoundCode int = 404
+
 /*PatchBootenvNotFound patch bootenv not found
 
 swagger:response patchBootenvNotFound
@@ -130,6 +139,9 @@ func (o *PatchBootenvNotFound) WriteResponse(rw http.ResponseWriter, producer ru
 		}
 	}
 }
+
+// HTTP code for type PatchBootenvConflict
+const PatchBootenvConflictCode int = 409
 
 /*PatchBootenvConflict patch bootenv conflict
 
@@ -171,6 +183,9 @@ func (o *PatchBootenvConflict) WriteResponse(rw http.ResponseWriter, producer ru
 	}
 }
 
+// HTTP code for type PatchBootenvExpectationFailed
+const PatchBootenvExpectationFailedCode int = 417
+
 /*PatchBootenvExpectationFailed patch bootenv expectation failed
 
 swagger:response patchBootenvExpectationFailed
@@ -210,6 +225,9 @@ func (o *PatchBootenvExpectationFailed) WriteResponse(rw http.ResponseWriter, pr
 		}
 	}
 }
+
+// HTTP code for type PatchBootenvInternalServerError
+const PatchBootenvInternalServerErrorCode int = 500
 
 /*PatchBootenvInternalServerError patch bootenv internal server error
 

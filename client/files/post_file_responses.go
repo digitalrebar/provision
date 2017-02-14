@@ -7,7 +7,9 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
+	"github.com/go-openapi/validate"
 
 	strfmt "github.com/go-openapi/strfmt"
 
@@ -254,4 +256,42 @@ type PostFileCreatedBody struct {
 	// size
 	// Required: true
 	Size *int64 `json:"Size"`
+}
+
+// Validate validates this post file created body
+func (o *PostFileCreatedBody) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := o.validateName(formats); err != nil {
+		// prop
+		res = append(res, err)
+	}
+
+	if err := o.validateSize(formats); err != nil {
+		// prop
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (o *PostFileCreatedBody) validateName(formats strfmt.Registry) error {
+
+	if err := validate.Required("postFileCreated"+"."+"Name", "body", o.Name); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (o *PostFileCreatedBody) validateSize(formats strfmt.Registry) error {
+
+	if err := validate.Required("postFileCreated"+"."+"Size", "body", o.Size); err != nil {
+		return err
+	}
+
+	return nil
 }

@@ -46,6 +46,15 @@ func NewDeleteTemplateParamsWithContext(ctx context.Context) *DeleteTemplatePara
 	}
 }
 
+// NewDeleteTemplateParamsWithHTTPClient creates a new DeleteTemplateParams object
+// with the default values initialized, and the ability to set a custom HTTPClient for a request
+func NewDeleteTemplateParamsWithHTTPClient(client *http.Client) *DeleteTemplateParams {
+	var ()
+	return &DeleteTemplateParams{
+		HTTPClient: client,
+	}
+}
+
 /*DeleteTemplateParams contains all the parameters to send to the API endpoint
 for the delete template operation typically these are written to a http.Request
 */
@@ -79,6 +88,17 @@ func (o *DeleteTemplateParams) WithContext(ctx context.Context) *DeleteTemplateP
 // SetContext adds the context to the delete template params
 func (o *DeleteTemplateParams) SetContext(ctx context.Context) {
 	o.Context = ctx
+}
+
+// WithHTTPClient adds the HTTPClient to the delete template params
+func (o *DeleteTemplateParams) WithHTTPClient(client *http.Client) *DeleteTemplateParams {
+	o.SetHTTPClient(client)
+	return o
+}
+
+// SetHTTPClient adds the HTTPClient to the delete template params
+func (o *DeleteTemplateParams) SetHTTPClient(client *http.Client) {
+	o.HTTPClient = client
 }
 
 // WithUUID adds the uuid to the delete template params

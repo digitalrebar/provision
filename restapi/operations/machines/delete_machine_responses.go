@@ -11,6 +11,9 @@ import (
 	"github.com/rackn/rocket-skates/models"
 )
 
+// HTTP code for type DeleteMachineNoContent
+const DeleteMachineNoContentCode int = 204
+
 /*DeleteMachineNoContent delete machine no content
 
 swagger:response deleteMachineNoContent
@@ -28,6 +31,9 @@ func (o *DeleteMachineNoContent) WriteResponse(rw http.ResponseWriter, producer 
 
 	rw.WriteHeader(204)
 }
+
+// HTTP code for type DeleteMachineUnauthorized
+const DeleteMachineUnauthorizedCode int = 401
 
 /*DeleteMachineUnauthorized delete machine unauthorized
 
@@ -69,6 +75,9 @@ func (o *DeleteMachineUnauthorized) WriteResponse(rw http.ResponseWriter, produc
 	}
 }
 
+// HTTP code for type DeleteMachineNotFound
+const DeleteMachineNotFoundCode int = 404
+
 /*DeleteMachineNotFound delete machine not found
 
 swagger:response deleteMachineNotFound
@@ -109,6 +118,9 @@ func (o *DeleteMachineNotFound) WriteResponse(rw http.ResponseWriter, producer r
 	}
 }
 
+// HTTP code for type DeleteMachineConflict
+const DeleteMachineConflictCode int = 409
+
 /*DeleteMachineConflict delete machine conflict
 
 swagger:response deleteMachineConflict
@@ -148,6 +160,9 @@ func (o *DeleteMachineConflict) WriteResponse(rw http.ResponseWriter, producer r
 		}
 	}
 }
+
+// HTTP code for type DeleteMachineInternalServerError
+const DeleteMachineInternalServerErrorCode int = 500
 
 /*DeleteMachineInternalServerError delete machine internal server error
 

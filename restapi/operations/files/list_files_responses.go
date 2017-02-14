@@ -11,6 +11,9 @@ import (
 	"github.com/rackn/rocket-skates/models"
 )
 
+// HTTP code for type ListFilesOK
+const ListFilesOKCode int = 200
+
 /*ListFilesOK list files o k
 
 swagger:response listFilesOK
@@ -54,6 +57,9 @@ func (o *ListFilesOK) WriteResponse(rw http.ResponseWriter, producer runtime.Pro
 
 }
 
+// HTTP code for type ListFilesUnauthorized
+const ListFilesUnauthorizedCode int = 401
+
 /*ListFilesUnauthorized list files unauthorized
 
 swagger:response listFilesUnauthorized
@@ -94,6 +100,9 @@ func (o *ListFilesUnauthorized) WriteResponse(rw http.ResponseWriter, producer r
 	}
 }
 
+// HTTP code for type ListFilesNotFound
+const ListFilesNotFoundCode int = 404
+
 /*ListFilesNotFound list files not found
 
 swagger:response listFilesNotFound
@@ -133,6 +142,9 @@ func (o *ListFilesNotFound) WriteResponse(rw http.ResponseWriter, producer runti
 		}
 	}
 }
+
+// HTTP code for type ListFilesInternalServerError
+const ListFilesInternalServerErrorCode int = 500
 
 /*ListFilesInternalServerError list files internal server error
 

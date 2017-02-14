@@ -46,6 +46,15 @@ func NewGetBootenvParamsWithContext(ctx context.Context) *GetBootenvParams {
 	}
 }
 
+// NewGetBootenvParamsWithHTTPClient creates a new GetBootenvParams object
+// with the default values initialized, and the ability to set a custom HTTPClient for a request
+func NewGetBootenvParamsWithHTTPClient(client *http.Client) *GetBootenvParams {
+	var ()
+	return &GetBootenvParams{
+		HTTPClient: client,
+	}
+}
+
 /*GetBootenvParams contains all the parameters to send to the API endpoint
 for the get bootenv operation typically these are written to a http.Request
 */
@@ -79,6 +88,17 @@ func (o *GetBootenvParams) WithContext(ctx context.Context) *GetBootenvParams {
 // SetContext adds the context to the get bootenv params
 func (o *GetBootenvParams) SetContext(ctx context.Context) {
 	o.Context = ctx
+}
+
+// WithHTTPClient adds the HTTPClient to the get bootenv params
+func (o *GetBootenvParams) WithHTTPClient(client *http.Client) *GetBootenvParams {
+	o.SetHTTPClient(client)
+	return o
+}
+
+// SetHTTPClient adds the HTTPClient to the get bootenv params
+func (o *GetBootenvParams) SetHTTPClient(client *http.Client) {
+	o.HTTPClient = client
 }
 
 // WithName adds the name to the get bootenv params

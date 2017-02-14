@@ -46,6 +46,15 @@ func NewListIsosParamsWithContext(ctx context.Context) *ListIsosParams {
 	}
 }
 
+// NewListIsosParamsWithHTTPClient creates a new ListIsosParams object
+// with the default values initialized, and the ability to set a custom HTTPClient for a request
+func NewListIsosParamsWithHTTPClient(client *http.Client) *ListIsosParams {
+
+	return &ListIsosParams{
+		HTTPClient: client,
+	}
+}
+
 /*ListIsosParams contains all the parameters to send to the API endpoint
 for the list isos operation typically these are written to a http.Request
 */
@@ -75,6 +84,17 @@ func (o *ListIsosParams) WithContext(ctx context.Context) *ListIsosParams {
 // SetContext adds the context to the list isos params
 func (o *ListIsosParams) SetContext(ctx context.Context) {
 	o.Context = ctx
+}
+
+// WithHTTPClient adds the HTTPClient to the list isos params
+func (o *ListIsosParams) WithHTTPClient(client *http.Client) *ListIsosParams {
+	o.SetHTTPClient(client)
+	return o
+}
+
+// SetHTTPClient adds the HTTPClient to the list isos params
+func (o *ListIsosParams) SetHTTPClient(client *http.Client) {
+	o.HTTPClient = client
 }
 
 // WriteToRequest writes these params to a swagger request
