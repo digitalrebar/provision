@@ -10,7 +10,7 @@ import (
 )
 
 func listThings(thing keySaver) ([]interface{}, *models.Error) {
-	things := backend.list(thing)
+	things := list(thing)
 	res := make([]interface{}, 0, len(things))
 	for _, obj := range things {
 		var buf interface{}
@@ -26,7 +26,7 @@ func listThings(thing keySaver) ([]interface{}, *models.Error) {
 func createThing(newThing keySaver) (interface{}, int, *models.Error) {
 	finalStatus := http.StatusCreated
 	oldThing := newThing.newIsh()
-	if err := backend.load(oldThing); err == nil {
+	if err := load(oldThing); err == nil {
 		Logger.Printf("backend: Updating %v\n", oldThing.key())
 		Logger.Printf("backend: Updating new %v\n", newThing.key())
 		finalStatus = http.StatusOK
@@ -34,7 +34,7 @@ func createThing(newThing keySaver) (interface{}, int, *models.Error) {
 		Logger.Printf("backend: Creating %v\n", newThing.key())
 		oldThing = nil
 	}
-	if err := backend.save(newThing, oldThing); err != nil {
+	if err := save(newThing, oldThing); err != nil {
 		Logger.Printf("backend: Save failed: %v\n", err)
 		return nil, http.StatusConflict, NewError(http.StatusConflict, err.Error())
 	}
@@ -42,7 +42,7 @@ func createThing(newThing keySaver) (interface{}, int, *models.Error) {
 }
 
 func getThing(thing keySaver) (interface{}, *models.Error) {
-	if err := backend.load(thing); err != nil {
+	if err := load(thing); err != nil {
 		return nil, NewError(http.StatusNotFound, err.Error())
 	}
 	return thing, nil
@@ -50,10 +50,10 @@ func getThing(thing keySaver) (interface{}, *models.Error) {
 
 func putThing(newThing keySaver) (interface{}, *models.Error) {
 	oldThing := newThing.newIsh()
-	if err := backend.load(oldThing); err != nil {
+	if err := load(oldThing); err != nil {
 		return nil, NewError(http.StatusNotFound, err.Error())
 	}
-	if err := backend.save(newThing, oldThing); err != nil {
+	if err := save(newThing, oldThing); err != nil {
 		Logger.Printf("backend: Save failed: %v\n", err)
 		return nil, NewError(http.StatusConflict, err.Error())
 	}
@@ -61,7 +61,7 @@ func putThing(newThing keySaver) (interface{}, *models.Error) {
 }
 
 func patchThing(oldThing keySaver, patch []byte) (interface{}, *models.Error) {
-	if err := backend.load(oldThing); err != nil {
+	if err := load(oldThing); err != nil {
 		return nil, NewError(http.StatusNotFound, err.Error())
 	}
 	var err error
@@ -74,7 +74,7 @@ func patchThing(oldThing keySaver, patch []byte) (interface{}, *models.Error) {
 	if err := json.Unmarshal(newThingBuf, &newThing); err != nil {
 		return nil, NewError(http.StatusExpectationFailed, err.Error())
 	}
-	if err := backend.save(newThing, oldThing); err != nil {
+	if err := save(newThing, oldThing); err != nil {
 		return nil, NewError(http.StatusConflict, err.Error())
 	}
 
@@ -82,10 +82,10 @@ func patchThing(oldThing keySaver, patch []byte) (interface{}, *models.Error) {
 }
 
 func deleteThing(thing keySaver) *models.Error {
-	if err := backend.load(thing); err != nil {
+	if err := load(thing); err != nil {
 		return NewError(http.StatusNotFound, err.Error())
 	}
-	if err := backend.remove(thing); err != nil {
+	if err := remove(thing); err != nil {
 		return NewError(http.StatusConflict, fmt.Sprintf("Failed to delete %s: %v", thing.key(), err))
 	}
 	return nil
