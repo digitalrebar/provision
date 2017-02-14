@@ -23,9 +23,14 @@ func registerBackends(s store.SimpleStore) {
 	t := &Template{}
 	b := &BootEnv{}
 	m := &Machine{}
-	backends[t.prefix()] = s.Sub(t.prefix())
-	backends[b.prefix()] = s.Sub(b.prefix())
-	backends[m.prefix()] = s.Sub(m.prefix())
+	prefixes := []string{t.prefix(), b.prefix(), m.prefix()}
+	for _, p := range prefixes {
+		b, err := s.Sub(p)
+		if err != nil {
+			Logger.Fatalf("%s: Error creating substore: %v", p, err)
+		}
+		backends[p] = b
+	}
 }
 
 func getBackend(t keySaver) store.SimpleStore {
