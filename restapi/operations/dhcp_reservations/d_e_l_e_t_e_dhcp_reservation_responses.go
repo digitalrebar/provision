@@ -9,6 +9,9 @@ import (
 	"github.com/go-openapi/runtime"
 )
 
+// HTTP code for type DELETEDhcpReservationNoContent
+const DELETEDhcpReservationNoContentCode int = 204
+
 /*DELETEDhcpReservationNoContent d e l e t e dhcp reservation no content
 
 swagger:response dELETEDhcpReservationNoContent

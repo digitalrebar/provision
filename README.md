@@ -84,6 +84,12 @@ This is completely our own file.
 
 There is a test-data with a cert,key,validator and directories to run a simple instance of *rocket-skates*.  Please don't put big things here.
 
+## Pulling pinned imports
+
+This must be done before building the client or the server.
+
+* glide i
+
 ## Building Server
 
 * go build -o rocket-skates cmd/rocket-skates-server/main.go

@@ -194,7 +194,7 @@ func (n *Machine) onChange(oldThing interface{}) error {
 			return fmt.Errorf("machine: Cannot change name of machine %s", old.Name)
 		}
 		oldBootEnv := NewBootenv(old.BootEnv)
-		if err := backend.load(oldBootEnv); err != nil {
+		if err := load(oldBootEnv); err != nil {
 			return err
 		}
 		oldBootEnv.DeleteRenderedTemplates(old)
@@ -207,7 +207,7 @@ func (n *Machine) onChange(oldThing interface{}) error {
 		return fmt.Errorf("machine: %s  is not a valid IPv4 address", n.Address)
 	}
 	bootEnv := NewBootenv(n.BootEnv)
-	if err := backend.load(bootEnv); err != nil {
+	if err := load(bootEnv); err != nil {
 		return err
 	}
 	if err := bootEnv.RenderTemplates(n); err != nil {
@@ -218,7 +218,7 @@ func (n *Machine) onChange(oldThing interface{}) error {
 
 func (n *Machine) onDelete() error {
 	bootEnv := NewBootenv(n.BootEnv)
-	if err := backend.load(bootEnv); err != nil {
+	if err := load(bootEnv); err != nil {
 		return err
 	}
 	bootEnv.DeleteRenderedTemplates(n)
@@ -226,7 +226,7 @@ func (n *Machine) onDelete() error {
 }
 
 func (b *Machine) List() ([]*Machine, error) {
-	things := backend.list(b)
+	things := list(b)
 	res := make([]*Machine, len(things))
 	for i, blob := range things {
 		machine := &Machine{}

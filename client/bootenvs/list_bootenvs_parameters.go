@@ -46,6 +46,15 @@ func NewListBootenvsParamsWithContext(ctx context.Context) *ListBootenvsParams {
 	}
 }
 
+// NewListBootenvsParamsWithHTTPClient creates a new ListBootenvsParams object
+// with the default values initialized, and the ability to set a custom HTTPClient for a request
+func NewListBootenvsParamsWithHTTPClient(client *http.Client) *ListBootenvsParams {
+
+	return &ListBootenvsParams{
+		HTTPClient: client,
+	}
+}
+
 /*ListBootenvsParams contains all the parameters to send to the API endpoint
 for the list bootenvs operation typically these are written to a http.Request
 */
@@ -75,6 +84,17 @@ func (o *ListBootenvsParams) WithContext(ctx context.Context) *ListBootenvsParam
 // SetContext adds the context to the list bootenvs params
 func (o *ListBootenvsParams) SetContext(ctx context.Context) {
 	o.Context = ctx
+}
+
+// WithHTTPClient adds the HTTPClient to the list bootenvs params
+func (o *ListBootenvsParams) WithHTTPClient(client *http.Client) *ListBootenvsParams {
+	o.SetHTTPClient(client)
+	return o
+}
+
+// SetHTTPClient adds the HTTPClient to the list bootenvs params
+func (o *ListBootenvsParams) SetHTTPClient(client *http.Client) {
+	o.HTTPClient = client
 }
 
 // WriteToRequest writes these params to a swagger request

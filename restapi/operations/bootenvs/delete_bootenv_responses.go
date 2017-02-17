@@ -11,6 +11,9 @@ import (
 	"github.com/rackn/rocket-skates/models"
 )
 
+// HTTP code for type DeleteBootenvNoContent
+const DeleteBootenvNoContentCode int = 204
+
 /*DeleteBootenvNoContent delete bootenv no content
 
 swagger:response deleteBootenvNoContent
@@ -28,6 +31,9 @@ func (o *DeleteBootenvNoContent) WriteResponse(rw http.ResponseWriter, producer 
 
 	rw.WriteHeader(204)
 }
+
+// HTTP code for type DeleteBootenvUnauthorized
+const DeleteBootenvUnauthorizedCode int = 401
 
 /*DeleteBootenvUnauthorized delete bootenv unauthorized
 
@@ -69,6 +75,9 @@ func (o *DeleteBootenvUnauthorized) WriteResponse(rw http.ResponseWriter, produc
 	}
 }
 
+// HTTP code for type DeleteBootenvNotFound
+const DeleteBootenvNotFoundCode int = 404
+
 /*DeleteBootenvNotFound delete bootenv not found
 
 swagger:response deleteBootenvNotFound
@@ -109,6 +118,9 @@ func (o *DeleteBootenvNotFound) WriteResponse(rw http.ResponseWriter, producer r
 	}
 }
 
+// HTTP code for type DeleteBootenvConflict
+const DeleteBootenvConflictCode int = 409
+
 /*DeleteBootenvConflict delete bootenv conflict
 
 swagger:response deleteBootenvConflict
@@ -148,6 +160,9 @@ func (o *DeleteBootenvConflict) WriteResponse(rw http.ResponseWriter, producer r
 		}
 	}
 }
+
+// HTTP code for type DeleteBootenvInternalServerError
+const DeleteBootenvInternalServerErrorCode int = 500
 
 /*DeleteBootenvInternalServerError delete bootenv internal server error
 

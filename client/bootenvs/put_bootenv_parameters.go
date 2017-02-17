@@ -48,6 +48,15 @@ func NewPutBootenvParamsWithContext(ctx context.Context) *PutBootenvParams {
 	}
 }
 
+// NewPutBootenvParamsWithHTTPClient creates a new PutBootenvParams object
+// with the default values initialized, and the ability to set a custom HTTPClient for a request
+func NewPutBootenvParamsWithHTTPClient(client *http.Client) *PutBootenvParams {
+	var ()
+	return &PutBootenvParams{
+		HTTPClient: client,
+	}
+}
+
 /*PutBootenvParams contains all the parameters to send to the API endpoint
 for the put bootenv operation typically these are written to a http.Request
 */
@@ -83,6 +92,17 @@ func (o *PutBootenvParams) WithContext(ctx context.Context) *PutBootenvParams {
 // SetContext adds the context to the put bootenv params
 func (o *PutBootenvParams) SetContext(ctx context.Context) {
 	o.Context = ctx
+}
+
+// WithHTTPClient adds the HTTPClient to the put bootenv params
+func (o *PutBootenvParams) WithHTTPClient(client *http.Client) *PutBootenvParams {
+	o.SetHTTPClient(client)
+	return o
+}
+
+// SetHTTPClient adds the HTTPClient to the put bootenv params
+func (o *PutBootenvParams) SetHTTPClient(client *http.Client) {
+	o.HTTPClient = client
 }
 
 // WithBody adds the body to the put bootenv params

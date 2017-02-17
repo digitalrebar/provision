@@ -46,6 +46,15 @@ func NewDeleteFileParamsWithContext(ctx context.Context) *DeleteFileParams {
 	}
 }
 
+// NewDeleteFileParamsWithHTTPClient creates a new DeleteFileParams object
+// with the default values initialized, and the ability to set a custom HTTPClient for a request
+func NewDeleteFileParamsWithHTTPClient(client *http.Client) *DeleteFileParams {
+	var ()
+	return &DeleteFileParams{
+		HTTPClient: client,
+	}
+}
+
 /*DeleteFileParams contains all the parameters to send to the API endpoint
 for the delete file operation typically these are written to a http.Request
 */
@@ -79,6 +88,17 @@ func (o *DeleteFileParams) WithContext(ctx context.Context) *DeleteFileParams {
 // SetContext adds the context to the delete file params
 func (o *DeleteFileParams) SetContext(ctx context.Context) {
 	o.Context = ctx
+}
+
+// WithHTTPClient adds the HTTPClient to the delete file params
+func (o *DeleteFileParams) WithHTTPClient(client *http.Client) *DeleteFileParams {
+	o.SetHTTPClient(client)
+	return o
+}
+
+// SetHTTPClient adds the HTTPClient to the delete file params
+func (o *DeleteFileParams) SetHTTPClient(client *http.Client) {
+	o.HTTPClient = client
 }
 
 // WithPath adds the path to the delete file params

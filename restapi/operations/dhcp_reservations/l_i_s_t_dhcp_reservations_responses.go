@@ -11,6 +11,9 @@ import (
 	"github.com/rackn/rocket-skates/models"
 )
 
+// HTTP code for type LISTDhcpReservationsOK
+const LISTDhcpReservationsOKCode int = 200
+
 /*LISTDhcpReservationsOK l i s t dhcp reservations o k
 
 swagger:response lISTDhcpReservationsOK

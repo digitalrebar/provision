@@ -48,6 +48,15 @@ func NewPostTemplateParamsWithContext(ctx context.Context) *PostTemplateParams {
 	}
 }
 
+// NewPostTemplateParamsWithHTTPClient creates a new PostTemplateParams object
+// with the default values initialized, and the ability to set a custom HTTPClient for a request
+func NewPostTemplateParamsWithHTTPClient(client *http.Client) *PostTemplateParams {
+	var ()
+	return &PostTemplateParams{
+		HTTPClient: client,
+	}
+}
+
 /*PostTemplateParams contains all the parameters to send to the API endpoint
 for the post template operation typically these are written to a http.Request
 */
@@ -81,6 +90,17 @@ func (o *PostTemplateParams) WithContext(ctx context.Context) *PostTemplateParam
 // SetContext adds the context to the post template params
 func (o *PostTemplateParams) SetContext(ctx context.Context) {
 	o.Context = ctx
+}
+
+// WithHTTPClient adds the HTTPClient to the post template params
+func (o *PostTemplateParams) WithHTTPClient(client *http.Client) *PostTemplateParams {
+	o.SetHTTPClient(client)
+	return o
+}
+
+// SetHTTPClient adds the HTTPClient to the post template params
+func (o *PostTemplateParams) SetHTTPClient(client *http.Client) {
+	o.HTTPClient = client
 }
 
 // WithBody adds the body to the post template params

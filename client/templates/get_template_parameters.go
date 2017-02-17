@@ -46,6 +46,15 @@ func NewGetTemplateParamsWithContext(ctx context.Context) *GetTemplateParams {
 	}
 }
 
+// NewGetTemplateParamsWithHTTPClient creates a new GetTemplateParams object
+// with the default values initialized, and the ability to set a custom HTTPClient for a request
+func NewGetTemplateParamsWithHTTPClient(client *http.Client) *GetTemplateParams {
+	var ()
+	return &GetTemplateParams{
+		HTTPClient: client,
+	}
+}
+
 /*GetTemplateParams contains all the parameters to send to the API endpoint
 for the get template operation typically these are written to a http.Request
 */
@@ -79,6 +88,17 @@ func (o *GetTemplateParams) WithContext(ctx context.Context) *GetTemplateParams 
 // SetContext adds the context to the get template params
 func (o *GetTemplateParams) SetContext(ctx context.Context) {
 	o.Context = ctx
+}
+
+// WithHTTPClient adds the HTTPClient to the get template params
+func (o *GetTemplateParams) WithHTTPClient(client *http.Client) *GetTemplateParams {
+	o.SetHTTPClient(client)
+	return o
+}
+
+// SetHTTPClient adds the HTTPClient to the get template params
+func (o *GetTemplateParams) SetHTTPClient(client *http.Client) {
+	o.HTTPClient = client
 }
 
 // WithUUID adds the uuid to the get template params

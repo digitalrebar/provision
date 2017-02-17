@@ -46,6 +46,15 @@ func NewDeleteMachineParamsWithContext(ctx context.Context) *DeleteMachineParams
 	}
 }
 
+// NewDeleteMachineParamsWithHTTPClient creates a new DeleteMachineParams object
+// with the default values initialized, and the ability to set a custom HTTPClient for a request
+func NewDeleteMachineParamsWithHTTPClient(client *http.Client) *DeleteMachineParams {
+	var ()
+	return &DeleteMachineParams{
+		HTTPClient: client,
+	}
+}
+
 /*DeleteMachineParams contains all the parameters to send to the API endpoint
 for the delete machine operation typically these are written to a http.Request
 */
@@ -79,6 +88,17 @@ func (o *DeleteMachineParams) WithContext(ctx context.Context) *DeleteMachinePar
 // SetContext adds the context to the delete machine params
 func (o *DeleteMachineParams) SetContext(ctx context.Context) {
 	o.Context = ctx
+}
+
+// WithHTTPClient adds the HTTPClient to the delete machine params
+func (o *DeleteMachineParams) WithHTTPClient(client *http.Client) *DeleteMachineParams {
+	o.SetHTTPClient(client)
+	return o
+}
+
+// SetHTTPClient adds the HTTPClient to the delete machine params
+func (o *DeleteMachineParams) SetHTTPClient(client *http.Client) {
+	o.HTTPClient = client
 }
 
 // WithUUID adds the uuid to the delete machine params

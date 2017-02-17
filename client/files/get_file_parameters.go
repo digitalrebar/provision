@@ -46,6 +46,15 @@ func NewGetFileParamsWithContext(ctx context.Context) *GetFileParams {
 	}
 }
 
+// NewGetFileParamsWithHTTPClient creates a new GetFileParams object
+// with the default values initialized, and the ability to set a custom HTTPClient for a request
+func NewGetFileParamsWithHTTPClient(client *http.Client) *GetFileParams {
+	var ()
+	return &GetFileParams{
+		HTTPClient: client,
+	}
+}
+
 /*GetFileParams contains all the parameters to send to the API endpoint
 for the get file operation typically these are written to a http.Request
 */
@@ -79,6 +88,17 @@ func (o *GetFileParams) WithContext(ctx context.Context) *GetFileParams {
 // SetContext adds the context to the get file params
 func (o *GetFileParams) SetContext(ctx context.Context) {
 	o.Context = ctx
+}
+
+// WithHTTPClient adds the HTTPClient to the get file params
+func (o *GetFileParams) WithHTTPClient(client *http.Client) *GetFileParams {
+	o.SetHTTPClient(client)
+	return o
+}
+
+// SetHTTPClient adds the HTTPClient to the get file params
+func (o *GetFileParams) SetHTTPClient(client *http.Client) {
+	o.HTTPClient = client
 }
 
 // WithPath adds the path to the get file params

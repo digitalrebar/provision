@@ -3,13 +3,8 @@ package provisioner
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"os"
-	"path"
-	"path/filepath"
-	"strings"
 
-	consul "github.com/hashicorp/consul/api"
+	"github.com/digitalrebar/digitalrebar/go/common/store"
 )
 
 type keySaver interface {
@@ -22,181 +17,81 @@ type keySaver interface {
 	RebuildRebarData() error
 }
 
-type storageBackend interface {
-	list(keySaver) [][]byte
-	save(keySaver, interface{}) error
-	load(keySaver) error
-	remove(keySaver) error
-}
-
-type fileBackend string
-
-func newFileBackend(path string) (fileBackend, error) {
-	fullPath, err := filepath.Abs(filepath.Clean(path))
-	if err != nil {
-		return "", err
-	}
-	if err := os.MkdirAll(fullPath, 0755); err != nil {
-		return "", err
-	}
-	return fileBackend(fullPath), nil
-}
-
-func (f fileBackend) mkThingPath(thing keySaver) string {
-	fullPath := filepath.Join(string(f), thing.prefix())
-	if err := os.MkdirAll(fullPath, 0755); err != nil {
-		Logger.Fatalf("file: Cannot create %s: %v", fullPath, err)
-	}
-	return fullPath
-}
-
-func (f fileBackend) mkThingName(thing keySaver) string {
-	return filepath.Join(string(f), thing.key()) + ".json"
-}
-
-func (f fileBackend) list(thing keySaver) [][]byte {
-	dir := f.mkThingPath(thing)
-	file, err := os.Open(dir)
-	if err != nil {
-		Logger.Fatalf("file: Failed to open dir %s: %v", dir, err)
-	}
-	names, err := file.Readdirnames(0)
-	if err != nil {
-		Logger.Fatalf("file: Failed to get listing for dir %s: %v", dir, err)
-	}
-	res := make([][]byte, 0, len(names))
-	for _, name := range names {
-		if !strings.HasSuffix(name, ".json") {
-			continue
-		}
-		fullName := filepath.Join(dir, name)
-		buf, err := ioutil.ReadFile(fullName)
+func registerBackends(s store.SimpleStore) {
+	backendMux.Lock()
+	defer backendMux.Unlock()
+	t := &Template{}
+	b := &BootEnv{}
+	m := &Machine{}
+	prefixes := []string{t.prefix(), b.prefix(), m.prefix()}
+	for _, p := range prefixes {
+		b, err := s.Sub(p)
 		if err != nil {
-			Logger.Fatalf("file: Failed to read info for %s: %v", fullName, err)
+			Logger.Fatalf("%s: Error creating substore: %v", p, err)
 		}
-		res = append(res, buf)
+		backends[p] = b
+	}
+}
+
+func getBackend(t keySaver) store.SimpleStore {
+	backendMux.Lock()
+	defer backendMux.Unlock()
+	res, ok := backends[t.prefix()]
+	if !ok {
+		Logger.Fatalf("%s: No registered storage backend!", t.prefix())
 	}
 	return res
 }
 
-func (f fileBackend) load(thing keySaver) error {
-	fullName := f.mkThingName(thing)
-	buf, err := ioutil.ReadFile(fullName)
+func list(t keySaver) [][]byte {
+	backend := getBackend(t)
+
+	keys, err := backend.Keys()
 	if err != nil {
-		return fmt.Errorf("file: Failed to read %s: %v", fullName, err)
+		Logger.Fatalf("%s: Error getting keys: %v", t.prefix(), err)
 	}
-	return json.Unmarshal(buf, &thing)
-}
-
-func (f fileBackend) save(newThing keySaver, oldThing interface{}) error {
-	f.mkThingPath(newThing)
-	if err := newThing.onChange(oldThing); err != nil && oldThing != nil {
-		return err
-	}
-	fullPath := f.mkThingName(newThing)
-	file, err := os.Create(fullPath)
-	if err != nil {
-		return fmt.Errorf("file: Failed to open thing %s: %v", fullPath, err)
-	}
-	enc := json.NewEncoder(file)
-	if err := enc.Encode(newThing); err != nil {
-		os.Remove(fullPath)
-		file.Close()
-		return fmt.Errorf("file: Failed to save %s: %v", fullPath, err)
-	}
-	file.Sync()
-	file.Close()
-	return nil
-}
-
-func (f fileBackend) remove(thing keySaver) error {
-	if err := f.load(thing); err != nil {
-		return err
-	}
-	if err := thing.onDelete(); err != nil {
-		return err
-	}
-	return os.Remove(f.mkThingName(thing))
-}
-
-type consulBackend struct {
-	kv      *consul.KV
-	baseKey string
-}
-
-func (cb *consulBackend) makePrefix(thing keySaver) string {
-	return path.Join(cb.baseKey, thing.prefix())
-}
-
-func (cb *consulBackend) makeKey(thing keySaver) string {
-	return path.Join(cb.baseKey, thing.key())
-}
-
-func newConsulBackend(baseKey string) (*consulBackend, error) {
-	client, err := consul.NewClient(consul.DefaultConfig())
-	if err != nil {
-		return nil, err
-	}
-	backend := &consulBackend{
-		kv:      client.KV(),
-		baseKey: baseKey,
-	}
-	return backend, nil
-}
-
-func (cb *consulBackend) list(thing keySaver) [][]byte {
-	keypairs, _, err := cb.kv.List(cb.makePrefix(thing), nil)
-	if err != nil {
-		return [][]byte{}
-	}
-	res := make([][]byte, len(keypairs))
-	for i, kp := range keypairs {
-		res[i] = kp.Value
+	res := make([][]byte, len(keys))
+	for i, k := range keys {
+		res[i], err = backend.Load(k)
+		if err != nil {
+			Logger.Fatalf("%s: Error reading contents for %s: %v", t.prefix(), k, err)
+		}
 	}
 	return res
 }
 
-func (cb *consulBackend) save(newThing keySaver, oldThing interface{}) error {
+//	save(keySaver, interface{}) error
+//      remove(keySaver) error
+
+func load(t keySaver) error {
+	backend := getBackend(t)
+	buf, err := backend.Load(t.key())
+	if err != nil {
+		return fmt.Errorf("%s: Failed to load %s: %v", t.prefix(), t.key(), err)
+	}
+	return json.Unmarshal(buf, &t)
+}
+
+func save(newThing keySaver, oldThing interface{}) error {
+	backend := getBackend(newThing)
+
 	if err := newThing.onChange(oldThing); err != nil && oldThing != nil {
 		return err
 	}
 	buf, err := json.Marshal(newThing)
 	if err != nil {
-		return fmt.Errorf("consul: Failed to marshal %+v: %v", newThing, err)
+		return fmt.Errorf("%s: Failed to marshal %s: %v", newThing.prefix(), newThing.key(), err)
 	}
-	kp := &consul.KVPair{Value: buf, Key: cb.makeKey(newThing)}
-	if _, err := cb.kv.Put(kp, nil); err != nil {
-		return fmt.Errorf("consul: Failed to save %s: %v", kp.Key, err)
-	}
-	err = newThing.RebuildRebarData()
-	return err
+	return backend.Save(newThing.key(), buf)
 }
 
-func (cb *consulBackend) load(s keySaver) error {
-	key := cb.makeKey(s)
-	kp, _, err := cb.kv.Get(key, nil)
-	if err != nil {
-		return fmt.Errorf("consul: Communication failure: %v", err)
-	} else if kp == nil {
-		return fmt.Errorf("consul: Failed to load %v", key)
-	}
-	if err := json.Unmarshal(kp.Value, &s); err != nil {
-		return fmt.Errorf("consul: Failed to unmarshal %s: %v", kp.Key, err)
-	}
-	return nil
-}
-
-func (cb *consulBackend) remove(s keySaver) error {
-	if err := cb.load(s); err != nil {
+func remove(t keySaver) error {
+	backend := getBackend(t)
+	if err := load(t); err != nil {
 		return err
 	}
-	if err := s.onDelete(); err != nil {
+	if err := t.onDelete(); err != nil {
 		return err
 	}
-	key := cb.makeKey(s)
-	if _, err := cb.kv.Delete(key, nil); err != nil {
-		return fmt.Errorf("consul: Failed to delete %v: %v", key, err)
-	}
-	err := s.RebuildRebarData()
-	return err
+	return backend.Remove(t.key())
 }

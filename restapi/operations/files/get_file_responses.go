@@ -12,6 +12,9 @@ import (
 	"github.com/rackn/rocket-skates/models"
 )
 
+// HTTP code for type GetFileOK
+const GetFileOKCode int = 200
+
 /*GetFileOK get file o k
 
 swagger:response getFileOK
@@ -50,6 +53,9 @@ func (o *GetFileOK) WriteResponse(rw http.ResponseWriter, producer runtime.Produ
 	}
 
 }
+
+// HTTP code for type GetFileUnauthorized
+const GetFileUnauthorizedCode int = 401
 
 /*GetFileUnauthorized get file unauthorized
 
@@ -91,6 +97,9 @@ func (o *GetFileUnauthorized) WriteResponse(rw http.ResponseWriter, producer run
 	}
 }
 
+// HTTP code for type GetFileNotFound
+const GetFileNotFoundCode int = 404
+
 /*GetFileNotFound get file not found
 
 swagger:response getFileNotFound
@@ -130,6 +139,9 @@ func (o *GetFileNotFound) WriteResponse(rw http.ResponseWriter, producer runtime
 		}
 	}
 }
+
+// HTTP code for type GetFileInternalServerError
+const GetFileInternalServerErrorCode int = 500
 
 /*GetFileInternalServerError get file internal server error
 

@@ -4,9 +4,11 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"sync"
 
 	"github.com/digitalrebar/digitalrebar/go/common/client"
 	"github.com/digitalrebar/digitalrebar/go/common/service"
+	"github.com/digitalrebar/digitalrebar/go/common/store"
 	"github.com/digitalrebar/digitalrebar/go/common/version"
 	"github.com/digitalrebar/digitalrebar/go/rebar-api/api"
 	consul "github.com/hashicorp/consul/api"
@@ -27,7 +29,8 @@ var ProvOpts struct {
 var Logger *log.Logger
 
 var ProvisionerURL string
-var backend storageBackend
+var backends = map[string]store.SimpleStore{}
+var backendMux = sync.Mutex{}
 var rebarClient *api.Client
 
 func InitializeProvisioner(apiPort int) {
@@ -52,9 +55,10 @@ func InitializeProvisioner(apiPort int) {
 		ProvOpts.OurAddress,
 		ProvOpts.StaticPort)
 	Logger.Printf("Version: %s\n", version.REBAR_VERSION)
+	var consulClient *consul.Client
 
 	if ProvOpts.RegisterConsul {
-		consulClient, err := client.Consul(true)
+		consulClient, err = client.Consul(true)
 		if err != nil {
 			Logger.Fatalf("Error talking to Consul: %v", err)
 		}
@@ -100,21 +104,31 @@ func InitializeProvisioner(apiPort int) {
 			log.Fatalf("Failed to register provisioner-tftp-service with Consul: %v", err)
 		}
 	}
-
+	var backend store.SimpleStore
 	switch ProvOpts.BackEndType {
 	case "consul":
-		backend, err = newConsulBackend(ProvOpts.DataRoot)
-		if err != nil {
-			Logger.Fatalf("Consul storage backend type %v: %v\n", ProvOpts.BackEndType, err)
+		if consulClient == nil {
+			consulClient, err = client.Consul(true)
+			if err != nil {
+				Logger.Fatalf("Error talking to Consul: %v", err)
+			}
 		}
+		backend, err = store.NewSimpleConsulStore(consulClient, ProvOpts.DataRoot)
 	case "directory":
-		backend, err = newFileBackend(ProvOpts.DataRoot)
-		if err != nil {
-			Logger.Fatalf("File storage backend type %v: %v\n", ProvOpts.BackEndType, err)
-		}
+		backend, err = store.NewFileBackend(ProvOpts.DataRoot)
+	case "memory":
+		backend = store.NewSimpleMemoryStore()
+		err = nil
+	case "bolt", "local":
+		backend, err = store.NewSimpleLocalStore(ProvOpts.DataRoot)
 	default:
 		Logger.Fatalf("Unknown storage backend type %v\n", ProvOpts.BackEndType)
 	}
+	if err != nil {
+		Logger.Fatalf("Error using backing store %s: %v", ProvOpts.BackEndType, err)
+	}
+
+	registerBackends(backend)
 
 	go func() {
 		if err := ServeTftp(fmt.Sprintf(":%d", ProvOpts.TftpPort)); err != nil {

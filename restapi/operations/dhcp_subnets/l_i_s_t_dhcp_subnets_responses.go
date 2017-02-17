@@ -11,6 +11,9 @@ import (
 	"github.com/rackn/rocket-skates/models"
 )
 
+// HTTP code for type LISTDhcpSubnetsOK
+const LISTDhcpSubnetsOKCode int = 200
+
 /*LISTDhcpSubnetsOK l i s t dhcp subnets o k
 
 swagger:response lISTDhcpSubnetsOK

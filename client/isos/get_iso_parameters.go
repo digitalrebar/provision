@@ -46,6 +46,15 @@ func NewGetIsoParamsWithContext(ctx context.Context) *GetIsoParams {
 	}
 }
 
+// NewGetIsoParamsWithHTTPClient creates a new GetIsoParams object
+// with the default values initialized, and the ability to set a custom HTTPClient for a request
+func NewGetIsoParamsWithHTTPClient(client *http.Client) *GetIsoParams {
+	var ()
+	return &GetIsoParams{
+		HTTPClient: client,
+	}
+}
+
 /*GetIsoParams contains all the parameters to send to the API endpoint
 for the get iso operation typically these are written to a http.Request
 */
@@ -79,6 +88,17 @@ func (o *GetIsoParams) WithContext(ctx context.Context) *GetIsoParams {
 // SetContext adds the context to the get iso params
 func (o *GetIsoParams) SetContext(ctx context.Context) {
 	o.Context = ctx
+}
+
+// WithHTTPClient adds the HTTPClient to the get iso params
+func (o *GetIsoParams) WithHTTPClient(client *http.Client) *GetIsoParams {
+	o.SetHTTPClient(client)
+	return o
+}
+
+// SetHTTPClient adds the HTTPClient to the get iso params
+func (o *GetIsoParams) SetHTTPClient(client *http.Client) {
+	o.HTTPClient = client
 }
 
 // WithName adds the name to the get iso params

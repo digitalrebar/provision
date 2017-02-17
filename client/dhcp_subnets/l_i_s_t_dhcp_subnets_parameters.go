@@ -46,6 +46,15 @@ func NewLISTDhcpSubnetsParamsWithContext(ctx context.Context) *LISTDhcpSubnetsPa
 	}
 }
 
+// NewLISTDhcpSubnetsParamsWithHTTPClient creates a new LISTDhcpSubnetsParams object
+// with the default values initialized, and the ability to set a custom HTTPClient for a request
+func NewLISTDhcpSubnetsParamsWithHTTPClient(client *http.Client) *LISTDhcpSubnetsParams {
+
+	return &LISTDhcpSubnetsParams{
+		HTTPClient: client,
+	}
+}
+
 /*LISTDhcpSubnetsParams contains all the parameters to send to the API endpoint
 for the l i s t dhcp subnets operation typically these are written to a http.Request
 */
@@ -75,6 +84,17 @@ func (o *LISTDhcpSubnetsParams) WithContext(ctx context.Context) *LISTDhcpSubnet
 // SetContext adds the context to the l i s t dhcp subnets params
 func (o *LISTDhcpSubnetsParams) SetContext(ctx context.Context) {
 	o.Context = ctx
+}
+
+// WithHTTPClient adds the HTTPClient to the l i s t dhcp subnets params
+func (o *LISTDhcpSubnetsParams) WithHTTPClient(client *http.Client) *LISTDhcpSubnetsParams {
+	o.SetHTTPClient(client)
+	return o
+}
+
+// SetHTTPClient adds the HTTPClient to the l i s t dhcp subnets params
+func (o *LISTDhcpSubnetsParams) SetHTTPClient(client *http.Client) {
+	o.HTTPClient = client
 }
 
 // WriteToRequest writes these params to a swagger request

@@ -48,6 +48,15 @@ func NewPatchTemplateParamsWithContext(ctx context.Context) *PatchTemplateParams
 	}
 }
 
+// NewPatchTemplateParamsWithHTTPClient creates a new PatchTemplateParams object
+// with the default values initialized, and the ability to set a custom HTTPClient for a request
+func NewPatchTemplateParamsWithHTTPClient(client *http.Client) *PatchTemplateParams {
+	var ()
+	return &PatchTemplateParams{
+		HTTPClient: client,
+	}
+}
+
 /*PatchTemplateParams contains all the parameters to send to the API endpoint
 for the patch template operation typically these are written to a http.Request
 */
@@ -83,6 +92,17 @@ func (o *PatchTemplateParams) WithContext(ctx context.Context) *PatchTemplatePar
 // SetContext adds the context to the patch template params
 func (o *PatchTemplateParams) SetContext(ctx context.Context) {
 	o.Context = ctx
+}
+
+// WithHTTPClient adds the HTTPClient to the patch template params
+func (o *PatchTemplateParams) WithHTTPClient(client *http.Client) *PatchTemplateParams {
+	o.SetHTTPClient(client)
+	return o
+}
+
+// SetHTTPClient adds the HTTPClient to the patch template params
+func (o *PatchTemplateParams) SetHTTPClient(client *http.Client) {
+	o.HTTPClient = client
 }
 
 // WithBody adds the body to the patch template params

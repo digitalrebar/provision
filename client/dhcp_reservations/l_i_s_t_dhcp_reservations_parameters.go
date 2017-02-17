@@ -46,6 +46,15 @@ func NewLISTDhcpReservationsParamsWithContext(ctx context.Context) *LISTDhcpRese
 	}
 }
 
+// NewLISTDhcpReservationsParamsWithHTTPClient creates a new LISTDhcpReservationsParams object
+// with the default values initialized, and the ability to set a custom HTTPClient for a request
+func NewLISTDhcpReservationsParamsWithHTTPClient(client *http.Client) *LISTDhcpReservationsParams {
+
+	return &LISTDhcpReservationsParams{
+		HTTPClient: client,
+	}
+}
+
 /*LISTDhcpReservationsParams contains all the parameters to send to the API endpoint
 for the l i s t dhcp reservations operation typically these are written to a http.Request
 */
@@ -75,6 +84,17 @@ func (o *LISTDhcpReservationsParams) WithContext(ctx context.Context) *LISTDhcpR
 // SetContext adds the context to the l i s t dhcp reservations params
 func (o *LISTDhcpReservationsParams) SetContext(ctx context.Context) {
 	o.Context = ctx
+}
+
+// WithHTTPClient adds the HTTPClient to the l i s t dhcp reservations params
+func (o *LISTDhcpReservationsParams) WithHTTPClient(client *http.Client) *LISTDhcpReservationsParams {
+	o.SetHTTPClient(client)
+	return o
+}
+
+// SetHTTPClient adds the HTTPClient to the l i s t dhcp reservations params
+func (o *LISTDhcpReservationsParams) SetHTTPClient(client *http.Client) {
+	o.HTTPClient = client
 }
 
 // WriteToRequest writes these params to a swagger request

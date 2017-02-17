@@ -46,6 +46,15 @@ func NewDeleteDhcpLeaseParamsWithContext(ctx context.Context) *DeleteDhcpLeasePa
 	}
 }
 
+// NewDeleteDhcpLeaseParamsWithHTTPClient creates a new DeleteDhcpLeaseParams object
+// with the default values initialized, and the ability to set a custom HTTPClient for a request
+func NewDeleteDhcpLeaseParamsWithHTTPClient(client *http.Client) *DeleteDhcpLeaseParams {
+	var ()
+	return &DeleteDhcpLeaseParams{
+		HTTPClient: client,
+	}
+}
+
 /*DeleteDhcpLeaseParams contains all the parameters to send to the API endpoint
 for the delete dhcp lease operation typically these are written to a http.Request
 */
@@ -79,6 +88,17 @@ func (o *DeleteDhcpLeaseParams) WithContext(ctx context.Context) *DeleteDhcpLeas
 // SetContext adds the context to the delete dhcp lease params
 func (o *DeleteDhcpLeaseParams) SetContext(ctx context.Context) {
 	o.Context = ctx
+}
+
+// WithHTTPClient adds the HTTPClient to the delete dhcp lease params
+func (o *DeleteDhcpLeaseParams) WithHTTPClient(client *http.Client) *DeleteDhcpLeaseParams {
+	o.SetHTTPClient(client)
+	return o
+}
+
+// SetHTTPClient adds the HTTPClient to the delete dhcp lease params
+func (o *DeleteDhcpLeaseParams) SetHTTPClient(client *http.Client) {
+	o.HTTPClient = client
 }
 
 // WithID adds the id to the delete dhcp lease params

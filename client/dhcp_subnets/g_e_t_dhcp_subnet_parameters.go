@@ -46,6 +46,15 @@ func NewGETDhcpSubnetParamsWithContext(ctx context.Context) *GETDhcpSubnetParams
 	}
 }
 
+// NewGETDhcpSubnetParamsWithHTTPClient creates a new GETDhcpSubnetParams object
+// with the default values initialized, and the ability to set a custom HTTPClient for a request
+func NewGETDhcpSubnetParamsWithHTTPClient(client *http.Client) *GETDhcpSubnetParams {
+	var ()
+	return &GETDhcpSubnetParams{
+		HTTPClient: client,
+	}
+}
+
 /*GETDhcpSubnetParams contains all the parameters to send to the API endpoint
 for the g e t dhcp subnet operation typically these are written to a http.Request
 */
@@ -79,6 +88,17 @@ func (o *GETDhcpSubnetParams) WithContext(ctx context.Context) *GETDhcpSubnetPar
 // SetContext adds the context to the g e t dhcp subnet params
 func (o *GETDhcpSubnetParams) SetContext(ctx context.Context) {
 	o.Context = ctx
+}
+
+// WithHTTPClient adds the HTTPClient to the g e t dhcp subnet params
+func (o *GETDhcpSubnetParams) WithHTTPClient(client *http.Client) *GETDhcpSubnetParams {
+	o.SetHTTPClient(client)
+	return o
+}
+
+// SetHTTPClient adds the HTTPClient to the g e t dhcp subnet params
+func (o *GETDhcpSubnetParams) SetHTTPClient(client *http.Client) {
+	o.HTTPClient = client
 }
 
 // WithID adds the id to the g e t dhcp subnet params

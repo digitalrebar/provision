@@ -11,6 +11,9 @@ import (
 	"github.com/rackn/rocket-skates/models"
 )
 
+// HTTP code for type PostTemplateOK
+const PostTemplateOKCode int = 200
+
 /*PostTemplateOK post template o k
 
 swagger:response postTemplateOK
@@ -50,6 +53,9 @@ func (o *PostTemplateOK) WriteResponse(rw http.ResponseWriter, producer runtime.
 		}
 	}
 }
+
+// HTTP code for type PostTemplateCreated
+const PostTemplateCreatedCode int = 201
 
 /*PostTemplateCreated post template created
 
@@ -91,6 +97,9 @@ func (o *PostTemplateCreated) WriteResponse(rw http.ResponseWriter, producer run
 	}
 }
 
+// HTTP code for type PostTemplateUnauthorized
+const PostTemplateUnauthorizedCode int = 401
+
 /*PostTemplateUnauthorized post template unauthorized
 
 swagger:response postTemplateUnauthorized
@@ -131,6 +140,9 @@ func (o *PostTemplateUnauthorized) WriteResponse(rw http.ResponseWriter, produce
 	}
 }
 
+// HTTP code for type PostTemplateConflict
+const PostTemplateConflictCode int = 409
+
 /*PostTemplateConflict post template conflict
 
 swagger:response postTemplateConflict
@@ -170,6 +182,9 @@ func (o *PostTemplateConflict) WriteResponse(rw http.ResponseWriter, producer ru
 		}
 	}
 }
+
+// HTTP code for type PostTemplateInternalServerError
+const PostTemplateInternalServerErrorCode int = 500
 
 /*PostTemplateInternalServerError post template internal server error
 

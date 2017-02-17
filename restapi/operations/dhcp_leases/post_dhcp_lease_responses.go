@@ -11,6 +11,9 @@ import (
 	"github.com/rackn/rocket-skates/models"
 )
 
+// HTTP code for type PostDhcpLeaseCreated
+const PostDhcpLeaseCreatedCode int = 201
+
 /*PostDhcpLeaseCreated post dhcp lease created
 
 swagger:response postDhcpLeaseCreated
@@ -50,6 +53,9 @@ func (o *PostDhcpLeaseCreated) WriteResponse(rw http.ResponseWriter, producer ru
 		}
 	}
 }
+
+// HTTP code for type PostDhcpLeaseUnauthorized
+const PostDhcpLeaseUnauthorizedCode int = 401
 
 /*PostDhcpLeaseUnauthorized post dhcp lease unauthorized
 
@@ -91,6 +97,9 @@ func (o *PostDhcpLeaseUnauthorized) WriteResponse(rw http.ResponseWriter, produc
 	}
 }
 
+// HTTP code for type PostDhcpLeaseConflict
+const PostDhcpLeaseConflictCode int = 409
+
 /*PostDhcpLeaseConflict post dhcp lease conflict
 
 swagger:response postDhcpLeaseConflict
@@ -130,6 +139,9 @@ func (o *PostDhcpLeaseConflict) WriteResponse(rw http.ResponseWriter, producer r
 		}
 	}
 }
+
+// HTTP code for type PostDhcpLeaseInternalServerError
+const PostDhcpLeaseInternalServerErrorCode int = 500
 
 /*PostDhcpLeaseInternalServerError post dhcp lease internal server error
 

@@ -46,6 +46,15 @@ func NewDELETEDhcpReservationParamsWithContext(ctx context.Context) *DELETEDhcpR
 	}
 }
 
+// NewDELETEDhcpReservationParamsWithHTTPClient creates a new DELETEDhcpReservationParams object
+// with the default values initialized, and the ability to set a custom HTTPClient for a request
+func NewDELETEDhcpReservationParamsWithHTTPClient(client *http.Client) *DELETEDhcpReservationParams {
+	var ()
+	return &DELETEDhcpReservationParams{
+		HTTPClient: client,
+	}
+}
+
 /*DELETEDhcpReservationParams contains all the parameters to send to the API endpoint
 for the d e l e t e dhcp reservation operation typically these are written to a http.Request
 */
@@ -79,6 +88,17 @@ func (o *DELETEDhcpReservationParams) WithContext(ctx context.Context) *DELETEDh
 // SetContext adds the context to the d e l e t e dhcp reservation params
 func (o *DELETEDhcpReservationParams) SetContext(ctx context.Context) {
 	o.Context = ctx
+}
+
+// WithHTTPClient adds the HTTPClient to the d e l e t e dhcp reservation params
+func (o *DELETEDhcpReservationParams) WithHTTPClient(client *http.Client) *DELETEDhcpReservationParams {
+	o.SetHTTPClient(client)
+	return o
+}
+
+// SetHTTPClient adds the HTTPClient to the d e l e t e dhcp reservation params
+func (o *DELETEDhcpReservationParams) SetHTTPClient(client *http.Client) {
+	o.HTTPClient = client
 }
 
 // WithID adds the id to the d e l e t e dhcp reservation params

@@ -48,6 +48,15 @@ func NewPostBootenvParamsWithContext(ctx context.Context) *PostBootenvParams {
 	}
 }
 
+// NewPostBootenvParamsWithHTTPClient creates a new PostBootenvParams object
+// with the default values initialized, and the ability to set a custom HTTPClient for a request
+func NewPostBootenvParamsWithHTTPClient(client *http.Client) *PostBootenvParams {
+	var ()
+	return &PostBootenvParams{
+		HTTPClient: client,
+	}
+}
+
 /*PostBootenvParams contains all the parameters to send to the API endpoint
 for the post bootenv operation typically these are written to a http.Request
 */
@@ -81,6 +90,17 @@ func (o *PostBootenvParams) WithContext(ctx context.Context) *PostBootenvParams 
 // SetContext adds the context to the post bootenv params
 func (o *PostBootenvParams) SetContext(ctx context.Context) {
 	o.Context = ctx
+}
+
+// WithHTTPClient adds the HTTPClient to the post bootenv params
+func (o *PostBootenvParams) WithHTTPClient(client *http.Client) *PostBootenvParams {
+	o.SetHTTPClient(client)
+	return o
+}
+
+// SetHTTPClient adds the HTTPClient to the post bootenv params
+func (o *PostBootenvParams) SetHTTPClient(client *http.Client) {
+	o.HTTPClient = client
 }
 
 // WithBody adds the body to the post bootenv params

@@ -46,6 +46,15 @@ func NewGETDhcpReservationParamsWithContext(ctx context.Context) *GETDhcpReserva
 	}
 }
 
+// NewGETDhcpReservationParamsWithHTTPClient creates a new GETDhcpReservationParams object
+// with the default values initialized, and the ability to set a custom HTTPClient for a request
+func NewGETDhcpReservationParamsWithHTTPClient(client *http.Client) *GETDhcpReservationParams {
+	var ()
+	return &GETDhcpReservationParams{
+		HTTPClient: client,
+	}
+}
+
 /*GETDhcpReservationParams contains all the parameters to send to the API endpoint
 for the g e t dhcp reservation operation typically these are written to a http.Request
 */
@@ -79,6 +88,17 @@ func (o *GETDhcpReservationParams) WithContext(ctx context.Context) *GETDhcpRese
 // SetContext adds the context to the g e t dhcp reservation params
 func (o *GETDhcpReservationParams) SetContext(ctx context.Context) {
 	o.Context = ctx
+}
+
+// WithHTTPClient adds the HTTPClient to the g e t dhcp reservation params
+func (o *GETDhcpReservationParams) WithHTTPClient(client *http.Client) *GETDhcpReservationParams {
+	o.SetHTTPClient(client)
+	return o
+}
+
+// SetHTTPClient adds the HTTPClient to the g e t dhcp reservation params
+func (o *GETDhcpReservationParams) SetHTTPClient(client *http.Client) {
+	o.HTTPClient = client
 }
 
 // WithID adds the id to the g e t dhcp reservation params

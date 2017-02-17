@@ -253,7 +253,7 @@ func (b *BootEnv) parseTemplates() {
 		templateInfo.pathTmpl = pathTmpl.Option("missingkey=error")
 		if templateInfo.contents == nil {
 			tmpl := NewTemplate(templateParams.UUID)
-			if err := backend.load(tmpl); err != nil {
+			if err := load(tmpl); err != nil {
 				b.Errorf("bootenv: Error loading template %s for %s: %v",
 					templateParams.UUID,
 					templateParams.Name,
@@ -556,7 +556,7 @@ func (b *BootEnv) onDelete() error {
 }
 
 func (b *BootEnv) List() ([]*BootEnv, error) {
-	things := backend.list(b)
+	things := list(b)
 	res := make([]*BootEnv, len(things))
 	for i, blob := range things {
 		bootenv := &BootEnv{}

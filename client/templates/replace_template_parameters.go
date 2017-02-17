@@ -47,6 +47,15 @@ func NewReplaceTemplateParamsWithContext(ctx context.Context) *ReplaceTemplatePa
 	}
 }
 
+// NewReplaceTemplateParamsWithHTTPClient creates a new ReplaceTemplateParams object
+// with the default values initialized, and the ability to set a custom HTTPClient for a request
+func NewReplaceTemplateParamsWithHTTPClient(client *http.Client) *ReplaceTemplateParams {
+	var ()
+	return &ReplaceTemplateParams{
+		HTTPClient: client,
+	}
+}
+
 /*ReplaceTemplateParams contains all the parameters to send to the API endpoint
 for the replace template operation typically these are written to a http.Request
 */
@@ -82,6 +91,17 @@ func (o *ReplaceTemplateParams) WithContext(ctx context.Context) *ReplaceTemplat
 // SetContext adds the context to the replace template params
 func (o *ReplaceTemplateParams) SetContext(ctx context.Context) {
 	o.Context = ctx
+}
+
+// WithHTTPClient adds the HTTPClient to the replace template params
+func (o *ReplaceTemplateParams) WithHTTPClient(client *http.Client) *ReplaceTemplateParams {
+	o.SetHTTPClient(client)
+	return o
+}
+
+// SetHTTPClient adds the HTTPClient to the replace template params
+func (o *ReplaceTemplateParams) SetHTTPClient(client *http.Client) {
+	o.HTTPClient = client
 }
 
 // WithBody adds the body to the replace template params

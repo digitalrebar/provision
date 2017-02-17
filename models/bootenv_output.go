@@ -5,9 +5,9 @@ package models
 
 import (
 	strfmt "github.com/go-openapi/strfmt"
-	"github.com/go-openapi/swag"
 
 	"github.com/go-openapi/errors"
+	"github.com/go-openapi/swag"
 )
 
 // BootenvOutput Bootenv  Output
@@ -28,6 +28,15 @@ func (m *BootenvOutput) UnmarshalJSON(raw []byte) error {
 	}
 	m.BootenvInput = aO0
 
+	var data struct {
+		Errors []string `json:"Errors,omitempty"`
+	}
+	if err := swag.ReadJSON(raw, &data); err != nil {
+		return err
+	}
+
+	m.Errors = data.Errors
+
 	return nil
 }
 
@@ -40,6 +49,18 @@ func (m BootenvOutput) MarshalJSON() ([]byte, error) {
 		return nil, err
 	}
 	_parts = append(_parts, aO0)
+
+	var data struct {
+		Errors []string `json:"Errors,omitempty"`
+	}
+
+	data.Errors = m.Errors
+
+	jsonData, err := swag.WriteJSON(data)
+	if err != nil {
+		return nil, err
+	}
+	_parts = append(_parts, jsonData)
 
 	return swag.ConcatJSON(_parts...), nil
 }

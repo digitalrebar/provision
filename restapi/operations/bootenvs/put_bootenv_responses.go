@@ -11,6 +11,9 @@ import (
 	"github.com/rackn/rocket-skates/models"
 )
 
+// HTTP code for type PutBootenvOK
+const PutBootenvOKCode int = 200
+
 /*PutBootenvOK put bootenv o k
 
 swagger:response putBootenvOK
@@ -50,6 +53,9 @@ func (o *PutBootenvOK) WriteResponse(rw http.ResponseWriter, producer runtime.Pr
 		}
 	}
 }
+
+// HTTP code for type PutBootenvUnauthorized
+const PutBootenvUnauthorizedCode int = 401
 
 /*PutBootenvUnauthorized put bootenv unauthorized
 
@@ -91,6 +97,9 @@ func (o *PutBootenvUnauthorized) WriteResponse(rw http.ResponseWriter, producer 
 	}
 }
 
+// HTTP code for type PutBootenvNotFound
+const PutBootenvNotFoundCode int = 404
+
 /*PutBootenvNotFound put bootenv not found
 
 swagger:response putBootenvNotFound
@@ -131,6 +140,9 @@ func (o *PutBootenvNotFound) WriteResponse(rw http.ResponseWriter, producer runt
 	}
 }
 
+// HTTP code for type PutBootenvConflict
+const PutBootenvConflictCode int = 409
+
 /*PutBootenvConflict put bootenv conflict
 
 swagger:response putBootenvConflict
@@ -170,6 +182,9 @@ func (o *PutBootenvConflict) WriteResponse(rw http.ResponseWriter, producer runt
 		}
 	}
 }
+
+// HTTP code for type PutBootenvInternalServerError
+const PutBootenvInternalServerErrorCode int = 500
 
 /*PutBootenvInternalServerError put bootenv internal server error
 

@@ -48,6 +48,15 @@ func NewPUTDhcpReservationParamsWithContext(ctx context.Context) *PUTDhcpReserva
 	}
 }
 
+// NewPUTDhcpReservationParamsWithHTTPClient creates a new PUTDhcpReservationParams object
+// with the default values initialized, and the ability to set a custom HTTPClient for a request
+func NewPUTDhcpReservationParamsWithHTTPClient(client *http.Client) *PUTDhcpReservationParams {
+	var ()
+	return &PUTDhcpReservationParams{
+		HTTPClient: client,
+	}
+}
+
 /*PUTDhcpReservationParams contains all the parameters to send to the API endpoint
 for the p u t dhcp reservation operation typically these are written to a http.Request
 */
@@ -83,6 +92,17 @@ func (o *PUTDhcpReservationParams) WithContext(ctx context.Context) *PUTDhcpRese
 // SetContext adds the context to the p u t dhcp reservation params
 func (o *PUTDhcpReservationParams) SetContext(ctx context.Context) {
 	o.Context = ctx
+}
+
+// WithHTTPClient adds the HTTPClient to the p u t dhcp reservation params
+func (o *PUTDhcpReservationParams) WithHTTPClient(client *http.Client) *PUTDhcpReservationParams {
+	o.SetHTTPClient(client)
+	return o
+}
+
+// SetHTTPClient adds the HTTPClient to the p u t dhcp reservation params
+func (o *PUTDhcpReservationParams) SetHTTPClient(client *http.Client) {
+	o.HTTPClient = client
 }
 
 // WithBody adds the body to the p u t dhcp reservation params

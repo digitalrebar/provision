@@ -11,6 +11,9 @@ import (
 	"github.com/rackn/rocket-skates/models"
 )
 
+// HTTP code for type GETDhcpSubnetOK
+const GETDhcpSubnetOKCode int = 200
+
 /*GETDhcpSubnetOK g e t dhcp subnet o k
 
 swagger:response gETDhcpSubnetOK

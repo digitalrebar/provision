@@ -4,10 +4,12 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"strconv"
+
 	strfmt "github.com/go-openapi/strfmt"
-	"github.com/go-openapi/swag"
 
 	"github.com/go-openapi/errors"
+	"github.com/go-openapi/swag"
 )
 
 // BootenvInput Bootenv Input
@@ -87,6 +89,9 @@ func (m *BootenvInput) validateOS(formats strfmt.Registry) error {
 	if m.OS != nil {
 
 		if err := m.OS.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("OS")
+			}
 			return err
 		}
 	}
@@ -118,6 +123,9 @@ func (m *BootenvInput) validateTemplates(formats strfmt.Registry) error {
 		if m.Templates[i] != nil {
 
 			if err := m.Templates[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("Templates" + "." + strconv.Itoa(i))
+				}
 				return err
 			}
 		}

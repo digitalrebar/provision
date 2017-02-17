@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	middleware "github.com/go-openapi/runtime/middleware"
+
 	"github.com/rackn/rocket-skates/models"
 )
 

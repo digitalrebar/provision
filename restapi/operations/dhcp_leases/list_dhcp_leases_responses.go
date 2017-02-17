@@ -11,6 +11,9 @@ import (
 	"github.com/rackn/rocket-skates/models"
 )
 
+// HTTP code for type ListDhcpLeasesOK
+const ListDhcpLeasesOKCode int = 200
+
 /*ListDhcpLeasesOK list dhcp leases o k
 
 swagger:response listDhcpLeasesOK
@@ -54,6 +57,9 @@ func (o *ListDhcpLeasesOK) WriteResponse(rw http.ResponseWriter, producer runtim
 
 }
 
+// HTTP code for type ListDhcpLeasesUnauthorized
+const ListDhcpLeasesUnauthorizedCode int = 401
+
 /*ListDhcpLeasesUnauthorized list dhcp leases unauthorized
 
 swagger:response listDhcpLeasesUnauthorized
@@ -94,6 +100,9 @@ func (o *ListDhcpLeasesUnauthorized) WriteResponse(rw http.ResponseWriter, produ
 	}
 }
 
+// HTTP code for type ListDhcpLeasesNotFound
+const ListDhcpLeasesNotFoundCode int = 404
+
 /*ListDhcpLeasesNotFound list dhcp leases not found
 
 swagger:response listDhcpLeasesNotFound
@@ -133,6 +142,9 @@ func (o *ListDhcpLeasesNotFound) WriteResponse(rw http.ResponseWriter, producer 
 		}
 	}
 }
+
+// HTTP code for type ListDhcpLeasesInternalServerError
+const ListDhcpLeasesInternalServerErrorCode int = 500
 
 /*ListDhcpLeasesInternalServerError list dhcp leases internal server error
 

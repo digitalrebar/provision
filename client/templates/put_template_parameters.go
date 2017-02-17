@@ -48,6 +48,15 @@ func NewPutTemplateParamsWithContext(ctx context.Context) *PutTemplateParams {
 	}
 }
 
+// NewPutTemplateParamsWithHTTPClient creates a new PutTemplateParams object
+// with the default values initialized, and the ability to set a custom HTTPClient for a request
+func NewPutTemplateParamsWithHTTPClient(client *http.Client) *PutTemplateParams {
+	var ()
+	return &PutTemplateParams{
+		HTTPClient: client,
+	}
+}
+
 /*PutTemplateParams contains all the parameters to send to the API endpoint
 for the put template operation typically these are written to a http.Request
 */
@@ -83,6 +92,17 @@ func (o *PutTemplateParams) WithContext(ctx context.Context) *PutTemplateParams 
 // SetContext adds the context to the put template params
 func (o *PutTemplateParams) SetContext(ctx context.Context) {
 	o.Context = ctx
+}
+
+// WithHTTPClient adds the HTTPClient to the put template params
+func (o *PutTemplateParams) WithHTTPClient(client *http.Client) *PutTemplateParams {
+	o.SetHTTPClient(client)
+	return o
+}
+
+// SetHTTPClient adds the HTTPClient to the put template params
+func (o *PutTemplateParams) SetHTTPClient(client *http.Client) {
+	o.HTTPClient = client
 }
 
 // WithBody adds the body to the put template params

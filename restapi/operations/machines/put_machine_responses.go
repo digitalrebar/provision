@@ -11,6 +11,9 @@ import (
 	"github.com/rackn/rocket-skates/models"
 )
 
+// HTTP code for type PutMachineOK
+const PutMachineOKCode int = 200
+
 /*PutMachineOK put machine o k
 
 swagger:response putMachineOK
@@ -50,6 +53,9 @@ func (o *PutMachineOK) WriteResponse(rw http.ResponseWriter, producer runtime.Pr
 		}
 	}
 }
+
+// HTTP code for type PutMachineUnauthorized
+const PutMachineUnauthorizedCode int = 401
 
 /*PutMachineUnauthorized put machine unauthorized
 
@@ -91,6 +97,9 @@ func (o *PutMachineUnauthorized) WriteResponse(rw http.ResponseWriter, producer 
 	}
 }
 
+// HTTP code for type PutMachineNotFound
+const PutMachineNotFoundCode int = 404
+
 /*PutMachineNotFound put machine not found
 
 swagger:response putMachineNotFound
@@ -131,6 +140,9 @@ func (o *PutMachineNotFound) WriteResponse(rw http.ResponseWriter, producer runt
 	}
 }
 
+// HTTP code for type PutMachineConflict
+const PutMachineConflictCode int = 409
+
 /*PutMachineConflict put machine conflict
 
 swagger:response putMachineConflict
@@ -170,6 +182,9 @@ func (o *PutMachineConflict) WriteResponse(rw http.ResponseWriter, producer runt
 		}
 	}
 }
+
+// HTTP code for type PutMachineInternalServerError
+const PutMachineInternalServerErrorCode int = 500
 
 /*PutMachineInternalServerError put machine internal server error
 

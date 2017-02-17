@@ -35,7 +35,7 @@ func ListIsos(params isos.ListIsosParams, p *models.Principal) middleware.Respon
 func reloadBootenvsForIso(name string) {
 	env := &BootEnv{}
 	newEnv := &BootEnv{}
-	for _, blob := range backend.list(env) {
+	for _, blob := range list(env) {
 		if err := json.Unmarshal(blob, env); err != nil {
 			continue
 		}
@@ -44,7 +44,7 @@ func reloadBootenvsForIso(name string) {
 		}
 		json.Unmarshal(blob, newEnv)
 		newEnv.Available = true
-		backend.save(newEnv, env)
+		save(newEnv, env)
 	}
 }
 

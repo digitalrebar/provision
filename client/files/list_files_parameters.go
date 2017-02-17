@@ -46,6 +46,15 @@ func NewListFilesParamsWithContext(ctx context.Context) *ListFilesParams {
 	}
 }
 
+// NewListFilesParamsWithHTTPClient creates a new ListFilesParams object
+// with the default values initialized, and the ability to set a custom HTTPClient for a request
+func NewListFilesParamsWithHTTPClient(client *http.Client) *ListFilesParams {
+
+	return &ListFilesParams{
+		HTTPClient: client,
+	}
+}
+
 /*ListFilesParams contains all the parameters to send to the API endpoint
 for the list files operation typically these are written to a http.Request
 */
@@ -75,6 +84,17 @@ func (o *ListFilesParams) WithContext(ctx context.Context) *ListFilesParams {
 // SetContext adds the context to the list files params
 func (o *ListFilesParams) SetContext(ctx context.Context) {
 	o.Context = ctx
+}
+
+// WithHTTPClient adds the HTTPClient to the list files params
+func (o *ListFilesParams) WithHTTPClient(client *http.Client) *ListFilesParams {
+	o.SetHTTPClient(client)
+	return o
+}
+
+// SetHTTPClient adds the HTTPClient to the list files params
+func (o *ListFilesParams) SetHTTPClient(client *http.Client) {
+	o.HTTPClient = client
 }
 
 // WriteToRequest writes these params to a swagger request

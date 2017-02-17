@@ -66,7 +66,7 @@ func TemplateReplace(params templates.ReplaceTemplateParams, p *models.Principal
 	finalStatus := http.StatusCreated
 	oldThing := NewTemplate(params.UUID)
 	newThing := NewTemplate(params.UUID)
-	if err := backend.load(oldThing); err == nil {
+	if err := load(oldThing); err == nil {
 		finalStatus = http.StatusOK
 	} else {
 		oldThing = nil
@@ -78,7 +78,7 @@ func TemplateReplace(params templates.ReplaceTemplateParams, p *models.Principal
 		return templates.NewReplaceTemplateExpectationFailed().WithPayload(e)
 	}
 	newThing.Contents = string(buf)
-	if err := backend.save(newThing, oldThing); err != nil {
+	if err := save(newThing, oldThing); err != nil {
 		e := NewError(http.StatusConflict, err.Error())
 		return templates.NewReplaceTemplateConflict().WithPayload(e)
 	}
@@ -196,7 +196,7 @@ func (t *Template) onChange(oldThing interface{}) error {
 			for _, machine := range machines {
 				reRender := false
 				bootEnv := NewBootenv(machine.BootEnv)
-				if err := backend.load(bootEnv); err == nil {
+				if err := load(bootEnv); err == nil {
 					for ii, template := range bootEnv.Templates {
 						ti := bootEnv.TemplateInfo[ii]
 						if template.UUID == t.UUID {

@@ -11,6 +11,9 @@ import (
 	"github.com/rackn/rocket-skates/models"
 )
 
+// HTTP code for type DeleteFileNoContent
+const DeleteFileNoContentCode int = 204
+
 /*DeleteFileNoContent delete file no content
 
 swagger:response deleteFileNoContent
@@ -28,6 +31,9 @@ func (o *DeleteFileNoContent) WriteResponse(rw http.ResponseWriter, producer run
 
 	rw.WriteHeader(204)
 }
+
+// HTTP code for type DeleteFileUnauthorized
+const DeleteFileUnauthorizedCode int = 401
 
 /*DeleteFileUnauthorized delete file unauthorized
 
@@ -69,6 +75,9 @@ func (o *DeleteFileUnauthorized) WriteResponse(rw http.ResponseWriter, producer 
 	}
 }
 
+// HTTP code for type DeleteFileForbidden
+const DeleteFileForbiddenCode int = 403
+
 /*DeleteFileForbidden delete file forbidden
 
 swagger:response deleteFileForbidden
@@ -108,6 +117,9 @@ func (o *DeleteFileForbidden) WriteResponse(rw http.ResponseWriter, producer run
 		}
 	}
 }
+
+// HTTP code for type DeleteFileNotFound
+const DeleteFileNotFoundCode int = 404
 
 /*DeleteFileNotFound delete file not found
 
@@ -149,6 +161,9 @@ func (o *DeleteFileNotFound) WriteResponse(rw http.ResponseWriter, producer runt
 	}
 }
 
+// HTTP code for type DeleteFileConflict
+const DeleteFileConflictCode int = 409
+
 /*DeleteFileConflict delete file conflict
 
 swagger:response deleteFileConflict
@@ -188,6 +203,9 @@ func (o *DeleteFileConflict) WriteResponse(rw http.ResponseWriter, producer runt
 		}
 	}
 }
+
+// HTTP code for type DeleteFileInternalServerError
+const DeleteFileInternalServerErrorCode int = 500
 
 /*DeleteFileInternalServerError delete file internal server error
 

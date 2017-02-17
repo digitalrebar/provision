@@ -48,6 +48,15 @@ func NewPostMachineParamsWithContext(ctx context.Context) *PostMachineParams {
 	}
 }
 
+// NewPostMachineParamsWithHTTPClient creates a new PostMachineParams object
+// with the default values initialized, and the ability to set a custom HTTPClient for a request
+func NewPostMachineParamsWithHTTPClient(client *http.Client) *PostMachineParams {
+	var ()
+	return &PostMachineParams{
+		HTTPClient: client,
+	}
+}
+
 /*PostMachineParams contains all the parameters to send to the API endpoint
 for the post machine operation typically these are written to a http.Request
 */
@@ -81,6 +90,17 @@ func (o *PostMachineParams) WithContext(ctx context.Context) *PostMachineParams 
 // SetContext adds the context to the post machine params
 func (o *PostMachineParams) SetContext(ctx context.Context) {
 	o.Context = ctx
+}
+
+// WithHTTPClient adds the HTTPClient to the post machine params
+func (o *PostMachineParams) WithHTTPClient(client *http.Client) *PostMachineParams {
+	o.SetHTTPClient(client)
+	return o
+}
+
+// SetHTTPClient adds the HTTPClient to the post machine params
+func (o *PostMachineParams) SetHTTPClient(client *http.Client) {
+	o.HTTPClient = client
 }
 
 // WithBody adds the body to the post machine params

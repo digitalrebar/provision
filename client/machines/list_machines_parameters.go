@@ -46,6 +46,15 @@ func NewListMachinesParamsWithContext(ctx context.Context) *ListMachinesParams {
 	}
 }
 
+// NewListMachinesParamsWithHTTPClient creates a new ListMachinesParams object
+// with the default values initialized, and the ability to set a custom HTTPClient for a request
+func NewListMachinesParamsWithHTTPClient(client *http.Client) *ListMachinesParams {
+
+	return &ListMachinesParams{
+		HTTPClient: client,
+	}
+}
+
 /*ListMachinesParams contains all the parameters to send to the API endpoint
 for the list machines operation typically these are written to a http.Request
 */
@@ -75,6 +84,17 @@ func (o *ListMachinesParams) WithContext(ctx context.Context) *ListMachinesParam
 // SetContext adds the context to the list machines params
 func (o *ListMachinesParams) SetContext(ctx context.Context) {
 	o.Context = ctx
+}
+
+// WithHTTPClient adds the HTTPClient to the list machines params
+func (o *ListMachinesParams) WithHTTPClient(client *http.Client) *ListMachinesParams {
+	o.SetHTTPClient(client)
+	return o
+}
+
+// SetHTTPClient adds the HTTPClient to the list machines params
+func (o *ListMachinesParams) SetHTTPClient(client *http.Client) {
+	o.HTTPClient = client
 }
 
 // WriteToRequest writes these params to a swagger request

@@ -11,6 +11,9 @@ import (
 	"github.com/rackn/rocket-skates/models"
 )
 
+// HTTP code for type ListIsosOK
+const ListIsosOKCode int = 200
+
 /*ListIsosOK list isos o k
 
 swagger:response listIsosOK
@@ -54,6 +57,9 @@ func (o *ListIsosOK) WriteResponse(rw http.ResponseWriter, producer runtime.Prod
 
 }
 
+// HTTP code for type ListIsosUnauthorized
+const ListIsosUnauthorizedCode int = 401
+
 /*ListIsosUnauthorized list isos unauthorized
 
 swagger:response listIsosUnauthorized
@@ -94,6 +100,9 @@ func (o *ListIsosUnauthorized) WriteResponse(rw http.ResponseWriter, producer ru
 	}
 }
 
+// HTTP code for type ListIsosNotFound
+const ListIsosNotFoundCode int = 404
+
 /*ListIsosNotFound list isos not found
 
 swagger:response listIsosNotFound
@@ -133,6 +142,9 @@ func (o *ListIsosNotFound) WriteResponse(rw http.ResponseWriter, producer runtim
 		}
 	}
 }
+
+// HTTP code for type ListIsosInternalServerError
+const ListIsosInternalServerErrorCode int = 500
 
 /*ListIsosInternalServerError list isos internal server error
 

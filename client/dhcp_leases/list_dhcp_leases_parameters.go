@@ -46,6 +46,15 @@ func NewListDhcpLeasesParamsWithContext(ctx context.Context) *ListDhcpLeasesPara
 	}
 }
 
+// NewListDhcpLeasesParamsWithHTTPClient creates a new ListDhcpLeasesParams object
+// with the default values initialized, and the ability to set a custom HTTPClient for a request
+func NewListDhcpLeasesParamsWithHTTPClient(client *http.Client) *ListDhcpLeasesParams {
+
+	return &ListDhcpLeasesParams{
+		HTTPClient: client,
+	}
+}
+
 /*ListDhcpLeasesParams contains all the parameters to send to the API endpoint
 for the list dhcp leases operation typically these are written to a http.Request
 */
@@ -75,6 +84,17 @@ func (o *ListDhcpLeasesParams) WithContext(ctx context.Context) *ListDhcpLeasesP
 // SetContext adds the context to the list dhcp leases params
 func (o *ListDhcpLeasesParams) SetContext(ctx context.Context) {
 	o.Context = ctx
+}
+
+// WithHTTPClient adds the HTTPClient to the list dhcp leases params
+func (o *ListDhcpLeasesParams) WithHTTPClient(client *http.Client) *ListDhcpLeasesParams {
+	o.SetHTTPClient(client)
+	return o
+}
+
+// SetHTTPClient adds the HTTPClient to the list dhcp leases params
+func (o *ListDhcpLeasesParams) SetHTTPClient(client *http.Client) {
+	o.HTTPClient = client
 }
 
 // WriteToRequest writes these params to a swagger request

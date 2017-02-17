@@ -11,6 +11,9 @@ import (
 	"github.com/rackn/rocket-skates/models"
 )
 
+// HTTP code for type GetTemplateOK
+const GetTemplateOKCode int = 200
+
 /*GetTemplateOK get template o k
 
 swagger:response getTemplateOK
@@ -50,6 +53,9 @@ func (o *GetTemplateOK) WriteResponse(rw http.ResponseWriter, producer runtime.P
 		}
 	}
 }
+
+// HTTP code for type GetTemplateUnauthorized
+const GetTemplateUnauthorizedCode int = 401
 
 /*GetTemplateUnauthorized get template unauthorized
 
@@ -91,6 +97,9 @@ func (o *GetTemplateUnauthorized) WriteResponse(rw http.ResponseWriter, producer
 	}
 }
 
+// HTTP code for type GetTemplateNotFound
+const GetTemplateNotFoundCode int = 404
+
 /*GetTemplateNotFound get template not found
 
 swagger:response getTemplateNotFound
@@ -130,6 +139,9 @@ func (o *GetTemplateNotFound) WriteResponse(rw http.ResponseWriter, producer run
 		}
 	}
 }
+
+// HTTP code for type GetTemplateInternalServerError
+const GetTemplateInternalServerErrorCode int = 500
 
 /*GetTemplateInternalServerError get template internal server error
 

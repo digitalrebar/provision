@@ -11,6 +11,9 @@ import (
 	"github.com/rackn/rocket-skates/models"
 )
 
+// HTTP code for type GetBootenvOK
+const GetBootenvOKCode int = 200
+
 /*GetBootenvOK get bootenv o k
 
 swagger:response getBootenvOK
@@ -50,6 +53,9 @@ func (o *GetBootenvOK) WriteResponse(rw http.ResponseWriter, producer runtime.Pr
 		}
 	}
 }
+
+// HTTP code for type GetBootenvUnauthorized
+const GetBootenvUnauthorizedCode int = 401
 
 /*GetBootenvUnauthorized get bootenv unauthorized
 
@@ -91,6 +97,9 @@ func (o *GetBootenvUnauthorized) WriteResponse(rw http.ResponseWriter, producer 
 	}
 }
 
+// HTTP code for type GetBootenvNotFound
+const GetBootenvNotFoundCode int = 404
+
 /*GetBootenvNotFound get bootenv not found
 
 swagger:response getBootenvNotFound
@@ -130,6 +139,9 @@ func (o *GetBootenvNotFound) WriteResponse(rw http.ResponseWriter, producer runt
 		}
 	}
 }
+
+// HTTP code for type GetBootenvInternalServerError
+const GetBootenvInternalServerErrorCode int = 500
 
 /*GetBootenvInternalServerError get bootenv internal server error
 

@@ -11,6 +11,9 @@ import (
 	"github.com/rackn/rocket-skates/models"
 )
 
+// HTTP code for type PostBootenvOK
+const PostBootenvOKCode int = 200
+
 /*PostBootenvOK post bootenv o k
 
 swagger:response postBootenvOK
@@ -50,6 +53,9 @@ func (o *PostBootenvOK) WriteResponse(rw http.ResponseWriter, producer runtime.P
 		}
 	}
 }
+
+// HTTP code for type PostBootenvCreated
+const PostBootenvCreatedCode int = 201
 
 /*PostBootenvCreated post bootenv created
 
@@ -91,6 +97,9 @@ func (o *PostBootenvCreated) WriteResponse(rw http.ResponseWriter, producer runt
 	}
 }
 
+// HTTP code for type PostBootenvUnauthorized
+const PostBootenvUnauthorizedCode int = 401
+
 /*PostBootenvUnauthorized post bootenv unauthorized
 
 swagger:response postBootenvUnauthorized
@@ -131,6 +140,9 @@ func (o *PostBootenvUnauthorized) WriteResponse(rw http.ResponseWriter, producer
 	}
 }
 
+// HTTP code for type PostBootenvConflict
+const PostBootenvConflictCode int = 409
+
 /*PostBootenvConflict post bootenv conflict
 
 swagger:response postBootenvConflict
@@ -170,6 +182,9 @@ func (o *PostBootenvConflict) WriteResponse(rw http.ResponseWriter, producer run
 		}
 	}
 }
+
+// HTTP code for type PostBootenvInternalServerError
+const PostBootenvInternalServerErrorCode int = 500
 
 /*PostBootenvInternalServerError post bootenv internal server error
 
