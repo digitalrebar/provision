@@ -4,6 +4,8 @@
 
 ## Tools
 
+We are using [go-bindata](https://github.com/jteeuwen/go-bindata) to embed binary assets in *rocket-skates*  You can obtain it by running `go get -u github.com/jteeuwen/go-bindata/...`, which will leave the `go-bindata` executable in `$GOPATH/bin`
+
 We are using [go-swagger](https://github.com/go-swagger/go-swagger) to generate code from the API specification file.
 You will need a binary to generate the code.  This can be obtained from [here](https://github.com/go-swagger/go-swagger#static-binary). We are currently using version 0.8.0.
 
@@ -92,6 +94,7 @@ This must be done before building the client or the server.
 
 ## Building Server
 
+* (cd embedded; go generate)
 * go build -o rocket-skates cmd/rocket-skates-server/main.go
 
 ## Running Server
