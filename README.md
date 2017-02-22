@@ -95,7 +95,7 @@ This must be done before building the client or the server.
 ## Building Server
 
 * go generate server/main.go
-* go build -o rocket-skates server/main.go
+* go build -o rocket-skates server/\*
 
 ## Running Server
 
