@@ -1,7 +1,7 @@
 # rocket-skates
 
 [![Build Status](https://travis-ci.com/rackn/rocket-skates.svg?token=xj7EDkir21wrLd1GKpXb&branch=master)](https://travis-ci.com/rackn/rocket-skates)
-[![codecov](https://codecov.io/gh/rackn/rocket-skates/branch/master/graph/badge.svg)](https://codecov.io/gh/rackn/rocket-skates)
+[![codecov](https://codecov.io/gh/rackn/rocket-skates/branch/master/graph/badge.svg?token=BL8q6Cy1ee)](https://codecov.io/gh/rackn/rocket-skates)
 [![Go Report Card](https://goreportcard.com/badge/github.com/rackn/rocket-skates)](https://goreportcard.com/report/github.com/rackn/rocket-skates)
 [![GoDoc](https://godoc.org/github.com/rackn/rocket-skates?status.svg)](https://godoc.org/github.com/rackn/rocket-skates)
 
