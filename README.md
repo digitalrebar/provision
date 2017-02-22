@@ -9,17 +9,17 @@ We are using [go-bindata](https://github.com/jteeuwen/go-bindata) to embed binar
 We are using [go-swagger](https://github.com/go-swagger/go-swagger) to generate code from the API specification file.
 You will need a binary to generate the code.  This can be obtained from [here](https://github.com/go-swagger/go-swagger#static-binary). We are currently using version 0.8.0.
 
-We are using [swagger-ui](https://github.com/swagger-api/swagger-ui) for a quick UI to inspect the API and drive the system.  It is customizable if we need, but we are running it straight up for now.  This needs to be at the top of the directory you run *rocket-skates* from.  
+We are using [swagger-ui](https://github.com/swagger-api/swagger-ui) for a quick UI to inspect the API and drive the system.  It is customizable if we need, but we are running it straight up for now.
+
+This basic dist files have been embedded into the rocket skates binary for the time being.  These are copied from the swagger-ui tree.
+
+NOTES on how to get swagger-ui
 
 * git clone https://github.com/swagger-api/swagger-ui
-
-And make this change:
+* cp -r swagger-ui/dist/\* embedded/assets/swagger-ui
+* change in embedded/assets/swagger-ui/index.html:
 
 ```
-diff --git a/dist/index.html b/dist/index.html
-index 14232f9..e4358e9 100644
---- a/dist/index.html
-+++ b/dist/index.html
 @@ -38,7 +38,7 @@
        if (url && url.length > 1) {
          url = decodeURIComponent(url[1]);
@@ -31,39 +31,34 @@ index 14232f9..e4358e9 100644
        hljs.configure({
 ```
 
-*TODO* Make swagger-ui dir a config option.
-
-## Swagger.json
-
-We are using an API specification file.  This files real content for the moment lives in StopLight.  The tool also for collobartive editting of the file, testing, and other things.  We will edit there and store the updated copy in github.  StopLight has a git commit style of tracking changes as well.
-
-This is my link, but it should get you in.
-https://app.stoplight.io/wk/AEknv6vzcpJa2H5ky/HGM8K52XAR5zJyhhe/f3eE5DeAt6TCSyQLd/design
-
-There are desktop apps for this as well.  They can drive testing and validation.  I'm looking at as well.
-Make edits in the app and export the file to swagger.yml in the top directory. 
-
-## Generating the Server
-
-To generate code:
-* swagger generate server -P models.Principal -f swagger.json 
-
-This generates the following directories:
-
-* cmd
-* models
-* restapi
-
-The file that we edit for the server is:
-
-* restapi/configure_rocket_skates.go 
-
-This is not regenerated on generate calls. To see the original contents, move the file off and regenerate.  I've tried to make minimal changes to that file and put the code in other directories, i.e. provisioner, so that we can merge easily after generates.
-
-The swagger command has more things, but this is enough to start.
+* Rebuild the world
 
 
-## Generating the Client
+## Test Data
+
+There is a test-data directory for local running.
+
+## Pulling pinned imports
+
+This must be done before building the client or the server.
+
+* glide i
+
+## Building Server
+
+* go generate server/main.go
+* go build -o rocket-skates server/\*
+
+## Running Server
+
+* cd test-data
+* sudo ../rocket-skates
+
+NOTE: I need the sudo to bind the tftp port.  This is configurable, i.e.  *--tftp-port=30000*  
+
+## STOP HERE!
+
+## Generating the Client - DON'T DO THIS FOR NOW.
 
 To generate the code:
 * swagger generate client -P models.Principal -f swagger.json 
@@ -82,33 +77,11 @@ The file that we edit for the client is:
 This is completely our own file.
 
 
-## Test Data
-
-There is a test-data with a cert,key,validator and directories to run a simple instance of *rocket-skates*.  Please don't put big things here.
-
-## Pulling pinned imports
-
-This must be done before building the client or the server.
-
-* glide i
-
-## Building Server
-
-* go generate server/main.go
-* go build -o rocket-skates server/\*
-
-## Running Server
-
-* sudo ./rocket-skates  --tls-certificate=test-data/server.crt --tls-key=test-data/server.key --tls-port=8092 --backend=directory --file-root=test-data/tftpboot --data-root=test-data/digitalrebar
-
-NOTE: I need the sudo to bind the tftp port.  This is configurable, i.e.  *--tftp-port=30000*  
-
-
 ## Building Client
 
 * go build -o rscli cmd/rocket-skates-client/main.go
 
-## Running Server
+## Running Client
 
 * ./rscli
 
