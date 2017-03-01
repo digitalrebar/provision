@@ -9,8 +9,7 @@
 
 We are using [go-bindata](https://github.com/jteeuwen/go-bindata) to embed binary assets in *rocket-skates*  You can obtain it by running `go get -u github.com/jteeuwen/go-bindata/...`, which will leave the `go-bindata` executable in `$GOPATH/bin`
 
-We are using [go-swagger](https://github.com/go-swagger/go-swagger) to generate code from the API specification file.
-You will need a binary to generate the code.  This can be obtained from [here](https://github.com/go-swagger/go-swagger#static-binary). We are currently using version 0.8.0.
+We are using [go-swagger](https://github.com/go-swagger/go-swagger) to generate code from the API specification file.  You can obtain it by running `go get -u github.com/go-swagger/go-swagger/cmd/swagger`, which will leave the `swagger` executabe in `$GOPATH/bin`
 
 We are using [swagger-ui](https://github.com/swagger-api/swagger-ui) for a quick UI to inspect the API and drive the system.  It is customizable if we need, but we are running it straight up for now.
 
