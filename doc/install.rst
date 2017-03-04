@@ -6,12 +6,6 @@ Install
 ~~~~~~~
 
 
-Building Server
----------------
-
-* go generate server/main.go
-* go build -o rocket-skates server/\*
-
 Running Server
 --------------
 
