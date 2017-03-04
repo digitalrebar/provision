@@ -2,8 +2,8 @@
 .. Licensed under the Apache License, Version 2.0 (the "License");
 .. Rocket Skates documentation under Digital Rebar master license
 
-Developer Tools
-~~~~~~~~~~~~~~~
+Developer Environment
+~~~~~~~~~~~~~~~~~~~~~
 
 We are using `go-bindata <https://github.com/jteeuwen/go-bindata>`_ to embed binary assets in *rocket-skates*  You can obtain it by running `go get -u github.com/jteeuwen/go-bindata/...`, which will leave the `go-bindata` executable in `$GOPATH/bin`
 
@@ -13,7 +13,7 @@ We are using `swagger-ui <https://github.com/swagger-api/swagger-ui>`_ for a qui
 
 This basic dist files have been embedded into the rocket skates binary for the time being.  These are copied from the swagger-ui tree.
 
-NOTES on how to get swagger-ui
+*NOTES* on how to get swagger-ui
 
 * git clone https://github.com/swagger-api/swagger-ui
 * cp -r swagger-ui/dist/\* embedded/assets/swagger-ui
@@ -44,3 +44,11 @@ Pulling pinned imports
 This must be done before building the client or the server.
 
 * glide i
+
+
+Building Server
+---------------
+
+* go generate server/main.go
+* go build -o rocket-skates server/\*
+
