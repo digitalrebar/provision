@@ -8,7 +8,7 @@ Developer Environment
 All the following steps can be rolled up into the following quickstart.
 
   ::
-    
+
     mkdir rocket-skates-dev
     cd rocket-skates-dev
     curl -fsSL https://raw.githubusercontent.com/rackn/rocket-skates/master/tools/build.sh | bash
