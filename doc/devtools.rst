@@ -5,6 +5,18 @@
 Developer Environment
 ~~~~~~~~~~~~~~~~~~~~~
 
+All the following steps can be rolled up into the following quickstart.
+
+  ::
+    
+    mkdir rocket-skates-dev
+    cd rocket-skates-dev
+    curl -fsSL https://raw.githubusercontent.com/rackn/rocket-skates/master/tools/build.sh | bash
+
+Or use the manual steps below.
+
+We are using go version 1.8 or better.
+
 We are using `go-bindata <https://github.com/jteeuwen/go-bindata>`_ to embed binary assets in *rocket-skates*  You can obtain it by running `go get -u github.com/jteeuwen/go-bindata/...`, which will leave the `go-bindata` executable in `$GOPATH/bin`
 
 We are using `go-swagger <https://github.com/go-swagger/go-swagger>`_ to generate code from the API specification file.  You can obtain it by running `go get -u github.com/go-swagger/go-swagger/cmd/swagger`, which will leave the `swagger` executabe in `$GOPATH/bin`
