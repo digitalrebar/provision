@@ -5,17 +5,28 @@
 Developer Environment
 ~~~~~~~~~~~~~~~~~~~~~
 
-All the following steps can be rolled up into the following quickstart.
+This page is intended for people who are building Rocket Skates from sources or contributing to the code base.  We maintain a inline documentation and test environment and expect contributors to participate in maintenance of those efforts.
+
+> Prerequisites: we are using go version 1.8 or better.  These documents expect that you are able to install and update Golang.
+
+Developer Quick Start
+---------------------
+
+To get started quickly, we've rolled all the installation steps into a script.  The script can be run directly from Github by copying the following lines:
 
   ::
 
     mkdir rocket-skates-dev
     cd rocket-skates-dev
-    curl -fsSL https://raw.githubusercontent.com/rackn/rocket-skates/master/tools/build.sh | bash
+    curl -fsSL https://raw.githubusercontent.com/digitalrebar/rocket-skates/master/tools/build.sh | bash
 
-Or use the manual steps below.
 
-We are using go version 1.8 or better.
+The end of the script includes environment configuration steps required to build the code.
+
+Developer Install Steps
+-----------------------
+
+> Please review the `tools/build.sh` script also.  It may have been updated more recently than the documentation!
 
 We are using `go-bindata <https://github.com/jteeuwen/go-bindata>`_ to embed binary assets in *rocket-skates*  You can obtain it by running `go get -u github.com/jteeuwen/go-bindata/...`, which will leave the `go-bindata` executable in `$GOPATH/bin`
 
