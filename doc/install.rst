@@ -29,8 +29,20 @@ The following pieces endpoints are available:
 * udp 69 or *--tftp-port* - Static files served from the test-data/tftpboot directory through the tftp protocol
 * udp 68 - DHCP Server listening socket - will only server addresses when once configured.  By default, silent.
 
-*NOTE* Sometimes the cert/key pair in the github tree is corrupt or not sufficient for the environment.  You can run
-the following command to rebuild a local cert/key pair.  You may need to install the openssl tools.
+.. note:: If your SSL certificate is not valid, then follow the :ref:`rs_gen_cert` steps.
 
-* openssl req -new -x509 -keyout server.key -out server.crt -days 365 -nodes
 
+.. _rs_gen_cert 
+
+Generate Certificate
+--------------------
+
+Sometimes the cert/key pair in the github tree is corrupt or not sufficient for the environment.  You can run
+the following command to rebuild a local cert/key pair.
+
+  ::
+
+    sudo openssl req -new -x509 -keyout server.key -out server.crt -days 365 -nodes
+
+
+You may need to install the openssl tools.
