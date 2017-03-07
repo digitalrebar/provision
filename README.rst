@@ -2,6 +2,10 @@
 .. Licensed under the Apache License, Version 2.0 (the "License");
 .. Rocket Skates documentation under Digital Rebar master license
 .. 
+.. index::
+  pair: Rocket Skates; Welcome
+
+.. _rs_welcome:
 
 Rocket Skates Documentation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -16,6 +20,9 @@ The **Rocket Skates Project** is a simple Golang executable that provides a comp
    
    doc/*
    LICENSE
+
+
+.. _rs_community:
 
 Join Our Community
 ------------------
@@ -45,6 +52,8 @@ Rocket Skates is supported as part of the larger Digital Rebar project community
 * `Mailing List <http://bit.ly/digitalrebarlist>`_ and `Live Chat <https://gitter.im/digitalrebar/core?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge>`_  (Gitter.im) and Freenode #DigitalRebar
 * `Issues and Roadmap <https://github.com/digitalrebar/digitalrebar/issues>`_
 * Full `Documentation <http://digital-rebar.readthedocs.io/en/latest/>`_ (`/doc <https://github.com/digitalrebar/digitalrebar/rocket-skates/tree/master/doc>`_ sources are updatable via pull request).
+
+.. _rs_quick:
 
 Quick Start
 -----------

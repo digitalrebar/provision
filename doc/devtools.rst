@@ -1,13 +1,20 @@
 .. Copyright (c) 2017 RackN Inc.
 .. Licensed under the Apache License, Version 2.0 (the "License");
 .. Rocket Skates documentation under Digital Rebar master license
+.. index::
+  pair: Rocket Skates; Developer Environment
+
+.. _rs_dev_environment:
 
 Developer Environment
 ~~~~~~~~~~~~~~~~~~~~~
 
 This page is intended for people who are building Rocket Skates from sources or contributing to the code base.  We maintain a inline documentation and test environment and expect contributors to participate in maintenance of those efforts.
 
-> Prerequisites: we are using go version 1.8 or better.  These documents expect that you are able to install and update Golang.
+.. note:: Prerequisites: we are using go version 1.8 or better.  These documents expect that you are able to install and update Golang.
+
+
+.. _re_dev_quick:
 
 Developer Quick Start
 ---------------------
@@ -23,10 +30,30 @@ To get started quickly, we've rolled all the installation steps into a script.  
 
 The end of the script includes environment configuration steps required to build the code.
 
+If you want more details, consult the :ref:`rs_dev_install` section.
+
+
+.. _rs_dev_build:
+
+Building The Server
+-------------------
+
+Once you've got the code built, you can repeat the process from the project root with the following steps:
+
+  ::
+
+    go generate server/main.go
+    go build -o rocket-skates server/\*
+
+
+The generate step is only required when you are changing the embedded assets in the `embedded/assets/` directories.
+
+.. _rs_dev_install:
+
 Developer Install Steps
 -----------------------
 
-> Please review the `tools/build.sh` script also.  It may have been updated more recently than the documentation!
+.. note:: Please review the `tools/build.sh` script also.  It may have been updated more recently than the documentation!
 
 We are using `go-bindata <https://github.com/jteeuwen/go-bindata>`_ to embed binary assets in *rocket-skates*  You can obtain it by running `go get -u github.com/jteeuwen/go-bindata/...`, which will leave the `go-bindata` executable in `$GOPATH/bin`
 
@@ -67,11 +94,4 @@ Pulling pinned imports
 This must be done before building the client or the server.
 
 * glide i
-
-
-Building Server
----------------
-
-* go generate server/main.go
-* go build -o rocket-skates server/\*
 
