@@ -1,6 +1,10 @@
 .. Copyright (c) 2017 RackN Inc.
 .. Licensed under the Apache License, Version 2.0 (the "License");
 .. Rocket Skates documentation under Digital Rebar master license
+.. index::
+  pair: Rocket Skates; Command Line Interface
+
+.. _rs_cli:
 
 Command Line Interface (CLI)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -23,6 +27,7 @@ The file that we edit for the client is:
 
 This is completely our own file.
 
+.. _rs_client:
 
 Building Client
 ---------------
