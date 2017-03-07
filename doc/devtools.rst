@@ -48,10 +48,22 @@ Once you've got the code built, you can repeat the process from the project root
 
 The generate step is only required when you are changing the embedded assets in the `embedded/assets/` directories.
 
+
+.. rs_testing
+
+Running the Tests
+-----------------
+
+Rocket Skates uses the Golang test libraries and we work hard to maintain test coverage.
+
+We use `tools/test.sh` in the rocket-skates root directory to test the entire code base.
+
+You can test individual modules from their subdirectories by running `go test`
+
 .. _rs_dev_install:
 
-Developer Install Steps
------------------------
+Developer Install Steps (manual)
+--------------------------------
 
 .. note:: Please review the `tools/build.sh` script also.  It may have been updated more recently than the documentation!
 
@@ -63,7 +75,11 @@ We are using `swagger-ui <https://github.com/swagger-api/swagger-ui>`_ for a qui
 
 This basic dist files have been embedded into the rocket skates binary for the time being.  These are copied from the swagger-ui tree.
 
-*NOTES* on how to get swagger-ui
+
+How to get Swagger-Ui
+---------------------
+
+Rocket Skates uses Swagger to generate interactive help for the API
 
 * git clone https://github.com/swagger-api/swagger-ui
 * cp -r swagger-ui/dist/\* embedded/assets/swagger-ui
