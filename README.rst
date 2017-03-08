@@ -27,11 +27,11 @@ The **Rocket Skates Project** is a simple Golang executable that provides a comp
 Join Our Community
 ------------------
 
-.. image:: https://travis-ci.org/rackn/rocket-skates.svg?token=xj7EDkir21wrLd1GKpXb&branch=master
+.. image:: https://travis-ci.org/rackn/rocket-skates.svg?branch=master
   :target: https://travis-ci.org/rackn/rocket-skates
   :alt: Build Status
 
-.. image:: https://codecov.io/gh/rackn/rocket-skates/branch/master/graph/badge.svg?token=BL8q6Cy1ee
+.. image:: https://codecov.io/gh/rackn/rocket-skates/branch/master/graph/badge.svg
   :target: https://codecov.io/gh/rackn/rocket-skates
   :alt: codecov
 
@@ -43,10 +43,10 @@ Join Our Community
   :target: https://godoc.org/github.com/rackn/rocket-skates
   :alt: GoDoc
 
-.. image:: https://readthedocs.org/projects/digital-rebar/badge/?version=latest
-  :target: http://digital-rebar.readthedocs.io/en/latest/BOOK.html?badge=latest
+.. image:: https://readthedocs.org/projects/rocket-skates/badge/?version=latest
+  :target: http://rocket-skates.readthedocs.io/en/latest/?badge=latest
   :alt: Documentation Status
-
+                         
 Rocket Skates is supported as part of the larger Digital Rebar project community.
 
 * `Mailing List <http://bit.ly/digitalrebarlist>`_ and `Live Chat <https://gitter.im/digitalrebar/core?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge>`_  (Gitter.im) and Freenode #DigitalRebar
