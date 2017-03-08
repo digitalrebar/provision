@@ -25,7 +25,7 @@ To get started quickly, we've rolled all the installation steps into a script.  
 
     mkdir rocket-skates-dev
     cd rocket-skates-dev
-    curl -fsSL https://raw.githubusercontent.com/digitalrebar/rocket-skates/master/tools/build.sh | bash
+    curl -fsSL https://raw.githubusercontent.com/rackn/rocket-skates/master/tools/build.sh | bash
 
 
 The end of the script includes environment configuration steps required to build the code.
