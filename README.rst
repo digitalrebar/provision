@@ -27,8 +27,8 @@ The **Rocket Skates Project** is a simple Golang executable that provides a comp
 Join Our Community
 ------------------
 
-.. image:: https://travis-ci.com/rackn/rocket-skates.svg?token=xj7EDkir21wrLd1GKpXb&branch=master
-  :target: https://travis-ci.com/rackn/rocket-skates
+.. image:: https://travis-ci.org/rackn/rocket-skates.svg?token=xj7EDkir21wrLd1GKpXb&branch=master
+  :target: https://travis-ci.org/rackn/rocket-skates
   :alt: Build Status
 
 .. image:: https://codecov.io/gh/rackn/rocket-skates/branch/master/graph/badge.svg?token=BL8q6Cy1ee
@@ -50,8 +50,8 @@ Join Our Community
 Rocket Skates is supported as part of the larger Digital Rebar project community.
 
 * `Mailing List <http://bit.ly/digitalrebarlist>`_ and `Live Chat <https://gitter.im/digitalrebar/core?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge>`_  (Gitter.im) and Freenode #DigitalRebar
-* `Issues and Roadmap <https://github.com/digitalrebar/digitalrebar/issues>`_
-* Full `Documentation <http://digital-rebar.readthedocs.io/en/latest/>`_ (`/doc <https://github.com/digitalrebar/digitalrebar/rocket-skates/tree/master/doc>`_ sources are updatable via pull request).
+* `Issues and Roadmap <https://github.com/rackn/rocket-skates/issues>`_
+* Full `Documentation <http://rocket-skates.readthedocs.io/en/latest/>`_ (`/doc <https://github.com/rackn/rocket-skates/tree/master/doc>`_ sources are updatable via pull request).
 
 .. _rs_quick:
 
@@ -66,7 +66,7 @@ Run it
 Complete Docs
 -------------
 
-More detailed information is available in the `/doc <https://github.com/digitalrebar/digitalrebar/rocket-skates/tree/master/doc>`_ directory
+More detailed information is available in the `/doc <https://github.com/rackn/rocket-skates/tree/master/doc>`_ directory
 
 .. toctree::
    :glob:
