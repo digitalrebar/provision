@@ -49,7 +49,7 @@ Once you've got the code built, you can repeat the process from the project root
 The generate step is only required when you are changing the embedded assets in the `embedded/assets/` directories.
 
 
-.. rs_testing
+.. _rs_testing:
 
 Running the Tests
 -----------------
@@ -67,11 +67,23 @@ Developer Install Steps (manual)
 
 .. note:: Please review the `tools/build.sh` script also.  It may have been updated more recently than the documentation!
 
-We are using `go-bindata <https://github.com/jteeuwen/go-bindata>`_ to embed binary assets in *rocket-skates*  You can obtain it by running `go get -u github.com/jteeuwen/go-bindata/...`, which will leave the `go-bindata` executable in `$GOPATH/bin`
+We are using `go-bindata <https://github.com/jteeuwen/go-bindata>`_ to embed binary assets in *rocket-skates*  The following command 
+will leave the *go-bindata* executable in *$GOPATH/bin*.
 
-We are using `go-swagger <https://github.com/go-swagger/go-swagger>`_ to generate code from the API specification file.  You can obtain it by running `go get -u github.com/go-swagger/go-swagger/cmd/swagger`, which will leave the `swagger` executabe in `$GOPATH/bin`
+  ::
 
-We are using `swagger-ui <https://github.com/swagger-api/swagger-ui>`_ for a quick UI to inspect the API and drive the system.  It is customizable if we need, but we are running it straight up for now.
+    go get -u github.com/jteeuwen/go-bindata/...
+
+
+We are using `go-swagger <https://github.com/go-swagger/go-swagger>`_ to generate code from the API specification file.  The following
+command will leave the *swagger* executable in *$GOPATH/bin*.
+
+  ::
+
+    go get -u github.com/go-swagger/go-swagger/cmd/swagger
+
+We are using `swagger-ui <https://github.com/swagger-api/swagger-ui>`_ for a quick UI to inspect the API and drive the system.
+It is customizable if we need, but we are running it straight up for now.
 
 This basic dist files have been embedded into the rocket skates binary for the time being.  These are copied from the swagger-ui tree.
 

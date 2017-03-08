@@ -27,12 +27,19 @@ The following pieces endpoints are available:
 * https://127.0.0.1:8092/api/v3 - Raw api endpoint
 * https://127.0.0.1:8091 - Static files served from the test-data/tftpboot directory
 * udp 69 or *--tftp-port* - Static files served from the test-data/tftpboot directory through the tftp protocol
-* udp 68 - DHCP Server listening socket - will only server addresses when once configured.  By default, silent.
+* udp 67 - DHCP Server listening socket - will only server addresses when once configured.  By default, silent.
 
 .. note:: If your SSL certificate is not valid, then follow the :ref:`rs_gen_cert` steps.
 
+.. note:: On OSX, you may have to add a route for broadcast addresses to work.  This can be done with the following
+comand.  The 192.168.100.1 is the IP address of the interface that you want to send messages through.
 
-.. _rs_gen_cert 
+  ::
+
+    sudo route add 255.255.255.255 192.168.100.1
+
+
+.. _rs_gen_cert:
 
 Generate Certificate
 --------------------
