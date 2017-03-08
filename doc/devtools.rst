@@ -32,13 +32,12 @@ The end of the script includes environment configuration steps required to build
 
 If you want more details, consult the :ref:`rs_dev_install` section.
 
-
 .. _rs_dev_build:
 
 Building The Server
 -------------------
 
-Once you've got the code built, you can repeat the process from the project root with the following steps:
+Once you've got the code and assets once, you can repeat the process from the project root with the following steps:
 
   ::
 
@@ -88,10 +87,18 @@ It is customizable if we need, but we are running it straight up for now.
 This basic dist files have been embedded into the rocket skates binary for the time being.  These are copied from the swagger-ui tree.
 
 
+Rocket skates requires some basic files to provide a PXE environment.  This can be obtained by running the
+*download-assets.sh* script.  This will populate the embedded/assets directory.
+
+  ::
+    ./tools/download-assets.sh
+
+
 How to get Swagger-Ui
 ---------------------
 
-Rocket Skates uses Swagger to generate interactive help for the API
+Rocket Skates uses Swagger to generate interactive help for the API.  This is in the tree by default.  If you
+need to update it, do the following:
 
 * git clone https://github.com/swagger-api/swagger-ui
 * cp -r swagger-ui/dist/\* embedded/assets/swagger-ui
@@ -109,7 +116,7 @@ Rocket Skates uses Swagger to generate interactive help for the API
      
            hljs.configure({
 
-* Rebuild the world
+* Rebuild the world (both generate and build)
 
 Test Data
 ~~~~~~~~~
