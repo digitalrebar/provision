@@ -9,6 +9,16 @@
 Install
 ~~~~~~~
 
+There are prerequisites for the system to function.
+
+Linux:
+* bsdtar - from your local package manager
+* 7z - from your local package manager
+
+Darwin:
+* bash4 - from homebrew bash
+* 7z - from homebrew p7zip
+
 
 Running Server
 --------------
