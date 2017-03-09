@@ -16,6 +16,7 @@ rocket-skates
 rscli
 vendor
 coverage.txt
+ALL-LICENSE
 
 # documentation
 builddir/
