@@ -13,5 +13,6 @@
     { "Code": 15, "Value": "test.this.out.com" },
     { "Code": 3, "Value": "192.168.100.1" }
   ],
-  "Strategy": "MAC"
+  "Strategy": "MAC",
+  "Pickers": [ "hint", "nextFree", "mostExpired"]
 }
