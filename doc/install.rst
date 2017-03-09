@@ -13,11 +13,15 @@ There are prerequisites for the system to function.
 
 Linux:
 * bsdtar - from your local package manager
+  * on ubuntu: apt-get install bsdtar
+  * on centos/redhat: yum install bsdtar
 * 7z - from your local package manager
+  * on ubuntu: apt-get install p7zip
+  * on centos/redhat: yum install p7zip
 
 Darwin:
-* bash4 - from homebrew bash
-* 7z - from homebrew p7zip
+* bash4 - install from homebrw: brew install bash
+* 7z - install from homebrew: brew install p7zip
 
 
 Running Server
