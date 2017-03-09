@@ -18,7 +18,11 @@ To run a local copy that will use the local filesystem as a storage area, do the
 * cd test-data
 * sudo ../rocket-skates
 
-NOTE: I need the sudo to bind the tftp port.  This is configurable, i.e.  *--tftp-port=30000*  
+Please review `--help` for options like disabling services, logging or paths.
+
+If you get a bind error, you may need to kill dnsmasq using `sudo pkill dnsmasq`
+
+.. note:: I need the sudo to bind the tftp port.  This is configurable, i.e.  *--tftp-port=30000*  
 
 The following pieces endpoints are available:
 
