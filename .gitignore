@@ -17,6 +17,8 @@ rscli
 vendor
 coverage.txt
 ALL-LICENSE
+client
+models
 
 # documentation
 builddir/
