@@ -24,8 +24,10 @@ Darwin:
 * 7z - install from homebrew: brew install p7zip
 
 
-Running Server
---------------
+Running The Server
+------------------
+
+Additional support materials in :ref:`rs_faq`.
 
 To run a local copy that will use the local filesystem as a storage area, do the following:
 
@@ -33,8 +35,6 @@ To run a local copy that will use the local filesystem as a storage area, do the
 * sudo ../rocket-skates
 
 Please review `--help` for options like disabling services, logging or paths.
-
-If you get a bind error, you may need to kill dnsmasq using `sudo pkill dnsmasq`
 
 .. note:: I need the sudo to bind the tftp port.  This is configurable, i.e.  *--tftp-port=30000*  
 

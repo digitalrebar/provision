@@ -10,7 +10,7 @@
 Rocket Skates Documentation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The **Rocket Skates Project** is a simple Golang executable that provides a complete API-driven DHCP/PXE provisioning system. It is designed to stand alone or operate as part of the `Digital Rebar <http://rebar.digital>`_ system management workflows.
+The **Rocket Skates Project** is a simple Golang executable that provides a complete API-driven DHCP/PXE/TFTP provisioning system. It is designed to stand alone or operate as part of the `Digital Rebar <http://rebar.digital>`_ system management workflows.
 
 
 .. toctree::
