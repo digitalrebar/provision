@@ -9,37 +9,29 @@
 Command Line Interface (CLI)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-> DON'T DO THIS FOR NOW.
+Using the devtool build process for the server will generate
+the files needed to build the cli.
 
-To generate the code:
-* swagger generate client -P models.Principal -f swagger.json 
-
-This generates the following directories:
+It generates the following directories:
 
 * client
-* cmd
 * models
-* restapi
 
-The file that we edit for the client is:
+The cli uses those client files to access the server.  The editable 
+cli code lives in:
 
-* cmd/rocket-skates-client/main.go 
-
-This is completely our own file.
+* cli
 
 .. _rs_client:
 
 Building Client
 ---------------
 
-* go build -o rscli cmd/rocket-skates-client/main.go
+* go build -o rscli cli/*
 
 
 Running Client
 --------------
 
 * ./rscli
-
-This is a really simple client but shows how to make the calls and get back structures.
-
 
