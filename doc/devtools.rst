@@ -48,6 +48,13 @@ Once you've got the code and assets once, you can repeat the process from the pr
 The generate step is only required when you are changing the embedded assets in the `embedded/assets/` directories.
 
 
+
+Serving UI from File System
+---------------------------
+
+When working on the Rocket Skates UI, you can skip the generate steps by using the `--dev-ui` flag.  Generally, this is started using `--dev-ui ./embedded/assets/ui`
+
+
 .. _rs_testing:
 
 Running the Tests
