@@ -11,6 +11,7 @@
     { "Code": 67, "Value": "{{if (eq (index . 93) \"0\")}}lpxelinux.0{{else}}bootx64.efi{{end}}" },
     { "Code": 6, "Value": "192.168.100.1" },
     { "Code": 15, "Value": "test.this.out.com" },
+    { "Code": 42, "Value": "17.253.24.125" },
     { "Code": 3, "Value": "192.168.100.1" }
   ],
   "Strategy": "MAC",
