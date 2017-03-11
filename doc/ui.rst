@@ -9,8 +9,17 @@
 User Interface (UI)
 ~~~~~~~~~~~~~~~~~~~
 
-There is no UI at this time.
+Subnets
+-------
 
+Broadcast vs Relay
+DHCP Options
+
+https://tools.ietf.org/html/rfc2132
+https://en.wikipedia.org/wiki/Dynamic_Host_Configuration_Protocol#DHCP_options
+
+Boot Environments (bootenvs)
+----------------------------
 
 .. _rs_swagger:
 

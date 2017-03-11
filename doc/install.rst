@@ -31,8 +31,10 @@ Additional support materials in :ref:`rs_faq`.
 
 To run a local copy that will use the local filesystem as a storage area, do the following:
 
-* cd test-data
-* sudo ../rocket-skates
+  ::
+
+    cd test-data
+    sudo ../rocket-skates
 
 Please review `--help` for options like disabling services, logging or paths.
 
