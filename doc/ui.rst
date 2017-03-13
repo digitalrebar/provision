@@ -22,7 +22,7 @@ To edit or delete a subnet, click on the name of the subnet to populate the edit
 
 There are two primary types of subnets: broadcast and relay:
 
-  * Broadcast subnets are associated with the addresses provided by the Rocket Skates host system.  Rocket Skates can have multiple DHCP ranges; however, you can only assign one address per interface _and_ those ranges must include the IP of the interface.  By convention, subnets associated with an interface will be named as the interface.
+  * Broadcast subnets are associated with the addresses provided by the Rocket Skates host system.  Rocket Skates can have multiple DHCP ranges; however, you can only assign one subnet per interface _and_ the subnet CIDR must include the IP of the interface (the range should NOT).  By convention, subnets associated with an interface will be named as the interface.
   * Relay subnets answer requests forwarded from DHCP relays such as those provided by switches.  These can be any suitable IP range.  Since the Relay subnets are not broadcast, they do not conflict with existing DHCP servers in the environment.
 
 Rocket Skates can operate in a permissive reservation mode or require users to whitelist systems before they are serviced.  The `OnlyReservations` flag will operate as a reservations required (whitelist) mode when true; otherwise, Rocket Skates permissive reservation mode will give out addresses to any valid DHCP request.
