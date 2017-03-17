@@ -26,7 +26,7 @@ func addIsoCommands() (cmds *cobra.Command) {
 			if resp, err := session.Isos.ListIsos(isos.NewListIsosParams()); err != nil {
 				log.Fatalf("Error listing isos: %v", err)
 			} else {
-				fmt.Println(prettyJSON(resp.Payload))
+				fmt.Println(pretty(resp.Payload))
 			}
 		},
 	})
@@ -48,7 +48,7 @@ func addIsoCommands() (cmds *cobra.Command) {
 			if resp, err := session.Isos.UploadIso(params); err != nil {
 				log.Fatalf("Error uploading: %v", err)
 			} else {
-				fmt.Println(prettyJSON(resp.Payload))
+				fmt.Println(pretty(resp.Payload))
 			}
 		},
 	})

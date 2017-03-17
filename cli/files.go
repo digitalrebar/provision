@@ -26,7 +26,7 @@ func addFileCommands() (cmds *cobra.Command) {
 			if resp, err := session.Files.ListFiles(files.NewListFilesParams()); err != nil {
 				log.Fatalf("Error listing files: %v", err)
 			} else {
-				fmt.Println(prettyJSON(resp.Payload))
+				fmt.Println(pretty(resp.Payload))
 			}
 		},
 	})
@@ -48,7 +48,7 @@ func addFileCommands() (cmds *cobra.Command) {
 			if resp, err := session.Files.UploadFile(params); err != nil {
 				log.Fatalf("Error uploading: %v", err)
 			} else {
-				fmt.Println(prettyJSON(resp.Payload))
+				fmt.Println(pretty(resp.Payload))
 			}
 		},
 	})

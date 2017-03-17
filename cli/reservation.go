@@ -1,11 +1,12 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
+
+	"github.com/ghodss/yaml"
 
 	"github.com/VictorLowther/jsonpatch"
 	"github.com/go-openapi/strfmt"
@@ -35,7 +36,7 @@ func addReservationCommands() (res *cobra.Command) {
 			if resp, err := session.Reservations.ListReservations(reservations.NewListReservationsParams()); err != nil {
 				log.Fatalf("Error listing %v: %v", name, err)
 			} else {
-				fmt.Println(prettyJSON(resp.Payload))
+				fmt.Println(pretty(resp.Payload))
 			}
 		},
 	})
@@ -74,7 +75,7 @@ func addReservationCommands() (res *cobra.Command) {
 			if resp, err := session.Reservations.GetReservation(reservations.NewGetReservationParams().WithAddress(s)); err != nil {
 				log.Fatalf("Failed to fetch %v: %v\n%v\n", singularName, args[0], err)
 			} else {
-				fmt.Println(prettyJSON(resp.Payload))
+				fmt.Println(pretty(resp.Payload))
 			}
 		},
 	})
@@ -113,14 +114,14 @@ func addReservationCommands() (res *cobra.Command) {
 				buf = []byte(args[0])
 			}
 			reservation := &models.Reservation{}
-			err = json.Unmarshal(buf, reservation)
+			err = yaml.Unmarshal(buf, reservation)
 			if err != nil {
 				log.Fatalf("Invalid %v object: %v\n", singularName, err)
 			}
 			if resp, err := session.Reservations.CreateReservation(reservations.NewCreateReservationParams().WithBody(reservation)); err != nil {
 				log.Fatalf("Unable to create new %v: %v\n", singularName, err)
 			} else {
-				fmt.Println(prettyJSON(resp.Payload))
+				fmt.Println(pretty(resp.Payload))
 			}
 		},
 	})
@@ -151,7 +152,7 @@ func addReservationCommands() (res *cobra.Command) {
 					buf = []byte(args[1])
 				}
 				reservation := resp.Payload
-				buf2, err := json.Marshal(reservation)
+				buf2, err := yaml.Marshal(reservation)
 				if err != nil {
 					log.Fatalf("Unable to marshal object: %v\n", err)
 				}
@@ -162,7 +163,7 @@ func addReservationCommands() (res *cobra.Command) {
 				}
 
 				reservation = &models.Reservation{}
-				err = json.Unmarshal(merged, reservation)
+				err = yaml.Unmarshal(merged, reservation)
 				if err != nil {
 					log.Fatalf("Unable to unmarshal merged object: %v\n", err)
 				}
@@ -170,7 +171,7 @@ func addReservationCommands() (res *cobra.Command) {
 				if resp, err := session.Reservations.PutReservation(reservations.NewPutReservationParams().WithAddress(s).WithBody(reservation)); err != nil {
 					log.Fatalf("Unable to patch %v\n%v\n", args[0], err)
 				} else {
-					fmt.Println(prettyJSON(resp.Payload))
+					fmt.Println(pretty(resp.Payload))
 				}
 			}
 		},
@@ -183,28 +184,28 @@ func addReservationCommands() (res *cobra.Command) {
 				log.Fatalf("%v requires 2 arguments\n", c.UseLine())
 			}
 			obj := &models.Reservation{}
-			if err := json.Unmarshal([]byte(args[0]), obj); err != nil {
+			if err := yaml.Unmarshal([]byte(args[0]), obj); err != nil {
 				log.Fatalf("Unable to parse %v JSON %v\nError: %v\n", c.UseLine(), args[0], err)
 			}
 			newObj := &models.Reservation{}
-			json.Unmarshal([]byte(args[0]), newObj)
-			if err := json.Unmarshal([]byte(args[1]), newObj); err != nil {
+			yaml.Unmarshal([]byte(args[0]), newObj)
+			if err := yaml.Unmarshal([]byte(args[1]), newObj); err != nil {
 				log.Fatalf("Unable to parse %v JSON %v\nError: %v\n", c.UseLine(), args[1], err)
 			}
-			newBuf, _ := json.Marshal(newObj)
+			newBuf, _ := yaml.Marshal(newObj)
 			patch, err := jsonpatch.GenerateJSON([]byte(args[0]), newBuf, true)
 			if err != nil {
 				log.Fatalf("Cannot generate JSON Patch\n%v\n", err)
 			}
 			p := []*models.JSONPatchOperation{}
-			err = json.Unmarshal(patch, p)
+			err = yaml.Unmarshal(patch, p)
 			if err != nil {
 				log.Fatalf("Cannot generate JSON Patch Object\n%v\n", err)
 			}
 			if resp, err := session.Reservations.PatchReservation(reservations.NewPatchReservationParams().WithAddress(*obj.Addr).WithBody(p)); err != nil {
 				log.Fatalf("Unable to patch %v\n%v\n", args[0], err)
 			} else {
-				fmt.Println(prettyJSON(resp.Payload))
+				fmt.Println(pretty(resp.Payload))
 			}
 		},
 	})

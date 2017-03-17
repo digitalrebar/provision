@@ -30,7 +30,7 @@ func addInterfaceCommands() (res *cobra.Command) {
 			if resp, err := session.Interfaces.ListInterfaces(interfaces.NewListInterfacesParams()); err != nil {
 				log.Fatalf("Error listing %v: %v", name, err)
 			} else {
-				fmt.Println(prettyJSON(resp.Payload))
+				fmt.Println(pretty(resp.Payload))
 			}
 		},
 	})
@@ -64,7 +64,7 @@ func addInterfaceCommands() (res *cobra.Command) {
 			if resp, err := session.Interfaces.GetInterface(interfaces.NewGetInterfaceParams().WithName(args[0])); err != nil {
 				log.Fatalf("Failed to fetch %v: %v\n%v\n", singularName, args[0], err)
 			} else {
-				fmt.Println(prettyJSON(resp.Payload))
+				fmt.Println(pretty(resp.Payload))
 			}
 		},
 	})
