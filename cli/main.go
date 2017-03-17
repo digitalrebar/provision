@@ -9,6 +9,8 @@ import (
 	"os"
 	"strings"
 
+	"github.com/ghodss/yaml"
+
 	"github.com/VictorLowther/jsonpatch/utils"
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
@@ -22,6 +24,7 @@ var (
 	debug              = false
 	endpoint           = "127.0.0.1:8092"
 	username, password string
+	format             = "json"
 	app                = &cobra.Command{
 		Use:   "rscli",
 		Short: "A CLI application for interacting with the Rocket-Skates API",
@@ -61,8 +64,17 @@ func d(msg string, args ...interface{}) {
 	}
 }
 
-func prettyJSON(o interface{}) (res string) {
-	buf, err := json.MarshalIndent(o, "", "  ")
+func pretty(o interface{}) (res string) {
+	var buf []byte
+	var err error
+	switch format {
+	case "json":
+		buf, err = json.MarshalIndent(o, "", "  ")
+	case "yaml":
+		buf, err = yaml.Marshal(o)
+	default:
+		log.Fatalf("Unknown pretty format %s", format)
+	}
 	if err != nil {
 		log.Fatalf("Failed to unmarshal returned object!")
 	}
@@ -96,6 +108,9 @@ func init() {
 	app.PersistentFlags().BoolVarP(&debug,
 		"debug", "d", false,
 		"Whether the CLI should run in debug mode")
+	app.PersistentFlags().StringVarP(&format,
+		"format", "F", "json",
+		`The serialzation we expect for output.  Can be "json" or "yaml"`)
 }
 
 func main() {
