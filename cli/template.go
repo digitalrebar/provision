@@ -1,11 +1,12 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
+
+	"github.com/ghodss/yaml"
 
 	"github.com/VictorLowther/jsonpatch"
 	"github.com/rackn/rocket-skates/client/templates"
@@ -34,7 +35,7 @@ func addTemplateCommands() (res *cobra.Command) {
 			if resp, err := session.Templates.ListTemplates(templates.NewListTemplatesParams()); err != nil {
 				log.Fatalf("Error listing %v: %v", name, err)
 			} else {
-				fmt.Println(prettyJSON(resp.Payload))
+				fmt.Println(pretty(resp.Payload))
 			}
 		},
 	})
@@ -68,7 +69,7 @@ func addTemplateCommands() (res *cobra.Command) {
 			if resp, err := session.Templates.GetTemplate(templates.NewGetTemplateParams().WithName(args[0])); err != nil {
 				log.Fatalf("Failed to fetch %v: %v\n%v\n", singularName, args[0], err)
 			} else {
-				fmt.Println(prettyJSON(resp.Payload))
+				fmt.Println(pretty(resp.Payload))
 			}
 		},
 	})
@@ -107,14 +108,14 @@ func addTemplateCommands() (res *cobra.Command) {
 				buf = []byte(args[0])
 			}
 			template := &models.Template{}
-			err = json.Unmarshal(buf, template)
+			err = yaml.Unmarshal(buf, template)
 			if err != nil {
 				log.Fatalf("Invalid %v object: %v\n", singularName, err)
 			}
 			if resp, err := session.Templates.CreateTemplate(templates.NewCreateTemplateParams().WithBody(template)); err != nil {
 				log.Fatalf("Unable to create new %v: %v\n", singularName, err)
 			} else {
-				fmt.Println(prettyJSON(resp.Payload))
+				fmt.Println(pretty(resp.Payload))
 			}
 		},
 	})
@@ -135,7 +136,7 @@ func addTemplateCommands() (res *cobra.Command) {
 			if resp, err := session.Templates.CreateTemplate(templates.NewCreateTemplateParams().WithBody(tmpl)); err != nil {
 				log.Fatalf("Unable to create new %v: %v\n", singularName, err)
 			} else {
-				fmt.Println(prettyJSON(resp.Payload))
+				fmt.Println(pretty(resp.Payload))
 			}
 		},
 	})
@@ -161,7 +162,7 @@ func addTemplateCommands() (res *cobra.Command) {
 					buf = []byte(args[1])
 				}
 				template := resp.Payload
-				buf2, err := json.Marshal(template)
+				buf2, err := yaml.Marshal(template)
 				if err != nil {
 					log.Fatalf("Unable to marshal object: %v\n", err)
 				}
@@ -172,7 +173,7 @@ func addTemplateCommands() (res *cobra.Command) {
 				}
 
 				template = &models.Template{}
-				err = json.Unmarshal(merged, template)
+				err = yaml.Unmarshal(merged, template)
 				if err != nil {
 					log.Fatalf("Unable to unmarshal merged object: %v\n", err)
 				}
@@ -180,7 +181,7 @@ func addTemplateCommands() (res *cobra.Command) {
 				if resp, err := session.Templates.PutTemplate(templates.NewPutTemplateParams().WithName(args[0]).WithBody(template)); err != nil {
 					log.Fatalf("Unable to patch %v\n%v\n", args[0], err)
 				} else {
-					fmt.Println(prettyJSON(resp.Payload))
+					fmt.Println(pretty(resp.Payload))
 				}
 			}
 		},
@@ -193,28 +194,28 @@ func addTemplateCommands() (res *cobra.Command) {
 				log.Fatalf("%v requires 2 arguments\n", c.UseLine())
 			}
 			obj := &models.Template{}
-			if err := json.Unmarshal([]byte(args[0]), obj); err != nil {
+			if err := yaml.Unmarshal([]byte(args[0]), obj); err != nil {
 				log.Fatalf("Unable to parse %v JSON %v\nError: %v\n", c.UseLine(), args[0], err)
 			}
 			newObj := &models.Template{}
-			json.Unmarshal([]byte(args[0]), newObj)
-			if err := json.Unmarshal([]byte(args[1]), newObj); err != nil {
+			yaml.Unmarshal([]byte(args[0]), newObj)
+			if err := yaml.Unmarshal([]byte(args[1]), newObj); err != nil {
 				log.Fatalf("Unable to parse %v JSON %v\nError: %v\n", c.UseLine(), args[1], err)
 			}
-			newBuf, _ := json.Marshal(newObj)
+			newBuf, _ := yaml.Marshal(newObj)
 			patch, err := jsonpatch.GenerateJSON([]byte(args[0]), newBuf, true)
 			if err != nil {
 				log.Fatalf("Cannot generate JSON Patch\n%v\n", err)
 			}
 			p := []*models.JSONPatchOperation{}
-			err = json.Unmarshal(patch, p)
+			err = yaml.Unmarshal(patch, p)
 			if err != nil {
 				log.Fatalf("Cannot generate JSON Patch Object\n%v\n", err)
 			}
 			if resp, err := session.Templates.PatchTemplate(templates.NewPatchTemplateParams().WithName(*obj.ID).WithBody(p)); err != nil {
 				log.Fatalf("Unable to patch %v\n%v\n", args[0], err)
 			} else {
-				fmt.Println(prettyJSON(resp.Payload))
+				fmt.Println(pretty(resp.Payload))
 			}
 		},
 	})

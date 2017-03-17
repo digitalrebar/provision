@@ -1,11 +1,12 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
+
+	"github.com/ghodss/yaml"
 
 	"github.com/VictorLowther/jsonpatch"
 	"github.com/rackn/rocket-skates/client/machines"
@@ -34,7 +35,7 @@ func addMachineCommands() (res *cobra.Command) {
 			if resp, err := session.Machines.ListMachines(machines.NewListMachinesParams()); err != nil {
 				log.Fatalf("Error listing %v: %v", name, err)
 			} else {
-				fmt.Println(prettyJSON(resp.Payload))
+				fmt.Println(pretty(resp.Payload))
 			}
 		},
 	})
@@ -68,7 +69,7 @@ func addMachineCommands() (res *cobra.Command) {
 			if resp, err := session.Machines.GetMachine(machines.NewGetMachineParams().WithName(args[0])); err != nil {
 				log.Fatalf("Failed to fetch %v: %v\n%v\n", singularName, args[0], err)
 			} else {
-				fmt.Println(prettyJSON(resp.Payload))
+				fmt.Println(pretty(resp.Payload))
 			}
 		},
 	})
@@ -107,14 +108,14 @@ func addMachineCommands() (res *cobra.Command) {
 				buf = []byte(args[0])
 			}
 			machine := &models.Machine{}
-			err = json.Unmarshal(buf, machine)
+			err = yaml.Unmarshal(buf, machine)
 			if err != nil {
 				log.Fatalf("Invalid %v object: %v\n", singularName, err)
 			}
 			if resp, err := session.Machines.CreateMachine(machines.NewCreateMachineParams().WithBody(machine)); err != nil {
 				log.Fatalf("Unable to create new %v: %v\n", singularName, err)
 			} else {
-				fmt.Println(prettyJSON(resp.Payload))
+				fmt.Println(pretty(resp.Payload))
 			}
 		},
 	})
@@ -140,7 +141,7 @@ func addMachineCommands() (res *cobra.Command) {
 					buf = []byte(args[1])
 				}
 				machine := resp.Payload
-				buf2, err := json.Marshal(machine)
+				buf2, err := yaml.Marshal(machine)
 				if err != nil {
 					log.Fatalf("Unable to marshal object: %v\n", err)
 				}
@@ -151,7 +152,7 @@ func addMachineCommands() (res *cobra.Command) {
 				}
 
 				machine = &models.Machine{}
-				err = json.Unmarshal(merged, machine)
+				err = yaml.Unmarshal(merged, machine)
 				if err != nil {
 					log.Fatalf("Unable to unmarshal merged object: %v\n", err)
 				}
@@ -159,7 +160,7 @@ func addMachineCommands() (res *cobra.Command) {
 				if resp, err := session.Machines.PutMachine(machines.NewPutMachineParams().WithName(args[0]).WithBody(machine)); err != nil {
 					log.Fatalf("Unable to patch %v\n%v\n", args[0], err)
 				} else {
-					fmt.Println(prettyJSON(resp.Payload))
+					fmt.Println(pretty(resp.Payload))
 				}
 			}
 		},
@@ -172,28 +173,28 @@ func addMachineCommands() (res *cobra.Command) {
 				log.Fatalf("%v requires 2 arguments\n", c.UseLine())
 			}
 			obj := &models.Machine{}
-			if err := json.Unmarshal([]byte(args[0]), obj); err != nil {
+			if err := yaml.Unmarshal([]byte(args[0]), obj); err != nil {
 				log.Fatalf("Unable to parse %v JSON %v\nError: %v\n", c.UseLine(), args[0], err)
 			}
 			newObj := &models.Machine{}
-			json.Unmarshal([]byte(args[0]), newObj)
-			if err := json.Unmarshal([]byte(args[1]), newObj); err != nil {
+			yaml.Unmarshal([]byte(args[0]), newObj)
+			if err := yaml.Unmarshal([]byte(args[1]), newObj); err != nil {
 				log.Fatalf("Unable to parse %v JSON %v\nError: %v\n", c.UseLine(), args[1], err)
 			}
-			newBuf, _ := json.Marshal(newObj)
+			newBuf, _ := yaml.Marshal(newObj)
 			patch, err := jsonpatch.GenerateJSON([]byte(args[0]), newBuf, true)
 			if err != nil {
 				log.Fatalf("Cannot generate JSON Patch\n%v\n", err)
 			}
 			p := []*models.JSONPatchOperation{}
-			err = json.Unmarshal(patch, p)
+			err = yaml.Unmarshal(patch, p)
 			if err != nil {
 				log.Fatalf("Cannot generate JSON Patch Object\n%v\n", err)
 			}
 			if resp, err := session.Machines.PatchMachine(machines.NewPatchMachineParams().WithName(obj.Name.String()).WithBody(p)); err != nil {
 				log.Fatalf("Unable to patch %v\n%v\n", args[0], err)
 			} else {
-				fmt.Println(prettyJSON(resp.Payload))
+				fmt.Println(pretty(resp.Payload))
 			}
 		},
 	})

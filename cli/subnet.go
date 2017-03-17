@@ -1,11 +1,12 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
+
+	"github.com/ghodss/yaml"
 
 	"github.com/VictorLowther/jsonpatch"
 	"github.com/rackn/rocket-skates/client/subnets"
@@ -34,7 +35,7 @@ func addSubnetCommands() (res *cobra.Command) {
 			if resp, err := session.Subnets.ListSubnets(subnets.NewListSubnetsParams()); err != nil {
 				log.Fatalf("Error listing %v: %v", name, err)
 			} else {
-				fmt.Println(prettyJSON(resp.Payload))
+				fmt.Println(pretty(resp.Payload))
 			}
 		},
 	})
@@ -68,7 +69,7 @@ func addSubnetCommands() (res *cobra.Command) {
 			if resp, err := session.Subnets.GetSubnet(subnets.NewGetSubnetParams().WithName(args[0])); err != nil {
 				log.Fatalf("Failed to fetch %v: %v\n%v\n", singularName, args[0], err)
 			} else {
-				fmt.Println(prettyJSON(resp.Payload))
+				fmt.Println(pretty(resp.Payload))
 			}
 		},
 	})
@@ -107,14 +108,14 @@ func addSubnetCommands() (res *cobra.Command) {
 				buf = []byte(args[0])
 			}
 			subnet := &models.Subnet{}
-			err = json.Unmarshal(buf, subnet)
+			err = yaml.Unmarshal(buf, subnet)
 			if err != nil {
 				log.Fatalf("Invalid %v object: %v\n", singularName, err)
 			}
 			if resp, err := session.Subnets.CreateSubnet(subnets.NewCreateSubnetParams().WithBody(subnet)); err != nil {
 				log.Fatalf("Unable to create new %v: %v\n", singularName, err)
 			} else {
-				fmt.Println(prettyJSON(resp.Payload))
+				fmt.Println(pretty(resp.Payload))
 			}
 		},
 	})
@@ -140,7 +141,7 @@ func addSubnetCommands() (res *cobra.Command) {
 					buf = []byte(args[1])
 				}
 				subnet := resp.Payload
-				buf2, err := json.Marshal(subnet)
+				buf2, err := yaml.Marshal(subnet)
 				if err != nil {
 					log.Fatalf("Unable to marshal object: %v\n", err)
 				}
@@ -151,7 +152,7 @@ func addSubnetCommands() (res *cobra.Command) {
 				}
 
 				subnet = &models.Subnet{}
-				err = json.Unmarshal(merged, subnet)
+				err = yaml.Unmarshal(merged, subnet)
 				if err != nil {
 					log.Fatalf("Unable to unmarshal merged object: %v\n", err)
 				}
@@ -159,7 +160,7 @@ func addSubnetCommands() (res *cobra.Command) {
 				if resp, err := session.Subnets.PutSubnet(subnets.NewPutSubnetParams().WithName(args[0]).WithBody(subnet)); err != nil {
 					log.Fatalf("Unable to patch %v\n%v\n", args[0], err)
 				} else {
-					fmt.Println(prettyJSON(resp.Payload))
+					fmt.Println(pretty(resp.Payload))
 				}
 			}
 		},
@@ -172,28 +173,28 @@ func addSubnetCommands() (res *cobra.Command) {
 				log.Fatalf("%v requires 2 arguments\n", c.UseLine())
 			}
 			obj := &models.Subnet{}
-			if err := json.Unmarshal([]byte(args[0]), obj); err != nil {
+			if err := yaml.Unmarshal([]byte(args[0]), obj); err != nil {
 				log.Fatalf("Unable to parse %v JSON %v\nError: %v\n", c.UseLine(), args[0], err)
 			}
 			newObj := &models.Subnet{}
-			json.Unmarshal([]byte(args[0]), newObj)
-			if err := json.Unmarshal([]byte(args[1]), newObj); err != nil {
+			yaml.Unmarshal([]byte(args[0]), newObj)
+			if err := yaml.Unmarshal([]byte(args[1]), newObj); err != nil {
 				log.Fatalf("Unable to parse %v JSON %v\nError: %v\n", c.UseLine(), args[1], err)
 			}
-			newBuf, _ := json.Marshal(newObj)
+			newBuf, _ := yaml.Marshal(newObj)
 			patch, err := jsonpatch.GenerateJSON([]byte(args[0]), newBuf, true)
 			if err != nil {
 				log.Fatalf("Cannot generate JSON Patch\n%v\n", err)
 			}
 			p := []*models.JSONPatchOperation{}
-			err = json.Unmarshal(patch, p)
+			err = yaml.Unmarshal(patch, p)
 			if err != nil {
 				log.Fatalf("Cannot generate JSON Patch Object\n%v\n", err)
 			}
 			if resp, err := session.Subnets.PatchSubnet(subnets.NewPatchSubnetParams().WithName(*obj.Name).WithBody(p)); err != nil {
 				log.Fatalf("Unable to patch %v\n%v\n", args[0], err)
 			} else {
-				fmt.Println(prettyJSON(resp.Payload))
+				fmt.Println(pretty(resp.Payload))
 			}
 		},
 	})
