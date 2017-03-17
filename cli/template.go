@@ -119,6 +119,27 @@ func addTemplateCommands() (res *cobra.Command) {
 		},
 	})
 	commands = append(commands, &cobra.Command{
+		Use:   "upload [file] as [name]",
+		Short: "Create a new template based on the raw file",
+		Run: func(c *cobra.Command, args []string) {
+			if len(args) != 3 {
+				log.Fatalf("upload requires 2 arguments")
+			}
+			tmpl := &models.Template{ID: &args[2]}
+			buf, err := ioutil.ReadFile(args[0])
+			if err != nil {
+				log.Fatalf("Error reading %s: %v", args[0], err)
+			}
+			str := string(buf)
+			tmpl.Contents = &str
+			if resp, err := session.Templates.CreateTemplate(templates.NewCreateTemplateParams().WithBody(tmpl)); err != nil {
+				log.Fatalf("Unable to create new %v: %v\n", singularName, err)
+			} else {
+				fmt.Println(prettyJSON(resp.Payload))
+			}
+		},
+	})
+	commands = append(commands, &cobra.Command{
 		Use:   "update [id] [json]",
 		Short: fmt.Sprintf("Unsafely update %v by id with the passed-in JSON", singularName),
 		Long:  `As a useful shortcut, you can pass '-' to indicate that the JSON should be read from stdin`,
