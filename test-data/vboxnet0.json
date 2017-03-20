@@ -1,6 +1,6 @@
 {
-  "Name": "vbox1",
-  "Subnet": "192.168.100.0/24",
+  "Name": "vboxnet0",
+  "Subnet": "192.168.100.1/24",
   "NextServer": "192.168.100.1",
   "ActiveStart": "192.168.100.110",
   "ActiveEnd": "192.168.100.200",
