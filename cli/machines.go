@@ -9,6 +9,7 @@ import (
 	"github.com/ghodss/yaml"
 
 	"github.com/VictorLowther/jsonpatch"
+	"github.com/go-openapi/strfmt"
 	"github.com/rackn/rocket-skates/client/machines"
 	"github.com/rackn/rocket-skates/models"
 	"github.com/spf13/cobra"
@@ -66,7 +67,7 @@ func addMachineCommands() (res *cobra.Command) {
 			if len(args) != 1 {
 				log.Fatalf("%v requires 1 argument\n", c.UseLine())
 			}
-			if resp, err := session.Machines.GetMachine(machines.NewGetMachineParams().WithName(args[0])); err != nil {
+			if resp, err := session.Machines.GetMachine(machines.NewGetMachineParams().WithUUID(strfmt.UUID(args[0]))); err != nil {
 				log.Fatalf("Failed to fetch %v: %v\n%v\n", singularName, args[0], err)
 			} else {
 				fmt.Println(pretty(resp.Payload))
@@ -127,7 +128,7 @@ func addMachineCommands() (res *cobra.Command) {
 			if len(args) != 2 {
 				log.Fatalf("%v requires 2 arguments\n", c.UseLine())
 			}
-			if resp, err := session.Machines.GetMachine(machines.NewGetMachineParams().WithName(args[0])); err != nil {
+			if resp, err := session.Machines.GetMachine(machines.NewGetMachineParams().WithUUID(strfmt.UUID(args[0]))); err != nil {
 				log.Fatalf("Failed to fetch %v: %v\n%v\n", singularName, args[0], err)
 			} else {
 				var buf []byte
@@ -157,7 +158,7 @@ func addMachineCommands() (res *cobra.Command) {
 					log.Fatalf("Unable to unmarshal merged object: %v\n", err)
 				}
 
-				if resp, err := session.Machines.PutMachine(machines.NewPutMachineParams().WithName(args[0]).WithBody(machine)); err != nil {
+				if resp, err := session.Machines.PutMachine(machines.NewPutMachineParams().WithUUID(strfmt.UUID(args[0])).WithBody(machine)); err != nil {
 					log.Fatalf("Unable to patch %v\n%v\n", args[0], err)
 				} else {
 					fmt.Println(pretty(resp.Payload))
@@ -191,7 +192,7 @@ func addMachineCommands() (res *cobra.Command) {
 			if err != nil {
 				log.Fatalf("Cannot generate JSON Patch Object\n%v\n", err)
 			}
-			if resp, err := session.Machines.PatchMachine(machines.NewPatchMachineParams().WithName(obj.Name.String()).WithBody(p)); err != nil {
+			if resp, err := session.Machines.PatchMachine(machines.NewPatchMachineParams().WithUUID(*obj.UUID).WithBody(p)); err != nil {
 				log.Fatalf("Unable to patch %v\n%v\n", args[0], err)
 			} else {
 				fmt.Println(pretty(resp.Payload))
@@ -205,7 +206,7 @@ func addMachineCommands() (res *cobra.Command) {
 			if len(args) != 1 {
 				log.Fatalf("%v requires 1 argument\n", c.UseLine())
 			}
-			if _, err := session.Machines.DeleteMachine(machines.NewDeleteMachineParams().WithName(args[0])); err != nil {
+			if _, err := session.Machines.DeleteMachine(machines.NewDeleteMachineParams().WithUUID(strfmt.UUID(args[0]))); err != nil {
 				log.Fatalf("Unable to destroy %v %v\nError: %v\n", singularName, args[0], err)
 			} else {
 				fmt.Printf("Deleted %v %v\n", singularName, args[0])
@@ -219,7 +220,7 @@ func addMachineCommands() (res *cobra.Command) {
 			if len(args) != 1 {
 				log.Fatalf("%v requires 1 argument\n", c.UseLine())
 			}
-			if _, err := session.Machines.GetMachine(machines.NewGetMachineParams().WithName(args[0])); err != nil {
+			if _, err := session.Machines.GetMachine(machines.NewGetMachineParams().WithUUID(strfmt.UUID(args[0]))); err != nil {
 				log.Fatalf("Failed to fetch %v: %v\n%v\n", singularName, args[0], err)
 			} else {
 				os.Exit(0)
