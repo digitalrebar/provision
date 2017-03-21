@@ -6,6 +6,7 @@ import (
 	"errors"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"strings"
 
@@ -22,7 +23,7 @@ import (
 var (
 	version            = "1.1.1"
 	debug              = false
-	endpoint           = "127.0.0.1:8092"
+	endpoint           = "https://127.0.0.1:8092"
 	username, password string
 	format             = "json"
 	app                = &cobra.Command{
@@ -121,7 +122,11 @@ func main() {
 			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 		}
 		hc := &http.Client{Transport: tr}
-		transport := httptransport.NewWithClient(endpoint, "/api/v3", []string{"https"}, hc)
+		epURL, err := url.Parse(endpoint)
+		if err != nil {
+			log.Fatalf("Error handling endpoint %s: %v", endpoint, err)
+		}
+		transport := httptransport.NewWithClient(epURL.Host, "/api/v3", []string{epURL.Scheme}, hc)
 		session = apiclient.New(transport, strfmt.Default)
 		basicAuth = httptransport.BasicAuth(username, password)
 
