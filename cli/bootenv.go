@@ -25,7 +25,7 @@ func (be BootEnvOps) GetType() interface{} {
 }
 
 func (be BootEnvOps) List() (interface{}, error) {
-	d, e := Session.BootEnvs.ListBootEnvs(bootenvs.NewListBootEnvsParams())
+	d, e := session.BootEnvs.ListBootEnvs(bootenvs.NewListBootEnvsParams())
 	if e != nil {
 		return nil, e
 	}
@@ -33,7 +33,7 @@ func (be BootEnvOps) List() (interface{}, error) {
 }
 
 func (be BootEnvOps) Get(id string) (interface{}, error) {
-	d, e := Session.BootEnvs.GetBootEnv(bootenvs.NewGetBootEnvParams().WithName(id))
+	d, e := session.BootEnvs.GetBootEnv(bootenvs.NewGetBootEnvParams().WithName(id))
 	if e != nil {
 		return nil, e
 	}
@@ -45,7 +45,7 @@ func (be BootEnvOps) Create(obj interface{}) (interface{}, error) {
 	if !ok {
 		return nil, fmt.Errorf("Invalid type passed to bootenv create")
 	}
-	d, e := Session.BootEnvs.CreateBootEnv(bootenvs.NewCreateBootEnvParams().WithBody(bootenv))
+	d, e := session.BootEnvs.CreateBootEnv(bootenvs.NewCreateBootEnvParams().WithBody(bootenv))
 	if e != nil {
 		return nil, e
 	}
@@ -57,7 +57,7 @@ func (be BootEnvOps) Put(id string, obj interface{}) (interface{}, error) {
 	if !ok {
 		return nil, fmt.Errorf("Invalid type passed to bootenv put")
 	}
-	d, e := Session.BootEnvs.PutBootEnv(bootenvs.NewPutBootEnvParams().WithName(id).WithBody(bootenv))
+	d, e := session.BootEnvs.PutBootEnv(bootenvs.NewPutBootEnvParams().WithName(id).WithBody(bootenv))
 	if e != nil {
 		return nil, e
 	}
@@ -69,7 +69,7 @@ func (be BootEnvOps) Patch(id string, obj interface{}) (interface{}, error) {
 	if !ok {
 		return nil, fmt.Errorf("Invalid type passed to bootenv patch")
 	}
-	d, e := Session.BootEnvs.PatchBootEnv(bootenvs.NewPatchBootEnvParams().WithName(id).WithBody(data))
+	d, e := session.BootEnvs.PatchBootEnv(bootenvs.NewPatchBootEnvParams().WithName(id).WithBody(data))
 	if e != nil {
 		return nil, e
 	}
@@ -77,7 +77,7 @@ func (be BootEnvOps) Patch(id string, obj interface{}) (interface{}, error) {
 }
 
 func (be BootEnvOps) Delete(id string) (interface{}, error) {
-	d, e := Session.BootEnvs.DeleteBootEnv(bootenvs.NewDeleteBootEnvParams().WithName(id))
+	d, e := session.BootEnvs.DeleteBootEnv(bootenvs.NewDeleteBootEnvParams().WithName(id))
 	if e != nil {
 		return nil, e
 	}
@@ -153,7 +153,7 @@ using isos upload.git `,
 				if ti.ID == "" {
 					continue
 				}
-				_, err = Session.Templates.GetTemplate(
+				_, err = session.Templates.GetTemplate(
 					templates.NewGetTemplateParams().WithName(ti.ID))
 				if err == nil {
 					continue
@@ -168,28 +168,28 @@ using isos upload.git `,
 				}
 				tmplContents := string(buf)
 				tmpl.Contents = &tmplContents
-				if _, err := Session.Templates.CreateTemplate(templates.NewCreateTemplateParams().WithBody(tmpl)); err != nil {
+				if _, err := session.Templates.CreateTemplate(templates.NewCreateTemplateParams().WithBody(tmpl)); err != nil {
 					log.Fatalf("Unable to create new template: %v\n", err)
 				}
 			}
 			// Upload the bootenv
 			log.Printf("Installing bootenv %s", *bootEnv.Name)
-			resp, err := Session.BootEnvs.CreateBootEnv(bootenvs.NewCreateBootEnvParams().WithBody(bootEnv))
+			resp, err := session.BootEnvs.CreateBootEnv(bootenvs.NewCreateBootEnvParams().WithBody(bootEnv))
 			if err != nil {
 				log.Fatalf("Unable to create new %v: %v\n", singularName, err)
 			}
 			if bootEnv.OS.IsoFile == "" {
-				fmt.Println(pretty(resp.Payload))
+				log.Println(pretty(resp.Payload))
 				return
 			}
 			// See if we need to install the ISO
-			isoResp, err := Session.Isos.ListIsos(isos.NewListIsosParams())
+			isoResp, err := session.Isos.ListIsos(isos.NewListIsosParams())
 			if err != nil {
 				log.Fatalf("Error listing isos: %v", err)
 			}
 			for _, isoName := range isoResp.Payload {
 				if bootEnv.OS.IsoFile == isoName {
-					fmt.Println(pretty(resp.Payload))
+					log.Println(pretty(resp.Payload))
 					return
 				}
 			}
@@ -200,7 +200,7 @@ using isos upload.git `,
 				if !installDownloadIsos {
 					log.Printf("Skipping ISO download as requested")
 					log.Printf("Upload with `rscli isos upload %s as %s` when you have it", bootEnv.OS.IsoFile, bootEnv.OS.IsoFile)
-					fmt.Println(pretty(resp.Payload))
+					log.Println(pretty(resp.Payload))
 					return
 				}
 				func() {
@@ -239,13 +239,13 @@ using isos upload.git `,
 			params := isos.NewUploadIsoParams()
 			params.Path = bootEnv.OS.IsoFile
 			params.Body = isoTarget
-			if _, err := Session.Isos.UploadIso(params); err != nil {
+			if _, err := session.Isos.UploadIso(params); err != nil {
 				log.Fatalf("Error uploading %s: %v", isoPath, err)
 			}
-			if resp, err := Session.BootEnvs.GetBootEnv(bootenvs.NewGetBootEnvParams().WithName(*bootEnv.Name)); err != nil {
+			if resp, err := session.BootEnvs.GetBootEnv(bootenvs.NewGetBootEnvParams().WithName(*bootEnv.Name)); err != nil {
 				log.Fatalf("Failed to fetch %v: %v\n%v\n", singularName, *bootEnv.Name, err)
 			} else {
-				fmt.Println(pretty(resp.Payload))
+				log.Println(pretty(resp.Payload))
 			}
 		},
 	}

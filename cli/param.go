@@ -15,7 +15,7 @@ func (be ParamOps) GetType() interface{} {
 }
 
 func (be ParamOps) List() (interface{}, error) {
-	d, e := Session.Params.ListParams(params.NewListParamsParams())
+	d, e := session.Params.ListParams(params.NewListParamsParams())
 	if e != nil {
 		return nil, e
 	}
@@ -23,7 +23,7 @@ func (be ParamOps) List() (interface{}, error) {
 }
 
 func (be ParamOps) Get(id string) (interface{}, error) {
-	d, e := Session.Params.GetParam(params.NewGetParamParams().WithName(id))
+	d, e := session.Params.GetParam(params.NewGetParamParams().WithName(id))
 	if e != nil {
 		return nil, e
 	}
@@ -35,7 +35,7 @@ func (be ParamOps) Create(obj interface{}) (interface{}, error) {
 	if !ok {
 		return nil, fmt.Errorf("Invalid type passed to param create")
 	}
-	d, e := Session.Params.CreateParam(params.NewCreateParamParams().WithBody(param))
+	d, e := session.Params.CreateParam(params.NewCreateParamParams().WithBody(param))
 	if e != nil {
 		return nil, e
 	}
@@ -47,7 +47,7 @@ func (be ParamOps) Put(id string, obj interface{}) (interface{}, error) {
 	if !ok {
 		return nil, fmt.Errorf("Invalid type passed to param put")
 	}
-	d, e := Session.Params.PutParam(params.NewPutParamParams().WithName(id).WithBody(param))
+	d, e := session.Params.PutParam(params.NewPutParamParams().WithName(id).WithBody(param))
 	if e != nil {
 		return nil, e
 	}
@@ -59,7 +59,7 @@ func (be ParamOps) Patch(id string, obj interface{}) (interface{}, error) {
 	if !ok {
 		return nil, fmt.Errorf("Invalid type passed to param patch")
 	}
-	d, e := Session.Params.PatchParam(params.NewPatchParamParams().WithName(id).WithBody(data))
+	d, e := session.Params.PatchParam(params.NewPatchParamParams().WithName(id).WithBody(data))
 	if e != nil {
 		return nil, e
 	}
@@ -67,7 +67,7 @@ func (be ParamOps) Patch(id string, obj interface{}) (interface{}, error) {
 }
 
 func (be ParamOps) Delete(id string) (interface{}, error) {
-	d, e := Session.Params.DeleteParam(params.NewDeleteParamParams().WithName(id))
+	d, e := session.Params.DeleteParam(params.NewDeleteParamParams().WithName(id))
 	if e != nil {
 		return nil, e
 	}

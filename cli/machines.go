@@ -16,7 +16,7 @@ func (be MachineOps) GetType() interface{} {
 }
 
 func (be MachineOps) List() (interface{}, error) {
-	d, e := Session.Machines.ListMachines(machines.NewListMachinesParams())
+	d, e := session.Machines.ListMachines(machines.NewListMachinesParams())
 	if e != nil {
 		return nil, e
 	}
@@ -24,7 +24,7 @@ func (be MachineOps) List() (interface{}, error) {
 }
 
 func (be MachineOps) Get(id string) (interface{}, error) {
-	d, e := Session.Machines.GetMachine(machines.NewGetMachineParams().WithUUID(strfmt.UUID(id)))
+	d, e := session.Machines.GetMachine(machines.NewGetMachineParams().WithUUID(strfmt.UUID(id)))
 	if e != nil {
 		return nil, e
 	}
@@ -36,7 +36,7 @@ func (be MachineOps) Create(obj interface{}) (interface{}, error) {
 	if !ok {
 		return nil, fmt.Errorf("Invalid type passed to machine create")
 	}
-	d, e := Session.Machines.CreateMachine(machines.NewCreateMachineParams().WithBody(machine))
+	d, e := session.Machines.CreateMachine(machines.NewCreateMachineParams().WithBody(machine))
 	if e != nil {
 		return nil, e
 	}
@@ -48,7 +48,7 @@ func (be MachineOps) Put(id string, obj interface{}) (interface{}, error) {
 	if !ok {
 		return nil, fmt.Errorf("Invalid type passed to machine put")
 	}
-	d, e := Session.Machines.PutMachine(machines.NewPutMachineParams().WithUUID(strfmt.UUID(id)).WithBody(machine))
+	d, e := session.Machines.PutMachine(machines.NewPutMachineParams().WithUUID(strfmt.UUID(id)).WithBody(machine))
 	if e != nil {
 		return nil, e
 	}
@@ -60,7 +60,7 @@ func (be MachineOps) Patch(id string, obj interface{}) (interface{}, error) {
 	if !ok {
 		return nil, fmt.Errorf("Invalid type passed to machine patch")
 	}
-	d, e := Session.Machines.PatchMachine(machines.NewPatchMachineParams().WithUUID(strfmt.UUID(id)).WithBody(data))
+	d, e := session.Machines.PatchMachine(machines.NewPatchMachineParams().WithUUID(strfmt.UUID(id)).WithBody(data))
 	if e != nil {
 		return nil, e
 	}
@@ -68,7 +68,7 @@ func (be MachineOps) Patch(id string, obj interface{}) (interface{}, error) {
 }
 
 func (be MachineOps) Delete(id string) (interface{}, error) {
-	d, e := Session.Machines.DeleteMachine(machines.NewDeleteMachineParams().WithUUID(strfmt.UUID(id)))
+	d, e := session.Machines.DeleteMachine(machines.NewDeleteMachineParams().WithUUID(strfmt.UUID(id)))
 	if e != nil {
 		return nil, e
 	}

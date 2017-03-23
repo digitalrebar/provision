@@ -1,7 +1,6 @@
 package cli
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -27,10 +26,10 @@ func addPrefCommands() (res *cobra.Command) {
 		Use:   "list",
 		Short: "List all preferences",
 		Run: func(c *cobra.Command, args []string) {
-			if resp, err := Session.Prefs.ListPrefs(prefs.NewListPrefsParams()); err != nil {
+			if resp, err := session.Prefs.ListPrefs(prefs.NewListPrefsParams()); err != nil {
 				log.Fatalf("Error listing prefs: %v", err)
 			} else {
-				fmt.Println(pretty(resp.Payload))
+				log.Println(pretty(resp.Payload))
 			}
 		},
 	})
@@ -61,10 +60,10 @@ func addPrefCommands() (res *cobra.Command) {
 			} else {
 				log.Fatalf("prefs set either takes a single argument or a multiple of two, not %d", len(args))
 			}
-			if resp, err := Session.Prefs.SetPrefs(prefs.NewSetPrefsParams().WithBody(prefsMap)); err != nil {
+			if resp, err := session.Prefs.SetPrefs(prefs.NewSetPrefsParams().WithBody(prefsMap)); err != nil {
 				log.Fatalf("Error setting prefs: %v", err)
 			} else {
-				fmt.Println(pretty(resp.Payload))
+				log.Println(pretty(resp.Payload))
 			}
 		},
 	})

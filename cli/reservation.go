@@ -15,7 +15,7 @@ func (be ReservationOps) GetType() interface{} {
 }
 
 func (be ReservationOps) List() (interface{}, error) {
-	d, e := Session.Reservations.ListReservations(reservations.NewListReservationsParams())
+	d, e := session.Reservations.ListReservations(reservations.NewListReservationsParams())
 	if e != nil {
 		return nil, e
 	}
@@ -27,7 +27,7 @@ func (be ReservationOps) Get(id string) (interface{}, error) {
 	if e != nil {
 		return nil, e
 	}
-	d, e := Session.Reservations.GetReservation(reservations.NewGetReservationParams().WithAddress(s))
+	d, e := session.Reservations.GetReservation(reservations.NewGetReservationParams().WithAddress(s))
 	if e != nil {
 		return nil, e
 	}
@@ -39,7 +39,7 @@ func (be ReservationOps) Create(obj interface{}) (interface{}, error) {
 	if !ok {
 		return nil, fmt.Errorf("Invalid type passed to reservation create")
 	}
-	d, e := Session.Reservations.CreateReservation(reservations.NewCreateReservationParams().WithBody(reservation))
+	d, e := session.Reservations.CreateReservation(reservations.NewCreateReservationParams().WithBody(reservation))
 	if e != nil {
 		return nil, e
 	}
@@ -55,7 +55,7 @@ func (be ReservationOps) Put(id string, obj interface{}) (interface{}, error) {
 	if e != nil {
 		return nil, e
 	}
-	d, e := Session.Reservations.PutReservation(reservations.NewPutReservationParams().WithAddress(s).WithBody(reservation))
+	d, e := session.Reservations.PutReservation(reservations.NewPutReservationParams().WithAddress(s).WithBody(reservation))
 	if e != nil {
 		return nil, e
 	}
@@ -71,7 +71,7 @@ func (be ReservationOps) Patch(id string, obj interface{}) (interface{}, error) 
 	if e != nil {
 		return nil, e
 	}
-	d, e := Session.Reservations.PatchReservation(reservations.NewPatchReservationParams().WithAddress(s).WithBody(data))
+	d, e := session.Reservations.PatchReservation(reservations.NewPatchReservationParams().WithAddress(s).WithBody(data))
 	if e != nil {
 		return nil, e
 	}
@@ -83,7 +83,7 @@ func (be ReservationOps) Delete(id string) (interface{}, error) {
 	if e != nil {
 		return nil, e
 	}
-	d, e := Session.Reservations.DeleteReservation(reservations.NewDeleteReservationParams().WithAddress(s))
+	d, e := session.Reservations.DeleteReservation(reservations.NewDeleteReservationParams().WithAddress(s))
 	if e != nil {
 		return nil, e
 	}
