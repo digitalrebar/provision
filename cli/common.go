@@ -1,36 +1,105 @@
 package cli
 
 import (
+	"crypto/tls"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
+	"net/http"
+	"net/url"
 	"os"
+	"strings"
 
 	"github.com/ghodss/yaml"
 
 	"github.com/VictorLowther/jsonpatch"
 	"github.com/VictorLowther/jsonpatch/utils"
 	"github.com/go-openapi/runtime"
+	httptransport "github.com/go-openapi/runtime/client"
+	strfmt "github.com/go-openapi/strfmt"
 	apiclient "github.com/rackn/rocket-skates/client"
 	"github.com/rackn/rocket-skates/models"
 	"github.com/spf13/cobra"
 )
 
 var (
-	Version            = "1.1.1"
-	Debug              = false
-	Endpoint           = "https://127.0.0.1:8092"
-	Username, Password string
-	Format             = "json"
-	App                = &cobra.Command{
+	App = &cobra.Command{
 		Use:   "rscli",
 		Short: "A CLI application for interacting with the Rocket-Skates API",
 	}
-	Session   *apiclient.RocketSkates
-	BasicAuth runtime.ClientAuthInfoWriter
+
+	version            = "1.1.1"
+	debug              = false
+	endpoint           = "https://127.0.0.1:8092"
+	username, password string
+	format             = "json"
+	session            *apiclient.RocketSkates
+	basicAuth          runtime.ClientAuthInfoWriter
 )
+
+func init() {
+	if ep := os.Getenv("RS_ENDPOINT"); ep != "" {
+		endpoint = ep
+	}
+	if kv := os.Getenv("RS_KEY"); kv != "" {
+		key := strings.SplitN(kv, ":", 2)
+		if len(key) < 2 {
+			log.Fatal("RS_KEY does not contain a username:password pair!")
+		}
+		if key[0] == "" || key[1] == "" {
+			log.Fatal("RS_KEY contains an invalid username:password pair!")
+		}
+		username = key[0]
+		password = key[1]
+	}
+	App.PersistentFlags().StringVarP(&endpoint,
+		"endpoint", "E", endpoint,
+		"The Rocket-Skates API endpoint to talk to")
+	App.PersistentFlags().StringVarP(&username,
+		"username", "U", username,
+		"Name of the Rocket-Skates user to talk to")
+	App.PersistentFlags().StringVarP(&password,
+		"password", "P", password,
+		"password of the Rocket-Skates user")
+	App.PersistentFlags().BoolVarP(&debug,
+		"debug", "d", false,
+		"Whether the CLI should run in debug mode")
+	App.PersistentFlags().StringVarP(&format,
+		"format", "F", "json",
+		`The serialzation we expect for output.  Can be "json" or "yaml"`)
+
+	App.PersistentPreRun = func(c *cobra.Command, a []string) {
+		var err error
+		d("Talking to Rocket-Skates with %v (%v:%v)", endpoint, username, password)
+		tr := &http.Transport{
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		}
+		hc := &http.Client{Transport: tr}
+		epURL, err := url.Parse(endpoint)
+		if err != nil {
+			log.Fatalf("Error handling endpoint %s: %v", endpoint, err)
+		}
+		transport := httptransport.NewWithClient(epURL.Host, "/api/v3", []string{epURL.Scheme}, hc)
+		session = apiclient.New(transport, strfmt.Default)
+		basicAuth = httptransport.BasicAuth(username, password)
+
+		if err != nil {
+			if c.Use != "version" {
+				log.Fatalf("Could not connect to Rocket-Skates: %v\n", err.Error())
+			}
+		}
+	}
+	App.AddCommand(&cobra.Command{
+		Use:   "version",
+		Short: "Rocket-Skates CLI Command Version",
+		Run: func(cmd *cobra.Command, args []string) {
+			log.Printf("Version: %v", version)
+		},
+	})
+
+}
 
 func safeMergeJSON(target, toMerge []byte) ([]byte, error) {
 	targetObj := make(map[string]interface{})
@@ -57,12 +126,8 @@ func safeMergeJSON(target, toMerge []byte) ([]byte, error) {
 	return json.Marshal(outObj)
 }
 
-func D(msg string, args ...interface{}) {
-	d(msg, args)
-}
-
 func d(msg string, args ...interface{}) {
-	if Debug {
+	if debug {
 		log.Printf(msg, args...)
 	}
 }
@@ -70,13 +135,13 @@ func d(msg string, args ...interface{}) {
 func pretty(o interface{}) (res string) {
 	var buf []byte
 	var err error
-	switch Format {
+	switch format {
 	case "json":
 		buf, err = json.MarshalIndent(o, "", "  ")
 	case "yaml":
 		buf, err = yaml.Marshal(o)
 	default:
-		log.Fatalf("Unknown pretty format %s", Format)
+		log.Fatalf("Unknown pretty format %s", format)
 	}
 	if err != nil {
 		log.Fatalf("Failed to unmarshal returned object!")
@@ -105,7 +170,6 @@ type UploadOp interface {
 }
 
 // TODO: Consider adding Match someday
-// TODO: Make PATCH WORK!!
 
 func commonOps(singularName, name string, pobj interface{}) (commands []*cobra.Command) {
 	commands = make([]*cobra.Command, 0, 0)
@@ -118,7 +182,7 @@ func commonOps(singularName, name string, pobj interface{}) (commands []*cobra.C
 				if data, err := ptrs.List(); err != nil {
 					log.Fatalf("Error listing %v: %v", name, err)
 				} else {
-					fmt.Println(pretty(data))
+					log.Println(pretty(data))
 				}
 			},
 		})
@@ -129,12 +193,14 @@ func commonOps(singularName, name string, pobj interface{}) (commands []*cobra.C
 			Short: fmt.Sprintf("Show a single %v by id", singularName),
 			Run: func(c *cobra.Command, args []string) {
 				if len(args) != 1 {
-					log.Fatalf("%v requires 1 argument\n", c.UseLine())
+					c.Printf("%v requires 1 argument\n", c.UseLine())
+					return
 				}
 				if data, err := gptrs.Get(args[0]); err != nil {
-					log.Fatalf("Failed to fetch %v: %v\n%v\n", singularName, args[0], err)
+					c.Printf("Failed to fetch %v: %v\n%v\n", singularName, args[0], err)
+					return
 				} else {
-					fmt.Println(pretty(data))
+					log.Println(pretty(data))
 				}
 			},
 		})
@@ -147,8 +213,6 @@ func commonOps(singularName, name string, pobj interface{}) (commands []*cobra.C
 				}
 				if _, err := gptrs.Get(args[0]); err != nil {
 					log.Fatalf("Failed to fetch %v: %v\n%v\n", singularName, args[0], err)
-				} else {
-					os.Exit(0)
 				}
 			},
 		})
@@ -180,7 +244,7 @@ func commonOps(singularName, name string, pobj interface{}) (commands []*cobra.C
 					if data, err := ptrs.Create(obj); err != nil {
 						log.Fatalf("Unable to create new %v: %v\n", singularName, err)
 					} else {
-						fmt.Println(pretty(data))
+						log.Println(pretty(data))
 					}
 				},
 			})
@@ -236,13 +300,12 @@ func commonOps(singularName, name string, pobj interface{}) (commands []*cobra.C
 						if data, err := ptrs.Put(args[0], obj); err != nil {
 							log.Fatalf("Unable to patch %v\n%v\n", args[0], err)
 						} else {
-							fmt.Println(pretty(data))
+							log.Println(pretty(data))
 						}
 					}
 				},
 			})
 
-			// GREG: This needs more help on arg processing.
 			commands = append(commands, &cobra.Command{
 				Use:   "patch [objectJson] [changesJson]",
 				Short: fmt.Sprintf("Patch %v with the passed-in JSON", singularName),
@@ -272,7 +335,7 @@ func commonOps(singularName, name string, pobj interface{}) (commands []*cobra.C
 					if data, err := ptrs.Patch("id", p); err != nil {
 						log.Fatalf("Unable to patch %v\n%v\n", args[0], err)
 					} else {
-						fmt.Println(pretty(data))
+						log.Println(pretty(data))
 					}
 				},
 			})
@@ -287,7 +350,7 @@ func commonOps(singularName, name string, pobj interface{}) (commands []*cobra.C
 					if _, err := ptrs.Delete(args[0]); err != nil {
 						log.Fatalf("Unable to destroy %v %v\nError: %v\n", singularName, args[0], err)
 					} else {
-						fmt.Printf("Deleted %v %v\n", singularName, args[0])
+						log.Printf("Deleted %v %v\n", singularName, args[0])
 					}
 				},
 			})
@@ -310,7 +373,7 @@ func commonOps(singularName, name string, pobj interface{}) (commands []*cobra.C
 				if d, err := ptrs.Upload(args[2], f); err != nil {
 					log.Fatalf("Error uploading: %v", err)
 				} else {
-					fmt.Println(pretty(d))
+					log.Println(pretty(d))
 				}
 			},
 		})

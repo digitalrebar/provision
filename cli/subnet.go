@@ -15,7 +15,7 @@ func (be SubnetOps) GetType() interface{} {
 }
 
 func (be SubnetOps) List() (interface{}, error) {
-	d, e := Session.Subnets.ListSubnets(subnets.NewListSubnetsParams())
+	d, e := session.Subnets.ListSubnets(subnets.NewListSubnetsParams())
 	if e != nil {
 		return nil, e
 	}
@@ -23,7 +23,7 @@ func (be SubnetOps) List() (interface{}, error) {
 }
 
 func (be SubnetOps) Get(id string) (interface{}, error) {
-	d, e := Session.Subnets.GetSubnet(subnets.NewGetSubnetParams().WithName(id))
+	d, e := session.Subnets.GetSubnet(subnets.NewGetSubnetParams().WithName(id))
 	if e != nil {
 		return nil, e
 	}
@@ -35,7 +35,7 @@ func (be SubnetOps) Create(obj interface{}) (interface{}, error) {
 	if !ok {
 		return nil, fmt.Errorf("Invalid type passed to subnet create")
 	}
-	d, e := Session.Subnets.CreateSubnet(subnets.NewCreateSubnetParams().WithBody(subnet))
+	d, e := session.Subnets.CreateSubnet(subnets.NewCreateSubnetParams().WithBody(subnet))
 	if e != nil {
 		return nil, e
 	}
@@ -47,7 +47,7 @@ func (be SubnetOps) Put(id string, obj interface{}) (interface{}, error) {
 	if !ok {
 		return nil, fmt.Errorf("Invalid type passed to subnet put")
 	}
-	d, e := Session.Subnets.PutSubnet(subnets.NewPutSubnetParams().WithName(id).WithBody(subnet))
+	d, e := session.Subnets.PutSubnet(subnets.NewPutSubnetParams().WithName(id).WithBody(subnet))
 	if e != nil {
 		return nil, e
 	}
@@ -59,7 +59,7 @@ func (be SubnetOps) Patch(id string, obj interface{}) (interface{}, error) {
 	if !ok {
 		return nil, fmt.Errorf("Invalid type passed to subnet patch")
 	}
-	d, e := Session.Subnets.PatchSubnet(subnets.NewPatchSubnetParams().WithName(id).WithBody(data))
+	d, e := session.Subnets.PatchSubnet(subnets.NewPatchSubnetParams().WithName(id).WithBody(data))
 	if e != nil {
 		return nil, e
 	}
@@ -67,7 +67,7 @@ func (be SubnetOps) Patch(id string, obj interface{}) (interface{}, error) {
 }
 
 func (be SubnetOps) Delete(id string) (interface{}, error) {
-	d, e := Session.Subnets.DeleteSubnet(subnets.NewDeleteSubnetParams().WithName(id))
+	d, e := session.Subnets.DeleteSubnet(subnets.NewDeleteSubnetParams().WithName(id))
 	if e != nil {
 		return nil, e
 	}
