@@ -1,56 +1,44 @@
 package main
 
 import (
-	"fmt"
-	"log"
 	"os"
 
 	"github.com/rackn/rocket-skates/client/files"
 	"github.com/spf13/cobra"
 )
 
+type FileOps struct{}
+
+func (be FileOps) List() (interface{}, error) {
+	d, e := session.Files.ListFiles(files.NewListFilesParams())
+	if e != nil {
+		return nil, e
+	}
+	return d.Payload, nil
+}
+
+func (be FileOps) Upload(path string, f *os.File) (interface{}, error) {
+	d, e := session.Files.UploadFile(files.NewUploadFileParams().WithPath(path).WithBody(f))
+	if e != nil {
+		return nil, e
+	}
+	return d.Payload, nil
+}
+
 func init() {
 	tree := addFileCommands()
 	app.AddCommand(tree)
 }
 
-func addFileCommands() (cmds *cobra.Command) {
-	cmds = &cobra.Command{
-		Use:   "files",
+func addFileCommands() (res *cobra.Command) {
+	singularName := "file"
+	name := "files"
+	d("Making command tree for %v\n", name)
+	res = &cobra.Command{
+		Use:   name,
 		Short: "Commands to manage files on the provisioner",
 	}
-	cmds.AddCommand(&cobra.Command{
-		Use:   "list",
-		Short: "List all uploaded files",
-		Run: func(c *cobra.Command, args []string) {
-			if resp, err := session.Files.ListFiles(files.NewListFilesParams()); err != nil {
-				log.Fatalf("Error listing files: %v", err)
-			} else {
-				fmt.Println(pretty(resp.Payload))
-			}
-		},
-	})
-	cmds.AddCommand(&cobra.Command{
-		Use:   "upload [file] as [name]",
-		Short: "Upload a local file to RocketSkates",
-		Run: func(c *cobra.Command, args []string) {
-			if len(args) != 3 {
-				log.Fatalf("Wrong number of args: expected 3, got %d", len(args))
-			}
-			params := files.NewUploadFileParams()
-			params.Path = args[2]
-			f, err := os.Open(args[0])
-			if err != nil {
-				log.Fatalf("Failed to open %s: %v", args[0], err)
-			}
-			defer f.Close()
-			params.Body = f
-			if resp, err := session.Files.UploadFile(params); err != nil {
-				log.Fatalf("Error uploading: %v", err)
-			} else {
-				fmt.Println(pretty(resp.Payload))
-			}
-		},
-	})
-	return
+	commands := commonOps(singularName, name, &FileOps{})
+	res.AddCommand(commands...)
+	return res
 }
