@@ -14,6 +14,8 @@
 
 rocket-skates
 rscli
+rscli.amd64.linux
+rscli.amd64.darwin
 vendor
 coverage.txt
 ALL-LICENSE

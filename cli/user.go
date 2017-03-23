@@ -1,4 +1,4 @@
-package main
+package cli
 
 import (
 	"fmt"
@@ -15,7 +15,7 @@ func (be UserOps) GetType() interface{} {
 }
 
 func (be UserOps) List() (interface{}, error) {
-	d, e := session.Users.ListUsers(users.NewListUsersParams())
+	d, e := Session.Users.ListUsers(users.NewListUsersParams())
 	if e != nil {
 		return nil, e
 	}
@@ -23,7 +23,7 @@ func (be UserOps) List() (interface{}, error) {
 }
 
 func (be UserOps) Get(id string) (interface{}, error) {
-	d, e := session.Users.GetUser(users.NewGetUserParams().WithName(id))
+	d, e := Session.Users.GetUser(users.NewGetUserParams().WithName(id))
 	if e != nil {
 		return nil, e
 	}
@@ -35,7 +35,7 @@ func (be UserOps) Create(obj interface{}) (interface{}, error) {
 	if !ok {
 		return nil, fmt.Errorf("Invalid type passed to user create")
 	}
-	d, e := session.Users.CreateUser(users.NewCreateUserParams().WithBody(user))
+	d, e := Session.Users.CreateUser(users.NewCreateUserParams().WithBody(user))
 	if e != nil {
 		return nil, e
 	}
@@ -47,7 +47,7 @@ func (be UserOps) Put(id string, obj interface{}) (interface{}, error) {
 	if !ok {
 		return nil, fmt.Errorf("Invalid type passed to user put")
 	}
-	d, e := session.Users.PutUser(users.NewPutUserParams().WithName(id).WithBody(user))
+	d, e := Session.Users.PutUser(users.NewPutUserParams().WithName(id).WithBody(user))
 	if e != nil {
 		return nil, e
 	}
@@ -59,7 +59,7 @@ func (be UserOps) Patch(id string, obj interface{}) (interface{}, error) {
 	if !ok {
 		return nil, fmt.Errorf("Invalid type passed to user patch")
 	}
-	d, e := session.Users.PatchUser(users.NewPatchUserParams().WithName(id).WithBody(data))
+	d, e := Session.Users.PatchUser(users.NewPatchUserParams().WithName(id).WithBody(data))
 	if e != nil {
 		return nil, e
 	}
@@ -67,7 +67,7 @@ func (be UserOps) Patch(id string, obj interface{}) (interface{}, error) {
 }
 
 func (be UserOps) Delete(id string) (interface{}, error) {
-	d, e := session.Users.DeleteUser(users.NewDeleteUserParams().WithName(id))
+	d, e := Session.Users.DeleteUser(users.NewDeleteUserParams().WithName(id))
 	if e != nil {
 		return nil, e
 	}
@@ -76,7 +76,7 @@ func (be UserOps) Delete(id string) (interface{}, error) {
 
 func init() {
 	tree := addUserCommands()
-	app.AddCommand(tree)
+	App.AddCommand(tree)
 }
 
 func addUserCommands() (res *cobra.Command) {

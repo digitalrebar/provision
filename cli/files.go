@@ -1,4 +1,4 @@
-package main
+package cli
 
 import (
 	"os"
@@ -10,7 +10,7 @@ import (
 type FileOps struct{}
 
 func (be FileOps) List() (interface{}, error) {
-	d, e := session.Files.ListFiles(files.NewListFilesParams())
+	d, e := Session.Files.ListFiles(files.NewListFilesParams())
 	if e != nil {
 		return nil, e
 	}
@@ -18,7 +18,7 @@ func (be FileOps) List() (interface{}, error) {
 }
 
 func (be FileOps) Upload(path string, f *os.File) (interface{}, error) {
-	d, e := session.Files.UploadFile(files.NewUploadFileParams().WithPath(path).WithBody(f))
+	d, e := Session.Files.UploadFile(files.NewUploadFileParams().WithPath(path).WithBody(f))
 	if e != nil {
 		return nil, e
 	}
@@ -27,7 +27,7 @@ func (be FileOps) Upload(path string, f *os.File) (interface{}, error) {
 
 func init() {
 	tree := addFileCommands()
-	app.AddCommand(tree)
+	App.AddCommand(tree)
 }
 
 func addFileCommands() (res *cobra.Command) {
