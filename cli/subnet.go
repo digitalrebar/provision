@@ -55,7 +55,7 @@ func (be SubnetOps) Put(id string, obj interface{}) (interface{}, error) {
 }
 
 func (be SubnetOps) Patch(id string, obj interface{}) (interface{}, error) {
-	data, ok := obj.([]*models.JSONPatchOperation)
+	data, ok := obj.(models.Patch)
 	if !ok {
 		return nil, fmt.Errorf("Invalid type passed to subnet patch")
 	}

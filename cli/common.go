@@ -194,8 +194,8 @@ func commonOps(singularName, name string, pobj interface{}) (commands []*cobra.C
 					if err != nil {
 						log.Fatalf("Cannot generate JSON Patch\n%v\n", err)
 					}
-					p := []*models.JSONPatchOperation{}
-					err = yaml.Unmarshal(patch, p)
+					p := models.Patch{}
+					err = yaml.Unmarshal(patch, &p)
 					if err != nil {
 						log.Fatalf("Cannot generate JSON Patch Object\n%v\n", err)
 					}
