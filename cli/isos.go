@@ -1,4 +1,4 @@
-package main
+package cli
 
 import (
 	"os"
@@ -10,7 +10,7 @@ import (
 type IsoOps struct{}
 
 func (be IsoOps) List() (interface{}, error) {
-	d, e := session.Isos.ListIsos(isos.NewListIsosParams())
+	d, e := Session.Isos.ListIsos(isos.NewListIsosParams())
 	if e != nil {
 		return nil, e
 	}
@@ -18,7 +18,7 @@ func (be IsoOps) List() (interface{}, error) {
 }
 
 func (be IsoOps) Upload(path string, f *os.File) (interface{}, error) {
-	d, e := session.Isos.UploadIso(isos.NewUploadIsoParams().WithPath(path).WithBody(f))
+	d, e := Session.Isos.UploadIso(isos.NewUploadIsoParams().WithPath(path).WithBody(f))
 	if e != nil {
 		return nil, e
 	}
@@ -27,7 +27,7 @@ func (be IsoOps) Upload(path string, f *os.File) (interface{}, error) {
 
 func init() {
 	tree := addIsoCommands()
-	app.AddCommand(tree)
+	App.AddCommand(tree)
 }
 
 func addIsoCommands() (res *cobra.Command) {

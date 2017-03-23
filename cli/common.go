@@ -1,7 +1,8 @@
-package main
+package cli
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -10,9 +11,78 @@ import (
 	"github.com/ghodss/yaml"
 
 	"github.com/VictorLowther/jsonpatch"
+	"github.com/VictorLowther/jsonpatch/utils"
+	"github.com/go-openapi/runtime"
+	apiclient "github.com/rackn/rocket-skates/client"
 	"github.com/rackn/rocket-skates/models"
 	"github.com/spf13/cobra"
 )
+
+var (
+	Version            = "1.1.1"
+	Debug              = false
+	Endpoint           = "https://127.0.0.1:8092"
+	Username, Password string
+	Format             = "json"
+	App                = &cobra.Command{
+		Use:   "rscli",
+		Short: "A CLI application for interacting with the Rocket-Skates API",
+	}
+	Session   *apiclient.RocketSkates
+	BasicAuth runtime.ClientAuthInfoWriter
+)
+
+func safeMergeJSON(target, toMerge []byte) ([]byte, error) {
+	targetObj := make(map[string]interface{})
+	toMergeObj := make(map[string]interface{})
+	if err := json.Unmarshal(target, &targetObj); err != nil {
+		return nil, err
+	}
+	if err := json.Unmarshal(toMerge, &toMergeObj); err != nil {
+		return nil, err
+	}
+	outObj, ok := utils.Merge(targetObj, toMergeObj).(map[string]interface{})
+	if !ok {
+		return nil, errors.New("Cannot happen in safeMergeJSON")
+	}
+	keys := make([]string, 0)
+	for k := range outObj {
+		if _, ok := targetObj[k]; !ok {
+			keys = append(keys, k)
+		}
+	}
+	for _, k := range keys {
+		delete(outObj, k)
+	}
+	return json.Marshal(outObj)
+}
+
+func D(msg string, args ...interface{}) {
+	d(msg, args)
+}
+
+func d(msg string, args ...interface{}) {
+	if Debug {
+		log.Printf(msg, args...)
+	}
+}
+
+func pretty(o interface{}) (res string) {
+	var buf []byte
+	var err error
+	switch Format {
+	case "json":
+		buf, err = json.MarshalIndent(o, "", "  ")
+	case "yaml":
+		buf, err = yaml.Marshal(o)
+	default:
+		log.Fatalf("Unknown pretty format %s", Format)
+	}
+	if err != nil {
+		log.Fatalf("Failed to unmarshal returned object!")
+	}
+	return string(buf)
+}
 
 type ListOp interface {
 	List() (interface{}, error)

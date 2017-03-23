@@ -1,4 +1,4 @@
-package main
+package cli
 
 import (
 	"fmt"
@@ -10,7 +10,7 @@ import (
 type InterfaceOps struct{}
 
 func (be InterfaceOps) List() (interface{}, error) {
-	d, e := session.Interfaces.ListInterfaces(interfaces.NewListInterfacesParams())
+	d, e := Session.Interfaces.ListInterfaces(interfaces.NewListInterfacesParams())
 	if e != nil {
 		return nil, e
 	}
@@ -18,7 +18,7 @@ func (be InterfaceOps) List() (interface{}, error) {
 }
 
 func (be InterfaceOps) Get(id string) (interface{}, error) {
-	d, e := session.Interfaces.GetInterface(interfaces.NewGetInterfaceParams().WithName(id))
+	d, e := Session.Interfaces.GetInterface(interfaces.NewGetInterfaceParams().WithName(id))
 	if e != nil {
 		return nil, e
 	}
@@ -27,7 +27,7 @@ func (be InterfaceOps) Get(id string) (interface{}, error) {
 
 func init() {
 	tree := addInterfaceCommands()
-	app.AddCommand(tree)
+	App.AddCommand(tree)
 }
 
 func addInterfaceCommands() (res *cobra.Command) {
