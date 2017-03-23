@@ -142,12 +142,12 @@ func commonOps(singularName, name string, pobj interface{}) (commands []*cobra.C
 						} else {
 							buf = []byte(args[1])
 						}
-						obj := ptrs.GetType()
-						err = yaml.Unmarshal(buf, obj)
+						var intermediate interface{}
+						err = yaml.Unmarshal(buf, &intermediate)
 						if err != nil {
 							log.Fatalf("Unable to unmarshal input stream: %v\n", err)
 						}
-						updateObj, err := json.Marshal(obj)
+						updateObj, err := json.Marshal(intermediate)
 						if err != nil {
 							log.Fatalf("Unable to marshal input stream: %v\n", err)
 						}
@@ -157,7 +157,7 @@ func commonOps(singularName, name string, pobj interface{}) (commands []*cobra.C
 							log.Fatalf("Unable to merge objects: %v\n", err)
 						}
 
-						obj = ptrs.GetType()
+						obj := ptrs.GetType()
 						err = yaml.Unmarshal(merged, obj)
 						if err != nil {
 							log.Fatalf("Unable to unmarshal merged object: %v\n", err)
