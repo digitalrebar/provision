@@ -14,8 +14,8 @@ import (
 
 	"github.com/ghodss/yaml"
 
-	"github.com/VictorLowther/jsonpatch"
-	"github.com/VictorLowther/jsonpatch/utils"
+	"github.com/VictorLowther/jsonpatch2"
+	"github.com/VictorLowther/jsonpatch2/utils"
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
 	strfmt "github.com/go-openapi/strfmt"
@@ -257,51 +257,52 @@ func commonOps(singularName, name string, pobj interface{}) (commands []*cobra.C
 					if len(args) != 2 {
 						log.Fatalf("%v requires 2 arguments\n", c.UseLine())
 					}
-					if data, err := gptrs.Get(args[0]); err != nil {
+					data, err := gptrs.Get(args[0])
+					if err != nil {
 						log.Fatalf("Failed to fetch %v: %v\n%v\n", singularName, args[0], err)
+					}
+					var buf []byte
+
+					baseObj, err := json.Marshal(data)
+					if err != nil {
+						log.Fatalf("Unable to marshal object: %v\n", err)
+					}
+
+					if args[1] == "-" {
+						buf, err = ioutil.ReadAll(os.Stdin)
+						if err != nil {
+							log.Fatalf("Error reading from stdin: %v", err)
+						}
 					} else {
-						var buf []byte
-						var err error
+						buf = []byte(args[1])
+					}
+					var intermediate interface{}
+					err = yaml.Unmarshal(buf, &intermediate)
+					if err != nil {
+						log.Fatalf("Unable to unmarshal input stream: %v\n", err)
+					}
+					updateObj, err := json.Marshal(intermediate)
+					if err != nil {
+						log.Fatalf("Unable to marshal input stream: %v\n", err)
+					}
 
-						baseObj, err := json.Marshal(data)
-						if err != nil {
-							log.Fatalf("Unable to marshal object: %v\n", err)
-						}
+					merged, err := safeMergeJSON(baseObj, updateObj)
+					if err != nil {
+						log.Fatalf("Unable to merge objects: %v\n", err)
+					}
+					patch, err := jsonpatch2.Generate(baseObj, merged, true)
+					if err != nil {
+						log.Fatalf("Error generating patch: %v", err)
+					}
+					p := models.Patch{}
+					if err := utils.Remarshal(&patch, &p); err != nil {
+						log.Fatalf("Error translating patch: %v", err)
+					}
 
-						if args[1] == "-" {
-							buf, err = ioutil.ReadAll(os.Stdin)
-							if err != nil {
-								log.Fatalf("Error reading from stdin: %v", err)
-							}
-						} else {
-							buf = []byte(args[1])
-						}
-						var intermediate interface{}
-						err = yaml.Unmarshal(buf, &intermediate)
-						if err != nil {
-							log.Fatalf("Unable to unmarshal input stream: %v\n", err)
-						}
-						updateObj, err := json.Marshal(intermediate)
-						if err != nil {
-							log.Fatalf("Unable to marshal input stream: %v\n", err)
-						}
-
-						merged, err := safeMergeJSON(baseObj, updateObj)
-						if err != nil {
-							log.Fatalf("Unable to merge objects: %v\n", err)
-						}
-
-						obj := ptrs.GetType()
-						err = yaml.Unmarshal(merged, obj)
-						if err != nil {
-							log.Fatalf("Unable to unmarshal merged object: %v\n", err)
-						}
-
-						if data, err := ptrs.Put(args[0], obj); err != nil {
-							log.Fatalf("Unable to patch %v\n%v\n", args[0], err)
-						} else {
-							log.Println(pretty(data))
-						}
+					if data, err := ptrs.Patch(args[0], p); err != nil {
+						log.Fatalf("Unable to patch %v\n%v\n", args[0], err)
+					} else {
+						fmt.Println(pretty(data))
 					}
 				},
 			})
@@ -323,15 +324,15 @@ func commonOps(singularName, name string, pobj interface{}) (commands []*cobra.C
 						log.Fatalf("Unable to parse %v JSON %v\nError: %v\n", c.UseLine(), args[1], err)
 					}
 					newBuf, _ := yaml.Marshal(newObj)
-					patch, err := jsonpatch.GenerateJSON([]byte(args[0]), newBuf, true)
+					patch, err := jsonpatch2.Generate([]byte(args[0]), newBuf, true)
 					if err != nil {
 						log.Fatalf("Cannot generate JSON Patch\n%v\n", err)
 					}
 					p := models.Patch{}
-					err = yaml.Unmarshal(patch, &p)
-					if err != nil {
-						log.Fatalf("Cannot generate JSON Patch Object\n%v\n", err)
+					if err := utils.Remarshal(&patch, &p); err != nil {
+						log.Fatalf("Error translating patch: %v", err)
 					}
+
 					if data, err := ptrs.Patch("id", p); err != nil {
 						log.Fatalf("Unable to patch %v\n%v\n", args[0], err)
 					} else {
