@@ -22,6 +22,7 @@ Linux:
 Darwin:
 * bash4 - install from homebrw: brew install bash
 * 7z - install from homebrew: brew install p7zip
+* libarchive - update from homebrew to get a functional tar: brew install libarchive
 
 
 Running The Server
