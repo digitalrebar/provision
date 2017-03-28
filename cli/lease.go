@@ -33,7 +33,7 @@ func (be LeaseOps) GetId(obj interface{}) (string, error) {
 }
 
 func (be LeaseOps) List() (interface{}, error) {
-	d, e := session.Leases.ListLeases(leases.NewListLeasesParams())
+	d, e := session.Leases.ListLeases(leases.NewListLeasesParams(), basicAuth)
 	if e != nil {
 		return nil, e
 	}
@@ -45,7 +45,7 @@ func (be LeaseOps) Get(id string) (interface{}, error) {
 	if e != nil {
 		return nil, e
 	}
-	d, e := session.Leases.GetLease(leases.NewGetLeaseParams().WithAddress(s))
+	d, e := session.Leases.GetLease(leases.NewGetLeaseParams().WithAddress(s), basicAuth)
 	if e != nil {
 		return nil, e
 	}
@@ -57,7 +57,7 @@ func (be LeaseOps) Create(obj interface{}) (interface{}, error) {
 	if !ok {
 		return nil, fmt.Errorf("Invalid type passed to lease create")
 	}
-	d, e := session.Leases.CreateLease(leases.NewCreateLeaseParams().WithBody(lease))
+	d, e := session.Leases.CreateLease(leases.NewCreateLeaseParams().WithBody(lease), basicAuth)
 	if e != nil {
 		return nil, e
 	}
@@ -73,7 +73,7 @@ func (be LeaseOps) Patch(id string, obj interface{}) (interface{}, error) {
 	if e != nil {
 		return nil, e
 	}
-	d, e := session.Leases.PatchLease(leases.NewPatchLeaseParams().WithAddress(s).WithBody(data))
+	d, e := session.Leases.PatchLease(leases.NewPatchLeaseParams().WithAddress(s).WithBody(data), basicAuth)
 	if e != nil {
 		return nil, e
 	}
@@ -85,7 +85,7 @@ func (be LeaseOps) Delete(id string) (interface{}, error) {
 	if e != nil {
 		return nil, e
 	}
-	d, e := session.Leases.DeleteLease(leases.NewDeleteLeaseParams().WithAddress(s))
+	d, e := session.Leases.DeleteLease(leases.NewDeleteLeaseParams().WithAddress(s), basicAuth)
 	if e != nil {
 		return nil, e
 	}

@@ -27,7 +27,7 @@ func addPrefCommands() (res *cobra.Command) {
 		Short: "List all preferences",
 		RunE: func(c *cobra.Command, args []string) error {
 			dumpUsage = false
-			if resp, err := session.Prefs.ListPrefs(prefs.NewListPrefsParams()); err != nil {
+			if resp, err := session.Prefs.ListPrefs(prefs.NewListPrefsParams(), basicAuth); err != nil {
 				return generateError(err, "Error listing prefs")
 			} else {
 				return prettyPrint(resp.Payload)
@@ -64,7 +64,7 @@ func addPrefCommands() (res *cobra.Command) {
 				return fmt.Errorf("prefs set either takes a single argument or a multiple of two, not %d", len(args))
 			}
 			dumpUsage = false
-			if resp, err := session.Prefs.SetPrefs(prefs.NewSetPrefsParams().WithBody(prefsMap)); err != nil {
+			if resp, err := session.Prefs.SetPrefs(prefs.NewSetPrefsParams().WithBody(prefsMap), basicAuth); err != nil {
 				return generateError(err, "Error setting prefs")
 			} else {
 				return prettyPrint(resp.Payload)

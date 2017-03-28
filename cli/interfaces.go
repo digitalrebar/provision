@@ -10,7 +10,7 @@ import (
 type InterfaceOps struct{}
 
 func (be InterfaceOps) List() (interface{}, error) {
-	d, e := session.Interfaces.ListInterfaces(interfaces.NewListInterfacesParams())
+	d, e := session.Interfaces.ListInterfaces(interfaces.NewListInterfacesParams(), basicAuth)
 	if e != nil {
 		return nil, e
 	}
@@ -18,7 +18,7 @@ func (be InterfaceOps) List() (interface{}, error) {
 }
 
 func (be InterfaceOps) Get(id string) (interface{}, error) {
-	d, e := session.Interfaces.GetInterface(interfaces.NewGetInterfaceParams().WithName(id))
+	d, e := session.Interfaces.GetInterface(interfaces.NewGetInterfaceParams().WithName(id), basicAuth)
 	if e != nil {
 		return nil, e
 	}

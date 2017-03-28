@@ -23,7 +23,7 @@ func (be SubnetOps) GetId(obj interface{}) (string, error) {
 }
 
 func (be SubnetOps) List() (interface{}, error) {
-	d, e := session.Subnets.ListSubnets(subnets.NewListSubnetsParams())
+	d, e := session.Subnets.ListSubnets(subnets.NewListSubnetsParams(), basicAuth)
 	if e != nil {
 		return nil, e
 	}
@@ -31,7 +31,7 @@ func (be SubnetOps) List() (interface{}, error) {
 }
 
 func (be SubnetOps) Get(id string) (interface{}, error) {
-	d, e := session.Subnets.GetSubnet(subnets.NewGetSubnetParams().WithName(id))
+	d, e := session.Subnets.GetSubnet(subnets.NewGetSubnetParams().WithName(id), basicAuth)
 	if e != nil {
 		return nil, e
 	}
@@ -43,7 +43,7 @@ func (be SubnetOps) Create(obj interface{}) (interface{}, error) {
 	if !ok {
 		return nil, fmt.Errorf("Invalid type passed to subnet create")
 	}
-	d, e := session.Subnets.CreateSubnet(subnets.NewCreateSubnetParams().WithBody(subnet))
+	d, e := session.Subnets.CreateSubnet(subnets.NewCreateSubnetParams().WithBody(subnet), basicAuth)
 	if e != nil {
 		return nil, e
 	}
@@ -55,7 +55,7 @@ func (be SubnetOps) Patch(id string, obj interface{}) (interface{}, error) {
 	if !ok {
 		return nil, fmt.Errorf("Invalid type passed to subnet patch")
 	}
-	d, e := session.Subnets.PatchSubnet(subnets.NewPatchSubnetParams().WithName(id).WithBody(data))
+	d, e := session.Subnets.PatchSubnet(subnets.NewPatchSubnetParams().WithName(id).WithBody(data), basicAuth)
 	if e != nil {
 		return nil, e
 	}
@@ -63,7 +63,7 @@ func (be SubnetOps) Patch(id string, obj interface{}) (interface{}, error) {
 }
 
 func (be SubnetOps) Delete(id string) (interface{}, error) {
-	d, e := session.Subnets.DeleteSubnet(subnets.NewDeleteSubnetParams().WithName(id))
+	d, e := session.Subnets.DeleteSubnet(subnets.NewDeleteSubnetParams().WithName(id), basicAuth)
 	if e != nil {
 		return nil, e
 	}
