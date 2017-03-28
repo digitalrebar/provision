@@ -1,9 +1,14 @@
 package main
 
 import (
+	"os"
+
 	"github.com/rackn/rocket-skates/cli"
 )
 
 func main() {
-	cli.App.Execute()
+	err := cli.App.Execute()
+	if err != nil {
+		os.Exit(1)
+	}
 }

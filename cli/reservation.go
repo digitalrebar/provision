@@ -14,6 +14,14 @@ func (be ReservationOps) GetType() interface{} {
 	return &models.Reservation{}
 }
 
+func (be ReservationOps) GetId(obj interface{}) (string, error) {
+	reservation, ok := obj.(*models.Reservation)
+	if !ok {
+		return "", fmt.Errorf("Invalid type passed to reservation create")
+	}
+	return reservation.Addr.String(), nil
+}
+
 func (be ReservationOps) List() (interface{}, error) {
 	d, e := session.Reservations.ListReservations(reservations.NewListReservationsParams())
 	if e != nil {

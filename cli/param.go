@@ -14,6 +14,14 @@ func (be ParamOps) GetType() interface{} {
 	return &models.Param{}
 }
 
+func (be ParamOps) GetId(obj interface{}) (string, error) {
+	param, ok := obj.(*models.Param)
+	if !ok {
+		return "", fmt.Errorf("Invalid type passed to param create")
+	}
+	return *param.Name, nil
+}
+
 func (be ParamOps) List() (interface{}, error) {
 	d, e := session.Params.ListParams(params.NewListParamsParams())
 	if e != nil {

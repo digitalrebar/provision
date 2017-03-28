@@ -17,6 +17,14 @@ func (be TemplateOps) GetType() interface{} {
 	return &models.Template{}
 }
 
+func (be TemplateOps) GetId(obj interface{}) (string, error) {
+	template, ok := obj.(*models.Template)
+	if !ok {
+		return "", fmt.Errorf("Invalid type passed to template create")
+	}
+	return *template.ID, nil
+}
+
 func (be TemplateOps) List() (interface{}, error) {
 	d, e := session.Templates.ListTemplates(templates.NewListTemplatesParams())
 	if e != nil {

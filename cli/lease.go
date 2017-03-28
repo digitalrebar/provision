@@ -24,6 +24,14 @@ func (be LeaseOps) GetType() interface{} {
 	return &models.Lease{}
 }
 
+func (be LeaseOps) GetId(obj interface{}) (string, error) {
+	lease, ok := obj.(*models.Lease)
+	if !ok {
+		return "", fmt.Errorf("Invalid type passed to lease create")
+	}
+	return lease.Addr.String(), nil
+}
+
 func (be LeaseOps) List() (interface{}, error) {
 	d, e := session.Leases.ListLeases(leases.NewListLeasesParams())
 	if e != nil {

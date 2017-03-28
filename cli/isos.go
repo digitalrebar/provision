@@ -25,6 +25,14 @@ func (be IsoOps) Upload(path string, f *os.File) (interface{}, error) {
 	return d.Payload, nil
 }
 
+func (be IsoOps) Delete(id string) (interface{}, error) {
+	_, e := session.Isos.DeleteIso(isos.NewDeleteIsoParams().WithPath(id))
+	if e != nil {
+		return nil, e
+	}
+	return "Good", nil
+}
+
 func init() {
 	tree := addIsoCommands()
 	App.AddCommand(tree)

@@ -14,6 +14,14 @@ func (be UserOps) GetType() interface{} {
 	return &models.User{}
 }
 
+func (be UserOps) GetId(obj interface{}) (string, error) {
+	user, ok := obj.(*models.User)
+	if !ok {
+		return "", fmt.Errorf("Invalid type passed to user create")
+	}
+	return *user.Name, nil
+}
+
 func (be UserOps) List() (interface{}, error) {
 	d, e := session.Users.ListUsers(users.NewListUsersParams())
 	if e != nil {

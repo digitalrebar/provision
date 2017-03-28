@@ -14,6 +14,14 @@ func (be SubnetOps) GetType() interface{} {
 	return &models.Subnet{}
 }
 
+func (be SubnetOps) GetId(obj interface{}) (string, error) {
+	subnet, ok := obj.(*models.Subnet)
+	if !ok {
+		return "", fmt.Errorf("Invalid type passed to subnet create")
+	}
+	return *subnet.Name, nil
+}
+
 func (be SubnetOps) List() (interface{}, error) {
 	d, e := session.Subnets.ListSubnets(subnets.NewListSubnetsParams())
 	if e != nil {
