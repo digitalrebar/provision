@@ -21,6 +21,7 @@ coverage.txt
 ALL-LICENSE
 client
 models
+assets/isos/
 
 # documentation
 builddir/
