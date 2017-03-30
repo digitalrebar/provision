@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"reflect"
 	"strings"
 
 	"github.com/ghodss/yaml"
@@ -101,29 +102,52 @@ func init() {
 
 }
 
-func safeMergeJSON(target, toMerge []byte) ([]byte, error) {
-	targetObj := make(map[string]interface{})
+func safeMergeJSON(src interface{}, toMerge []byte) ([]byte, error) {
 	toMergeObj := make(map[string]interface{})
-	if err := json.Unmarshal(target, &targetObj); err != nil {
+	if err := json.Unmarshal(toMerge, &toMergeObj); err != nil {
 		return nil, err
 	}
-	if err := json.Unmarshal(toMerge, &toMergeObj); err != nil {
+	buf, err := json.Marshal(src)
+	if err != nil {
+		return nil, err
+	}
+	var targetObj map[string]interface{}
+	if err := json.Unmarshal(buf, &targetObj); err != nil {
 		return nil, err
 	}
 	outObj, ok := utils.Merge(targetObj, toMergeObj).(map[string]interface{})
 	if !ok {
 		return nil, errors.New("Cannot happen in safeMergeJSON")
 	}
-	keys := make([]string, 0)
-	for k := range outObj {
-		if _, ok := targetObj[k]; !ok {
-			keys = append(keys, k)
+	sv := reflect.ValueOf(src)
+	for sv.Kind() == reflect.Ptr || sv.Kind() == reflect.Interface {
+		sv = sv.Elem()
+	}
+	if sv.Kind() != reflect.Struct {
+		log.Panicf("first arg to safeMergeJSON is not a struct! %#v", src)
+	}
+	finalObj := map[string]interface{}{}
+	for i := 0; i < sv.NumField(); i++ {
+		vf := sv.Field(i)
+		if !vf.CanSet() {
+			continue
+		}
+		tf := sv.Type().Field(i)
+		mapField := tf.Name
+		if tag, ok := tf.Tag.Lookup(`json`); ok {
+			tagVals := strings.Split(tag, `,`)
+			if tagVals[0] == "-" {
+				continue
+			}
+			if tagVals[0] != "" {
+				mapField = tagVals[0]
+			}
+		}
+		if v, ok := outObj[mapField]; ok {
+			finalObj[mapField] = v
 		}
 	}
-	for _, k := range keys {
-		delete(outObj, k)
-	}
-	return json.Marshal(outObj)
+	return json.Marshal(finalObj)
 }
 
 func d(msg string, args ...interface{}) {
@@ -286,7 +310,7 @@ func commonOps(singularName, name string, pobj interface{}) (commands []*cobra.C
 						log.Fatalf("Unable to marshal input stream: %v\n", err)
 					}
 
-					merged, err := safeMergeJSON(baseObj, updateObj)
+					merged, err := safeMergeJSON(data, updateObj)
 					if err != nil {
 						log.Fatalf("Unable to merge objects: %v\n", err)
 					}
