@@ -26,7 +26,7 @@ func (be IsoOps) Upload(path string, f *os.File) (interface{}, error) {
 }
 
 func (be IsoOps) Delete(id string) (interface{}, error) {
-	_, e := session.Isos.DeleteIso(isos.NewDeleteIsoParams().WithPath(id))
+	_, e := session.Isos.DeleteIso(isos.NewDeleteIsoParams().WithPath(id), basicAuth)
 	if e != nil {
 		return nil, e
 	}

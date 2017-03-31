@@ -26,7 +26,7 @@ func (be FileOps) Upload(path string, f *os.File) (interface{}, error) {
 }
 
 func (be FileOps) Delete(id string) (interface{}, error) {
-	_, e := session.Files.DeleteFile(files.NewDeleteFileParams().WithPath(id))
+	_, e := session.Files.DeleteFile(files.NewDeleteFileParams().WithPath(id), basicAuth)
 	if e != nil {
 		return nil, e
 	}
