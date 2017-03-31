@@ -93,6 +93,7 @@ func testCli(t *testing.T, test CliTest) {
 	t.Logf("Testing: %v (stdin: %s)\n", test.args, test.stdin)
 
 	hasE := false
+	// Add access args
 	for _, a := range test.args {
 		if a == "-E" {
 			hasE = true
@@ -103,7 +104,7 @@ func testCli(t *testing.T, test CliTest) {
 	// Add access args
 	args := test.args
 	if !hasE {
-		args = []string{"-E", "https://127.0.0.1:10001"}
+		args := []string{"-E", "https://127.0.0.1:10001", "-U", "rocketskates", "-P", "r0cketsk8ts"}
 		for _, a := range test.args {
 			args = append(args, a)
 		}
