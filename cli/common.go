@@ -38,7 +38,16 @@ var (
 	format             = "json"
 	session            *apiclient.RocketSkates
 	basicAuth          runtime.ClientAuthInfoWriter
+	uf                 func(*cobra.Command) error
+	dumpUsage          = true
 )
+
+func MyUsage(c *cobra.Command) error {
+	if dumpUsage {
+		return uf(c)
+	}
+	return nil
+}
 
 func init() {
 	if ep := os.Getenv("RS_ENDPOINT"); ep != "" {
@@ -71,6 +80,9 @@ func init() {
 		"format", "F", "json",
 		`The serialzation we expect for output.  Can be "json" or "yaml"`)
 
+	uf = App.UsageFunc()
+	App.SetUsageFunc(MyUsage)
+
 	App.PersistentPreRun = func(c *cobra.Command, a []string) {
 		var err error
 		d("Talking to Rocket-Skates with %v (%v:%v)", endpoint, username, password)
@@ -82,8 +94,10 @@ func init() {
 		if err != nil {
 			log.Fatalf("Error handling endpoint %s: %v", endpoint, err)
 		}
-		transport := httptransport.NewWithClient(epURL.Host, "/api/v3", []string{epURL.Scheme}, hc)
-		session = apiclient.New(transport, strfmt.Default)
+		if session == nil {
+			transport := httptransport.NewWithClient(epURL.Host, "/api/v3", []string{epURL.Scheme}, hc)
+			session = apiclient.New(transport, strfmt.Default)
+		}
 		basicAuth = httptransport.BasicAuth(username, password)
 
 		if err != nil {
@@ -95,8 +109,9 @@ func init() {
 	App.AddCommand(&cobra.Command{
 		Use:   "version",
 		Short: "Rocket-Skates CLI Command Version",
-		Run: func(cmd *cobra.Command, args []string) {
-			log.Printf("Version: %v", version)
+		RunE: func(cmd *cobra.Command, args []string) error {
+			fmt.Printf("Version: %v\n", version)
+			return nil
 		},
 	})
 
@@ -156,21 +171,25 @@ func d(msg string, args ...interface{}) {
 	}
 }
 
-func pretty(o interface{}) (res string) {
+func prettyPrint(o interface{}) (err error) {
 	var buf []byte
-	var err error
 	switch format {
 	case "json":
 		buf, err = json.MarshalIndent(o, "", "  ")
 	case "yaml":
 		buf, err = yaml.Marshal(o)
 	default:
-		log.Fatalf("Unknown pretty format %s", format)
+		return fmt.Errorf("Unknown pretty format %s", format)
 	}
 	if err != nil {
-		log.Fatalf("Failed to unmarshal returned object!")
+		return fmt.Errorf("Failed to unmarshal returned object! %s", err.Error())
 	}
-	return string(buf)
+	fmt.Println(string(buf))
+	return nil
+}
+
+type Payloader interface {
+	GetPayload() interface{}
 }
 
 type ListOp interface {
@@ -183,14 +202,48 @@ type GetOp interface {
 
 type ModOps interface {
 	GetType() interface{}
+	GetId(interface{}) (string, error)
 	Create(interface{}) (interface{}, error)
 	Put(string, interface{}) (interface{}, error)
 	Patch(string, interface{}) (interface{}, error)
+}
+
+type DeleteOps interface {
 	Delete(string) (interface{}, error)
 }
 
 type UploadOp interface {
 	Upload(string, *os.File) (interface{}, error)
+}
+
+func generateError(err error, sfmt string, args ...interface{}) error {
+	s := fmt.Sprintf(sfmt, args...)
+
+	obj, ok := err.(Payloader)
+	if !ok {
+		return fmt.Errorf(s+": %v", err)
+	}
+
+	e := obj.GetPayload()
+	if e == nil {
+		return fmt.Errorf(s+": %v", err)
+	}
+
+	ee, ok := e.(*models.Error)
+	if !ok {
+		return fmt.Errorf(s+": %v", err)
+	}
+
+	s = ""
+	first := true
+	for _, ns := range ee.Messages {
+		if !first {
+			s = s + "\n"
+		}
+		first = false
+		s = s + ns
+	}
+	return fmt.Errorf(s)
 }
 
 // TODO: Consider adding Match someday
@@ -202,11 +255,12 @@ func commonOps(singularName, name string, pobj interface{}) (commands []*cobra.C
 		commands = append(commands, &cobra.Command{
 			Use:   "list",
 			Short: fmt.Sprintf("List all %v", name),
-			Run: func(c *cobra.Command, args []string) {
+			RunE: func(c *cobra.Command, args []string) error {
+				dumpUsage = false
 				if data, err := ptrs.List(); err != nil {
-					log.Fatalf("Error listing %v: %v", name, err)
+					return generateError(err, "Error listing %v", name)
 				} else {
-					log.Println(pretty(data))
+					return prettyPrint(data)
 				}
 			},
 		})
@@ -215,29 +269,30 @@ func commonOps(singularName, name string, pobj interface{}) (commands []*cobra.C
 		commands = append(commands, &cobra.Command{
 			Use:   "show [id]",
 			Short: fmt.Sprintf("Show a single %v by id", singularName),
-			Run: func(c *cobra.Command, args []string) {
+			RunE: func(c *cobra.Command, args []string) error {
 				if len(args) != 1 {
-					c.Printf("%v requires 1 argument\n", c.UseLine())
-					return
+					return fmt.Errorf("%v requires 1 argument", c.UseLine())
 				}
+				dumpUsage = false
 				if data, err := gptrs.Get(args[0]); err != nil {
-					c.Printf("Failed to fetch %v: %v\n%v\n", singularName, args[0], err)
-					return
+					return generateError(err, "Failed to fetch %v: %v", singularName, args[0])
 				} else {
-					log.Println(pretty(data))
+					return prettyPrint(data)
 				}
 			},
 		})
 		commands = append(commands, &cobra.Command{
 			Use:   "exists [id]",
 			Short: fmt.Sprintf("See if a %v exists by id", singularName),
-			Run: func(c *cobra.Command, args []string) {
+			RunE: func(c *cobra.Command, args []string) error {
 				if len(args) != 1 {
-					log.Fatalf("%v requires 1 argument\n", c.UseLine())
+					return fmt.Errorf("%v requires 1 argument", c.UseLine())
 				}
+				dumpUsage = false
 				if _, err := gptrs.Get(args[0]); err != nil {
-					log.Fatalf("Failed to fetch %v: %v\n%v\n", singularName, args[0], err)
+					return generateError(err, "Failed to fetch %v: %v", singularName, args[0])
 				}
+				return nil
 			},
 		})
 
@@ -246,16 +301,17 @@ func commonOps(singularName, name string, pobj interface{}) (commands []*cobra.C
 				Use:   "create [json]",
 				Short: fmt.Sprintf("Create a new %v with the passed-in JSON", singularName),
 				Long:  `As a useful shortcut, you can pass '-' to indicate that the JSON should be read from stdin`,
-				Run: func(c *cobra.Command, args []string) {
+				RunE: func(c *cobra.Command, args []string) error {
 					if len(args) != 1 {
-						log.Fatalf("%v requires 1 argument\n", c.UseLine())
+						return fmt.Errorf("%v requires 1 argument", c.UseLine())
 					}
+					dumpUsage = false
 					var buf []byte
 					var err error
 					if args[0] == "-" {
 						buf, err = ioutil.ReadAll(os.Stdin)
 						if err != nil {
-							log.Fatalf("Error reading from stdin: %v", err)
+							return fmt.Errorf("Error reading from stdin: %v", err)
 						}
 					} else {
 						buf = []byte(args[0])
@@ -263,12 +319,12 @@ func commonOps(singularName, name string, pobj interface{}) (commands []*cobra.C
 					obj := ptrs.GetType()
 					err = yaml.Unmarshal(buf, obj)
 					if err != nil {
-						log.Fatalf("Invalid %v object: %v\n", singularName, err)
+						return fmt.Errorf("Invalid %v object: %v", singularName, err)
 					}
 					if data, err := ptrs.Create(obj); err != nil {
-						log.Fatalf("Unable to create new %v: %v\n", singularName, err)
+						return generateError(err, "Unable to create new %v", singularName)
 					} else {
-						log.Println(pretty(data))
+						return prettyPrint(data)
 					}
 				},
 			})
@@ -277,25 +333,25 @@ func commonOps(singularName, name string, pobj interface{}) (commands []*cobra.C
 				Use:   "update [id] [json]",
 				Short: fmt.Sprintf("Unsafely update %v by id with the passed-in JSON", singularName),
 				Long:  `As a useful shortcut, you can pass '-' to indicate that the JSON should be read from stdin`,
-				Run: func(c *cobra.Command, args []string) {
+				RunE: func(c *cobra.Command, args []string) error {
 					if len(args) != 2 {
-						log.Fatalf("%v requires 2 arguments\n", c.UseLine())
+						return fmt.Errorf("%v requires 2 arguments", c.UseLine())
 					}
+					dumpUsage = false
 					data, err := gptrs.Get(args[0])
 					if err != nil {
-						log.Fatalf("Failed to fetch %v: %v\n%v\n", singularName, args[0], err)
+						return generateError(err, "Failed to fetch %v: %v", singularName, args[0])
 					}
 					var buf []byte
 
 					baseObj, err := json.Marshal(data)
 					if err != nil {
-						log.Fatalf("Unable to marshal object: %v\n", err)
+						return fmt.Errorf("Unable to marshal object: %v\n", err)
 					}
-
 					if args[1] == "-" {
 						buf, err = ioutil.ReadAll(os.Stdin)
 						if err != nil {
-							log.Fatalf("Error reading from stdin: %v", err)
+							return fmt.Errorf("Error reading from stdin: %v", err)
 						}
 					} else {
 						buf = []byte(args[1])
@@ -303,30 +359,30 @@ func commonOps(singularName, name string, pobj interface{}) (commands []*cobra.C
 					var intermediate interface{}
 					err = yaml.Unmarshal(buf, &intermediate)
 					if err != nil {
-						log.Fatalf("Unable to unmarshal input stream: %v\n", err)
+						return fmt.Errorf("Unable to unmarshal input stream: %v\n", err)
 					}
 					updateObj, err := json.Marshal(intermediate)
 					if err != nil {
-						log.Fatalf("Unable to marshal input stream: %v\n", err)
+						return fmt.Errorf("Unable to marshal input stream: %v\n", err)
 					}
 
 					merged, err := safeMergeJSON(data, updateObj)
 					if err != nil {
-						log.Fatalf("Unable to merge objects: %v\n", err)
+						return fmt.Errorf("Unable to merge objects: %v\n", err)
 					}
 					patch, err := jsonpatch2.Generate(baseObj, merged, true)
 					if err != nil {
-						log.Fatalf("Error generating patch: %v", err)
+						return fmt.Errorf("Error generating patch: %v", err)
 					}
 					p := models.Patch{}
 					if err := utils.Remarshal(&patch, &p); err != nil {
-						log.Fatalf("Error translating patch: %v", err)
+						return fmt.Errorf("Error translating patch: %v", err)
 					}
 
 					if data, err := ptrs.Patch(args[0], p); err != nil {
-						log.Fatalf("Unable to patch %v\n%v\n", args[0], err)
+						return generateError(err, "Unable to patch %v", args[0])
 					} else {
-						fmt.Println(pretty(data))
+						return prettyPrint(data)
 					}
 				},
 			})
@@ -334,71 +390,81 @@ func commonOps(singularName, name string, pobj interface{}) (commands []*cobra.C
 			commands = append(commands, &cobra.Command{
 				Use:   "patch [objectJson] [changesJson]",
 				Short: fmt.Sprintf("Patch %v with the passed-in JSON", singularName),
-				Run: func(c *cobra.Command, args []string) {
+				RunE: func(c *cobra.Command, args []string) error {
 					if len(args) != 2 {
-						log.Fatalf("%v requires 2 arguments\n", c.UseLine())
+						return fmt.Errorf("%v requires 2 arguments", c.UseLine())
 					}
-					obj := &models.BootEnv{}
+					dumpUsage = false
+					obj := ptrs.GetType()
 					if err := yaml.Unmarshal([]byte(args[0]), obj); err != nil {
-						log.Fatalf("Unable to parse %v JSON %v\nError: %v\n", c.UseLine(), args[0], err)
+						return fmt.Errorf("Unable to parse %v JSON %v\nError: %v", c.UseLine(), args[0], err)
 					}
-					newObj := &models.BootEnv{}
+					newObj := ptrs.GetType()
 					yaml.Unmarshal([]byte(args[0]), newObj)
 					if err := yaml.Unmarshal([]byte(args[1]), newObj); err != nil {
-						log.Fatalf("Unable to parse %v JSON %v\nError: %v\n", c.UseLine(), args[1], err)
+						return fmt.Errorf("Unable to parse %v JSON %v\nError: %v", c.UseLine(), args[1], err)
 					}
-					newBuf, _ := yaml.Marshal(newObj)
+					newBuf, _ := json.Marshal(newObj)
 					patch, err := jsonpatch2.Generate([]byte(args[0]), newBuf, true)
 					if err != nil {
-						log.Fatalf("Cannot generate JSON Patch\n%v\n", err)
+						return fmt.Errorf("Cannot generate JSON Patch\n%v", err)
 					}
 					p := models.Patch{}
 					if err := utils.Remarshal(&patch, &p); err != nil {
-						log.Fatalf("Error translating patch: %v", err)
+						return fmt.Errorf("Error translating patch: %v", err)
 					}
 
-					if data, err := ptrs.Patch("id", p); err != nil {
-						log.Fatalf("Unable to patch %v\n%v\n", args[0], err)
-					} else {
-						log.Println(pretty(data))
+					id, err := ptrs.GetId(obj)
+					if err != nil {
+						return fmt.Errorf("Cannot get key for obj: %v", err)
 					}
-				},
-			})
-
-			commands = append(commands, &cobra.Command{
-				Use:   "destroy [id]",
-				Short: fmt.Sprintf("Destroy %v by id", singularName),
-				Run: func(c *cobra.Command, args []string) {
-					if len(args) != 1 {
-						log.Fatalf("%v requires 1 argument\n", c.UseLine())
-					}
-					if _, err := ptrs.Delete(args[0]); err != nil {
-						log.Fatalf("Unable to destroy %v %v\nError: %v\n", singularName, args[0], err)
+					if data, err := ptrs.Patch(id, p); err != nil {
+						return generateError(err, "Unable to patch %v", args[0])
 					} else {
-						log.Printf("Deleted %v %v\n", singularName, args[0])
+						return prettyPrint(data)
 					}
 				},
 			})
 		}
 	}
 
+	if ptrs, ok := pobj.(DeleteOps); ok {
+		commands = append(commands, &cobra.Command{
+			Use:   "destroy [id]",
+			Short: fmt.Sprintf("Destroy %v by id", singularName),
+			RunE: func(c *cobra.Command, args []string) error {
+				if len(args) != 1 {
+					return fmt.Errorf("%v requires 1 argument", c.UseLine())
+				}
+				dumpUsage = false
+				if _, err := ptrs.Delete(args[0]); err != nil {
+					return generateError(err, "Unable to destroy %v %v", singularName, args[0])
+				} else {
+					fmt.Printf("Deleted %v %v\n", singularName, args[0])
+					return nil
+				}
+			},
+		})
+	}
+
 	if ptrs, ok := pobj.(UploadOp); ok {
 		commands = append(commands, &cobra.Command{
 			Use:   "upload [file] as [name]",
 			Short: "Upload a local file to RocketSkates",
-			Run: func(c *cobra.Command, args []string) {
+			RunE: func(c *cobra.Command, args []string) error {
 				if len(args) != 3 {
-					log.Fatalf("Wrong number of args: expected 3, got %d", len(args))
+					return fmt.Errorf("Wrong number of args: expected 3, got %d", len(args))
 				}
+				dumpUsage = false
 				f, err := os.Open(args[0])
 				if err != nil {
-					log.Fatalf("Failed to open %s: %v", args[0], err)
+					return fmt.Errorf("Failed to open %s: %v", args[0], err)
 				}
 				defer f.Close()
 				if d, err := ptrs.Upload(args[2], f); err != nil {
-					log.Fatalf("Error uploading: %v", err)
+					return generateError(err, "Error uploading: %v", args[0])
 				} else {
-					log.Println(pretty(d))
+					return prettyPrint(d)
 				}
 			},
 		})

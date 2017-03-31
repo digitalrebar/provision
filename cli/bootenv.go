@@ -24,6 +24,14 @@ func (be BootEnvOps) GetType() interface{} {
 	return &models.BootEnv{}
 }
 
+func (be BootEnvOps) GetId(obj interface{}) (string, error) {
+	bootenv, ok := obj.(*models.BootEnv)
+	if !ok {
+		return "", fmt.Errorf("Invalid type passed to bootenv create")
+	}
+	return *bootenv.Name, nil
+}
+
 func (be BootEnvOps) List() (interface{}, error) {
 	d, e := session.BootEnvs.ListBootEnvs(bootenvs.NewListBootEnvsParams())
 	if e != nil {
@@ -118,35 +126,36 @@ is not present, we will try to download it if the bootenv specifies a location
 to download the ISO from.  If we cannot find an ISO to upload, then the bootenv
 will still be uploaded, but it will not be available until the ISO is uploaded
 using isos upload.git `,
-		Run: func(c *cobra.Command, args []string) {
+		RunE: func(c *cobra.Command, args []string) error {
 			if len(args) < 1 {
-				log.Fatalf("bootenvs install needs at least 1 arg")
+				return fmt.Errorf("%v needs at least 1 arg", c.UseLine())
 			}
 			if len(args) > 2 {
-				log.Fatalf("Too many args to bootenvs install")
+				return fmt.Errorf("%v has Too many args", c.UseLine())
 			}
+			dumpUsage = false
 			isoCache := "isos"
 			if len(args) == 2 {
 				isoCache = args[1]
 			}
 			var err error
 			if err = os.MkdirAll(isoCache, 0755); err != nil {
-				log.Fatalf("Error ensuring ISO cache exists: %s", err)
+				return fmt.Errorf("Error ensuring ISO cache exists: %s", err)
 			}
 			if bs, err := os.Stat("bootenvs"); err != nil {
-				log.Fatalf("Error determining whether bootenvs dir exists: %s", err)
+				return fmt.Errorf("Error determining whether bootenvs dir exists: %s", err)
 			} else if !bs.IsDir() {
-				log.Fatalf("bootenvs is not a directory")
+				return fmt.Errorf("bootenvs is not a directory")
 			}
 			var bootEnvBuf []byte
 			bootEnvBuf, err = ioutil.ReadFile(args[0])
 			if err != nil {
-				log.Fatalf("No bootenv %s", args[0])
+				return fmt.Errorf("No bootenv %s", args[0])
 			}
 			bootEnv := &models.BootEnv{}
 			err = yaml.Unmarshal(bootEnvBuf, bootEnv)
 			if err != nil {
-				log.Fatalf("Invalid %v object: %v\n", singularName, err)
+				return fmt.Errorf("Invalid %v object: %v\n", singularName, err)
 			}
 			// Upload any required templates if needed.
 			for _, ti := range bootEnv.Templates {
@@ -164,33 +173,31 @@ using isos upload.git `,
 				tmplName := path.Join("templates", ti.ID)
 				buf, err := ioutil.ReadFile(tmplName)
 				if err != nil {
-					log.Fatalf("%s requires template %s, but we cannot find it in %s", *bootEnv.Name, ti.ID, tmplName)
+					return fmt.Errorf("%s requires template %s, but we cannot find it in %s", *bootEnv.Name, ti.ID, tmplName)
 				}
 				tmplContents := string(buf)
 				tmpl.Contents = &tmplContents
 				if _, err := session.Templates.CreateTemplate(templates.NewCreateTemplateParams().WithBody(tmpl)); err != nil {
-					log.Fatalf("Unable to create new template: %v\n", err)
+					return generateError(err, "Unable to create new template: %s", ti.ID)
 				}
 			}
 			// Upload the bootenv
 			log.Printf("Installing bootenv %s", *bootEnv.Name)
 			resp, err := session.BootEnvs.CreateBootEnv(bootenvs.NewCreateBootEnvParams().WithBody(bootEnv))
 			if err != nil {
-				log.Fatalf("Unable to create new %v: %v\n", singularName, err)
+				return generateError(err, "Unable to create new %v", singularName)
 			}
 			if bootEnv.OS.IsoFile == "" {
-				log.Println(pretty(resp.Payload))
-				return
+				return prettyPrint(resp.Payload)
 			}
 			// See if we need to install the ISO
 			isoResp, err := session.Isos.ListIsos(isos.NewListIsosParams())
 			if err != nil {
-				log.Fatalf("Error listing isos: %v", err)
+				return generateError(err, "Error listing isos")
 			}
 			for _, isoName := range isoResp.Payload {
 				if bootEnv.OS.IsoFile == isoName {
-					log.Println(pretty(resp.Payload))
-					return
+					return prettyPrint(resp.Payload)
 				}
 			}
 			// We need to install the ISO
@@ -200,52 +207,55 @@ using isos upload.git `,
 				if !installDownloadIsos {
 					log.Printf("Skipping ISO download as requested")
 					log.Printf("Upload with `rscli isos upload %s as %s` when you have it", bootEnv.OS.IsoFile, bootEnv.OS.IsoFile)
-					log.Println(pretty(resp.Payload))
-					return
+					return prettyPrint(resp.Payload)
 				}
-				func() {
+				err = func() error {
 					// It is not present locally, we need to download it
 					if isoUrl == "" {
-						log.Fatalf("Unable to automatically download %s", isoUrl)
+						return fmt.Errorf("Unable to automatically download %s", isoUrl)
 					}
 					log.Printf("Downloading %s to %s", isoUrl, isoPath)
 					isoTarget, err := os.Create(isoPath)
 					defer isoTarget.Close()
 					if err != nil {
-						log.Fatalf("Unable to create %s to download ISO into: %v", isoPath, err)
+						return fmt.Errorf("Unable to create %s to download ISO into: %v", isoPath, err)
 					}
 					isoDlResp, err := http.Get(isoUrl)
 					if err != nil {
-						log.Fatalf("Unable to connect to %s: %v", isoUrl, err)
+						return fmt.Errorf("Unable to connect to %s: %v", isoUrl, err)
 					}
 					defer isoDlResp.Body.Close()
 					if isoDlResp.StatusCode >= 300 {
-						log.Fatalf("Unable to initiate download of %s: %s", isoUrl, isoDlResp.Status)
+						return fmt.Errorf("Unable to initiate download of %s: %s", isoUrl, isoDlResp.Status)
 					}
 					byteCount, err := io.Copy(isoTarget, isoDlResp.Body)
 					if err != nil {
-						log.Fatalf("Download of %s aborted: %v", isoUrl, err)
+						return fmt.Errorf("Download of %s aborted: %v", isoUrl, err)
 					}
 					log.Printf("Downloaded %d bytes", byteCount)
+					return nil
 				}()
+				if err != nil {
+					return err
+				}
 			}
 			// We have the ISO now.
 			log.Printf("Uploading %s to RocketSkates", isoPath)
 			isoTarget, err := os.Open(isoPath)
 			if err != nil {
-				log.Fatalf("Unable to open %s for upload: %v", isoPath, err)
+				return fmt.Errorf("Unable to open %s for upload: %v", isoPath, err)
 			}
 			defer isoTarget.Close()
 			params := isos.NewUploadIsoParams()
 			params.Path = bootEnv.OS.IsoFile
 			params.Body = isoTarget
 			if _, err := session.Isos.UploadIso(params); err != nil {
-				log.Fatalf("Error uploading %s: %v", isoPath, err)
+				return generateError(err, "Error uploading %s", isoPath)
 			}
 			if resp, err := session.BootEnvs.GetBootEnv(bootenvs.NewGetBootEnvParams().WithName(*bootEnv.Name)); err != nil {
-				log.Fatalf("Failed to fetch %v: %v\n%v\n", singularName, *bootEnv.Name, err)
+				return generateError(err, "Failed to fetch %v: %v", singularName, *bootEnv.Name)
 			} else {
-				log.Println(pretty(resp.Payload))
+				return prettyPrint(resp.Payload)
 			}
 		},
 	}

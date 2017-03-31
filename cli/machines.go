@@ -15,6 +15,14 @@ func (be MachineOps) GetType() interface{} {
 	return &models.Machine{}
 }
 
+func (be MachineOps) GetId(obj interface{}) (string, error) {
+	machine, ok := obj.(*models.Machine)
+	if !ok || machine.UUID == nil {
+		return "", fmt.Errorf("Invalid type passed to machine create")
+	}
+	return machine.UUID.String(), nil
+}
+
 func (be MachineOps) List() (interface{}, error) {
 	d, e := session.Machines.ListMachines(machines.NewListMachinesParams())
 	if e != nil {

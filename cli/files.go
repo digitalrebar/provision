@@ -25,6 +25,14 @@ func (be FileOps) Upload(path string, f *os.File) (interface{}, error) {
 	return d.Payload, nil
 }
 
+func (be FileOps) Delete(id string) (interface{}, error) {
+	_, e := session.Files.DeleteFile(files.NewDeleteFileParams().WithPath(id))
+	if e != nil {
+		return nil, e
+	}
+	return "Good", nil
+}
+
 func init() {
 	tree := addFileCommands()
 	App.AddCommand(tree)

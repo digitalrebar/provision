@@ -1,0 +1,179 @@
+package cli
+
+import (
+	"encoding/json"
+	"io/ioutil"
+	"strings"
+	"testing"
+)
+
+var templateDefaultListString string = "[]\n"
+
+var templateShowNoArgErrorString string = "Error: rscli templates show [id] requires 1 argument\n"
+var templateShowTooManyArgErrorString string = "Error: rscli templates show [id] requires 1 argument\n"
+var templateShowMissingArgErrorString string = "Error: templates GET: ignore: Not Found\n\n"
+var templateShowJohnString string = `{
+  "Contents": "John Rules",
+  "ID": "john"
+}
+`
+
+var templateExistsNoArgErrorString string = "Error: rscli templates exists [id] requires 1 argument"
+var templateExistsTooManyArgErrorString string = "Error: rscli templates exists [id] requires 1 argument"
+var templateExistsIgnoreString string = ""
+var templateExistsMissingIgnoreString string = "Error: templates GET: ignore: Not Found\n\n"
+
+var templateCreateNoArgErrorString string = "Error: rscli templates create [json] requires 1 argument\n"
+var templateCreateTooManyArgErrorString string = "Error: rscli templates create [json] requires 1 argument\n"
+var templateCreateBadJSONString = "asdgasdg"
+var templateCreateBadJSONErrorString = "Error: Invalid template object: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Template\n\n"
+var templateCreateInputString string = `{
+  "Contents": "John Rules",
+  "ID": "john"
+}
+`
+var templateCreateJohnString string = `{
+  "Contents": "John Rules",
+  "ID": "john"
+}
+`
+var templateCreateDuplicateErrorString = "Error: dataTracker create templates: john already exists\n\n"
+
+var templateListBothEnvsString = `[
+  {
+    "Contents": "John Rules",
+    "ID": "john"
+  }
+]
+`
+
+var templateUpdateNoArgErrorString string = "Error: rscli templates update [id] [json] requires 2 arguments"
+var templateUpdateTooManyArgErrorString string = "Error: rscli templates update [id] [json] requires 2 arguments"
+var templateUpdateBadJSONString = "asdgasdg"
+var templateUpdateBadJSONErrorString = "Error: Unable to merge objects: json: cannot unmarshal string into Go value of type map[string]interface {}\n\n\n"
+var templateUpdateInputString string = `{
+  "Description": "NewStrat"
+}
+`
+var templateUpdateJohnString string = `{
+  "Contents": "John Rules",
+  "Description": "NewStrat",
+  "ID": "john"
+}
+`
+var templateUpdateJohnMissingErrorString string = "Error: templates GET: john2: Not Found\n\n"
+
+var templatePatchNoArgErrorString string = "Error: rscli templates patch [objectJson] [changesJson] requires 2 arguments"
+var templatePatchTooManyArgErrorString string = "Error: rscli templates patch [objectJson] [changesJson] requires 2 arguments"
+var templatePatchBadPatchJSONString = "asdgasdg"
+var templatePatchBadPatchJSONErrorString = "Error: Unable to parse rscli templates patch [objectJson] [changesJson] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Template\n\n"
+var templatePatchBadBaseJSONString = "asdgasdg"
+var templatePatchBadBaseJSONErrorString = "Error: Unable to parse rscli templates patch [objectJson] [changesJson] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Template\n\n"
+var templatePatchBaseString string = `{
+  "Contents": "John Rules",
+  "Description": "NewStrat",
+  "ID": "john"
+}
+`
+var templatePatchInputString string = `{
+  "Description": "bootx64.efi"
+}
+`
+var templatePatchJohnString string = `{
+  "Contents": "John Rules",
+  "Description": "bootx64.efi",
+  "ID": "john"
+}
+`
+var templatePatchMissingBaseString string = `{
+  "Contents": "John Rules",
+  "Description": "NewStrat",
+  "ID": "john2"
+}
+`
+var templatePatchJohnMissingErrorString string = "Error: templates: PATCH john2: Not Found\n\n"
+
+var templateDestroyNoArgErrorString string = "Error: rscli templates destroy [id] requires 1 argument"
+var templateDestroyTooManyArgErrorString string = "Error: rscli templates destroy [id] requires 1 argument"
+var templateDestroyJohnString string = "Deleted template john\n"
+var templateDestroyMissingJohnString string = "Error: templates: DELETE john: Not Found\n\n"
+
+var templatesUploadNoArgsErrorString string = "Error: Wrong number of args: expected 3, got 0\n"
+var templatesUploadOneArgsErrorString string = "Error: Wrong number of args: expected 3, got 1\n"
+var templatesUploadFourArgsErrorString string = "Error: Wrong number of args: expected 3, got 4\n"
+var templatesUploadMissingFileErrorString string = "Error: Failed to open greg: open greg: no such file or directory\n\n"
+var templatesUploadSuccessString string = `{
+  "Contents": *REPLACE_WITH_TEMPLATE_GO_CONTENT*,
+  "ID": "greg"
+}
+`
+var templateDestroyGregString string = "Deleted template greg\n"
+
+func TestTemplateCli(t *testing.T) {
+	templateContent, _ := ioutil.ReadFile("template.go")
+	sb, _ := json.Marshal(string(templateContent))
+	templatesUploadSuccessString = strings.Replace(templatesUploadSuccessString, "*REPLACE_WITH_TEMPLATE_GO_CONTENT*", string(sb), 1)
+
+	tests := []CliTest{
+		CliTest{true, false, []string{"templates"}, noStdinString, "Access CLI commands relating to templates\n", ""},
+		CliTest{false, false, []string{"templates", "list"}, noStdinString, templateDefaultListString, noErrorString},
+
+		CliTest{true, true, []string{"templates", "create"}, noStdinString, noContentString, templateCreateNoArgErrorString},
+		CliTest{true, true, []string{"templates", "create", "john", "john2"}, noStdinString, noContentString, templateCreateTooManyArgErrorString},
+		CliTest{false, true, []string{"templates", "create", templateCreateBadJSONString}, noStdinString, noContentString, templateCreateBadJSONErrorString},
+		CliTest{false, false, []string{"templates", "create", templateCreateInputString}, noStdinString, templateCreateJohnString, noErrorString},
+		CliTest{false, true, []string{"templates", "create", templateCreateInputString}, noStdinString, noContentString, templateCreateDuplicateErrorString},
+		CliTest{false, false, []string{"templates", "list"}, noStdinString, templateListBothEnvsString, noErrorString},
+
+		CliTest{true, true, []string{"templates", "show"}, noStdinString, noContentString, templateShowNoArgErrorString},
+		CliTest{true, true, []string{"templates", "show", "john", "john2"}, noStdinString, noContentString, templateShowTooManyArgErrorString},
+		CliTest{false, true, []string{"templates", "show", "ignore"}, noStdinString, noContentString, templateShowMissingArgErrorString},
+		CliTest{false, false, []string{"templates", "show", "john"}, noStdinString, templateShowJohnString, noErrorString},
+
+		CliTest{true, true, []string{"templates", "exists"}, noStdinString, noContentString, templateExistsNoArgErrorString},
+		CliTest{true, true, []string{"templates", "exists", "john", "john2"}, noStdinString, noContentString, templateExistsTooManyArgErrorString},
+		CliTest{false, false, []string{"templates", "exists", "john"}, noStdinString, templateExistsIgnoreString, noErrorString},
+		CliTest{false, true, []string{"templates", "exists", "ignore"}, noStdinString, noContentString, templateExistsMissingIgnoreString},
+		CliTest{true, true, []string{"templates", "exists", "john", "john2"}, noStdinString, noContentString, templateExistsTooManyArgErrorString},
+
+		CliTest{true, true, []string{"templates", "update"}, noStdinString, noContentString, templateUpdateNoArgErrorString},
+		CliTest{true, true, []string{"templates", "update", "john", "john2", "john3"}, noStdinString, noContentString, templateUpdateTooManyArgErrorString},
+		CliTest{false, true, []string{"templates", "update", "john", templateUpdateBadJSONString}, noStdinString, noContentString, templateUpdateBadJSONErrorString},
+		CliTest{false, false, []string{"templates", "update", "john", templateUpdateInputString}, noStdinString, templateUpdateJohnString, noErrorString},
+		CliTest{false, true, []string{"templates", "update", "john2", templateUpdateInputString}, noStdinString, noContentString, templateUpdateJohnMissingErrorString},
+		CliTest{false, false, []string{"templates", "show", "john"}, noStdinString, templateUpdateJohnString, noErrorString},
+
+		CliTest{true, true, []string{"templates", "patch"}, noStdinString, noContentString, templatePatchNoArgErrorString},
+		CliTest{true, true, []string{"templates", "patch", "john", "john2", "john3"}, noStdinString, noContentString, templatePatchTooManyArgErrorString},
+		CliTest{false, true, []string{"templates", "patch", templatePatchBaseString, templatePatchBadPatchJSONString}, noStdinString, noContentString, templatePatchBadPatchJSONErrorString},
+		CliTest{false, true, []string{"templates", "patch", templatePatchBadBaseJSONString, templatePatchInputString}, noStdinString, noContentString, templatePatchBadBaseJSONErrorString},
+		CliTest{false, false, []string{"templates", "patch", templatePatchBaseString, templatePatchInputString}, noStdinString, templatePatchJohnString, noErrorString},
+		CliTest{false, true, []string{"templates", "patch", templatePatchMissingBaseString, templatePatchInputString}, noStdinString, noContentString, templatePatchJohnMissingErrorString},
+		CliTest{false, false, []string{"templates", "show", "john"}, noStdinString, templatePatchJohnString, noErrorString},
+
+		CliTest{true, true, []string{"templates", "destroy"}, noStdinString, noContentString, templateDestroyNoArgErrorString},
+		CliTest{true, true, []string{"templates", "destroy", "john", "june"}, noStdinString, noContentString, templateDestroyTooManyArgErrorString},
+		CliTest{false, false, []string{"templates", "destroy", "john"}, noStdinString, templateDestroyJohnString, noErrorString},
+		CliTest{false, true, []string{"templates", "destroy", "john"}, noStdinString, noContentString, templateDestroyMissingJohnString},
+		CliTest{false, false, []string{"templates", "list"}, noStdinString, templateDefaultListString, noErrorString},
+
+		CliTest{false, false, []string{"templates", "create", "-"}, templateCreateInputString + "\n", templateCreateJohnString, noErrorString},
+		CliTest{false, false, []string{"templates", "list"}, noStdinString, templateListBothEnvsString, noErrorString},
+		CliTest{false, false, []string{"templates", "update", "john", "-"}, templateUpdateInputString + "\n", templateUpdateJohnString, noErrorString},
+		CliTest{false, false, []string{"templates", "show", "john"}, noStdinString, templateUpdateJohnString, noErrorString},
+
+		CliTest{false, false, []string{"templates", "destroy", "john"}, noStdinString, templateDestroyJohnString, noErrorString},
+		CliTest{false, false, []string{"templates", "list"}, noStdinString, templateDefaultListString, noErrorString},
+
+		CliTest{true, true, []string{"templates", "upload"}, noStdinString, noContentString, templatesUploadNoArgsErrorString},
+		CliTest{true, true, []string{"templates", "upload", "asg"}, noStdinString, noContentString, templatesUploadOneArgsErrorString},
+		CliTest{true, true, []string{"templates", "upload", "asg", "two", "three", "four"}, noStdinString, noContentString, templatesUploadFourArgsErrorString},
+		CliTest{false, true, []string{"templates", "upload", "greg", "as", "greg"}, noStdinString, noContentString, templatesUploadMissingFileErrorString},
+		CliTest{false, false, []string{"templates", "upload", "template.go", "as", "greg"}, noStdinString, templatesUploadSuccessString, noErrorString},
+		CliTest{false, false, []string{"templates", "destroy", "greg"}, noStdinString, templateDestroyGregString, noErrorString},
+	}
+
+	for _, test := range tests {
+		testCli(t, test)
+	}
+}

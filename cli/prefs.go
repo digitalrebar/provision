@@ -1,8 +1,8 @@
 package cli
 
 import (
+	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 
 	"github.com/ghodss/yaml"
@@ -25,18 +25,19 @@ func addPrefCommands() (res *cobra.Command) {
 	commands = append(commands, &cobra.Command{
 		Use:   "list",
 		Short: "List all preferences",
-		Run: func(c *cobra.Command, args []string) {
+		RunE: func(c *cobra.Command, args []string) error {
+			dumpUsage = false
 			if resp, err := session.Prefs.ListPrefs(prefs.NewListPrefsParams()); err != nil {
-				log.Fatalf("Error listing prefs: %v", err)
+				return generateError(err, "Error listing prefs")
 			} else {
-				log.Println(pretty(resp.Payload))
+				return prettyPrint(resp.Payload)
 			}
 		},
 	})
 	commands = append(commands, &cobra.Command{
-		Use:   "set",
+		Use:   "set [- | JSON or YAML Map of strings | pairs of string args]",
 		Short: "Set preferences",
-		Run: func(c *cobra.Command, args []string) {
+		RunE: func(c *cobra.Command, args []string) error {
 			prefsMap := map[string]string{}
 			if len(args) == 1 {
 				var buf []byte
@@ -44,26 +45,29 @@ func addPrefCommands() (res *cobra.Command) {
 				if args[0] == `-` {
 					buf, err = ioutil.ReadAll(os.Stdin)
 					if err != nil {
-						log.Fatalf("Error reading from stdin: %v", err)
+						dumpUsage = false
+						return fmt.Errorf("Error reading from stdin: %v", err)
 					}
 				} else {
 					buf = []byte(args[0])
 				}
-				err = yaml.Unmarshal(buf, prefsMap)
+				err = yaml.Unmarshal(buf, &prefsMap)
 				if err != nil {
-					log.Fatalf("Invalid prefs: %v\n", err)
+					dumpUsage = false
+					return fmt.Errorf("Invalid prefs: %v\n", err)
 				}
-			} else if len(args)%2 == 0 {
+			} else if len(args) != 0 && len(args)%2 == 0 {
 				for i := 0; i < len(args); i += 2 {
 					prefsMap[args[i]] = args[i+1]
 				}
 			} else {
-				log.Fatalf("prefs set either takes a single argument or a multiple of two, not %d", len(args))
+				return fmt.Errorf("prefs set either takes a single argument or a multiple of two, not %d", len(args))
 			}
+			dumpUsage = false
 			if resp, err := session.Prefs.SetPrefs(prefs.NewSetPrefsParams().WithBody(prefsMap)); err != nil {
-				log.Fatalf("Error setting prefs: %v", err)
+				return generateError(err, "Error setting prefs")
 			} else {
-				log.Println(pretty(resp.Payload))
+				return prettyPrint(resp.Payload)
 			}
 		},
 	})
