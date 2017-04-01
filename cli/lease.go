@@ -64,22 +64,6 @@ func (be LeaseOps) Create(obj interface{}) (interface{}, error) {
 	return d.Payload, nil
 }
 
-func (be LeaseOps) Put(id string, obj interface{}) (interface{}, error) {
-	lease, ok := obj.(*models.Lease)
-	if !ok {
-		return nil, fmt.Errorf("Invalid type passed to lease put")
-	}
-	s, e := convertStringToAddress(id)
-	if e != nil {
-		return nil, e
-	}
-	d, e := session.Leases.PutLease(leases.NewPutLeaseParams().WithAddress(s).WithBody(lease))
-	if e != nil {
-		return nil, e
-	}
-	return d.Payload, nil
-}
-
 func (be LeaseOps) Patch(id string, obj interface{}) (interface{}, error) {
 	data, ok := obj.(models.Patch)
 	if !ok {

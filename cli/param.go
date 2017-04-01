@@ -50,18 +50,6 @@ func (be ParamOps) Create(obj interface{}) (interface{}, error) {
 	return d.Payload, nil
 }
 
-func (be ParamOps) Put(id string, obj interface{}) (interface{}, error) {
-	param, ok := obj.(*models.Param)
-	if !ok {
-		return nil, fmt.Errorf("Invalid type passed to param put")
-	}
-	d, e := session.Params.PutParam(params.NewPutParamParams().WithName(id).WithBody(param))
-	if e != nil {
-		return nil, e
-	}
-	return d.Payload, nil
-}
-
 func (be ParamOps) Patch(id string, obj interface{}) (interface{}, error) {
 	data, ok := obj.(models.Patch)
 	if !ok {

@@ -50,18 +50,6 @@ func (be UserOps) Create(obj interface{}) (interface{}, error) {
 	return d.Payload, nil
 }
 
-func (be UserOps) Put(id string, obj interface{}) (interface{}, error) {
-	user, ok := obj.(*models.User)
-	if !ok {
-		return nil, fmt.Errorf("Invalid type passed to user put")
-	}
-	d, e := session.Users.PutUser(users.NewPutUserParams().WithName(id).WithBody(user))
-	if e != nil {
-		return nil, e
-	}
-	return d.Payload, nil
-}
-
 func (be UserOps) Patch(id string, obj interface{}) (interface{}, error) {
 	data, ok := obj.(models.Patch)
 	if !ok {

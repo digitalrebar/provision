@@ -50,18 +50,6 @@ func (be SubnetOps) Create(obj interface{}) (interface{}, error) {
 	return d.Payload, nil
 }
 
-func (be SubnetOps) Put(id string, obj interface{}) (interface{}, error) {
-	subnet, ok := obj.(*models.Subnet)
-	if !ok {
-		return nil, fmt.Errorf("Invalid type passed to subnet put")
-	}
-	d, e := session.Subnets.PutSubnet(subnets.NewPutSubnetParams().WithName(id).WithBody(subnet))
-	if e != nil {
-		return nil, e
-	}
-	return d.Payload, nil
-}
-
 func (be SubnetOps) Patch(id string, obj interface{}) (interface{}, error) {
 	data, ok := obj.(models.Patch)
 	if !ok {

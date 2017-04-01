@@ -51,18 +51,6 @@ func (be MachineOps) Create(obj interface{}) (interface{}, error) {
 	return d.Payload, nil
 }
 
-func (be MachineOps) Put(id string, obj interface{}) (interface{}, error) {
-	machine, ok := obj.(*models.Machine)
-	if !ok {
-		return nil, fmt.Errorf("Invalid type passed to machine put")
-	}
-	d, e := session.Machines.PutMachine(machines.NewPutMachineParams().WithUUID(strfmt.UUID(id)).WithBody(machine))
-	if e != nil {
-		return nil, e
-	}
-	return d.Payload, nil
-}
-
 func (be MachineOps) Patch(id string, obj interface{}) (interface{}, error) {
 	data, ok := obj.(models.Patch)
 	if !ok {

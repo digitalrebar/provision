@@ -54,22 +54,6 @@ func (be ReservationOps) Create(obj interface{}) (interface{}, error) {
 	return d.Payload, nil
 }
 
-func (be ReservationOps) Put(id string, obj interface{}) (interface{}, error) {
-	reservation, ok := obj.(*models.Reservation)
-	if !ok {
-		return nil, fmt.Errorf("Invalid type passed to reservation put")
-	}
-	s, e := convertStringToAddress(id)
-	if e != nil {
-		return nil, e
-	}
-	d, e := session.Reservations.PutReservation(reservations.NewPutReservationParams().WithAddress(s).WithBody(reservation))
-	if e != nil {
-		return nil, e
-	}
-	return d.Payload, nil
-}
-
 func (be ReservationOps) Patch(id string, obj interface{}) (interface{}, error) {
 	data, ok := obj.(models.Patch)
 	if !ok {
