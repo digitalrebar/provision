@@ -204,7 +204,6 @@ type ModOps interface {
 	GetType() interface{}
 	GetId(interface{}) (string, error)
 	Create(interface{}) (interface{}, error)
-	Put(string, interface{}) (interface{}, error)
 	Patch(string, interface{}) (interface{}, error)
 }
 

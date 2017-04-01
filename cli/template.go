@@ -53,18 +53,6 @@ func (be TemplateOps) Create(obj interface{}) (interface{}, error) {
 	return d.Payload, nil
 }
 
-func (be TemplateOps) Put(id string, obj interface{}) (interface{}, error) {
-	template, ok := obj.(*models.Template)
-	if !ok {
-		return nil, fmt.Errorf("Invalid type passed to template put")
-	}
-	d, e := session.Templates.PutTemplate(templates.NewPutTemplateParams().WithName(id).WithBody(template))
-	if e != nil {
-		return nil, e
-	}
-	return d.Payload, nil
-}
-
 func (be TemplateOps) Patch(id string, obj interface{}) (interface{}, error) {
 	data, ok := obj.(models.Patch)
 	if !ok {
