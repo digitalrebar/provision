@@ -84,26 +84,20 @@ func init() {
 	App.SetUsageFunc(MyUsage)
 
 	App.PersistentPreRun = func(c *cobra.Command, a []string) {
-		var err error
-		d("Talking to Rocket-Skates with %v (%v:%v)", endpoint, username, password)
-		tr := &http.Transport{
-			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
-		}
-		hc := &http.Client{Transport: tr}
-		epURL, err := url.Parse(endpoint)
-		if err != nil {
-			log.Fatalf("Error handling endpoint %s: %v", endpoint, err)
-		}
 		if session == nil {
+			var err error
+			d("Talking to Rocket-Skates with %v (%v:%v)", endpoint, username, password)
+			tr := &http.Transport{
+				TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+			}
+			hc := &http.Client{Transport: tr}
+			epURL, err := url.Parse(endpoint)
+			if err != nil {
+				log.Fatalf("Error handling endpoint %s: %v", endpoint, err)
+			}
 			transport := httptransport.NewWithClient(epURL.Host, "/api/v3", []string{epURL.Scheme}, hc)
 			session = apiclient.New(transport, strfmt.Default)
-		}
-		basicAuth = httptransport.BasicAuth(username, password)
-
-		if err != nil {
-			if c.Use != "version" {
-				log.Fatalf("Could not connect to Rocket-Skates: %v\n", err.Error())
-			}
+			basicAuth = httptransport.BasicAuth(username, password)
 		}
 	}
 	App.AddCommand(&cobra.Command{
