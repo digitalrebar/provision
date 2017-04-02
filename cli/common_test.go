@@ -91,10 +91,23 @@ type CliTest struct {
 func testCli(t *testing.T, test CliTest) {
 	t.Logf("Testing: %v (stdin: %s)\n", test.args, test.stdin)
 
-	// Add access args
-	args := []string{"-E", "https://127.0.0.1:10001"}
+	hasE := false
 	for _, a := range test.args {
-		args = append(args, a)
+		if a == "-E" {
+			hasE = true
+			break
+		}
+	}
+
+	// Add access args
+	args := test.args
+	if !hasE {
+		args = []string{"-E", "https://127.0.0.1:10001"}
+		for _, a := range test.args {
+			args = append(args, a)
+		}
+	} else {
+		session = nil
 	}
 
 	so, se, err := runCliCommand(t, args, test.stdin)
@@ -155,6 +168,86 @@ func generateArgs(args []string) *server.ProgOpts {
 	}
 
 	return &c_opts
+}
+
+var yamlTestString = `- Available: true
+  BootParams: ""
+  Description: The boot environment you should use to have unknown machines boot off
+    their local hard drive
+  Errors: null
+  Initrds: null
+  Kernel: ""
+  Name: ignore
+  OS:
+    Name: ignore
+  OptionalParams: null
+  RequiredParams: null
+  Templates:
+  - Contents: |
+      DEFAULT local
+      PROMPT 0
+      TIMEOUT 10
+      LABEL local
+      localboot 0
+    Name: pxelinux
+    Path: pxelinux.cfg/default
+  - Contents: exit
+    Name: elilo
+    Path: elilo.conf
+  - Contents: |
+      #!ipxe
+      chain tftp://{{.ProvisionerAddress}}/${netX/ip}.ipxe || exit
+    Name: ipxe
+    Path: default.ipxe
+
+`
+
+var jsonTestString = `[
+  {
+    "Available": true,
+    "BootParams": "",
+    "Description": "The boot environment you should use to have unknown machines boot off their local hard drive",
+    "Errors": null,
+    "Initrds": null,
+    "Kernel": "",
+    "Name": "ignore",
+    "OS": {
+      "Name": "ignore"
+    },
+    "OptionalParams": null,
+    "RequiredParams": null,
+    "Templates": [
+      {
+        "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
+        "Name": "pxelinux",
+        "Path": "pxelinux.cfg/default"
+      },
+      {
+        "Contents": "exit",
+        "Name": "elilo",
+        "Path": "elilo.conf"
+      },
+      {
+        "Contents": "#!ipxe\nchain tftp://{{.ProvisionerAddress}}/${netX/ip}.ipxe || exit\n",
+        "Name": "ipxe",
+        "Path": "default.ipxe"
+      }
+    ]
+  }
+]
+`
+
+func TestCorePieces(t *testing.T) {
+	tests := []CliTest{
+		CliTest{false, true, []string{"-E", "khttps://1.1.1.2:325", "bootenvs", "list"}, noStdinString, noContentString, "Error: Error listing bootenvs: Get khttps://1.1.1.2:325/api/v3/bootenvs: unsupported protocol scheme \"khttps\"\n\n"},
+		CliTest{false, false, []string{"-E", "https://127.0.0.1:10001", "version"}, noStdinString, "Version: " + version + "\n", noErrorString},
+		CliTest{false, true, []string{"-F", "cow", "bootenvs", "list"}, noStdinString, noContentString, "Error: Unknown pretty format cow\n\n"},
+		CliTest{false, false, []string{"-F", "yaml", "bootenvs", "list"}, noStdinString, yamlTestString, noErrorString},
+		CliTest{false, false, []string{"-F", "json", "bootenvs", "list"}, noStdinString, jsonTestString, noErrorString},
+	}
+	for _, test := range tests {
+		testCli(t, test)
+	}
 }
 
 func TestMain(m *testing.M) {

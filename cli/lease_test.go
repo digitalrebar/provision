@@ -107,6 +107,10 @@ var leaseDestroyTooManyArgErrorString string = "Error: rscli leases destroy [id]
 var leaseDestroyJohnString string = "Deleted lease 192.168.100.110\n"
 var leaseDestroyMissingJohnString string = "Error: leases: DELETE C0A8646E: Not Found\n\n"
 
+var leaseShowInvalidAddressErrorString string = "Error: lease get: address not valid: k192.168.100.110\n\n"
+var leaseUpdateInvalidAddressErrorString string = "Error: lease get: address not valid: k192.168.100.111\n\n"
+var leaseDestroyInvalidAddressErrorString string = "Error: lease delete: address not valid: k192.168.100.110\n\n"
+
 func TestLeaseCli(t *testing.T) {
 	tests := []CliTest{
 		// Create subnet
@@ -126,6 +130,7 @@ func TestLeaseCli(t *testing.T) {
 		CliTest{true, true, []string{"leases", "show", "john", "john2"}, noStdinString, noContentString, leaseShowTooManyArgErrorString},
 		CliTest{false, true, []string{"leases", "show", "192.168.100.111"}, noStdinString, noContentString, leaseShowMissingArgErrorString},
 		CliTest{false, false, []string{"leases", "show", "192.168.100.110"}, noStdinString, leaseShowLeaseString, noErrorString},
+		CliTest{false, true, []string{"leases", "show", "k192.168.100.110"}, noStdinString, noContentString, leaseShowInvalidAddressErrorString},
 
 		CliTest{true, true, []string{"leases", "exists"}, noStdinString, noContentString, leaseExistsNoArgErrorString},
 		CliTest{true, true, []string{"leases", "exists", "john", "john2"}, noStdinString, noContentString, leaseExistsTooManyArgErrorString},
@@ -139,6 +144,7 @@ func TestLeaseCli(t *testing.T) {
 		CliTest{false, false, []string{"leases", "update", "192.168.100.110", leaseUpdateInputString}, noStdinString, leaseUpdateJohnString, noErrorString},
 		CliTest{false, true, []string{"leases", "update", "192.168.100.111", leaseUpdateInputString}, noStdinString, noContentString, leaseUpdateJohnMissingErrorString},
 		CliTest{false, false, []string{"leases", "show", "192.168.100.110"}, noStdinString, leaseUpdateJohnString, noErrorString},
+		CliTest{false, true, []string{"leases", "update", "k192.168.100.111", leaseUpdateInputString}, noStdinString, noContentString, leaseUpdateInvalidAddressErrorString},
 
 		CliTest{true, true, []string{"leases", "patch"}, noStdinString, noContentString, leasePatchNoArgErrorString},
 		CliTest{true, true, []string{"leases", "patch", "john", "john2", "john3"}, noStdinString, noContentString, leasePatchTooManyArgErrorString},
@@ -153,6 +159,7 @@ func TestLeaseCli(t *testing.T) {
 		CliTest{false, false, []string{"leases", "destroy", "192.168.100.110"}, noStdinString, leaseDestroyJohnString, noErrorString},
 		CliTest{false, true, []string{"leases", "destroy", "192.168.100.110"}, noStdinString, noContentString, leaseDestroyMissingJohnString},
 		CliTest{false, false, []string{"leases", "list"}, noStdinString, leaseDefaultListString, noErrorString},
+		CliTest{false, true, []string{"leases", "destroy", "k192.168.100.110"}, noStdinString, noContentString, leaseDestroyInvalidAddressErrorString},
 
 		CliTest{false, false, []string{"leases", "create", "-"}, leaseCreateInputString + "\n", leaseCreateJohnString, noErrorString},
 		CliTest{false, false, []string{"leases", "list"}, noStdinString, leaseListLeasesString, noErrorString},
