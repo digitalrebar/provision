@@ -4,6 +4,8 @@ import (
 	"io/ioutil"
 	"os"
 	"testing"
+
+	"github.com/rackn/rocket-skates/midlayer"
 )
 
 var bootEnvDefaultListString string = `[
@@ -287,8 +289,8 @@ var bootEnvInstallSledgehammerSuccessString string = `{
   "Name": "sledgehammer",
   "OS": {
     "IsoFile": "sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar",
-    "IsoSha256": "1b402035e0670bbfdf1250d3201f95232a50a4aa8b03c87d302facc922b9ccb2",
-    "IsoUrl": "http://opencrowbar.s3-website-us-east-1.amazonaws.com/sledgehammer/708de8b878e3818b1c1bb598a56de968939f9d4b/sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar",
+    "IsoSha256": "e094e066b24671c461c17482c6f071d78723275c48df70eb9d24125c89e99760",
+    "IsoUrl": "http://127.0.0.1:10003/sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar",
     "Name": "sledgehammer/708de8b878e3818b1c1bb598a56de968939f9d4b"
   },
   "OptionalParams": [
@@ -451,11 +453,13 @@ func TestBootEnvCli(t *testing.T) {
 		testCli(t, test)
 	}
 
+	midlayer.ServeStatic("127.0.0.1:10003", "test-data", nil)
+
 	os.RemoveAll("bootenvs/sledgehammer.yml")
 	if err := os.MkdirAll("bootenvs", 0755); err != nil {
 		t.Errorf("Failed to create bootenvs dir: %v\n", err)
 	}
-	if err := os.Symlink("../../assets/bootenvs/sledgehammer.yml", "bootenvs/sledgehammer.yml"); err != nil {
+	if err := os.Symlink("../test-data/sledgehammer.yml", "bootenvs/sledgehammer.yml"); err != nil {
 		t.Errorf("Failed to create link to sledgehammer.yml: %v\n", err)
 	}
 	if err := os.Symlink("../../assets/bootenvs/local.yml", "bootenvs/local.yml"); err != nil {
