@@ -1,6 +1,8 @@
 package cli
 
 import (
+	"io/ioutil"
+	"os"
 	"testing"
 )
 
@@ -253,6 +255,92 @@ var bootEnvDestroyTooManyArgErrorString string = "Error: rscli bootenvs destroy 
 var bootEnvDestroyJohnString string = "Deleted bootenv john\n"
 var bootEnvDestroyMissingJohnString string = "Error: bootenvs: DELETE john: Not Found\n\n"
 
+var bootEnvInstallNoArgUsageString string = "Error: rscli bootenvs install [bootenvFile] [isoPath] needs at least 1 arg\n"
+var bootEnvInstallTooManyArgUsageString string = "Error: rscli bootenvs install [bootenvFile] [isoPath] has Too many args\n"
+var bootEnvInstallBadBootEnvDirErrorString string = "Error: Error determining whether bootenvs dir exists: stat bootenvs: no such file or directory\n\n"
+var bootEnvInstallBootEnvDirIsFileErrorString string = "Error: bootenvs is not a directory\n\n"
+var bootEnvInstallNoSledgehammerErrorString string = "Error: No bootenv bootenvs/sledgehammer.yml\n\n"
+var bootEnvInstallSledgehammerBadJsonErrorString string = "Error: Invalid bootenv object: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.BootEnv\n\n\n"
+
+var bootEnvInstallSledgehammerSuccessString string = `{
+  "Available": true,
+  "BootParams": "rootflags=loop root=live:/sledgehammer.iso rootfstype=auto ro liveimg rd_NO_LUKS rd_NO_MD rd_NO_DM provisioner.web={{.ProvisionerURL}} rebar.web={{.CommandURL}} rs.uuid={{.Machine.UUID}} rs.api={{.ApiURL}}",
+  "Errors": null,
+  "Initrds": [
+    "stage1.img"
+  ],
+  "Kernel": "vmlinuz0",
+  "Name": "sledgehammer",
+  "OS": {
+    "IsoFile": "sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar",
+    "IsoSha256": "1b402035e0670bbfdf1250d3201f95232a50a4aa8b03c87d302facc922b9ccb2",
+    "IsoUrl": "http://opencrowbar.s3-website-us-east-1.amazonaws.com/sledgehammer/708de8b878e3818b1c1bb598a56de968939f9d4b/sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar",
+    "Name": "sledgehammer/708de8b878e3818b1c1bb598a56de968939f9d4b"
+  },
+  "OptionalParams": [
+    "ntp_servers",
+    "access_keys"
+  ],
+  "RequiredParams": null,
+  "Templates": [
+    {
+      "Contents": "DEFAULT discovery\nPROMPT 0\nTIMEOUT 10\nLABEL discovery\n  KERNEL {{.Env.PathFor \"tftp\" .Env.Kernel}}\n  INITRD {{.Env.JoinInitrds \"tftp\"}}\n  APPEND {{.BootParams}}\n  IPAPPEND 2\n",
+      "Name": "pxelinux",
+      "Path": "pxelinux.cfg/{{.Machine.HexAddress}}"
+    },
+    {
+      "Contents": "delay=2\ntimeout=20\nverbose=5\nimage={{.Env.PathFor \"tftp\" .Env.Kernel}}\ninitrd={{.Env.JoinInitrds \"tftp\"}}\nappend={{.BootParams}}\n",
+      "Name": "elilo",
+      "Path": "{{.Machine.HexAddress}}.conf"
+    },
+    {
+      "Contents": "#!ipxe\nkernel {{.Env.PathFor \"http\" .Env.Kernel}} {{.BootParams}} BOOTIF=01-${netX/mac:hexhyp}\n{{ range $initrd := .Env.Initrds }}\ninitrd {{$.Env.PathFor \"http\" $initrd}}\n{{ end }}\nboot\n",
+      "Name": "ipxe",
+      "Path": "{{.Machine.Address}}.ipxe"
+    },
+    {
+      "Contents": "#!/bin/bash\n# Copyright 2017, RackN\n#\n# Licensed under the Apache License, Version 2.0 (the \"License\");\n# you may not use this file except in compliance with the License.\n# You may obtain a copy of the License at\n#\n#  http://www.apache.org/licenses/LICENSE-2.0\n#\n# Unless required by applicable law or agreed to in writing, software\n# distributed under the License is distributed on an \"AS IS\" BASIS,\n# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n# See the License for the specific language governing permissions and\n# limitations under the License.\n#\n\n# We get the following variables from start-up.sh\n# MAC BOOTDEV ADMIN_IP DOMAIN HOSTNAME HOSTNAME_MAC MYIP\n\nset -x\nshopt -s extglob\nexport PS4=\"${BASH_SOURCE}@${LINENO}(${FUNCNAME[0]}): \"\ncp /usr/share/zoneinfo/GMT /etc/localtime\n\n# Set up just enough infrastructure to let the jigs work.\n# Allow client to pass http proxy environment variables\necho \"AcceptEnv http_proxy https_proxy no_proxy\" \u003e\u003e /etc/ssh/sshd_config\nservice sshd restart\n\n# Synchronize our date\n{{ if (.ParamExists \"ntp_servers\") }}\nntpdate \"{{index (.Param \"ntp_servers\") 0}}\"\n{{ end }}\n\n{{ if (.ParamExists \"access_keys\") }}\nmkdir -p /root/.ssh\ncat \u003e/root/.ssh/authorized_keys \u003c\u003cEOF\n### BEGIN GENERATED CONTENT\n{{ range $key := .Param \"access_keys\" }}{{$key}}{{ end }}\n#### END GENERATED CONTENT\nEOF\n{{ end }}\n\n# The last line in this script must always be exit 0!!\nexit 0\n",
+      "Name": "control.sh",
+      "Path": "{{.Machine.Path}}/control.sh"
+    }
+  ]
+}
+`
+
+var bootEnvInstallLocalMissingTemplatesErrorString string = "Error: local requires template local-pxelinux.tmpl, but we cannot find it in templates/local-pxelinux.tmpl\n\n"
+
+var bootEnvInstallLocalSuccessString string = `{
+  "Available": true,
+  "BootParams": "",
+  "Errors": null,
+  "Initrds": null,
+  "Kernel": "",
+  "Name": "local",
+  "OS": {
+    "Name": "local"
+  },
+  "OptionalParams": null,
+  "RequiredParams": null,
+  "Templates": [
+    {
+      "ID": "local-pxelinux.tmpl",
+      "Name": "pxelinux",
+      "Path": "pxelinux.cfg/{{.Machine.HexAddress}}"
+    },
+    {
+      "ID": "local-elilo.tmpl",
+      "Name": "elilo",
+      "Path": "{{.Machine.HexAddress}}.conf"
+    },
+    {
+      "ID": "local-ipxe.tmpl",
+      "Name": "ipxe",
+      "Path": "{{.Machine.Address}}.ipxe"
+    }
+  ]
+}
+`
+
 func TestBootEnvCli(t *testing.T) {
 	tests := []CliTest{
 		CliTest{true, false, []string{"bootenvs"}, noStdinString, "Access CLI commands relating to bootenvs\n", ""},
@@ -303,12 +391,106 @@ func TestBootEnvCli(t *testing.T) {
 		CliTest{false, false, []string{"bootenvs", "show", "john"}, noStdinString, bootEnvUpdateJohnString, noErrorString},
 		CliTest{false, false, []string{"bootenvs", "destroy", "john"}, noStdinString, bootEnvDestroyJohnString, noErrorString},
 		CliTest{false, false, []string{"bootenvs", "list"}, noStdinString, bootEnvDefaultListString, noErrorString},
+
+		CliTest{true, true, []string{"bootenvs", "install"}, noStdinString, noContentString, bootEnvInstallNoArgUsageString},
+		CliTest{true, true, []string{"bootenvs", "install", "john", "john", "john2"}, noStdinString, noContentString, bootEnvInstallTooManyArgUsageString},
+		CliTest{false, true, []string{"bootenvs", "install", "sledgehammer"}, noStdinString, noContentString, bootEnvInstallBadBootEnvDirErrorString},
 	}
 
 	for _, test := range tests {
 		testCli(t, test)
 	}
 
-}
+	if f, err := os.Create("bootenvs"); err != nil {
+		t.Errorf("Failed to create bootenvs file: %v\n", err)
+	} else {
+		f.Close()
+	}
 
-// TODO: Test Install bootenv.
+	tests = []CliTest{
+		CliTest{false, true, []string{"bootenvs", "install", "bootenvs/sledgehammer.yml"}, noStdinString, noContentString, bootEnvInstallBootEnvDirIsFileErrorString},
+	}
+	for _, test := range tests {
+		testCli(t, test)
+	}
+
+	os.RemoveAll("bootenvs")
+	if err := os.MkdirAll("bootenvs", 0755); err != nil {
+		t.Errorf("Failed to create bootenvs dir: %v\n", err)
+	}
+
+	tests = []CliTest{
+		CliTest{false, true, []string{"bootenvs", "install", "bootenvs/sledgehammer.yml"}, noStdinString, noContentString, bootEnvInstallNoSledgehammerErrorString},
+	}
+	for _, test := range tests {
+		testCli(t, test)
+	}
+
+	if err := ioutil.WriteFile("bootenvs/sledgehammer.yml", []byte("TEST"), 0644); err != nil {
+		t.Errorf("Failed to create bootenvs file: %v\n", err)
+	}
+
+	tests = []CliTest{
+		CliTest{false, true, []string{"bootenvs", "install", "bootenvs/sledgehammer.yml"}, noStdinString, noContentString, bootEnvInstallSledgehammerBadJsonErrorString},
+	}
+	for _, test := range tests {
+		testCli(t, test)
+	}
+
+	os.RemoveAll("bootenvs/sledgehammer.yml")
+	if err := os.MkdirAll("bootenvs", 0755); err != nil {
+		t.Errorf("Failed to create bootenvs dir: %v\n", err)
+	}
+	if err := os.Symlink("../../assets/bootenvs/sledgehammer.yml", "bootenvs/sledgehammer.yml"); err != nil {
+		t.Errorf("Failed to create link to sledgehammer.yml: %v\n", err)
+	}
+	if err := os.Symlink("../../assets/bootenvs/local.yml", "bootenvs/local.yml"); err != nil {
+		t.Errorf("Failed to create link to local.yml: %v\n", err)
+	}
+	tests = []CliTest{
+		CliTest{false, false, []string{"bootenvs", "install", "bootenvs/sledgehammer.yml"}, noStdinString, bootEnvInstallSledgehammerSuccessString, noErrorString},
+		CliTest{false, true, []string{"bootenvs", "install", "bootenvs/local.yml"}, noStdinString, noContentString, bootEnvInstallLocalMissingTemplatesErrorString},
+	}
+	for _, test := range tests {
+		testCli(t, test)
+	}
+
+	if err := os.MkdirAll("templates", 0755); err != nil {
+		t.Errorf("Failed to create templates dir: %v\n", err)
+	}
+	tmpls := []string{"local-pxelinux.tmpl", "local-elilo.tmpl", "local-ipxe.tmpl"}
+	for _, tmpl := range tmpls {
+		if err := os.Symlink("../../assets/templates/"+tmpl, "templates/"+tmpl); err != nil {
+			t.Errorf("Failed to create link to %s: %v\n", tmpl, err)
+		}
+	}
+	tests = []CliTest{
+		CliTest{false, false, []string{"bootenvs", "install", "bootenvs/local.yml", "ic"}, noStdinString, bootEnvInstallLocalSuccessString, noErrorString},
+		CliTest{false, false, []string{"bootenvs", "destroy", "sledgehammer"}, noStdinString, "Deleted bootenv sledgehammer\n", noErrorString},
+		CliTest{false, false, []string{"bootenvs", "install", "bootenvs/sledgehammer.yml"}, noStdinString, bootEnvInstallSledgehammerSuccessString, noErrorString},
+
+		// Clean up
+		CliTest{false, false, []string{"bootenvs", "destroy", "local"}, noStdinString, "Deleted bootenv local\n", noErrorString},
+		CliTest{false, false, []string{"bootenvs", "destroy", "sledgehammer"}, noStdinString, "Deleted bootenv sledgehammer\n", noErrorString},
+		CliTest{false, false, []string{"templates", "destroy", "local-pxelinux.tmpl"}, noStdinString, "Deleted template local-pxelinux.tmpl\n", noErrorString},
+		CliTest{false, false, []string{"templates", "destroy", "local-elilo.tmpl"}, noStdinString, "Deleted template local-elilo.tmpl\n", noErrorString},
+		CliTest{false, false, []string{"templates", "destroy", "local-ipxe.tmpl"}, noStdinString, "Deleted template local-ipxe.tmpl\n", noErrorString},
+		CliTest{false, false, []string{"isos", "destroy", "sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar"}, noStdinString, "Deleted iso sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar\n", noErrorString},
+	}
+	for _, test := range tests {
+		testCli(t, test)
+	}
+
+	// Make sure that ic exists and iso exists
+	if _, err := os.Stat("ic"); os.IsNotExist(err) {
+		t.Errorf("Failed to create ic directory\n")
+	}
+	if _, err := os.Stat("isos"); os.IsNotExist(err) {
+		t.Errorf("Failed to create isos directory\n")
+	}
+
+	os.RemoveAll("bootenvs")
+	os.RemoveAll("templates")
+	os.RemoveAll("isos")
+	os.RemoveAll("ic")
+}

@@ -126,15 +126,12 @@ using isos upload.git `,
 			if len(args) == 2 {
 				isoCache = args[1]
 			}
-			var err error
-			if err = os.MkdirAll(isoCache, 0755); err != nil {
-				return fmt.Errorf("Error ensuring ISO cache exists: %s", err)
-			}
 			if bs, err := os.Stat("bootenvs"); err != nil {
 				return fmt.Errorf("Error determining whether bootenvs dir exists: %s", err)
 			} else if !bs.IsDir() {
 				return fmt.Errorf("bootenvs is not a directory")
 			}
+			var err error
 			var bootEnvBuf []byte
 			bootEnvBuf, err = ioutil.ReadFile(args[0])
 			if err != nil {
@@ -168,6 +165,9 @@ using isos upload.git `,
 				if _, err := session.Templates.CreateTemplate(templates.NewCreateTemplateParams().WithBody(tmpl)); err != nil {
 					return generateError(err, "Unable to create new template: %s", ti.ID)
 				}
+			}
+			if err = os.MkdirAll(isoCache, 0755); err != nil {
+				return fmt.Errorf("Error ensuring ISO cache exists: %s", err)
 			}
 			// Upload the bootenv
 			log.Printf("Installing bootenv %s", *bootEnv.Name)
