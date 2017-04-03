@@ -262,6 +262,20 @@ var bootEnvInstallBootEnvDirIsFileErrorString string = "Error: bootenvs is not a
 var bootEnvInstallNoSledgehammerErrorString string = "Error: No bootenv bootenvs/sledgehammer.yml\n\n"
 var bootEnvInstallSledgehammerBadJsonErrorString string = "Error: Invalid bootenv object: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.BootEnv\n\n\n"
 
+var bootEnvInstallSledgehammerSuccessWithErrorsString string = `RE:
+{
+  "Available": false,
+  "BootParams": "rootflags=loop root=live:/sledgehammer.iso rootfstype=auto ro liveimg rd_NO_LUKS rd_NO_MD rd_NO_DM provisioner.web={{.ProvisionerURL}} rebar.web={{.CommandURL}} rs.uuid={{.Machine.UUID}} rs.api={{.ApiURL}}",
+  "Errors": \[
+[\s\S]*
+  \],
+  "Initrds": \[
+    "stage1.img"
+  \],
+[\s\S]*
+}
+`
+
 var bootEnvInstallSledgehammerSuccessString string = `{
   "Available": true,
   "BootParams": "rootflags=loop root=live:/sledgehammer.iso rootfstype=auto ro liveimg rd_NO_LUKS rd_NO_MD rd_NO_DM provisioner.web={{.ProvisionerURL}} rebar.web={{.CommandURL}} rs.uuid={{.Machine.UUID}} rs.api={{.ApiURL}}",
@@ -448,6 +462,15 @@ func TestBootEnvCli(t *testing.T) {
 		t.Errorf("Failed to create link to local.yml: %v\n", err)
 	}
 	tests = []CliTest{
+		CliTest{false, false, []string{"bootenvs", "install", "--skip-download", "bootenvs/sledgehammer.yml"}, noStdinString, bootEnvInstallSledgehammerSuccessWithErrorsString, noErrorString},
+		CliTest{false, false, []string{"bootenvs", "destroy", "sledgehammer"}, noStdinString, "Deleted bootenv sledgehammer\n", noErrorString},
+	}
+	for _, test := range tests {
+		testCli(t, test)
+	}
+
+	installSkipDownloadIsos = false
+	tests = []CliTest{
 		CliTest{false, false, []string{"bootenvs", "install", "bootenvs/sledgehammer.yml"}, noStdinString, bootEnvInstallSledgehammerSuccessString, noErrorString},
 		CliTest{false, true, []string{"bootenvs", "install", "bootenvs/local.yml"}, noStdinString, noContentString, bootEnvInstallLocalMissingTemplatesErrorString},
 	}
@@ -470,8 +493,8 @@ func TestBootEnvCli(t *testing.T) {
 		CliTest{false, false, []string{"bootenvs", "install", "bootenvs/sledgehammer.yml"}, noStdinString, bootEnvInstallSledgehammerSuccessString, noErrorString},
 
 		// Clean up
-		CliTest{false, false, []string{"bootenvs", "destroy", "local"}, noStdinString, "Deleted bootenv local\n", noErrorString},
 		CliTest{false, false, []string{"bootenvs", "destroy", "sledgehammer"}, noStdinString, "Deleted bootenv sledgehammer\n", noErrorString},
+		CliTest{false, false, []string{"bootenvs", "destroy", "local"}, noStdinString, "Deleted bootenv local\n", noErrorString},
 		CliTest{false, false, []string{"templates", "destroy", "local-pxelinux.tmpl"}, noStdinString, "Deleted template local-pxelinux.tmpl\n", noErrorString},
 		CliTest{false, false, []string{"templates", "destroy", "local-elilo.tmpl"}, noStdinString, "Deleted template local-elilo.tmpl\n", noErrorString},
 		CliTest{false, false, []string{"templates", "destroy", "local-ipxe.tmpl"}, noStdinString, "Deleted template local-ipxe.tmpl\n", noErrorString},

@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"regexp"
 	"strings"
 	"testing"
 	"time"
@@ -119,13 +120,21 @@ func testCli(t *testing.T, test CliTest) {
 		t.Errorf("Expected No Error: but got: %v\n", err)
 	}
 
-	// if we are not dumping usage, expect exact matches
+	// if we are not dumping usage, expect exact/regexp matches
 	// If we are dumping usage and there is an error, expect out to match exact and error to prefix match
 	// If we are dumping usage and there is not an error, expect err to match exact and out to prefix match
-
 	if !test.dumpUsage {
-		if so != test.expectedStdOut {
-			t.Errorf("Expected StdOut: aa%saa, but got: aa%saa\n", test.expectedStdOut, so)
+		if strings.HasPrefix(test.expectedStdOut, "RE:\n") {
+			if matched, err := regexp.MatchString(test.expectedStdOut[4:], so); err != nil || !matched {
+				if err != nil {
+					t.Errorf("Expected StdOut: regexp fail: %v\n", err)
+				}
+				t.Errorf("Expected StdOut: aa%saa, but got: aa%saa\n", test.expectedStdOut[4:], so)
+			}
+		} else {
+			if so != test.expectedStdOut {
+				t.Errorf("Expected StdOut: aa%saa, but got: aa%saa\n", test.expectedStdOut, so)
+			}
 		}
 		if se != test.expectedStdErr {
 			t.Errorf("Expected StdErr: aa%saa, but got: aa%saa\n", test.expectedStdErr, se)

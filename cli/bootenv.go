@@ -85,6 +85,8 @@ func init() {
 	App.AddCommand(tree)
 }
 
+var installSkipDownloadIsos = true
+
 func addBootEnvCommands() (res *cobra.Command) {
 	singularName := "bootenv"
 	name := "bootenvs"
@@ -96,7 +98,6 @@ func addBootEnvCommands() (res *cobra.Command) {
 
 	commands := commonOps(singularName, name, &BootEnvOps{})
 
-	installDownloadIsos := true
 	installCmd := &cobra.Command{
 		Use:   "install [bootenvFile] [isoPath]",
 		Short: "Install a bootenv along with everything it requires",
@@ -192,7 +193,7 @@ using isos upload.git `,
 			isoPath := path.Join(isoCache, bootEnv.OS.IsoFile)
 			if _, err := os.Stat(isoPath); err != nil {
 				isoUrl := bootEnv.OS.IsoURL.String()
-				if !installDownloadIsos {
+				if installSkipDownloadIsos {
 					log.Printf("Skipping ISO download as requested")
 					log.Printf("Upload with `rscli isos upload %s as %s` when you have it", bootEnv.OS.IsoFile, bootEnv.OS.IsoFile)
 					return prettyPrint(resp.Payload)
@@ -247,7 +248,7 @@ using isos upload.git `,
 			}
 		},
 	}
-	installCmd.Flags().BoolVar(&installDownloadIsos, "download", true, "Whether to try to download ISOs from their upstream")
+	installCmd.Flags().BoolVar(&installSkipDownloadIsos, "skip-download", false, "Whether to try to download ISOs from their upstream")
 	commands = append(commands, installCmd)
 
 	res.AddCommand(commands...)
