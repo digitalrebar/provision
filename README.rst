@@ -10,7 +10,6 @@ Rocket Skates
 
 .. figure::  doc/images/rocket.jpg
    :align:   right
-   :width: 200 px
    :alt: Code name Rocket Skates
    :target: https://www.pexels.com/photo/aerospace-engineering-exploration-launch-34521/
 
