@@ -12,7 +12,7 @@ FAQ / Troubleshooting
 
 The following section is designed to answer frequently asked questions and help troubleshoot Rocket Skates installs.
 
-.. _rs_bind_error
+.. _rs_bind_error:
 
 Bind Error
 ----------
@@ -27,3 +27,17 @@ Rocket Skates will fail if it cannot attach to one of the required ports.
   * 67 - dhcp.  Correct with `sudo pkill dnsmasq`
 
 See the port mapping list on start-up for a complete list.
+
+.. _rs_gen_cert:
+
+Generate Certificate
+--------------------
+
+Sometimes the cert/key pair in the github tree is corrupt or not sufficient for the environment.  You can run the following command to rebuild a local cert/key pair.
+
+  ::
+
+    sudo openssl req -new -x509 -keyout server.key -out server.crt -days 365 -nodes
+
+
+You may need to install the openssl tools.
