@@ -46,6 +46,7 @@ The following pieces endpoints are available:
 * https://127.0.0.1:8092/swagger-ui - swagger-ui to explore the API
 * https://127.0.0.1:8092/swagger.json - API Swagger JSON file
 * https://127.0.0.1:8092/api/v3 - Raw api endpoint
+* https://127.0.0.1:8092/ui - User Configuration Pages
 * https://127.0.0.1:8091 - Static files served from the test-data/tftpboot directory
 * udp 69 or *--tftp-port* - Static files served from the test-data/tftpboot directory through the tftp protocol
 * udp 67 - DHCP Server listening socket - will only server addresses when once configured.  By default, silent.
@@ -74,3 +75,39 @@ the following command to rebuild a local cert/key pair.
 
 
 You may need to install the openssl tools.
+
+
+Configuring the Server
+~~~~~~~~~~~~~~~~~~~~~~
+
+Rocket Skates provides both DHCP and Provisioning services but can be run with either disabled.  This allows users to work in environments with existing DHCP infrastructure or to use Rocket Skates as an API driven DHCP server.
+
+DHCP Server
+-----------
+
+Provisioner
+-----------
+
+
+
+Download the service & cli
+  ::
+    curl -o
+    curl -o
+
+
+Install Boot Environments
+Upload Templates
+Set Proferences
+  ::
+    cd assets
+    ../rscli bootenvs install bootenvs/sledgehammer.yml 
+    ../rscli bootenvs install bootenvs/discovery.yml 
+    ../rscli bootenvs install bootenvs/local.yml 
+    ../rscli templates upload templates/local-elilo.tmpl as 5  ../rscli templates upload templates/local-pxelinux.tmpl as local-pxelinux.tmpl
+    ../rscli templates upload templates/local-ipxe.tmpl as 
+ local.elilo.tmpl
+    ../rscli prefs set unknownBootEnv to "discovery"
+local-ipxe.tmpl
+ 
+You can also review the UX via https://127.0.0.1:8092.
