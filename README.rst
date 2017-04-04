@@ -57,9 +57,12 @@ Quick Start
 
 At this time, you must follow the :ref:`rs_install` steps.  Don't worry, they are very simple.
 
+.. _rs_toc:
 
 Table of Contents
 -----------------
+
+**Reading on Github?** Visit `Generated Docs <http://rocket-skates.readthedocs.io/en/latest/README.html#rs_toc>`_ for a generated ToC.
 
 .. toctree::
    :glob:
