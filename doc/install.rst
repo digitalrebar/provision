@@ -13,8 +13,10 @@ There are prerequisites for the system to function.
 
 Linux:
 * bsdtar - from your local package manager
+
   * on ubuntu: apt-get install bsdtar
   * on centos/redhat: yum install bsdtar
+
 * 7z - from your local package manager
   * on ubuntu: apt-get install p7zip
   * on centos/redhat: yum install p7zip
@@ -51,30 +53,13 @@ The following pieces endpoints are available:
 * udp 69 or *--tftp-port* - Static files served from the test-data/tftpboot directory through the tftp protocol
 * udp 67 - DHCP Server listening socket - will only server addresses when once configured.  By default, silent.
 
-.. note:: If your SSL certificate is not valid, then follow the :ref:`rs_gen_cert` steps.
+If your SSL certificate is not valid, then follow the :ref:`rs_gen_cert` steps.
 
-.. note:: On OSX, you may have to add a route for broadcast addresses to work.  This can be done with the following
-comand.  The 192.168.100.1 is the IP address of the interface that you want to send messages through.
+.. note:: On OSX, you may have to add a route for broadcast addresses to work.  This can be done with the following comand.  The 192.168.100.1 is the IP address of the interface that you want to send messages through.
 
   ::
 
     sudo route add 255.255.255.255 192.168.100.1
-
-
-.. _rs_gen_cert:
-
-Generate Certificate
---------------------
-
-Sometimes the cert/key pair in the github tree is corrupt or not sufficient for the environment.  You can run
-the following command to rebuild a local cert/key pair.
-
-  ::
-
-    sudo openssl req -new -x509 -keyout server.key -out server.crt -days 365 -nodes
-
-
-You may need to install the openssl tools.
 
 
 Configuring the Server
@@ -82,32 +67,31 @@ Configuring the Server
 
 Rocket Skates provides both DHCP and Provisioning services but can be run with either disabled.  This allows users to work in environments with existing DHCP infrastructure or to use Rocket Skates as an API driven DHCP server.
 
-DHCP Server
------------
+DHCP Server (subnets)
+---------------------
 
-Provisioner
------------
+The DHCP server is configured be enabling Subnets that serve IPs and/or additional configuration information.  It is possible to run the DHCP server using only pre-defined IP Reservations or allow the DHCP server to create IP Leases dynamically.  
 
+The DHCP server had two primary models
 
+#. DHCP Listeners can be set on an IP for each server interface.  These listeners will respond to DHCP broadcasts on the matching network(s).  Operators should ensure that no other DHCP servers are set up on the configured subnets.
 
-Download the service & cli
+#. DHCP Relay allows other DHCP listeners to forward requests to the Rocket Skates server.  In this mode, the server is passive and can easily co-exist with other DHCP servers.  This mode works with the Provisioner by setting the many optional parameters (like next boot) that are needed for PXE boot processes.
+
+Provisioner (bootenvs)
+----------------------
+
+The Provisioner is a combination of several services and a template expansion engine.  The primary model is a boot environment (BootEnv) that contains crtical metadata to describe an installation process.  This metadata includes templates that are dynamically expanded when machines boot.
+
+Rocket Skates CLI has a process that combines multiple calls to install BootEnvs.  The following steps will configure a system capable to :ref:`rs_provion_discovered`.
+
   ::
-    curl -o
-    curl -o
 
-
-Install Boot Environments
-Upload Templates
-Set Proferences
-  ::
-    cd assets
     ../rscli bootenvs install bootenvs/sledgehammer.yml 
     ../rscli bootenvs install bootenvs/discovery.yml 
     ../rscli bootenvs install bootenvs/local.yml 
-    ../rscli templates upload templates/local-elilo.tmpl as 5  ../rscli templates upload templates/local-pxelinux.tmpl as local-pxelinux.tmpl
-    ../rscli templates upload templates/local-ipxe.tmpl as 
- local.elilo.tmpl
+    ../rscli templates upload templates/local-elilo.tmpl as local-elilo.tmpl
+    ../rscli templates upload templates/local-pxelinux.tmpl as local-pxelinux.tmpl
+    ../rscli templates upload templates/local-ipxe.tmpl as local-ipxe.tmpl
     ../rscli prefs set unknownBootEnv to "discovery"
-local-ipxe.tmpl
  
-You can also review the UX via https://127.0.0.1:8092.
