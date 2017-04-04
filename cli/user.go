@@ -84,6 +84,25 @@ func addUserCommands() (res *cobra.Command) {
 		Short: fmt.Sprintf("Access CLI commands relating to %v", name),
 	}
 	commands := commonOps(singularName, name, &UserOps{})
+
+	tokenCmd := &cobra.Command{
+		Use:   "token [id]",
+		Short: "Get a login token for this user",
+		Long:  "Creates a time-bound token for the specified user.",
+		RunE: func(c *cobra.Command, args []string) error {
+			if len(args) != 1 {
+				return fmt.Errorf("%v needs 1 arg", c.UseLine())
+			}
+			dumpUsage = false
+			if d, e := session.Users.GetUserToken(users.NewGetUserTokenParams().WithName(args[0]), basicAuth); e != nil {
+				return generateError(e, "Error: getToken: %v", e)
+			} else {
+				return prettyPrint(d.Payload)
+			}
+		},
+	}
+	commands = append(commands, tokenCmd)
+
 	res.AddCommand(commands...)
 	return res
 }

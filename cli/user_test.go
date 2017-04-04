@@ -105,6 +105,15 @@ var userDestroyTooManyArgErrorString string = "Error: rscli users destroy [id] r
 var userDestroyJohnString string = "Deleted user john\n"
 var userDestroyMissingJohnString string = "Error: users: DELETE john: Not Found\n\n"
 
+var userTokenNoArgErrorString string = "Error: rscli users token [id] needs 1 arg\n"
+var userTokenTooManyArgErrorString string = "Error: rscli users token [id] needs 1 arg\n"
+var userTokenUserNotFoundErrorString string = "Error: User GET: greg: Not Found\n\n"
+var userTokenSuccessString string = `RE:
+{
+  "Token": "[\s\S]*"
+}
+`
+
 func TestUserCli(t *testing.T) {
 
 	d, _ := session.Users.GetUser(users.NewGetUserParams().WithName("rocketskates"), basicAuth)
@@ -162,6 +171,11 @@ func TestUserCli(t *testing.T) {
 
 		CliTest{false, false, []string{"users", "destroy", "john"}, noStdinString, userDestroyJohnString, noErrorString},
 		CliTest{false, false, []string{"users", "list"}, noStdinString, userDefaultListString, noErrorString},
+
+		CliTest{true, true, []string{"users", "token"}, noStdinString, noContentString, userTokenNoArgErrorString},
+		CliTest{true, true, []string{"users", "token", "greg", "greg2"}, noStdinString, noContentString, userTokenTooManyArgErrorString},
+		CliTest{false, true, []string{"users", "token", "greg"}, noStdinString, noContentString, userTokenUserNotFoundErrorString},
+		CliTest{false, false, []string{"users", "token", "rocketskates"}, noStdinString, userTokenSuccessString, noErrorString},
 	}
 
 	for _, test := range tests {
