@@ -33,7 +33,7 @@ func (be BootEnvOps) GetId(obj interface{}) (string, error) {
 }
 
 func (be BootEnvOps) List() (interface{}, error) {
-	d, e := session.BootEnvs.ListBootEnvs(bootenvs.NewListBootEnvsParams())
+	d, e := session.BootEnvs.ListBootEnvs(bootenvs.NewListBootEnvsParams(), basicAuth)
 	if e != nil {
 		return nil, e
 	}
@@ -41,7 +41,7 @@ func (be BootEnvOps) List() (interface{}, error) {
 }
 
 func (be BootEnvOps) Get(id string) (interface{}, error) {
-	d, e := session.BootEnvs.GetBootEnv(bootenvs.NewGetBootEnvParams().WithName(id))
+	d, e := session.BootEnvs.GetBootEnv(bootenvs.NewGetBootEnvParams().WithName(id), basicAuth)
 	if e != nil {
 		return nil, e
 	}
@@ -53,7 +53,7 @@ func (be BootEnvOps) Create(obj interface{}) (interface{}, error) {
 	if !ok {
 		return nil, fmt.Errorf("Invalid type passed to bootenv create")
 	}
-	d, e := session.BootEnvs.CreateBootEnv(bootenvs.NewCreateBootEnvParams().WithBody(bootenv))
+	d, e := session.BootEnvs.CreateBootEnv(bootenvs.NewCreateBootEnvParams().WithBody(bootenv), basicAuth)
 	if e != nil {
 		return nil, e
 	}
@@ -65,7 +65,7 @@ func (be BootEnvOps) Patch(id string, obj interface{}) (interface{}, error) {
 	if !ok {
 		return nil, fmt.Errorf("Invalid type passed to bootenv patch")
 	}
-	d, e := session.BootEnvs.PatchBootEnv(bootenvs.NewPatchBootEnvParams().WithName(id).WithBody(data))
+	d, e := session.BootEnvs.PatchBootEnv(bootenvs.NewPatchBootEnvParams().WithName(id).WithBody(data), basicAuth)
 	if e != nil {
 		return nil, e
 	}
@@ -73,7 +73,7 @@ func (be BootEnvOps) Patch(id string, obj interface{}) (interface{}, error) {
 }
 
 func (be BootEnvOps) Delete(id string) (interface{}, error) {
-	d, e := session.BootEnvs.DeleteBootEnv(bootenvs.NewDeleteBootEnvParams().WithName(id))
+	d, e := session.BootEnvs.DeleteBootEnv(bootenvs.NewDeleteBootEnvParams().WithName(id), basicAuth)
 	if e != nil {
 		return nil, e
 	}
@@ -149,7 +149,7 @@ using isos upload.git `,
 					continue
 				}
 				_, err = session.Templates.GetTemplate(
-					templates.NewGetTemplateParams().WithName(ti.ID))
+					templates.NewGetTemplateParams().WithName(ti.ID), basicAuth)
 				if err == nil {
 					continue
 				}
@@ -163,7 +163,7 @@ using isos upload.git `,
 				}
 				tmplContents := string(buf)
 				tmpl.Contents = &tmplContents
-				if _, err := session.Templates.CreateTemplate(templates.NewCreateTemplateParams().WithBody(tmpl)); err != nil {
+				if _, err := session.Templates.CreateTemplate(templates.NewCreateTemplateParams().WithBody(tmpl), basicAuth); err != nil {
 					return generateError(err, "Unable to create new template: %s", ti.ID)
 				}
 			}
@@ -172,7 +172,7 @@ using isos upload.git `,
 			}
 			// Upload the bootenv
 			log.Printf("Installing bootenv %s", *bootEnv.Name)
-			resp, err := session.BootEnvs.CreateBootEnv(bootenvs.NewCreateBootEnvParams().WithBody(bootEnv))
+			resp, err := session.BootEnvs.CreateBootEnv(bootenvs.NewCreateBootEnvParams().WithBody(bootEnv), basicAuth)
 			if err != nil {
 				return generateError(err, "Unable to create new %v", singularName)
 			}
@@ -180,7 +180,7 @@ using isos upload.git `,
 				return prettyPrint(resp.Payload)
 			}
 			// See if we need to install the ISO
-			isoResp, err := session.Isos.ListIsos(isos.NewListIsosParams())
+			isoResp, err := session.Isos.ListIsos(isos.NewListIsosParams(), basicAuth)
 			if err != nil {
 				return generateError(err, "Error listing isos")
 			}
@@ -238,10 +238,10 @@ using isos upload.git `,
 			params := isos.NewUploadIsoParams()
 			params.Path = bootEnv.OS.IsoFile
 			params.Body = isoTarget
-			if _, err := session.Isos.UploadIso(params); err != nil {
+			if _, err := session.Isos.UploadIso(params, basicAuth); err != nil {
 				return generateError(err, "Error uploading %s", isoPath)
 			}
-			if resp, err := session.BootEnvs.GetBootEnv(bootenvs.NewGetBootEnvParams().WithName(*bootEnv.Name)); err != nil {
+			if resp, err := session.BootEnvs.GetBootEnv(bootenvs.NewGetBootEnvParams().WithName(*bootEnv.Name), basicAuth); err != nil {
 				return generateError(err, "Failed to fetch %v: %v", singularName, *bootEnv.Name)
 			} else {
 				return prettyPrint(resp.Payload)

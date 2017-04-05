@@ -10,7 +10,7 @@ import (
 type FileOps struct{}
 
 func (be FileOps) List() (interface{}, error) {
-	d, e := session.Files.ListFiles(files.NewListFilesParams())
+	d, e := session.Files.ListFiles(files.NewListFilesParams(), basicAuth)
 	if e != nil {
 		return nil, e
 	}
@@ -18,7 +18,7 @@ func (be FileOps) List() (interface{}, error) {
 }
 
 func (be FileOps) Upload(path string, f *os.File) (interface{}, error) {
-	d, e := session.Files.UploadFile(files.NewUploadFileParams().WithPath(path).WithBody(f))
+	d, e := session.Files.UploadFile(files.NewUploadFileParams().WithPath(path).WithBody(f), basicAuth)
 	if e != nil {
 		return nil, e
 	}
@@ -26,7 +26,7 @@ func (be FileOps) Upload(path string, f *os.File) (interface{}, error) {
 }
 
 func (be FileOps) Delete(id string) (interface{}, error) {
-	_, e := session.Files.DeleteFile(files.NewDeleteFileParams().WithPath(id))
+	_, e := session.Files.DeleteFile(files.NewDeleteFileParams().WithPath(id), basicAuth)
 	if e != nil {
 		return nil, e
 	}

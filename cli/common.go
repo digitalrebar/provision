@@ -34,6 +34,7 @@ var (
 	version            = "1.1.1"
 	debug              = false
 	endpoint           = "https://127.0.0.1:8092"
+	token              = ""
 	username, password string
 	format             = "json"
 	session            *apiclient.RocketSkates
@@ -52,6 +53,9 @@ func MyUsage(c *cobra.Command) error {
 func init() {
 	if ep := os.Getenv("RS_ENDPOINT"); ep != "" {
 		endpoint = ep
+	}
+	if tk := os.Getenv("RS_TOKEN"); tk != "" {
+		token = tk
 	}
 	if kv := os.Getenv("RS_KEY"); kv != "" {
 		key := strings.SplitN(kv, ":", 2)
@@ -73,6 +77,9 @@ func init() {
 	App.PersistentFlags().StringVarP(&password,
 		"password", "P", password,
 		"password of the Rocket-Skates user")
+	App.PersistentFlags().StringVarP(&token,
+		"token", "T", token,
+		"token of the Rocket-Skates access")
 	App.PersistentFlags().BoolVarP(&debug,
 		"debug", "d", false,
 		"Whether the CLI should run in debug mode")
@@ -97,6 +104,10 @@ func init() {
 			}
 			transport := httptransport.NewWithClient(epURL.Host, "/api/v3", []string{epURL.Scheme}, hc)
 			session = apiclient.New(transport, strfmt.Default)
+		}
+		if token != "" {
+			basicAuth = httptransport.BearerToken(token)
+		} else {
 			basicAuth = httptransport.BasicAuth(username, password)
 		}
 	}

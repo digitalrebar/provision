@@ -93,6 +93,7 @@ func testCli(t *testing.T, test CliTest) {
 	t.Logf("Testing: %v (stdin: %s)\n", test.args, test.stdin)
 
 	hasE := false
+	// Add access args
 	for _, a := range test.args {
 		if a == "-E" {
 			hasE = true
@@ -103,7 +104,7 @@ func testCli(t *testing.T, test CliTest) {
 	// Add access args
 	args := test.args
 	if !hasE {
-		args = []string{"-E", "https://127.0.0.1:10001"}
+		args = []string{"-E", "https://127.0.0.1:10001", "-U", "rocketskates", "-P", "r0cketsk8ts"}
 		for _, a := range test.args {
 			args = append(args, a)
 		}
@@ -249,7 +250,7 @@ var jsonTestString = `[
 func TestCorePieces(t *testing.T) {
 	tests := []CliTest{
 		CliTest{false, true, []string{"-E", "khttps://1.1.1.2:325", "bootenvs", "list"}, noStdinString, noContentString, "Error: Error listing bootenvs: Get khttps://1.1.1.2:325/api/v3/bootenvs: unsupported protocol scheme \"khttps\"\n\n"},
-		CliTest{false, false, []string{"-E", "https://127.0.0.1:10001", "version"}, noStdinString, "Version: " + version + "\n", noErrorString},
+		CliTest{false, false, []string{"-E", "https://127.0.0.1:10001", "-U", "rocketskates", "-P", "r0cketsk8ts", "version"}, noStdinString, "Version: " + version + "\n", noErrorString},
 		CliTest{false, true, []string{"-F", "cow", "bootenvs", "list"}, noStdinString, noContentString, "Error: Unknown pretty format cow\n\n"},
 		CliTest{false, false, []string{"-F", "yaml", "bootenvs", "list"}, noStdinString, yamlTestString, noErrorString},
 		CliTest{false, false, []string{"-F", "json", "bootenvs", "list"}, noStdinString, jsonTestString, noErrorString},
@@ -285,12 +286,16 @@ func TestMain(m *testing.M) {
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
 	client := &http.Client{Transport: tr}
-	_, apierr := client.Get("https://127.0.0.1:10001/api/v3/subnets")
+	req, _ := http.NewRequest("GET", "https://127.0.0.1:10001/api/v3/subnets", nil)
+	req.SetBasicAuth("rocketskates", "r0cketsk8ts")
+	_, apierr := client.Do(req)
 	count := 0
 	for apierr != nil && count < 30 {
 		time.Sleep(1 * time.Second)
 		count++
-		_, apierr = client.Get("https://127.0.0.1:10001/api/v3/subnets")
+		req, _ = http.NewRequest("GET", "https://127.0.0.1:10001/api/v3/subnets", nil)
+		req.SetBasicAuth("rocketskates", "r0cketsk8ts")
+		_, apierr = client.Do(req)
 	}
 	ret := 1
 	if count == 30 {

@@ -24,7 +24,7 @@ func (be MachineOps) GetId(obj interface{}) (string, error) {
 }
 
 func (be MachineOps) List() (interface{}, error) {
-	d, e := session.Machines.ListMachines(machines.NewListMachinesParams())
+	d, e := session.Machines.ListMachines(machines.NewListMachinesParams(), basicAuth)
 	if e != nil {
 		return nil, e
 	}
@@ -32,7 +32,7 @@ func (be MachineOps) List() (interface{}, error) {
 }
 
 func (be MachineOps) Get(id string) (interface{}, error) {
-	d, e := session.Machines.GetMachine(machines.NewGetMachineParams().WithUUID(strfmt.UUID(id)))
+	d, e := session.Machines.GetMachine(machines.NewGetMachineParams().WithUUID(strfmt.UUID(id)), basicAuth)
 	if e != nil {
 		return nil, e
 	}
@@ -44,7 +44,7 @@ func (be MachineOps) Create(obj interface{}) (interface{}, error) {
 	if !ok {
 		return nil, fmt.Errorf("Invalid type passed to machine create")
 	}
-	d, e := session.Machines.CreateMachine(machines.NewCreateMachineParams().WithBody(machine))
+	d, e := session.Machines.CreateMachine(machines.NewCreateMachineParams().WithBody(machine), basicAuth)
 	if e != nil {
 		return nil, e
 	}
@@ -56,7 +56,7 @@ func (be MachineOps) Patch(id string, obj interface{}) (interface{}, error) {
 	if !ok {
 		return nil, fmt.Errorf("Invalid type passed to machine patch")
 	}
-	d, e := session.Machines.PatchMachine(machines.NewPatchMachineParams().WithUUID(strfmt.UUID(id)).WithBody(data))
+	d, e := session.Machines.PatchMachine(machines.NewPatchMachineParams().WithUUID(strfmt.UUID(id)).WithBody(data), basicAuth)
 	if e != nil {
 		return nil, e
 	}
@@ -64,7 +64,7 @@ func (be MachineOps) Patch(id string, obj interface{}) (interface{}, error) {
 }
 
 func (be MachineOps) Delete(id string) (interface{}, error) {
-	d, e := session.Machines.DeleteMachine(machines.NewDeleteMachineParams().WithUUID(strfmt.UUID(id)))
+	d, e := session.Machines.DeleteMachine(machines.NewDeleteMachineParams().WithUUID(strfmt.UUID(id)), basicAuth)
 	if e != nil {
 		return nil, e
 	}

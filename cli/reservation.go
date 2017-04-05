@@ -23,7 +23,7 @@ func (be ReservationOps) GetId(obj interface{}) (string, error) {
 }
 
 func (be ReservationOps) List() (interface{}, error) {
-	d, e := session.Reservations.ListReservations(reservations.NewListReservationsParams())
+	d, e := session.Reservations.ListReservations(reservations.NewListReservationsParams(), basicAuth)
 	if e != nil {
 		return nil, e
 	}
@@ -35,7 +35,7 @@ func (be ReservationOps) Get(id string) (interface{}, error) {
 	if e != nil {
 		return nil, e
 	}
-	d, e := session.Reservations.GetReservation(reservations.NewGetReservationParams().WithAddress(s))
+	d, e := session.Reservations.GetReservation(reservations.NewGetReservationParams().WithAddress(s), basicAuth)
 	if e != nil {
 		return nil, e
 	}
@@ -47,7 +47,7 @@ func (be ReservationOps) Create(obj interface{}) (interface{}, error) {
 	if !ok {
 		return nil, fmt.Errorf("Invalid type passed to reservation create")
 	}
-	d, e := session.Reservations.CreateReservation(reservations.NewCreateReservationParams().WithBody(reservation))
+	d, e := session.Reservations.CreateReservation(reservations.NewCreateReservationParams().WithBody(reservation), basicAuth)
 	if e != nil {
 		return nil, e
 	}
@@ -63,7 +63,7 @@ func (be ReservationOps) Patch(id string, obj interface{}) (interface{}, error) 
 	if e != nil {
 		return nil, e
 	}
-	d, e := session.Reservations.PatchReservation(reservations.NewPatchReservationParams().WithAddress(s).WithBody(data))
+	d, e := session.Reservations.PatchReservation(reservations.NewPatchReservationParams().WithAddress(s).WithBody(data), basicAuth)
 	if e != nil {
 		return nil, e
 	}
@@ -75,7 +75,7 @@ func (be ReservationOps) Delete(id string) (interface{}, error) {
 	if e != nil {
 		return nil, e
 	}
-	d, e := session.Reservations.DeleteReservation(reservations.NewDeleteReservationParams().WithAddress(s))
+	d, e := session.Reservations.DeleteReservation(reservations.NewDeleteReservationParams().WithAddress(s), basicAuth)
 	if e != nil {
 		return nil, e
 	}

@@ -26,7 +26,7 @@ func (be TemplateOps) GetId(obj interface{}) (string, error) {
 }
 
 func (be TemplateOps) List() (interface{}, error) {
-	d, e := session.Templates.ListTemplates(templates.NewListTemplatesParams())
+	d, e := session.Templates.ListTemplates(templates.NewListTemplatesParams(), basicAuth)
 	if e != nil {
 		return nil, e
 	}
@@ -34,7 +34,7 @@ func (be TemplateOps) List() (interface{}, error) {
 }
 
 func (be TemplateOps) Get(id string) (interface{}, error) {
-	d, e := session.Templates.GetTemplate(templates.NewGetTemplateParams().WithName(id))
+	d, e := session.Templates.GetTemplate(templates.NewGetTemplateParams().WithName(id), basicAuth)
 	if e != nil {
 		return nil, e
 	}
@@ -46,7 +46,7 @@ func (be TemplateOps) Create(obj interface{}) (interface{}, error) {
 	if !ok {
 		return nil, fmt.Errorf("Invalid type passed to template create")
 	}
-	d, e := session.Templates.CreateTemplate(templates.NewCreateTemplateParams().WithBody(template))
+	d, e := session.Templates.CreateTemplate(templates.NewCreateTemplateParams().WithBody(template), basicAuth)
 	if e != nil {
 		return nil, e
 	}
@@ -58,7 +58,7 @@ func (be TemplateOps) Patch(id string, obj interface{}) (interface{}, error) {
 	if !ok {
 		return nil, fmt.Errorf("Invalid type passed to template patch")
 	}
-	d, e := session.Templates.PatchTemplate(templates.NewPatchTemplateParams().WithName(id).WithBody(data))
+	d, e := session.Templates.PatchTemplate(templates.NewPatchTemplateParams().WithName(id).WithBody(data), basicAuth)
 	if e != nil {
 		return nil, e
 	}
@@ -66,7 +66,7 @@ func (be TemplateOps) Patch(id string, obj interface{}) (interface{}, error) {
 }
 
 func (be TemplateOps) Delete(id string) (interface{}, error) {
-	d, e := session.Templates.DeleteTemplate(templates.NewDeleteTemplateParams().WithName(id))
+	d, e := session.Templates.DeleteTemplate(templates.NewDeleteTemplateParams().WithName(id), basicAuth)
 	if e != nil {
 		return nil, e
 	}
@@ -82,7 +82,7 @@ func (be TemplateOps) Upload(id string, f *os.File) (interface{}, error) {
 	}
 	str := string(buf.Bytes())
 	tmpl.Contents = &str
-	d, e := session.Templates.CreateTemplate(templates.NewCreateTemplateParams().WithBody(tmpl))
+	d, e := session.Templates.CreateTemplate(templates.NewCreateTemplateParams().WithBody(tmpl), basicAuth)
 	if e != nil {
 		return nil, e
 	}

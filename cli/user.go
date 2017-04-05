@@ -23,7 +23,7 @@ func (be UserOps) GetId(obj interface{}) (string, error) {
 }
 
 func (be UserOps) List() (interface{}, error) {
-	d, e := session.Users.ListUsers(users.NewListUsersParams())
+	d, e := session.Users.ListUsers(users.NewListUsersParams(), basicAuth)
 	if e != nil {
 		return nil, e
 	}
@@ -31,7 +31,7 @@ func (be UserOps) List() (interface{}, error) {
 }
 
 func (be UserOps) Get(id string) (interface{}, error) {
-	d, e := session.Users.GetUser(users.NewGetUserParams().WithName(id))
+	d, e := session.Users.GetUser(users.NewGetUserParams().WithName(id), basicAuth)
 	if e != nil {
 		return nil, e
 	}
@@ -43,7 +43,7 @@ func (be UserOps) Create(obj interface{}) (interface{}, error) {
 	if !ok {
 		return nil, fmt.Errorf("Invalid type passed to user create")
 	}
-	d, e := session.Users.CreateUser(users.NewCreateUserParams().WithBody(user))
+	d, e := session.Users.CreateUser(users.NewCreateUserParams().WithBody(user), basicAuth)
 	if e != nil {
 		return nil, e
 	}
@@ -55,7 +55,7 @@ func (be UserOps) Patch(id string, obj interface{}) (interface{}, error) {
 	if !ok {
 		return nil, fmt.Errorf("Invalid type passed to user patch")
 	}
-	d, e := session.Users.PatchUser(users.NewPatchUserParams().WithName(id).WithBody(data))
+	d, e := session.Users.PatchUser(users.NewPatchUserParams().WithName(id).WithBody(data), basicAuth)
 	if e != nil {
 		return nil, e
 	}
@@ -63,7 +63,7 @@ func (be UserOps) Patch(id string, obj interface{}) (interface{}, error) {
 }
 
 func (be UserOps) Delete(id string) (interface{}, error) {
-	d, e := session.Users.DeleteUser(users.NewDeleteUserParams().WithName(id))
+	d, e := session.Users.DeleteUser(users.NewDeleteUserParams().WithName(id), basicAuth)
 	if e != nil {
 		return nil, e
 	}
@@ -84,6 +84,25 @@ func addUserCommands() (res *cobra.Command) {
 		Short: fmt.Sprintf("Access CLI commands relating to %v", name),
 	}
 	commands := commonOps(singularName, name, &UserOps{})
+
+	tokenCmd := &cobra.Command{
+		Use:   "token [id]",
+		Short: "Get a login token for this user",
+		Long:  "Creates a time-bound token for the specified user.",
+		RunE: func(c *cobra.Command, args []string) error {
+			if len(args) != 1 {
+				return fmt.Errorf("%v needs 1 arg", c.UseLine())
+			}
+			dumpUsage = false
+			if d, e := session.Users.GetUserToken(users.NewGetUserTokenParams().WithName(args[0]), basicAuth); e != nil {
+				return generateError(e, "Error: getToken: %v", e)
+			} else {
+				return prettyPrint(d.Payload)
+			}
+		},
+	}
+	commands = append(commands, tokenCmd)
+
 	res.AddCommand(commands...)
 	return res
 }

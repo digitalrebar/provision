@@ -10,7 +10,7 @@ import (
 type IsoOps struct{}
 
 func (be IsoOps) List() (interface{}, error) {
-	d, e := session.Isos.ListIsos(isos.NewListIsosParams())
+	d, e := session.Isos.ListIsos(isos.NewListIsosParams(), basicAuth)
 	if e != nil {
 		return nil, e
 	}
@@ -18,7 +18,7 @@ func (be IsoOps) List() (interface{}, error) {
 }
 
 func (be IsoOps) Upload(path string, f *os.File) (interface{}, error) {
-	d, e := session.Isos.UploadIso(isos.NewUploadIsoParams().WithPath(path).WithBody(f))
+	d, e := session.Isos.UploadIso(isos.NewUploadIsoParams().WithPath(path).WithBody(f), basicAuth)
 	if e != nil {
 		return nil, e
 	}
@@ -26,7 +26,7 @@ func (be IsoOps) Upload(path string, f *os.File) (interface{}, error) {
 }
 
 func (be IsoOps) Delete(id string) (interface{}, error) {
-	_, e := session.Isos.DeleteIso(isos.NewDeleteIsoParams().WithPath(id))
+	_, e := session.Isos.DeleteIso(isos.NewDeleteIsoParams().WithPath(id), basicAuth)
 	if e != nil {
 		return nil, e
 	}

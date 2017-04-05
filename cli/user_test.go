@@ -1,10 +1,20 @@
 package cli
 
 import (
+	"encoding/base64"
+	"strings"
 	"testing"
+
+	"github.com/rackn/rocket-skates/client/users"
 )
 
-var userDefaultListString string = "[]\n"
+var userDefaultListString string = `[
+  {
+    "Name": "rocketskates",
+    "PasswordHash": "*REPLACE_WITH_HASH*"
+  }
+]
+`
 
 var userShowNoArgErrorString string = "Error: rscli users show [id] requires 1 argument\n"
 var userShowTooManyArgErrorString string = "Error: rscli users show [id] requires 1 argument\n"
@@ -40,6 +50,10 @@ var userListBothEnvsString = `[
   {
     "Name": "john",
     "PasswordHash": "asdg"
+  },
+  {
+    "Name": "rocketskates",
+    "PasswordHash": "*REPLACE_WITH_HASH*"
   }
 ]
 `
@@ -91,7 +105,22 @@ var userDestroyTooManyArgErrorString string = "Error: rscli users destroy [id] r
 var userDestroyJohnString string = "Deleted user john\n"
 var userDestroyMissingJohnString string = "Error: users: DELETE john: Not Found\n\n"
 
+var userTokenNoArgErrorString string = "Error: rscli users token [id] needs 1 arg\n"
+var userTokenTooManyArgErrorString string = "Error: rscli users token [id] needs 1 arg\n"
+var userTokenUserNotFoundErrorString string = "Error: User GET: greg: Not Found\n\n"
+var userTokenSuccessString string = `RE:
+{
+  "Token": "[\s\S]*"
+}
+`
+
 func TestUserCli(t *testing.T) {
+
+	d, _ := session.Users.GetUser(users.NewGetUserParams().WithName("rocketskates"), basicAuth)
+	s := base64.StdEncoding.EncodeToString([]byte(d.Payload.PasswordHash))
+	userDefaultListString = strings.Replace(userDefaultListString, "*REPLACE_WITH_HASH*", s, 1)
+	userListBothEnvsString = strings.Replace(userListBothEnvsString, "*REPLACE_WITH_HASH*", s, 1)
+
 	tests := []CliTest{
 		CliTest{true, false, []string{"users"}, noStdinString, "Access CLI commands relating to users\n", ""},
 		CliTest{false, false, []string{"users", "list"}, noStdinString, userDefaultListString, noErrorString},
@@ -142,6 +171,11 @@ func TestUserCli(t *testing.T) {
 
 		CliTest{false, false, []string{"users", "destroy", "john"}, noStdinString, userDestroyJohnString, noErrorString},
 		CliTest{false, false, []string{"users", "list"}, noStdinString, userDefaultListString, noErrorString},
+
+		CliTest{true, true, []string{"users", "token"}, noStdinString, noContentString, userTokenNoArgErrorString},
+		CliTest{true, true, []string{"users", "token", "greg", "greg2"}, noStdinString, noContentString, userTokenTooManyArgErrorString},
+		CliTest{false, true, []string{"users", "token", "greg"}, noStdinString, noContentString, userTokenUserNotFoundErrorString},
+		CliTest{false, false, []string{"users", "token", "rocketskates"}, noStdinString, userTokenSuccessString, noErrorString},
 	}
 
 	for _, test := range tests {
