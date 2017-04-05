@@ -21,6 +21,7 @@ var bootEnvDefaultListString string = `[
     "OS": {
       "Name": "ignore"
     },
+    "OnlyUnknown": true,
     "OptionalParams": null,
     "RequiredParams": null,
     "Templates": [
@@ -58,6 +59,7 @@ var bootEnvShowIgnoreString string = `{
   "OS": {
     "Name": "ignore"
   },
+  "OnlyUnknown": true,
   "OptionalParams": null,
   "RequiredParams": null,
   "Templates": [
@@ -105,6 +107,7 @@ var bootEnvCreateJohnString string = `{
   "OS": {
     "Name": ""
   },
+  "OnlyUnknown": false,
   "OptionalParams": null,
   "RequiredParams": null,
   "Templates": null
@@ -124,6 +127,7 @@ var bootEnvListBothEnvsString = `[
     "OS": {
       "Name": "ignore"
     },
+    "OnlyUnknown": true,
     "OptionalParams": null,
     "RequiredParams": null,
     "Templates": [
@@ -156,6 +160,7 @@ var bootEnvListBothEnvsString = `[
     "OS": {
       "Name": ""
     },
+    "OnlyUnknown": false,
     "OptionalParams": null,
     "RequiredParams": null,
     "Templates": null
@@ -183,6 +188,7 @@ var bootEnvUpdateJohnString string = `{
   "OS": {
     "Name": ""
   },
+  "OnlyUnknown": false,
   "OptionalParams": null,
   "RequiredParams": null,
   "Templates": null
@@ -208,6 +214,7 @@ var bootEnvPatchBaseString string = `{
   "OS": {
     "Name": ""
   },
+  "OnlyUnknown": false,
   "OptionalParams": null,
   "RequiredParams": null,
   "Templates": null
@@ -229,6 +236,7 @@ var bootEnvPatchJohnString string = `{
   "OS": {
     "Name": ""
   },
+  "OnlyUnknown": false,
   "OptionalParams": null,
   "RequiredParams": null,
   "Templates": null
@@ -246,6 +254,7 @@ var bootEnvPatchMissingBaseString string = `{
   "OS": {
     "Name": ""
   },
+  "OnlyUnknown": false,
   "OptionalParams": null,
   "RequiredParams": null,
   "Templates": null
@@ -262,7 +271,7 @@ var bootEnvInstallNoArgUsageString string = "Error: rscli bootenvs install [boot
 var bootEnvInstallTooManyArgUsageString string = "Error: rscli bootenvs install [bootenvFile] [isoPath] has Too many args\n"
 var bootEnvInstallBadBootEnvDirErrorString string = "Error: Error determining whether bootenvs dir exists: stat bootenvs: no such file or directory\n\n"
 var bootEnvInstallBootEnvDirIsFileErrorString string = "Error: bootenvs is not a directory\n\n"
-var bootEnvInstallNoSledgehammerErrorString string = "Error: No bootenv bootenvs/sledgehammer.yml\n\n"
+var bootEnvInstallNoSledgehammerErrorString string = "Error: No bootenv bootenvs/fredhammer.yml\n\n"
 var bootEnvInstallSledgehammerBadJsonErrorString string = "Error: Invalid bootenv object: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.BootEnv\n\n\n"
 
 var bootEnvInstallSledgehammerSuccessWithErrorsString string = `RE:
@@ -287,13 +296,14 @@ var bootEnvInstallSledgehammerSuccessString string = `{
     "stage1.img"
   ],
   "Kernel": "vmlinuz0",
-  "Name": "sledgehammer",
+  "Name": "fredhammer",
   "OS": {
     "IsoFile": "sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar",
     "IsoSha256": "e094e066b24671c461c17482c6f071d78723275c48df70eb9d24125c89e99760",
     "IsoUrl": "http://127.0.0.1:10003/sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar",
     "Name": "sledgehammer/708de8b878e3818b1c1bb598a56de968939f9d4b"
   },
+  "OnlyUnknown": false,
   "OptionalParams": [
     "ntp_servers",
     "access_keys"
@@ -336,6 +346,7 @@ var bootEnvInstallLocalSuccessString string = `{
   "OS": {
     "Name": "local"
   },
+  "OnlyUnknown": false,
   "OptionalParams": null,
   "RequiredParams": null,
   "Templates": [
@@ -411,7 +422,7 @@ func TestBootEnvCli(t *testing.T) {
 
 		CliTest{true, true, []string{"bootenvs", "install"}, noStdinString, noContentString, bootEnvInstallNoArgUsageString},
 		CliTest{true, true, []string{"bootenvs", "install", "john", "john", "john2"}, noStdinString, noContentString, bootEnvInstallTooManyArgUsageString},
-		CliTest{false, true, []string{"bootenvs", "install", "sledgehammer"}, noStdinString, noContentString, bootEnvInstallBadBootEnvDirErrorString},
+		CliTest{false, true, []string{"bootenvs", "install", "fredhammer"}, noStdinString, noContentString, bootEnvInstallBadBootEnvDirErrorString},
 	}
 
 	for _, test := range tests {
@@ -425,7 +436,7 @@ func TestBootEnvCli(t *testing.T) {
 	}
 
 	tests = []CliTest{
-		CliTest{false, true, []string{"bootenvs", "install", "bootenvs/sledgehammer.yml"}, noStdinString, noContentString, bootEnvInstallBootEnvDirIsFileErrorString},
+		CliTest{false, true, []string{"bootenvs", "install", "bootenvs/fredhammer.yml"}, noStdinString, noContentString, bootEnvInstallBootEnvDirIsFileErrorString},
 	}
 	for _, test := range tests {
 		testCli(t, test)
@@ -437,18 +448,18 @@ func TestBootEnvCli(t *testing.T) {
 	}
 
 	tests = []CliTest{
-		CliTest{false, true, []string{"bootenvs", "install", "bootenvs/sledgehammer.yml"}, noStdinString, noContentString, bootEnvInstallNoSledgehammerErrorString},
+		CliTest{false, true, []string{"bootenvs", "install", "bootenvs/fredhammer.yml"}, noStdinString, noContentString, bootEnvInstallNoSledgehammerErrorString},
 	}
 	for _, test := range tests {
 		testCli(t, test)
 	}
 
-	if err := ioutil.WriteFile("bootenvs/sledgehammer.yml", []byte("TEST"), 0644); err != nil {
+	if err := ioutil.WriteFile("bootenvs/fredhammer.yml", []byte("TEST"), 0644); err != nil {
 		t.Errorf("Failed to create bootenvs file: %v\n", err)
 	}
 
 	tests = []CliTest{
-		CliTest{false, true, []string{"bootenvs", "install", "bootenvs/sledgehammer.yml"}, noStdinString, noContentString, bootEnvInstallSledgehammerBadJsonErrorString},
+		CliTest{false, true, []string{"bootenvs", "install", "bootenvs/fredhammer.yml"}, noStdinString, noContentString, bootEnvInstallSledgehammerBadJsonErrorString},
 	}
 	for _, test := range tests {
 		testCli(t, test)
@@ -456,19 +467,19 @@ func TestBootEnvCli(t *testing.T) {
 
 	midlayer.ServeStatic("127.0.0.1:10003", backend.NewFS("test-data", nil), nil)
 
-	os.RemoveAll("bootenvs/sledgehammer.yml")
+	os.RemoveAll("bootenvs/fredhammer.yml")
 	if err := os.MkdirAll("bootenvs", 0755); err != nil {
 		t.Errorf("Failed to create bootenvs dir: %v\n", err)
 	}
-	if err := os.Symlink("../test-data/sledgehammer.yml", "bootenvs/sledgehammer.yml"); err != nil {
-		t.Errorf("Failed to create link to sledgehammer.yml: %v\n", err)
+	if err := os.Symlink("../test-data/fredhammer.yml", "bootenvs/fredhammer.yml"); err != nil {
+		t.Errorf("Failed to create link to fredhammer.yml: %v\n", err)
 	}
 	if err := os.Symlink("../../assets/bootenvs/local.yml", "bootenvs/local.yml"); err != nil {
 		t.Errorf("Failed to create link to local.yml: %v\n", err)
 	}
 	tests = []CliTest{
-		CliTest{false, false, []string{"bootenvs", "install", "--skip-download", "bootenvs/sledgehammer.yml"}, noStdinString, bootEnvInstallSledgehammerSuccessWithErrorsString, noErrorString},
-		CliTest{false, false, []string{"bootenvs", "destroy", "sledgehammer"}, noStdinString, "Deleted bootenv sledgehammer\n", noErrorString},
+		CliTest{false, false, []string{"bootenvs", "install", "--skip-download", "bootenvs/fredhammer.yml"}, noStdinString, bootEnvInstallSledgehammerSuccessWithErrorsString, noErrorString},
+		CliTest{false, false, []string{"bootenvs", "destroy", "fredhammer"}, noStdinString, "Deleted bootenv fredhammer\n", noErrorString},
 	}
 	for _, test := range tests {
 		testCli(t, test)
@@ -476,7 +487,7 @@ func TestBootEnvCli(t *testing.T) {
 
 	installSkipDownloadIsos = false
 	tests = []CliTest{
-		CliTest{false, false, []string{"bootenvs", "install", "bootenvs/sledgehammer.yml"}, noStdinString, bootEnvInstallSledgehammerSuccessString, noErrorString},
+		CliTest{false, false, []string{"bootenvs", "install", "bootenvs/fredhammer.yml"}, noStdinString, bootEnvInstallSledgehammerSuccessString, noErrorString},
 		CliTest{false, true, []string{"bootenvs", "install", "bootenvs/local.yml"}, noStdinString, noContentString, bootEnvInstallLocalMissingTemplatesErrorString},
 	}
 	for _, test := range tests {
@@ -494,11 +505,11 @@ func TestBootEnvCli(t *testing.T) {
 	}
 	tests = []CliTest{
 		CliTest{false, false, []string{"bootenvs", "install", "bootenvs/local.yml", "ic"}, noStdinString, bootEnvInstallLocalSuccessString, noErrorString},
-		CliTest{false, false, []string{"bootenvs", "destroy", "sledgehammer"}, noStdinString, "Deleted bootenv sledgehammer\n", noErrorString},
-		CliTest{false, false, []string{"bootenvs", "install", "bootenvs/sledgehammer.yml"}, noStdinString, bootEnvInstallSledgehammerSuccessString, noErrorString},
+		CliTest{false, false, []string{"bootenvs", "destroy", "fredhammer"}, noStdinString, "Deleted bootenv fredhammer\n", noErrorString},
+		CliTest{false, false, []string{"bootenvs", "install", "bootenvs/fredhammer.yml"}, noStdinString, bootEnvInstallSledgehammerSuccessString, noErrorString},
 
 		// Clean up
-		CliTest{false, false, []string{"bootenvs", "destroy", "sledgehammer"}, noStdinString, "Deleted bootenv sledgehammer\n", noErrorString},
+		CliTest{false, false, []string{"bootenvs", "destroy", "fredhammer"}, noStdinString, "Deleted bootenv fredhammer\n", noErrorString},
 		CliTest{false, false, []string{"bootenvs", "destroy", "local"}, noStdinString, "Deleted bootenv local\n", noErrorString},
 		CliTest{false, false, []string{"templates", "destroy", "local-pxelinux.tmpl"}, noStdinString, "Deleted template local-pxelinux.tmpl\n", noErrorString},
 		CliTest{false, false, []string{"templates", "destroy", "local-elilo.tmpl"}, noStdinString, "Deleted template local-elilo.tmpl\n", noErrorString},

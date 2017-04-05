@@ -7,7 +7,21 @@ import (
 	"testing"
 )
 
-var templateDefaultListString string = "[]\n"
+var templateDefaultListString string = `[
+  {
+    "Contents": "exit\n",
+    "ID": "local-elilo.tmpl"
+  },
+  {
+    "Contents": "#!ipxe\nexit",
+    "ID": "local-ipxe.tmpl"
+  },
+  {
+    "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
+    "ID": "local-pxelinux.tmpl"
+  }
+]
+`
 
 var templateShowNoArgErrorString string = "Error: rscli templates show [id] requires 1 argument\n"
 var templateShowTooManyArgErrorString string = "Error: rscli templates show [id] requires 1 argument\n"
@@ -43,6 +57,18 @@ var templateListBothEnvsString = `[
   {
     "Contents": "John Rules",
     "ID": "john"
+  },
+  {
+    "Contents": "exit\n",
+    "ID": "local-elilo.tmpl"
+  },
+  {
+    "Contents": "#!ipxe\nexit",
+    "ID": "local-ipxe.tmpl"
+  },
+  {
+    "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
+    "ID": "local-pxelinux.tmpl"
   }
 ]
 `

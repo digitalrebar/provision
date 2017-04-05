@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"os"
 	"testing"
 )
 
@@ -10,7 +11,7 @@ var machineShowNoArgErrorString string = "Error: rscli machines show [id] requir
 var machineShowTooManyArgErrorString string = "Error: rscli machines show [id] requires 1 argument\n"
 var machineShowMissingArgErrorString string = "Error: machines GET: john: Not Found\n\n"
 var machineShowMachineString string = `{
-  "BootEnv": "ignore",
+  "BootEnv": "local",
   "Errors": null,
   "Name": "john",
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
@@ -29,11 +30,11 @@ var machineCreateBadJSONErrorString = "Error: Invalid machine object: error unma
 var machineCreateInputString string = `{
   "name": "john",
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
-  "bootenv": "ignore"
+  "bootenv": "local"
 }
 `
 var machineCreateJohnString string = `{
-  "BootEnv": "ignore",
+  "BootEnv": "local",
   "Errors": null,
   "Name": "john",
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
@@ -43,7 +44,7 @@ var machineCreateDuplicateErrorString = "Error: dataTracker create machines: 3e7
 
 var machineListMachinesString = `[
   {
-    "BootEnv": "ignore",
+    "BootEnv": "local",
     "Errors": null,
     "Name": "john",
     "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
@@ -60,7 +61,7 @@ var machineUpdateInputString string = `{
 }
 `
 var machineUpdateJohnString string = `{
-  "BootEnv": "ignore",
+  "BootEnv": "local",
   "Description": "lpxelinux.0",
   "Errors": null,
   "Name": "john",
@@ -76,7 +77,7 @@ var machinePatchBadPatchJSONErrorString = "Error: Unable to parse rscli machines
 var machinePatchBadBaseJSONString = "asdgasdg"
 var machinePatchBadBaseJSONErrorString = "Error: Unable to parse rscli machines patch [objectJson] [changesJson] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Machine\n\n"
 var machinePatchBaseString string = `{
-  "BootEnv": "ignore",
+  "BootEnv": "local",
   "Description": "lpxelinux.0",
   "Errors": null,
   "Name": "john",
@@ -88,7 +89,7 @@ var machinePatchInputString string = `{
 }
 `
 var machinePatchJohnString string = `{
-  "BootEnv": "ignore",
+  "BootEnv": "local",
   "Description": "bootx64.efi",
   "Errors": null,
   "Name": "john",
@@ -96,7 +97,7 @@ var machinePatchJohnString string = `{
 }
 `
 var machinePatchMissingBaseString string = `{
-  "BootEnv": "ignore",
+  "BootEnv": "local",
   "Description": "bootx64.efi",
   "Errors": null,
   "Name": "john",
@@ -111,7 +112,26 @@ var machineDestroyJohnString string = "Deleted machine 3e7031fe-3062-45f1-835c-9
 var machineDestroyMissingJohnString string = "Error: machines: DELETE 3e7031fe-3062-45f1-835c-92541bc9cbd3: Not Found\n\n"
 
 func TestMachineCli(t *testing.T) {
+	if err := os.MkdirAll("bootenvs", 0755); err != nil {
+		t.Errorf("Failed to create bootenvs dir: %v\n", err)
+	}
+	if err := os.Symlink("../../assets/bootenvs/local.yml", "bootenvs/local.yml"); err != nil {
+		t.Errorf("Failed to create link to local.yml: %v\n", err)
+	}
+
+	if err := os.MkdirAll("templates", 0755); err != nil {
+		t.Errorf("Failed to create templates dir: %v\n", err)
+	}
+	tmpls := []string{"local-pxelinux.tmpl", "local-elilo.tmpl", "local-ipxe.tmpl"}
+	for _, tmpl := range tmpls {
+		if err := os.Symlink("../../assets/templates/"+tmpl, "templates/"+tmpl); err != nil {
+			t.Errorf("Failed to create link to %s: %v\n", tmpl, err)
+		}
+	}
+
 	tests := []CliTest{
+		CliTest{false, false, []string{"bootenvs", "install", "bootenvs/local.yml"}, noStdinString, bootEnvInstallLocalSuccessString, noErrorString},
+
 		CliTest{true, false, []string{"machines"}, noStdinString, "Access CLI commands relating to machines\n", ""},
 		CliTest{false, false, []string{"machines", "list"}, noStdinString, machineDefaultListString, noErrorString},
 
@@ -160,10 +180,19 @@ func TestMachineCli(t *testing.T) {
 		CliTest{false, false, []string{"machines", "show", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, machineUpdateJohnString, noErrorString},
 		CliTest{false, false, []string{"machines", "destroy", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, machineDestroyJohnString, noErrorString},
 		CliTest{false, false, []string{"machines", "list"}, noStdinString, machineDefaultListString, noErrorString},
+
+		CliTest{false, false, []string{"bootenvs", "destroy", "local"}, noStdinString, "Deleted bootenv local\n", noErrorString},
+		CliTest{false, false, []string{"templates", "destroy", "local-pxelinux.tmpl"}, noStdinString, "Deleted template local-pxelinux.tmpl\n", noErrorString},
+		CliTest{false, false, []string{"templates", "destroy", "local-elilo.tmpl"}, noStdinString, "Deleted template local-elilo.tmpl\n", noErrorString},
+		CliTest{false, false, []string{"templates", "destroy", "local-ipxe.tmpl"}, noStdinString, "Deleted template local-ipxe.tmpl\n", noErrorString},
 	}
 
 	for _, test := range tests {
 		testCli(t, test)
 	}
 
+	os.RemoveAll("bootenvs")
+	os.RemoveAll("templates")
+	os.RemoveAll("isos")
+	os.RemoveAll("ic")
 }
