@@ -16,9 +16,9 @@ var prefsSetOddArgsErrorString string = "Error: prefs set either takes a single 
 var prefsSetBadJSONErrorString string = "Error: Invalid prefs: error unmarshaling JSON: json: cannot unmarshal string into Go value of type map[string]string\n\n\n"
 
 var prefsSetEmptyJSONString string = "{}"
-var prefsSetEmptyJSONResponseString string = "{}\n"
 var prefsSetJSONResponseString string = `{
-  "defaultBootEnv": "local"
+  "defaultBootEnv": "local",
+  "unknownBootEnv": "ignore"
 }
 `
 var prefsSetIllegalJSONResponseString string = "Error: defaultBootEnv: Bootenv illegal does not exist\n\n"
@@ -32,7 +32,11 @@ var prefsChangedListString = `{
 
 var prefsSetStdinBadJSONString = "fred\n"
 var prefsSetStdinBadJSONErrorString = ""
-var prefsSetStdinJSONString = "{}\n"
+var prefsSetStdinJSONString = `{
+  "defaultBootEnv": "local",
+  "unknownBootEnv": "ignore"
+}
+`
 
 func TestPrefsCli(t *testing.T) {
 	if err := os.MkdirAll("bootenvs", 0755); err != nil {
@@ -63,7 +67,7 @@ func TestPrefsCli(t *testing.T) {
 		CliTest{false, true, []string{"prefs", "set", "john"}, noStdinString, noContentString, prefsSetBadJSONErrorString},
 
 		// Set empty hash - should result in no changes
-		CliTest{false, false, []string{"prefs", "set", prefsSetEmptyJSONString}, noStdinString, prefsSetEmptyJSONResponseString, noErrorString},
+		CliTest{false, false, []string{"prefs", "set", prefsSetEmptyJSONString}, noStdinString, prefsDefaultListString, noErrorString},
 		CliTest{false, false, []string{"prefs", "list"}, noStdinString, prefsDefaultListString, noErrorString},
 
 		CliTest{false, false, []string{"prefs", "set", "defaultBootEnv", "local"}, noStdinString, prefsSetJSONResponseString, noErrorString},
@@ -77,7 +81,7 @@ func TestPrefsCli(t *testing.T) {
 
 		CliTest{false, true, []string{"prefs", "set", "-"}, prefsSetStdinBadJSONString, noContentString, prefsSetBadJSONErrorString},
 		CliTest{false, false, []string{"prefs", "list"}, noStdinString, prefsChangedListString, noErrorString},
-		CliTest{false, false, []string{"prefs", "set", "-"}, prefsSetStdinJSONString, prefsSetEmptyJSONResponseString, noErrorString},
+		CliTest{false, false, []string{"prefs", "set", "-"}, prefsSetStdinJSONString, prefsChangedListString, noErrorString},
 		CliTest{false, false, []string{"prefs", "list"}, noStdinString, prefsChangedListString, noErrorString},
 
 		// Clean-up - can't happen now.
