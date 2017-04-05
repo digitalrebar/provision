@@ -2,6 +2,7 @@ package cli
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/rackn/rocket-skates/client/users"
 	"github.com/rackn/rocket-skates/models"
@@ -86,15 +87,67 @@ func addUserCommands() (res *cobra.Command) {
 	commands := commonOps(singularName, name, &UserOps{})
 
 	tokenCmd := &cobra.Command{
-		Use:   "token [id]",
-		Short: "Get a login token for this user",
+		Use:   "token [id] [ttl [ttl]] [scope [scope]] [action [action]] [specific [specific]]",
+		Short: "Get a login token for this user with optional parameters",
 		Long:  "Creates a time-bound token for the specified user.",
 		RunE: func(c *cobra.Command, args []string) error {
-			if len(args) != 1 {
-				return fmt.Errorf("%v needs 1 arg", c.UseLine())
+			if len(args) < 1 {
+				return fmt.Errorf("%v needs at least 1 arg", c.UseLine())
 			}
+
+			scope := ""
+			action := ""
+			specific := ""
+			ttl := ""
+			index := 2
+			for index < len(args) {
+				if args[index-1] == "scope" {
+					scope = args[index]
+					index += 2
+					continue
+				}
+				if args[index-1] == "action" {
+					action = args[index]
+					index += 2
+					continue
+				}
+				if args[index-1] == "specific" {
+					specific = args[index]
+					index += 2
+					continue
+				}
+				if args[index-1] == "ttl" {
+					ttl = args[index]
+					index += 2
+					continue
+				}
+				return fmt.Errorf("%v does not support %s", c.UseLine(), args[index-1])
+			}
+			if index-1 != len(args) {
+				return fmt.Errorf("%v needs at least 1 and pairs arg", c.UseLine())
+			}
+
 			dumpUsage = false
-			if d, e := session.Users.GetUserToken(users.NewGetUserTokenParams().WithName(args[0]), basicAuth); e != nil {
+
+			p := users.NewGetUserTokenParams().WithName(args[0])
+			if scope != "" {
+				p = p.WithScope(&scope)
+			}
+			if action != "" {
+				p = p.WithAction(&action)
+			}
+			if specific != "" {
+				p = p.WithSpecific(&specific)
+			}
+			if ttl != "" {
+				ttl64, e := strconv.ParseInt(ttl, 10, 64)
+				if e != nil {
+					return fmt.Errorf("ttl should be a number: %v", e)
+				}
+				p = p.WithTTL(&ttl64)
+			}
+
+			if d, e := session.Users.GetUserToken(p, basicAuth); e != nil {
 				return generateError(e, "Error: getToken: %v", e)
 			} else {
 				return prettyPrint(d.Payload)

@@ -105,9 +105,11 @@ var userDestroyTooManyArgErrorString string = "Error: rscli users destroy [id] r
 var userDestroyJohnString string = "Deleted user john\n"
 var userDestroyMissingJohnString string = "Error: users: DELETE john: Not Found\n\n"
 
-var userTokenNoArgErrorString string = "Error: rscli users token [id] needs 1 arg\n"
-var userTokenTooManyArgErrorString string = "Error: rscli users token [id] needs 1 arg\n"
+var userTokenNoArgErrorString string = "Error: rscli users token [id] [ttl [ttl]] [scope [scope]] [action [action]] [specific [specific]] needs at least 1 arg\n"
+var userTokenTooManyArgErrorString string = "Error: rscli users token [id] [ttl [ttl]] [scope [scope]] [action [action]] [specific [specific]] needs at least 1 and pairs arg\n"
+var userTokenUnknownPairErrorString string = "Error: rscli users token [id] [ttl [ttl]] [scope [scope]] [action [action]] [specific [specific]] does not support greg2\n"
 var userTokenUserNotFoundErrorString string = "Error: User GET: greg: Not Found\n\n"
+var userTokenTTLNotNumberErrorString string = "Error: ttl should be a number: strconv.ParseInt: parsing \"cow\": invalid syntax\n\n"
 var userTokenSuccessString string = `RE:
 {
   "Token": "[\s\S]*"
@@ -174,8 +176,11 @@ func TestUserCli(t *testing.T) {
 
 		CliTest{true, true, []string{"users", "token"}, noStdinString, noContentString, userTokenNoArgErrorString},
 		CliTest{true, true, []string{"users", "token", "greg", "greg2"}, noStdinString, noContentString, userTokenTooManyArgErrorString},
+		CliTest{true, true, []string{"users", "token", "greg", "greg2", "greg3"}, noStdinString, noContentString, userTokenUnknownPairErrorString},
 		CliTest{false, true, []string{"users", "token", "greg"}, noStdinString, noContentString, userTokenUserNotFoundErrorString},
 		CliTest{false, false, []string{"users", "token", "rocketskates"}, noStdinString, userTokenSuccessString, noErrorString},
+		CliTest{false, false, []string{"users", "token", "rocketskates", "scope", "all", "ttl", "330", "action", "list", "specific", "asdgag"}, noStdinString, userTokenSuccessString, noErrorString},
+		CliTest{false, true, []string{"users", "token", "rocketskates", "scope", "all", "ttl", "cow", "action", "list", "specific", "asdgag"}, noStdinString, noContentString, userTokenTTLNotNumberErrorString},
 	}
 
 	for _, test := range tests {
