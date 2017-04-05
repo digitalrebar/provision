@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"os"
 	"testing"
 )
 
@@ -17,14 +18,14 @@ var prefsSetBadJSONErrorString string = "Error: Invalid prefs: error unmarshalin
 var prefsSetEmptyJSONString string = "{}"
 var prefsSetEmptyJSONResponseString string = "{}\n"
 var prefsSetJSONResponseString string = `{
-  "defaultBootEnv": "ignore"
+  "defaultBootEnv": "local"
 }
 `
 var prefsSetIllegalJSONResponseString string = "Error: defaultBootEnv: Bootenv illegal does not exist\n\n"
 var prefsSetInvalidPrefResponseString string = "Error: Unknown Preference greg\n\n"
 
 var prefsChangedListString = `{
-  "defaultBootEnv": "ignore",
+  "defaultBootEnv": "local",
   "unknownBootEnv": "ignore"
 }
 `
@@ -34,7 +35,26 @@ var prefsSetStdinBadJSONErrorString = ""
 var prefsSetStdinJSONString = "{}\n"
 
 func TestPrefsCli(t *testing.T) {
+	if err := os.MkdirAll("bootenvs", 0755); err != nil {
+		t.Errorf("Failed to create bootenvs dir: %v\n", err)
+	}
+	if err := os.Symlink("../../assets/bootenvs/local.yml", "bootenvs/local.yml"); err != nil {
+		t.Errorf("Failed to create link to local.yml: %v\n", err)
+	}
+
+	if err := os.MkdirAll("templates", 0755); err != nil {
+		t.Errorf("Failed to create templates dir: %v\n", err)
+	}
+	tmpls := []string{"local-pxelinux.tmpl", "local-elilo.tmpl", "local-ipxe.tmpl"}
+	for _, tmpl := range tmpls {
+		if err := os.Symlink("../../assets/templates/"+tmpl, "templates/"+tmpl); err != nil {
+			t.Errorf("Failed to create link to %s: %v\n", tmpl, err)
+		}
+	}
+
 	tests := []CliTest{
+		CliTest{false, false, []string{"bootenvs", "install", "bootenvs/local.yml"}, noStdinString, bootEnvInstallLocalSuccessString, noErrorString},
+
 		CliTest{true, false, []string{"prefs"}, noStdinString, "List and set RocketSkates operation preferences\n", noErrorString},
 		CliTest{false, false, []string{"prefs", "list"}, noStdinString, prefsDefaultListString, noErrorString},
 
@@ -46,7 +66,7 @@ func TestPrefsCli(t *testing.T) {
 		CliTest{false, false, []string{"prefs", "set", prefsSetEmptyJSONString}, noStdinString, prefsSetEmptyJSONResponseString, noErrorString},
 		CliTest{false, false, []string{"prefs", "list"}, noStdinString, prefsDefaultListString, noErrorString},
 
-		CliTest{false, false, []string{"prefs", "set", "defaultBootEnv", "ignore"}, noStdinString, prefsSetJSONResponseString, noErrorString},
+		CliTest{false, false, []string{"prefs", "set", "defaultBootEnv", "local"}, noStdinString, prefsSetJSONResponseString, noErrorString},
 		CliTest{false, false, []string{"prefs", "list"}, noStdinString, prefsChangedListString, noErrorString},
 
 		CliTest{false, true, []string{"prefs", "set", "defaultBootEnv", "illegal"}, noStdinString, noContentString, prefsSetIllegalJSONResponseString},
@@ -59,8 +79,15 @@ func TestPrefsCli(t *testing.T) {
 		CliTest{false, false, []string{"prefs", "list"}, noStdinString, prefsChangedListString, noErrorString},
 		CliTest{false, false, []string{"prefs", "set", "-"}, prefsSetStdinJSONString, prefsSetEmptyJSONResponseString, noErrorString},
 		CliTest{false, false, []string{"prefs", "list"}, noStdinString, prefsChangedListString, noErrorString},
+
+		// Clean-up - can't happen now.
 	}
 	for _, test := range tests {
 		testCli(t, test)
 	}
+
+	os.RemoveAll("bootenvs")
+	os.RemoveAll("templates")
+	os.RemoveAll("isos")
+	os.RemoveAll("ic")
 }

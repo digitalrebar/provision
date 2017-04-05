@@ -190,6 +190,7 @@ var yamlTestString = `- Available: true
   Name: ignore
   OS:
     Name: ignore
+  OnlyUnknown: true
   OptionalParams: null
   RequiredParams: null
   Templates:
@@ -224,6 +225,7 @@ var jsonTestString = `[
     "OS": {
       "Name": "ignore"
     },
+    "OnlyUnknown": true,
     "OptionalParams": null,
     "RequiredParams": null,
     "Templates": [
