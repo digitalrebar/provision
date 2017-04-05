@@ -3,6 +3,7 @@ package cli
 import (
 	"bytes"
 	"crypto/tls"
+	"encoding/json"
 	"io"
 	"io/ioutil"
 	"log"
@@ -20,6 +21,7 @@ import (
 var (
 	tmpDir  string
 	running bool
+	myToken string
 )
 
 var noErrorString string = ``
@@ -104,7 +106,7 @@ func testCli(t *testing.T, test CliTest) {
 	// Add access args
 	args := test.args
 	if !hasE {
-		args = []string{"-E", "https://127.0.0.1:10001", "-U", "rocketskates", "-P", "r0cketsk8ts"}
+		args = []string{"-E", "https://127.0.0.1:10001", "-T", myToken}
 		for _, a := range test.args {
 			args = append(args, a)
 		}
@@ -303,6 +305,14 @@ func TestMain(m *testing.M) {
 	if count == 30 {
 		log.Printf("Server failed to start in time allowed")
 	} else {
+		req, _ = http.NewRequest("GET", "https://127.0.0.1:10001/api/v3/users/rocketskates/token", nil)
+		req.SetBasicAuth("rocketskates", "r0cketsk8ts")
+		resp, _ := client.Do(req)
+		var token map[string]string
+		buf, _ := ioutil.ReadAll(resp.Body)
+		json.Unmarshal(buf, &token)
+		myToken, _ = token["Token"]
+
 		ret = m.Run()
 	}
 
