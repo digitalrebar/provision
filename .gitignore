@@ -23,6 +23,7 @@ client
 models
 assets/isos/
 rocketskates.zip
+rocketskates.sha256
 
 # documentation
 builddir/
