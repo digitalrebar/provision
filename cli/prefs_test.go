@@ -26,7 +26,8 @@ var prefsSetInvalidPrefResponseString string = "Error: Unknown Preference greg\n
 
 var prefsChangedListString = `{
   "defaultBootEnv": "local",
-  "unknownBootEnv": "ignore"
+  "unknownBootEnv": "ignore",
+  "unknownTokenTimeout": "30"
 }
 `
 
@@ -37,6 +38,13 @@ var prefsSetStdinJSONString = `{
   "unknownBootEnv": "ignore"
 }
 `
+
+var prefsSetJSONBadKnownTokenTimeout = `{
+  "knownTokenTimeout": "local",
+}`
+var prefsSetJSONBadUnknownTokenTimeout = `{
+  "unknownTokenTimeout": "local",
+}`
 
 func TestPrefsCli(t *testing.T) {
 	if err := os.MkdirAll("bootenvs", 0755); err != nil {
