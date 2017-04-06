@@ -20,6 +20,7 @@ import (
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
 	strfmt "github.com/go-openapi/strfmt"
+	"github.com/rackn/rocket-skates"
 	apiclient "github.com/rackn/rocket-skates/client"
 	"github.com/rackn/rocket-skates/models"
 	"github.com/spf13/cobra"
@@ -31,7 +32,7 @@ var (
 		Short: "A CLI application for interacting with the Rocket-Skates API",
 	}
 
-	version            = "1.1.1"
+	version            = rocketskates.RS_VERSION
 	debug              = false
 	endpoint           = "https://127.0.0.1:8092"
 	token              = ""
