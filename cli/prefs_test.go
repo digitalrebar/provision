@@ -7,7 +7,9 @@ import (
 
 var prefsDefaultListString = `{
   "defaultBootEnv": "sledgehammer",
-  "unknownBootEnv": "ignore"
+  "knownTokenTimeout": "3600",
+  "unknownBootEnv": "ignore",
+  "unknownTokenTimeout": "600"
 }
 `
 
@@ -18,7 +20,9 @@ var prefsSetBadJSONErrorString string = "Error: Invalid prefs: error unmarshalin
 var prefsSetEmptyJSONString string = "{}"
 var prefsSetJSONResponseString string = `{
   "defaultBootEnv": "local",
-  "unknownBootEnv": "ignore"
+  "knownTokenTimeout": "3600",
+  "unknownBootEnv": "ignore",
+  "unknownTokenTimeout": "600"
 }
 `
 var prefsSetIllegalJSONResponseString string = "Error: defaultBootEnv: Bootenv illegal does not exist\n\n"
@@ -26,7 +30,9 @@ var prefsSetInvalidPrefResponseString string = "Error: Unknown Preference greg\n
 
 var prefsChangedListString = `{
   "defaultBootEnv": "local",
-  "unknownBootEnv": "ignore"
+  "knownTokenTimeout": "3600",
+  "unknownBootEnv": "ignore",
+  "unknownTokenTimeout": "600"
 }
 `
 
@@ -35,6 +41,24 @@ var prefsSetStdinBadJSONErrorString = ""
 var prefsSetStdinJSONString = `{
   "defaultBootEnv": "local",
   "unknownBootEnv": "ignore"
+}
+`
+
+var prefsSetBadKnownTokenTimeoutErrorString = "Error: Preference knownTokenTimeout: strconv.Atoi: parsing \"illegal\": invalid syntax\n\n"
+var prefsSetBadUnknownTokenTimeoutErrorString = "Error: Preference unknownTokenTimeout: strconv.Atoi: parsing \"illegal\": invalid syntax\n\n"
+
+var prefsKnownChangedListString = `{
+  "defaultBootEnv": "local",
+  "knownTokenTimeout": "5000",
+  "unknownBootEnv": "ignore",
+  "unknownTokenTimeout": "600"
+}
+`
+var prefsBothChangedListString = `{
+  "defaultBootEnv": "local",
+  "knownTokenTimeout": "5000",
+  "unknownBootEnv": "ignore",
+  "unknownTokenTimeout": "7000"
 }
 `
 
@@ -76,13 +100,19 @@ func TestPrefsCli(t *testing.T) {
 		CliTest{false, true, []string{"prefs", "set", "defaultBootEnv", "illegal"}, noStdinString, noContentString, prefsSetIllegalJSONResponseString},
 		CliTest{false, false, []string{"prefs", "list"}, noStdinString, prefsChangedListString, noErrorString},
 
+		CliTest{false, true, []string{"prefs", "set", "knownTokenTimeout", "illegal"}, noStdinString, noContentString, prefsSetBadKnownTokenTimeoutErrorString},
+		CliTest{false, true, []string{"prefs", "set", "unknownTokenTimeout", "illegal"}, noStdinString, noContentString, prefsSetBadUnknownTokenTimeoutErrorString},
+		CliTest{false, false, []string{"prefs", "set", "knownTokenTimeout", "5000"}, noStdinString, prefsKnownChangedListString, noErrorString},
+		CliTest{false, false, []string{"prefs", "set", "unknownTokenTimeout", "7000"}, noStdinString, prefsBothChangedListString, noErrorString},
+		CliTest{false, false, []string{"prefs", "list"}, noStdinString, prefsBothChangedListString, noErrorString},
+
 		CliTest{false, true, []string{"prefs", "set", "greg", "ignore"}, noStdinString, noContentString, prefsSetInvalidPrefResponseString},
-		CliTest{false, false, []string{"prefs", "list"}, noStdinString, prefsChangedListString, noErrorString},
+		CliTest{false, false, []string{"prefs", "list"}, noStdinString, prefsBothChangedListString, noErrorString},
 
 		CliTest{false, true, []string{"prefs", "set", "-"}, prefsSetStdinBadJSONString, noContentString, prefsSetBadJSONErrorString},
-		CliTest{false, false, []string{"prefs", "list"}, noStdinString, prefsChangedListString, noErrorString},
-		CliTest{false, false, []string{"prefs", "set", "-"}, prefsSetStdinJSONString, prefsChangedListString, noErrorString},
-		CliTest{false, false, []string{"prefs", "list"}, noStdinString, prefsChangedListString, noErrorString},
+		CliTest{false, false, []string{"prefs", "list"}, noStdinString, prefsBothChangedListString, noErrorString},
+		CliTest{false, false, []string{"prefs", "set", "-"}, prefsSetStdinJSONString, prefsBothChangedListString, noErrorString},
+		CliTest{false, false, []string{"prefs", "list"}, noStdinString, prefsBothChangedListString, noErrorString},
 
 		// Clean-up - can't happen now.
 	}
