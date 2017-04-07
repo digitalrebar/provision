@@ -1,17 +1,12 @@
 package cli
 
 import (
-	"encoding/base64"
-	"strings"
 	"testing"
-
-	"github.com/digitalrebar/provision/client/users"
 )
 
 var userDefaultListString string = `[
   {
-    "Name": "rocketskates",
-    "PasswordHash": "*REPLACE_WITH_HASH*"
+    "Name": "rocketskates"
   }
 ]
 `
@@ -20,8 +15,7 @@ var userShowNoArgErrorString string = "Error: drpcli users show [id] requires 1 
 var userShowTooManyArgErrorString string = "Error: drpcli users show [id] requires 1 argument\n"
 var userShowMissingArgErrorString string = "Error: users GET: ignore: Not Found\n\n"
 var userShowJohnString string = `{
-  "Name": "john",
-  "PasswordHash": "asdg"
+  "Name": "john"
 }
 `
 
@@ -35,25 +29,21 @@ var userCreateTooManyArgErrorString string = "Error: drpcli users create [json] 
 var userCreateBadJSONString = "asdgasdg"
 var userCreateBadJSONErrorString = "Error: Invalid user object: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.User\n\n"
 var userCreateInputString string = `{
-  "Name": "john",
-  "PasswordHash": "asdg"
+  "Name": "john"
 }
 `
 var userCreateJohnString string = `{
-  "Name": "john",
-  "PasswordHash": "asdg"
+  "Name": "john"
 }
 `
 var userCreateDuplicateErrorString = "Error: dataTracker create users: john already exists\n\n"
 
 var userListBothEnvsString = `[
   {
-    "Name": "john",
-    "PasswordHash": "asdg"
+    "Name": "john"
   },
   {
-    "Name": "rocketskates",
-    "PasswordHash": "*REPLACE_WITH_HASH*"
+    "Name": "rocketskates"
   }
 ]
 `
@@ -67,8 +57,7 @@ var userUpdateInputString string = `{
 }
 `
 var userUpdateJohnString string = `{
-  "Name": "john",
-  "PasswordHash": "NewStrat"
+  "Name": "john"
 }
 `
 var userUpdateJohnMissingErrorString string = "Error: users GET: john2: Not Found\n\n"
@@ -80,8 +69,7 @@ var userPatchBadPatchJSONErrorString = "Error: Unable to parse drpcli users patc
 var userPatchBadBaseJSONString = "asdgasdg"
 var userPatchBadBaseJSONErrorString = "Error: Unable to parse drpcli users patch [objectJson] [changesJson] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.User\n\n"
 var userPatchBaseString string = `{
-  "Name": "john",
-  "PasswordHash": "NewStrat"
+  "Name": "john"
 }
 `
 var userPatchInputString string = `{
@@ -89,13 +77,11 @@ var userPatchInputString string = `{
 }
 `
 var userPatchJohnString string = `{
-  "Name": "john",
-  "PasswordHash": "Strat2n1"
+  "Name": "john"
 }
 `
 var userPatchMissingBaseString string = `{
-  "Name": "john2",
-  "PasswordHash": "Strat2n1"
+  "Name": "john2"
 }
 `
 var userPatchJohnMissingErrorString string = "Error: users: PATCH john2: Not Found\n\n"
@@ -117,11 +103,6 @@ var userTokenSuccessString string = `RE:
 `
 
 func TestUserCli(t *testing.T) {
-
-	d, _ := session.Users.GetUser(users.NewGetUserParams().WithName("rocketskates"), basicAuth)
-	s := base64.StdEncoding.EncodeToString([]byte(d.Payload.PasswordHash))
-	userDefaultListString = strings.Replace(userDefaultListString, "*REPLACE_WITH_HASH*", s, 1)
-	userListBothEnvsString = strings.Replace(userListBothEnvsString, "*REPLACE_WITH_HASH*", s, 1)
 
 	tests := []CliTest{
 		CliTest{true, false, []string{"users"}, noStdinString, "Access CLI commands relating to users\n", ""},
