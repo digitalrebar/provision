@@ -195,7 +195,7 @@ using isos upload.git `,
 				isoUrl := bootEnv.OS.IsoURL.String()
 				if installSkipDownloadIsos {
 					log.Printf("Skipping ISO download as requested")
-					log.Printf("Upload with `rscli isos upload %s as %s` when you have it", bootEnv.OS.IsoFile, bootEnv.OS.IsoFile)
+					log.Printf("Upload with `drpcli isos upload %s as %s` when you have it", bootEnv.OS.IsoFile, bootEnv.OS.IsoFile)
 					return prettyPrint(resp.Payload)
 				}
 				err = func() error {

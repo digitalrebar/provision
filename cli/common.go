@@ -28,7 +28,7 @@ import (
 
 var (
 	App = &cobra.Command{
-		Use:   "rscli",
+		Use:   "drpcli",
 		Short: "A CLI application for interacting with the DigitalRebar Provision API",
 	}
 

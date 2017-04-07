@@ -6,8 +6,8 @@ import (
 
 var paramDefaultListString string = "[]\n"
 
-var paramShowNoArgErrorString string = "Error: rscli params show [id] requires 1 argument\n"
-var paramShowTooManyArgErrorString string = "Error: rscli params show [id] requires 1 argument\n"
+var paramShowNoArgErrorString string = "Error: drpcli params show [id] requires 1 argument\n"
+var paramShowTooManyArgErrorString string = "Error: drpcli params show [id] requires 1 argument\n"
 var paramShowMissingArgErrorString string = "Error: parameters GET: ignore: Not Found\n\n"
 var paramShowJohnString string = `{
   "Name": "john",
@@ -15,13 +15,13 @@ var paramShowJohnString string = `{
 }
 `
 
-var paramExistsNoArgErrorString string = "Error: rscli params exists [id] requires 1 argument"
-var paramExistsTooManyArgErrorString string = "Error: rscli params exists [id] requires 1 argument"
+var paramExistsNoArgErrorString string = "Error: drpcli params exists [id] requires 1 argument"
+var paramExistsTooManyArgErrorString string = "Error: drpcli params exists [id] requires 1 argument"
 var paramExistsIgnoreString string = ""
 var paramExistsMissingIgnoreString string = "Error: parameters GET: ignore: Not Found\n\n"
 
-var paramCreateNoArgErrorString string = "Error: rscli params create [json] requires 1 argument\n"
-var paramCreateTooManyArgErrorString string = "Error: rscli params create [json] requires 1 argument\n"
+var paramCreateNoArgErrorString string = "Error: drpcli params create [json] requires 1 argument\n"
+var paramCreateTooManyArgErrorString string = "Error: drpcli params create [json] requires 1 argument\n"
 var paramCreateBadJSONString = "asdgasdg"
 var paramCreateBadJSONErrorString = "Error: Invalid param object: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Param\n\n"
 var paramCreateInputString string = `{
@@ -44,8 +44,8 @@ var paramListBothEnvsString = `[
 ]
 `
 
-var paramUpdateNoArgErrorString string = "Error: rscli params update [id] [json] requires 2 arguments"
-var paramUpdateTooManyArgErrorString string = "Error: rscli params update [id] [json] requires 2 arguments"
+var paramUpdateNoArgErrorString string = "Error: drpcli params update [id] [json] requires 2 arguments"
+var paramUpdateTooManyArgErrorString string = "Error: drpcli params update [id] [json] requires 2 arguments"
 var paramUpdateBadJSONString = "asdgasdg"
 var paramUpdateBadJSONErrorString = "Error: Unable to merge objects: json: cannot unmarshal string into Go value of type map[string]interface {}\n\n\n"
 var paramUpdateInputString string = `{
@@ -59,12 +59,12 @@ var paramUpdateJohnString string = `{
 `
 var paramUpdateJohnMissingErrorString string = "Error: parameters GET: john2: Not Found\n\n"
 
-var paramPatchNoArgErrorString string = "Error: rscli params patch [objectJson] [changesJson] requires 2 arguments"
-var paramPatchTooManyArgErrorString string = "Error: rscli params patch [objectJson] [changesJson] requires 2 arguments"
+var paramPatchNoArgErrorString string = "Error: drpcli params patch [objectJson] [changesJson] requires 2 arguments"
+var paramPatchTooManyArgErrorString string = "Error: drpcli params patch [objectJson] [changesJson] requires 2 arguments"
 var paramPatchBadPatchJSONString = "asdgasdg"
-var paramPatchBadPatchJSONErrorString = "Error: Unable to parse rscli params patch [objectJson] [changesJson] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Param\n\n"
+var paramPatchBadPatchJSONErrorString = "Error: Unable to parse drpcli params patch [objectJson] [changesJson] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Param\n\n"
 var paramPatchBadBaseJSONString = "asdgasdg"
-var paramPatchBadBaseJSONErrorString = "Error: Unable to parse rscli params patch [objectJson] [changesJson] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Param\n\n"
+var paramPatchBadBaseJSONErrorString = "Error: Unable to parse drpcli params patch [objectJson] [changesJson] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Param\n\n"
 var paramPatchBaseString string = `{
   "Name": "john",
   "Value": "NewStrat"
@@ -86,8 +86,8 @@ var paramPatchMissingBaseString string = `{
 `
 var paramPatchJohnMissingErrorString string = "Error: parameters: PATCH john2: Not Found\n\n"
 
-var paramDestroyNoArgErrorString string = "Error: rscli params destroy [id] requires 1 argument"
-var paramDestroyTooManyArgErrorString string = "Error: rscli params destroy [id] requires 1 argument"
+var paramDestroyNoArgErrorString string = "Error: drpcli params destroy [id] requires 1 argument"
+var paramDestroyTooManyArgErrorString string = "Error: drpcli params destroy [id] requires 1 argument"
 var paramDestroyJohnString string = "Deleted param john\n"
 var paramDestroyMissingJohnString string = "Error: parameters: DELETE john: Not Found\n\n"
 
