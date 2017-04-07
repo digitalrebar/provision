@@ -1,8 +1,8 @@
 .. Copyright (c) 2017 RackN Inc.
 .. Licensed under the Apache License, Version 2.0 (the "License");
-.. Rocket Skates documentation under Digital Rebar master license
+.. DigitalRebar Provision documentation under Digital Rebar master license
 .. index::
-  pair: Rocket Skates; Architecture
+  pair: DigitalRebar Provision; Architecture
 
 .. _rs_architecture:
 
@@ -10,7 +10,7 @@
 Architecture
 ~~~~~~~~~~~~
 
-Rocket Skates is intended to be a very simple service that can run with minimal overhead in nearly any environment.  For this reason, all the needed components are combined into the Golang binary server including the UI and Swagger UI assets.  The binary is can be run as a user process or easily configured as a operating system service.
+DigitalRebar Provision is intended to be a very simple service that can run with minimal overhead in nearly any environment.  For this reason, all the needed components are combined into the Golang binary server including the UI and Swagger UI assets.  The binary is can be run as a user process or easily configured as a operating system service.
 
 The service is designed to work with multiple backend data stores.  For stand alone operation, data is stored on the file system.  For Digital Rebar integration, data can be maintained in Consul.
 
@@ -23,14 +23,14 @@ By design, there are minimal integrations between core services.  This allows th
 Design Restrictions
 -------------------
 
-Since Rocket Skates is part of the larger Digital Rebar system, it's scope is limited to handling DHCP and Provisioning actions.  Out of band management to control server flow or configure firmware plus other management features will be handled by other Digital Rebar services.
+Since DigitalRebar Provision is part of the larger Digital Rebar system, it's scope is limited to handling DHCP and Provisioning actions.  Out of band management to control server flow or configure firmware plus other management features will be handled by other Digital Rebar services.
 
 Services
 --------
 
 Provisioning requires handoffs between multiple services as described in the :ref:`rs_workflows` section.  Since several of services are standard protocols (DHCP, TFTP, HTTP), it may be difficult to change ports without breaking workflow.
 
-The figure below illustrates the three core Rocket Skates services including protocols and default ports.  The services are:
+The figure below illustrates the three core DigitalRebar Provision services including protocols and default ports.  The services are:
 
 #. Web - These services provide control for the other services
 
@@ -46,6 +46,6 @@ The figure below illustrates the three core Rocket Skates services including pro
 
 
 .. figure::  images/core_services.png
-   :alt: Core Rocket Skates Services
+   :alt: Core DigitalRebar Provision Services
    :target: https://docs.google.com/drawings/d/1SVGGwQZxopiVEYjIM3FXC92yG4DKCCejRBDNMsHmxKE/edit?usp=sharing
 

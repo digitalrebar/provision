@@ -14,8 +14,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/digitalrebar/provision/server"
 	"github.com/jessevdk/go-flags"
-	"github.com/rackn/rocket-skates/server"
 )
 
 var (

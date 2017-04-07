@@ -1,4 +1,4 @@
-// Rocket-Skates is a provisioning binary that provides a
+// DigitalRebar Provision is a provisioning binary that provides a
 // DHCP server and Provisioner system that allows for simply
 // booting and installing bare metal.
-package rocketskates
+package provision

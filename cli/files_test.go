@@ -8,8 +8,8 @@ import (
 )
 
 var filesDefaultListString string = `[
-  "jq",
-  "rscli.amd64.linux"
+  "drpcli.amd64.linux",
+  "jq"
 ]
 `
 
@@ -32,13 +32,13 @@ var filesUploadCommonSuccessString = `{
 var filesUploadMkdirErrorString = "Error: upload: unable to create directory /greg\n\n"
 
 var filesGregListString string = `[
+  "drpcli.amd64.linux",
   "greg",
-  "jq",
-  "rscli.amd64.linux"
+  "jq"
 ]
 `
-var filesDestroyNoArgsErrorString = "Error: rscli files destroy [id] requires 1 argument\n"
-var filesDestroyTwoArgsErrorString = "Error: rscli files destroy [id] requires 1 argument\n"
+var filesDestroyNoArgsErrorString = "Error: drpcli files destroy [id] requires 1 argument\n"
+var filesDestroyTwoArgsErrorString = "Error: drpcli files destroy [id] requires 1 argument\n"
 var filesDestroyGregSuccessString = "Deleted file greg\n"
 var filesDestroyFredErrorString = "Error: delete: unable to delete /fred\n\n"
 

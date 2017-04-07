@@ -6,8 +6,8 @@ import (
 
 var subnetDefaultListString string = "[]\n"
 
-var subnetShowNoArgErrorString string = "Error: rscli subnets show [id] requires 1 argument\n"
-var subnetShowTooManyArgErrorString string = "Error: rscli subnets show [id] requires 1 argument\n"
+var subnetShowNoArgErrorString string = "Error: drpcli subnets show [id] requires 1 argument\n"
+var subnetShowTooManyArgErrorString string = "Error: drpcli subnets show [id] requires 1 argument\n"
 var subnetShowMissingArgErrorString string = "Error: subnets GET: ignore: Not Found\n\n"
 var subnetShowJohnString string = `{
   "ActiveEnd": "192.168.100.100",
@@ -37,13 +37,13 @@ var subnetShowJohnString string = `{
 }
 `
 
-var subnetExistsNoArgErrorString string = "Error: rscli subnets exists [id] requires 1 argument"
-var subnetExistsTooManyArgErrorString string = "Error: rscli subnets exists [id] requires 1 argument"
+var subnetExistsNoArgErrorString string = "Error: drpcli subnets exists [id] requires 1 argument"
+var subnetExistsTooManyArgErrorString string = "Error: drpcli subnets exists [id] requires 1 argument"
 var subnetExistsIgnoreString string = ""
 var subnetExistsMissingIgnoreString string = "Error: subnets GET: ignore: Not Found\n\n"
 
-var subnetCreateNoArgErrorString string = "Error: rscli subnets create [json] requires 1 argument\n"
-var subnetCreateTooManyArgErrorString string = "Error: rscli subnets create [json] requires 1 argument\n"
+var subnetCreateNoArgErrorString string = "Error: drpcli subnets create [json] requires 1 argument\n"
+var subnetCreateTooManyArgErrorString string = "Error: drpcli subnets create [json] requires 1 argument\n"
 var subnetCreateBadJSONString = "asdgasdg"
 var subnetCreateBadJSONErrorString = "Error: Invalid subnet object: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Subnet\n\n"
 var subnetCreateInputString string = `{
@@ -116,8 +116,8 @@ var subnetListBothEnvsString = `[
 ]
 `
 
-var subnetUpdateNoArgErrorString string = "Error: rscli subnets update [id] [json] requires 2 arguments"
-var subnetUpdateTooManyArgErrorString string = "Error: rscli subnets update [id] [json] requires 2 arguments"
+var subnetUpdateNoArgErrorString string = "Error: drpcli subnets update [id] [json] requires 2 arguments"
+var subnetUpdateTooManyArgErrorString string = "Error: drpcli subnets update [id] [json] requires 2 arguments"
 var subnetUpdateBadJSONString = "asdgasdg"
 var subnetUpdateBadJSONErrorString = "Error: Unable to merge objects: json: cannot unmarshal string into Go value of type map[string]interface {}\n\n\n"
 var subnetUpdateInputString string = `{
@@ -153,12 +153,12 @@ var subnetUpdateJohnString string = `{
 `
 var subnetUpdateJohnMissingErrorString string = "Error: subnets GET: john2: Not Found\n\n"
 
-var subnetPatchNoArgErrorString string = "Error: rscli subnets patch [objectJson] [changesJson] requires 2 arguments"
-var subnetPatchTooManyArgErrorString string = "Error: rscli subnets patch [objectJson] [changesJson] requires 2 arguments"
+var subnetPatchNoArgErrorString string = "Error: drpcli subnets patch [objectJson] [changesJson] requires 2 arguments"
+var subnetPatchTooManyArgErrorString string = "Error: drpcli subnets patch [objectJson] [changesJson] requires 2 arguments"
 var subnetPatchBadPatchJSONString = "asdgasdg"
-var subnetPatchBadPatchJSONErrorString = "Error: Unable to parse rscli subnets patch [objectJson] [changesJson] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Subnet\n\n"
+var subnetPatchBadPatchJSONErrorString = "Error: Unable to parse drpcli subnets patch [objectJson] [changesJson] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Subnet\n\n"
 var subnetPatchBadBaseJSONString = "asdgasdg"
-var subnetPatchBadBaseJSONErrorString = "Error: Unable to parse rscli subnets patch [objectJson] [changesJson] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Subnet\n\n"
+var subnetPatchBadBaseJSONErrorString = "Error: Unable to parse drpcli subnets patch [objectJson] [changesJson] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Subnet\n\n"
 var subnetPatchBaseString string = `{
   "ActiveEnd": "192.168.100.100",
   "ActiveLeaseTime": 60,
@@ -246,8 +246,8 @@ var subnetPatchMissingBaseString string = `{
 `
 var subnetPatchJohnMissingErrorString string = "Error: subnets: PATCH john2: Not Found\n\n"
 
-var subnetDestroyNoArgErrorString string = "Error: rscli subnets destroy [id] requires 1 argument"
-var subnetDestroyTooManyArgErrorString string = "Error: rscli subnets destroy [id] requires 1 argument"
+var subnetDestroyNoArgErrorString string = "Error: drpcli subnets destroy [id] requires 1 argument"
+var subnetDestroyTooManyArgErrorString string = "Error: drpcli subnets destroy [id] requires 1 argument"
 var subnetDestroyJohnString string = "Deleted subnet john\n"
 var subnetDestroyMissingJohnString string = "Error: subnets: DELETE john: Not Found\n\n"
 

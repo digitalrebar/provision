@@ -5,8 +5,8 @@ import (
 	"io/ioutil"
 	"os"
 
+	"github.com/digitalrebar/provision/client/prefs"
 	"github.com/ghodss/yaml"
-	"github.com/rackn/rocket-skates/client/prefs"
 	"github.com/spf13/cobra"
 )
 
@@ -18,7 +18,7 @@ func init() {
 func addPrefCommands() (res *cobra.Command) {
 	res = &cobra.Command{
 		Use:   "prefs",
-		Short: "List and set RocketSkates operation preferences",
+		Short: "List and set DigitalRebar Provision operational preferences",
 	}
 
 	commands := []*cobra.Command{}

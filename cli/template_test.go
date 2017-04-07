@@ -23,8 +23,8 @@ var templateDefaultListString string = `[
 ]
 `
 
-var templateShowNoArgErrorString string = "Error: rscli templates show [id] requires 1 argument\n"
-var templateShowTooManyArgErrorString string = "Error: rscli templates show [id] requires 1 argument\n"
+var templateShowNoArgErrorString string = "Error: drpcli templates show [id] requires 1 argument\n"
+var templateShowTooManyArgErrorString string = "Error: drpcli templates show [id] requires 1 argument\n"
 var templateShowMissingArgErrorString string = "Error: templates GET: ignore: Not Found\n\n"
 var templateShowJohnString string = `{
   "Contents": "John Rules",
@@ -32,13 +32,13 @@ var templateShowJohnString string = `{
 }
 `
 
-var templateExistsNoArgErrorString string = "Error: rscli templates exists [id] requires 1 argument"
-var templateExistsTooManyArgErrorString string = "Error: rscli templates exists [id] requires 1 argument"
+var templateExistsNoArgErrorString string = "Error: drpcli templates exists [id] requires 1 argument"
+var templateExistsTooManyArgErrorString string = "Error: drpcli templates exists [id] requires 1 argument"
 var templateExistsIgnoreString string = ""
 var templateExistsMissingIgnoreString string = "Error: templates GET: ignore: Not Found\n\n"
 
-var templateCreateNoArgErrorString string = "Error: rscli templates create [json] requires 1 argument\n"
-var templateCreateTooManyArgErrorString string = "Error: rscli templates create [json] requires 1 argument\n"
+var templateCreateNoArgErrorString string = "Error: drpcli templates create [json] requires 1 argument\n"
+var templateCreateTooManyArgErrorString string = "Error: drpcli templates create [json] requires 1 argument\n"
 var templateCreateBadJSONString = "asdgasdg"
 var templateCreateBadJSONErrorString = "Error: Invalid template object: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Template\n\n"
 var templateCreateInputString string = `{
@@ -73,8 +73,8 @@ var templateListBothEnvsString = `[
 ]
 `
 
-var templateUpdateNoArgErrorString string = "Error: rscli templates update [id] [json] requires 2 arguments"
-var templateUpdateTooManyArgErrorString string = "Error: rscli templates update [id] [json] requires 2 arguments"
+var templateUpdateNoArgErrorString string = "Error: drpcli templates update [id] [json] requires 2 arguments"
+var templateUpdateTooManyArgErrorString string = "Error: drpcli templates update [id] [json] requires 2 arguments"
 var templateUpdateBadJSONString = "asdgasdg"
 var templateUpdateBadJSONErrorString = "Error: Unable to merge objects: json: cannot unmarshal string into Go value of type map[string]interface {}\n\n\n"
 var templateUpdateInputString string = `{
@@ -89,12 +89,12 @@ var templateUpdateJohnString string = `{
 `
 var templateUpdateJohnMissingErrorString string = "Error: templates GET: john2: Not Found\n\n"
 
-var templatePatchNoArgErrorString string = "Error: rscli templates patch [objectJson] [changesJson] requires 2 arguments"
-var templatePatchTooManyArgErrorString string = "Error: rscli templates patch [objectJson] [changesJson] requires 2 arguments"
+var templatePatchNoArgErrorString string = "Error: drpcli templates patch [objectJson] [changesJson] requires 2 arguments"
+var templatePatchTooManyArgErrorString string = "Error: drpcli templates patch [objectJson] [changesJson] requires 2 arguments"
 var templatePatchBadPatchJSONString = "asdgasdg"
-var templatePatchBadPatchJSONErrorString = "Error: Unable to parse rscli templates patch [objectJson] [changesJson] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Template\n\n"
+var templatePatchBadPatchJSONErrorString = "Error: Unable to parse drpcli templates patch [objectJson] [changesJson] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Template\n\n"
 var templatePatchBadBaseJSONString = "asdgasdg"
-var templatePatchBadBaseJSONErrorString = "Error: Unable to parse rscli templates patch [objectJson] [changesJson] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Template\n\n"
+var templatePatchBadBaseJSONErrorString = "Error: Unable to parse drpcli templates patch [objectJson] [changesJson] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Template\n\n"
 var templatePatchBaseString string = `{
   "Contents": "John Rules",
   "Description": "NewStrat",
@@ -119,8 +119,8 @@ var templatePatchMissingBaseString string = `{
 `
 var templatePatchJohnMissingErrorString string = "Error: templates: PATCH john2: Not Found\n\n"
 
-var templateDestroyNoArgErrorString string = "Error: rscli templates destroy [id] requires 1 argument"
-var templateDestroyTooManyArgErrorString string = "Error: rscli templates destroy [id] requires 1 argument"
+var templateDestroyNoArgErrorString string = "Error: drpcli templates destroy [id] requires 1 argument"
+var templateDestroyTooManyArgErrorString string = "Error: drpcli templates destroy [id] requires 1 argument"
 var templateDestroyJohnString string = "Deleted template john\n"
 var templateDestroyMissingJohnString string = "Error: templates: DELETE john: Not Found\n\n"
 

@@ -7,8 +7,8 @@ import (
 
 var machineDefaultListString string = "[]\n"
 
-var machineShowNoArgErrorString string = "Error: rscli machines show [id] requires 1 argument\n"
-var machineShowTooManyArgErrorString string = "Error: rscli machines show [id] requires 1 argument\n"
+var machineShowNoArgErrorString string = "Error: drpcli machines show [id] requires 1 argument\n"
+var machineShowTooManyArgErrorString string = "Error: drpcli machines show [id] requires 1 argument\n"
 var machineShowMissingArgErrorString string = "Error: machines GET: john: Not Found\n\n"
 var machineShowMachineString string = `{
   "BootEnv": "local",
@@ -18,13 +18,13 @@ var machineShowMachineString string = `{
 }
 `
 
-var machineExistsNoArgErrorString string = "Error: rscli machines exists [id] requires 1 argument"
-var machineExistsTooManyArgErrorString string = "Error: rscli machines exists [id] requires 1 argument"
+var machineExistsNoArgErrorString string = "Error: drpcli machines exists [id] requires 1 argument"
+var machineExistsTooManyArgErrorString string = "Error: drpcli machines exists [id] requires 1 argument"
 var machineExistsMachineString string = ""
 var machineExistsMissingJohnString string = "Error: machines GET: john: Not Found\n\n"
 
-var machineCreateNoArgErrorString string = "Error: rscli machines create [json] requires 1 argument\n"
-var machineCreateTooManyArgErrorString string = "Error: rscli machines create [json] requires 1 argument\n"
+var machineCreateNoArgErrorString string = "Error: drpcli machines create [json] requires 1 argument\n"
+var machineCreateTooManyArgErrorString string = "Error: drpcli machines create [json] requires 1 argument\n"
 var machineCreateBadJSONString = "asdgasdg"
 var machineCreateBadJSONErrorString = "Error: Invalid machine object: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Machine\n\n"
 var machineCreateInputString string = `{
@@ -52,8 +52,8 @@ var machineListMachinesString = `[
 ]
 `
 
-var machineUpdateNoArgErrorString string = "Error: rscli machines update [id] [json] requires 2 arguments"
-var machineUpdateTooManyArgErrorString string = "Error: rscli machines update [id] [json] requires 2 arguments"
+var machineUpdateNoArgErrorString string = "Error: drpcli machines update [id] [json] requires 2 arguments"
+var machineUpdateTooManyArgErrorString string = "Error: drpcli machines update [id] [json] requires 2 arguments"
 var machineUpdateBadJSONString = "asdgasdg"
 var machineUpdateBadJSONErrorString = "Error: Unable to merge objects: json: cannot unmarshal string into Go value of type map[string]interface {}\n\n\n"
 var machineUpdateInputString string = `{
@@ -70,12 +70,12 @@ var machineUpdateJohnString string = `{
 `
 var machineUpdateJohnMissingErrorString string = "Error: machines GET: john2: Not Found\n\n"
 
-var machinePatchNoArgErrorString string = "Error: rscli machines patch [objectJson] [changesJson] requires 2 arguments"
-var machinePatchTooManyArgErrorString string = "Error: rscli machines patch [objectJson] [changesJson] requires 2 arguments"
+var machinePatchNoArgErrorString string = "Error: drpcli machines patch [objectJson] [changesJson] requires 2 arguments"
+var machinePatchTooManyArgErrorString string = "Error: drpcli machines patch [objectJson] [changesJson] requires 2 arguments"
 var machinePatchBadPatchJSONString = "asdgasdg"
-var machinePatchBadPatchJSONErrorString = "Error: Unable to parse rscli machines patch [objectJson] [changesJson] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Machine\n\n"
+var machinePatchBadPatchJSONErrorString = "Error: Unable to parse drpcli machines patch [objectJson] [changesJson] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Machine\n\n"
 var machinePatchBadBaseJSONString = "asdgasdg"
-var machinePatchBadBaseJSONErrorString = "Error: Unable to parse rscli machines patch [objectJson] [changesJson] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Machine\n\n"
+var machinePatchBadBaseJSONErrorString = "Error: Unable to parse drpcli machines patch [objectJson] [changesJson] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Machine\n\n"
 var machinePatchBaseString string = `{
   "BootEnv": "local",
   "Description": "lpxelinux.0",
@@ -106,8 +106,8 @@ var machinePatchMissingBaseString string = `{
 `
 var machinePatchJohnMissingErrorString string = "Error: machines: PATCH 3e7031fe-5555-45f1-835c-92541bc9cbd3: Not Found\n\n"
 
-var machineDestroyNoArgErrorString string = "Error: rscli machines destroy [id] requires 1 argument"
-var machineDestroyTooManyArgErrorString string = "Error: rscli machines destroy [id] requires 1 argument"
+var machineDestroyNoArgErrorString string = "Error: drpcli machines destroy [id] requires 1 argument"
+var machineDestroyTooManyArgErrorString string = "Error: drpcli machines destroy [id] requires 1 argument"
 var machineDestroyJohnString string = "Deleted machine 3e7031fe-3062-45f1-835c-92541bc9cbd3\n"
 var machineDestroyMissingJohnString string = "Error: machines: DELETE 3e7031fe-3062-45f1-835c-92541bc9cbd3: Not Found\n\n"
 

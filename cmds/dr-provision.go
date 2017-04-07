@@ -1,4 +1,4 @@
-// Package main Rocket Skates Server
+// Package main DigitalRebar Provision Server
 //
 // An RestFUL API-driven Provisioner and DHCP server
 //
@@ -7,8 +7,8 @@ package main
 import (
 	"os"
 
+	"github.com/digitalrebar/provision/server"
 	"github.com/jessevdk/go-flags"
-	"github.com/rackn/rocket-skates/server"
 )
 
 var c_opts server.ProgOpts

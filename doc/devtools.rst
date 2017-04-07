@@ -1,15 +1,15 @@
 .. Copyright (c) 2017 RackN Inc.
 .. Licensed under the Apache License, Version 2.0 (the "License");
-.. Rocket Skates documentation under Digital Rebar master license
+.. DigitalRebar Provision documentation under Digital Rebar master license
 .. index::
-  pair: Rocket Skates; Developer Environment
+  pair: DigitalRebar Provision; Developer Environment
 
 .. _rs_dev_environment:
 
 Developer Environment
 ~~~~~~~~~~~~~~~~~~~~~
 
-This page is intended for people who are building Rocket Skates from sources or contributing to the code base.  We maintain a inline documentation and test environment and expect contributors to participate in maintenance of those efforts.
+This page is intended for people who are building DigitalRebar Provision from sources or contributing to the code base.  We maintain a inline documentation and test environment and expect contributors to participate in maintenance of those efforts.
 
 .. note:: Prerequisites: we are using go version 1.8 or better.  These documents expect that you are able to install and update Golang.
 
@@ -23,9 +23,9 @@ To get started quickly, we've rolled all the installation steps into a script.  
 
   ::
 
-    mkdir rocket-skates-dev
-    cd rocket-skates-dev
-    curl -fsSL https://raw.githubusercontent.com/rackn/rocket-skates/master/tools/build.sh | bash
+    mkdir dr-provison-dev
+    cd dr-provision-dev
+    curl -fsSL https://raw.githubusercontent.com/digitalrebar/provision/master/tools/build.sh | bash
 
 
 The end of the script includes environment configuration steps required to build the code.
@@ -41,8 +41,8 @@ Once you've got the code and assets once, you can repeat the process from the pr
 
   ::
 
-    go generate server/main.go
-    go build -o rocket-skates server/\*
+    go generate server/assets.go
+    go build -o dr-provision cmds/dr-provision.go
 
 
 The generate step is only required when you are changing the embedded assets in the `embedded/assets/` directories.
@@ -52,7 +52,7 @@ The generate step is only required when you are changing the embedded assets in 
 Serving UI from File System
 ---------------------------
 
-When working on the Rocket Skates UI, you can skip the generate steps by using the `--dev-ui` flag.  Generally, this is started using `--dev-ui ./embedded/assets/ui`
+When working on the DigitalRebar Provision UI, you can skip the generate steps by using the `--dev-ui` flag.  Generally, this is started using `--dev-ui ./embedded/assets/ui`
 
 
 .. _rs_testing:
@@ -60,9 +60,9 @@ When working on the Rocket Skates UI, you can skip the generate steps by using t
 Running the Tests
 -----------------
 
-Rocket Skates uses the Golang test libraries and we work hard to maintain test coverage.
+DigitalRebar Provision uses the Golang test libraries and we work hard to maintain test coverage.
 
-We use `tools/test.sh` in the rocket-skates root directory to test the entire code base.
+We use `tools/test.sh` in the provision root directory to test the entire code base.
 
 You can test individual modules from their subdirectories by running `go test`
 
@@ -73,7 +73,7 @@ Developer Install Steps (manual)
 
 .. note:: Please review the `tools/build.sh` script also.  It may have been updated more recently than the documentation!
 
-We are using `go-bindata <https://github.com/jteeuwen/go-bindata>`_ to embed binary assets in *rocket-skates*  The following command 
+We are using `go-bindata <https://github.com/jteeuwen/go-bindata>`_ to embed binary assets in *dr-provision*  The following command 
 will leave the *go-bindata* executable in *$GOPATH/bin*.
 
   ::
@@ -91,10 +91,10 @@ command will leave the *swagger* executable in *$GOPATH/bin*.
 We are using `swagger-ui <https://github.com/swagger-api/swagger-ui>`_ for a quick UI to inspect the API and drive the system.
 It is customizable if we need, but we are running it straight up for now.
 
-This basic dist files have been embedded into the rocket skates binary for the time being.  These are copied from the swagger-ui tree.
+This basic dist files have been embedded into the dr-provision binary for the time being.  These are copied from the swagger-ui tree.
 
 
-Rocket skates requires some basic files to provide a PXE environment.  This can be obtained by running the
+DigitalRebar Provision requires some basic files to provide a PXE environment.  This can be obtained by running the
 *download-assets.sh* script.  This will populate the embedded/assets directory.
 
   ::
@@ -104,7 +104,7 @@ Rocket skates requires some basic files to provide a PXE environment.  This can 
 How to get Swagger-Ui
 ---------------------
 
-Rocket Skates uses Swagger to generate interactive help for the API.  This is in the tree by default.  If you
+DigiatlRebar Provision uses Swagger to generate interactive help for the API.  This is in the tree by default.  If you
 need to update it, do the following:
 
 * git clone https://github.com/swagger-api/swagger-ui

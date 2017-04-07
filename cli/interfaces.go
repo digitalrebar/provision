@@ -3,7 +3,7 @@ package cli
 import (
 	"fmt"
 
-	"github.com/rackn/rocket-skates/client/interfaces"
+	"github.com/digitalrebar/provision/client/interfaces"
 	"github.com/spf13/cobra"
 )
 

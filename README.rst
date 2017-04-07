@@ -1,12 +1,12 @@
 .. Copyright (c) 2017 RackN Inc.
 .. Licensed under the Apache License, Version 2.0 (the "License");
-.. Rocket Skates documentation under Digital Rebar master license
+.. DigitalRebar Provision documentation under Digital Rebar master license
 .. 
 
 .. _rs_welcome:
 
-Rocket Skates
-~~~~~~~~~~~~~
+DigitalRebar Provision
+~~~~~~~~~~~~~~~~~~~~~~
 
 *simple, fast and open API-driven server provisioning.*
 
@@ -25,30 +25,30 @@ TL;DR: Cobbler Replacement
 Community Resources
 -------------------
 
-.. image:: https://travis-ci.org/rackn/rocket-skates.svg?branch=master
-  :target: https://travis-ci.org/rackn/rocket-skates
+.. image:: https://travis-ci.org/digitalrebar/provision.svg?branch=master
+  :target: https://travis-ci.org/digitalrebar/provision
   :alt: Build Status
 
-.. image:: https://codecov.io/gh/rackn/rocket-skates/branch/master/graph/badge.svg
-  :target: https://codecov.io/gh/rackn/rocket-skates
+.. image:: https://codecov.io/gh/digitalrebar/provision/branch/master/graph/badge.svg
+  :target: https://codecov.io/gh/digitalrebar/provision
   :alt: codecov
 
-.. image:: https://goreportcard.com/badge/github.com/rackn/rocket-skates
-  :target: https://goreportcard.com/report/github.com/rackn/rocket-skates
+.. image:: https://goreportcard.com/badge/github.com/digitalrebar/provision
+  :target: https://goreportcard.com/report/github.com/digitalrebar/provision
   :alt: Go Report Card
 
-.. image:: https://godoc.org/github.com/rackn/rocket-skates?status.svg
-  :target: https://godoc.org/github.com/rackn/rocket-skates
+.. image:: https://godoc.org/github.com/digitalrebar/provision?status.svg
+  :target: https://godoc.org/github.com/digitalrebar/provision
   :alt: GoDoc
 
-.. image:: https://readthedocs.org/projects/rocket-skates/badge/?version=latest
-  :target: http://rocket-skates.readthedocs.io/en/latest/?badge=latest
+.. image:: https://readthedocs.org/projects/provision/badge/?version=latest
+  :target: http://provision.readthedocs.io/en/latest/?badge=latest
   :alt: Documentation Status
                          
 
 * `Mailing List <http://bit.ly/digitalrebarlist>`_ and `Live Chat <https://gitter.im/digitalrebar/core?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge>`_  (Gitter.im) and Freenode #DigitalRebar
-* `Issues and Features <https://github.com/rackn/rocket-skates/issues>`_
-* Full `Documentation <http://rocket-skates.readthedocs.io/en/latest/>`_ (Github `/doc <https://github.com/rackn/rocket-skates/tree/master/doc>`_ sources are updatable via pull request).
+* `Issues and Features <https://github.com/digitalrebar/provision/issues>`_
+* Full `Documentation <http://provision.readthedocs.io/en/latest/>`_ (Github `/doc <https://github.com/digitalrebar/provision/tree/master/doc>`_ sources are updatable via pull request).
 
 .. _rs_quick:
 
@@ -62,7 +62,7 @@ At this time, you must follow the :ref:`rs_install` steps.  Don't worry, they ar
 Table of Contents
 -----------------
 
-**Reading on Github?** Visit `Generated Docs <http://rocket-skates.readthedocs.io/en/latest/README.html#rs_toc>`_ for a generated ToC.
+**Reading on Github?** Visit `Generated Docs <http://provision.readthedocs.io/en/latest/README.html#rs_toc>`_ for a generated ToC.
 
 .. toctree::
    :glob:

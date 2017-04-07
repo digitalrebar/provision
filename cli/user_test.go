@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/rackn/rocket-skates/client/users"
+	"github.com/digitalrebar/provision/client/users"
 )
 
 var userDefaultListString string = `[
@@ -16,8 +16,8 @@ var userDefaultListString string = `[
 ]
 `
 
-var userShowNoArgErrorString string = "Error: rscli users show [id] requires 1 argument\n"
-var userShowTooManyArgErrorString string = "Error: rscli users show [id] requires 1 argument\n"
+var userShowNoArgErrorString string = "Error: drpcli users show [id] requires 1 argument\n"
+var userShowTooManyArgErrorString string = "Error: drpcli users show [id] requires 1 argument\n"
 var userShowMissingArgErrorString string = "Error: users GET: ignore: Not Found\n\n"
 var userShowJohnString string = `{
   "Name": "john",
@@ -25,13 +25,13 @@ var userShowJohnString string = `{
 }
 `
 
-var userExistsNoArgErrorString string = "Error: rscli users exists [id] requires 1 argument"
-var userExistsTooManyArgErrorString string = "Error: rscli users exists [id] requires 1 argument"
+var userExistsNoArgErrorString string = "Error: drpcli users exists [id] requires 1 argument"
+var userExistsTooManyArgErrorString string = "Error: drpcli users exists [id] requires 1 argument"
 var userExistsIgnoreString string = ""
 var userExistsMissingIgnoreString string = "Error: users GET: ignore: Not Found\n\n"
 
-var userCreateNoArgErrorString string = "Error: rscli users create [json] requires 1 argument\n"
-var userCreateTooManyArgErrorString string = "Error: rscli users create [json] requires 1 argument\n"
+var userCreateNoArgErrorString string = "Error: drpcli users create [json] requires 1 argument\n"
+var userCreateTooManyArgErrorString string = "Error: drpcli users create [json] requires 1 argument\n"
 var userCreateBadJSONString = "asdgasdg"
 var userCreateBadJSONErrorString = "Error: Invalid user object: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.User\n\n"
 var userCreateInputString string = `{
@@ -58,8 +58,8 @@ var userListBothEnvsString = `[
 ]
 `
 
-var userUpdateNoArgErrorString string = "Error: rscli users update [id] [json] requires 2 arguments"
-var userUpdateTooManyArgErrorString string = "Error: rscli users update [id] [json] requires 2 arguments"
+var userUpdateNoArgErrorString string = "Error: drpcli users update [id] [json] requires 2 arguments"
+var userUpdateTooManyArgErrorString string = "Error: drpcli users update [id] [json] requires 2 arguments"
 var userUpdateBadJSONString = "asdgasdg"
 var userUpdateBadJSONErrorString = "Error: Unable to merge objects: json: cannot unmarshal string into Go value of type map[string]interface {}\n\n\n"
 var userUpdateInputString string = `{
@@ -73,12 +73,12 @@ var userUpdateJohnString string = `{
 `
 var userUpdateJohnMissingErrorString string = "Error: users GET: john2: Not Found\n\n"
 
-var userPatchNoArgErrorString string = "Error: rscli users patch [objectJson] [changesJson] requires 2 arguments"
-var userPatchTooManyArgErrorString string = "Error: rscli users patch [objectJson] [changesJson] requires 2 arguments"
+var userPatchNoArgErrorString string = "Error: drpcli users patch [objectJson] [changesJson] requires 2 arguments"
+var userPatchTooManyArgErrorString string = "Error: drpcli users patch [objectJson] [changesJson] requires 2 arguments"
 var userPatchBadPatchJSONString = "asdgasdg"
-var userPatchBadPatchJSONErrorString = "Error: Unable to parse rscli users patch [objectJson] [changesJson] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.User\n\n"
+var userPatchBadPatchJSONErrorString = "Error: Unable to parse drpcli users patch [objectJson] [changesJson] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.User\n\n"
 var userPatchBadBaseJSONString = "asdgasdg"
-var userPatchBadBaseJSONErrorString = "Error: Unable to parse rscli users patch [objectJson] [changesJson] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.User\n\n"
+var userPatchBadBaseJSONErrorString = "Error: Unable to parse drpcli users patch [objectJson] [changesJson] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.User\n\n"
 var userPatchBaseString string = `{
   "Name": "john",
   "PasswordHash": "NewStrat"
@@ -100,14 +100,14 @@ var userPatchMissingBaseString string = `{
 `
 var userPatchJohnMissingErrorString string = "Error: users: PATCH john2: Not Found\n\n"
 
-var userDestroyNoArgErrorString string = "Error: rscli users destroy [id] requires 1 argument"
-var userDestroyTooManyArgErrorString string = "Error: rscli users destroy [id] requires 1 argument"
+var userDestroyNoArgErrorString string = "Error: drpcli users destroy [id] requires 1 argument"
+var userDestroyTooManyArgErrorString string = "Error: drpcli users destroy [id] requires 1 argument"
 var userDestroyJohnString string = "Deleted user john\n"
 var userDestroyMissingJohnString string = "Error: users: DELETE john: Not Found\n\n"
 
-var userTokenNoArgErrorString string = "Error: rscli users token [id] [ttl [ttl]] [scope [scope]] [action [action]] [specific [specific]] needs at least 1 arg\n"
-var userTokenTooManyArgErrorString string = "Error: rscli users token [id] [ttl [ttl]] [scope [scope]] [action [action]] [specific [specific]] needs at least 1 and pairs arg\n"
-var userTokenUnknownPairErrorString string = "Error: rscli users token [id] [ttl [ttl]] [scope [scope]] [action [action]] [specific [specific]] does not support greg2\n"
+var userTokenNoArgErrorString string = "Error: drpcli users token [id] [ttl [ttl]] [scope [scope]] [action [action]] [specific [specific]] needs at least 1 arg\n"
+var userTokenTooManyArgErrorString string = "Error: drpcli users token [id] [ttl [ttl]] [scope [scope]] [action [action]] [specific [specific]] needs at least 1 and pairs arg\n"
+var userTokenUnknownPairErrorString string = "Error: drpcli users token [id] [ttl [ttl]] [scope [scope]] [action [action]] [specific [specific]] does not support greg2\n"
 var userTokenUserNotFoundErrorString string = "Error: User GET: greg: Not Found\n\n"
 var userTokenTTLNotNumberErrorString string = "Error: ttl should be a number: strconv.ParseInt: parsing \"cow\": invalid syntax\n\n"
 var userTokenSuccessString string = `RE:
