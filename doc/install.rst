@@ -87,11 +87,11 @@ DigitalRebar Provision CLI has a process that combines multiple calls to install
 
   ::
 
-    ../rscli bootenvs install bootenvs/sledgehammer.yml 
-    ../rscli bootenvs install bootenvs/discovery.yml 
-    ../rscli bootenvs install bootenvs/local.yml 
-    ../rscli templates upload templates/local-elilo.tmpl as local-elilo.tmpl
-    ../rscli templates upload templates/local-pxelinux.tmpl as local-pxelinux.tmpl
-    ../rscli templates upload templates/local-ipxe.tmpl as local-ipxe.tmpl
-    ../rscli prefs set unknownBootEnv to "discovery"
+    ../bin/$(uname -s | tr '[:upper:]' '[:lower:]')/amd64/drpcli bootenvs install bootenvs/sledgehammer.yml 
+    ../bin/$(uname -s | tr '[:upper:]' '[:lower:]')/amd64/drpcli bootenvs install bootenvs/discovery.yml 
+    ../bin/$(uname -s | tr '[:upper:]' '[:lower:]')/amd64/drpcli bootenvs install bootenvs/local.yml 
+    ../bin/$(uname -s | tr '[:upper:]' '[:lower:]')/amd64/drpcli templates upload templates/local-elilo.tmpl as local-elilo.tmpl
+    ../bin/$(uname -s | tr '[:upper:]' '[:lower:]')/amd64/drpcli templates upload templates/local-pxelinux.tmpl as local-pxelinux.tmpl
+    ../bin/$(uname -s | tr '[:upper:]' '[:lower:]')/amd64/drpcli templates upload templates/local-ipxe.tmpl as local-ipxe.tmpl
+    ../bin/$(uname -s | tr '[:upper:]' '[:lower:]')/amd64/drpcli prefs set unknownBootEnv to "discovery"
  

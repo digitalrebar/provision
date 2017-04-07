@@ -27,11 +27,11 @@ cli code lives in:
 Building Client
 ---------------
 
-* go build -o rscli cli/*
+* go build -o drpcli cmds/drpcli.go
 
 
 Running Client
 --------------
 
-* ./rscli
+* ./drpcli
 
