@@ -11,10 +11,10 @@ import (
 
 	"github.com/ghodss/yaml"
 
-	bootenvs "github.com/rackn/rocket-skates/client/boot_envs"
-	"github.com/rackn/rocket-skates/client/isos"
-	"github.com/rackn/rocket-skates/client/templates"
-	"github.com/rackn/rocket-skates/models"
+	bootenvs "github.com/digitalrebar/provision/client/boot_envs"
+	"github.com/digitalrebar/provision/client/isos"
+	"github.com/digitalrebar/provision/client/templates"
+	"github.com/digitalrebar/provision/models"
 	"github.com/spf13/cobra"
 )
 
@@ -109,9 +109,9 @@ bootenvs must contain [bootenvFile]
 templates must contain any templates that the requested bootenv refers to.
 
 bootenvs install will try to upload any required ISOs if they are not already
-present in RocketSkates.  If [isoPath] is specified, it will use that directory
-to to check and download ISOs into, otherwise it will use isos/  If the ISO
-is not present, we will try to download it if the bootenv specifies a location
+present in DigitalRebar Provision.  If [isoPath] is specified, it will use that
+directory to to check and download ISOs into, otherwise it will use isos/  If the
+ISO is not present, we will try to download it if the bootenv specifies a location
 to download the ISO from.  If we cannot find an ISO to upload, then the bootenv
 will still be uploaded, but it will not be available until the ISO is uploaded
 using isos upload.git `,
@@ -229,7 +229,7 @@ using isos upload.git `,
 				}
 			}
 			// We have the ISO now.
-			log.Printf("Uploading %s to RocketSkates", isoPath)
+			log.Printf("Uploading %s to DigitalRebar Provision", isoPath)
 			isoTarget, err := os.Open(isoPath)
 			if err != nil {
 				return fmt.Errorf("Unable to open %s for upload: %v", isoPath, err)

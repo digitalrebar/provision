@@ -1,8 +1,8 @@
 .. Copyright (c) 2017 RackN Inc.
 .. Licensed under the Apache License, Version 2.0 (the "License");
-.. Rocket Skates documentation under Digital Rebar master license
+.. DigitalRebar Provision documentation under Digital Rebar master license
 .. index::
-  pair: Rocket Skates; Install
+  pair: DigitalRebar Provision; Install
 
 .. _rs_install:
 
@@ -37,7 +37,7 @@ To run a local copy that will use the local filesystem as a storage area, do the
   ::
 
     cd test-data
-    sudo ../rocket-skates
+    sudo ../bin/$(uname -s | tr '[:upper:]' '[:lower:]')/amd64/dr-provision --file-root=`pwd`/tftpboot --data-root=./digitalrebar
 
 Please review `--help` for options like disabling services, logging or paths.
 
@@ -65,7 +65,7 @@ If your SSL certificate is not valid, then follow the :ref:`rs_gen_cert` steps.
 Configuring the Server
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Rocket Skates provides both DHCP and Provisioning services but can be run with either disabled.  This allows users to work in environments with existing DHCP infrastructure or to use Rocket Skates as an API driven DHCP server.
+DigitalRebar Provision provides both DHCP and Provisioning services but can be run with either disabled.  This allows users to work in environments with existing DHCP infrastructure or to use DigitalRebar Provision as an API driven DHCP server.
 
 DHCP Server (subnets)
 ---------------------
@@ -76,14 +76,14 @@ The DHCP server had two primary models
 
 #. DHCP Listeners can be set on an IP for each server interface.  These listeners will respond to DHCP broadcasts on the matching network(s).  Operators should ensure that no other DHCP servers are set up on the configured subnets.
 
-#. DHCP Relay allows other DHCP listeners to forward requests to the Rocket Skates server.  In this mode, the server is passive and can easily co-exist with other DHCP servers.  This mode works with the Provisioner by setting the many optional parameters (like next boot) that are needed for PXE boot processes.
+#. DHCP Relay allows other DHCP listeners to forward requests to the DigitalRebar Provision server.  In this mode, the server is passive and can easily co-exist with other DHCP servers.  This mode works with the Provisioner by setting the many optional parameters (like next boot) that are needed for PXE boot processes.
 
 Provisioner (bootenvs)
 ----------------------
 
 The Provisioner is a combination of several services and a template expansion engine.  The primary model is a boot environment (BootEnv) that contains crtical metadata to describe an installation process.  This metadata includes templates that are dynamically expanded when machines boot.
 
-Rocket Skates CLI has a process that combines multiple calls to install BootEnvs.  The following steps will configure a system capable to :ref:`rs_provion_discovered`.
+DigitalRebar Provision CLI has a process that combines multiple calls to install BootEnvs.  The following steps will configure a system capable to :ref:`rs_provion_discovered`.
 
   ::
 

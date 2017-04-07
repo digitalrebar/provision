@@ -6,8 +6,8 @@ import (
 	"io"
 	"os"
 
-	"github.com/rackn/rocket-skates/client/templates"
-	"github.com/rackn/rocket-skates/models"
+	"github.com/digitalrebar/provision/client/templates"
+	"github.com/digitalrebar/provision/models"
 	"github.com/spf13/cobra"
 )
 

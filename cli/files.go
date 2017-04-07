@@ -3,7 +3,7 @@ package cli
 import (
 	"os"
 
-	"github.com/rackn/rocket-skates/client/files"
+	"github.com/digitalrebar/provision/client/files"
 	"github.com/spf13/cobra"
 )
 

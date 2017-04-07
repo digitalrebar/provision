@@ -3,8 +3,8 @@ package cli
 import (
 	"fmt"
 
-	"github.com/rackn/rocket-skates/client/reservations"
-	"github.com/rackn/rocket-skates/models"
+	"github.com/digitalrebar/provision/client/reservations"
+	"github.com/digitalrebar/provision/models"
 	"github.com/spf13/cobra"
 )
 

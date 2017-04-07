@@ -1,18 +1,18 @@
 .. Copyright (c) 2017 RackN Inc.
 .. Licensed under the Apache License, Version 2.0 (the "License");
-.. Rocket Skates documentation under Digital Rebar master license
+.. DigitalRebar Provision documentation under Digital Rebar master license
 .. index::
-  pair: Rocket Skates; Workglows
+  pair: DigitalRebar Provision; Workglows
 
 .. _rs_workflows:
 
 
-Rocket Skates Workflows
-~~~~~~~~~~~~~~~~~~~~~~~
+DigitalRebar Provision Workflows
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 PXE Provisioning requires hand-offs between multiple services and the nodes.  Generally, these flows start with network discovery (DHCP) providing a "next boot" instruction to the server's pre-execution environment (PXE) that can download a very limited operating system using a very simple file tranfer protocol (TFTP).  That next operating system can then take more complex actions including using HTTP do download further files.
 
-:note: According to project :ref:`rs_design_restriction`, Rocket Skates does not provide out-of-band management or orchestration.
+:note: According to project :ref:`rs_design_restriction`, DigitalRebar Provision does not provide out-of-band management or orchestration.
 
 In the flow graphics, green steps indicate user actions.
 
@@ -21,7 +21,7 @@ In the flow graphics, green steps indicate user actions.
 Basic Discovery
 ---------------
 
-The basic discovery flow uses the specialized Discovery and Sledgehammer Boot Environments (BootEnvs).  These BootEnvs work with the default next boot to self-register machines with Rocket Skates using the Machines API.
+The basic discovery flow uses the specialized Discovery and Sledgehammer Boot Environments (BootEnvs).  These BootEnvs work with the default next boot to self-register machines with DigitalRebar Provision using the Machines API.
 
 This recommended process allows operators to start with minimal information about the environment so they can :ref:`rs_provision discovered`.  Without discovery, operators must create machines in advance following the :ref:`rs_provision_known` process.
 

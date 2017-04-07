@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/rackn/rocket-skates/models"
+	"github.com/digitalrebar/provision/models"
 )
 
 var interfaceShowNoArgErrorString string = "Error: rscli interfaces show [id] requires 1 argument\n"

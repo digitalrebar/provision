@@ -108,9 +108,9 @@ qthelp:
 	@echo
 	@echo "Build finished; now you can run "qcollectiongenerator" with the" \
 	      ".qhcp project file in $(BUILDDIR)/qthelp, like this:"
-	@echo "# qcollectiongenerator $(BUILDDIR)/qthelp/RocketSkates.qhcp"
+	@echo "# qcollectiongenerator $(BUILDDIR)/qthelp/DigitalRebarProvision.qhcp"
 	@echo "To view the help file:"
-	@echo "# assistant -collectionFile $(BUILDDIR)/qthelp/RocketSkates.qhc"
+	@echo "# assistant -collectionFile $(BUILDDIR)/qthelp/DigitalRebarProvision.qhc"
 
 .PHONY: applehelp
 applehelp:
@@ -127,8 +127,8 @@ devhelp:
 	@echo
 	@echo "Build finished."
 	@echo "To view the help file:"
-	@echo "# mkdir -p $$HOME/.local/share/devhelp/RocketSkates"
-	@echo "# ln -s $(BUILDDIR)/devhelp $$HOME/.local/share/devhelp/RocketSkates"
+	@echo "# mkdir -p $$HOME/.local/share/devhelp/DigitalRebarProvision"
+	@echo "# ln -s $(BUILDDIR)/devhelp $$HOME/.local/share/devhelp/DigitalRebarProvision"
 	@echo "# devhelp"
 
 .PHONY: epub

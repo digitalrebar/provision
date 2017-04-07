@@ -17,28 +17,28 @@ import (
 
 	"github.com/VictorLowther/jsonpatch2"
 	"github.com/VictorLowther/jsonpatch2/utils"
+	"github.com/digitalrebar/provision"
+	apiclient "github.com/digitalrebar/provision/client"
+	"github.com/digitalrebar/provision/models"
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
 	strfmt "github.com/go-openapi/strfmt"
-	"github.com/rackn/rocket-skates"
-	apiclient "github.com/rackn/rocket-skates/client"
-	"github.com/rackn/rocket-skates/models"
 	"github.com/spf13/cobra"
 )
 
 var (
 	App = &cobra.Command{
 		Use:   "rscli",
-		Short: "A CLI application for interacting with the Rocket-Skates API",
+		Short: "A CLI application for interacting with the DigitalRebar Provision API",
 	}
 
-	version            = rocketskates.RS_VERSION
+	version            = provision.RS_VERSION
 	debug              = false
 	endpoint           = "https://127.0.0.1:8092"
 	token              = ""
 	username, password string
 	format             = "json"
-	session            *apiclient.RocketSkates
+	session            *apiclient.DigitalRebarProvision
 	basicAuth          runtime.ClientAuthInfoWriter
 	uf                 func(*cobra.Command) error
 	dumpUsage          = true

@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/rackn/rocket-skates/cli"
+	"github.com/digitalrebar/provision/cli"
 )
 
 func main() {

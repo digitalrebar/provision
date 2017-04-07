@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/rackn/rocket-skates/client/users"
-	"github.com/rackn/rocket-skates/models"
+	"github.com/digitalrebar/provision/client/users"
+	"github.com/digitalrebar/provision/models"
 	"github.com/spf13/cobra"
 )
 

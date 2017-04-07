@@ -83,7 +83,7 @@ func TestPrefsCli(t *testing.T) {
 	tests := []CliTest{
 		CliTest{false, false, []string{"bootenvs", "install", "bootenvs/local.yml"}, noStdinString, bootEnvInstallLocalSuccessString, noErrorString},
 
-		CliTest{true, false, []string{"prefs"}, noStdinString, "List and set RocketSkates operation preferences\n", noErrorString},
+		CliTest{true, false, []string{"prefs"}, noStdinString, "List and set DigitalRebar Provision operational preferences\n", noErrorString},
 		CliTest{false, false, []string{"prefs", "list"}, noStdinString, prefsDefaultListString, noErrorString},
 
 		CliTest{true, true, []string{"prefs", "set"}, noStdinString, noContentString, prefsSetNoArgsErrorString},

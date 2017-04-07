@@ -12,18 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-rocket-skates
-rscli
-rscli.amd64.linux
-rscli.amd64.darwin
+dr-provision
+drpcli
+drpcli.amd64.linux
+drpcli.amd64.darwin
 vendor
 coverage.txt
 ALL-LICENSE
 client
 models
 assets/isos/
-rocketskates.zip
-rocketskates.sha256
+dr-provision.zip
+dr-provision.sha256
 
 # documentation
 builddir/

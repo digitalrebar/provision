@@ -1,9 +1,9 @@
 .. _licenses:
 
-Rocket Skates Licenses
-======================
+DigitalRebar Provision Licenses
+===============================
 
-Rocket Skates code is available is available from multiple authors under the Apache 2 license.
+DigitalRebar Provision code is available is available from multiple authors under the Apache 2 license.
 
 ::
 

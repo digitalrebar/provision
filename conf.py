@@ -138,10 +138,10 @@ html_theme = 'bizstyle'
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
-html_title = "Rocket Skates Docs"
+html_title = "DigitalRebar Provision Docs"
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
-html_short_title = "Rocket Skates"
+html_short_title = "Provision"
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
@@ -218,7 +218,7 @@ html_show_sourcelink = False
 #html_search_scorer = 'scorer.js'
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'Rocket_Skates'
+htmlhelp_basename = 'DigitalRebar_Provision'
 
 # -- Options for LaTeX output ---------------------------------------------
 
@@ -240,7 +240,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'RocketSkates.tex', u'Rocket Skates Documentation',
+    (master_doc, 'DigitalRebar_Provision.tex', u'DigitalRebar Provision Documentation',
      u'RackN team', 'manual'),
 ]
 
@@ -270,7 +270,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'rocketskates', u'Rocket Skates Documentation',
+    (master_doc, 'dr-provision', u'DigitalRebar Provision Documentation',
      [author], 1)
 ]
 
@@ -284,8 +284,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'RocketSkates', u'Rocket Skates Documentation',
-     author, 'RocketSkates', 'Golang API-Driven PXE Provisioning & DHCP.',
+    (master_doc, 'DigitalRebar Provision', u'DigitalRebar Provision Documentation',
+     author, 'DigitalRebar Provision', 'Golang API-Driven PXE Provisioning & DHCP.',
      'Miscellaneous'),
 ]
 

@@ -3,9 +3,9 @@ package cli
 import (
 	"fmt"
 
+	"github.com/digitalrebar/provision/client/leases"
+	"github.com/digitalrebar/provision/models"
 	"github.com/go-openapi/strfmt"
-	"github.com/rackn/rocket-skates/client/leases"
-	"github.com/rackn/rocket-skates/models"
 	"github.com/spf13/cobra"
 )
 

@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/rackn/rocket-skates/client/users"
+	"github.com/digitalrebar/provision/client/users"
 )
 
 var userDefaultListString string = `[

@@ -5,8 +5,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/rackn/rocket-skates/backend"
-	"github.com/rackn/rocket-skates/midlayer"
+	"github.com/digitalrebar/provision/backend"
+	"github.com/digitalrebar/provision/midlayer"
 )
 
 var bootEnvDefaultListString string = `[

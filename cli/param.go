@@ -3,8 +3,8 @@ package cli
 import (
 	"fmt"
 
-	"github.com/rackn/rocket-skates/client/params"
-	"github.com/rackn/rocket-skates/models"
+	"github.com/digitalrebar/provision/client/params"
+	"github.com/digitalrebar/provision/models"
 	"github.com/spf13/cobra"
 )
 
