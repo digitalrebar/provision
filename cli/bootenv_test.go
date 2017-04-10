@@ -292,7 +292,7 @@ var bootEnvInstallSledgehammerSuccessString string = `RE:
 {
   "Available": [\s\S]*,
   "BootParams": "rootflags=loop root=live:/sledgehammer.iso rootfstype=auto ro liveimg rd_NO_LUKS rd_NO_MD rd_NO_DM provisioner.web={{.ProvisionerURL}} rebar.web={{.CommandURL}} rs.uuid={{.Machine.UUID}} rs.api={{.ApiURL}}",
-  "Errors": null,
+  "Errors": [\s\S]*,
   "Initrds": \[
     "stage1.img"
   \],
