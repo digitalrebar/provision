@@ -300,8 +300,7 @@ var bootEnvInstallSledgehammerSuccessString string = `RE:
   "Name": "fredhammer",
   "OS": {
     "IsoFile": "sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar",
-    "IsoSha256": "e094e066b24671c461c17482c6f071d78723275c48df70eb9d24125c89e99760",
-    "IsoUrl": "http://127.0.0.1:10003/sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar",
+    [\s\S]*,
     "Name": "sledgehammer/708de8b878e3818b1c1bb598a56de968939f9d4b"
   },
   "OnlyUnknown": false,
