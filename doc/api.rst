@@ -16,10 +16,6 @@ All API calls are avilable under `/api/v3` based on the Digital Rebar API conven
 
 This section is intended to provide general information about and functional of the API
 
-See `the swagger-ui`__.
-
-.. __: swagger-ui/index.html
-
 
 .. _rs_subnets:
 
@@ -27,7 +23,6 @@ Subnets
 -------
 
 Names of Subnets match the Interfaces to which they are bound.
-
 
 
 .. _rs_interfaces:

@@ -67,10 +67,6 @@ clean:
 
 .PHONY: html
 html:
-	mkdir -p $(BUILDDIR)/html/doc
-	cp -r embedded/assets/swagger-ui $(BUILDDIR)/html/doc
-	curl -fsSL -o $(BUILDDIR)/html/doc/swagger-ui/swagger.json https://github.com/digitalrebar/provision/releases/download/tip/swagger.json
-	sed -i -e "s-https://127.0.0.1:8092/swagger.json-../swagger.json-" $(BUILDDIR)/html/doc/swagger-ui/index.html
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
