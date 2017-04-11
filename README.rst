@@ -55,7 +55,9 @@ Community Resources
 Quick Start
 -----------
 
-At this time, you must follow the :ref:`rs_install` steps.  Don't worry, they are very simple.
+:ref:`rs_quickstart` for the the fast play-with-it steps.  Don't worry, they are very simple.
+
+:ref:`rs_install` for more details on the install steps.
 
 .. _rs_toc:
 
@@ -68,5 +70,15 @@ Table of Contents
    :glob:
    :numbered:
    
+   doc/quickstart
+   doc/architecture
+   doc/workflows
+   doc/install
+   doc/ui
+   doc/cli
+   doc/api
+   doc/dev-server
+   doc/dev-cli
+   doc/faq-troubleshooting
    doc/*
    LICENSE
