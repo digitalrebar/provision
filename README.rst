@@ -10,7 +10,7 @@ Digital Rebar Provision
 
 *simple, fast and open API-driven server provisioning.*
 
-.. figure::  doc/images/dr_provision.jpg
+.. figure::  doc/images/dr_provision.png
    :align:   right
    :width: 320 px
    :alt: Digital Rebar Provision
@@ -55,9 +55,9 @@ Community Resources
 Quick Start
 -----------
 
-:ref:`rs_quickstart` for the the fast play-with-it steps.  Don't worry, they are very simple.
+Look at `Quick Start<http://provision.readthedocs.io/en/latest/doc/quickstart.html>`_ for the the fast play-with-it steps.  Don't worry, they are very simple.
 
-:ref:`rs_install` for more details on the install steps.
+Look at `Install<http://provision.readthedocs.io/en/latest/doc/install.html>`_ for more details on the install steps.
 
 .. _rs_toc:
 
