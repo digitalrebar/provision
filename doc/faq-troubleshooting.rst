@@ -41,3 +41,15 @@ Sometimes the cert/key pair in the github tree is corrupt or not sufficient for 
 
 
 You may need to install the openssl tools.
+
+Rocket Skates?
+--------------
+
+Rocket Skates was the working name for Digital Rebar Provision during initial development.  Since they are fast and powerful boots, it seemed like a natural name for a Cobbler replacement.
+
+.. figure::  doc/images/rocket.jpg
+   :align:   right
+   :width: 320 px
+   :alt: Code name Rocket Skates
+   :target: https://www.pexels.com/photo/aerospace-engineering-exploration-launch-34521/
+

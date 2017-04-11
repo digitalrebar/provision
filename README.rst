@@ -5,16 +5,16 @@
 
 .. _rs_welcome:
 
-DigitalRebar Provision
-~~~~~~~~~~~~~~~~~~~~~~
+Digital Rebar Provision
+~~~~~~~~~~~~~~~~~~~~~~~
 
 *simple, fast and open API-driven server provisioning.*
 
-.. figure::  doc/images/rocket.jpg
+.. figure::  doc/images/dr_provision.jpg
    :align:   right
    :width: 320 px
-   :alt: Code name Rocket Skates
-   :target: https://www.pexels.com/photo/aerospace-engineering-exploration-launch-34521/
+   :alt: Digital Rebar Provision
+   :target: https://github.com/digitalrebar/provision
 
 **DR Provision** is a APLv2 simple Golang executable that provides a simple yet complete API-driven DHCP/PXE/TFTP provisioning system. It is designed to stand alone or operate as part of the `Digital Rebar <http://rebar.digital>`_ management system.
 
