@@ -55,9 +55,9 @@ Community Resources
 Quick Start
 -----------
 
-Look at `Quick Start<http://provision.readthedocs.io/en/latest/doc/quickstart.html>`_ for the the fast play-with-it steps.  Don't worry, they are very simple.
+Look at `Quick Start <http://provision.readthedocs.io/en/latest/doc/quickstart.html>`_ for the the fast play-with-it steps.  Don't worry, they are very simple.
 
-Look at `Install<http://provision.readthedocs.io/en/latest/doc/install.html>`_ for more details on the install steps.
+Look at `Install <http://provision.readthedocs.io/en/latest/doc/install.html>`_ for more details on the install steps.
 
 .. _rs_toc:
 
