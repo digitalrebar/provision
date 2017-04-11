@@ -2,54 +2,27 @@
 .. Licensed under the Apache License, Version 2.0 (the "License");
 .. DigitalRebar Provision documentation under Digital Rebar master license
 .. index::
-  pair: DigitalRebar Provision; Command Line Interface
+  pair: DigitalRebar Provision; Command Line Interface (CLI)
+  pair: DigitalRebar Provision; drpcli
 
 .. _rs_cli:
 
-Command Line Interface (CLI)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Digital Rebar Provision Command Line Interface (CLI)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Using the devtool build process for the server will generate
-the files needed to build the cli.
+The Digital Rebar Provision Command Line Interface (drpcli) prevents a simplified way to interact with the
+:ref:`rs_api`.
 
-It generates the following directories:
+The CLI provides help for commands and follows a pattern of chained parameters with a few flags for additional 
+modifications.
 
-* client
-* models
+Some examples are:
 
-The cli uses those client files to access the server.  The editable 
-cli code lives in:
+  ::
 
-* cli
+    drpcli bootenvs list
+    drpcli subnets get mysubnet
+    drpcli preferences set defaultBootEnv discovery
 
-The hope is that the CLI will use a generated client library based upon
-the generated swagger.json file.  This will help ensure that we are building
-a valid and viable swagger.json file.  The build.sh tool generates all the
-components need for the cli and also builds multiple instances of it.
-
-.. _rs_client:
-
-Building Client
----------------
-
-While a single *go build* command will generate the cli, it is safer to
-use the *build.sh* script to ensure that all the parts are accurately generated.
-
-* tools/build.sh
-
-The results are stored in the bin directory based upon OS and platform.  We
-currently build windows, linux, and darwin for amd64.
-
-Running Client
---------------
-
-After building the code, you can use the tools/install.sh script to get a cli
-and dr-provision binary in the top-level directory for your platform.
-
-* tools/install.sh --isolated install
-
-Once that has been done a single time, symbolic links are created so that running
-commands from the top-level directory should work.
-
-* ./drpcli
+More details need to be added.
 
