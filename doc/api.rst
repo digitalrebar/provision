@@ -17,17 +17,5 @@ All API calls are avilable under `/api/v3` based on the Digital Rebar API conven
 This section is intended to provide general information about and functional of the API
 
 
-.. _rs_subnets:
+.. swaggerv2doc:: https://github.com/digitalrebar/provision/releases/download/tip/swagger.json
 
-Subnets
--------
-
-Names of Subnets match the Interfaces to which they are bound.
-
-
-.. _rs_interfaces:
-
-Interfaces
-----------
-
-This read only list of system interfaces is included for the UI configuration process.
