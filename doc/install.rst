@@ -141,3 +141,8 @@ DigitalRebar Provision CLI has a process that combines multiple calls to install
 
 .. note:: The tools/discovery_load.sh script does this with the default credentials.
 
+
+
+.. note:: The default password for the default templates is **RocketSkates**
+
+.. note:: The default user for the default ubuntu/debian templates is **rocketskates**
