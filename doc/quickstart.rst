@@ -37,3 +37,12 @@ default and unknown boot environments to do dynamic discovery.  This script need
 .. note:: This is NOT a production deployment and will NOT restart on failure or reboot.
 
 
+Videos
+------
+
+We constantly update and add videos to the `DR Provision Playlist <https://www.youtube.com/playlist?list=PLXPBeIrpXjfilUi7Qj1Sl0UhjxNRSC7nx>`_ so please check.
+
+Here are quick start specific videos:
+
+  * Mac OSX https://youtu.be/uUWU-4ObGIY
+  * Linux https://youtu.be/MPkGCiakXPs
