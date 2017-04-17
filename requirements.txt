@@ -1,1 +1,1 @@
-sphinxcontrib-swaggerdoc
+git+http://github.com/galthaus/sphinxcontrib-swaggerdoc#egg=sphinxcontrib-swaggerdoc
