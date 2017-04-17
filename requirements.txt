@@ -1,1 +1,1 @@
-git+http://github.com/galthaus/sphinxcontrib-swaggerdoc#egg=sphinxcontrib-swaggerdoc
+-e git+https://github.com/galthaus/sphinx-swaggerdoc#egg=sphinx-swaggerdoc
