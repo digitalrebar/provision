@@ -30,6 +30,8 @@ The sudo command will run an instance of Digital Rebar Provision that uses the d
 Additionally, *dr-provision* will attempt to use the best IP address for client's to talk to it, but if that detection fails, the
 IP address specified in by *--static-ip* will be used.
 
+The default user:password is ``rocketskates:r0cket8ts``.
+
 The *tools/discovery-load.sh* command will use the default credentials to install the discovery, sledgehammer, and local boot
 environments.  This will download the sledgehammer tarball and upload into Digital Rebar Provision.  It will also change the
 default and unknown boot environments to do dynamic discovery.  This script needs to be run after starting *dr-provision*.
@@ -37,3 +39,12 @@ default and unknown boot environments to do dynamic discovery.  This script need
 .. note:: This is NOT a production deployment and will NOT restart on failure or reboot.
 
 
+Videos
+------
+
+We constantly update and add videos to the `DR Provision Playlist <https://www.youtube.com/playlist?list=PLXPBeIrpXjfilUi7Qj1Sl0UhjxNRSC7nx>`_ so please check.
+
+Here are quick start specific videos:
+
+  * Mac OSX https://youtu.be/uUWU-4ObGIY
+  * Linux https://youtu.be/MPkGCiakXPs

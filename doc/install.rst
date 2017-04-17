@@ -83,6 +83,8 @@ as an isolated test drive environment.  This will create a symbolic link from th
 directory for the appropriate OS/platform, create a set of directories for data storage and file storage, and
 display a command to run.  This is what the quickstart method above describes.
 
+The default username:password is ``rocketskates:r0cketsk8ts``.
+
 Please review `--help` for options like disabling services, logging or paths.
 
 .. note:: the sudo is required handle binding the TFTP and DHCP ports.
@@ -142,7 +144,11 @@ DigitalRebar Provision CLI has a process that combines multiple calls to install
 .. note:: The tools/discovery_load.sh script does this with the default credentials.
 
 
+Default Template Identity 
+-------------------------
 
-.. note:: The default password for the default templates is **RocketSkates**
+_These settings apply to TEMPLATES not the API._
 
-.. note:: The default user for the default ubuntu/debian templates is **rocketskates**
+The default password for the default o/s templates is **RocketSkates**
+
+The default user for the default ubuntu/debian templates is **rocketskates**

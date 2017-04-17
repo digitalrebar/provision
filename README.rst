@@ -49,15 +49,17 @@ Community Resources
 * `Mailing List <http://bit.ly/digitalrebarlist>`_ and `Live Chat <https://gitter.im/digitalrebar/core?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge>`_  (Gitter.im) and Freenode #DigitalRebar
 * `Issues and Features <https://github.com/digitalrebar/provision/issues>`_
 * Full `Documentation <http://provision.readthedocs.io/en/latest/>`_ (Github `/doc <https://github.com/digitalrebar/provision/tree/master/doc>`_ sources are updatable via pull request).
+* Videos on the `DR Provision Playlist <https://www.youtube.com/playlist?list=PLXPBeIrpXjfilUi7Qj1Sl0UhjxNRSC7nx>`_ provide both specific and general background information.
+
 
 .. _rs_quick:
 
-Quick Start
------------
+Instal & Quick Start
+--------------------
 
-Look at `Quick Start <http://provision.readthedocs.io/en/latest/doc/quickstart.html>`_ for the the fast play-with-it steps.  Don't worry, they are very simple.
+Our `Quick Start <http://provision.readthedocs.io/en/latest/doc/quickstart.html>`_ has fast play-with-it steps.  Don't worry, they are very simple and take about 5 minutes.
 
-Look at `Install <http://provision.readthedocs.io/en/latest/doc/install.html>`_ for more details on the install steps.
+Regular `Install <http://provision.readthedocs.io/en/latest/doc/install.html>`_ for more details on the install steps.  These include production options.
 
 .. _rs_toc:
 
