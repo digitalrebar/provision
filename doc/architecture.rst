@@ -25,6 +25,8 @@ Design Restrictions
 
 Since DigitalRebar Provision is part of the larger Digital Rebar system, it's scope is limited to handling DHCP and Provisioning actions.  Out of band management to control server flow or configure firmware plus other management features will be handled by other Digital Rebar services.
 
+.. _rs_arch_services:
+
 Services
 --------
 
@@ -48,4 +50,22 @@ The figure below illustrates the three core DigitalRebar Provision services incl
 .. figure::  images/core_services.png
    :alt: Core DigitalRebar Provision Services
    :target: https://docs.google.com/drawings/d/1SVGGwQZxopiVEYjIM3FXC92yG4DKCCejRBDNMsHmxKE/edit?usp=sharing
+
+
+.. _rs_arch_ports:
+
+Ports
+-----
+
+The table describes the ports that need to be available to run DigitalRebar Provision.  Firewall rules may need to be altered to enable these services.  The feature column indicates when the port is required.  For example, the DHCP server can be turned off and that port is no longer required.
+
+========  =======   =====================
+Ports     Feature   Usage
+========  =======   =====================
+67/udp    DHCP      DHCP Port
+69/udp    PROV      TFTP Port
+8091/tcp  PROV      HTTP-base File Server
+8092/tcp  Always    DR Provision Mgmt
+========  =======   =====================
+
 
