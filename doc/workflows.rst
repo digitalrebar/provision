@@ -23,7 +23,7 @@ Basic Discovery
 
 The basic discovery flow uses the specialized Discovery and Sledgehammer Boot Environments (BootEnvs).  These BootEnvs work with the default next boot to self-register machines with DigitalRebar Provision using the Machines API.
 
-This recommended process allows operators to start with minimal information about the environment so they can :ref:`rs_provision discovered`.  Without discovery, operators must create machines in advance following the :ref:`rs_provision_known` process.
+This recommended process allows operators to start with minimal information about the environment so they can :ref:`rs_provision_discovered`.  Without discovery, operators must create machines in advance following the :ref:`rs_provision_known` process.
 
 .. figure::  images/boot_discover.png
    :alt: Discover Machines

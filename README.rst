@@ -75,6 +75,7 @@ Table of Contents
    doc/quickstart
    doc/release
    doc/architecture
+   doc/operation
    doc/workflows
    doc/install
    doc/ui
@@ -83,5 +84,4 @@ Table of Contents
    doc/dev-server
    doc/dev-cli
    doc/faq-troubleshooting
-   doc/*
    LICENSE

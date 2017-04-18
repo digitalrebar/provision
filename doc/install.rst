@@ -103,7 +103,7 @@ The API, File Server, DHCP, and TFTP ports can be configured, but DHCP and TFTP 
 
 If your SSL certificate is not valid, then follow the :ref:`rs_gen_cert` steps.
 
-.. note:: On Darwin, you may have to add a route for broadcast addresses to work.  This can be done with the following comand.  The 192.168.100.1 is the IP address of the interface that you want to send messages through.
+.. note:: On Darwin, you may have to add a route for broadcast addresses to work.  This can be done with the following comand.  The 192.168.100.1 is the IP address of the interface that you want to send messages through. The install script will make suggestions for you.
 
   ::
 
@@ -131,7 +131,7 @@ Provisioner (bootenvs)
 
 The Provisioner is a combination of several services and a template expansion engine.  The primary model is a boot environment (BootEnv) that contains crtical metadata to describe an installation process.  This metadata includes templates that are dynamically expanded when machines boot.
 
-DigitalRebar Provision CLI has a process that combines multiple calls to install BootEnvs.  The following steps will configure a system capable to :ref:`rs_provion_discovered`.
+DigitalRebar Provision CLI has a process that combines multiple calls to install BootEnvs.  The following steps will configure a system capable to :ref:`rs_provision_discovered`.
 
   ::
 
