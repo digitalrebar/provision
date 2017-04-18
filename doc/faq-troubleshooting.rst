@@ -47,7 +47,7 @@ Rocket Skates?
 
 Rocket Skates was the working name for Digital Rebar Provision during initial development.  Since they are fast and powerful boots, it seemed like a natural name for a Cobbler replacement.
 
-.. figure::  doc/images/rocket.jpg
+.. figure::  images/rocket.jpg
    :align:   right
    :width: 320 px
    :alt: Code name Rocket Skates
