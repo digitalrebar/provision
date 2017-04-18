@@ -75,8 +75,8 @@ Table of Contents
    doc/quickstart
    doc/release
    doc/architecture
-   doc/operation
    doc/workflows
+   doc/operation
    doc/install
    doc/ui
    doc/cli
