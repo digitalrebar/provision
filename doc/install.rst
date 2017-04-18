@@ -15,12 +15,13 @@ Get Code
 --------
 
 The code is delivered by zip file with a sha256sum to validate contents.  These are in github under the
-`*releases* <https://github.com/digitalrebar/provision/releases>` tab for the Digital Rebar Provision project.
+`*releases* <https://github.com/digitalrebar/provision/releases>`_ tab for the Digital Rebar Provision project.
 
-There are at least 2 releases to choose from:
+There are at least 3 releases to choose from:
 
   * **tip** - This is the most recent code.  This is the latest build of master.  It is bleeding edge and while the project attempts to be very stable with master, it can have issues.
-  * **v3.0.0** - The latest stable relase will be marked as stable and latest in github.  It will have a semver style naming convention.
+  * **stable** - This is the most recent **stable** code.  This is a tag that tracks the version-based tag.
+  * **v3.0.0** - There will be a set of semver named releases.
 
 Previous releases will continue to be available in tag/release history.
 
