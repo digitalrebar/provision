@@ -180,7 +180,7 @@ container and start kubeadm.  Something like this:
   ::
 
     ssh root@192.168.124.22
-    nsenter --mount --target 1 runc exec --tty kubelet
+    nsenter --mount --target 1 runc exec --tty kubelet sh
     kubeadm-init.sh
 
 This will run for a while and start up the master.  It will output a line that looks like this:
@@ -194,7 +194,7 @@ This will need to run on each k8s-node.  We will need to SSH into the kubelet on
   ::
 
     ssh root@192.168.124.23
-    nsenter --mount --target 1 runc exec --tty kubelet
+    nsenter --mount --target 1 runc exec --tty kubelet sh
     kubeadm join --token bb38c6.117e66eabbbce07d 192.168.65.22:6443
 
 We wait for a while and if the KVM instances have internet access, then kubernetes will be up.  The default access for this cluster
@@ -203,7 +203,7 @@ is through the kubelet container though others are probably configurable.
   ::
 
     ssh root@192.168.124.22
-    nsenter --mount --target 1 runc exec --tty kubelet
+    nsenter --mount --target 1 runc exec --tty kubelet sh
     kubectl get nodes
 
 
