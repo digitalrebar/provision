@@ -14,6 +14,7 @@ var machineShowMachineString string = `{
   "BootEnv": "local",
   "Errors": null,
   "Name": "john",
+  "Profiles": null,
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
 }
 `
@@ -37,6 +38,7 @@ var machineCreateJohnString string = `{
   "BootEnv": "local",
   "Errors": null,
   "Name": "john",
+  "Profiles": null,
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
 }
 `
@@ -47,6 +49,7 @@ var machineListMachinesString = `[
     "BootEnv": "local",
     "Errors": null,
     "Name": "john",
+    "Profiles": null,
     "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
   }
 ]
@@ -65,6 +68,7 @@ var machineUpdateJohnString string = `{
   "Description": "lpxelinux.0",
   "Errors": null,
   "Name": "john",
+  "Profiles": null,
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
 }
 `
@@ -81,6 +85,7 @@ var machinePatchBaseString string = `{
   "Description": "lpxelinux.0",
   "Errors": null,
   "Name": "john",
+  "Profiles": null,
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
 }
 `
@@ -93,6 +98,7 @@ var machinePatchJohnString string = `{
   "Description": "bootx64.efi",
   "Errors": null,
   "Name": "john",
+  "Profiles": null,
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
 }
 `
@@ -101,6 +107,7 @@ var machinePatchMissingBaseString string = `{
   "Description": "bootx64.efi",
   "Errors": null,
   "Name": "john",
+  "Profiles": null,
   "Uuid": "3e7031fe-5555-45f1-835c-92541bc9cbd3"
 }
 `
