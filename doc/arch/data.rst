@@ -204,7 +204,7 @@ The subnet also allows for the specification of DHCP options to be sent to clien
 specific options.  Some common options are:
 
 ========  ====  =================================
-Type      #    Description
+Type      #     Description
 ========  ====  =================================
 IP        3     Default Gateway
 IP        6     DNS Server

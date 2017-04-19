@@ -73,11 +73,13 @@ Table of Contents
    :numbered:
    
    doc/quickstart
+   doc/install
    doc/release
    doc/architecture
    doc/workflows
+   doc/deployment
    doc/operation
-   doc/install
+   doc/os-support
    doc/ui
    doc/cli
    doc/api
