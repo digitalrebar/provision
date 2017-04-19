@@ -34,6 +34,8 @@ Here are the following steps that work on an Ubuntu 16.04 desktop with KVM alrea
 Let's hit each of the steps.  For a simple play with it trial, create a directory for both DigitalRebar Provison
 and LinuxKit.
 
+Also, there is a `video <https://youtu.be/kITojfeYaPQ>`_ of these steps.
+
 Get, Start, and Configure DigitalRebar Provision
 ------------------------------------------------
 
