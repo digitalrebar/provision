@@ -45,9 +45,12 @@ form of parameters and fields.  The **Name** field should contain the FQDN of th
 The Machine object contains an **Error** field that represents errors encountered while operating on the machine.  In general,
 these are errors pertaining to rendering the :ref:`rs_model_bootenv`.
 
-The Machine parameters are defined as a field on the Machine that is presented as a dicitionary of string keys to arbritary objects.
-These could be strings, bools, numbers, arrays, or objects represented similarly defined dictionaries.  The machine parameters
-are available to templates for expansion in them.
+The Machine parameters are defined as a special :ref:`rs_model_profiles` on the Machine.  The profile stores a dicitionary of
+string keys to arbritary objects.  These could be strings, bools, numbers, arrays, or objects represented similarly
+defined dictionaries.  The machine parameters are available to templates for expansion in them.
+
+Additionally, the machine maintains an ordered list of profiles that are searched and then finally the **profile**.  See
+:ref:`rs_model_profiles` for more information.
 
 .. index::
   pair: Model; BootEnv
@@ -69,8 +72,8 @@ template information can use the same template expansion that is used in the tem
 information.
 
 Additionally, the BootEnv defines required and optional parameters.  The required parameters validated at render time to be
-present or an error is generated.  These parameters can be met by the parameters on the machine or from the global :ref:`rs_model_param`
-space.
+present or an error is generated.  These parameters can be met by the parameters on the machine, the machine's profiles list,
+or from the global :ref:`rs_model_profiles` space.
 
 BootEnvs can be marked **OnlyUnknown**.  This tells the rest of the system that this BootEnv is not for specific machines.  It is a
 general BootEnv.  For example, *discovery* and *ignore* are **OnlyUnknown**.  *discovery* is used to discovery unknown machines and
@@ -141,8 +144,8 @@ the newly discovered machine.
 
 With regard to the **.Param** and **.ParamExists** functions, these functions return the parameter or existence of
 the parameter specified by the *key* input.  The parameters are examined from most specific to global.  This means
-that the Machine object's parameters are checked first, then the global :ref:`rs_model_param`.  The parameters on machines
-and the global space are free form dictionaries and default empty.  Any key/value pair can be added and referenced.
+that the Machine object's profile is checked first, then the list of :ref:`rs_model_profiles` associated with the machine,
+and finally the global :ref:`rs_model_profiles`.  The parameters are containered in the :ref:`rs_model_profiles`.
 
 The default :ref:`rs_model_template` and :ref:`rs_model_bootenv` use the following optional (unless marked with an \*)
 parameters.
@@ -164,16 +167,28 @@ dns-domain                         String            DNS Domain to use for this 
 For some examples of this in use, see :ref:`rs_operation`.
 
 .. index::
-  pair: Model; Param
+  pair: Model; Profile
 
-.. _rs_model_param:
+.. _rs_model_profile:
 
-Param
-~~~~~
+Profile
+~~~~~~~
 
-The Param Object defines a single key / value.  The system maintains a global list of these manipulated by the :ref:`rs_api`.  The key space
-is a free form string and the value is an arbirtary data blob specified by JSON through the :ref:`rs_api`.  The common parameters defined
-in :ref:`rs_model_template` can be globally set through these objects.  They are the lowest level of precedence.
+The Profile Object defines a set of key / value pairs (or parameters).  All of these may be manipulated by the :ref:`rs_api`.
+The key space is a free form string and the value is an arbirtary data blob specified by JSON through
+the :ref:`rs_api`.  The common parameters defined in :ref:`rs_model_template` can be set on these objects.
+The system maintains a **global** profile for setting system wide parameters.  They are the lowest level of precedence.
+
+The profiles are free form dictionaries and default empty.  Any key/value pair can be added and referenced.
+
+Other profiles may be created to group parameters together to apply to sets of machines.  The machine's profile
+list allows the administator to specify an ordered set of profiles.  Additionally, the system maintains a special
+profile for each machine to store custom parameters specific to that machine.
+
+When the system needs to render a template parameter, the machine's specific profile is checked, then the order
+list of profiles stored in the Machine Object are checked, and finally the **global** profile is checked.  The
+key and its value are used if found in template rendering.
+
 
 .. _rs_dhcp_models:
 
@@ -311,7 +326,7 @@ More on access tokens and an control in :ref:`rs_operation`.
 Prefs
 ~~~~~
 
-Most configuration is handle through the global parameter system on machines specific parameters, but there are a few modifiable
+Most configuration is handle through the profiles system, but there are a few modifiable
 options that can be changed over time in the server (outside of command line flags).  These are preferences.  The preferences are
 key value pairs where both the key and the value are string.  The use internally may be an integer, but the specification through
 the :ref:`rs_api` is by string.
