@@ -14,6 +14,9 @@ var machineShowMachineString string = `{
   "BootEnv": "local",
   "Errors": null,
   "Name": "john",
+  "Profile": {
+    "Name": ""
+  },
   "Profiles": null,
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
 }
@@ -38,6 +41,9 @@ var machineCreateJohnString string = `{
   "BootEnv": "local",
   "Errors": null,
   "Name": "john",
+  "Profile": {
+    "Name": ""
+  },
   "Profiles": null,
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
 }
@@ -49,6 +55,9 @@ var machineListMachinesString = `[
     "BootEnv": "local",
     "Errors": null,
     "Name": "john",
+    "Profile": {
+      "Name": ""
+    },
     "Profiles": null,
     "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
   }
@@ -68,6 +77,9 @@ var machineUpdateJohnString string = `{
   "Description": "lpxelinux.0",
   "Errors": null,
   "Name": "john",
+  "Profile": {
+    "Name": ""
+  },
   "Profiles": null,
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
 }
@@ -85,6 +97,9 @@ var machinePatchBaseString string = `{
   "Description": "lpxelinux.0",
   "Errors": null,
   "Name": "john",
+  "Profile": {
+    "Name": ""
+  },
   "Profiles": null,
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
 }
@@ -98,6 +113,9 @@ var machinePatchJohnString string = `{
   "Description": "bootx64.efi",
   "Errors": null,
   "Name": "john",
+  "Profile": {
+    "Name": ""
+  },
   "Profiles": null,
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
 }
@@ -107,6 +125,9 @@ var machinePatchMissingBaseString string = `{
   "Description": "bootx64.efi",
   "Errors": null,
   "Name": "john",
+  "Profile": {
+    "Name": ""
+  },
   "Profiles": null,
   "Uuid": "3e7031fe-5555-45f1-835c-92541bc9cbd3"
 }
@@ -138,6 +159,21 @@ var machineParamsStartingString string = `{
 `
 var machinesParamsNextString string = `{
   "jj": 3
+}
+`
+var machineUpdateJohnWithParamsString string = `{
+  "BootEnv": "local",
+  "Description": "lpxelinux.0",
+  "Errors": null,
+  "Name": "john",
+  "Profile": {
+    "Name": "",
+    "Params": {
+      "jj": 3
+    }
+  },
+  "Profiles": null,
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
 }
 `
 
@@ -236,6 +272,8 @@ func TestMachineCli(t *testing.T) {
 		CliTest{false, true, []string{"machines", "params", "john2", machinesParamsNextString}, noStdinString, noContentString, machinesParamsSetMissingMachineString},
 		CliTest{false, false, []string{"machines", "params", "3e7031fe-3062-45f1-835c-92541bc9cbd3", machinesParamsNextString}, noStdinString, machinesParamsNextString, noErrorString},
 		CliTest{false, false, []string{"machines", "params", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, machinesParamsNextString, noErrorString},
+
+		CliTest{false, false, []string{"machines", "show", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, machineUpdateJohnWithParamsString, noErrorString},
 
 		CliTest{false, false, []string{"machines", "destroy", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, machineDestroyJohnString, noErrorString},
 		CliTest{false, false, []string{"machines", "list"}, noStdinString, machineDefaultListString, noErrorString},
