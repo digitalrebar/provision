@@ -43,8 +43,12 @@ Community Resources
 
 .. image:: https://readthedocs.org/projects/provision/badge/?version=stable
   :target: http://provision.readthedocs.io/en/stable/?badge=stable
-  :alt: Documentation Status
-                         
+  :alt: Documentation Stable Status
+
+.. image:: https://readthedocs.org/projects/provision/badge/?version=latest
+  :target: http://provision.readthedocs.io/en/latest/?badge=latest
+  :alt: Documentation Latest Status
+
 
 * `Mailing List <http://bit.ly/digitalrebarlist>`_ and `Live Chat <https://gitter.im/digitalrebar/core?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge>`_  (Gitter.im) and Freenode #DigitalRebar
 * `Issues and Features <https://github.com/digitalrebar/provision/issues>`_
