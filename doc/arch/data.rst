@@ -183,7 +183,8 @@ The profiles are free form dictionaries and default empty.  Any key/value pair c
 
 Other profiles may be created to group parameters together to apply to sets of machines.  The machine's profile
 list allows the administator to specify an ordered set of profiles.  Additionally, the system maintains a special
-profile for each machine to store custom parameters specific to that machine.
+profile for each machine to store custom parameters specific to that machine.  This profile is embedded in the :ref:`rs_model_machine`
+object.
 
 When the system needs to render a template parameter, the machine's specific profile is checked, then the order
 list of profiles stored in the Machine Object are checked, and finally the **global** profile is checked.  The
