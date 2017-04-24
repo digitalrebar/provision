@@ -58,8 +58,8 @@ Community Resources
 
 .. _rs_quick:
 
-Instal & Quick Start
---------------------
+Install & Quick Start
+---------------------
 
 Our `Quick Start <http://provision.readthedocs.io/en/stable/doc/quickstart.html>`_ has fast play-with-it steps.  Don't worry, they are very simple and take about 5 minutes.
 
