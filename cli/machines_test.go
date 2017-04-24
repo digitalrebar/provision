@@ -14,6 +14,10 @@ var machineShowMachineString string = `{
   "BootEnv": "local",
   "Errors": null,
   "Name": "john",
+  "Profile": {
+    "Name": ""
+  },
+  "Profiles": null,
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
 }
 `
@@ -37,6 +41,10 @@ var machineCreateJohnString string = `{
   "BootEnv": "local",
   "Errors": null,
   "Name": "john",
+  "Profile": {
+    "Name": ""
+  },
+  "Profiles": null,
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
 }
 `
@@ -47,6 +55,10 @@ var machineListMachinesString = `[
     "BootEnv": "local",
     "Errors": null,
     "Name": "john",
+    "Profile": {
+      "Name": ""
+    },
+    "Profiles": null,
     "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
   }
 ]
@@ -65,6 +77,10 @@ var machineUpdateJohnString string = `{
   "Description": "lpxelinux.0",
   "Errors": null,
   "Name": "john",
+  "Profile": {
+    "Name": ""
+  },
+  "Profiles": null,
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
 }
 `
@@ -81,6 +97,10 @@ var machinePatchBaseString string = `{
   "Description": "lpxelinux.0",
   "Errors": null,
   "Name": "john",
+  "Profile": {
+    "Name": ""
+  },
+  "Profiles": null,
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
 }
 `
@@ -93,6 +113,10 @@ var machinePatchJohnString string = `{
   "Description": "bootx64.efi",
   "Errors": null,
   "Name": "john",
+  "Profile": {
+    "Name": ""
+  },
+  "Profiles": null,
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
 }
 `
@@ -101,6 +125,10 @@ var machinePatchMissingBaseString string = `{
   "Description": "bootx64.efi",
   "Errors": null,
   "Name": "john",
+  "Profile": {
+    "Name": ""
+  },
+  "Profiles": null,
   "Uuid": "3e7031fe-5555-45f1-835c-92541bc9cbd3"
 }
 `
@@ -116,10 +144,38 @@ var machineBootEnvMissingMachineErrorString string = "Error: machines GET: john:
 var machineBootEnvBadBootEnvErrorString string = "Error: Machine 3e7031fe-3062-45f1-835c-92541bc9cbd3 has BootEnv john2, which is not present in the DataTracker\n\n"
 
 var machineGetNoArgErrorString string = "Error: drpcli machines get [id] param [key] requires 3 arguments"
-var machineGetMissingMachineErrorString string = "Error: machines GET: john: Not Found\n\n"
+var machineGetMissingMachineErrorString string = "Error: machines GET Params: john: Not Found\n\n"
 
 var machineSetNoArgErrorString string = "Error: drpcli machines set [id] param [key] to [json blob] requires 5 arguments"
-var machineSetMissingMachineErrorString string = "Error: machines GET: john: Not Found\n\n"
+var machineSetMissingMachineErrorString string = "Error: machines GET Params: john: Not Found\n\n"
+
+var machineParamsNoArgErrorString string = "Error: drpcli machines params [id] [json] requires 1 or 2 arguments\n"
+var machineParamsMissingMachineErrorString string = "Error: machines GET Params: john2: Not Found\n\n"
+var machinesParamsSetMissingMachineString string = "Error: machines SET Params: john2: Not Found\n\n"
+
+var machineParamsStartingString string = `{
+  "john3": 4
+}
+`
+var machinesParamsNextString string = `{
+  "jj": 3
+}
+`
+var machineUpdateJohnWithParamsString string = `{
+  "BootEnv": "local",
+  "Description": "lpxelinux.0",
+  "Errors": null,
+  "Name": "john",
+  "Profile": {
+    "Name": "",
+    "Params": {
+      "jj": 3
+    }
+  },
+  "Profiles": null,
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+}
+`
 
 func TestMachineCli(t *testing.T) {
 	if err := os.MkdirAll("bootenvs", 0755); err != nil {
@@ -209,6 +265,15 @@ func TestMachineCli(t *testing.T) {
 		CliTest{false, false, []string{"machines", "set", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "param", "john2", "to", "null"}, noStdinString, "null\n", noErrorString},
 		CliTest{false, false, []string{"machines", "get", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "param", "john2"}, noStdinString, "null\n", noErrorString},
 		CliTest{false, false, []string{"machines", "get", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "param", "john3"}, noStdinString, "4\n", noErrorString},
+
+		CliTest{true, true, []string{"machines", "params"}, noStdinString, noContentString, machineParamsNoArgErrorString},
+		CliTest{false, true, []string{"machines", "params", "john2"}, noStdinString, noContentString, machineParamsMissingMachineErrorString},
+		CliTest{false, false, []string{"machines", "params", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, machineParamsStartingString, noErrorString},
+		CliTest{false, true, []string{"machines", "params", "john2", machinesParamsNextString}, noStdinString, noContentString, machinesParamsSetMissingMachineString},
+		CliTest{false, false, []string{"machines", "params", "3e7031fe-3062-45f1-835c-92541bc9cbd3", machinesParamsNextString}, noStdinString, machinesParamsNextString, noErrorString},
+		CliTest{false, false, []string{"machines", "params", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, machinesParamsNextString, noErrorString},
+
+		CliTest{false, false, []string{"machines", "show", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, machineUpdateJohnWithParamsString, noErrorString},
 
 		CliTest{false, false, []string{"machines", "destroy", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, machineDestroyJohnString, noErrorString},
 		CliTest{false, false, []string{"machines", "list"}, noStdinString, machineDefaultListString, noErrorString},

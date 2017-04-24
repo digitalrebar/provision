@@ -144,6 +144,38 @@ func addMachineCommands() (res *cobra.Command) {
 	})
 
 	commands = append(commands, &cobra.Command{
+		Use:   "params [id] [json]",
+		Short: fmt.Sprintf("Gets/sets all parameters for the machine"),
+		Long:  `A helper function to return all or set all the parameters on the machine`,
+		RunE: func(c *cobra.Command, args []string) error {
+			if len(args) != 1 && len(args) != 2 {
+				return fmt.Errorf("%v requires 1 or 2 arguments", c.UseLine())
+			}
+			dumpUsage = false
+			uuid := args[0]
+			if len(args) == 1 {
+				d, err := session.Machines.GetMachineParams(machines.NewGetMachineParamsParams().WithUUID(strfmt.UUID(uuid)), basicAuth)
+				if err != nil {
+					return generateError(err, "Failed to fetch params %v: %v", singularName, uuid)
+				}
+				return prettyPrint(d.Payload)
+			} else {
+				newValue := args[1]
+				var value map[string]interface{}
+				err := yaml.Unmarshal([]byte(newValue), &value)
+				if err != nil {
+					return fmt.Errorf("Unable to unmarshal input stream: %v\n", err)
+				}
+				d, err := session.Machines.PostMachineParams(machines.NewPostMachineParamsParams().WithUUID(strfmt.UUID(uuid)).WithBody(value), basicAuth)
+				if err != nil {
+					return generateError(err, "Failed to fetch params %v: %v", singularName, uuid)
+				}
+				return prettyPrint(d.Payload)
+			}
+		},
+	})
+
+	commands = append(commands, &cobra.Command{
 		Use:   "get [id] param [key]",
 		Short: fmt.Sprintf("Get a parameter from the machine"),
 		Long:  `A helper function to return the value of the parameter on the machine`,
@@ -151,20 +183,25 @@ func addMachineCommands() (res *cobra.Command) {
 			if len(args) != 3 {
 				return fmt.Errorf("%v requires 3 arguments", c.UseLine())
 			}
+			dumpUsage = false
 			uuid := args[0]
 			// at = args[1]
 			key := args[2]
 
-			dumpUsage = false
-			data, err := mo.Get(uuid)
+			d, err := session.Machines.GetMachineParams(machines.NewGetMachineParamsParams().WithUUID(strfmt.UUID(uuid)), basicAuth)
 			if err != nil {
-				return generateError(err, "Failed to fetch %v: %v", singularName, uuid)
+				return generateError(err, "Failed to fetch params %v: %v", singularName, uuid)
 			}
-			machine, ok := data.(*models.Machine)
-			if !ok {
-				return fmt.Errorf("Invalid type returned by machine get")
+			pp := d.Payload
+			if pp == nil {
+				return prettyPrint(pp)
 			}
-			return prettyPrint(machine.Params[key])
+
+			if val, found := pp[key]; found {
+				return prettyPrint(val)
+			} else {
+				return prettyPrint(nil)
+			}
 		},
 	})
 
@@ -181,59 +218,27 @@ func addMachineCommands() (res *cobra.Command) {
 			newValue := args[4]
 			dumpUsage = false
 
-			data, err := mo.Get(uuid)
-			if err != nil {
-				return generateError(err, "Failed to fetch %v: %v", singularName, args[0])
-			}
-			machine, ok := data.(*models.Machine)
-			if !ok {
-				return fmt.Errorf("Invalid type returned by machine get")
-			}
-
-			baseObj, err := json.Marshal(data)
-			if err != nil {
-				return fmt.Errorf("Unable to marshal object: %v\n", err)
-			}
-
-			var intermediate interface{}
-			err = yaml.Unmarshal([]byte(newValue), &intermediate)
+			var value interface{}
+			err := yaml.Unmarshal([]byte(newValue), &value)
 			if err != nil {
 				return fmt.Errorf("Unable to unmarshal input stream: %v\n", err)
 			}
-			if machine.Params == nil {
-				machine.Params = make(map[string]interface{}, 0)
-			}
-			machine.Params[key] = intermediate
 
-			updateObj, err := json.Marshal(machine)
+			d, err := session.Machines.GetMachineParams(machines.NewGetMachineParamsParams().WithUUID(strfmt.UUID(uuid)), basicAuth)
 			if err != nil {
-				return fmt.Errorf("Unable to marshal input stream: %v\n", err)
+				return generateError(err, "Failed to fetch params %v: %v", singularName, uuid)
 			}
-			merged, err := safeMergeJSON(data, updateObj)
-			if err != nil {
-				return fmt.Errorf("Unable to merge objects: %v\n", err)
-			}
-			patch, err := jsonpatch2.Generate(baseObj, merged, true)
-			if err != nil {
-				return fmt.Errorf("Error generating patch: %v", err)
-			}
-			p := models.Patch{}
-			if err := utils.Remarshal(&patch, &p); err != nil {
-				return fmt.Errorf("Error translating patch for bootenv: %v", err)
-			}
-
-			if data, err := mo.Patch(uuid, p); err != nil {
-				return generateError(err, "Unable to update bootenv %v", args[0])
+			pp := d.Payload
+			if value == nil {
+				delete(pp, key)
 			} else {
-				machine, ok := data.(*models.Machine)
-				if !ok {
-					return fmt.Errorf("Invalid type returned by machine get")
-				}
-				if machine.Params == nil {
-					machine.Params = make(map[string]interface{}, 0)
-				}
-				return prettyPrint(machine.Params[key])
+				pp[key] = value
 			}
+			_, err = session.Machines.PostMachineParams(machines.NewPostMachineParamsParams().WithUUID(strfmt.UUID(uuid)).WithBody(pp), basicAuth)
+			if err != nil {
+				return generateError(err, "Failed to post params %v: %v", singularName, uuid)
+			}
+			return prettyPrint(value)
 		},
 	})
 
