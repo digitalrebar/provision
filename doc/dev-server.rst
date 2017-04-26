@@ -1,15 +1,15 @@
 .. Copyright (c) 2017 RackN Inc.
 .. Licensed under the Apache License, Version 2.0 (the "License");
-.. DigitalRebar Provision documentation under Digital Rebar master license
+.. Digital Rebar Provision documentation under Digital Rebar master license
 .. index::
-  pair: DigitalRebar Provision; Developer Environment
+  pair: Digital Rebar Provision; Developer Environment
 
 .. _rs_dev_environment:
 
 Developer Environment
 ~~~~~~~~~~~~~~~~~~~~~
 
-This page is intended for people who are building DigitalRebar Provision from sources or contributing to the code base.  We maintain inline documentation and test environment and expect contributors to participate in maintenance of those efforts.
+This page is intended for people who are building Digital Rebar Provision from sources or contributing to the code base.  We maintain inline documentation and test environment and expect contributors to participate in maintenance of those efforts.
 
 .. note:: Prerequisites: we are using go version 1.8 or better.  These documents expect that you are able to install and update Golang.
 
@@ -58,7 +58,7 @@ command on both the server and the cli.
 Serving UI from File System
 ---------------------------
 
-When working on the DigitalRebar Provision UI, you can skip the generate steps by using the `--dev-ui` flag.  Generally, this is started using `--dev-ui ./embedded/assets/ui`
+When working on the Digital Rebar Provision UI, you can skip the generate steps by using the `--dev-ui` flag.  Generally, this is started using `--dev-ui ./embedded/assets/ui`
 
 
 .. _rs_testing:
@@ -66,7 +66,7 @@ When working on the DigitalRebar Provision UI, you can skip the generate steps b
 Running the Tests
 -----------------
 
-DigitalRebar Provision uses the Golang test libraries and we work hard to maintain test coverage.
+Digital Rebar Provision uses the Golang test libraries and we work hard to maintain test coverage.
 
 We use `tools/test.sh` in the provision root directory to test the entire code base.
 

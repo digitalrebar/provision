@@ -1,23 +1,23 @@
 .. Copyright (c) 2017 RackN Inc.
 .. Licensed under the Apache License, Version 2.0 (the "License");
-.. DigitalRebar Provision documentation under Digital Rebar master license
+.. Digital Rebar Provision documentation under Digital Rebar master license
 .. index::
-  pair: DigitalRebar Provision; FAQ
-  pair: DigitalRebar Provision; Troubleshooting
+  pair: Digital Rebar Provision; FAQ
+  pair: Digital Rebar Provision; Troubleshooting
 
 .. _rs_faq:
 
 FAQ / Troubleshooting
 ~~~~~~~~~~~~~~~~~~~~~
 
-The following section is designed to answer frequently asked questions and help troubleshoot DigitalRebar Provision installs.
+The following section is designed to answer frequently asked questions and help troubleshoot Digital Rebar Provision installs.
 
 .. _rs_bind_error:
 
 Bind Error
 ----------
 
-DigitalRebar Provision will fail if it cannot attach to one of the required ports.
+Digital Rebar Provision will fail if it cannot attach to one of the required ports.
 
 * Typical Error Message: "listen udp4 :67: bind: address already in use"
 * Additional Information: The conflicted port will be included in the error between colons (e.g.: `:67:`)

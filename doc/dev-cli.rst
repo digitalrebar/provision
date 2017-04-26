@@ -1,8 +1,8 @@
 .. Copyright (c) 2017 RackN Inc.
 .. Licensed under the Apache License, Version 2.0 (the "License");
-.. DigitalRebar Provision documentation under Digital Rebar master license
+.. Digital Rebar Provision documentation under Digital Rebar master license
 .. index::
-  pair: DigitalRebar Provision; Developing the Command Line Interface
+  pair: Digital Rebar Provision; Developing the Command Line Interface
 
 .. _rs_dev_cli:
 

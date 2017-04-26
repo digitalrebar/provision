@@ -32,16 +32,17 @@ var (
 		Short: "A CLI application for interacting with the DigitalRebar Provision API",
 	}
 
-	version            = provision.RS_VERSION
-	debug              = false
-	endpoint           = "https://127.0.0.1:8092"
-	token              = ""
-	username, password string
-	format             = "json"
-	session            *apiclient.DigitalRebarProvision
-	basicAuth          runtime.ClientAuthInfoWriter
-	uf                 func(*cobra.Command) error
-	dumpUsage          = true
+	version   = provision.RS_VERSION
+	debug     = false
+	endpoint  = "https://127.0.0.1:8092"
+	token     = ""
+	username  = "rocketskates"
+	password  = "r0cketsk8ts"
+	format    = "json"
+	session   *apiclient.DigitalRebarProvision
+	basicAuth runtime.ClientAuthInfoWriter
+	uf        func(*cobra.Command) error
+	dumpUsage = true
 )
 
 func MyUsage(c *cobra.Command) error {
@@ -120,7 +121,18 @@ func init() {
 			return nil
 		},
 	})
-
+	App.AddCommand(&cobra.Command{
+		Use:   "autocomplete <filename>",
+		Short: "Rocket-Skates CLI Command Bash AutoCompletion File",
+		Long:  "Generate a bash autocomplete file as <filename>.\nPlace the generated file in /etc/bash_completion.d or /usr/local/etc/bash_completion.d.",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			if len(args) != 1 {
+				return fmt.Errorf("%v requires 1  argument", cmd.UseLine())
+			}
+			App.GenBashCompletionFile(args[0])
+			return nil
+		},
+	})
 }
 
 func safeMergeJSON(src interface{}, toMerge []byte) ([]byte, error) {

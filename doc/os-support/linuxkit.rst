@@ -1,6 +1,6 @@
 .. Copyright (c) 2017 RackN Inc.
 .. Licensed under the Apache License, Version 2.0 (the "License");
-.. DigitalRebar Provision documentation under Digital Rebar master license
+.. Digital Rebar Provision documentation under Digital Rebar master license
 .. index::
   pair: Operating Support; LinuxKit
 
@@ -13,12 +13,12 @@ LinuxKit
 can run containers and other container platforms.  The goal is to provide a simple to update, secure, and maintain OS that
 can facilitate container deployments.
 
-It turns out that DigitalRebar Provision can easily deploy LinuxKit images.  The example assets provided with DigitalRebar
+It turns out that Digital Rebar Provision can easily deploy LinuxKit images.  The example assets provided with Digital Rebar
 Provision contains some examples of `LinuxKit <https://github.com/linuxkit/linuxkit>`_ deployments.
 
 There are three currently available.  Though they are really simple and easily cloned.
 
-* lk-sshd - the example sshd 
+* lk-sshd - the example sshd
 * lk-k8s-master - the k8s project master image
 * lk-k8s-node - the k8s project node image
 
@@ -31,17 +31,17 @@ Here are the following steps that work on an Ubuntu 16.04 desktop with KVM alrea
 * Install BootEnvs
 * Run Nodes
 
-Let's hit each of the steps.  For a simple play with it trial, create a directory for both DigitalRebar Provison
+Let's hit each of the steps.  For a simple play with it trial, create a directory for both Digital Rebar Provison
 and LinuxKit.
 
 Also, there is a `video <https://youtu.be/kITojfeYaPQ>`_ of these steps.
 
-Get, Start, and Configure DigitalRebar Provision
-------------------------------------------------
+Get, Start, and Configure Digital Rebar Provision
+-------------------------------------------------
 
-There are already many pages for this, :ref:`rs_quickstart` and :ref:`rs_install`.  The main thing is to use the 
+There are already many pages for this, :ref:`rs_quickstart` and :ref:`rs_install`.  The main thing is to use the
 **tip** version at the moment.  You should probably include the *discovery* and *sledgehammer* images.  The KVM
-system used (the DigitalRebar test tool, kvm-slave) always PXE boots and machines can be easily added just by 
+system used (the Digital Rebar test tool, kvm-slave) always PXE boots and machines can be easily added just by
 starting them.
 
 For a simple trail, use the install process with the *--isolated* flag.
@@ -78,7 +78,7 @@ The provided :ref:`rs_model_bootenv` deploying the sshd example and k8s project.
 * Edit the *examples/sshd.yml*
   * Replace the "#your ssh key here" line with the contents of your SSH public key.  e.g. ~/.ssh/id_rsa.pub
 * Run the moby build command
-  
+
   ::
 
     # edit files
@@ -110,9 +110,9 @@ dr-provision install directory.
 Install BootEnvs
 ----------------
 
-At this point, we can add the :ref:`rs_model_bootenv` to DigitalRebar Provision.
+At this point, we can add the :ref:`rs_model_bootenv` to Digital Rebar Provision.
 
-* Change to your DigitalRebar Provision directory and then to the assets directory.
+* Change to your Digital Rebar Provision directory and then to the assets directory.
 * Run the following
 
   ::
@@ -131,7 +131,7 @@ Run Nodes
 At this point, you can boot some nodes and run them.  You can have pre-existing nodes or discovered nodes.  This will
 use discovered nodes.
 
-First, we start some nodes.  I used my kvm-slave tool that starts KVM on my DigitalRebar Provison network. .e.g. tools/kvm-slave
+First, we start some nodes.  I used my kvm-slave tool that starts KVM on my Digital Rebar Provison network. .e.g. tools/kvm-slave
 Anything that PXEs and you can three will work.
 
 Once they are discovered, you will see something like this from **drpcli machines list**
@@ -174,7 +174,7 @@ At this point, you should change the BootEnv field to the environment of choice.
 At this point, you should reboot those kvm instances (close the KVM console window or kill the qemu process).  Once the systems
 boot up, you should be able to ssh into them from the account your ssh key is from (as root).
 
-And that is all for the sshd image.  
+And that is all for the sshd image.
 
 For Kubernetes, you have to do a few more steps. In this example, 192.168.124.22 is the master.  We need to SSH into its kubelet
 container and start kubeadm.  Something like this:
@@ -209,5 +209,5 @@ is through the kubelet container though others are probably configurable.
     kubectl get nodes
 
 
-There are ssh helper scripts in the *linuxkit/projects/kubernetes* directory, but I found them to not always work with the latest 
+There are ssh helper scripts in the *linuxkit/projects/kubernetes* directory, but I found them to not always work with the latest
 k8s containers.
