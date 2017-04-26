@@ -135,11 +135,19 @@ This would do the same thing as above, but would create the :ref:`rs_model_machi
 Creating a Reservation
 ----------------------
 
+Sometimes you want to create a :ref:`rs_model_reservation`.  This would be to make sure that a specific MAC Address received
+a specific IP Adress.  Here is an example command.
 
+  ::
 
+     drpcli reservations create '{ "Addr": "1.1.1.1", "Token": "08:00:27:33:77:de", "Strategy": "MAC" }'
 
+You can additionally add DHCP options or the Next Boot server.  
 
-* Creating a subnet
-* Editing a template
+  ::
+
+     drpcli reservations create '{ "Addr": "1.1.1.5", "Token": "08:01:27:33:77:de", "Strategy": "MAC", "NextServer": "1.1.1.2", "Options": [ { "Code": 44, "Value": "1.1.1.1" } ] }'
+
+Remember to add an option 1 (netmask) if you are not using a subnet to fill in default options.
 
 
