@@ -1,8 +1,8 @@
 .. Copyright (c) 2017 RackN Inc.
 .. Licensed under the Apache License, Version 2.0 (the "License");
-.. DigitalRebar Provision documentation under Digital Rebar master license
+.. Digital Rebar Provision documentation under Digital Rebar master license
 .. index::
-  pair: DigitalRebar Provision; Quickstart
+  pair: Digital Rebar Provision; Quickstart
 
 .. _rs_quickstart:
 
@@ -21,10 +21,13 @@ It should display something like this:
 
   ::
 
-    Run the following commands to start up dr-provision in a local isolated way.
-    The server will store information and server files in the drp-data directory.
+    # Run the following commands to start up dr-provision in a local isolated way.
+    # The server will store information and serve files from the drp-data directory.
 
     sudo ./dr-provision --static-ip=<IP of an Interface> --file-root=`pwd`/drp-data/tftpboot --data-root=drp-data/digitalrebar &
+
+    # Once dr-provision is started, this commmand will gather and upload the tools required to
+    # do discovery-based machine management
 
     tools/discovery-load.sh
 

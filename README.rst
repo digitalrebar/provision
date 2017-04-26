@@ -75,6 +75,7 @@ Table of Contents
 .. toctree::
    :glob:
    :numbered:
+   :maxdepth: 2
    
    doc/quickstart
    doc/install
@@ -89,5 +90,6 @@ Table of Contents
    doc/api
    doc/dev-server
    doc/dev-cli
+   doc/dev-docs
    doc/faq-troubleshooting
    LICENSE
