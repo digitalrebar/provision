@@ -24,6 +24,7 @@ The architecture can be described in terms of the server and its data model.
   :glob:
   :numbered:
 
+  arch/features
   arch/server
   arch/data
 
