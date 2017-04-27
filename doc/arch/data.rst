@@ -55,6 +55,8 @@ defined dictionaries.  The machine parameters are available to templates for exp
 
 Additionally, the machine maintains an ordered list of profiles that are searched and then finally the **global profile**.  See :ref:`rs_model_profile` and :ref:`rs_model_template` for more information.
 
+.. note:: When updating the Params part of the embedded Profile in the :ref:`rs_model_machine` object, using the **PUT** method will replace the Params map with the map from the input object.  The **PATCH** will merge the Params map in the input with the existing Params map in the current :ref:`rs_model_machine` object.  The **POST** method on the params subaction will replace the map with the input version.
+
 .. index::
   pair: Model; BootEnv
 
@@ -198,6 +200,7 @@ When the system needs to render a template parameter, the machine's specific pro
 list of profiles stored in the Machine Object are checked, and finally the **global** profile is checked.  The
 key and its value are used if found in template rendering.
 
+.. note:: When updating the Params part of the :ref:`rs_model_profile`, using the **PUT** method will replace the Params map with the map from the input object.  The **PATCH** method will merge the Params map in the input with the existing Params map in the current :ref:`rs_model_profile` object.  The **POST** method on the params subaction will replace the map with the input version.
 
 .. _rs_dhcp_models:
 
