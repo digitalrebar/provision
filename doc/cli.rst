@@ -38,6 +38,8 @@ The *drpcli* has help at each layer of command and is the easiest way to figure 
 
 Each object in the :ref:`rs_data_architecture` has a CLI subcommand.
 
+.. note:: VERY IMPORTANT - the **update** commands use the **PATCH** operation for the objects in the :ref:`rs_api`.  This has the implication that for map like components (Params sections of :ref:`rs_model_machine` and :ref:`rs_model_profile`) the contents are merged with the existing object.  For the Params sections specifically, use the subaction *params* to replace contents.
+
 By default, the CLI will attempt to access the *dr-provision* API endpoint on the localhost at port 8092 with
 the username and password of *rocketskates* and *r0cketsk8ts*, respectively.
 All three of these values can be provided by environment variable or command line flag.
@@ -82,6 +84,7 @@ Commands
 .. toctree::
    :glob:
    :numbered:
+   :maxdepth: 1
    
    cli/*
 

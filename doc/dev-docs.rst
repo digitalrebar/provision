@@ -17,6 +17,8 @@ A couple of notes about consistency.
 
 #. Digital Rebar is the name of the parent project and can be abbreviated DR.
 #. Digital Rebar Provision or DR Provision or DRP can be used to reference this part of the project.
+#. API docs generated from the go files as part of swagger annotations of the godoc comments.  Update there, please.
+#. CLI docs generated from the cli files as part of cobra structures.  The tools generate those.  Update there, please.
 
 Otherwise, try and find a good place for what you want to add.  And Thanks!
 

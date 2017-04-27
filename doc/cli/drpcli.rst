@@ -39,6 +39,8 @@ SEE ALSO
    relating to machines
 -  `drpcli prefs <drpcli_prefs.html>`__ - List and set DigitalRebar
    Provision operational preferences
+-  `drpcli profiles <drpcli_profiles.html>`__ - Access CLI commands
+   relating to profiles
 -  `drpcli reservations <drpcli_reservations.html>`__ - Access CLI
    commands relating to reservations
 -  `drpcli subnets <drpcli_subnets.html>`__ - Access CLI commands
