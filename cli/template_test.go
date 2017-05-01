@@ -133,12 +133,21 @@ var templatesUploadSuccessString string = `{
   "ID": "greg"
 }
 `
+var templatesUploadReplaceSuccessString string = `{
+  "Contents": *REPLACE_WITH_LEASE_GO_CONTENT*,
+  "ID": "greg"
+}
+`
 var templateDestroyGregString string = "Deleted template greg\n"
 
 func TestTemplateCli(t *testing.T) {
 	templateContent, _ := ioutil.ReadFile("template.go")
 	sb, _ := json.Marshal(string(templateContent))
 	templatesUploadSuccessString = strings.Replace(templatesUploadSuccessString, "*REPLACE_WITH_TEMPLATE_GO_CONTENT*", string(sb), 1)
+
+	templateContent, _ = ioutil.ReadFile("lease.go")
+	sb, _ = json.Marshal(string(templateContent))
+	templatesUploadReplaceSuccessString = strings.Replace(templatesUploadReplaceSuccessString, "*REPLACE_WITH_LEASE_GO_CONTENT*", string(sb), 1)
 
 	tests := []CliTest{
 		CliTest{true, false, []string{"templates"}, noStdinString, "Access CLI commands relating to templates\n", ""},
@@ -196,6 +205,8 @@ func TestTemplateCli(t *testing.T) {
 		CliTest{true, true, []string{"templates", "upload", "asg", "two", "three", "four"}, noStdinString, noContentString, templatesUploadFourArgsErrorString},
 		CliTest{false, true, []string{"templates", "upload", "greg", "as", "greg"}, noStdinString, noContentString, templatesUploadMissingFileErrorString},
 		CliTest{false, false, []string{"templates", "upload", "template.go", "as", "greg"}, noStdinString, templatesUploadSuccessString, noErrorString},
+		CliTest{false, false, []string{"templates", "upload", "template.go", "as", "greg"}, noStdinString, templatesUploadSuccessString, noErrorString},
+		CliTest{false, false, []string{"templates", "upload", "lease.go", "as", "greg"}, noStdinString, templatesUploadReplaceSuccessString, noErrorString},
 		CliTest{false, false, []string{"templates", "destroy", "greg"}, noStdinString, templateDestroyGregString, noErrorString},
 	}
 
