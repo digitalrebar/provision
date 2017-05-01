@@ -87,6 +87,28 @@ func init() {
 
 var installSkipDownloadIsos = true
 
+func uploadTemplateFile(tid string) error {
+	_, err := session.Templates.GetTemplate(
+		templates.NewGetTemplateParams().WithName(tid), basicAuth)
+	if err == nil {
+		return nil
+	}
+	log.Printf("Installing template %s", tid)
+	tmpl := &models.Template{}
+	tmpl.ID = &tid
+	tmplName := path.Join("templates", tid)
+	buf, err := ioutil.ReadFile(tmplName)
+	if err != nil {
+		return generateError(err, "Unable to find template: %s", tid)
+	}
+	tmplContents := string(buf)
+	tmpl.Contents = &tmplContents
+	if _, err := session.Templates.CreateTemplate(templates.NewCreateTemplateParams().WithBody(tmpl), basicAuth); err != nil {
+		return generateError(err, "Unable to create new template: %s", tid)
+	}
+	return nil
+}
+
 func addBootEnvCommands() (res *cobra.Command) {
 	singularName := "bootenv"
 	name := "bootenvs"
@@ -143,30 +165,27 @@ using isos upload.git `,
 			if err != nil {
 				return fmt.Errorf("Invalid %v object: %v\n", singularName, err)
 			}
-			// Upload any required templates if needed.
+			// Upload any required templates if needed.  This includes inline templates
 			for _, ti := range bootEnv.Templates {
 				if ti.ID == "" {
 					continue
 				}
-				_, err = session.Templates.GetTemplate(
-					templates.NewGetTemplateParams().WithName(ti.ID), basicAuth)
-				if err == nil {
-					continue
-				}
-				log.Printf("Installing template %s", ti.ID)
-				tmpl := &models.Template{}
-				tmpl.ID = &ti.ID
-				tmplName := path.Join("templates", ti.ID)
-				buf, err := ioutil.ReadFile(tmplName)
+				err = uploadTemplateFile(ti.ID)
 				if err != nil {
-					return fmt.Errorf("%s requires template %s, but we cannot find it in %s", *bootEnv.Name, ti.ID, tmplName)
-				}
-				tmplContents := string(buf)
-				tmpl.Contents = &tmplContents
-				if _, err := session.Templates.CreateTemplate(templates.NewCreateTemplateParams().WithBody(tmpl), basicAuth); err != nil {
-					return generateError(err, "Unable to create new template: %s", ti.ID)
+					return err
 				}
 			}
+			// Upload all templates in the templates directory - from subtemplate inclusion
+			files, err := ioutil.ReadDir("templates")
+			if err == nil {
+				for _, f := range files {
+					err = uploadTemplateFile(f.Name())
+					if err != nil {
+						return err
+					}
+				}
+			}
+
 			if err = os.MkdirAll(isoCache, 0755); err != nil {
 				return fmt.Errorf("Error ensuring ISO cache exists: %s", err)
 			}

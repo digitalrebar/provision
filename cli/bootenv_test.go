@@ -315,7 +315,7 @@ var bootEnvInstallSledgehammerSuccessString string = `RE:
 }
 `
 
-var bootEnvInstallLocalMissingTemplatesErrorString string = "Error: local requires template local-pxelinux.tmpl, but we cannot find it in templates/local-pxelinux.tmpl\n\n"
+var bootEnvInstallLocalMissingTemplatesErrorString string = "Error: Unable to find template: local-pxelinux.tmpl: open templates/local-pxelinux.tmpl: no such file or directory\n\n"
 
 var bootEnvInstallLocalSuccessString string = `{
   "Available": true,
