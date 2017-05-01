@@ -82,11 +82,21 @@ func (be TemplateOps) Upload(id string, f *os.File) (interface{}, error) {
 	}
 	str := string(buf.Bytes())
 	tmpl.Contents = &str
-	d, e := session.Templates.CreateTemplate(templates.NewCreateTemplateParams().WithBody(tmpl), basicAuth)
-	if e != nil {
-		return nil, e
+
+	_, err = be.Get(id)
+	if err == nil {
+		d, e := session.Templates.PutTemplate(templates.NewPutTemplateParams().WithName(id).WithBody(tmpl), basicAuth)
+		if e != nil {
+			return nil, e
+		}
+		return d.Payload, nil
+	} else {
+		d, e := session.Templates.CreateTemplate(templates.NewCreateTemplateParams().WithBody(tmpl), basicAuth)
+		if e != nil {
+			return nil, e
+		}
+		return d.Payload, nil
 	}
-	return d.Payload, nil
 }
 
 func init() {
