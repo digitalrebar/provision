@@ -80,6 +80,7 @@ Table of Contents
    doc/quickstart
    doc/install
    doc/release
+   doc/upgrade
    doc/architecture
    doc/workflows
    doc/deployment
