@@ -109,6 +109,22 @@ You could also use the **create** subcommand of template, but often times **uplo
 
 .. note:: Remember to add the new template to a :ref:`rs_model_bootenv` or another :ref:`rs_model_template` as an embedded template.
 
+
+Updating a Template
+-------------------
+
+Sometimes you want to edit an existing template.  To do this, do the following:
+
+  ::
+
+    drpcli templates show net_seed.tmpl | jq -r .Contents > edit.tmpl
+    # Edit the edit.tmpl to be what you want
+    drpcli templates upload edit.tmpl as net_seed.tmpl
+
+We use **jq** to get a copy of the current template, edit it, and use the upload command to replace the template.
+If you aleady had a template, you could replace it with the upload command.
+
+
 Creating a Machine
 ------------------
 
