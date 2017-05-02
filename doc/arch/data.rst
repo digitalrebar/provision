@@ -73,7 +73,7 @@ The system maintains a **global** profile for setting system wide parameters.  T
 The profiles are free form dictionaries and default empty.  Any key/value pair can be added and referenced.
 
 Other profiles may be created to group parameters together to apply to sets of machines.  The machine's profile
-list allows the administator to specify an ordered set of profiles that apply to that machine as well.  
+list allows the administator to specify an ordered set of profiles that apply to that machine as well.
 Additionally, the system maintains a special
 profile for each machine to store custom parameters specific to that machine.  This profile is embedded in the :ref:`rs_model_machine` object.
 
@@ -215,6 +215,8 @@ sub-templates to make kickstart and preseed generation easier.  The following te
 have some parameters that drive them.  The required parameters can be applied through profiles or the
 :ref:`rs_model_machine` profile.  The templates contain comments with how to use and parameters to set.
 
+.. index::
+  pair: SubTemplate; Update DRP BootEnv
 
 Update Digital Rebar Provisioner BootEnv
 ++++++++++++++++++++++++++++++++++++++++
@@ -236,6 +238,9 @@ An example :ref:`rs_model_profile` that sets the next BootEnv would be:
     Params:
       next_boot_env: cores-live
 
+
+.. index::
+  pair: SubTemplate; Web Proxy
 
 .. _rs_arch_proxy_server:
 
@@ -263,6 +268,8 @@ An example :ref:`rs_model_profile` that sets proxies would look like this yaml.
         - url: http://1.1.1.2:3128
           address: 1.1.1.2
 
+.. index::
+  pair: SubTemplate; Local Repos
 
 Local Repos
 +++++++++++
@@ -287,6 +294,10 @@ An example :ref:`rs_model_profile` that sets proxies would look like this yaml.
     Params:
       local_repo: true
 
+.. index::
+  pair: SubTemplate; Set Hostname
+
+.. _rs_st_set_hostname:
 
 Set Hostname
 ++++++++++++
@@ -299,12 +310,16 @@ The template uses the :ref:`rs_model_machine` built in parameters.
 
     {{ template "set-hostname.tmpl" . }}
 
+.. index::
+  pair: SubTemplate; Remote Root Access
+
+.. _rs_st_remote_root_access:
 
 Remote Root Access
 ++++++++++++++++++
 
 This templates installs an authorized_keys file in the root user's home directory.  Multiple keys may be provided.
-The template also sets the **/etc/ssh/sshd_config** entry *PermitRootLogin*.  The default setting is 
+The template also sets the **/etc/ssh/sshd_config** entry *PermitRootLogin*.  The default setting is
 *without-passord* (keyed access only), but other values are available, *no*, *yes*, *froced-commands-only*.
 
   ::
@@ -321,6 +336,50 @@ An example :ref:`rs_model_profile` that sets the keys and *PermitRootLogin* woul
         key1:  ssh-rsa abasbaksl;gksj;glasgjasyyp
         key2:  ssh-rsa moreblablabalkhjlkasjg
       access_ssh_root_mode: yes
+
+.. index::
+  pair: SubTemplate; Digital Rebar Integration
+
+Digital Rebar Integration
++++++++++++++++++++++++++
+
+This template will join the newly installed node into Digital Rebar.  This template requires that you
+use the :ref:`rs_st_remote_root_access` and :ref:`rs_st_set_hostname` subtemplates as well.  To use, include
+these in the kickstart post install section or the net-post-install.sh script.  The **join-to-dr.tmpl** requires
+setting the *join_dr* parameter to *true* and credentials to access Digital Rebar.  Digital Rebar's Endpoint is
+specified with the *CommandURL* parameter, e.g. https://70.2.3.5.  The username and password used to access
+Digital Rebar is specified with *rebar-machine_key*.  This should be the machine key in the rebar-access role
+in the system deployment.  You will need to make sure that the rebar root access key is added to the **access_keys**
+parameter.  To get these last two values, see the commands below.
+
+
+  ::
+
+    {{ template "set-hostname.tmpl" . }}
+    {{ template "root-remote-access.tmpl" . }}
+    {{ template "join-to-dr.tmpl" . }}
+
+
+An example :ref:`rs_model_profile`.
+
+  ::
+
+    # Contains parameters for join-to-dr.tmpl and root-remote-access.tmpl
+    Name: dr-int
+    Params:
+      access_keys:
+        key1:  ssh-rsa abasbaksl;gksj;glasgjasyyp
+      dr_join: true
+      CommandURL: https://70.2.3.5
+      rebar-machine_key: machine_install:109asdga;hkljhjha3aksljdga
+
+To get the values for the ssh key and the *rebar-machine_key*, you can check the *rebar-access* role's attributes or run the
+folllowing commands.
+
+.. note:: DR Integration - commands to run on admin node to get values.
+
+  * rebar-machine_key: docker exec -it compose_rebar_api_1 cat /etc/rebar.install.key
+  * rebar root access key: docker exec -it compose_rebar_api_1 cat /home/rebar/.ssh/id_rsa.pub
 
 
 .. _rs_dhcp_models:
