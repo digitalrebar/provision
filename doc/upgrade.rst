@@ -47,6 +47,7 @@ For non-isolated :ref:`rs_install`, update this way:
 
 #. Install new code - How ever you installed before, do it again.  :ref:`rs_install`
 #. Start up dr-provision
+
   ::
 
     systemctl start dr-provision

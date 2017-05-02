@@ -58,6 +58,33 @@ Additionally, the machine maintains an ordered list of profiles that are searche
 .. note:: When updating the Params part of the embedded Profile in the :ref:`rs_model_machine` object, using the **PUT** method will replace the Params map with the map from the input object.  The **PATCH** will merge the Params map in the input with the existing Params map in the current :ref:`rs_model_machine` object.  The **POST** method on the params subaction will replace the map with the input version.
 
 .. index::
+  pair: Model; Profile
+
+.. _rs_model_profile:
+
+Profile
+~~~~~~~
+
+The Profile Object defines a set of key / value pairs (or parameters).  All of these may be manipulated by the :ref:`rs_api`.
+The key space is a free form string and the value is an arbirtary data blob specified by JSON through
+the :ref:`rs_api`.  The common parameters defined in :ref:`rs_model_template` can be set on these objects.
+The system maintains a **global** profile for setting system wide parameters.  They are the lowest level of precedence.
+
+The profiles are free form dictionaries and default empty.  Any key/value pair can be added and referenced.
+
+Other profiles may be created to group parameters together to apply to sets of machines.  The machine's profile
+list allows the administator to specify an ordered set of profiles that apply to that machine as well.  
+Additionally, the system maintains a special
+profile for each machine to store custom parameters specific to that machine.  This profile is embedded in the :ref:`rs_model_machine` object.
+
+When the system needs to render a template parameter, the machine's specific profile is checked, then the order
+list of profiles stored in the Machine Object are checked, and finally the **global** profile is checked.  The
+key and its value are used if found in template rendering.
+
+.. note:: When updating the Params part of the :ref:`rs_model_profile`, using the **PUT** method will replace the Params map with the map from the input object.  The **PATCH** method will merge the Params map in the input with the existing Params map in the current :ref:`rs_model_profile` object.  The **POST** method on the params subaction will replace the map with the input version.
+
+
+.. index::
   pair: Model; BootEnv
 
 .. _rs_model_bootenv:
@@ -128,6 +155,8 @@ Expansion                      Description
 .Machine.URL                   A HTTP URL that references the Machine's specific unique filesystem space.
 .Env.PathFor <proto> <file>    This references the boot environment and builds a string that presents a either a tftp or http specifier into exploded ISO space for that file.  *Proto* is **tftp** or **http**.  The *file* is a relative path inside the ISO.
 .Env.InstallURL                An HTTP URL to the base ISO install directory.
+.Env.OS.Family                 An optional string from the BootEnv that is used to represent the OS Family.  Ubuntu preseed uses this to determine debian vs ubuntu as an example.
+.Env.OS.Version                An optional string from the BootEnv that is used to represent the OS Version.  Ubuntu preseed uses this to determine what version of ubuntu is being installed.
 .Env.JoinInitrds <proto>       A comma separated string of all the initrd files specified in the BootEnv reference through the specified proto (**tftp** or **http**)
 .BootParams                    This renders the **BootParam** field of :ref:`rs_model_bootenv` at that spot.  Template expansion applies to that field as well.
 .ProvisionerAddress            An IP address that is on the provisioner that is the most direct access to the machine.
@@ -163,8 +192,8 @@ parameters.
 =================================  ================  =================================================================================================================================
 Parameter                          Type              Description
 =================================  ================  =================================================================================================================================
-ntp_servers                        Array of objects  lookup format
-proxy-servers                      Array of objects  lookup format
+ntp_servers                        Array of string   The format is an array of IP addresses in dotted quad format.
+proxy-servers                      Array of objects  See below, :ref:`rs_arch_proxy_server` as well as some kickstart templates.
 operating-system-disk              String            A string to use as the default install drive.  /dev/sda or sda depending upon kickstart or preseed.
 access_keys                        Map of strings    The key is the name of the public key.  The value is the public key.  All keys are placed in the .authorized_keys file of root.
 provisioner-default-password-hash  String            The password hash for the initial default password, **RocketSkates**
@@ -174,33 +203,125 @@ dns-domain                         String            DNS Domain to use for this 
 \*operating-system-install-flavor  String            Windows Only
 =================================  ================  =================================================================================================================================
 
-For some examples of this in use, see :ref:`rs_operation`.
+For some examples of this in use, see :ref:`rs_operation` as well as the example profiles in the assets
+:ref:`rs_install` directory.
 
-.. index::
-  pair: Model; Profile
 
-.. _rs_model_profile:
+Sub-templates
+_____________
 
-Profile
-~~~~~~~
+A :ref:`rs_model_template` may contain other templates as described above.  The system comes with some pre-existing
+sub-templates to make kickstart and preseed generation easier.  The following templates are available had
+have some parameters that drive them.  The required parameters can be applied through profiles or the
+:ref:`rs_model_machine` profile.  The templates contain comments with how to use and parameters to set.
 
-The Profile Object defines a set of key / value pairs (or parameters).  All of these may be manipulated by the :ref:`rs_api`.
-The key space is a free form string and the value is an arbirtary data blob specified by JSON through
-the :ref:`rs_api`.  The common parameters defined in :ref:`rs_model_template` can be set on these objects.
-The system maintains a **global** profile for setting system wide parameters.  They are the lowest level of precedence.
 
-The profiles are free form dictionaries and default empty.  Any key/value pair can be added and referenced.
+Update Digital Rebar Provisioner BootEnv
+++++++++++++++++++++++++++++++++++++++++
 
-Other profiles may be created to group parameters together to apply to sets of machines.  The machine's profile
-list allows the administator to specify an ordered set of profiles that apply to that machine as well.  
-Additionally, the system maintains a special
-profile for each machine to store custom parameters specific to that machine.  This profile is embedded in the :ref:`rs_model_machine` object.
+This sub-template updates the :ref:`rs_model_machine` object's BootEnv to the parameter, **next_boot_env**.  If
+**next_boot_env** is not defined, the BootEnv will be set to *local*.  This template uses the **GenerateToken**
+function to securely update Digital Rebar Provision.  To use, add the following to the post install section of
+your kickstart or net-post-install.sh template.
 
-When the system needs to render a template parameter, the machine's specific profile is checked, then the order
-list of profiles stored in the Machine Object are checked, and finally the **global** profile is checked.  The
-key and its value are used if found in template rendering.
+  ::
 
-.. note:: When updating the Params part of the :ref:`rs_model_profile`, using the **PUT** method will replace the Params map with the map from the input object.  The **PATCH** method will merge the Params map in the input with the existing Params map in the current :ref:`rs_model_profile` object.  The **POST** method on the params subaction will replace the map with the input version.
+    {{ template "update-drp-local.tmpl" . }}
+
+An example :ref:`rs_model_profile` that sets the next BootEnv would be:
+
+  ::
+
+    Name: post-install-bootenv
+    Params:
+      next_boot_env: cores-live
+
+
+.. _rs_arch_proxy_server:
+
+Web Proxy
++++++++++
+
+This sub-template sets up the environment variables and conditionally the apt repo to use a web proxy.  The
+sub-template uses the **proxy-servers** parameter.  The place the template in the post-install section of
+the kickstart or the net-post-install.sh script.
+
+  ::
+
+    {{ template "web-proxy.tmpl" . }}
+
+
+An example :ref:`rs_model_profile` that sets proxies would look like this yaml.
+
+  ::
+
+    Name: proxy-config
+    Params:
+      proxy-servers:
+        - url: http://1.1.1.1:3128
+          address: 1.1.1.1
+        - url: http://1.1.1.2:3128
+          address: 1.1.1.2
+
+
+Local Repos
++++++++++++
+
+It is possible to use the exploded ISOs as repositories for post-installation work.  This can be helpful
+when missing internet connectivity.  To cause the local repos to replace the public repos, set the *local_repo*
+parameter to *true*.  This will force them to be changed.  There is one for ubuntu/debian-based systems,
+**ubuntu-drp-only-repos.tmpl** and one for centos/redhat-based systems, **centos-drp-only-repos.tmpl**.
+The place the template in the post-install section of the kickstart or the net-post-install.sh script.
+
+  ::
+
+    {{ template "ubuntu-drp-only-repos.tmpl" . }}
+    {{ template "centos-drp-only-repos.tmpl" . }}
+
+
+An example :ref:`rs_model_profile` that sets proxies would look like this yaml.
+
+  ::
+
+    Name: local-repos
+    Params:
+      local_repo: true
+
+
+Set Hostname
+++++++++++++
+
+To set the hostname on the post-installed system, include this template.  It will work for ubuntu and centos-based
+systems.  The place the template in the post-install section of the kickstart or the net-post-install.sh script.
+The template uses the :ref:`rs_model_machine` built in parameters.
+
+  ::
+
+    {{ template "set-hostname.tmpl" . }}
+
+
+Remote Root Access
+++++++++++++++++++
+
+This templates installs an authorized_keys file in the root user's home directory.  Multiple keys may be provided.
+The template also sets the **/etc/ssh/sshd_config** entry *PermitRootLogin*.  The default setting is 
+*without-passord* (keyed access only), but other values are available, *no*, *yes*, *froced-commands-only*.
+
+  ::
+
+    {{ template "root-remote-access.tmpl" . }}
+
+An example :ref:`rs_model_profile` that sets the keys and *PermitRootLogin* would look like this yaml.
+
+  ::
+
+    Name: root-access
+    Params:
+      access_keys:
+        key1:  ssh-rsa abasbaksl;gksj;glasgjasyyp
+        key2:  ssh-rsa moreblablabalkhjlkasjg
+      access_ssh_root_mode: yes
+
 
 .. _rs_dhcp_models:
 
