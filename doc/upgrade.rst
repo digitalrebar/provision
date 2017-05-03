@@ -91,3 +91,7 @@ the bootenvs and templates (tools/discovery-load.sh).  Or you can manually add a
 with drpcli.
 
 
+v3.0.2 to v3.0.3
+----------------
+This is a quick turn release to address the issue with updating bootenvs.  This is a CLI code and docs only change.
+
