@@ -66,10 +66,20 @@ var prefsKnownChangedListString = `{
   "unknownTokenTimeout": "600"
 }
 `
-var prefsBothChangedListString = `{
+var prefsBothPreDebugChangedListString = `{
   "debugBootEnv": "0",
   "debugDhcp": "0",
   "debugRenderer": "0",
+  "defaultBootEnv": "local",
+  "knownTokenTimeout": "5000",
+  "unknownBootEnv": "ignore",
+  "unknownTokenTimeout": "7000"
+}
+`
+var prefsBothChangedListString = `{
+  "debugBootEnv": "1",
+  "debugDhcp": "2",
+  "debugRenderer": "1",
   "defaultBootEnv": "local",
   "knownTokenTimeout": "5000",
   "unknownBootEnv": "ignore",
@@ -118,7 +128,8 @@ func TestPrefsCli(t *testing.T) {
 		CliTest{false, true, []string{"prefs", "set", "knownTokenTimeout", "illegal"}, noStdinString, noContentString, prefsSetBadKnownTokenTimeoutErrorString},
 		CliTest{false, true, []string{"prefs", "set", "unknownTokenTimeout", "illegal"}, noStdinString, noContentString, prefsSetBadUnknownTokenTimeoutErrorString},
 		CliTest{false, false, []string{"prefs", "set", "knownTokenTimeout", "5000"}, noStdinString, prefsKnownChangedListString, noErrorString},
-		CliTest{false, false, []string{"prefs", "set", "unknownTokenTimeout", "7000"}, noStdinString, prefsBothChangedListString, noErrorString},
+		CliTest{false, false, []string{"prefs", "set", "unknownTokenTimeout", "7000"}, noStdinString, prefsBothPreDebugChangedListString, noErrorString},
+		CliTest{false, false, []string{"prefs", "set", "debugRenderer", "1", "debugDhcp", "2", "debugBootEnv", "1"}, noStdinString, prefsBothChangedListString, noErrorString},
 		CliTest{false, false, []string{"prefs", "list"}, noStdinString, prefsBothChangedListString, noErrorString},
 
 		CliTest{false, true, []string{"prefs", "set", "greg", "ignore"}, noStdinString, noContentString, prefsSetInvalidPrefResponseString},
