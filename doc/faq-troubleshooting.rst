@@ -42,6 +42,11 @@ Sometimes the cert/key pair in the github tree is corrupt or not sufficient for 
 
 You may need to install the openssl tools.
 
+Turn Up the Debug
+-----------------
+
+To get additional debug from dr-provision, you can set debug preferences to increase the logging.  See :ref:`rs_model_prefs`.
+
 Rocket Skates?
 --------------
 
