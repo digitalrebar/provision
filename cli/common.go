@@ -225,6 +225,10 @@ type ModOps interface {
 	Patch(string, interface{}) (interface{}, error)
 }
 
+type UpdateOps interface {
+	Update(string, interface{}) (interface{}, error)
+}
+
 type DeleteOps interface {
 	Delete(string) (interface{}, error)
 }
@@ -355,16 +359,9 @@ func commonOps(singularName, name string, pobj interface{}) (commands []*cobra.C
 						return fmt.Errorf("%v requires 2 arguments", c.UseLine())
 					}
 					dumpUsage = false
-					data, err := gptrs.Get(args[0])
-					if err != nil {
-						return generateError(err, "Failed to fetch %v: %v", singularName, args[0])
-					}
-					var buf []byte
 
-					baseObj, err := json.Marshal(data)
-					if err != nil {
-						return fmt.Errorf("Unable to marshal object: %v\n", err)
-					}
+					var buf []byte
+					var err error
 					if args[1] == "-" {
 						buf, err = ioutil.ReadAll(os.Stdin)
 						if err != nil {
@@ -378,15 +375,40 @@ func commonOps(singularName, name string, pobj interface{}) (commands []*cobra.C
 					if err != nil {
 						return fmt.Errorf("Unable to unmarshal input stream: %v\n", err)
 					}
+
 					updateObj, err := json.Marshal(intermediate)
 					if err != nil {
 						return fmt.Errorf("Unable to marshal input stream: %v\n", err)
+					}
+					data, err := gptrs.Get(args[0])
+					if err != nil {
+						return generateError(err, "Failed to fetch %v: %v", singularName, args[0])
+					}
+					baseObj, err := json.Marshal(data)
+					if err != nil {
+						return fmt.Errorf("Unable to marshal object: %v\n", err)
 					}
 
 					merged, err := safeMergeJSON(data, updateObj)
 					if err != nil {
 						return fmt.Errorf("Unable to merge objects: %v\n", err)
 					}
+
+					// if the caller provides update, use it because we have Patch issues.
+					if uptrs, ok := pobj.(UpdateOps); ok {
+						obj := ptrs.GetType()
+						err = yaml.Unmarshal(merged, obj)
+						if err != nil {
+							return fmt.Errorf("Unable to unmarshal merged input stream: %v\n", err)
+						}
+
+						if data, err := uptrs.Update(args[0], obj); err != nil {
+							return generateError(err, "Unable to update %v", args[0])
+						} else {
+							return prettyPrint(data)
+						}
+					}
+					// Else use Patch
 					patch, err := jsonpatch2.Generate(baseObj, merged, true)
 					if err != nil {
 						return fmt.Errorf("Error generating patch: %v", err)
