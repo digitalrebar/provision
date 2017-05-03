@@ -6,6 +6,9 @@ import (
 )
 
 var prefsDefaultListString = `{
+  "debugBootEnv": "0",
+  "debugDhcp": "0",
+  "debugRenderer": "0",
   "defaultBootEnv": "sledgehammer",
   "knownTokenTimeout": "3600",
   "unknownBootEnv": "ignore",
@@ -19,6 +22,9 @@ var prefsSetBadJSONErrorString string = "Error: Invalid prefs: error unmarshalin
 
 var prefsSetEmptyJSONString string = "{}"
 var prefsSetJSONResponseString string = `{
+  "debugBootEnv": "0",
+  "debugDhcp": "0",
+  "debugRenderer": "0",
   "defaultBootEnv": "local",
   "knownTokenTimeout": "3600",
   "unknownBootEnv": "ignore",
@@ -29,6 +35,9 @@ var prefsSetIllegalJSONResponseString string = "Error: defaultBootEnv: Bootenv i
 var prefsSetInvalidPrefResponseString string = "Error: Unknown Preference greg\n\n"
 
 var prefsChangedListString = `{
+  "debugBootEnv": "0",
+  "debugDhcp": "0",
+  "debugRenderer": "0",
   "defaultBootEnv": "local",
   "knownTokenTimeout": "3600",
   "unknownBootEnv": "ignore",
@@ -48,6 +57,9 @@ var prefsSetBadKnownTokenTimeoutErrorString = "Error: Preference knownTokenTimeo
 var prefsSetBadUnknownTokenTimeoutErrorString = "Error: Preference unknownTokenTimeout: strconv.Atoi: parsing \"illegal\": invalid syntax\n\n"
 
 var prefsKnownChangedListString = `{
+  "debugBootEnv": "0",
+  "debugDhcp": "0",
+  "debugRenderer": "0",
   "defaultBootEnv": "local",
   "knownTokenTimeout": "5000",
   "unknownBootEnv": "ignore",
@@ -55,6 +67,9 @@ var prefsKnownChangedListString = `{
 }
 `
 var prefsBothChangedListString = `{
+  "debugBootEnv": "0",
+  "debugDhcp": "0",
+  "debugRenderer": "0",
   "defaultBootEnv": "local",
   "knownTokenTimeout": "5000",
   "unknownBootEnv": "ignore",
