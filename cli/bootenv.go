@@ -60,6 +60,18 @@ func (be BootEnvOps) Create(obj interface{}) (interface{}, error) {
 	return d.Payload, nil
 }
 
+func (be BootEnvOps) Update(id string, obj interface{}) (interface{}, error) {
+	bootenv, ok := obj.(*models.BootEnv)
+	if !ok {
+		return nil, fmt.Errorf("Invalid type passed to bootenv update")
+	}
+	d, e := session.BootEnvs.PutBootEnv(bootenvs.NewPutBootEnvParams().WithName(id).WithBody(bootenv), basicAuth)
+	if e != nil {
+		return nil, e
+	}
+	return d.Payload, nil
+}
+
 func (be BootEnvOps) Patch(id string, obj interface{}) (interface{}, error) {
 	data, ok := obj.(models.Patch)
 	if !ok {
