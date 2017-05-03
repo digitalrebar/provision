@@ -87,7 +87,15 @@ command, but any new templates would need to be added to a *templates* directoy 
 Editing a BootEnv
 -----------------
 
-Sometimes you just want to edit a :ref:`rs_model_bootenv`.
+Sometimes you just want to edit a :ref:`rs_model_bootenv`.  To do this, get the latest copy with the *show*
+command.  Edit the file as needed.  Then using the *update* command, put the value back.  The *--format=yaml*
+is optional, but I find YAML easier to edit.
+
+  ::
+
+    drpcli bootenvs show discovery --format=yaml > discovery.yaml
+    # Edit the discovery.yaml as you want
+    drpcli bootenvs update discovery - < discovery.yaml
 
 
 Cloning a Template
