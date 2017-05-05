@@ -9,7 +9,7 @@ import (
 
 type InterfaceOps struct{}
 
-func (be InterfaceOps) List() (interface{}, error) {
+func (be InterfaceOps) List(parms map[string]string) (interface{}, error) {
 	d, e := session.Interfaces.ListInterfaces(interfaces.NewListInterfacesParams(), basicAuth)
 	if e != nil {
 		return nil, e

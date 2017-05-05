@@ -32,8 +32,29 @@ func (be LeaseOps) GetId(obj interface{}) (string, error) {
 	return lease.Addr.String(), nil
 }
 
-func (be LeaseOps) List() (interface{}, error) {
-	d, e := session.Leases.ListLeases(leases.NewListLeasesParams(), basicAuth)
+func (be LeaseOps) List(parms map[string]string) (interface{}, error) {
+	params := leases.NewListLeasesParams()
+	if listLimit != -1 {
+		t1 := int64(listLimit)
+		params = params.WithLimit(&t1)
+	}
+	if listOffset != -1 {
+		t1 := int64(listOffset)
+		params = params.WithOffset(&t1)
+	}
+	for k, v := range parms {
+		switch k {
+		case "Addr":
+			params = params.WithAddr(&v)
+		case "Token":
+			params = params.WithToken(&v)
+		case "Strategy":
+			params = params.WithStrategy(&v)
+		case "ExpireTime":
+			params = params.WithExpireTime(&v)
+		}
+	}
+	d, e := session.Leases.ListLeases(params, basicAuth)
 	if e != nil {
 		return nil, e
 	}

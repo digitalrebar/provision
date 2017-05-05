@@ -11,6 +11,8 @@ var profileDefaultListString string = `[
 ]
 `
 
+var profileEmptyListString string = "[]\n"
+
 var profileShowNoArgErrorString string = "Error: drpcli profiles show [id] requires 1 argument\n"
 var profileShowTooManyArgErrorString string = "Error: drpcli profiles show [id] requires 1 argument\n"
 var profileShowMissingArgErrorString string = "Error: profiles GET: john2: Not Found\n\n"
@@ -51,6 +53,15 @@ var profileListProfilesString = `[
   {
     "Name": "global"
   },
+  {
+    "Name": "john",
+    "Params": {
+      "FRED": "GREG"
+    }
+  }
+]
+`
+var profileListJohnOnlyString = `[
   {
     "Name": "john",
     "Params": {
@@ -168,6 +179,14 @@ func TestProfileCli(t *testing.T) {
 		CliTest{false, false, []string{"profiles", "create", profileCreateInputString}, noStdinString, profileCreateJohnString, noErrorString},
 		CliTest{false, true, []string{"profiles", "create", profileCreateInputString}, noStdinString, noContentString, profileCreateDuplicateErrorString},
 		CliTest{false, false, []string{"profiles", "list"}, noStdinString, profileListProfilesString, noErrorString},
+		CliTest{false, false, []string{"profiles", "list", "--limit=0"}, noStdinString, profileEmptyListString, noErrorString},
+		CliTest{false, false, []string{"profiles", "list", "--limit=10", "--offset=0"}, noStdinString, profileListProfilesString, noErrorString},
+		CliTest{false, false, []string{"profiles", "list", "--limit=10", "--offset=10"}, noStdinString, profileEmptyListString, noErrorString},
+		CliTest{false, true, []string{"profiles", "list", "--limit=-10", "--offset=0"}, noStdinString, noContentString, limitNegativeError},
+		CliTest{false, true, []string{"profiles", "list", "--limit=10", "--offset=-10"}, noStdinString, noContentString, offsetNegativeError},
+		CliTest{false, false, []string{"profiles", "list", "--limit=-1", "--offset=-1"}, noStdinString, profileListProfilesString, noErrorString},
+		CliTest{false, false, []string{"profiles", "list", "Name=fred"}, noStdinString, profileEmptyListString, noErrorString},
+		CliTest{false, false, []string{"profiles", "list", "Name=john"}, noStdinString, profileListJohnOnlyString, noErrorString},
 
 		CliTest{true, true, []string{"profiles", "show"}, noStdinString, noContentString, profileShowNoArgErrorString},
 		CliTest{true, true, []string{"profiles", "show", "john", "john2"}, noStdinString, noContentString, profileShowTooManyArgErrorString},

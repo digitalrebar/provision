@@ -211,7 +211,7 @@ type Payloader interface {
 }
 
 type ListOp interface {
-	List() (interface{}, error)
+	List(params map[string]string) (interface{}, error)
 }
 
 type GetOp interface {
@@ -267,24 +267,38 @@ func generateError(err error, sfmt string, args ...interface{}) error {
 	return fmt.Errorf(s)
 }
 
-// TODO: Consider adding Match someday
+var listLimit = -1
+var listOffset = -1
 
 func commonOps(singularName, name string, pobj interface{}) (commands []*cobra.Command) {
 	commands = make([]*cobra.Command, 0, 0)
 
 	if ptrs, ok := pobj.(ListOp); ok {
-		commands = append(commands, &cobra.Command{
-			Use:   "list",
+		listCmd := &cobra.Command{
+			Use:   "list [key=value] ...",
 			Short: fmt.Sprintf("List all %v", name),
 			RunE: func(c *cobra.Command, args []string) error {
 				dumpUsage = false
-				if data, err := ptrs.List(); err != nil {
+
+				parms := map[string]string{}
+
+				for _, a := range args {
+					ar := strings.SplitN(a, "=", 2)
+					parms[ar[0]] = ar[1]
+				}
+
+				if data, err := ptrs.List(parms); err != nil {
 					return generateError(err, "Error listing %v", name)
 				} else {
 					return prettyPrint(data)
 				}
 			},
-		})
+		}
+		listCmd.Flags().IntVar(&listLimit, "limit", -1, "Maximum number of items to return")
+		listCmd.Flags().IntVar(&listOffset, "offset", -1, "Number of items to skip before starting to return data")
+
+		commands = append(commands, listCmd)
+
 	}
 	if gptrs, ok := pobj.(GetOp); ok {
 		commands = append(commands, &cobra.Command{

@@ -5,12 +5,17 @@ import (
 	"testing"
 )
 
+var machineAddrErrorString string = "Error: Invalid address: fred\n\n"
+var machineExpireTimeErrorString string = "Error: Invalid UUID: false\n\n"
+
+var machineEmptyListString string = "[]\n"
 var machineDefaultListString string = "[]\n"
 
 var machineShowNoArgErrorString string = "Error: drpcli machines show [id] requires 1 argument\n"
 var machineShowTooManyArgErrorString string = "Error: drpcli machines show [id] requires 1 argument\n"
 var machineShowMissingArgErrorString string = "Error: machines GET: john: Not Found\n\n"
 var machineShowMachineString string = `{
+  "Address": "192.168.100.110",
   "BootEnv": "local",
   "Errors": null,
   "Name": "john",
@@ -32,12 +37,14 @@ var machineCreateTooManyArgErrorString string = "Error: drpcli machines create [
 var machineCreateBadJSONString = "asdgasdg"
 var machineCreateBadJSONErrorString = "Error: Invalid machine object: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Machine\n\n"
 var machineCreateInputString string = `{
+  "Address": "192.168.100.110",
   "name": "john",
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "bootenv": "local"
 }
 `
 var machineCreateJohnString string = `{
+  "Address": "192.168.100.110",
   "BootEnv": "local",
   "Errors": null,
   "Name": "john",
@@ -52,6 +59,7 @@ var machineCreateDuplicateErrorString = "Error: dataTracker create machines: 3e7
 
 var machineListMachinesString = `[
   {
+    "Address": "192.168.100.110",
     "BootEnv": "local",
     "Errors": null,
     "Name": "john",
@@ -73,6 +81,7 @@ var machineUpdateInputString string = `{
 }
 `
 var machineUpdateJohnString string = `{
+  "Address": "192.168.100.110",
   "BootEnv": "local",
   "Description": "lpxelinux.0",
   "Errors": null,
@@ -93,6 +102,7 @@ var machinePatchBadPatchJSONErrorString = "Error: Unable to parse drpcli machine
 var machinePatchBadBaseJSONString = "asdgasdg"
 var machinePatchBadBaseJSONErrorString = "Error: Unable to parse drpcli machines patch [objectJson] [changesJson] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Machine\n\n"
 var machinePatchBaseString string = `{
+  "Address": "192.168.100.110",
   "BootEnv": "local",
   "Description": "lpxelinux.0",
   "Errors": null,
@@ -109,6 +119,7 @@ var machinePatchInputString string = `{
 }
 `
 var machinePatchJohnString string = `{
+  "Address": "192.168.100.110",
   "BootEnv": "local",
   "Description": "bootx64.efi",
   "Errors": null,
@@ -121,6 +132,7 @@ var machinePatchJohnString string = `{
 }
 `
 var machinePatchMissingBaseString string = `{
+  "Address": "192.168.100.110",
   "BootEnv": "local",
   "Description": "bootx64.efi",
   "Errors": null,
@@ -162,6 +174,7 @@ var machinesParamsNextString string = `{
 }
 `
 var machineUpdateJohnWithParamsString string = `{
+  "Address": "192.168.100.110",
   "BootEnv": "local",
   "Description": "lpxelinux.0",
   "Errors": null,
@@ -207,6 +220,22 @@ func TestMachineCli(t *testing.T) {
 		CliTest{false, false, []string{"machines", "create", machineCreateInputString}, noStdinString, machineCreateJohnString, noErrorString},
 		CliTest{false, true, []string{"machines", "create", machineCreateInputString}, noStdinString, noContentString, machineCreateDuplicateErrorString},
 		CliTest{false, false, []string{"machines", "list"}, noStdinString, machineListMachinesString, noErrorString},
+		CliTest{false, false, []string{"machines", "list", "--limit=0"}, noStdinString, machineEmptyListString, noErrorString},
+		CliTest{false, false, []string{"machines", "list", "--limit=10", "--offset=0"}, noStdinString, machineListMachinesString, noErrorString},
+		CliTest{false, false, []string{"machines", "list", "--limit=10", "--offset=10"}, noStdinString, machineEmptyListString, noErrorString},
+		CliTest{false, true, []string{"machines", "list", "--limit=-10", "--offset=0"}, noStdinString, noContentString, limitNegativeError},
+		CliTest{false, true, []string{"machines", "list", "--limit=10", "--offset=-10"}, noStdinString, noContentString, offsetNegativeError},
+		CliTest{false, false, []string{"machines", "list", "--limit=-1", "--offset=-1"}, noStdinString, machineListMachinesString, noErrorString},
+		CliTest{false, false, []string{"machines", "list", "Name=fred"}, noStdinString, machineEmptyListString, noErrorString},
+		CliTest{false, false, []string{"machines", "list", "Name=john"}, noStdinString, machineListMachinesString, noErrorString},
+		CliTest{false, false, []string{"machines", "list", "BootEnv=local"}, noStdinString, machineListMachinesString, noErrorString},
+		CliTest{false, false, []string{"machines", "list", "BootEnv=false"}, noStdinString, machineEmptyListString, noErrorString},
+		CliTest{false, false, []string{"machines", "list", "Address=192.168.100.110"}, noStdinString, machineListMachinesString, noErrorString},
+		CliTest{false, false, []string{"machines", "list", "Address=1.1.1.1"}, noStdinString, machineEmptyListString, noErrorString},
+		CliTest{false, true, []string{"machines", "list", "Address=fred"}, noStdinString, noContentString, machineAddrErrorString},
+		CliTest{false, false, []string{"machines", "list", "UUID=4e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, machineEmptyListString, noErrorString},
+		CliTest{false, false, []string{"machines", "list", "UUID=3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, machineListMachinesString, noErrorString},
+		CliTest{false, true, []string{"machines", "list", "UUID=false"}, noStdinString, noContentString, machineExpireTimeErrorString},
 
 		CliTest{true, true, []string{"machines", "show"}, noStdinString, noContentString, machineShowNoArgErrorString},
 		CliTest{true, true, []string{"machines", "show", "john", "john2"}, noStdinString, noContentString, machineShowTooManyArgErrorString},

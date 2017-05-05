@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"strconv"
 
 	"github.com/ghodss/yaml"
 
@@ -32,8 +33,31 @@ func (be BootEnvOps) GetId(obj interface{}) (string, error) {
 	return *bootenv.Name, nil
 }
 
-func (be BootEnvOps) List() (interface{}, error) {
-	d, e := session.BootEnvs.ListBootEnvs(bootenvs.NewListBootEnvsParams(), basicAuth)
+func (be BootEnvOps) List(parms map[string]string) (interface{}, error) {
+	params := bootenvs.NewListBootEnvsParams()
+	if listLimit != -1 {
+		t1 := int64(listLimit)
+		params = params.WithLimit(&t1)
+	}
+	if listOffset != -1 {
+		t1 := int64(listOffset)
+		params = params.WithOffset(&t1)
+	}
+
+	for k, v := range parms {
+		switch k {
+		case "Available":
+			b, _ := strconv.ParseBool(v)
+			params = params.WithAvailable(&b)
+		case "OnlyUnknown":
+			b, _ := strconv.ParseBool(v)
+			params = params.WithOnlyUnknown(&b)
+		case "Name":
+			params = params.WithName(&v)
+		}
+	}
+
+	d, e := session.BootEnvs.ListBootEnvs(params, basicAuth)
 	if e != nil {
 		return nil, e
 	}

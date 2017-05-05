@@ -23,8 +23,23 @@ func (be ProfileOps) GetId(obj interface{}) (string, error) {
 	return *profile.Name, nil
 }
 
-func (be ProfileOps) List() (interface{}, error) {
-	d, e := session.Profiles.ListProfiles(profiles.NewListProfilesParams(), basicAuth)
+func (be ProfileOps) List(parms map[string]string) (interface{}, error) {
+	params := profiles.NewListProfilesParams()
+	if listLimit != -1 {
+		t1 := int64(listLimit)
+		params = params.WithLimit(&t1)
+	}
+	if listOffset != -1 {
+		t1 := int64(listOffset)
+		params = params.WithOffset(&t1)
+	}
+	for k, v := range parms {
+		switch k {
+		case "Name":
+			params = params.WithName(&v)
+		}
+	}
+	d, e := session.Profiles.ListProfiles(params, basicAuth)
 	if e != nil {
 		return nil, e
 	}

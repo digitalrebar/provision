@@ -9,6 +9,10 @@ import (
 	"github.com/digitalrebar/provision/midlayer"
 )
 
+var limitNegativeError string = "Error: Limit cannot be negative\n\n"
+var offsetNegativeError string = "Error: Offset cannot be negative\n\n"
+
+var bootEnvEmptyListString string = "[]\n"
 var bootEnvDefaultListString string = `[
   {
     "Available": true,
@@ -354,6 +358,18 @@ func TestBootEnvCli(t *testing.T) {
 	tests := []CliTest{
 		CliTest{true, false, []string{"bootenvs"}, noStdinString, "Access CLI commands relating to bootenvs\n", ""},
 		CliTest{false, false, []string{"bootenvs", "list"}, noStdinString, bootEnvDefaultListString, noErrorString},
+		CliTest{false, false, []string{"bootenvs", "list", "--limit=0"}, noStdinString, bootEnvEmptyListString, noErrorString},
+		CliTest{false, false, []string{"bootenvs", "list", "--limit=10", "--offset=0"}, noStdinString, bootEnvDefaultListString, noErrorString},
+		CliTest{false, false, []string{"bootenvs", "list", "--limit=10", "--offset=10"}, noStdinString, bootEnvEmptyListString, noErrorString},
+		CliTest{false, true, []string{"bootenvs", "list", "--limit=-10", "--offset=0"}, noStdinString, noContentString, limitNegativeError},
+		CliTest{false, true, []string{"bootenvs", "list", "--limit=10", "--offset=-10"}, noStdinString, noContentString, offsetNegativeError},
+		CliTest{false, false, []string{"bootenvs", "list", "--limit=-1", "--offset=-1"}, noStdinString, bootEnvDefaultListString, noErrorString},
+		CliTest{false, false, []string{"bootenvs", "list", "Name=fred"}, noStdinString, bootEnvEmptyListString, noErrorString},
+		CliTest{false, false, []string{"bootenvs", "list", "Name=ignore"}, noStdinString, bootEnvDefaultListString, noErrorString},
+		CliTest{false, false, []string{"bootenvs", "list", "Available=true"}, noStdinString, bootEnvDefaultListString, noErrorString},
+		CliTest{false, false, []string{"bootenvs", "list", "Available=false"}, noStdinString, bootEnvEmptyListString, noErrorString},
+		CliTest{false, false, []string{"bootenvs", "list", "OnlyUnknown=true"}, noStdinString, bootEnvDefaultListString, noErrorString},
+		CliTest{false, false, []string{"bootenvs", "list", "OnlyUnknown=false"}, noStdinString, bootEnvEmptyListString, noErrorString},
 
 		CliTest{true, true, []string{"bootenvs", "show"}, noStdinString, noContentString, bootEnvShowNoArgErrorString},
 		CliTest{true, true, []string{"bootenvs", "show", "john", "john2"}, noStdinString, noContentString, bootEnvShowTooManyArgErrorString},

@@ -25,8 +25,23 @@ func (be TemplateOps) GetId(obj interface{}) (string, error) {
 	return *template.ID, nil
 }
 
-func (be TemplateOps) List() (interface{}, error) {
-	d, e := session.Templates.ListTemplates(templates.NewListTemplatesParams(), basicAuth)
+func (be TemplateOps) List(parms map[string]string) (interface{}, error) {
+	params := templates.NewListTemplatesParams()
+	if listLimit != -1 {
+		t1 := int64(listLimit)
+		params = params.WithLimit(&t1)
+	}
+	if listOffset != -1 {
+		t1 := int64(listOffset)
+		params = params.WithOffset(&t1)
+	}
+	for k, v := range parms {
+		switch k {
+		case "ID":
+			params = params.WithID(&v)
+		}
+	}
+	d, e := session.Templates.ListTemplates(params, basicAuth)
 	if e != nil {
 		return nil, e
 	}

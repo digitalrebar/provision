@@ -4,13 +4,18 @@ import (
 	"testing"
 )
 
+var reservationAddrErrorString string = "Error: Invalid Address: fred\n\n"
+var reservationExpireTimeErrorString string = "Error: Invalid Address: false\n\n"
+
 var reservationDefaultListString string = "[]\n"
+var reservationEmptyListString string = "[]\n"
 
 var reservationShowNoArgErrorString string = "Error: drpcli reservations show [id] requires 1 argument\n"
 var reservationShowTooManyArgErrorString string = "Error: drpcli reservations show [id] requires 1 argument\n"
 var reservationShowMissingArgErrorString string = "Error: reservations GET: C0A86467: Not Found\n\n"
 var reservationShowJohnString string = `{
   "Addr": "192.168.100.100",
+  "NextServer": "2.2.2.2",
   "Options": null,
   "Strategy": "MAC",
   "Token": "john"
@@ -28,12 +33,14 @@ var reservationCreateBadJSONString = "asdgasdg"
 var reservationCreateBadJSONErrorString = "Error: Invalid reservation object: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Reservation\n\n"
 var reservationCreateInputString string = `{
   "Addr": "192.168.100.100",
+  "NextServer": "2.2.2.2",
   "Strategy": "MAC",
   "Token": "john"
 }
 `
 var reservationCreateJohnString string = `{
   "Addr": "192.168.100.100",
+  "NextServer": "2.2.2.2",
   "Options": null,
   "Strategy": "MAC",
   "Token": "john"
@@ -41,9 +48,20 @@ var reservationCreateJohnString string = `{
 `
 var reservationCreateDuplicateErrorString = "Error: dataTracker create reservations: C0A86464 already exists\n\n"
 
+var reservationListReservationsString = `[
+  {
+    "Addr": "192.168.100.100",
+    "NextServer": "2.2.2.2",
+    "Options": null,
+    "Strategy": "MAC",
+    "Token": "john"
+  }
+]
+`
 var reservationListBothEnvsString = `[
   {
     "Addr": "192.168.100.100",
+    "NextServer": "2.2.2.2",
     "Options": null,
     "Strategy": "MAC",
     "Token": "john"
@@ -61,6 +79,7 @@ var reservationUpdateInputString string = `{
 `
 var reservationUpdateJohnString string = `{
   "Addr": "192.168.100.100",
+  "NextServer": "2.2.2.2",
   "Options": [
     {
       "Code": 3,
@@ -91,6 +110,7 @@ var reservationPatchInputString string = `{
 `
 var reservationPatchJohnString string = `{
   "Addr": "192.168.100.100",
+  "NextServer": "2.2.2.2",
   "Options": [
     {
       "Code": 3,
@@ -103,6 +123,7 @@ var reservationPatchJohnString string = `{
 `
 var reservationPatchMissingBaseString string = `{
   "Addr": "193.168.100.100",
+  "NextServer": "2.2.2.2",
   "Strategy": "NewStrat",
   "Token": "john"
 }
@@ -125,6 +146,23 @@ func TestReservationCli(t *testing.T) {
 		CliTest{false, false, []string{"reservations", "create", reservationCreateInputString}, noStdinString, reservationCreateJohnString, noErrorString},
 		CliTest{false, true, []string{"reservations", "create", reservationCreateInputString}, noStdinString, noContentString, reservationCreateDuplicateErrorString},
 		CliTest{false, false, []string{"reservations", "list"}, noStdinString, reservationListBothEnvsString, noErrorString},
+
+		CliTest{false, false, []string{"reservations", "list", "--limit=0"}, noStdinString, reservationEmptyListString, noErrorString},
+		CliTest{false, false, []string{"reservations", "list", "--limit=10", "--offset=0"}, noStdinString, reservationListReservationsString, noErrorString},
+		CliTest{false, false, []string{"reservations", "list", "--limit=10", "--offset=10"}, noStdinString, reservationEmptyListString, noErrorString},
+		CliTest{false, true, []string{"reservations", "list", "--limit=-10", "--offset=0"}, noStdinString, noContentString, limitNegativeError},
+		CliTest{false, true, []string{"reservations", "list", "--limit=10", "--offset=-10"}, noStdinString, noContentString, offsetNegativeError},
+		CliTest{false, false, []string{"reservations", "list", "--limit=-1", "--offset=-1"}, noStdinString, reservationListReservationsString, noErrorString},
+		CliTest{false, false, []string{"reservations", "list", "Strategy=fred"}, noStdinString, reservationEmptyListString, noErrorString},
+		CliTest{false, false, []string{"reservations", "list", "Strategy=MAC"}, noStdinString, reservationListReservationsString, noErrorString},
+		CliTest{false, false, []string{"reservations", "list", "Token=john"}, noStdinString, reservationListReservationsString, noErrorString},
+		CliTest{false, false, []string{"reservations", "list", "Token=false"}, noStdinString, reservationEmptyListString, noErrorString},
+		CliTest{false, false, []string{"reservations", "list", "Addr=192.168.100.100"}, noStdinString, reservationListReservationsString, noErrorString},
+		CliTest{false, false, []string{"reservations", "list", "Addr=1.1.1.1"}, noStdinString, reservationEmptyListString, noErrorString},
+		CliTest{false, true, []string{"reservations", "list", "Addr=fred"}, noStdinString, noContentString, reservationAddrErrorString},
+		CliTest{false, false, []string{"reservations", "list", "NextServer=3.3.3.3"}, noStdinString, reservationEmptyListString, noErrorString},
+		CliTest{false, false, []string{"reservations", "list", "NextServer=2.2.2.2"}, noStdinString, reservationListReservationsString, noErrorString},
+		CliTest{false, true, []string{"reservations", "list", "NextServer=false"}, noStdinString, noContentString, reservationExpireTimeErrorString},
 
 		CliTest{true, true, []string{"reservations", "show"}, noStdinString, noContentString, reservationShowNoArgErrorString},
 		CliTest{true, true, []string{"reservations", "show", "john", "john2"}, noStdinString, noContentString, reservationShowTooManyArgErrorString},

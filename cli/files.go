@@ -9,7 +9,7 @@ import (
 
 type FileOps struct{}
 
-func (be FileOps) List() (interface{}, error) {
+func (be FileOps) List(parms map[string]string) (interface{}, error) {
 	d, e := session.Files.ListFiles(files.NewListFilesParams(), basicAuth)
 	if e != nil {
 		return nil, e

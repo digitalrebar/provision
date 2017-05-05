@@ -4,7 +4,11 @@ import (
 	"testing"
 )
 
+var subnetAddrErrorString string = "Error: Invalid Address: fred\n\n"
+var subnetExpireTimeErrorString string = "Error: Invalid subnet CIDR: false\n\n"
+
 var subnetDefaultListString string = "[]\n"
+var subnetEmptyListString string = "[]\n"
 
 var subnetShowNoArgErrorString string = "Error: drpcli subnets show [id] requires 1 argument\n"
 var subnetShowTooManyArgErrorString string = "Error: drpcli subnets show [id] requires 1 argument\n"
@@ -14,7 +18,7 @@ var subnetShowJohnString string = `{
   "ActiveLeaseTime": 60,
   "ActiveStart": "192.168.100.20",
   "Name": "john",
-  "NextServer": "",
+  "NextServer": "3.3.3.3",
   "OnlyReservations": false,
   "Options": [
     {
@@ -51,6 +55,7 @@ var subnetCreateInputString string = `{
   "ActiveEnd": "192.168.100.100",
   "ActiveStart": "192.168.100.20",
   "ActiveLeaseTime": 60,
+  "NextServer": "3.3.3.3",
   "OnlyReservations": false,
   "ReservedLeaseTime": 7200,
   "Subnet": "192.168.100.0/24",
@@ -62,7 +67,7 @@ var subnetCreateJohnString string = `{
   "ActiveLeaseTime": 60,
   "ActiveStart": "192.168.100.20",
   "Name": "john",
-  "NextServer": "",
+  "NextServer": "3.3.3.3",
   "OnlyReservations": false,
   "Options": [
     {
@@ -92,7 +97,7 @@ var subnetListBothEnvsString = `[
     "ActiveLeaseTime": 60,
     "ActiveStart": "192.168.100.20",
     "Name": "john",
-    "NextServer": "",
+    "NextServer": "3.3.3.3",
     "OnlyReservations": false,
     "Options": [
       {
@@ -129,7 +134,7 @@ var subnetUpdateJohnString string = `{
   "ActiveLeaseTime": 60,
   "ActiveStart": "192.168.100.20",
   "Name": "john",
-  "NextServer": "",
+  "NextServer": "3.3.3.3",
   "OnlyReservations": false,
   "Options": [
     {
@@ -164,7 +169,7 @@ var subnetPatchBaseString string = `{
   "ActiveLeaseTime": 60,
   "ActiveStart": "192.168.100.20",
   "Name": "john",
-  "NextServer": "",
+  "NextServer": "3.3.3.3",
   "OnlyReservations": false,
   "Options": [
     {
@@ -195,7 +200,7 @@ var subnetPatchJohnString string = `{
   "ActiveLeaseTime": 60,
   "ActiveStart": "192.168.100.20",
   "Name": "john",
-  "NextServer": "",
+  "NextServer": "3.3.3.3",
   "OnlyReservations": false,
   "Options": [
     {
@@ -222,7 +227,7 @@ var subnetPatchMissingBaseString string = `{
   "ActiveLeaseTime": 60,
   "ActiveStart": "192.168.100.20",
   "Name": "john2",
-  "NextServer": "",
+  "NextServer": "3.3.3.3",
   "OnlyReservations": false,
   "Options": [
     {
@@ -262,6 +267,22 @@ func TestSubnetCli(t *testing.T) {
 		CliTest{false, false, []string{"subnets", "create", subnetCreateInputString}, noStdinString, subnetCreateJohnString, noErrorString},
 		CliTest{false, true, []string{"subnets", "create", subnetCreateInputString}, noStdinString, noContentString, subnetCreateDuplicateErrorString},
 		CliTest{false, false, []string{"subnets", "list"}, noStdinString, subnetListBothEnvsString, noErrorString},
+		CliTest{false, false, []string{"subnets", "list", "--limit=0"}, noStdinString, subnetEmptyListString, noErrorString},
+		CliTest{false, false, []string{"subnets", "list", "--limit=10", "--offset=0"}, noStdinString, subnetListBothEnvsString, noErrorString},
+		CliTest{false, false, []string{"subnets", "list", "--limit=10", "--offset=10"}, noStdinString, subnetEmptyListString, noErrorString},
+		CliTest{false, true, []string{"subnets", "list", "--limit=-10", "--offset=0"}, noStdinString, noContentString, limitNegativeError},
+		CliTest{false, true, []string{"subnets", "list", "--limit=10", "--offset=-10"}, noStdinString, noContentString, offsetNegativeError},
+		CliTest{false, false, []string{"subnets", "list", "--limit=-1", "--offset=-1"}, noStdinString, subnetListBothEnvsString, noErrorString},
+		CliTest{false, false, []string{"subnets", "list", "Name=fred"}, noStdinString, subnetEmptyListString, noErrorString},
+		CliTest{false, false, []string{"subnets", "list", "Name=john"}, noStdinString, subnetListBothEnvsString, noErrorString},
+		CliTest{false, false, []string{"subnets", "list", "Strategy=MAC"}, noStdinString, subnetListBothEnvsString, noErrorString},
+		CliTest{false, false, []string{"subnets", "list", "Strategy=false"}, noStdinString, subnetEmptyListString, noErrorString},
+		CliTest{false, false, []string{"subnets", "list", "NextServer=3.3.3.3"}, noStdinString, subnetListBothEnvsString, noErrorString},
+		CliTest{false, false, []string{"subnets", "list", "NextServer=1.1.1.1"}, noStdinString, subnetEmptyListString, noErrorString},
+		CliTest{false, true, []string{"subnets", "list", "NextServer=fred"}, noStdinString, noContentString, subnetAddrErrorString},
+		CliTest{false, false, []string{"subnets", "list", "Subnet=192.168.103.0/24"}, noStdinString, subnetEmptyListString, noErrorString},
+		CliTest{false, false, []string{"subnets", "list", "Subnet=192.168.100.0/24"}, noStdinString, subnetListBothEnvsString, noErrorString},
+		CliTest{false, true, []string{"subnets", "list", "Subnet=false"}, noStdinString, noContentString, subnetExpireTimeErrorString},
 
 		CliTest{true, true, []string{"subnets", "show"}, noStdinString, noContentString, subnetShowNoArgErrorString},
 		CliTest{true, true, []string{"subnets", "show", "john", "john2"}, noStdinString, noContentString, subnetShowTooManyArgErrorString},
