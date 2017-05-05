@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"os"
 	"path"
-	"strconv"
 
 	"github.com/ghodss/yaml"
 
@@ -47,11 +46,9 @@ func (be BootEnvOps) List(parms map[string]string) (interface{}, error) {
 	for k, v := range parms {
 		switch k {
 		case "Available":
-			b, _ := strconv.ParseBool(v)
-			params = params.WithAvailable(&b)
+			params = params.WithAvailable(&v)
 		case "OnlyUnknown":
-			b, _ := strconv.ParseBool(v)
-			params = params.WithOnlyUnknown(&b)
+			params = params.WithOnlyUnknown(&v)
 		case "Name":
 			params = params.WithName(&v)
 		}
