@@ -23,6 +23,10 @@ func (be ProfileOps) GetId(obj interface{}) (string, error) {
 	return *profile.Name, nil
 }
 
+func (be ProfileOps) GetIndexes() map[string]string {
+	return map[string]string{"Name": "string"}
+}
+
 func (be ProfileOps) List(parms map[string]string) (interface{}, error) {
 	params := profiles.NewListProfilesParams()
 	if listLimit != -1 {

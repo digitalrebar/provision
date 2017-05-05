@@ -23,6 +23,10 @@ func (be UserOps) GetId(obj interface{}) (string, error) {
 	return *user.Name, nil
 }
 
+func (be UserOps) GetIndexes() map[string]string {
+	return map[string]string{"Name": "string"}
+}
+
 func (be UserOps) List(parms map[string]string) (interface{}, error) {
 	params := users.NewListUsersParams()
 	if listLimit != -1 {

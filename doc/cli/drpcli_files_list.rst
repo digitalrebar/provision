@@ -6,11 +6,11 @@ List all files
 Synopsis
 --------
 
-List all files
+This will list all files by default.
 
 ::
 
-    drpcli files list
+    drpcli files list [key=value] ...
 
 Options inherited from parent commands
 --------------------------------------

@@ -9,6 +9,10 @@ import (
 
 type IsoOps struct{}
 
+func (be IsoOps) GetIndexes() map[string]string {
+	return map[string]string{}
+}
+
 func (be IsoOps) List(parms map[string]string) (interface{}, error) {
 	d, e := session.Isos.ListIsos(isos.NewListIsosParams(), basicAuth)
 	if e != nil {

@@ -6,11 +6,11 @@ List all isos
 Synopsis
 --------
 
-List all isos
+This will list all isos by default.
 
 ::
 
-    drpcli isos list
+    drpcli isos list [key=value] ...
 
 Options inherited from parent commands
 --------------------------------------

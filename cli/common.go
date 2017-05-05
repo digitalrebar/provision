@@ -212,6 +212,7 @@ type Payloader interface {
 
 type ListOp interface {
 	List(params map[string]string) (interface{}, error)
+	GetIndexes() map[string]string
 }
 
 type GetOp interface {
@@ -272,11 +273,48 @@ var listOffset = -1
 
 func commonOps(singularName, name string, pobj interface{}) (commands []*cobra.Command) {
 	commands = make([]*cobra.Command, 0, 0)
-
 	if ptrs, ok := pobj.(ListOp); ok {
+		idxs := ptrs.GetIndexes()
+		bigidxstr := ""
+		if len(idxs) > 0 {
+			idxstr := ""
+			idxsingle := "notallowed"
+			for k, v := range idxs {
+				idxsingle = k
+				idxstr += fmt.Sprintf("*  %s = %s\n", k, v)
+			}
+			bigidxstr = fmt.Sprintf(`
+You may specify:
+
+*  Offset = integer, 0-based inclusive starting point in filter data.
+*  Limit = integer, number of items to return
+
+Functional Indexs:
+
+%s
+
+Functions:
+
+*  Eq(value) = Return items that are equal to value
+*  Lt(value) = Return items that are less than value
+*  Lte(value) = Return items that less than or equal to value
+*  Gt(value) = Return items that are greater than value
+*  Gte(value) = Return items that greater than or equal to value
+*  Between(lower,upper) = Return items that are inclusively between lower and upper
+*  Except(lower,upper) = Return items that are not inclusively between lower and upper
+
+Example:
+
+*  %v=fred - returns items named fred
+*  %v=Lt(fred) - returns items that alphabetically less than fred.
+*  %v=Lt(fred)&Available=true - returns items with Name less than fred and Available is true
+
+`, idxstr, idxsingle, idxsingle, idxsingle)
+		}
 		listCmd := &cobra.Command{
 			Use:   "list [key=value] ...",
 			Short: fmt.Sprintf("List all %v", name),
+			Long:  fmt.Sprintf("This will list all %v by default.\n%s\n", name, bigidxstr),
 			RunE: func(c *cobra.Command, args []string) error {
 				dumpUsage = false
 
@@ -294,8 +332,10 @@ func commonOps(singularName, name string, pobj interface{}) (commands []*cobra.C
 				}
 			},
 		}
-		listCmd.Flags().IntVar(&listLimit, "limit", -1, "Maximum number of items to return")
-		listCmd.Flags().IntVar(&listOffset, "offset", -1, "Number of items to skip before starting to return data")
+		if len(idxs) > 0 {
+			listCmd.Flags().IntVar(&listLimit, "limit", -1, "Maximum number of items to return")
+			listCmd.Flags().IntVar(&listOffset, "offset", -1, "Number of items to skip before starting to return data")
+		}
 
 		commands = append(commands, listCmd)
 

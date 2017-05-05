@@ -22,6 +22,10 @@ func (be SubnetOps) GetId(obj interface{}) (string, error) {
 	return *subnet.Name, nil
 }
 
+func (be SubnetOps) GetIndexes() map[string]string {
+	return map[string]string{"Name": "string", "Subnet": "CIDR IP Address", "Strategy": "string", "NextServer": "IP Address"}
+}
+
 func (be SubnetOps) List(parms map[string]string) (interface{}, error) {
 	params := subnets.NewListSubnetsParams()
 	if listLimit != -1 {

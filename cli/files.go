@@ -9,6 +9,10 @@ import (
 
 type FileOps struct{}
 
+func (be FileOps) GetIndexes() map[string]string {
+	return map[string]string{}
+}
+
 func (be FileOps) List(parms map[string]string) (interface{}, error) {
 	d, e := session.Files.ListFiles(files.NewListFilesParams(), basicAuth)
 	if e != nil {

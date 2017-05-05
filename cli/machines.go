@@ -27,6 +27,10 @@ func (be MachineOps) GetId(obj interface{}) (string, error) {
 	return machine.UUID.String(), nil
 }
 
+func (be MachineOps) GetIndexes() map[string]string {
+	return map[string]string{"Name": "string", "BootEnv": "string", "UUID": "uuid string", "Address": "IP Address"}
+}
+
 func (be MachineOps) List(parms map[string]string) (interface{}, error) {
 	params := machines.NewListMachinesParams()
 	if listLimit != -1 {

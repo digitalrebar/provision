@@ -22,6 +22,10 @@ func (be ReservationOps) GetId(obj interface{}) (string, error) {
 	return reservation.Addr.String(), nil
 }
 
+func (be ReservationOps) GetIndexes() map[string]string {
+	return map[string]string{"Addr": "IP Address", "Token": "string", "Strategy": "string", "NextServer": "IP Address"}
+}
+
 func (be ReservationOps) List(parms map[string]string) (interface{}, error) {
 	params := reservations.NewListReservationsParams()
 	if listLimit != -1 {

@@ -32,6 +32,10 @@ func (be BootEnvOps) GetId(obj interface{}) (string, error) {
 	return *bootenv.Name, nil
 }
 
+func (be BootEnvOps) GetIndexes() map[string]string {
+	return map[string]string{"Available": "boolean", "Name": "string", "OnlyUnknown": "boolean"}
+}
+
 func (be BootEnvOps) List(parms map[string]string) (interface{}, error) {
 	params := bootenvs.NewListBootEnvsParams()
 	if listLimit != -1 {

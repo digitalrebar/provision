@@ -25,6 +25,10 @@ func (be TemplateOps) GetId(obj interface{}) (string, error) {
 	return *template.ID, nil
 }
 
+func (be TemplateOps) GetIndexes() map[string]string {
+	return map[string]string{"ID": "string"}
+}
+
 func (be TemplateOps) List(parms map[string]string) (interface{}, error) {
 	params := templates.NewListTemplatesParams()
 	if listLimit != -1 {

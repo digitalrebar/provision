@@ -32,6 +32,10 @@ func (be LeaseOps) GetId(obj interface{}) (string, error) {
 	return lease.Addr.String(), nil
 }
 
+func (be LeaseOps) GetIndexes() map[string]string {
+	return map[string]string{"Addr": "IP Address", "Token": "string", "Strategy": "string", "ExpireTime": "TimeDate"}
+}
+
 func (be LeaseOps) List(parms map[string]string) (interface{}, error) {
 	params := leases.NewListLeasesParams()
 	if listLimit != -1 {
