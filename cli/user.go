@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/digitalrebar/provision/backend"
 	"github.com/digitalrebar/provision/client/users"
 	"github.com/digitalrebar/provision/models"
 	"github.com/spf13/cobra"
@@ -23,8 +24,32 @@ func (be UserOps) GetId(obj interface{}) (string, error) {
 	return *user.Name, nil
 }
 
-func (be UserOps) List() (interface{}, error) {
-	d, e := session.Users.ListUsers(users.NewListUsersParams(), basicAuth)
+func (be UserOps) GetIndexes() map[string]string {
+	b := &backend.User{}
+	ans := map[string]string{}
+	for k, v := range b.Indexes() {
+		ans[k] = v.Type
+	}
+	return ans
+}
+
+func (be UserOps) List(parms map[string]string) (interface{}, error) {
+	params := users.NewListUsersParams()
+	if listLimit != -1 {
+		t1 := int64(listLimit)
+		params = params.WithLimit(&t1)
+	}
+	if listOffset != -1 {
+		t1 := int64(listOffset)
+		params = params.WithOffset(&t1)
+	}
+	for k, v := range parms {
+		switch k {
+		case "Name":
+			params = params.WithName(&v)
+		}
+	}
+	d, e := session.Users.ListUsers(params, basicAuth)
 	if e != nil {
 		return nil, e
 	}

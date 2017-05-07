@@ -11,6 +11,7 @@ import (
 
 	"github.com/ghodss/yaml"
 
+	"github.com/digitalrebar/provision/backend"
 	bootenvs "github.com/digitalrebar/provision/client/boot_envs"
 	"github.com/digitalrebar/provision/client/isos"
 	"github.com/digitalrebar/provision/client/templates"
@@ -32,8 +33,38 @@ func (be BootEnvOps) GetId(obj interface{}) (string, error) {
 	return *bootenv.Name, nil
 }
 
-func (be BootEnvOps) List() (interface{}, error) {
-	d, e := session.BootEnvs.ListBootEnvs(bootenvs.NewListBootEnvsParams(), basicAuth)
+func (be BootEnvOps) GetIndexes() map[string]string {
+	b := &backend.BootEnv{}
+	ans := map[string]string{}
+	for k, v := range b.Indexes() {
+		ans[k] = v.Type
+	}
+	return ans
+}
+
+func (be BootEnvOps) List(parms map[string]string) (interface{}, error) {
+	params := bootenvs.NewListBootEnvsParams()
+	if listLimit != -1 {
+		t1 := int64(listLimit)
+		params = params.WithLimit(&t1)
+	}
+	if listOffset != -1 {
+		t1 := int64(listOffset)
+		params = params.WithOffset(&t1)
+	}
+
+	for k, v := range parms {
+		switch k {
+		case "Available":
+			params = params.WithAvailable(&v)
+		case "OnlyUnknown":
+			params = params.WithOnlyUnknown(&v)
+		case "Name":
+			params = params.WithName(&v)
+		}
+	}
+
+	d, e := session.BootEnvs.ListBootEnvs(params, basicAuth)
 	if e != nil {
 		return nil, e
 	}

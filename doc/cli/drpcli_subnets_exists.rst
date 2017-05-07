@@ -6,7 +6,25 @@ See if a subnet exists by id
 Synopsis
 --------
 
-See if a subnet exists by id
+This will detect if a subnets exists.
+
+You may specify the id in the request by the using normal key or by
+index.
+
+Functional Indexs:
+
+-  NextServer = IP Address
+-  Subnet = CIDR Address
+-  Name = string
+-  Strategy = string
+
+When using the index name, use the following form:
+
+-  Index:Value
+
+Example:
+
+-  e.g: Strategy:fred
 
 ::
 

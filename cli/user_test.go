@@ -4,6 +4,7 @@ import (
 	"testing"
 )
 
+var userEmptyListString string = "[]\n"
 var userDefaultListString string = `[
   {
     "Name": "rocketskates"
@@ -38,6 +39,12 @@ var userCreateJohnString string = `{
 `
 var userCreateDuplicateErrorString = "Error: dataTracker create users: john already exists\n\n"
 
+var userListJohnOnlyString = `[
+  {
+    "Name": "john"
+  }
+]
+`
 var userListBothEnvsString = `[
   {
     "Name": "john"
@@ -114,6 +121,15 @@ func TestUserCli(t *testing.T) {
 		CliTest{false, false, []string{"users", "create", userCreateInputString}, noStdinString, userCreateJohnString, noErrorString},
 		CliTest{false, true, []string{"users", "create", userCreateInputString}, noStdinString, noContentString, userCreateDuplicateErrorString},
 		CliTest{false, false, []string{"users", "list"}, noStdinString, userListBothEnvsString, noErrorString},
+
+		CliTest{false, false, []string{"users", "list", "--limit=0"}, noStdinString, userEmptyListString, noErrorString},
+		CliTest{false, false, []string{"users", "list", "--limit=10", "--offset=0"}, noStdinString, userListBothEnvsString, noErrorString},
+		CliTest{false, false, []string{"users", "list", "--limit=10", "--offset=10"}, noStdinString, userEmptyListString, noErrorString},
+		CliTest{false, true, []string{"users", "list", "--limit=-10", "--offset=0"}, noStdinString, noContentString, limitNegativeError},
+		CliTest{false, true, []string{"users", "list", "--limit=10", "--offset=-10"}, noStdinString, noContentString, offsetNegativeError},
+		CliTest{false, false, []string{"users", "list", "--limit=-1", "--offset=-1"}, noStdinString, userListBothEnvsString, noErrorString},
+		CliTest{false, false, []string{"users", "list", "Name=fred"}, noStdinString, userEmptyListString, noErrorString},
+		CliTest{false, false, []string{"users", "list", "Name=john"}, noStdinString, userListJohnOnlyString, noErrorString},
 
 		CliTest{true, true, []string{"users", "show"}, noStdinString, noContentString, userShowNoArgErrorString},
 		CliTest{true, true, []string{"users", "show", "john", "john2"}, noStdinString, noContentString, userShowTooManyArgErrorString},

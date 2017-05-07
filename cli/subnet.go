@@ -3,6 +3,7 @@ package cli
 import (
 	"fmt"
 
+	"github.com/digitalrebar/provision/backend"
 	"github.com/digitalrebar/provision/client/subnets"
 	"github.com/digitalrebar/provision/models"
 	"github.com/spf13/cobra"
@@ -22,8 +23,39 @@ func (be SubnetOps) GetId(obj interface{}) (string, error) {
 	return *subnet.Name, nil
 }
 
-func (be SubnetOps) List() (interface{}, error) {
-	d, e := session.Subnets.ListSubnets(subnets.NewListSubnetsParams(), basicAuth)
+func (be SubnetOps) GetIndexes() map[string]string {
+	b := &backend.Subnet{}
+	ans := map[string]string{}
+	for k, v := range b.Indexes() {
+		ans[k] = v.Type
+	}
+	return ans
+}
+
+func (be SubnetOps) List(parms map[string]string) (interface{}, error) {
+	params := subnets.NewListSubnetsParams()
+	if listLimit != -1 {
+		t1 := int64(listLimit)
+		params = params.WithLimit(&t1)
+	}
+	if listOffset != -1 {
+		t1 := int64(listOffset)
+		params = params.WithOffset(&t1)
+	}
+	for k, v := range parms {
+		switch k {
+		case "Name":
+			params = params.WithName(&v)
+		case "Subnet":
+			params = params.WithSubnet(&v)
+		case "Strategy":
+			params = params.WithStrategy(&v)
+		case "NextServer":
+			params = params.WithNextServer(&v)
+		}
+	}
+
+	d, e := session.Subnets.ListSubnets(params, basicAuth)
 	if e != nil {
 		return nil, e
 	}

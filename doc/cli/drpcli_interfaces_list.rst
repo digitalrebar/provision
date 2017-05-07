@@ -6,11 +6,11 @@ List all interfaces
 Synopsis
 --------
 
-List all interfaces
+This will list all interfaces by default.
 
 ::
 
-    drpcli interfaces list
+    drpcli interfaces list [key=value] ...
 
 Options inherited from parent commands
 --------------------------------------

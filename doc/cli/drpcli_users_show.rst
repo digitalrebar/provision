@@ -6,7 +6,22 @@ Show a single user by id
 Synopsis
 --------
 
-Show a single user by id
+This will show a users.
+
+You may specify the id in the request by the using normal key or by
+index.
+
+Functional Indexs:
+
+-  Name = string
+
+When using the index name, use the following form:
+
+-  Index:Value
+
+Example:
+
+-  e.g: Name:fred
 
 ::
 

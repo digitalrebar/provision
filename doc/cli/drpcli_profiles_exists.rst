@@ -6,7 +6,22 @@ See if a profile exists by id
 Synopsis
 --------
 
-See if a profile exists by id
+This will detect if a profiles exists.
+
+You may specify the id in the request by the using normal key or by
+index.
+
+Functional Indexs:
+
+-  Name = string
+
+When using the index name, use the following form:
+
+-  Index:Value
+
+Example:
+
+-  e.g: Name:fred
 
 ::
 

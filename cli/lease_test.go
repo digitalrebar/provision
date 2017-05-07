@@ -5,6 +5,10 @@ import (
 )
 
 var leaseDefaultListString string = "[]\n"
+var leaseEmptyListString string = "[]\n"
+
+var leaseAddrErrorString string = "Error: Addr must be an IP address\n\n"
+var leaseExpireTimeErrorString string = "Error: ExpireTime is not valid: parsing time \"false\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"false\" as \"2006\"\n\n"
 
 var leaseShowNoArgErrorString string = "Error: drpcli leases show [id] requires 1 argument\n"
 var leaseShowTooManyArgErrorString string = "Error: drpcli leases show [id] requires 1 argument\n"
@@ -125,6 +129,22 @@ func TestLeaseCli(t *testing.T) {
 		CliTest{false, false, []string{"leases", "create", leaseCreateInputString}, noStdinString, leaseCreateJohnString, noErrorString},
 		CliTest{false, true, []string{"leases", "create", leaseCreateInputString}, noStdinString, noContentString, leaseCreateDuplicateErrorString},
 		CliTest{false, false, []string{"leases", "list"}, noStdinString, leaseListLeasesString, noErrorString},
+		CliTest{false, false, []string{"leases", "list", "--limit=0"}, noStdinString, leaseEmptyListString, noErrorString},
+		CliTest{false, false, []string{"leases", "list", "--limit=10", "--offset=0"}, noStdinString, leaseListLeasesString, noErrorString},
+		CliTest{false, false, []string{"leases", "list", "--limit=10", "--offset=10"}, noStdinString, leaseEmptyListString, noErrorString},
+		CliTest{false, true, []string{"leases", "list", "--limit=-10", "--offset=0"}, noStdinString, noContentString, limitNegativeError},
+		CliTest{false, true, []string{"leases", "list", "--limit=10", "--offset=-10"}, noStdinString, noContentString, offsetNegativeError},
+		CliTest{false, false, []string{"leases", "list", "--limit=-1", "--offset=-1"}, noStdinString, leaseListLeasesString, noErrorString},
+		CliTest{false, false, []string{"leases", "list", "Strategy=fred"}, noStdinString, leaseEmptyListString, noErrorString},
+		CliTest{false, false, []string{"leases", "list", "Strategy=MAC"}, noStdinString, leaseListLeasesString, noErrorString},
+		CliTest{false, false, []string{"leases", "list", "Token=08:00:27:33:77:de"}, noStdinString, leaseListLeasesString, noErrorString},
+		CliTest{false, false, []string{"leases", "list", "Token=false"}, noStdinString, leaseEmptyListString, noErrorString},
+		CliTest{false, false, []string{"leases", "list", "Addr=192.168.100.110"}, noStdinString, leaseListLeasesString, noErrorString},
+		CliTest{false, false, []string{"leases", "list", "Addr=1.1.1.1"}, noStdinString, leaseEmptyListString, noErrorString},
+		CliTest{false, true, []string{"leases", "list", "Addr=fred"}, noStdinString, noContentString, leaseAddrErrorString},
+		CliTest{false, false, []string{"leases", "list", "ExpireTime=2016-03-31T00:11:21.028-05:00"}, noStdinString, leaseEmptyListString, noErrorString},
+		CliTest{false, false, []string{"leases", "list", "ExpireTime=2017-03-31T00:11:21.028-05:00"}, noStdinString, leaseListLeasesString, noErrorString},
+		CliTest{false, true, []string{"leases", "list", "ExpireTime=false"}, noStdinString, noContentString, leaseExpireTimeErrorString},
 
 		CliTest{true, true, []string{"leases", "show"}, noStdinString, noContentString, leaseShowNoArgErrorString},
 		CliTest{true, true, []string{"leases", "show", "john", "john2"}, noStdinString, noContentString, leaseShowTooManyArgErrorString},

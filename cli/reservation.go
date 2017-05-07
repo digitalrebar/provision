@@ -3,6 +3,7 @@ package cli
 import (
 	"fmt"
 
+	"github.com/digitalrebar/provision/backend"
 	"github.com/digitalrebar/provision/client/reservations"
 	"github.com/digitalrebar/provision/models"
 	"github.com/spf13/cobra"
@@ -22,8 +23,38 @@ func (be ReservationOps) GetId(obj interface{}) (string, error) {
 	return reservation.Addr.String(), nil
 }
 
-func (be ReservationOps) List() (interface{}, error) {
-	d, e := session.Reservations.ListReservations(reservations.NewListReservationsParams(), basicAuth)
+func (be ReservationOps) GetIndexes() map[string]string {
+	b := &backend.Reservation{}
+	ans := map[string]string{}
+	for k, v := range b.Indexes() {
+		ans[k] = v.Type
+	}
+	return ans
+}
+
+func (be ReservationOps) List(parms map[string]string) (interface{}, error) {
+	params := reservations.NewListReservationsParams()
+	if listLimit != -1 {
+		t1 := int64(listLimit)
+		params = params.WithLimit(&t1)
+	}
+	if listOffset != -1 {
+		t1 := int64(listOffset)
+		params = params.WithOffset(&t1)
+	}
+	for k, v := range parms {
+		switch k {
+		case "Addr":
+			params = params.WithAddr(&v)
+		case "Token":
+			params = params.WithToken(&v)
+		case "Strategy":
+			params = params.WithStrategy(&v)
+		case "NextServer":
+			params = params.WithNextServer(&v)
+		}
+	}
+	d, e := session.Reservations.ListReservations(params, basicAuth)
 	if e != nil {
 		return nil, e
 	}

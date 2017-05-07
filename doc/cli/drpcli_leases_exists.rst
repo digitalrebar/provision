@@ -6,7 +6,25 @@ See if a lease exists by id
 Synopsis
 --------
 
-See if a lease exists by id
+This will detect if a leases exists.
+
+You may specify the id in the request by the using normal key or by
+index.
+
+Functional Indexs:
+
+-  Addr = IP Address
+-  Token = string
+-  Strategy = string
+-  ExpireTime = Date/Time string
+
+When using the index name, use the following form:
+
+-  Index:Value
+
+Example:
+
+-  e.g: ExpireTime:fred
 
 ::
 

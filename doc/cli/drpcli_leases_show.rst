@@ -6,7 +6,25 @@ Show a single lease by id
 Synopsis
 --------
 
-Show a single lease by id
+This will show a leases.
+
+You may specify the id in the request by the using normal key or by
+index.
+
+Functional Indexs:
+
+-  Addr = IP Address
+-  Token = string
+-  Strategy = string
+-  ExpireTime = Date/Time string
+
+When using the index name, use the following form:
+
+-  Index:Value
+
+Example:
+
+-  e.g: ExpireTime:fred
 
 ::
 

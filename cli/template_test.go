@@ -7,6 +7,8 @@ import (
 	"testing"
 )
 
+var templateEmptyListString string = "[]\n"
+
 var templateDefaultListString string = `[
   {
     "Contents": "exit\n",
@@ -53,6 +55,13 @@ var templateCreateJohnString string = `{
 `
 var templateCreateDuplicateErrorString = "Error: dataTracker create templates: john already exists\n\n"
 
+var templateListJohnOnlyString = `[
+  {
+    "Contents": "John Rules",
+    "ID": "john"
+  }
+]
+`
 var templateListBothEnvsString = `[
   {
     "Contents": "John Rules",
@@ -159,6 +168,14 @@ func TestTemplateCli(t *testing.T) {
 		CliTest{false, false, []string{"templates", "create", templateCreateInputString}, noStdinString, templateCreateJohnString, noErrorString},
 		CliTest{false, true, []string{"templates", "create", templateCreateInputString}, noStdinString, noContentString, templateCreateDuplicateErrorString},
 		CliTest{false, false, []string{"templates", "list"}, noStdinString, templateListBothEnvsString, noErrorString},
+		CliTest{false, false, []string{"templates", "list", "--limit=0"}, noStdinString, templateEmptyListString, noErrorString},
+		CliTest{false, false, []string{"templates", "list", "--limit=10", "--offset=0"}, noStdinString, templateListBothEnvsString, noErrorString},
+		CliTest{false, false, []string{"templates", "list", "--limit=10", "--offset=10"}, noStdinString, templateEmptyListString, noErrorString},
+		CliTest{false, true, []string{"templates", "list", "--limit=-10", "--offset=0"}, noStdinString, noContentString, limitNegativeError},
+		CliTest{false, true, []string{"templates", "list", "--limit=10", "--offset=-10"}, noStdinString, noContentString, offsetNegativeError},
+		CliTest{false, false, []string{"templates", "list", "--limit=-1", "--offset=-1"}, noStdinString, templateListBothEnvsString, noErrorString},
+		CliTest{false, false, []string{"templates", "list", "ID=fred"}, noStdinString, templateEmptyListString, noErrorString},
+		CliTest{false, false, []string{"templates", "list", "ID=john"}, noStdinString, templateListJohnOnlyString, noErrorString},
 
 		CliTest{true, true, []string{"templates", "show"}, noStdinString, noContentString, templateShowNoArgErrorString},
 		CliTest{true, true, []string{"templates", "show", "john", "john2"}, noStdinString, noContentString, templateShowTooManyArgErrorString},

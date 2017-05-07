@@ -6,6 +6,7 @@ import (
 
 	"github.com/VictorLowther/jsonpatch2"
 	"github.com/VictorLowther/jsonpatch2/utils"
+	"github.com/digitalrebar/provision/backend"
 	"github.com/digitalrebar/provision/client/machines"
 	"github.com/digitalrebar/provision/models"
 	"github.com/ghodss/yaml"
@@ -27,8 +28,38 @@ func (be MachineOps) GetId(obj interface{}) (string, error) {
 	return machine.UUID.String(), nil
 }
 
-func (be MachineOps) List() (interface{}, error) {
-	d, e := session.Machines.ListMachines(machines.NewListMachinesParams(), basicAuth)
+func (be MachineOps) GetIndexes() map[string]string {
+	b := &backend.Machine{}
+	ans := map[string]string{}
+	for k, v := range b.Indexes() {
+		ans[k] = v.Type
+	}
+	return ans
+}
+
+func (be MachineOps) List(parms map[string]string) (interface{}, error) {
+	params := machines.NewListMachinesParams()
+	if listLimit != -1 {
+		t1 := int64(listLimit)
+		params = params.WithLimit(&t1)
+	}
+	if listOffset != -1 {
+		t1 := int64(listOffset)
+		params = params.WithOffset(&t1)
+	}
+	for k, v := range parms {
+		switch k {
+		case "Name":
+			params = params.WithName(&v)
+		case "BootEnv":
+			params = params.WithBootEnv(&v)
+		case "UUID":
+			params = params.WithUUID(&v)
+		case "Address":
+			params = params.WithAddress(&v)
+		}
+	}
+	d, e := session.Machines.ListMachines(params, basicAuth)
 	if e != nil {
 		return nil, e
 	}

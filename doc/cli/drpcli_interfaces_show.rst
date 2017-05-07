@@ -6,7 +6,7 @@ Show a single interface by id
 Synopsis
 --------
 
-Show a single interface by id
+This will show a interfaces.
 
 ::
 

@@ -6,7 +6,25 @@ See if a machine exists by id
 Synopsis
 --------
 
-See if a machine exists by id
+This will detect if a machines exists.
+
+You may specify the id in the request by the using normal key or by
+index.
+
+Functional Indexs:
+
+-  Address = IP Address
+-  Uuid = UUID string
+-  Name = string
+-  BootEnv = string
+
+When using the index name, use the following form:
+
+-  Index:Value
+
+Example:
+
+-  e.g: BootEnv:fred
 
 ::
 

@@ -19,7 +19,6 @@ these models and how to build them.  The :ref:`rs_cli` describes the Command Lin
 
 This section will describe its use and role in the system.
 
-
 .. _rs_provisioner_models:
 
 Provisioner Models

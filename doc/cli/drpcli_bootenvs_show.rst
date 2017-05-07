@@ -6,7 +6,24 @@ Show a single bootenv by id
 Synopsis
 --------
 
-Show a single bootenv by id
+This will show a bootenvs.
+
+You may specify the id in the request by the using normal key or by
+index.
+
+Functional Indexs:
+
+-  OnlyUnknown = boolean
+-  Name = string
+-  Available = boolean
+
+When using the index name, use the following form:
+
+-  Index:Value
+
+Example:
+
+-  e.g: Available:fred
 
 ::
 

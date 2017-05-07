@@ -6,7 +6,7 @@ See if a interface exists by id
 Synopsis
 --------
 
-See if a interface exists by id
+This will detect if a interfaces exists.
 
 ::
 

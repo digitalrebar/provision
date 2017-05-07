@@ -3,6 +3,7 @@ package cli
 import (
 	"fmt"
 
+	"github.com/digitalrebar/provision/backend"
 	"github.com/digitalrebar/provision/client/leases"
 	"github.com/digitalrebar/provision/models"
 	"github.com/go-openapi/strfmt"
@@ -32,8 +33,38 @@ func (be LeaseOps) GetId(obj interface{}) (string, error) {
 	return lease.Addr.String(), nil
 }
 
-func (be LeaseOps) List() (interface{}, error) {
-	d, e := session.Leases.ListLeases(leases.NewListLeasesParams(), basicAuth)
+func (be LeaseOps) GetIndexes() map[string]string {
+	b := &backend.Lease{}
+	ans := map[string]string{}
+	for k, v := range b.Indexes() {
+		ans[k] = v.Type
+	}
+	return ans
+}
+
+func (be LeaseOps) List(parms map[string]string) (interface{}, error) {
+	params := leases.NewListLeasesParams()
+	if listLimit != -1 {
+		t1 := int64(listLimit)
+		params = params.WithLimit(&t1)
+	}
+	if listOffset != -1 {
+		t1 := int64(listOffset)
+		params = params.WithOffset(&t1)
+	}
+	for k, v := range parms {
+		switch k {
+		case "Addr":
+			params = params.WithAddr(&v)
+		case "Token":
+			params = params.WithToken(&v)
+		case "Strategy":
+			params = params.WithStrategy(&v)
+		case "ExpireTime":
+			params = params.WithExpireTime(&v)
+		}
+	}
+	d, e := session.Leases.ListLeases(params, basicAuth)
 	if e != nil {
 		return nil, e
 	}
