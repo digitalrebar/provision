@@ -3,6 +3,7 @@ package cli
 import (
 	"fmt"
 
+	"github.com/digitalrebar/provision/backend"
 	"github.com/digitalrebar/provision/client/leases"
 	"github.com/digitalrebar/provision/models"
 	"github.com/go-openapi/strfmt"
@@ -33,7 +34,12 @@ func (be LeaseOps) GetId(obj interface{}) (string, error) {
 }
 
 func (be LeaseOps) GetIndexes() map[string]string {
-	return map[string]string{"Addr": "IP Address", "Token": "string", "Strategy": "string", "ExpireTime": "TimeDate"}
+	b := &backend.Lease{}
+	ans := map[string]string{}
+	for k, v := range b.Indexes() {
+		ans[k] = v.Type
+	}
+	return ans
 }
 
 func (be LeaseOps) List(parms map[string]string) (interface{}, error) {

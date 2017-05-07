@@ -6,7 +6,25 @@ Show a single reservation by id
 Synopsis
 --------
 
-Show a single reservation by id
+This will show a reservations.
+
+You may specify the id in the request by the using normal key or by
+index.
+
+Functional Indexs:
+
+-  Strategy = string
+-  NextServer = IP Address
+-  Addr = IP Address
+-  Token = string
+
+When using the index name, use the following form:
+
+-  Index:Value
+
+Example:
+
+-  e.g: Token:fred
 
 ::
 

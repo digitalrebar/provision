@@ -6,7 +6,24 @@ See if a bootenv exists by id
 Synopsis
 --------
 
-See if a bootenv exists by id
+This will detect if a bootenvs exists.
+
+You may specify the id in the request by the using normal key or by
+index.
+
+Functional Indexs:
+
+-  OnlyUnknown = boolean
+-  Name = string
+-  Available = boolean
+
+When using the index name, use the following form:
+
+-  Index:Value
+
+Example:
+
+-  e.g: Available:fred
 
 ::
 

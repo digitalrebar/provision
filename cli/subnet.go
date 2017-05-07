@@ -3,6 +3,7 @@ package cli
 import (
 	"fmt"
 
+	"github.com/digitalrebar/provision/backend"
 	"github.com/digitalrebar/provision/client/subnets"
 	"github.com/digitalrebar/provision/models"
 	"github.com/spf13/cobra"
@@ -23,7 +24,12 @@ func (be SubnetOps) GetId(obj interface{}) (string, error) {
 }
 
 func (be SubnetOps) GetIndexes() map[string]string {
-	return map[string]string{"Name": "string", "Subnet": "CIDR IP Address", "Strategy": "string", "NextServer": "IP Address"}
+	b := &backend.Subnet{}
+	ans := map[string]string{}
+	for k, v := range b.Indexes() {
+		ans[k] = v.Type
+	}
+	return ans
 }
 
 func (be SubnetOps) List(parms map[string]string) (interface{}, error) {

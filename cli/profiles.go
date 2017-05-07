@@ -3,6 +3,7 @@ package cli
 import (
 	"fmt"
 
+	"github.com/digitalrebar/provision/backend"
 	"github.com/digitalrebar/provision/client/profiles"
 	"github.com/digitalrebar/provision/models"
 	"github.com/ghodss/yaml"
@@ -24,7 +25,12 @@ func (be ProfileOps) GetId(obj interface{}) (string, error) {
 }
 
 func (be ProfileOps) GetIndexes() map[string]string {
-	return map[string]string{"Name": "string"}
+	b := &backend.Profile{}
+	ans := map[string]string{}
+	for k, v := range b.Indexes() {
+		ans[k] = v.Type
+	}
+	return ans
 }
 
 func (be ProfileOps) List(parms map[string]string) (interface{}, error) {

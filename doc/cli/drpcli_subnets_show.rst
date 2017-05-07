@@ -6,7 +6,25 @@ Show a single subnet by id
 Synopsis
 --------
 
-Show a single subnet by id
+This will show a subnets.
+
+You may specify the id in the request by the using normal key or by
+index.
+
+Functional Indexs:
+
+-  NextServer = IP Address
+-  Subnet = CIDR Address
+-  Name = string
+-  Strategy = string
+
+When using the index name, use the following form:
+
+-  Index:Value
+
+Example:
+
+-  e.g: Strategy:fred
 
 ::
 

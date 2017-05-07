@@ -15,10 +15,10 @@ You may specify:
 
 Functional Indexs:
 
--  Name = string
--  Subnet = CIDR IP Address
--  Strategy = string
 -  NextServer = IP Address
+-  Subnet = CIDR Address
+-  Name = string
+-  Strategy = string
 
 Functions:
 
@@ -34,11 +34,10 @@ Functions:
 
 Example:
 
--  NextServer=fred - returns items named fred
--  NextServer=Lt(fred) - returns items that alphabetically less than
-   fred.
--  NextServer=Lt(fred)&Available=true - returns items with Name less
-   than fred and Available is true
+-  Strategy=fred - returns items named fred
+-  Strategy=Lt(fred) - returns items that alphabetically less than fred.
+-  Strategy=Lt(fred)&Available=true - returns items with Name less than
+   fred and Available is true
 
 ::
 

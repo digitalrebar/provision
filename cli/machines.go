@@ -6,6 +6,7 @@ import (
 
 	"github.com/VictorLowther/jsonpatch2"
 	"github.com/VictorLowther/jsonpatch2/utils"
+	"github.com/digitalrebar/provision/backend"
 	"github.com/digitalrebar/provision/client/machines"
 	"github.com/digitalrebar/provision/models"
 	"github.com/ghodss/yaml"
@@ -28,7 +29,12 @@ func (be MachineOps) GetId(obj interface{}) (string, error) {
 }
 
 func (be MachineOps) GetIndexes() map[string]string {
-	return map[string]string{"Name": "string", "BootEnv": "string", "UUID": "uuid string", "Address": "IP Address"}
+	b := &backend.Machine{}
+	ans := map[string]string{}
+	for k, v := range b.Indexes() {
+		ans[k] = v.Type
+	}
+	return ans
 }
 
 func (be MachineOps) List(parms map[string]string) (interface{}, error) {

@@ -16,8 +16,8 @@ You may specify:
 Functional Indexs:
 
 -  Name = string
--  OnlyUnknown = boolean
 -  Available = boolean
+-  OnlyUnknown = boolean
 
 Functions:
 
@@ -33,11 +33,11 @@ Functions:
 
 Example:
 
--  Available=fred - returns items named fred
--  Available=Lt(fred) - returns items that alphabetically less than
+-  OnlyUnknown=fred - returns items named fred
+-  OnlyUnknown=Lt(fred) - returns items that alphabetically less than
    fred.
--  Available=Lt(fred)&Available=true - returns items with Name less than
-   fred and Available is true
+-  OnlyUnknown=Lt(fred)&Available=true - returns items with Name less
+   than fred and Available is true
 
 ::
 

@@ -15,10 +15,10 @@ You may specify:
 
 Functional Indexs:
 
--  Strategy = string
--  NextServer = IP Address
 -  Addr = IP Address
 -  Token = string
+-  Strategy = string
+-  NextServer = IP Address
 
 Functions:
 
@@ -34,10 +34,11 @@ Functions:
 
 Example:
 
--  Token=fred - returns items named fred
--  Token=Lt(fred) - returns items that alphabetically less than fred.
--  Token=Lt(fred)&Available=true - returns items with Name less than
-   fred and Available is true
+-  NextServer=fred - returns items named fred
+-  NextServer=Lt(fred) - returns items that alphabetically less than
+   fred.
+-  NextServer=Lt(fred)&Available=true - returns items with Name less
+   than fred and Available is true
 
 ::
 

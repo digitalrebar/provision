@@ -3,6 +3,7 @@ package cli
 import (
 	"fmt"
 
+	"github.com/digitalrebar/provision/backend"
 	"github.com/digitalrebar/provision/client/reservations"
 	"github.com/digitalrebar/provision/models"
 	"github.com/spf13/cobra"
@@ -23,7 +24,12 @@ func (be ReservationOps) GetId(obj interface{}) (string, error) {
 }
 
 func (be ReservationOps) GetIndexes() map[string]string {
-	return map[string]string{"Addr": "IP Address", "Token": "string", "Strategy": "string", "NextServer": "IP Address"}
+	b := &backend.Reservation{}
+	ans := map[string]string{}
+	for k, v := range b.Indexes() {
+		ans[k] = v.Type
+	}
+	return ans
 }
 
 func (be ReservationOps) List(parms map[string]string) (interface{}, error) {

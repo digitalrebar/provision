@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 
+	"github.com/digitalrebar/provision/backend"
 	"github.com/digitalrebar/provision/client/templates"
 	"github.com/digitalrebar/provision/models"
 	"github.com/spf13/cobra"
@@ -26,7 +27,12 @@ func (be TemplateOps) GetId(obj interface{}) (string, error) {
 }
 
 func (be TemplateOps) GetIndexes() map[string]string {
-	return map[string]string{"ID": "string"}
+	b := &backend.Template{}
+	ans := map[string]string{}
+	for k, v := range b.Indexes() {
+		ans[k] = v.Type
+	}
+	return ans
 }
 
 func (be TemplateOps) List(parms map[string]string) (interface{}, error) {

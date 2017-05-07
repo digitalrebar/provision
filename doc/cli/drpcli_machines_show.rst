@@ -6,7 +6,25 @@ Show a single machine by id
 Synopsis
 --------
 
-Show a single machine by id
+This will show a machines.
+
+You may specify the id in the request by the using normal key or by
+index.
+
+Functional Indexs:
+
+-  Address = IP Address
+-  Uuid = UUID string
+-  Name = string
+-  BootEnv = string
+
+When using the index name, use the following form:
+
+-  Index:Value
+
+Example:
+
+-  e.g: BootEnv:fred
 
 ::
 

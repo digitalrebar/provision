@@ -217,6 +217,7 @@ type ListOp interface {
 
 type GetOp interface {
 	Get(string) (interface{}, error)
+	GetIndexes() map[string]string
 }
 
 type ModOps interface {
@@ -280,6 +281,9 @@ func commonOps(singularName, name string, pobj interface{}) (commands []*cobra.C
 			idxstr := ""
 			idxsingle := "notallowed"
 			for k, v := range idxs {
+				if k == "Key" {
+					continue
+				}
 				idxsingle = k
 				idxstr += fmt.Sprintf("*  %s = %s\n", k, v)
 			}
@@ -341,9 +345,39 @@ Example:
 
 	}
 	if gptrs, ok := pobj.(GetOp); ok {
+		idxs := gptrs.GetIndexes()
+		bigidxstr := ""
+		if len(idxs) > 0 {
+			idxstr := ""
+			idxsingle := "notallowed"
+			for k, v := range idxs {
+				if k == "Key" {
+					continue
+				}
+				idxsingle = k
+				idxstr += fmt.Sprintf("*  %s = %s\n", k, v)
+			}
+			bigidxstr = fmt.Sprintf(`
+You may specify the id in the request by the using normal key or by index.
+
+Functional Indexs:
+
+%s
+
+When using the index name, use the following form:
+
+* Index:Value
+
+Example:
+
+* e.g: %s:fred
+
+`, idxstr, idxsingle)
+		}
 		commands = append(commands, &cobra.Command{
 			Use:   "show [id]",
 			Short: fmt.Sprintf("Show a single %v by id", singularName),
+			Long:  fmt.Sprintf("This will show a %v.\n%s\n", name, bigidxstr),
 			RunE: func(c *cobra.Command, args []string) error {
 				if len(args) != 1 {
 					return fmt.Errorf("%v requires 1 argument", c.UseLine())
@@ -359,6 +393,7 @@ Example:
 		commands = append(commands, &cobra.Command{
 			Use:   "exists [id]",
 			Short: fmt.Sprintf("See if a %v exists by id", singularName),
+			Long:  fmt.Sprintf("This will detect if a %v exists.\n%s\n", name, bigidxstr),
 			RunE: func(c *cobra.Command, args []string) error {
 				if len(args) != 1 {
 					return fmt.Errorf("%v requires 1 argument", c.UseLine())

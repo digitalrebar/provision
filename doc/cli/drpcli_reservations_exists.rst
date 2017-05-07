@@ -6,7 +6,25 @@ See if a reservation exists by id
 Synopsis
 --------
 
-See if a reservation exists by id
+This will detect if a reservations exists.
+
+You may specify the id in the request by the using normal key or by
+index.
+
+Functional Indexs:
+
+-  Strategy = string
+-  NextServer = IP Address
+-  Addr = IP Address
+-  Token = string
+
+When using the index name, use the following form:
+
+-  Index:Value
+
+Example:
+
+-  e.g: Token:fred
 
 ::
 

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/digitalrebar/provision/backend"
 	"github.com/digitalrebar/provision/client/users"
 	"github.com/digitalrebar/provision/models"
 	"github.com/spf13/cobra"
@@ -24,7 +25,12 @@ func (be UserOps) GetId(obj interface{}) (string, error) {
 }
 
 func (be UserOps) GetIndexes() map[string]string {
-	return map[string]string{"Name": "string"}
+	b := &backend.User{}
+	ans := map[string]string{}
+	for k, v := range b.Indexes() {
+		ans[k] = v.Type
+	}
+	return ans
 }
 
 func (be UserOps) List(parms map[string]string) (interface{}, error) {
