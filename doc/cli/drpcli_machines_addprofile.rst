@@ -1,34 +1,16 @@
-drpcli subnets show
-===================
+drpcli machines addprofile
+==========================
 
-Show a single subnet by id
+Add profile to the machine's profile list
 
 Synopsis
 --------
 
-This will show a subnets.
-
-You may specify the id in the request by the using normal key or by
-index.
-
-Functional Indexs:
-
--  Name = string
--  NextServer = IP Address
--  Strategy = string
--  Subnet = CIDR Address
-
-When using the index name, use the following form:
-
--  Index:Value
-
-Example:
-
--  e.g: Subnet:fred
+Helper function to add a profile to the machine's profile list.
 
 ::
 
-    drpcli subnets show [id]
+    drpcli machines addprofile [id] [profile]
 
 Options inherited from parent commands
 --------------------------------------
@@ -45,5 +27,5 @@ Options inherited from parent commands
 SEE ALSO
 --------
 
--  `drpcli subnets <drpcli_subnets.html>`__ - Access CLI commands
-   relating to subnets
+-  `drpcli machines <drpcli_machines.html>`__ - Access CLI commands
+   relating to machines

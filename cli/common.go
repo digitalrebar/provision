@@ -11,6 +11,7 @@ import (
 	"net/url"
 	"os"
 	"reflect"
+	"sort"
 	"strings"
 
 	"github.com/ghodss/yaml"
@@ -278,14 +279,20 @@ func commonOps(singularName, name string, pobj interface{}) (commands []*cobra.C
 		idxs := ptrs.GetIndexes()
 		bigidxstr := ""
 		if len(idxs) > 0 {
+			keys := []string{}
+			for k := range idxs {
+				keys = append(keys, k)
+			}
+			sort.Strings(keys)
+
 			idxstr := ""
 			idxsingle := "notallowed"
-			for k, v := range idxs {
+			for _, k := range keys {
 				if k == "Key" {
 					continue
 				}
 				idxsingle = k
-				idxstr += fmt.Sprintf("*  %s = %s\n", k, v)
+				idxstr += fmt.Sprintf("*  %s = %s\n", k, idxs[k])
 			}
 			bigidxstr = fmt.Sprintf(`
 You may specify:
@@ -348,14 +355,20 @@ Example:
 		idxs := gptrs.GetIndexes()
 		bigidxstr := ""
 		if len(idxs) > 0 {
+			keys := []string{}
+			for k := range idxs {
+				keys = append(keys, k)
+			}
+			sort.Strings(keys)
+
 			idxstr := ""
 			idxsingle := "notallowed"
-			for k, v := range idxs {
+			for _, k := range keys {
 				if k == "Key" {
 					continue
 				}
 				idxsingle = k
-				idxstr += fmt.Sprintf("*  %s = %s\n", k, v)
+				idxstr += fmt.Sprintf("*  %s = %s\n", k, idxs[k])
 			}
 			bigidxstr = fmt.Sprintf(`
 You may specify the id in the request by the using normal key or by index.

@@ -14,9 +14,9 @@ index.
 Functional Indexs:
 
 -  Address = IP Address
--  Uuid = UUID string
--  Name = string
 -  BootEnv = string
+-  Name = string
+-  Uuid = UUID string
 
 When using the index name, use the following form:
 
@@ -24,7 +24,7 @@ When using the index name, use the following form:
 
 Example:
 
--  e.g: BootEnv:fred
+-  e.g: Uuid:fred
 
 ::
 

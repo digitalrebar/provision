@@ -13,9 +13,9 @@ index.
 
 Functional Indexs:
 
--  OnlyUnknown = boolean
--  Name = string
 -  Available = boolean
+-  Name = string
+-  OnlyUnknown = boolean
 
 When using the index name, use the following form:
 
@@ -23,7 +23,7 @@ When using the index name, use the following form:
 
 Example:
 
--  e.g: Available:fred
+-  e.g: OnlyUnknown:fred
 
 ::
 

@@ -5,6 +5,9 @@ import (
 	"testing"
 )
 
+var machineAddProfileNoArgErrorString string = "Error: drpcli machines addprofile [id] [profile] requires 2 arguments\n"
+var machineRemoveProfileNoArgErrorString string = "Error: drpcli machines removeprofile [id] [profile] requires 2 arguments\n"
+
 var machineAddrErrorString string = "Error: Invalid address: fred\n\n"
 var machineExpireTimeErrorString string = "Error: Invalid UUID: false\n\n"
 
@@ -134,7 +137,7 @@ var machinePatchJohnString string = `{
 var machinePatchMissingBaseString string = `{
   "Address": "192.168.100.110",
   "BootEnv": "local",
-  "Description": "bootx64.efi",
+  "Description": "lpxelinux.0",
   "Errors": null,
   "Name": "john",
   "Profile": {
@@ -145,6 +148,66 @@ var machinePatchMissingBaseString string = `{
 }
 `
 var machinePatchJohnMissingErrorString string = "Error: machines: PATCH 3e7031fe-5555-45f1-835c-92541bc9cbd3: Not Found\n\n"
+
+var machineAddProfileJillString string = `{
+  "Address": "192.168.100.110",
+  "BootEnv": "local",
+  "Description": "lpxelinux.0",
+  "Errors": null,
+  "Name": "john",
+  "Profile": {
+    "Name": ""
+  },
+  "Profiles": [
+    "jill"
+  ],
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+}
+`
+var machineAddProfileJillJeanString string = `{
+  "Address": "192.168.100.110",
+  "BootEnv": "local",
+  "Description": "lpxelinux.0",
+  "Errors": null,
+  "Name": "john",
+  "Profile": {
+    "Name": ""
+  },
+  "Profiles": [
+    "jill",
+    "jean"
+  ],
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+}
+`
+var machineRemoveProfileJeanString string = `{
+  "Address": "192.168.100.110",
+  "BootEnv": "local",
+  "Description": "lpxelinux.0",
+  "Errors": null,
+  "Name": "john",
+  "Profile": {
+    "Name": ""
+  },
+  "Profiles": [
+    "jean"
+  ],
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+}
+`
+var machineRemoveProfileAllGoneString string = `{
+  "Address": "192.168.100.110",
+  "BootEnv": "local",
+  "Description": "lpxelinux.0",
+  "Errors": null,
+  "Name": "john",
+  "Profile": {
+    "Name": ""
+  },
+  "Profiles": [],
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+}
+`
 
 var machineDestroyNoArgErrorString string = "Error: drpcli machines destroy [id] requires 1 argument"
 var machineDestroyTooManyArgErrorString string = "Error: drpcli machines destroy [id] requires 1 argument"
@@ -185,7 +248,7 @@ var machineUpdateJohnWithParamsString string = `{
       "jj": 3
     }
   },
-  "Profiles": null,
+  "Profiles": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
 }
 `
@@ -281,6 +344,15 @@ func TestMachineCli(t *testing.T) {
 		CliTest{false, true, []string{"machines", "bootenv", "john", "john2"}, noStdinString, noContentString, machineBootEnvMissingMachineErrorString},
 		CliTest{false, true, []string{"machines", "bootenv", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "john2"}, noStdinString, noContentString, machineBootEnvBadBootEnvErrorString},
 		CliTest{false, false, []string{"machines", "bootenv", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "local"}, noStdinString, machineUpdateJohnString, noErrorString},
+
+		CliTest{true, true, []string{"machines", "addprofile"}, noStdinString, noContentString, machineAddProfileNoArgErrorString},
+		CliTest{false, false, []string{"machines", "addprofile", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "jill"}, noStdinString, machineAddProfileJillString, noErrorString},
+		CliTest{false, false, []string{"machines", "addprofile", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "jean"}, noStdinString, machineAddProfileJillJeanString, noErrorString},
+		CliTest{false, false, []string{"machines", "addprofile", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "jill"}, noStdinString, machineAddProfileJillJeanString, noErrorString},
+		CliTest{true, true, []string{"machines", "removeprofile"}, noStdinString, noContentString, machineRemoveProfileNoArgErrorString},
+		CliTest{false, false, []string{"machines", "removeprofile", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "justine"}, noStdinString, machineAddProfileJillJeanString, noErrorString},
+		CliTest{false, false, []string{"machines", "removeprofile", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "jill"}, noStdinString, machineRemoveProfileJeanString, noErrorString},
+		CliTest{false, false, []string{"machines", "removeprofile", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "jean"}, noStdinString, machineRemoveProfileAllGoneString, noErrorString},
 
 		CliTest{true, true, []string{"machines", "get"}, noStdinString, noContentString, machineGetNoArgErrorString},
 		CliTest{false, true, []string{"machines", "get", "john", "param", "john2"}, noStdinString, noContentString, machineGetMissingMachineErrorString},

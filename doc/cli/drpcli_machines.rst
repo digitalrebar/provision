@@ -25,6 +25,8 @@ SEE ALSO
 
 -  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
    DigitalRebar Provision API
+-  `drpcli machines addprofile <drpcli_machines_addprofile.html>`__ -
+   Add profile to the machine's profile list
 -  `drpcli machines bootenv <drpcli_machines_bootenv.html>`__ - Set the
    machine's bootenv
 -  `drpcli machines create <drpcli_machines_create.html>`__ - Create a
@@ -41,6 +43,9 @@ SEE ALSO
    all parameters for the machine
 -  `drpcli machines patch <drpcli_machines_patch.html>`__ - Patch
    machine with the passed-in JSON
+-  `drpcli machines
+   removeprofile <drpcli_machines_removeprofile.html>`__ - Set the
+   machine's bootenv
 -  `drpcli machines set <drpcli_machines_set.html>`__ - Set the
    machine's param to
 -  `drpcli machines show <drpcli_machines_show.html>`__ - Show a single
