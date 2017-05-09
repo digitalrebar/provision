@@ -15,10 +15,10 @@ You may specify:
 
 Functional Indexs:
 
--  ExpireTime = Date/Time string
 -  Addr = IP Address
--  Token = string
+-  ExpireTime = Date/Time string
 -  Strategy = string
+-  Token = string
 
 Functions:
 
@@ -34,9 +34,9 @@ Functions:
 
 Example:
 
--  Strategy=fred - returns items named fred
--  Strategy=Lt(fred) - returns items that alphabetically less than fred.
--  Strategy=Lt(fred)&Available=true - returns items with Name less than
+-  Token=fred - returns items named fred
+-  Token=Lt(fred) - returns items that alphabetically less than fred.
+-  Token=Lt(fred)&Available=true - returns items with Name less than
    fred and Available is true
 
 ::

@@ -15,10 +15,10 @@ You may specify:
 
 Functional Indexs:
 
--  BootEnv = string
 -  Address = IP Address
--  Uuid = UUID string
+-  BootEnv = string
 -  Name = string
+-  Uuid = UUID string
 
 Functions:
 
@@ -34,9 +34,9 @@ Functions:
 
 Example:
 
--  Name=fred - returns items named fred
--  Name=Lt(fred) - returns items that alphabetically less than fred.
--  Name=Lt(fred)&Available=true - returns items with Name less than fred
+-  Uuid=fred - returns items named fred
+-  Uuid=Lt(fred) - returns items that alphabetically less than fred.
+-  Uuid=Lt(fred)&Available=true - returns items with Name less than fred
    and Available is true
 
 ::

@@ -13,10 +13,10 @@ index.
 
 Functional Indexs:
 
--  NextServer = IP Address
--  Subnet = CIDR Address
 -  Name = string
+-  NextServer = IP Address
 -  Strategy = string
+-  Subnet = CIDR Address
 
 When using the index name, use the following form:
 
@@ -24,7 +24,7 @@ When using the index name, use the following form:
 
 Example:
 
--  e.g: Strategy:fred
+-  e.g: Subnet:fred
 
 ::
 

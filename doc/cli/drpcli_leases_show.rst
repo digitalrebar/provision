@@ -14,9 +14,9 @@ index.
 Functional Indexs:
 
 -  Addr = IP Address
--  Token = string
--  Strategy = string
 -  ExpireTime = Date/Time string
+-  Strategy = string
+-  Token = string
 
 When using the index name, use the following form:
 
@@ -24,7 +24,7 @@ When using the index name, use the following form:
 
 Example:
 
--  e.g: ExpireTime:fred
+-  e.g: Token:fred
 
 ::
 

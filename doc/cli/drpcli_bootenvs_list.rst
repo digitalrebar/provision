@@ -15,8 +15,8 @@ You may specify:
 
 Functional Indexs:
 
--  Name = string
 -  Available = boolean
+-  Name = string
 -  OnlyUnknown = boolean
 
 Functions:

@@ -13,9 +13,9 @@ index.
 
 Functional Indexs:
 
--  Strategy = string
--  NextServer = IP Address
 -  Addr = IP Address
+-  NextServer = IP Address
+-  Strategy = string
 -  Token = string
 
 When using the index name, use the following form:
