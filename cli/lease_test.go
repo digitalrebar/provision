@@ -29,7 +29,7 @@ var leaseExistsMissingJohnString string = "Error: leases GET: C0A8646F: Not Foun
 var leaseCreateNoArgErrorString string = "Error: drpcli leases create [json] requires 1 argument\n"
 var leaseCreateTooManyArgErrorString string = "Error: drpcli leases create [json] requires 1 argument\n"
 var leaseCreateBadJSONString = "asdgasdg"
-var leaseCreateBadJSONErrorString = "Error: Invalid lease object: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Lease\n\n"
+var leaseCreateBadJSONErrorString = "Error: Unable to create new lease: Invalid type passed to lease create\n\n"
 var leaseCreateInputString string = `{
   "Addr": "192.168.100.110",
   "ExpireTime": "2017-03-31T00:11:21.028-05:00",

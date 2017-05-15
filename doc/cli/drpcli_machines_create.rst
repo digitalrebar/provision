@@ -1,13 +1,17 @@
 drpcli machines create
 ======================
 
-Create a new machine with the passed-in JSON
+Create a new machine with the passed-in JSON or string key
 
 Synopsis
 --------
 
 As a useful shortcut, you can pass '-' to indicate that the JSON should
-be read from stdin
+be read from stdin.
+
+In either case, for the Machine, BootEnv, User, and Profile objects, a
+string may be provided to create a new empty object of that type. For
+User, BootEnv, Machine, and Profile, it will be the object's name.
 
 ::
 

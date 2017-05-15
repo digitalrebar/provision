@@ -422,8 +422,13 @@ Example:
 		if ptrs, ok := pobj.(ModOps); ok {
 			commands = append(commands, &cobra.Command{
 				Use:   "create [json]",
-				Short: fmt.Sprintf("Create a new %v with the passed-in JSON", singularName),
-				Long:  `As a useful shortcut, you can pass '-' to indicate that the JSON should be read from stdin`,
+				Short: fmt.Sprintf("Create a new %v with the passed-in JSON or string key", singularName),
+				Long: `
+As a useful shortcut, you can pass '-' to indicate that the JSON should be read from stdin.
+
+In either case, for the Machine, BootEnv, User, and Profile objects, a string may be provided to create a new
+empty object of that type.  For User, BootEnv, Machine, and Profile, it will be the object's name.
+`,
 				RunE: func(c *cobra.Command, args []string) error {
 					if len(args) != 1 {
 						return fmt.Errorf("%v requires 1 argument", c.UseLine())
@@ -439,10 +444,15 @@ Example:
 					} else {
 						buf = []byte(args[0])
 					}
-					obj := ptrs.GetType()
+					var obj interface{}
+					obj = ptrs.GetType()
 					err = yaml.Unmarshal(buf, obj)
 					if err != nil {
-						return fmt.Errorf("Invalid %v object: %v", singularName, err)
+						obj = ""
+						err2 := yaml.Unmarshal(buf, &obj)
+						if err2 != nil {
+							return fmt.Errorf("Invalid %v object: %v and %v", singularName, err, err2)
+						}
 					}
 					if data, err := ptrs.Create(obj); err != nil {
 						return generateError(err, "Unable to create new %v", singularName)

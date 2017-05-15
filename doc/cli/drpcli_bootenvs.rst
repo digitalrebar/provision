@@ -26,7 +26,7 @@ SEE ALSO
 -  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
    DigitalRebar Provision API
 -  `drpcli bootenvs create <drpcli_bootenvs_create.html>`__ - Create a
-   new bootenv with the passed-in JSON
+   new bootenv with the passed-in JSON or string key
 -  `drpcli bootenvs destroy <drpcli_bootenvs_destroy.html>`__ - Destroy
    bootenv by id
 -  `drpcli bootenvs exists <drpcli_bootenvs_exists.html>`__ - See if a

@@ -37,8 +37,10 @@ var machineExistsMissingJohnString string = "Error: machines GET: john: Not Foun
 
 var machineCreateNoArgErrorString string = "Error: drpcli machines create [json] requires 1 argument\n"
 var machineCreateTooManyArgErrorString string = "Error: drpcli machines create [json] requires 1 argument\n"
-var machineCreateBadJSONString = "asdgasdg"
-var machineCreateBadJSONErrorString = "Error: Invalid machine object: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Machine\n\n"
+var machineCreateBadJSONString = "{asdgasdg"
+var machineCreateBadJSONErrorString = "Error: Invalid machine object: error converting YAML to JSON: yaml: line 1: did not find expected ',' or '}' and error converting YAML to JSON: yaml: line 1: did not find expected ',' or '}'\n\n"
+var machineCreateBadJSON2String = "[asdgasdg]"
+var machineCreateBadJSON2ErrorString = "Error: Unable to create new machine: Invalid type passed to machine create\n\n"
 var machineCreateInputString string = `{
   "Address": "192.168.100.110",
   "name": "john",
@@ -58,6 +60,7 @@ var machineCreateJohnString string = `{
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
 }
 `
+
 var machineCreateDuplicateErrorString = "Error: dataTracker create machines: 3e7031fe-3062-45f1-835c-92541bc9cbd3 already exists\n\n"
 
 var machineListMachinesString = `[
@@ -280,6 +283,7 @@ func TestMachineCli(t *testing.T) {
 		CliTest{true, true, []string{"machines", "create"}, noStdinString, noContentString, machineCreateNoArgErrorString},
 		CliTest{true, true, []string{"machines", "create", "john", "john2"}, noStdinString, noContentString, machineCreateTooManyArgErrorString},
 		CliTest{false, true, []string{"machines", "create", machineCreateBadJSONString}, noStdinString, noContentString, machineCreateBadJSONErrorString},
+		CliTest{false, true, []string{"machines", "create", machineCreateBadJSON2String}, noStdinString, noContentString, machineCreateBadJSON2ErrorString},
 		CliTest{false, false, []string{"machines", "create", machineCreateInputString}, noStdinString, machineCreateJohnString, noErrorString},
 		CliTest{false, true, []string{"machines", "create", machineCreateInputString}, noStdinString, noContentString, machineCreateDuplicateErrorString},
 		CliTest{false, false, []string{"machines", "list"}, noStdinString, machineListMachinesString, noErrorString},

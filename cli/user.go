@@ -67,7 +67,11 @@ func (be UserOps) Get(id string) (interface{}, error) {
 func (be UserOps) Create(obj interface{}) (interface{}, error) {
 	user, ok := obj.(*models.User)
 	if !ok {
-		return nil, fmt.Errorf("Invalid type passed to user create")
+		name, ok := obj.(string)
+		if !ok {
+			return nil, fmt.Errorf("Invalid type passed to user create")
+		}
+		user = &models.User{Name: &name}
 	}
 	d, e := session.Users.CreateUser(users.NewCreateUserParams().WithBody(user), basicAuth)
 	if e != nil {

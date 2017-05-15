@@ -67,7 +67,11 @@ func (be ProfileOps) Get(id string) (interface{}, error) {
 func (be ProfileOps) Create(obj interface{}) (interface{}, error) {
 	profile, ok := obj.(*models.Profile)
 	if !ok {
-		return nil, fmt.Errorf("Invalid type passed to profile create")
+		profName, ok := obj.(string)
+		if !ok {
+			return nil, fmt.Errorf("Invalid type passed to profile create")
+		}
+		profile = &models.Profile{Name: &profName}
 	}
 	d, e := session.Profiles.CreateProfile(profiles.NewCreateProfileParams().WithBody(profile), basicAuth)
 	if e != nil {

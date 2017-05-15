@@ -31,8 +31,10 @@ var profileExistsMissingJohnString string = "Error: profiles GET: john2: Not Fou
 
 var profileCreateNoArgErrorString string = "Error: drpcli profiles create [json] requires 1 argument\n"
 var profileCreateTooManyArgErrorString string = "Error: drpcli profiles create [json] requires 1 argument\n"
-var profileCreateBadJSONString = "asdgasdg"
-var profileCreateBadJSONErrorString = "Error: Invalid profile object: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Profile\n\n"
+var profileCreateBadJSONString = "{asdgasdg"
+var profileCreateBadJSONErrorString = "Error: Invalid profile object: error converting YAML to JSON: yaml: line 1: did not find expected ',' or '}' and error converting YAML to JSON: yaml: line 1: did not find expected ',' or '}'\n\n"
+var profileCreateBadJSON2String = "[asdgasdg]"
+var profileCreateBadJSON2ErrorString = "Error: Unable to create new profile: Invalid type passed to profile create\n\n"
 var profileCreateInputString string = `{
   "Name": "john",
   "Params": {
@@ -176,6 +178,7 @@ func TestProfileCli(t *testing.T) {
 		CliTest{true, true, []string{"profiles", "create"}, noStdinString, noContentString, profileCreateNoArgErrorString},
 		CliTest{true, true, []string{"profiles", "create", "john", "john2"}, noStdinString, noContentString, profileCreateTooManyArgErrorString},
 		CliTest{false, true, []string{"profiles", "create", profileCreateBadJSONString}, noStdinString, noContentString, profileCreateBadJSONErrorString},
+		CliTest{false, true, []string{"profiles", "create", profileCreateBadJSON2String}, noStdinString, noContentString, profileCreateBadJSON2ErrorString},
 		CliTest{false, false, []string{"profiles", "create", profileCreateInputString}, noStdinString, profileCreateJohnString, noErrorString},
 		CliTest{false, true, []string{"profiles", "create", profileCreateInputString}, noStdinString, noContentString, profileCreateDuplicateErrorString},
 		CliTest{false, false, []string{"profiles", "list"}, noStdinString, profileListProfilesString, noErrorString},

@@ -27,8 +27,10 @@ var userExistsMissingIgnoreString string = "Error: users GET: ignore: Not Found\
 
 var userCreateNoArgErrorString string = "Error: drpcli users create [json] requires 1 argument\n"
 var userCreateTooManyArgErrorString string = "Error: drpcli users create [json] requires 1 argument\n"
-var userCreateBadJSONString = "asdgasdg"
-var userCreateBadJSONErrorString = "Error: Invalid user object: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.User\n\n"
+var userCreateBadJSONString = "{asdgasdg"
+var userCreateBadJSONErrorString = "Error: Invalid user object: error converting YAML to JSON: yaml: line 1: did not find expected ',' or '}' and error converting YAML to JSON: yaml: line 1: did not find expected ',' or '}'\n\n"
+var userCreateBadJSON2String = "[asdgasdg]"
+var userCreateBadJSON2ErrorString = "Error: Unable to create new user: Invalid type passed to user create\n\n"
 var userCreateInputString string = `{
   "Name": "john"
 }
@@ -37,6 +39,12 @@ var userCreateJohnString string = `{
   "Name": "john"
 }
 `
+var userCreateFredInputString string = `fred`
+var userCreateFredString string = `{
+  "Name": "fred"
+}
+`
+var userDestroyFredString string = "Deleted user fred\n"
 var userCreateDuplicateErrorString = "Error: dataTracker create users: john already exists\n\n"
 
 var userListJohnOnlyString = `[
@@ -118,7 +126,10 @@ func TestUserCli(t *testing.T) {
 		CliTest{true, true, []string{"users", "create"}, noStdinString, noContentString, userCreateNoArgErrorString},
 		CliTest{true, true, []string{"users", "create", "john", "john2"}, noStdinString, noContentString, userCreateTooManyArgErrorString},
 		CliTest{false, true, []string{"users", "create", userCreateBadJSONString}, noStdinString, noContentString, userCreateBadJSONErrorString},
+		CliTest{false, true, []string{"users", "create", userCreateBadJSON2String}, noStdinString, noContentString, userCreateBadJSON2ErrorString},
 		CliTest{false, false, []string{"users", "create", userCreateInputString}, noStdinString, userCreateJohnString, noErrorString},
+		CliTest{false, false, []string{"users", "create", userCreateFredInputString}, noStdinString, userCreateFredString, noErrorString},
+		CliTest{false, false, []string{"users", "destroy", userCreateFredInputString}, noStdinString, userDestroyFredString, noErrorString},
 		CliTest{false, true, []string{"users", "create", userCreateInputString}, noStdinString, noContentString, userCreateDuplicateErrorString},
 		CliTest{false, false, []string{"users", "list"}, noStdinString, userListBothEnvsString, noErrorString},
 
