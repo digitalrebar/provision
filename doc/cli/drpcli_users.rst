@@ -26,7 +26,7 @@ SEE ALSO
 -  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
    DigitalRebar Provision API
 -  `drpcli users create <drpcli_users_create.html>`__ - Create a new
-   user with the passed-in JSON
+   user with the passed-in JSON or string key
 -  `drpcli users destroy <drpcli_users_destroy.html>`__ - Destroy user
    by id
 -  `drpcli users exists <drpcli_users_exists.html>`__ - See if a user

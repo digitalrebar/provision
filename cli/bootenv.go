@@ -82,7 +82,11 @@ func (be BootEnvOps) Get(id string) (interface{}, error) {
 func (be BootEnvOps) Create(obj interface{}) (interface{}, error) {
 	bootenv, ok := obj.(*models.BootEnv)
 	if !ok {
-		return nil, fmt.Errorf("Invalid type passed to bootenv create")
+		name, ok := obj.(string)
+		if !ok {
+			return nil, fmt.Errorf("Invalid type passed to bootenv create")
+		}
+		bootenv = &models.BootEnv{Name: &name}
 	}
 	d, e := session.BootEnvs.CreateBootEnv(bootenvs.NewCreateBootEnvParams().WithBody(bootenv), basicAuth)
 	if e != nil {

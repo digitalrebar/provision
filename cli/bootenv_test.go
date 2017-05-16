@@ -93,8 +93,8 @@ var bootEnvExistsMissingJohnString string = "Error: bootenvs GET: john: Not Foun
 
 var bootEnvCreateNoArgErrorString string = "Error: drpcli bootenvs create [json] requires 1 argument\n"
 var bootEnvCreateTooManyArgErrorString string = "Error: drpcli bootenvs create [json] requires 1 argument\n"
-var bootEnvCreateBadJSONString = "asdgasdg"
-var bootEnvCreateBadJSONErrorString = "Error: Invalid bootenv object: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.BootEnv\n\n"
+var bootEnvCreateBadJSONString = "{asdgasdg}"
+var bootEnvCreateBadJSONErrorString = "Error: dataTracker create bootenvs: Empty key not allowed\n\n"
 var bootEnvCreateInputString string = `{
   "name": "john"
 }
@@ -117,6 +117,26 @@ var bootEnvCreateJohnString string = `{
   "Templates": null
 }
 `
+var bootEnvCreateFredInputString string = `fred`
+var bootEnvCreateFredString string = `{
+  "Available": false,
+  "BootParams": "",
+  "Errors": [
+    "bootenv: Missing elilo or pxelinux template"
+  ],
+  "Initrds": null,
+  "Kernel": "",
+  "Name": "fred",
+  "OS": {
+    "Name": ""
+  },
+  "OnlyUnknown": false,
+  "OptionalParams": null,
+  "RequiredParams": null,
+  "Templates": null
+}
+`
+var bootEnvDeleteFredString string = "Deleted bootenv fred\n"
 var bootEnvCreateDuplicateErrorString = "Error: dataTracker create bootenvs: john already exists\n\n"
 
 var bootEnvListBothEnvsString = `[
@@ -386,6 +406,8 @@ func TestBootEnvCli(t *testing.T) {
 		CliTest{true, true, []string{"bootenvs", "create", "john", "john2"}, noStdinString, noContentString, bootEnvCreateTooManyArgErrorString},
 		CliTest{false, true, []string{"bootenvs", "create", bootEnvCreateBadJSONString}, noStdinString, noContentString, bootEnvCreateBadJSONErrorString},
 		CliTest{false, false, []string{"bootenvs", "create", bootEnvCreateInputString}, noStdinString, bootEnvCreateJohnString, noErrorString},
+		CliTest{false, false, []string{"bootenvs", "create", bootEnvCreateFredInputString}, noStdinString, bootEnvCreateFredString, noErrorString},
+		CliTest{false, false, []string{"bootenvs", "destroy", bootEnvCreateFredInputString}, noStdinString, bootEnvDeleteFredString, noErrorString},
 		CliTest{false, true, []string{"bootenvs", "create", bootEnvCreateInputString}, noStdinString, noContentString, bootEnvCreateDuplicateErrorString},
 		CliTest{false, false, []string{"bootenvs", "list"}, noStdinString, bootEnvListBothEnvsString, noErrorString},
 

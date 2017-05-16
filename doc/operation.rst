@@ -26,7 +26,7 @@ Usually, you need to get or set the preferences for your system.
   ::
 
     # Show the current preference settings
-    drpcli prefs list  
+    drpcli prefs list
 
     # Or get a specific one
     drpcli prefs get unknownBootEnv
@@ -43,7 +43,7 @@ Set a preference
     drpcli prefs set unknownBootEnv discovery defaultBootEnv sledgehammer
 
 The system does validate values to make sure they are sane, so watch for errors.
-  
+
 Installing a "Canned" BootEnv
 -----------------------------
 
@@ -61,7 +61,7 @@ This is a CLI helper that is not in the API that will read the provided YAML :re
 upload the included or referenced :ref:`rs_model_template` files (from the *templates* peer directory), upload
 the :ref:`rs_model_bootenv`, and check for an existing ISO in the ISO repository.  If an ISO is not present in
 the already uploaded list, it will check a local isos directory for the file.  If that is not present and the
-:ref:`rs_model_bootenv` contains a URL for the ISO, the ISO will attempt to be downloaded to the local isos 
+:ref:`rs_model_bootenv` contains a URL for the ISO, the ISO will attempt to be downloaded to the local isos
 directory and then uploaded into Digital Rebar Provision.  Once upload, the ISO is "exploded" for access by
 machines in the file server file system space.
 
@@ -75,7 +75,7 @@ inclusion, but for now let's just focus on basic "cut and paste" style editing.
   ::
 
     drpcli bootenvs show ubuntu-16.04-install --format yaml > new-file.yaml
-    # Edit the file 
+    # Edit the file
     #  change the Name field to something new. *MUST DO THIS*
     #  change the OS->Name field to something new if you don't want to sure the same iso directory.
     #  Edit other parameters as needed
@@ -83,6 +83,17 @@ inclusion, but for now let's just focus on basic "cut and paste" style editing.
 
 This is a shallow clone.  It will reuse the templates unless you explictly modify them.  You could use the *install*
 command, but any new templates would need to be added to a *templates* directoy in the current directory.
+
+Creating a BootEnv
+------------------
+
+You can additionally create an empty :ref:`rs_model_bootenv` by doing the following:
+
+  ::
+
+    drpcli bootenvs create emtpy_bootenv
+
+This :ref:`rs_model_bootenv` will not be *Available*, but will allow for additional editing.
 
 Editing a BootEnv
 -----------------
@@ -133,6 +144,63 @@ We use **jq** to get a copy of the current template, edit it, and use the upload
 If you aleady had a template, you could replace it with the upload command.
 
 
+Creating a Profile
+------------------
+
+Sometimes you want to create a :ref:`rs_model_profile`.  You can create an empty profile by doing the following:
+
+  ::
+
+    drpcli profiles create '{ "Name": "myprofile" }'
+
+    or
+
+    drpcli profiles create myprofile
+
+If you just send a string, the system will attempt to use that as the Name of the profile.
+
+Additionally, JSON can be provided to fill in some default values.
+
+  ::
+
+    drpcli profiles create '{ "Name": "myprofile", "Params": { "string_param1": "string", "map_parm1": { "key1": "value", "key2": "value2" } } }'
+
+
+Deleting a Profile
+------------------
+
+Sometimes you want to delete a :ref:`rs_model_profile`.  You can use the destroy command in the profile CLI,
+but the :ref:`rs_model_profile` must not be in use.  Use the following:
+
+  ::
+
+    drpcli profiles destroy myprofile
+
+
+Altering an Existing Profile (including global)
+-----------------------------------------------
+
+Somtimes you want to update an existing :ref:`rs_model_profile`, including **global**.  You can *set*
+parameter values by doing the following:
+
+  ::
+
+    drpcli profiles set myprofile param crazycat to true
+    # These last two will show the value or the whole profile.
+    drpcli profiles get myprofile param crazycat
+    drpcli profiles show myprofile
+
+.. note:: Setting a parameter's value to **null** will clear it from the structure.
+
+Alternatively, you can also use the update command and send raw JSON similar to create.
+
+  ::
+
+    drpcli profiles update myprofile '{ "Params": { "string_param1": "string", "map_parm1": { "key1": "value", "key2": "value2" }, "crazycat": null } }'
+
+Update is an additive operation by default.  So, to remove items, **null** must be passed as
+the value of the key you wish to remove.
+
 Creating a Machine
 ------------------
 
@@ -156,6 +224,48 @@ This would do the same thing as above, but would create the :ref:`rs_model_machi
 
 .. note:: The :ref:`rs_model_bootenv` MUST exist or the create will fail.
 
+To create an empty :ref:`rs_model_machine`, do the following:
+
+  ::
+
+    drpcli machine create jill.rackn.com
+
+This will create an empty :ref:`rs_model_machine` named *jill.rackn.com*.
+
+.. note:: The *defaultBootEnv* :ref:`rs_model_bootenv` MUST exist or the create will fail.
+
+
+Adding or Removing a Profile to a Machine
+-----------------------------------------
+
+Sometimes you want to add or remove a :ref:`rs_model_profile` to a :ref:`rs_model_machine`.  To add a profile, do the following:
+
+  ::
+
+    drpcli machines addprofile "dff3a693-76a7-49ce-baaa-773cbb6d5092" myprofile
+
+
+To remove a profile, do the following:
+
+  ::
+
+    drpcli machines removeprofile "dff3a693-76a7-49ce-baaa-773cbb6d5092" myprofile
+
+The :ref:`rs_model_machine` update command can also be used to modify the list of :ref:`rs_model_profile`.
+
+
+Changing BootEnv on a Machine
+-----------------------------
+
+Sometimes you want to change the :ref:`rs_model_bootenv` associated with a :ref:`rs_model_machine`.  To do this, do the following:
+
+  ::
+
+    drpcli machines bootenv drpcli "dff3a693-76a7-49ce-baaa-773cbb6d5092" mybootenv
+
+.. note:: The :ref:`rs_model_bootenv` *MUST* exists or the command will fail.
+
+
 Creating a Reservation
 ----------------------
 
@@ -166,7 +276,7 @@ a specific IP Adress.  Here is an example command.
 
      drpcli reservations create '{ "Addr": "1.1.1.1", "Token": "08:00:27:33:77:de", "Strategy": "MAC" }'
 
-You can additionally add DHCP options or the Next Boot server.  
+You can additionally add DHCP options or the Next Boot server.
 
   ::
 

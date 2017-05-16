@@ -26,7 +26,7 @@ SEE ALSO
 -  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
    DigitalRebar Provision API
 -  `drpcli subnets create <drpcli_subnets_create.html>`__ - Create a new
-   subnet with the passed-in JSON
+   subnet with the passed-in JSON or string key
 -  `drpcli subnets destroy <drpcli_subnets_destroy.html>`__ - Destroy
    subnet by id
 -  `drpcli subnets exists <drpcli_subnets_exists.html>`__ - See if a

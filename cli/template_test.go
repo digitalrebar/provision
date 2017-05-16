@@ -42,7 +42,7 @@ var templateExistsMissingIgnoreString string = "Error: templates GET: ignore: No
 var templateCreateNoArgErrorString string = "Error: drpcli templates create [json] requires 1 argument\n"
 var templateCreateTooManyArgErrorString string = "Error: drpcli templates create [json] requires 1 argument\n"
 var templateCreateBadJSONString = "asdgasdg"
-var templateCreateBadJSONErrorString = "Error: Invalid template object: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Template\n\n"
+var templateCreateBadJSONErrorString = "Error: Unable to create new template: Invalid type passed to template create\n\n"
 var templateCreateInputString string = `{
   "Contents": "John Rules",
   "ID": "john"

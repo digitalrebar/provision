@@ -30,7 +30,7 @@ SEE ALSO
 -  `drpcli machines bootenv <drpcli_machines_bootenv.html>`__ - Set the
    machine's bootenv
 -  `drpcli machines create <drpcli_machines_create.html>`__ - Create a
-   new machine with the passed-in JSON
+   new machine with the passed-in JSON or string key
 -  `drpcli machines destroy <drpcli_machines_destroy.html>`__ - Destroy
    machine by id
 -  `drpcli machines exists <drpcli_machines_exists.html>`__ - See if a

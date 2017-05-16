@@ -26,7 +26,7 @@ SEE ALSO
 -  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
    DigitalRebar Provision API
 -  `drpcli profiles create <drpcli_profiles_create.html>`__ - Create a
-   new profile with the passed-in JSON
+   new profile with the passed-in JSON or string key
 -  `drpcli profiles destroy <drpcli_profiles_destroy.html>`__ - Destroy
    profile by id
 -  `drpcli profiles exists <drpcli_profiles_exists.html>`__ - See if a

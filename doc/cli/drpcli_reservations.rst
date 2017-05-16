@@ -26,7 +26,7 @@ SEE ALSO
 -  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
    DigitalRebar Provision API
 -  `drpcli reservations create <drpcli_reservations_create.html>`__ -
-   Create a new reservation with the passed-in JSON
+   Create a new reservation with the passed-in JSON or string key
 -  `drpcli reservations destroy <drpcli_reservations_destroy.html>`__ -
    Destroy reservation by id
 -  `drpcli reservations exists <drpcli_reservations_exists.html>`__ -

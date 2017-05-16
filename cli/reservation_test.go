@@ -30,7 +30,7 @@ var reservationExistsMissingIgnoreString string = "Error: reservation get: addre
 var reservationCreateNoArgErrorString string = "Error: drpcli reservations create [json] requires 1 argument\n"
 var reservationCreateTooManyArgErrorString string = "Error: drpcli reservations create [json] requires 1 argument\n"
 var reservationCreateBadJSONString = "asdgasdg"
-var reservationCreateBadJSONErrorString = "Error: Invalid reservation object: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Reservation\n\n"
+var reservationCreateBadJSONErrorString = "Error: Unable to create new reservation: Invalid type passed to reservation create\n\n"
 var reservationCreateInputString string = `{
   "Addr": "192.168.100.100",
   "NextServer": "2.2.2.2",

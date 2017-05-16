@@ -26,7 +26,7 @@ SEE ALSO
 -  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
    DigitalRebar Provision API
 -  `drpcli leases create <drpcli_leases_create.html>`__ - Create a new
-   lease with the passed-in JSON
+   lease with the passed-in JSON or string key
 -  `drpcli leases destroy <drpcli_leases_destroy.html>`__ - Destroy
    lease by id
 -  `drpcli leases exists <drpcli_leases_exists.html>`__ - See if a lease

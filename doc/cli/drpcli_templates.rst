@@ -26,7 +26,7 @@ SEE ALSO
 -  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
    DigitalRebar Provision API
 -  `drpcli templates create <drpcli_templates_create.html>`__ - Create a
-   new template with the passed-in JSON
+   new template with the passed-in JSON or string key
 -  `drpcli templates destroy <drpcli_templates_destroy.html>`__ -
    Destroy template by id
 -  `drpcli templates exists <drpcli_templates_exists.html>`__ - See if a

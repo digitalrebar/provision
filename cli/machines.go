@@ -77,7 +77,12 @@ func (be MachineOps) Get(id string) (interface{}, error) {
 func (be MachineOps) Create(obj interface{}) (interface{}, error) {
 	machine, ok := obj.(*models.Machine)
 	if !ok {
-		return nil, fmt.Errorf("Invalid type passed to machine create")
+		name, ok := obj.(string)
+		if !ok {
+			return nil, fmt.Errorf("Invalid type passed to machine create")
+		}
+		hostname := strfmt.Hostname(name)
+		machine = &models.Machine{Name: &hostname}
 	}
 	d, e := session.Machines.CreateMachine(machines.NewCreateMachineParams().WithBody(machine), basicAuth)
 	if e != nil {

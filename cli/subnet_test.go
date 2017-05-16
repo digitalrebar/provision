@@ -49,7 +49,7 @@ var subnetExistsMissingIgnoreString string = "Error: subnets GET: ignore: Not Fo
 var subnetCreateNoArgErrorString string = "Error: drpcli subnets create [json] requires 1 argument\n"
 var subnetCreateTooManyArgErrorString string = "Error: drpcli subnets create [json] requires 1 argument\n"
 var subnetCreateBadJSONString = "asdgasdg"
-var subnetCreateBadJSONErrorString = "Error: Invalid subnet object: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Subnet\n\n"
+var subnetCreateBadJSONErrorString = "Error: Unable to create new subnet: Invalid type passed to subnet create\n\n"
 var subnetCreateInputString string = `{
   "Name": "john",
   "ActiveEnd": "192.168.100.100",
