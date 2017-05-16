@@ -36,7 +36,7 @@ directory for object storage and file storage.  Additionally, *dr-provision* wil
 to use the best IP address for client's to talk to it, but if that detection fails, the IP
 address specified in by *--static-ip* will be used.
 
-The default user:password is ``rocketskates:r0cket8ts``.
+The default user:password is ``rocketskates:r0cketsk8ts``.
 
 The *tools/discovery-load.sh* command will use the default credentials to install
 the discovery, sledgehammer, and local boot environments.  This will download the
