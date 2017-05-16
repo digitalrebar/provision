@@ -111,6 +111,8 @@ If your SSL certificate is not valid, then follow the :ref:`rs_gen_cert` steps.
   ::
 
     sudo route add 255.255.255.255 192.168.100.1
+    # or < 10.9 OSX/Darwin
+    sudo route -n add -net 255.255.255.255 192.168.100.1
 
 
 Configuring the Server
@@ -147,7 +149,7 @@ Digital Rebar Provision CLI has a process that combines multiple calls to instal
 .. note:: The tools/discovery_load.sh script does this with the default credentials.
 
 
-Default Template Identity 
+Default Template Identity
 -------------------------
 
 _These settings apply to TEMPLATES not the API._
