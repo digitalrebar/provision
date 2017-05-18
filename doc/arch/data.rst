@@ -507,7 +507,11 @@ the User :ref:`rs_api` can be used to generate time-based, function restricted t
 :ref:`rs_model_template` provides a helper function to generate these for restricted machine access in the discovery and post-install
 process.
 
-More on access tokens and an control in :ref:`rs_operation`.
+The User Object is usually created with an unset password.  This allows for the User have no access but still access the system
+through constructed tokens.  The :ref:`rs_cli` has commands to set the password for a user.
+
+More on access tokens, user creation,  and an control in :ref:`rs_operation`.
+
 
 .. index::
   pair: Model; Prefs
