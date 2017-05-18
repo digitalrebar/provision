@@ -32,6 +32,8 @@ SEE ALSO
 -  `drpcli users exists <drpcli_users_exists.html>`__ - See if a user
    exists by id
 -  `drpcli users list <drpcli_users_list.html>`__ - List all users
+-  `drpcli users password <drpcli_users_password.html>`__ - Set the
+   password for this id
 -  `drpcli users patch <drpcli_users_patch.html>`__ - Patch user with
    the passed-in JSON
 -  `drpcli users show <drpcli_users_show.html>`__ - Show a single user

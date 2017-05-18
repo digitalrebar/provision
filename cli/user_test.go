@@ -117,6 +117,9 @@ var userTokenSuccessString string = `RE:
 }
 `
 
+var userPasswordNoArgsErrorString string = "Error: drpcli users password [id] [password] needs 2 args\n"
+var userPasswordNotFoundErrorString string = "Error: User GET: jill: Not Found\n\n"
+
 func TestUserCli(t *testing.T) {
 
 	tests := []CliTest{
@@ -167,6 +170,12 @@ func TestUserCli(t *testing.T) {
 		CliTest{false, false, []string{"users", "patch", userPatchBaseString, userPatchInputString}, noStdinString, userPatchJohnString, noErrorString},
 		CliTest{false, true, []string{"users", "patch", userPatchMissingBaseString, userPatchInputString}, noStdinString, noContentString, userPatchJohnMissingErrorString},
 		CliTest{false, false, []string{"users", "show", "john"}, noStdinString, userPatchJohnString, noErrorString},
+
+		CliTest{true, true, []string{"users", "password"}, noStdinString, noContentString, userPasswordNoArgsErrorString},
+		CliTest{true, true, []string{"users", "password", "one"}, noStdinString, noContentString, userPasswordNoArgsErrorString},
+		CliTest{true, true, []string{"users", "password", "one", "two", "three"}, noStdinString, noContentString, userPasswordNoArgsErrorString},
+		CliTest{false, true, []string{"users", "password", "jill", "june"}, noStdinString, noContentString, userPasswordNotFoundErrorString},
+		CliTest{false, false, []string{"users", "password", "john", "june"}, noStdinString, userPatchJohnString, noErrorString},
 
 		CliTest{true, true, []string{"users", "destroy"}, noStdinString, noContentString, userDestroyNoArgErrorString},
 		CliTest{true, true, []string{"users", "destroy", "john", "june"}, noStdinString, noContentString, userDestroyTooManyArgErrorString},

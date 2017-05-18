@@ -115,6 +115,28 @@ func addUserCommands() (res *cobra.Command) {
 	}
 	commands := commonOps(singularName, name, &UserOps{})
 
+	passwordCmd := &cobra.Command{
+		Use:   "password [id] [password]",
+		Short: "Set the password for this id",
+		Long:  "Set the password for this id",
+		RunE: func(c *cobra.Command, args []string) error {
+			if len(args) != 2 {
+				return fmt.Errorf("%v needs 2 args", c.UseLine())
+			}
+
+			dumpUsage = false
+
+			pwd := &models.UserPassword{Password: args[1]}
+			p := users.NewPutUserPasswordParams().WithName(args[0]).WithBody(pwd)
+			if d, e := session.Users.PutUserPassword(p, basicAuth); e != nil {
+				return generateError(e, "Error: putUserPassword: %v", e)
+			} else {
+				return prettyPrint(d.Payload)
+			}
+		},
+	}
+	commands = append(commands, passwordCmd)
+
 	tokenCmd := &cobra.Command{
 		Use:   "token [id] [ttl [ttl]] [scope [scope]] [action [action]] [specific [specific]]",
 		Short: "Get a login token for this user with optional parameters",

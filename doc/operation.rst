@@ -19,7 +19,7 @@ section for UI usage.
 
 
 Preference Setting
-------------------
+++++++++++++++++++
 
 Usually, you need to get or set the preferences for your system.
 
@@ -43,6 +43,11 @@ Set a preference
     drpcli prefs set unknownBootEnv discovery defaultBootEnv sledgehammer
 
 The system does validate values to make sure they are sane, so watch for errors.
+
+
+BootEnv Operations
+++++++++++++++++++
+
 
 Installing a "Canned" BootEnv
 -----------------------------
@@ -108,6 +113,8 @@ is optional, but I find YAML easier to edit.
     # Edit the discovery.yaml as you want
     drpcli bootenvs update discovery - < discovery.yaml
 
+Template Operations
++++++++++++++++++++
 
 Cloning a Template
 ------------------
@@ -143,6 +150,8 @@ Sometimes you want to edit an existing template.  To do this, do the following:
 We use **jq** to get a copy of the current template, edit it, and use the upload command to replace the template.
 If you aleady had a template, you could replace it with the upload command.
 
+Profile Operations
+++++++++++++++++++
 
 Creating a Profile
 ------------------
@@ -200,6 +209,9 @@ Alternatively, you can also use the update command and send raw JSON similar to 
 
 Update is an additive operation by default.  So, to remove items, **null** must be passed as
 the value of the key you wish to remove.
+
+Machine Operations
+++++++++++++++++++
 
 Creating a Machine
 ------------------
@@ -266,6 +278,9 @@ Sometimes you want to change the :ref:`rs_model_bootenv` associated with a :ref:
 .. note:: The :ref:`rs_model_bootenv` *MUST* exists or the command will fail.
 
 
+DHCP Operations
++++++++++++++++
+
 Creating a Reservation
 ----------------------
 
@@ -283,5 +298,95 @@ You can additionally add DHCP options or the Next Boot server.
      drpcli reservations create '{ "Addr": "1.1.1.5", "Token": "08:01:27:33:77:de", "Strategy": "MAC", "NextServer": "1.1.1.2", "Options": [ { "Code": 44, "Value": "1.1.1.1" } ] }'
 
 Remember to add an option 1 (netmask) if you are not using a subnet to fill in default options.
+
+User Operations
++++++++++++++++
+
+Creating a User
+---------------
+
+Sometimes you want to create a :ref:`rs_model_user`.  By default, the user will be created without
+a valid password.  The user will only be able to access the system through granted tokens.
+
+To create a user, do the following:
+
+  ::
+
+    drpcli users create fred
+
+.. note:: This :ref:`rs_model_user` will *NOT* be able to access the system without additional admin action.
+
+
+Granting a User Token
+---------------------
+
+Sometimes as an administrator, you would like to grant a limited use and scope access token to a user.  To
+grant a token, do the following:
+
+  ::
+
+    drpcli users token fred
+
+This will create a token that is valid for 1 hour and can do anything.  Additionally, the CLI can take
+additional parameters that alter the token's scope (model), actions, and key.
+
+  ::
+
+    drpcli users token fred ttl 600 scope users action password specfic fred
+
+This will create a token that is valid for 10 minutes and can only execute the password API call on the
+:ref:`rs_model_user` object named *fred*.
+
+To use the token in with the CLI, use the -T option.
+
+  ::
+
+    drpcli -T <token> bootenvs list
+
+
+Deleting a User
+---------------
+
+Sometimes you want to remove a reset from the system. To remove a user, do the following:
+
+  ::
+
+    drpcli users destroy fred
+
+
+Revoking a User's Password
+--------------------------
+
+To clear the password from a :ref:`rs_model_user`, do the following:
+
+  ::
+
+    drpcli users update fred '{ "PasswordHash": "12" }'
+
+This basically creates an invalid hash which matches no passwords.  Issued tokens will still continue to
+function until their times expire.
+
+Secure User Creation Pattern
+----------------------------
+
+A secure pattern would be the following:
+
+* Admin creates a new account
+
+  ::
+
+    drpcli users create fred
+
+* Admin creates a token for that account that only can set the password and sends that token to new user.
+
+  ::
+
+    drpcli users token fred scope users action password ttl 3600
+
+* New user uses token to set their password
+
+  ::
+
+    drpcli -T <token> users password fred mypassword
 
 
