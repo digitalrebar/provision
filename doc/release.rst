@@ -14,7 +14,7 @@ Releases
 Version Scheme
 --------------
 
-There are two named releases and many sematic versioned releases.
+There are two named releases and many semantic versioned releases.
 
 * **tip** - This is the currently built master code.  It follows the bleeding edge of the trees.
 * **stable** - This is the default release used by install.  It follows to most recently released code.
