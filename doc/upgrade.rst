@@ -9,7 +9,7 @@
 Upgrade
 ~~~~~~~
 
-While not glamorous, you can install over the existing code and restart.  That is about it.  Here are few more details.
+While not glamorous, it is possible to install over the existing code and restart.  That is about it.  Here are few more details.
 
 Steps
 =====
@@ -21,20 +21,20 @@ For isolated :ref:`rs_install`, update this way:
 
       killall dr-provision
 
-#. Return to your install directory
+#. Return to the install directory
 #. Run the install again
    ::
 
      rm sha256sums
-     # Remeber to use --drp-version is you want something other than stable
-     # Curl/Bash from quickstart if you truly believe, or this:
+     # Remeber to use --drp-version to set a version other than stable
+     # Curl/Bash from quickstart if desired, or this:
      tools/install.sh --isolated install
 
 #. Restart dr-provision, as stated by the tools/install.sh output.
 
 For non-isolated :ref:`rs_install`, update this way:
 
-#. Stop dr-provision, using your system method of choice
+#. Stop dr-provision, using the system method of choice
    ::
 
      systemctl stop dr-provision
@@ -45,7 +45,7 @@ For non-isolated :ref:`rs_install`, update this way:
 
      service dr-provision stop
 
-#. Install new code - How ever you installed before, do it again.  :ref:`rs_install`
+#. Install new code - Use the same install technique as the first install.  :ref:`rs_install`
 #. Start up dr-provision
 
   ::
@@ -67,7 +67,7 @@ In this section, notes about migrating from one release to another will be added
 
 v3.0.0 to v3.0.1
 ----------------
-If parameters were added to machines or global, these will need to be manually readded to the machine or 
+If parameters were added to machines or global, these will need to be manually re-added to the machine or 
 global profile, respectively.  The machine's parameter setting cli is unchanged.  The global parameters will
 need to be changed to a profiles call.
 
@@ -85,10 +85,9 @@ need to be changed to a profiles call.
 v3.0.1 to v3.0.2
 ----------------
 There are changes to templates and bootenvs.  Upgrade will not update these automatically, because they may be in
-use and working for you.  You will need to start over by removing the bootenvs and templates directory in
-your data store directory (usually drp-data/digitalrebar or /var/lib/dr-provision/digitalrebar) and re-uploading
-the bootenvs and templates (tools/discovery-load.sh).  Or you can manually add and update, templates and bootenvs
-with drpcli.
+use and working.  It is necessary to start over by removing the bootenvs and templates directory in
+the data store directory (usually drp-data/digitalrebar or /var/lib/dr-provision/digitalrebar) and re-uploading
+the bootenvs and templates (tools/discovery-load.sh).  Or templates and bootenvs can be manually added and updated with drpcli.
 
 
 v3.0.2 to v3.0.3
