@@ -9,7 +9,7 @@
 Upgrade
 ~~~~~~~
 
-While not glamorous, it is possible to install over the existing code and restart.  That is about it.  Here are few more details.
+While not glamorous, existing code can be overwritten by a new install and restart.  That is about it.  Here are few more details.
 
 Steps
 =====
@@ -85,10 +85,10 @@ need to be changed to a profiles call.
 v3.0.1 to v3.0.2
 ----------------
 There are changes to templates and bootenvs.  Upgrade will not update these automatically, because they may be in
-use and working.  It is necessary to start over by removing the bootenvs and templates directory in
+use and working properly.  it is necessary to restart by removing the bootenvs and templates directory in
 the data store directory (usually drp-data/digitalrebar or /var/lib/dr-provision/digitalrebar) and re-uploading
-the bootenvs and templates (tools/discovery-load.sh).  Or templates and bootenvs can be manually added and updated with drpcli.
-
+the bootenvs and templates (tools/discovery-load.sh).  Additionally, templates and bootenvs can be manually added and updated,
+with drpcli.
 
 v3.0.2 to v3.0.3
 ----------------
