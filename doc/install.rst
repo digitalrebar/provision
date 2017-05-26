@@ -9,7 +9,7 @@
 Install
 ~~~~~~~
 
-The install script does the following steps (in a slightly different order).
+The install script executes the following steps (in a slightly different order).
 
 Get Code
 --------
@@ -21,7 +21,7 @@ There are at least 3 releases to choose from:
 
   * **tip** - This is the most recent code.  This is the latest build of master.  It is bleeding edge and while the project attempts to be very stable with master, it can have issues.
   * **stable** - This is the most recent **stable** code.  This is a tag that tracks the version-based tag.
-  * **v3.0.0** - There will be a set of semver named releases.
+  * **v3.0.0** - There will be a set of Semantic Versioning named releases.
 
 Previous releases will continue to be available in tag/release history.  For additional information, see
 :ref:`rs_release_process`.
@@ -49,7 +49,7 @@ Prerequisites
 **dr-provision** requires two applications to operate correctly, **bsdtar** and **7z**.  These are used to extract the contents
 of iso and tar images to be served by the file server component of **dr-provision**.
 
-For Linux, you will need the **bsdtar** and **p7zip** packages.
+For Linux, the **bsdtar** and **p7zip** packages are required.
 
 .. admonition:: ubuntu
 
@@ -61,21 +61,21 @@ For Linux, you will need the **bsdtar** and **p7zip** packages.
 
 .. admonition:: Darwin
 
-  You will need the following new package, **p7zip**, and you will need to update **tar**.  The **tar** program on Darwin
-  is already **bsdtar**.
+  The new package, **p7zip** is required, and **tar** must also be updated.  The **tar** program on Darwin is already **bsdtar**.
 
   * 7z - install from homebrew: brew install p7zip
   * libarchive - update from homebrew to get a functional tar: brew install libarchive
 
-At this point, you may start the server.
+At this point, the server can be started.
 
 Running The Server
 ------------------
 
 Additional support materials in :ref:`rs_faq`.
 
-The **install.sh** script provides two options for running **dr-provision**.  The default values install the
-server and cli in /usr/local/bin.  It will also put a service control file in place.  Once that completes,
+The **install.sh** script provides two options for running **dr-provision**.  
+
+The default values install the server and cli in /usr/local/bin.  It will also put a service control file in place.  Once that finishes,
 the appropriate service start method will run the daemon.  The **install.sh** script prints out the command to run
 and enable the service.  The method described in the :ref:`rs_quickstart` can be used to deploy this way if the
 *--isolated* flag is removed from the command line.  Look at the internals of the **install.sh** script to see what
@@ -86,7 +86,7 @@ as an isolated "test drive" environment.  This will create a symbolic link from 
 directory for the appropriate OS/platform, create a set of directories for data storage and file storage, and
 display a command to run.  This is what the :ref:`rs_quickstart` method describes.
 
-The default username:password is ``rocketskates:r0cketsk8ts``.
+The default username & password is ``rocketskates:r0cketsk8ts``.
 
 Please review `--help` for options like disabling services, logging or paths.
 
@@ -104,56 +104,12 @@ Once running, the following endpoints are available:
 
 The API, File Server, DHCP, and TFTP ports can be configured, but DHCP and TFTP may not function properly on non-standard ports.
 
-If your SSL certificate is not valid, then follow the :ref:`rs_gen_cert` steps.
+If the SSL certificate is not valid, then follow the :ref:`rs_gen_cert` steps.
 
-.. note:: On Darwin, you may have to add a route for broadcast addresses to work.  This can be done with the following comand.  The 192.168.100.1 is the IP address of the interface that you want to send messages through. The install script will make suggestions for you.
+.. note:: On Darwin, it may be necessary to add a route for broadcast addresses to work.  This can be done with the below command.  The 192.168.100.1 is the IP address of the interface that the messages should be sent through. The install script will provide suggestions.
 
   ::
 
     sudo route add 255.255.255.255 192.168.100.1
     # or < 10.9 OSX/Darwin
     sudo route -n add -net 255.255.255.255 192.168.100.1
-
-
-Configuring the Server
-~~~~~~~~~~~~~~~~~~~~~~
-
-Digital Rebar Provision provides both DHCP and Provisioning services but can be run with either disabled.  This allows users to work in environments with existing DHCP infrastructure or to use Digital Rebar Provision as an API driven DHCP server.
-
-DHCP Server (subnets)
----------------------
-
-The DHCP server is configured be enabling Subnets that serve IPs and/or additional configuration information.  It is possible to run the DHCP server using only pre-defined IP Reservations or allow the DHCP server to create IP Leases dynamically.
-
-The DHCP server had two primary models
-
-#. DHCP Listeners can be set on an IP for each server interface.  These listeners will respond to DHCP broadcasts on the matching network(s).  Operators should ensure that no other DHCP servers are set up on the configured subnets.
-
-#. DHCP Relay allows other DHCP listeners to forward requests to the Digital Rebar Provision server.  In this mode, the server is passive and can easily co-exist with other DHCP servers.  This mode works with the Provisioner by setting the many optional parameters (like next boot) that are needed for PXE boot processes.
-
-Provisioner (bootenvs)
-----------------------
-
-The Provisioner is a combination of several services and a template expansion engine.  The primary model is a boot environment (BootEnv) that contains crtical metadata to describe an installation process.  This metadata includes templates that are dynamically expanded when machines boot.
-
-Digital Rebar Provision CLI has a process that combines multiple calls to install BootEnvs.  The following steps will configure a system capable to :ref:`rs_provision_discovered`.
-
-  ::
-
-    cd assets
-    drpcli bootenvs install bootenvs/sledgehammer.yml
-    drpcli bootenvs install bootenvs/discovery.yml
-    drpcli bootenvs install bootenvs/local.yml
-    drpcli prefs set unknownBootEnv "discovery" defaultBootEnv "sledgehammer"
-
-.. note:: The tools/discovery_load.sh script does this with the default credentials.
-
-
-Default Template Identity
--------------------------
-
-_These settings apply to TEMPLATES not the API._
-
-The default password for the default o/s templates is **RocketSkates**
-
-The default user for the default ubuntu/debian templates is **rocketskates**
