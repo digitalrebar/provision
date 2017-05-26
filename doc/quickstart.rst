@@ -9,14 +9,15 @@
 Quick Start
 ~~~~~~~~~~~
 
-Typically, Curl and Bash files are NOT safe, but they are simple and quick.
+Typically, Curl and Bash are unsafe, but they are simple and quick.
 
   ::
 
     curl -fsSL https://raw.githubusercontent.com/digitalrebar/provision/master/tools/install.sh | bash -s -- --isolated install
 
-This will pull the latest code bundle and checksum from Github, extract the code files,
-make sure prerequisites are installed and create some initial directories and links.
+This will pull the latest code bundle and checksum from github, extract the code files,
+make sure prerequisites are installed, and create some initial directories and links.
+
 It should display something like this:
 
   ::
@@ -26,7 +27,7 @@ It should display something like this:
 
     sudo ./dr-provision --static-ip=<IP of an Interface> --file-root=`pwd`/drp-data/tftpboot --data-root=drp-data/digitalrebar &
 
-    # Once dr-provision is started, this commmand will gather and upload the tools required to
+    # Once dr-provision is started, this command will gather and upload the tools required to
     # do discovery-based machine management
 
     tools/discovery-load.sh

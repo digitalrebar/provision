@@ -79,6 +79,7 @@ Table of Contents
    
    doc/quickstart
    doc/install
+   doc/configuring
    doc/release
    doc/upgrade
    doc/architecture

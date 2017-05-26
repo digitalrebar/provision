@@ -86,7 +86,7 @@ as an isolated "test drive" environment.  This will create a symbolic link from 
 directory for the appropriate OS/platform, create a set of directories for data storage and file storage, and
 display a command to run.  This is what the :ref:`rs_quickstart` method describes.
 
-The default username & password is ``rocketskates & r0cketsk8ts``.
+The default username & password is ``rocketskates:r0cketsk8ts``.
 
 Please review `--help` for options like disabling services, logging or paths.
 
@@ -114,46 +114,3 @@ If the SSL certificate is not valid, then follow the :ref:`rs_gen_cert` steps.
     # or < 10.9 OSX/Darwin
     sudo route -n add -net 255.255.255.255 192.168.100.1
 
-
-Configuring the Server
-~~~~~~~~~~~~~~~~~~~~~~
-
-Digital Rebar Provision provides both DHCP and Provisioning services but can be run with either disabled.  This allows users to work in environments with existing DHCP infrastructure or to use Digital Rebar Provision as an API driven DHCP server.
-
-DHCP Server (subnets)
----------------------
-
-The DHCP server is configured to enable Subnets that serve IPs and/or additional configuration information.  It is possible to run the DHCP server using only predefined IP Reservations or allow the DHCP server to create IP Leases dynamically.
-
-The DHCP server had two primary models
-
-#. DHCP Listeners can be set on an IP for each server interface.  These listeners will respond to DHCP broadcasts on the matching network(s).  Operators should ensure that no other DHCP servers are set up on the configured subnets.
-
-#. DHCP Relay allows other DHCP listeners to forward requests to the Digital Rebar Provision server.  In this mode, the server is passive and can easily co-exist with other DHCP servers.  This mode works with the Provisioner by setting the many optional parameters (like next boot) that are needed for PXE boot processes.
-
-Provisioner (bootenvs)
-----------------------
-
-The Provisioner is a combination of several services and a template expansion engine.  The primary model is a boot environment (BootEnv) that contains critical metadata to describe an installation process.  This metadata includes templates that are dynamically expanded when machines boot.
-
-Digital Rebar Provision CLI has a process that combines multiple calls to install BootEnvs.  The following steps will configure a system capable to :ref:`rs_provision_discovered`.
-
-  ::
-
-    cd assets
-    drpcli bootenvs install bootenvs/sledgehammer.yml
-    drpcli bootenvs install bootenvs/discovery.yml
-    drpcli bootenvs install bootenvs/local.yml
-    drpcli prefs set unknownBootEnv "discovery" defaultBootEnv "sledgehammer"
-
-.. note:: The tools/discovery_load.sh script does this with the default credentials.
-
-
-Default Template Identity
--------------------------
-
-_These settings apply to TEMPLATES not the API._
-
-The default password for the default o/s templates is **RocketSkates**
-
-The default user for the default ubuntu/debian templates is **rocketskates**
