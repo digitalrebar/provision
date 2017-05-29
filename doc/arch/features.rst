@@ -19,7 +19,7 @@ Cloud-first means having a great, tested API. Years of provisioning experience w
 Security & Authenticated API
 ----------------------------
 
-Not an afterthought, we both HTTPS and user authentication for using the API. Our mix of basic and bearer token authentication recognizes that both users and automation will use the API. This brings a new level of security and control to data center provisioning.
+Not an afterthought, we use both HTTPS and user authentication for the API. Our mix of basic and bearer token authentication recognizes that both users and automation will use the API. This brings a new level of security and control to data center provisioning.
 
 Stand-alone multi-architecture Golang binary
 --------------------------------------------
@@ -35,12 +35,12 @@ Configuration at Global, Group/Profile and Node level. Properties for templates 
 Multi-mode (but optional) DHCP
 ------------------------------
 
-Network IP allocation is a key component of any provisioning infrastructure; however, DHCP needs are highly site dependant. Digital Rebar Provision works as a multi-interface DHCP listener and can also resolve addresses from DHCP forwarders. It can even be disabled if your environment already has a DHCP service that can configure a the “next boot” provider.
+Network IP allocation is a key component of any provisioning infrastructure; however, DHCP needs are highly site dependent. Digital Rebar Provision works as a multi-interface DHCP listener and can also resolve addresses from DHCP forwarders. It can even be disabled if the environment already has a DHCP service that can configure a the “next boot” provider.
 
 Dynamic Provisioner templates for TFTP and HTTP
 -----------------------------------------------
 
-For security and scale, Digital Rebar Provision builds provisioning files dynamically based on the Boot Environment Template system. This means that critical system information is not written to disk and files do not have to be synchronized. Of course, when you need to just serve a file that works too.
+For security and scale, Digital Rebar Provision builds provisioning files dynamically based on the Boot Environment Template system. This means that critical system information is not written to disk and files do not have to be synchronized. Of course, when a file needs to be served it works too.
 
 Node Discovery Bootstrapping
 ----------------------------
