@@ -10,7 +10,7 @@ Data Architecture
 =================
 
 Digital Rebar Provision uses a fairly simple data model.  There are 4 main models for the provisioner server
-and 4 models for the DHCP server.  Each model has a cooresponding API in the :ref:`rs_api`.
+and 4 models for the DHCP server.  Each model has a corresponding API in the :ref:`rs_api`.
 
 The models define elements of the system.  The API provides basic CRUD (create, read, update, and delete) operations as well as
 some additional actions for manipulating the state of the system.  The :ref:`rs_api` contains that definitions of the actual
@@ -48,8 +48,8 @@ The **Name** field should contain the FQDN of the node.
 The Machine object contains an **Error** field that represents errors encountered while operating on the machine.  In general,
 these are errors pertaining to rendering the :ref:`rs_model_bootenv`.
 
-The Machine parameters are defined as a special :ref:`rs_model_profile` on the Machine.  The profile stores a dicitionary of
-string keys to arbritary objects.  These could be strings, bools, numbers, arrays, or objects representing similarly
+The Machine parameters are defined as a special :ref:`rs_model_profile` on the Machine.  The profile stores a dictionary of
+string keys to arbitrary objects.  These could be strings, booleans, numbers, arrays, or objects representing similarly
 defined dictionaries.  The machine parameters are available to templates for expansion in them.
 
 Additionally, the machine maintains an ordered list of profiles that are searched and then finally the **global profile**.  See :ref:`rs_model_profile` and :ref:`rs_model_template` for more information.
@@ -65,14 +65,14 @@ Profile
 ~~~~~~~
 
 The Profile Object defines a set of key / value pairs (or parameters).  All of these may be manipulated by the :ref:`rs_api`.
-The key space is a free form string and the value is an arbirtary data blob specified by JSON through
+The key space is a free form string and the value is an arbitrary data blob specified by JSON through
 the :ref:`rs_api`.  The common parameters defined in :ref:`rs_model_template` can be set on these objects.
 The system maintains a **global** profile for setting system wide parameters.  They are the lowest level of precedence.
 
 The profiles are free form dictionaries and default empty.  Any key/value pair can be added and referenced.
 
 Other profiles may be created to group parameters together to apply to sets of machines.  The machine's profile
-list allows the administator to specify an ordered set of profiles that apply to that machine as well.
+list allows the administrator to specify an ordered set of profiles that apply to that machine as well.
 Additionally, the system maintains a special
 profile for each machine to store custom parameters specific to that machine.  This profile is embedded in the :ref:`rs_model_machine` object.
 
@@ -223,7 +223,7 @@ Update Digital Rebar Provisioner BootEnv
 This sub-template updates the :ref:`rs_model_machine` object's BootEnv to the parameter, **next_boot_env**.  If
 **next_boot_env** is not defined, the BootEnv will be set to *local*.  This template uses the **GenerateToken**
 function to securely update Digital Rebar Provision.  To use, add the following to the post install section of
-your kickstart or net-post-install.sh template.
+the kickstart or net-post-install.sh template.
 
   ::
 
@@ -319,7 +319,7 @@ Remote Root Access
 
 This templates installs an authorized_keys file in the root user's home directory.  Multiple keys may be provided.
 The template also sets the **/etc/ssh/sshd_config** entry *PermitRootLogin*.  The default setting is
-*without-passord* (keyed access only), but other values are available, *no*, *yes*, *froced-commands-only*.
+*without-password* (keyed access only), but other values are available, *no*, *yes*, *forced-commands-only*.
 
   ::
 
@@ -342,13 +342,13 @@ An example :ref:`rs_model_profile` that sets the keys and *PermitRootLogin* woul
 Digital Rebar Integration
 +++++++++++++++++++++++++
 
-This template will join the newly installed node into Digital Rebar.  This template requires that you
-use the :ref:`rs_st_remote_root_access` and :ref:`rs_st_set_hostname` subtemplates as well.  To use, include
+This template will join the newly installed node into Digital Rebar.  This template requires the
+use of the :ref:`rs_st_remote_root_access` and :ref:`rs_st_set_hostname` subtemplates as well.  To use, include
 these in the kickstart post install section or the net-post-install.sh script.  The **join-to-dr.tmpl** requires
 setting the *join_dr* parameter to *true* and credentials to access Digital Rebar.  Digital Rebar's Endpoint is
 specified with the *CommandURL* parameter, e.g. https://70.2.3.5.  The username and password used to access
 Digital Rebar is specified with *rebar-machine_key*.  This should be the machine key in the rebar-access role
-in the system deployment.  You will need to make sure that the rebar root access key is added to the **access_keys**
+in the system deployment.  It is necessary to make sure that the rebar root access key is added to the **access_keys**
 parameter.  To get these last two values, see the commands below.
 
 
@@ -372,8 +372,8 @@ An example :ref:`rs_model_profile`.
       CommandURL: https://70.2.3.5
       rebar-machine_key: machine_install:109asdga;hkljhjha3aksljdga
 
-To get the values for the ssh key and the *rebar-machine_key*, you can check the *rebar-access* role's attributes or run the
-folllowing commands.
+To get the values for the ssh key and the *rebar-machine_key*, check the *rebar-access* role's attributes or run the
+following commands.
 
 .. note:: DR Integration - commands to run on admin node to get values.
 
@@ -406,7 +406,7 @@ the PXE chain.  This is usually an IP associated with Digital Rebar Provision, b
 any next hop server.  The lease times for both reserved and unreserved clients as specified here (**ReservedLeaseTime** and **ActiveLeaseTime**).
 The subnet can also me marked as only working for explicitly reserved nodes (**ReservedOnly**).
 
-The subnet also allows for the specification of DHCP options to be sent to clients.  These can be overriden by :ref:`rs_model_reservation`
+The subnet also allows for the specification of DHCP options to be sent to clients.  These can be overridden by :ref:`rs_model_reservation`
 specific options.  Some common options are:
 
 ========  ====  =================================
@@ -483,7 +483,7 @@ Interface
 ~~~~~~~~~
 
 The Interface Object is a read-only object that is used to identify local interfaces and their addresses on the
-Digital Rebar Provision server.  This is useful for determing what subnets to create and with what address ranges.
+Digital Rebar Provision server.  This is useful for determining what subnets to create and with what address ranges.
 The :ref:`rs_ui_subnets` part of the :ref:`rs_ui` uses this to populate possible subnets to create.
 
 
