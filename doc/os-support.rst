@@ -18,9 +18,4 @@ The default installation includes an assets directory that contain pre-existing 
 
 This section of the docs provides some hints and gotchas for the various platforms.
 
-.. toctree::
-  :glob:
-  :numbered:
-
-  os-support/*
-
+:ref:`1.linuxkit <rs_os_linuxkit>`
