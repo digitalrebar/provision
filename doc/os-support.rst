@@ -12,10 +12,11 @@ OS Support
 
 Digital Rebar Provision, through its :ref:`rs_model_bootenv`, provides the ability to use and install many types of operating systems.
 
-The default installation includes an assets directory that contain pre-existing :ref:`rs_model_bootenv` and
-:ref:`rs_model_template`.  Example Ubuntu, CentOS, and other operating systems are available to start from.
+The default installation includes an assets directory that contain pre-existing :ref:`bootenvs <rs_model_bootenv>` and
+:ref:`templates <rs_model_template>`.  Example Ubuntu, CentOS, and other operating systems are available to start from.
 
 
 This section of the docs provides some hints and gotchas for the various platforms.
 
-:ref:`1.linuxkit <rs_os_linuxkit>`
+:ref:`1. linuxkit <rs_os_linuxkit>`
+
