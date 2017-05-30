@@ -39,10 +39,3 @@ Boot Environments (bootenvs)
 Configuring at least one Boot Environment is a critical first step in Digital Rebar Provision operation.  The Digital Rebar CentOS based in-memory discovery image, Sledgehammer, will be installed on first use by default.
 
 The UI will show a complete list of potential Boot Environments;
-
-.. _rs_swagger:
-
-Swagger UI
-~~~~~~~~~~
-
-The Digital Rebar Provision UI includes Swagger to allow you to explore and test the API.
