@@ -88,6 +88,7 @@ Table of Contents
    doc/operation
    doc/os-support
    doc/ui
+   doc/Swagger
    doc/cli
    doc/api
    doc/dev-server

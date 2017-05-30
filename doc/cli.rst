@@ -77,14 +77,6 @@ your terminal/shell or reload the completions.
     sudo drpcli autocomplete /usr/local/etc/bash_completion.d/drpcli
     . /usr/local/etc/bash_completion
 
-
 Commands
 ========
-
-.. toctree::
-   :glob:
-   :numbered:
-   :maxdepth: 1
-   
-   cli/*
-
+:ref:`CLI Commands <rs_cli_command>`
