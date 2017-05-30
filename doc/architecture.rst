@@ -23,9 +23,9 @@ The architecture can be described in terms of the server and its data model.
 Architectures:
 ==============
 
-:ref:`1. features <rs_server_features>`
+1. :ref:`features <rs_server_features>`
 
-:ref:`2. data <rs_data_architecture>`
+#. :ref:`data <rs_data_architecture>`
 
-:ref:`3. server <rs_server_architecture>`
+#. :ref:`server <rs_server_architecture>`
 
