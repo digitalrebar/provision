@@ -43,7 +43,7 @@ Digital Rebar Provision CLI has a process that combines multiple calls to instal
 Default Template Identity
 -------------------------
 
-_These settings apply to TEMPLATES not the API._
+These settings apply to TEMPLATES only not the API.
 
 The default password for the default o/s templates is **RocketSkates**
 
