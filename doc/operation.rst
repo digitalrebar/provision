@@ -9,8 +9,8 @@
 Digital Rebar Provision Operations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This section will attempt to describe common operations and actions that can be done.  We will assume that you have
-drpcli somewhere in your path and have setup the environment variables to access Digital Rebar Provision.  See, :ref:`rs_cli`.
+This section will attempt to describe common operations and actions that can be done.  We will assume that 
+drpcli is already somewhere in the path and have setup the environment variables to access Digital Rebar Provision.  See, :ref:`rs_cli`.
 
 Some of these operations are in the :ref:`rs_ui`, but not all.  This will focus on CLI usage for now.  See the :ref:`rs_ui`
 section for UI usage.
@@ -21,7 +21,7 @@ section for UI usage.
 Preference Setting
 ++++++++++++++++++
 
-Usually, you need to get or set the preferences for your system.
+Usually, it is necessary to get or set the preferences for the system.
 
   ::
 
@@ -55,7 +55,7 @@ Installing a "Canned" BootEnv
 Manipulating :ref:`rs_model_bootenv` and :ref:`rs_model_template` are handled by their own commands.  There are some
 additional helpers especially when following the layout of the initial :ref:`rs_install`.
 
-To install a provided :ref:`rs_model_bootenv`, do the following from your install location.
+To install a provided :ref:`rs_model_bootenv`, do the following from the install location.
 
   ::
 
@@ -74,7 +74,7 @@ machines in the file server file system space.
 Cloning a BootEnv
 -----------------
 
-Sometimes you have a :ref:`rs_model_bootenv` but want to make changes.  Now, these can be handled by :ref:`rs_model_template`
+Sometimes there is a :ref:`rs_model_bootenv` but want to make changes.  Now, these can be handled by :ref:`rs_model_template`
 inclusion, but for now let's just focus on basic "cut and paste" style editing.
 
   ::
@@ -82,17 +82,17 @@ inclusion, but for now let's just focus on basic "cut and paste" style editing.
     drpcli bootenvs show ubuntu-16.04-install --format yaml > new-file.yaml
     # Edit the file
     #  change the Name field to something new. *MUST DO THIS*
-    #  change the OS->Name field to something new if you don't want to sure the same iso directory.
+    #  change the OS->Name field to something new to avoid sharing an iso directory.
     #  Edit other parameters as needed
     drpcli bootenvs create - < new-file.yaml
 
-This is a shallow clone.  It will reuse the templates unless you explictly modify them.  You could use the *install*
-command, but any new templates would need to be added to a *templates* directoy in the current directory.
+This is a shallow clone.  It will reuse the templates unless they are explicitly modified.  It is possible to use the *install*
+command, but any new templates would need to be added to a *templates* directory in the current directory.
 
 Creating a BootEnv
 ------------------
 
-You can additionally create an empty :ref:`rs_model_bootenv` by doing the following:
+It might be necessary to create an empty :ref:`rs_model_bootenv` by doing the following:
 
   ::
 
@@ -103,14 +103,14 @@ This :ref:`rs_model_bootenv` will not be *Available*, but will allow for additio
 Editing a BootEnv
 -----------------
 
-Sometimes you just want to edit a :ref:`rs_model_bootenv`.  To do this, get the latest copy with the *show*
+It might be necessary to edit a :ref:`rs_model_bootenv`.  To do this, get the latest copy with the *show*
 command.  Edit the file as needed.  Then using the *update* command, put the value back.  The *--format=yaml*
 is optional, but I find YAML easier to edit.
 
   ::
 
     drpcli bootenvs show discovery --format=yaml > discovery.yaml
-    # Edit the discovery.yaml as you want
+    # Edit the discovery.yaml as needed
     drpcli bootenvs update discovery - < discovery.yaml
 
 Template Operations
@@ -119,19 +119,18 @@ Template Operations
 Cloning a Template
 ------------------
 
-Sometimes you want to create a new template from an existing one.  To do this, do the following:
+It might be necessary to create a new template from an existing one.  To do this, do the following:
 
   ::
 
     drpcli templates show net_seed.tmpl | jq -r .Contents > new.tmpl
-    # Edit the new.tmpl to be what you want
+    # Edit the new.tmpl to be what is required
     drpcli templates upload new.tmpl as new_template
 
-In this case, we are using **jq** to help us out.  **jq** is a JSON processing command line filter.  You send JSON in and you
-get data back.  In this case, we are wanting the Contents of the template.  We save that to file, edit it, and upload it as a
+In this case, we are using **jq** to help us out.  **jq** is a JSON processing command line filter.  JSON can be used to retrieve the required data.  In this case, we are wanting the Contents of the template.  We save that to file, edit it, and upload it as a
 new template, *new_template*.
 
-You could also use the **create** subcommand of template, but often times **upload** is easier.
+It is possible to use the **create** subcommand of template, but often times **upload** is easier.
 
 .. note:: Remember to add the new template to a :ref:`rs_model_bootenv` or another :ref:`rs_model_template` as an embedded template.
 
@@ -139,16 +138,16 @@ You could also use the **create** subcommand of template, but often times **uplo
 Updating a Template
 -------------------
 
-Sometimes you want to edit an existing template.  To do this, do the following:
+It might be necessary to edit an existing template.  To do this, do the following:
 
   ::
 
     drpcli templates show net_seed.tmpl | jq -r .Contents > edit.tmpl
-    # Edit the edit.tmpl to be what you want
+    # Edit the edit.tmpl to be what is desired
     drpcli templates upload edit.tmpl as net_seed.tmpl
 
 We use **jq** to get a copy of the current template, edit it, and use the upload command to replace the template.
-If you aleady had a template, you could replace it with the upload command.
+If there already is a template present, then it can be replaced with the upload command.
 
 Profile Operations
 ++++++++++++++++++
@@ -156,7 +155,7 @@ Profile Operations
 Creating a Profile
 ------------------
 
-Sometimes you want to create a :ref:`rs_model_profile`.  You can create an empty profile by doing the following:
+It might be necessary to create a :ref:`rs_model_profile`. An empty profile can be created by doing the following:
 
   ::
 
@@ -166,7 +165,7 @@ Sometimes you want to create a :ref:`rs_model_profile`.  You can create an empty
 
     drpcli profiles create myprofile
 
-If you just send a string, the system will attempt to use that as the Name of the profile.
+The system will attempt to use any sent string as the Name of the profile.
 
 Additionally, JSON can be provided to fill in some default values.
 
@@ -178,7 +177,7 @@ Additionally, JSON can be provided to fill in some default values.
 Deleting a Profile
 ------------------
 
-Sometimes you want to delete a :ref:`rs_model_profile`.  You can use the destroy command in the profile CLI,
+It might be necessary to delete a :ref:`rs_model_profile`.  It is possible to use the destroy command in the profile CLI,
 but the :ref:`rs_model_profile` must not be in use.  Use the following:
 
   ::
@@ -189,8 +188,7 @@ but the :ref:`rs_model_profile` must not be in use.  Use the following:
 Altering an Existing Profile (including global)
 -----------------------------------------------
 
-Somtimes you want to update an existing :ref:`rs_model_profile`, including **global**.  You can *set*
-parameter values by doing the following:
+It might be necessary to update an existing :ref:`rs_model_profile`, including **global**.  parameter values can be *set* by doing the following:
 
   ::
 
@@ -201,14 +199,14 @@ parameter values by doing the following:
 
 .. note:: Setting a parameter's value to **null** will clear it from the structure.
 
-Alternatively, you can also use the update command and send raw JSON similar to create.
+Alternatively, the update command can be used to send raw JSON similar to create.
 
   ::
 
     drpcli profiles update myprofile '{ "Params": { "string_param1": "string", "map_parm1": { "key1": "value", "key2": "value2" }, "crazycat": null } }'
 
 Update is an additive operation by default.  So, to remove items, **null** must be passed as
-the value of the key you wish to remove.
+the value of the key to be removed.
 
 Machine Operations
 ++++++++++++++++++
@@ -216,7 +214,7 @@ Machine Operations
 Creating a Machine
 ------------------
 
-Sometimes you want to create a :ref:`rs_model_machine`.  You know the IP address the machine is going to boot as and you just want to
+It might be necessary to create a :ref:`rs_model_machine`.  Given the IP that the machine will boot as all that is required is to 
 create the machine and assign a :ref:`rs_model_bootenv`.  To do this, do the following:
 
   ::
@@ -250,7 +248,7 @@ This will create an empty :ref:`rs_model_machine` named *jill.rackn.com*.
 Adding or Removing a Profile to a Machine
 -----------------------------------------
 
-Sometimes you want to add or remove a :ref:`rs_model_profile` to a :ref:`rs_model_machine`.  To add a profile, do the following:
+It might be necessary to add or remove a :ref:`rs_model_profile` to or from a :ref:`rs_model_machine`.  To add a profile, do the following:
 
   ::
 
@@ -269,7 +267,7 @@ The :ref:`rs_model_machine` update command can also be used to modify the list o
 Changing BootEnv on a Machine
 -----------------------------
 
-Sometimes you want to change the :ref:`rs_model_bootenv` associated with a :ref:`rs_model_machine`.  To do this, do the following:
+It might be necessary to change the :ref:`rs_model_bootenv` associated with a :ref:`rs_model_machine`.  To do this, do the following:
 
   ::
 
@@ -284,20 +282,20 @@ DHCP Operations
 Creating a Reservation
 ----------------------
 
-Sometimes you want to create a :ref:`rs_model_reservation`.  This would be to make sure that a specific MAC Address received
-a specific IP Adress.  Here is an example command.
+It might be necessary to create a :ref:`rs_model_reservation`.  This would be to make sure that a specific MAC Address received
+a specific IP Address.  Here is an example command.
 
   ::
 
      drpcli reservations create '{ "Addr": "1.1.1.1", "Token": "08:00:27:33:77:de", "Strategy": "MAC" }'
 
-You can additionally add DHCP options or the Next Boot server.
+Additionally, it is possible to add DHCP options or the Next Boot server.
 
   ::
 
      drpcli reservations create '{ "Addr": "1.1.1.5", "Token": "08:01:27:33:77:de", "Strategy": "MAC", "NextServer": "1.1.1.2", "Options": [ { "Code": 44, "Value": "1.1.1.1" } ] }'
 
-Remember to add an option 1 (netmask) if you are not using a subnet to fill in default options.
+Remember to add an option 1 (netmask) if a subnet is not being used to fill the default options.
 
 User Operations
 +++++++++++++++
@@ -305,7 +303,7 @@ User Operations
 Creating a User
 ---------------
 
-Sometimes you want to create a :ref:`rs_model_user`.  By default, the user will be created without
+It might be necessary to create a :ref:`rs_model_user`.  By default, the user will be created without
 a valid password.  The user will only be able to access the system through granted tokens.
 
 To create a user, do the following:
@@ -320,7 +318,7 @@ To create a user, do the following:
 Granting a User Token
 ---------------------
 
-Sometimes as an administrator, you would like to grant a limited use and scope access token to a user.  To
+Sometimes as an administrator, it may be necessary to grant a limited use and scope access token to a user.  To
 grant a token, do the following:
 
   ::
@@ -332,7 +330,7 @@ additional parameters that alter the token's scope (model), actions, and key.
 
   ::
 
-    drpcli users token fred ttl 600 scope users action password specfic fred
+    drpcli users token fred ttl 600 scope users action password specific fred
 
 This will create a token that is valid for 10 minutes and can only execute the password API call on the
 :ref:`rs_model_user` object named *fred*.
@@ -347,7 +345,7 @@ To use the token in with the CLI, use the -T option.
 Deleting a User
 ---------------
 
-Sometimes you want to remove a reset from the system. To remove a user, do the following:
+It might be necessary to remove a reset from the system. To remove a user, do the following:
 
   ::
 
