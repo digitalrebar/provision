@@ -9,16 +9,16 @@
 Developer Environment
 ~~~~~~~~~~~~~~~~~~~~~
 
-This page is intended for people who are building Digital Rebar Provision from sources or contributing to the code base.  We maintain inline documentation and test environment and expect contributors to participate in maintenance of those efforts.
+This page is intended for people who are building Digital Rebar Provision from sources or contributing to the code base.  We maintain inline documentation and test environment and contributors are expected to participate in maintenance of those efforts.
 
-.. note:: Prerequisites: we are using go version 1.8 or better.  These documents expect ability to both install and update Golang.
+.. note:: Prerequisites: go version 1.8 or better.  These documents expect ability to both install and update Golang.
 
 .. _re_dev_quick:
 
 Developer Quick Start
 ---------------------
 
-To get started quickly, we've rolled all the installation steps into a script.  The script can be run directly from Github by copying the following lines:
+To get started quickly, all the installation steps are rolled into a script.  The script can be run directly from Github by copying the following lines:
 
   ::
 
@@ -65,9 +65,9 @@ When working on the Digital Rebar Provision UI, it is possible to skip the gener
 Running the Tests
 -----------------
 
-Digital Rebar Provision uses the Golang test libraries and we work hard to maintain test coverage.
+Digital Rebar Provision uses the Golang test libraries and the development team works hard to maintain test coverage.
 
-We use `tools/test.sh` in the provision root directory to test the entire code base.
+The `tools/test.sh` in the provision root directory is the main way to test the entire code base.
 
 To test individual modules from their subdirectories run: `go test`
 
@@ -99,5 +99,5 @@ Packaging the Code
 
 Once the code is built, the code can be package for storage in Github or for use by the **install.sh** script.
 
-Runing the **tools/package.sh** script will generate a **dr-provision.zip** and **dr-provision.sha256** file.  These files
+Running the **tools/package.sh** script will generate a **dr-provision.zip** and **dr-provision.sha256** file.  These files
 can be used with the :ref:`rs_install` process.
