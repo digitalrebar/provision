@@ -9,26 +9,25 @@
 Developer Environment
 ~~~~~~~~~~~~~~~~~~~~~
 
-This page is intended for people who are building Digital Rebar Provision from sources or contributing to the code base.  We maintain inline documentation and test environment and expect contributors to participate in maintenance of those efforts.
+This page is intended for people who are building Digital Rebar Provision from sources or contributing to the code base.  We maintain inline documentation and test environment and contributors are expected to participate in maintenance of those efforts.
 
-.. note:: Prerequisites: we are using go version 1.8 or better.  These documents expect that you are able to install and update Golang.
-
+.. note:: Prerequisites: go version 1.8 or better.  These documents expect ability to both install and update Golang.
 
 .. _re_dev_quick:
 
 Developer Quick Start
 ---------------------
 
-To get started quickly, we've rolled all the installation steps into a script.  The script can be run directly from Github by copying the following lines:
+To get started quickly, all the installation steps are rolled into a script.  The script can be run directly from Github by copying the following lines:
 
   ::
 
     curl -fsSL https://raw.githubusercontent.com/digitalrebar/provision/master/tools/build.sh | bash
 
-The script will use your current **GOPATH** variable for placing the code.  If **GOPATH** isn't set,
+The script will use the current **GOPATH** variable for placing the code.  If **GOPATH** isn't set,
 it will be set to *$HOME/go*.
 
-Once the script is complete, you can change directory to the source area and continue development.
+Once the script is complete, it is possible to change the directory to the source area and continue development.
 
   ::
 
@@ -36,7 +35,7 @@ Once the script is complete, you can change directory to the source area and con
     cd "$GOPATH/src/github.com/digitalrebar/provision"
 
 
-If you want more details on how to run the result, consult the :ref:`rs_install` section.  The **install.sh** script
+If more details on how to run the result are needed, consult the :ref:`rs_install` section.  The **install.sh** script
 can be used to install from the source directory after a build.
 
 .. _rs_dev_build:
@@ -44,7 +43,7 @@ can be used to install from the source directory after a build.
 Building The Server
 -------------------
 
-Once you've got the code and assets once, you can repeat the process from the project root with the following command:
+After the code and assets have been obtained once, the process can be repeated from the project root with the following command:
 
   ::
 
@@ -58,7 +57,7 @@ command on both the server and the cli.
 Serving UI from File System
 ---------------------------
 
-When working on the Digital Rebar Provision UI, you can skip the generate steps by using the `--dev-ui` flag.  Generally, this is started using `--dev-ui ./embedded/assets/ui`
+When working on the Digital Rebar Provision UI, it is possible to skip the generate steps by using the `--dev-ui` flag.  Generally, this is started using `--dev-ui ./embedded/assets/ui`
 
 
 .. _rs_testing:
@@ -66,17 +65,16 @@ When working on the Digital Rebar Provision UI, you can skip the generate steps 
 Running the Tests
 -----------------
 
-Digital Rebar Provision uses the Golang test libraries and we work hard to maintain test coverage.
+Digital Rebar Provision uses the Golang test libraries and the development team works hard to maintain test coverage.
 
-We use `tools/test.sh` in the provision root directory to test the entire code base.
+The `tools/test.sh` in the provision root directory is the main way to test the entire code base.
 
-You can test individual modules from their subdirectories by running `go test`
+To test individual modules from their subdirectories run: `go test`
 
 How to get Swagger-Ui
 ---------------------
 
-DigiatlRebar Provision uses Swagger to generate interactive help for the API.  This is in the tree by default.  If you
-need to update it, do the following:
+DigiatlRebar Provision uses Swagger to generate interactive help for the API.  This is in the tree by default.  If an update is needed, do the following:
 
 * git clone https://github.com/swagger-api/swagger-ui
 * cp -r swagger-ui/dist/\* embedded/assets/swagger-ui
@@ -101,5 +99,5 @@ Packaging the Code
 
 Once the code is built, the code can be package for storage in Github or for use by the **install.sh** script.
 
-Runing the **tools/package.sh** script will generate a **dr-provision.zip** and **dr-provision.sha256** file.  These files
+Running the **tools/package.sh** script will generate a **dr-provision.zip** and **dr-provision.sha256** file.  These files
 can be used with the :ref:`rs_install` process.

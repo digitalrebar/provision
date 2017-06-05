@@ -74,7 +74,7 @@ machines in the file server file system space.
 Cloning a BootEnv
 -----------------
 
-Sometimes there is a :ref:`rs_model_bootenv` but want to make changes.  Now, these can be handled by :ref:`rs_model_template`
+Sometimes there is a :ref:`rs_model_bootenv` but it is necessary to make changes.  These can be handled by :ref:`rs_model_template`
 inclusion, but for now let's just focus on basic "cut and paste" style editing.
 
   ::
