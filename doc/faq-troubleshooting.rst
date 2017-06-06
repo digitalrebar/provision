@@ -21,8 +21,8 @@ Digital Rebar Provision will fail if it cannot attach to one of the required por
 
 * Typical Error Message: "listen udp4 :67: bind: address already in use"
 * Additional Information: The conflicted port will be included in the error between colons (e.g.: `:67:`)
-* Workaround: If you do not need the conflicting service, you can disable that service
-* Resolution: Stop the offending service on your system.  Typical corrective actions are:
+* Workaround: If the conflicting service is not required, simply disable that service
+* Resolution: Stop the offending service on the system.  Typical corrective actions are:
 
   * 67 - dhcp.  Correct with `sudo pkill dnsmasq`
 
@@ -33,19 +33,19 @@ See the port mapping list on start-up for a complete list.
 Generate Certificate
 --------------------
 
-Sometimes the cert/key pair in the github tree is corrupt or not sufficient for the environment.  You can run the following command to rebuild a local cert/key pair.
+Sometimes the cert/key pair in the github tree is corrupt or not sufficient for the environment.  The following command can be used to rebuild a local cert/key pair.
 
   ::
 
     sudo openssl req -new -x509 -keyout server.key -out server.crt -days 365 -nodes
 
 
-You may need to install the openssl tools.
+It may be necessary to install the openssl tools.
 
 Turn Up the Debug
 -----------------
 
-To get additional debug from dr-provision, you can set debug preferences to increase the logging.  See :ref:`rs_model_prefs`.
+To get additional debug from dr-provision, set debug preferences to increase the logging.  See :ref:`rs_model_prefs`.
 
 Rocket Skates?
 --------------

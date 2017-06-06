@@ -10,7 +10,7 @@ Developing Documentation
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 As an open source project, we encourage community feedback and involvement.  Docs can be updated by 
-pull requests against the `github <https://github.com/digitalrebar/provision>`_ repository either from your
+pull requests against the `github <https://github.com/digitalrebar/provision>`_ repository either from a private
 tree or directly against the tree.
 
 A couple of notes about consistency.
@@ -20,5 +20,5 @@ A couple of notes about consistency.
 #. API docs generated from the go files as part of swagger annotations of the godoc comments.  Update there, please.
 #. CLI docs generated from the cli files as part of cobra structures.  The tools generate those.  Update there, please.
 
-Otherwise, try and find a good place for what you want to add.  And Thanks!
+Otherwise, try and find a good place for what needs to be added.  And Thanks!
 
