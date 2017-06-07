@@ -76,13 +76,13 @@ Make some ISOs
 The provided :ref:`rs_model_bootenv` deploying the sshd example and k8s project.  To build these, we need to do a couple of things.
 
 * Edit the *examples/sshd.yml*
-  * Replace the "#your ssh key here" line with the contents of the SSH public key.  e.g. ~/.ssh/id_rsa.pub
+   * Replace the "#your ssh key here" line with the contents of the SSH public key.  e.g. ~/.ssh/id_rsa.pub
 * Run the moby build command
 
   ::
 
     # edit files
-    bin/moby build examples/sshd.yml
+    bin/moby build -output iso-bios examples/sshd.yml
 
 This will generate an ISO, *sshd.iso*.  Copy this file into the assets/isos directory (creating it if it doesn't exist) in the
 dr-provision install directory.
@@ -91,11 +91,13 @@ Additionally, we can build the Kubernetes images.  We still need to edit a coupl
 
 * cd projects/kubernetes
 * Edit the *k8s-master.yml*
-  * Replace the "#your ssh key here" line with the contents of the SSH public key.  e.g. ~/.ssh/id_rsa.pub
-  * At the end, make sure the *outputs:* section includes " - format: iso-bios".  Append it to the end of the file.
+   * Replace the "#your ssh key here" line with the contents of the SSH public key.  e.g. ~/.ssh/id_rsa.pub
 * Edit the *k8s-node.yml*
-  * Replace the "#your ssh key here" line with the contents of the SSH public key.  e.g. ~/.ssh/id_rsa.pub
-  * At the end, make sure the *outputs:* section includes " - format: iso-bios".  Append it to the end of the file.
+   * Replace the "#your ssh key here" line with the contents of the SSH public key.  e.g. ~/.ssh/id_rsa.pub
+* Edit the *Makefile*
+   * Add **-output iso-bios** to the moby build lines.  This will make sure to make ISOs.
+   * E.g. ../../bin/moby build -output iso-bios -name kube-master kube-master.yml
+   * E.g. ../../bin/moby build -output iso-bios -name kube-node kube-node.yml
 * Run the make command
 
   ::
