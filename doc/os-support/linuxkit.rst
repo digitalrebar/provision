@@ -52,7 +52,7 @@ Something like:
 
     mkdir -p lk-dr-trial/dr-provision
     cd lk-dr-trial/dr-provision
-    curl -fsSL https://raw.githubusercontent.com/digitalrebar/provision/master/tools/install.sh | bash -s -- --isolated --rs-version=tip install
+    curl -fsSL https://raw.githubusercontent.com/digitalrebar/provision/master/tools/install.sh | bash -s -- --isolated --drp-version=tip install
     # Follow the instructions at the end of the script
 
 
