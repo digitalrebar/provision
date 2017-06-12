@@ -57,7 +57,7 @@ command on both the server and the cli.
 Serving UI from File System
 ---------------------------
 
-When working on the Digital Rebar Provision UI, it is possible to skip the generate steps by using the `--dev-ui` flag.  Generally, this is started using `--dev-ui ./embedded/assets/ui`
+When working on the Digital Rebar Provision UI, it is possible to skip the generate steps by using the `--dev-ui` flag.  Generally, this is started using `--dev-ui ./embedded/assets/ui/public`
 
 
 .. _rs_testing:
