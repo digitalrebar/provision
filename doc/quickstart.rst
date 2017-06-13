@@ -9,6 +9,8 @@
 Quick Start
 ~~~~~~~~~~~
 
+_For full install, please see :ref:`rs_install`!_
+
 Typically, Curl and Bash are unsafe, but they are simple and quick.
 
   ::
@@ -36,6 +38,8 @@ The sudo command will run an instance of Digital Rebar Provision that uses the d
 directory for object and file storage.  Additionally, *dr-provision* will attempt
 to use the IP address best suited for client interaction, however if that detection fails, the IP
 address specified in by *--static-ip* will be used.
+
+.. note:: On MAC DARWIN there are two additional steps. First, use the ``--static-ip=`` flag to help the service understand traffic targets.  Second, you may have to add a route for broadcast addresses to work.  This can be done with the following comand.  The 192.168.100.1 is the IP address of the interface that you want to send messages through. The install script will make suggestions for you.
 
 The default username & password is ``rocketskates & r0cketsk8ts``.
 
