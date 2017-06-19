@@ -73,16 +73,16 @@ func init() {
 	}
 	App.PersistentFlags().StringVarP(&endpoint,
 		"endpoint", "E", endpoint,
-		"The Rocket-Skates API endpoint to talk to")
+		"The Digital Rebar Provision API endpoint to talk to")
 	App.PersistentFlags().StringVarP(&username,
 		"username", "U", username,
-		"Name of the Rocket-Skates user to talk to")
+		"Name of the Digital Rebar Provision user to talk to")
 	App.PersistentFlags().StringVarP(&password,
 		"password", "P", password,
-		"password of the Rocket-Skates user")
+		"password of the Digital Rebar Provision user")
 	App.PersistentFlags().StringVarP(&token,
 		"token", "T", token,
-		"token of the Rocket-Skates access")
+		"token of the Digital Rebar Provision access")
 	App.PersistentFlags().BoolVarP(&debug,
 		"debug", "d", false,
 		"Whether the CLI should run in debug mode")
@@ -96,7 +96,7 @@ func init() {
 	App.PersistentPreRun = func(c *cobra.Command, a []string) {
 		if session == nil {
 			var err error
-			d("Talking to Rocket-Skates with %v (%v:%v)", endpoint, username, password)
+			d("Talking to Digital Rebar Provision with %v (%v:%v)", endpoint, username, password)
 			tr := &http.Transport{
 				TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 			}
@@ -116,7 +116,7 @@ func init() {
 	}
 	App.AddCommand(&cobra.Command{
 		Use:   "version",
-		Short: "Rocket-Skates CLI Command Version",
+		Short: "Digital Rebar Provision CLI Command Version",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			fmt.Printf("Version: %v\n", version)
 			return nil
@@ -124,7 +124,7 @@ func init() {
 	})
 	App.AddCommand(&cobra.Command{
 		Use:   "autocomplete <filename>",
-		Short: "Rocket-Skates CLI Command Bash AutoCompletion File",
+		Short: "Digital Rebar Provision CLI Command Bash AutoCompletion File",
 		Long:  "Generate a bash autocomplete file as <filename>.\nPlace the generated file in /etc/bash_completion.d or /usr/local/etc/bash_completion.d.",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) != 1 {
@@ -601,7 +601,7 @@ empty object of that type.  For User, BootEnv, Machine, and Profile, it will be 
 	if ptrs, ok := pobj.(UploadOp); ok {
 		commands = append(commands, &cobra.Command{
 			Use:   "upload [file] as [name]",
-			Short: "Upload a local file to RocketSkates",
+			Short: "Upload a local file to Digital Rebar Provision",
 			RunE: func(c *cobra.Command, args []string) error {
 				if len(args) != 3 {
 					return fmt.Errorf("Wrong number of args: expected 3, got %d", len(args))
