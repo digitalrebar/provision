@@ -28,6 +28,8 @@ dr-provision.zip
 dr-provision.sha256
 server.key
 server.crt
+# Pip stuff for docs
+src
 
 # documentation
 builddir/
