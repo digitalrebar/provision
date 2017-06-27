@@ -10,7 +10,7 @@
 Digital Rebar Provision Workflows
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-PXE Provisioning requires hand-offs between multiple services and the nodes.  Generally, these flows start with network discovery (DHCP) providing a "next boot" instruction to the server's pre-execution environment (PXE) that can download a very limited operating system using a very simple file transfer protocol (TFTP).  That next operating system can then take more complex actions including using HTTP do download further files.
+PXE Provisioning requires hand-offs between multiple services and the nodes.  Generally, these flows start with network discovery (DHCP) providing a "next boot" instruction to the server's pre-execution environment (PXE) that can download a very limited operating system using a very simple file transfer protocol (TFTP).  That next operating system can then take more complex actions including using HTTP to download further files.
 
 :note: According to project :ref:`rs_design_restriction`, Digital Rebar Provision does not provide out-of-band management or orchestration.
 
@@ -32,8 +32,8 @@ This recommended process allows operators to start with minimal information abou
 
 .. _rs_provision_discovered: 
 
-Provision O/S from Discovered Systems
--------------------------------------
+Provision O/S on Discovered Systems
+-----------------------------------
 
 Once systems have been discovered using :ref:`rs_basic_discovery`, their machine BootEnv can be set to an O/S installation image.  The recommended BootEnvs for these images includes an automatic machines API call that sets the machine to boot to local disk (BootEnv = local).
 
