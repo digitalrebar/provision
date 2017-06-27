@@ -15,7 +15,7 @@ var templateDefaultListString string = `[
     "ID": "local-elilo.tmpl"
   },
   {
-    "Contents": "#!ipxe\nexit",
+    "Contents": "#!ipxe\nexit 1\n",
     "ID": "local-ipxe.tmpl"
   },
   {
@@ -72,7 +72,7 @@ var templateListBothEnvsString = `[
     "ID": "local-elilo.tmpl"
   },
   {
-    "Contents": "#!ipxe\nexit",
+    "Contents": "#!ipxe\nexit 1\n",
     "ID": "local-ipxe.tmpl"
   },
   {
