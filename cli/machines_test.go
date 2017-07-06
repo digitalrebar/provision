@@ -19,14 +19,21 @@ var machineShowTooManyArgErrorString string = "Error: drpcli machines show [id] 
 var machineShowMissingArgErrorString string = "Error: machines GET: john: Not Found\n\n"
 var machineShowMachineString string = `{
   "Address": "192.168.100.110",
+  "Available": true,
   "BootEnv": "local",
   "Errors": null,
   "Name": "john",
   "Profile": {
-    "Name": ""
+    "Available": false,
+    "Errors": null,
+    "Name": "",
+    "Tasks": null,
+    "Validated": false
   },
   "Profiles": null,
-  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+  "Tasks": null,
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
 }
 `
 
@@ -50,14 +57,21 @@ var machineCreateInputString string = `{
 `
 var machineCreateJohnString string = `{
   "Address": "192.168.100.110",
+  "Available": true,
   "BootEnv": "local",
   "Errors": null,
   "Name": "john",
   "Profile": {
-    "Name": ""
+    "Available": false,
+    "Errors": null,
+    "Name": "",
+    "Tasks": null,
+    "Validated": false
   },
   "Profiles": null,
-  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+  "Tasks": null,
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
 }
 `
 
@@ -66,14 +80,21 @@ var machineCreateDuplicateErrorString = "Error: dataTracker create machines: 3e7
 var machineListMachinesString = `[
   {
     "Address": "192.168.100.110",
+    "Available": true,
     "BootEnv": "local",
     "Errors": null,
     "Name": "john",
     "Profile": {
-      "Name": ""
+      "Available": false,
+      "Errors": null,
+      "Name": "",
+      "Tasks": null,
+      "Validated": false
     },
     "Profiles": null,
-    "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+    "Tasks": null,
+    "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+    "Validated": true
   }
 ]
 `
@@ -88,15 +109,22 @@ var machineUpdateInputString string = `{
 `
 var machineUpdateJohnString string = `{
   "Address": "192.168.100.110",
+  "Available": true,
   "BootEnv": "local",
   "Description": "lpxelinux.0",
   "Errors": null,
   "Name": "john",
   "Profile": {
-    "Name": ""
+    "Available": false,
+    "Errors": null,
+    "Name": "",
+    "Tasks": null,
+    "Validated": false
   },
   "Profiles": null,
-  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+  "Tasks": null,
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
 }
 `
 var machineUpdateJohnMissingErrorString string = "Error: machines GET: john2: Not Found\n\n"
@@ -117,6 +145,7 @@ var machinePatchBaseString string = `{
     "Name": ""
   },
   "Profiles": null,
+  "Tasks": null,
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
 }
 `
@@ -126,15 +155,22 @@ var machinePatchInputString string = `{
 `
 var machinePatchJohnString string = `{
   "Address": "192.168.100.110",
+  "Available": true,
   "BootEnv": "local",
   "Description": "bootx64.efi",
   "Errors": null,
   "Name": "john",
   "Profile": {
-    "Name": ""
+    "Available": false,
+    "Errors": null,
+    "Name": "",
+    "Tasks": null,
+    "Validated": false
   },
   "Profiles": null,
-  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+  "Tasks": null,
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
 }
 `
 var machinePatchMissingBaseString string = `{
@@ -147,6 +183,7 @@ var machinePatchMissingBaseString string = `{
     "Name": ""
   },
   "Profiles": null,
+  "Tasks": null,
   "Uuid": "3e7031fe-5555-45f1-835c-92541bc9cbd3"
 }
 `
@@ -154,61 +191,96 @@ var machinePatchJohnMissingErrorString string = "Error: machines: PATCH 3e7031fe
 
 var machineAddProfileJillString string = `{
   "Address": "192.168.100.110",
+  "Available": false,
   "BootEnv": "local",
   "Description": "lpxelinux.0",
-  "Errors": null,
+  "Errors": [
+    "Profile jill (at 0) does not exist"
+  ],
   "Name": "john",
   "Profile": {
-    "Name": ""
+    "Available": false,
+    "Errors": null,
+    "Name": "",
+    "Tasks": null,
+    "Validated": false
   },
   "Profiles": [
     "jill"
   ],
-  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+  "Tasks": null,
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
 }
 `
 var machineAddProfileJillJeanString string = `{
   "Address": "192.168.100.110",
+  "Available": false,
   "BootEnv": "local",
   "Description": "lpxelinux.0",
-  "Errors": null,
+  "Errors": [
+    "Profile jill (at 0) does not exist",
+    "Profile jean (at 1) does not exist"
+  ],
   "Name": "john",
   "Profile": {
-    "Name": ""
+    "Available": false,
+    "Errors": null,
+    "Name": "",
+    "Tasks": null,
+    "Validated": false
   },
   "Profiles": [
     "jill",
     "jean"
   ],
-  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+  "Tasks": null,
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
 }
 `
 var machineRemoveProfileJeanString string = `{
   "Address": "192.168.100.110",
+  "Available": false,
   "BootEnv": "local",
   "Description": "lpxelinux.0",
-  "Errors": null,
+  "Errors": [
+    "Profile jean (at 0) does not exist"
+  ],
   "Name": "john",
   "Profile": {
-    "Name": ""
+    "Available": false,
+    "Errors": null,
+    "Name": "",
+    "Tasks": null,
+    "Validated": false
   },
   "Profiles": [
     "jean"
   ],
-  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+  "Tasks": null,
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
 }
 `
 var machineRemoveProfileAllGoneString string = `{
   "Address": "192.168.100.110",
+  "Available": true,
   "BootEnv": "local",
   "Description": "lpxelinux.0",
   "Errors": null,
   "Name": "john",
   "Profile": {
-    "Name": ""
+    "Available": false,
+    "Errors": null,
+    "Name": "",
+    "Tasks": null,
+    "Validated": false
   },
   "Profiles": [],
-  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+  "Tasks": null,
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
 }
 `
 
@@ -219,7 +291,28 @@ var machineDestroyMissingJohnString string = "Error: machines: DELETE 3e7031fe-3
 
 var machineBootEnvNoArgErrorString string = "Error: drpcli machines bootenv [id] [bootenv] requires 2 arguments"
 var machineBootEnvMissingMachineErrorString string = "Error: machines GET: john: Not Found\n\n"
-var machineBootEnvBadBootEnvErrorString string = "Error: Machine 3e7031fe-3062-45f1-835c-92541bc9cbd3 has BootEnv john2, which is not present in the DataTracker\n\n"
+var machineBootEnvErrorBootEnvString string = `{
+  "Address": "192.168.100.110",
+  "Available": false,
+  "BootEnv": "john2",
+  "Description": "lpxelinux.0",
+  "Errors": [
+    "Bootenv john2 does not exist"
+  ],
+  "Name": "john",
+  "Profile": {
+    "Available": false,
+    "Errors": null,
+    "Name": "",
+    "Tasks": null,
+    "Validated": false
+  },
+  "Profiles": null,
+  "Tasks": null,
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
+}
+`
 
 var machineGetNoArgErrorString string = "Error: drpcli machines get [id] param [key] requires 3 arguments"
 var machineGetMissingMachineErrorString string = "Error: machines GET Params: john: Not Found\n\n"
@@ -241,18 +334,25 @@ var machinesParamsNextString string = `{
 `
 var machineUpdateJohnWithParamsString string = `{
   "Address": "192.168.100.110",
+  "Available": true,
   "BootEnv": "local",
   "Description": "lpxelinux.0",
   "Errors": null,
   "Name": "john",
   "Profile": {
+    "Available": false,
+    "Errors": null,
     "Name": "",
     "Params": {
       "jj": 3
-    }
+    },
+    "Tasks": null,
+    "Validated": false
   },
   "Profiles": [],
-  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+  "Tasks": null,
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
 }
 `
 
@@ -346,7 +446,7 @@ func TestMachineCli(t *testing.T) {
 
 		CliTest{true, true, []string{"machines", "bootenv"}, noStdinString, noContentString, machineBootEnvNoArgErrorString},
 		CliTest{false, true, []string{"machines", "bootenv", "john", "john2"}, noStdinString, noContentString, machineBootEnvMissingMachineErrorString},
-		CliTest{false, true, []string{"machines", "bootenv", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "john2"}, noStdinString, noContentString, machineBootEnvBadBootEnvErrorString},
+		CliTest{false, false, []string{"machines", "bootenv", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "john2"}, noStdinString, machineBootEnvErrorBootEnvString, noErrorString},
 		CliTest{false, false, []string{"machines", "bootenv", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "local"}, noStdinString, machineUpdateJohnString, noErrorString},
 
 		CliTest{true, true, []string{"machines", "addprofile"}, noStdinString, noContentString, machineAddProfileNoArgErrorString},

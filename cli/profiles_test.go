@@ -6,7 +6,11 @@ import (
 
 var profileDefaultListString string = `[
   {
-    "Name": "global"
+    "Available": true,
+    "Errors": null,
+    "Name": "global",
+    "Tasks": null,
+    "Validated": true
   }
 ]
 `
@@ -17,10 +21,14 @@ var profileShowNoArgErrorString string = "Error: drpcli profiles show [id] requi
 var profileShowTooManyArgErrorString string = "Error: drpcli profiles show [id] requires 1 argument\n"
 var profileShowMissingArgErrorString string = "Error: profiles GET: john2: Not Found\n\n"
 var profileShowProfileString string = `{
+  "Available": true,
+  "Errors": null,
   "Name": "john",
   "Params": {
     "FRED": "GREG"
-  }
+  },
+  "Tasks": null,
+  "Validated": true
 }
 `
 
@@ -43,32 +51,48 @@ var profileCreateInputString string = `{
 }
 `
 var profileCreateJohnString string = `{
+  "Available": true,
+  "Errors": null,
   "Name": "john",
   "Params": {
     "FRED": "GREG"
-  }
+  },
+  "Tasks": null,
+  "Validated": true
 }
 `
 var profileCreateDuplicateErrorString = "Error: dataTracker create profiles: john already exists\n\n"
 
 var profileListProfilesString = `[
   {
-    "Name": "global"
+    "Available": true,
+    "Errors": null,
+    "Name": "global",
+    "Tasks": null,
+    "Validated": true
   },
   {
+    "Available": true,
+    "Errors": null,
     "Name": "john",
     "Params": {
       "FRED": "GREG"
-    }
+    },
+    "Tasks": null,
+    "Validated": true
   }
 ]
 `
 var profileListJohnOnlyString = `[
   {
+    "Available": true,
+    "Errors": null,
     "Name": "john",
     "Params": {
       "FRED": "GREG"
-    }
+    },
+    "Tasks": null,
+    "Validated": true
   }
 ]
 `
@@ -84,11 +108,15 @@ var profileUpdateInputString string = `{
 }
 `
 var profileUpdateJohnString string = `{
+  "Available": true,
+  "Errors": null,
   "Name": "john",
   "Params": {
     "FRED": "GREG",
     "JESSIE": "JAMES"
-  }
+  },
+  "Tasks": null,
+  "Validated": true
 }
 `
 var profileUpdateJohnMissingErrorString string = "Error: profiles GET: john2: Not Found\n\n"
@@ -116,12 +144,16 @@ var profilePatchInputString string = `{
 }
 `
 var profilePatchJohnString string = `{
+  "Available": true,
+  "Errors": null,
   "Name": "john",
   "Params": {
     "FRED": "LYNN",
     "JESSIE": "HAUG",
     "JOHN": "StClaire"
-  }
+  },
+  "Tasks": null,
+  "Validated": true
 }
 `
 var profilePatchMissingBaseString string = `{
@@ -162,10 +194,14 @@ var profilesParamsNextString string = `{
 }
 `
 var profileUpdateJohnWithParamsString string = `{
+  "Available": true,
+  "Errors": null,
   "Name": "john",
   "Params": {
     "jj": 3
-  }
+  },
+  "Tasks": null,
+  "Validated": true
 }
 `
 
