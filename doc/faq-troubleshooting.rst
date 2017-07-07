@@ -39,9 +39,29 @@ Sometimes the cert/key pair in the github tree is corrupt or not sufficient for 
 
     sudo openssl req -new -x509 -keyout server.key -out server.crt -days 365 -nodes
 
-
 It may be necessary to install the openssl tools.
 
+Add SSH Keys to Authorized Keys
+-------------------------------
+
+To have provisioned operating systems (including discovery/sledgehammer) add keys, you should set the ``access`` keys parameter with a hash of the desired keys.  This can be accomplished by editing the root access profile to add your key(s) and then update the profile via the CLI.
+
+  ::
+
+    vi assets/profiles/root-access.yaml
+    ./drpcli profiles update global - < assets/profiles/root-access.yaml
+    
+note: you should use the ``global`` profile is you the keys used for all installs.
+
+Turn on autocomplete for the CLI
+--------------------------------
+
+The DRP CLI will automatically create the autocomplete file if a path is provided.
+
+  ::
+  
+    ./drpcli autocomplete /etc/bash_completion.d/drpcli
+    
 Turn Up the Debug
 -----------------
 
