@@ -44,23 +44,38 @@ It may be necessary to install the openssl tools.
 Add SSH Keys to Authorized Keys
 -------------------------------
 
-To have provisioned operating systems (including discovery/sledgehammer) add keys, you should set the ``access`` keys parameter with a hash of the desired keys.  This can be accomplished by editing the root access profile to add your key(s) and then update the profile via the CLI.
+To have provisioned operating systems (including discovery/sledgehammer) add keys, you should set the ``access_keys`` parameter with a hash of the desired keys.  This can be accomplished by editing the root access profile to add your key(s) and then update the profile via the CLI.
 
   ::
 
     vi assets/profiles/root-access.yaml
-    ./drpcli profiles update global - < assets/profiles/root-access.yaml
+    ./drpcli profiles update root-access - < assets/profiles/root-access.yaml
     
-note: you should use the ``global`` profile is you the keys used for all installs.
+NOTE: By default, these changes are targeted at the ``root-access`` profile and you will need to add that profile to selected machines for your keys to be injected.
+
+If you want this parameter applied to all machines by default, then you should change ``root-access`` to ``global`` in the yaml file and command line.  
+
+  ::
+
+    cp assets/profiles/root-access.yaml assets/profiles/global.yaml
+    # remember to change root-access to global!
+    vi assets/profiles/global.yaml
+    ./drpcli profiles update global - < assets/profiles/global.yaml
 
 Turn on autocomplete for the CLI
 --------------------------------
 
-The DRP CLI will automatically create the autocomplete file if a path is provided.
+The DRP CLI will automatically create the autocomplete file if a path is provided.  You must make sure to use the correct path!  The example below is for Ubuntu.
 
   ::
   
     ./drpcli autocomplete /etc/bash_completion.d/drpcli
+    
+Log out and log back in to take effect or run:
+
+  * ``. /etc/bash_completion`` # On Ubuntu
+  * ``. /etc/profile.d/bash_completion.sh`` # On Centos
+  * ``. /usr/local/etc/bash_completion`` # On OS X with bash 4 installed.
     
 Turn Up the Debug
 -----------------
