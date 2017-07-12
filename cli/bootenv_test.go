@@ -28,6 +28,7 @@ var bootEnvDefaultListString string = `[
     "OnlyUnknown": true,
     "OptionalParams": null,
     "RequiredParams": null,
+    "Tasks": null,
     "Templates": [
       {
         "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
@@ -44,7 +45,8 @@ var bootEnvDefaultListString string = `[
         "Name": "ipxe",
         "Path": "default.ipxe"
       }
-    ]
+    ],
+    "Validated": true
   }
 ]
 `
@@ -66,6 +68,7 @@ var bootEnvShowIgnoreString string = `{
   "OnlyUnknown": true,
   "OptionalParams": null,
   "RequiredParams": null,
+  "Tasks": null,
   "Templates": [
     {
       "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
@@ -82,7 +85,8 @@ var bootEnvShowIgnoreString string = `{
       "Name": "ipxe",
       "Path": "default.ipxe"
     }
-  ]
+  ],
+  "Validated": true
 }
 `
 
@@ -114,7 +118,9 @@ var bootEnvCreateJohnString string = `{
   "OnlyUnknown": false,
   "OptionalParams": null,
   "RequiredParams": null,
-  "Templates": null
+  "Tasks": null,
+  "Templates": null,
+  "Validated": true
 }
 `
 var bootEnvCreateFredInputString string = `fred`
@@ -133,7 +139,9 @@ var bootEnvCreateFredString string = `{
   "OnlyUnknown": false,
   "OptionalParams": null,
   "RequiredParams": null,
-  "Templates": null
+  "Tasks": null,
+  "Templates": null,
+  "Validated": true
 }
 `
 var bootEnvDeleteFredString string = "Deleted bootenv fred\n"
@@ -154,6 +162,7 @@ var bootEnvListBothEnvsString = `[
     "OnlyUnknown": true,
     "OptionalParams": null,
     "RequiredParams": null,
+    "Tasks": null,
     "Templates": [
       {
         "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
@@ -170,7 +179,8 @@ var bootEnvListBothEnvsString = `[
         "Name": "ipxe",
         "Path": "default.ipxe"
       }
-    ]
+    ],
+    "Validated": true
   },
   {
     "Available": false,
@@ -187,7 +197,9 @@ var bootEnvListBothEnvsString = `[
     "OnlyUnknown": false,
     "OptionalParams": null,
     "RequiredParams": null,
-    "Templates": null
+    "Tasks": null,
+    "Templates": null,
+    "Validated": true
   }
 ]
 `
@@ -215,7 +227,9 @@ var bootEnvUpdateJohnString string = `{
   "OnlyUnknown": false,
   "OptionalParams": null,
   "RequiredParams": null,
-  "Templates": null
+  "Tasks": null,
+  "Templates": null,
+  "Validated": true
 }
 `
 var bootEnvUpdateJohnMissingErrorString string = "Error: bootenvs GET: john2: Not Found\n\n"
@@ -241,7 +255,9 @@ var bootEnvPatchBaseString string = `{
   "OnlyUnknown": false,
   "OptionalParams": null,
   "RequiredParams": null,
-  "Templates": null
+  "Tasks": null,
+  "Templates": null,
+  "Validated": true
 }
 `
 var bootEnvPatchInputString string = `{
@@ -263,7 +279,9 @@ var bootEnvPatchJohnString string = `{
   "OnlyUnknown": false,
   "OptionalParams": null,
   "RequiredParams": null,
-  "Templates": null
+  "Tasks": null,
+  "Templates": null,
+  "Validated": true
 }
 `
 var bootEnvPatchMissingBaseString string = `{
@@ -281,7 +299,9 @@ var bootEnvPatchMissingBaseString string = `{
   "OnlyUnknown": false,
   "OptionalParams": null,
   "RequiredParams": null,
-  "Templates": null
+  "Tasks": null,
+  "Templates": null,
+  "Validated": true
 }
 `
 var bootEnvPatchJohnMissingErrorString string = "Error: bootenvs: PATCH john2: Not Found\n\n"
@@ -333,9 +353,11 @@ var bootEnvInstallSledgehammerSuccessString string = `RE:
     "access_keys"
   \],
   "RequiredParams": null,
+  "Tasks": null,
   "Templates": \[
 [\s\S]*
-  \]
+  \],
+  "Validated": [\s\S]*
 }
 `
 
@@ -354,6 +376,7 @@ var bootEnvInstallLocalSuccessString string = `{
   "OnlyUnknown": false,
   "OptionalParams": null,
   "RequiredParams": null,
+  "Tasks": null,
   "Templates": [
     {
       "ID": "local-pxelinux.tmpl",
@@ -370,7 +393,8 @@ var bootEnvInstallLocalSuccessString string = `{
       "Name": "ipxe",
       "Path": "{{.Machine.Address}}.ipxe"
     }
-  ]
+  ],
+  "Validated": true
 }
 `
 

@@ -23,9 +23,11 @@ var machineShowMachineString string = `{
   "Errors": null,
   "Name": "john",
   "Profile": {
-    "Name": ""
+    "Name": "",
+    "Tasks": null
   },
   "Profiles": null,
+  "Tasks": null,
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
 }
 `
@@ -54,9 +56,11 @@ var machineCreateJohnString string = `{
   "Errors": null,
   "Name": "john",
   "Profile": {
-    "Name": ""
+    "Name": "",
+    "Tasks": null
   },
   "Profiles": null,
+  "Tasks": null,
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
 }
 `
@@ -70,9 +74,11 @@ var machineListMachinesString = `[
     "Errors": null,
     "Name": "john",
     "Profile": {
-      "Name": ""
+      "Name": "",
+      "Tasks": null
     },
     "Profiles": null,
+    "Tasks": null,
     "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
   }
 ]
@@ -93,9 +99,11 @@ var machineUpdateJohnString string = `{
   "Errors": null,
   "Name": "john",
   "Profile": {
-    "Name": ""
+    "Name": "",
+    "Tasks": null
   },
   "Profiles": null,
+  "Tasks": null,
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
 }
 `
@@ -117,6 +125,7 @@ var machinePatchBaseString string = `{
     "Name": ""
   },
   "Profiles": null,
+  "Tasks": null,
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
 }
 `
@@ -131,9 +140,11 @@ var machinePatchJohnString string = `{
   "Errors": null,
   "Name": "john",
   "Profile": {
-    "Name": ""
+    "Name": "",
+    "Tasks": null
   },
   "Profiles": null,
+  "Tasks": null,
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
 }
 `
@@ -147,6 +158,7 @@ var machinePatchMissingBaseString string = `{
     "Name": ""
   },
   "Profiles": null,
+  "Tasks": null,
   "Uuid": "3e7031fe-5555-45f1-835c-92541bc9cbd3"
 }
 `
@@ -159,11 +171,13 @@ var machineAddProfileJillString string = `{
   "Errors": null,
   "Name": "john",
   "Profile": {
-    "Name": ""
+    "Name": "",
+    "Tasks": null
   },
   "Profiles": [
     "jill"
   ],
+  "Tasks": null,
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
 }
 `
@@ -174,15 +188,18 @@ var machineAddProfileJillJeanString string = `{
   "Errors": null,
   "Name": "john",
   "Profile": {
-    "Name": ""
+    "Name": "",
+    "Tasks": null
   },
   "Profiles": [
     "jill",
     "jean"
   ],
+  "Tasks": null,
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
 }
 `
+var machineAddProfileJillJeanJillErrorString string = "Error: Duplicate profile jill: at 0 and 2\n\n"
 var machineRemoveProfileJeanString string = `{
   "Address": "192.168.100.110",
   "BootEnv": "local",
@@ -190,11 +207,13 @@ var machineRemoveProfileJeanString string = `{
   "Errors": null,
   "Name": "john",
   "Profile": {
-    "Name": ""
+    "Name": "",
+    "Tasks": null
   },
   "Profiles": [
     "jean"
   ],
+  "Tasks": null,
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
 }
 `
@@ -205,9 +224,11 @@ var machineRemoveProfileAllGoneString string = `{
   "Errors": null,
   "Name": "john",
   "Profile": {
-    "Name": ""
+    "Name": "",
+    "Tasks": null
   },
-  "Profiles": [],
+  "Profiles": null,
+  "Tasks": null,
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
 }
 `
@@ -219,7 +240,7 @@ var machineDestroyMissingJohnString string = "Error: machines: DELETE 3e7031fe-3
 
 var machineBootEnvNoArgErrorString string = "Error: drpcli machines bootenv [id] [bootenv] requires 2 arguments"
 var machineBootEnvMissingMachineErrorString string = "Error: machines GET: john: Not Found\n\n"
-var machineBootEnvBadBootEnvErrorString string = "Error: Machine 3e7031fe-3062-45f1-835c-92541bc9cbd3 has BootEnv john2, which is not present in the DataTracker\n\n"
+var machineBootEnvErrorBootEnvString string = "Error: Bootenv john2 does not exist\n\n"
 
 var machineGetNoArgErrorString string = "Error: drpcli machines get [id] param [key] requires 3 arguments"
 var machineGetMissingMachineErrorString string = "Error: machines GET Params: john: Not Found\n\n"
@@ -249,10 +270,23 @@ var machineUpdateJohnWithParamsString string = `{
     "Name": "",
     "Params": {
       "jj": 3
-    }
+    },
+    "Tasks": null
   },
-  "Profiles": [],
+  "Profiles": null,
+  "Tasks": null,
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+}
+`
+
+var machineJillCreate string = `{
+  "Name": "jill",
+  "Tasks": null
+}
+`
+var machineJeanCreate string = `{
+  "Name": "jean",
+  "Tasks": null
 }
 `
 
@@ -276,6 +310,8 @@ func TestMachineCli(t *testing.T) {
 
 	tests := []CliTest{
 		CliTest{false, false, []string{"bootenvs", "install", "bootenvs/local.yml"}, noStdinString, bootEnvInstallLocalSuccessString, noErrorString},
+		CliTest{false, false, []string{"profiles", "create", "jill"}, noStdinString, machineJillCreate, noErrorString},
+		CliTest{false, false, []string{"profiles", "create", "jean"}, noStdinString, machineJeanCreate, noErrorString},
 
 		CliTest{true, false, []string{"machines"}, noStdinString, "Access CLI commands relating to machines\n", ""},
 		CliTest{false, false, []string{"machines", "list"}, noStdinString, machineDefaultListString, noErrorString},
@@ -346,13 +382,13 @@ func TestMachineCli(t *testing.T) {
 
 		CliTest{true, true, []string{"machines", "bootenv"}, noStdinString, noContentString, machineBootEnvNoArgErrorString},
 		CliTest{false, true, []string{"machines", "bootenv", "john", "john2"}, noStdinString, noContentString, machineBootEnvMissingMachineErrorString},
-		CliTest{false, true, []string{"machines", "bootenv", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "john2"}, noStdinString, noContentString, machineBootEnvBadBootEnvErrorString},
+		CliTest{false, true, []string{"machines", "bootenv", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "john2"}, noStdinString, noContentString, machineBootEnvErrorBootEnvString},
 		CliTest{false, false, []string{"machines", "bootenv", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "local"}, noStdinString, machineUpdateJohnString, noErrorString},
 
 		CliTest{true, true, []string{"machines", "addprofile"}, noStdinString, noContentString, machineAddProfileNoArgErrorString},
 		CliTest{false, false, []string{"machines", "addprofile", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "jill"}, noStdinString, machineAddProfileJillString, noErrorString},
 		CliTest{false, false, []string{"machines", "addprofile", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "jean"}, noStdinString, machineAddProfileJillJeanString, noErrorString},
-		CliTest{false, false, []string{"machines", "addprofile", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "jill"}, noStdinString, machineAddProfileJillJeanString, noErrorString},
+		CliTest{false, true, []string{"machines", "addprofile", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "jill"}, noStdinString, noContentString, machineAddProfileJillJeanJillErrorString},
 		CliTest{true, true, []string{"machines", "removeprofile"}, noStdinString, noContentString, machineRemoveProfileNoArgErrorString},
 		CliTest{false, false, []string{"machines", "removeprofile", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "justine"}, noStdinString, machineAddProfileJillJeanString, noErrorString},
 		CliTest{false, false, []string{"machines", "removeprofile", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "jill"}, noStdinString, machineRemoveProfileJeanString, noErrorString},
@@ -386,6 +422,8 @@ func TestMachineCli(t *testing.T) {
 		CliTest{false, false, []string{"machines", "destroy", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, machineDestroyJohnString, noErrorString},
 		CliTest{false, false, []string{"machines", "list"}, noStdinString, machineDefaultListString, noErrorString},
 
+		CliTest{false, false, []string{"profiles", "destroy", "jill"}, noStdinString, "Deleted profile jill\n", noErrorString},
+		CliTest{false, false, []string{"profiles", "destroy", "jean"}, noStdinString, "Deleted profile jean\n", noErrorString},
 		CliTest{false, false, []string{"bootenvs", "destroy", "local"}, noStdinString, "Deleted bootenv local\n", noErrorString},
 		CliTest{false, false, []string{"templates", "destroy", "local-pxelinux.tmpl"}, noStdinString, "Deleted template local-pxelinux.tmpl\n", noErrorString},
 		CliTest{false, false, []string{"templates", "destroy", "local-elilo.tmpl"}, noStdinString, "Deleted template local-elilo.tmpl\n", noErrorString},

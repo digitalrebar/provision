@@ -195,6 +195,7 @@ var yamlTestString = `- Available: true
   OnlyUnknown: true
   OptionalParams: null
   RequiredParams: null
+  Tasks: null
   Templates:
   - Contents: |
       DEFAULT local
@@ -212,6 +213,7 @@ var yamlTestString = `- Available: true
       chain tftp://{{.ProvisionerAddress}}/${netX/ip}.ipxe || exit
     Name: ipxe
     Path: default.ipxe
+  Validated: true
 
 `
 
@@ -230,6 +232,7 @@ var jsonTestString = `[
     "OnlyUnknown": true,
     "OptionalParams": null,
     "RequiredParams": null,
+    "Tasks": null,
     "Templates": [
       {
         "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
@@ -246,7 +249,8 @@ var jsonTestString = `[
         "Name": "ipxe",
         "Path": "default.ipxe"
       }
-    ]
+    ],
+    "Validated": true
   }
 ]
 `

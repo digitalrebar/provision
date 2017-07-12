@@ -6,7 +6,8 @@ import (
 
 var profileDefaultListString string = `[
   {
-    "Name": "global"
+    "Name": "global",
+    "Tasks": null
   }
 ]
 `
@@ -20,7 +21,8 @@ var profileShowProfileString string = `{
   "Name": "john",
   "Params": {
     "FRED": "GREG"
-  }
+  },
+  "Tasks": null
 }
 `
 
@@ -46,20 +48,23 @@ var profileCreateJohnString string = `{
   "Name": "john",
   "Params": {
     "FRED": "GREG"
-  }
+  },
+  "Tasks": null
 }
 `
 var profileCreateDuplicateErrorString = "Error: dataTracker create profiles: john already exists\n\n"
 
 var profileListProfilesString = `[
   {
-    "Name": "global"
+    "Name": "global",
+    "Tasks": null
   },
   {
     "Name": "john",
     "Params": {
       "FRED": "GREG"
-    }
+    },
+    "Tasks": null
   }
 ]
 `
@@ -68,7 +73,8 @@ var profileListJohnOnlyString = `[
     "Name": "john",
     "Params": {
       "FRED": "GREG"
-    }
+    },
+    "Tasks": null
   }
 ]
 `
@@ -88,7 +94,8 @@ var profileUpdateJohnString string = `{
   "Params": {
     "FRED": "GREG",
     "JESSIE": "JAMES"
-  }
+  },
+  "Tasks": null
 }
 `
 var profileUpdateJohnMissingErrorString string = "Error: profiles GET: john2: Not Found\n\n"
@@ -121,7 +128,8 @@ var profilePatchJohnString string = `{
     "FRED": "LYNN",
     "JESSIE": "HAUG",
     "JOHN": "StClaire"
-  }
+  },
+  "Tasks": null
 }
 `
 var profilePatchMissingBaseString string = `{
@@ -165,7 +173,8 @@ var profileUpdateJohnWithParamsString string = `{
   "Name": "john",
   "Params": {
     "jj": 3
-  }
+  },
+  "Tasks": null
 }
 `
 
