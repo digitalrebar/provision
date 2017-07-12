@@ -199,11 +199,6 @@ func addMachineCommands() (res *cobra.Command) {
 			}
 
 			machine, _ := data.(*models.Machine)
-			for _, s := range machine.Profiles {
-				if s == args[1] {
-					return prettyPrint(data)
-				}
-			}
 			machine.Profiles = append(machine.Profiles, args[1])
 			merged, err := json.Marshal(machine)
 			if err != nil {
@@ -256,6 +251,9 @@ func addMachineCommands() (res *cobra.Command) {
 				newProfiles = append(newProfiles, s)
 			}
 			machine.Profiles = newProfiles
+			if len(newProfiles) == 0 {
+				machine.Profiles = nil
+			}
 
 			if !changed {
 				return prettyPrint(data)
