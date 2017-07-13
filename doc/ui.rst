@@ -60,6 +60,15 @@ Profiles provide a convenient way to apply sets of parameters to a machine. Mult
 
 Parameters can be linked to specific profiles through the profiles page, which can then be attached to machines through the machines UI.
 
+.. _rs_ui_params:
+
+Parameters (params)
+-------------------
+
+Parameters are passed to a template from a machine, and help to drive the template's functions. They consist of key/value pairs that provide configuration to the renderer.
+
+Profiles allow params to be applied in bulk, or they can be attached to templates individually.
+
 .. _rs_ui_reservations:
 
 Reservations
