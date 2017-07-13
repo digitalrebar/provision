@@ -40,6 +40,17 @@ Configuring at least one Boot Environment is a critical first step in Digital Re
 
 The UI will show a complete list of potential Boot Environments;
 
+.. _rs_ui_machines:
+
+Machines
+--------
+
+Machines are central to the provisioning process, as they connect Boot Environments to incoming IP addresses. Desired BootEnvs can be assigned to machines from this page.
+
+If a machine is not given a BootEnv, it will use the BootEnv listed as *defaultBootEnv* on the BootEnvs Preferences page.
+
+Profiles can also be bound to machines from this view. Machines will relay the parameters of a profile to the templates provided by the selected BootEnv.
+
 .. _rs_ui_profiles:
 
 Profiles
