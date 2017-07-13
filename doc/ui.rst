@@ -39,3 +39,12 @@ Boot Environments (bootenvs)
 Configuring at least one Boot Environment is a critical first step in Digital Rebar Provision operation.  The Digital Rebar CentOS based in-memory discovery image, Sledgehammer, will be installed on first use by default.
 
 The UI will show a complete list of potential Boot Environments;
+
+.. _rs_ui_profiles:
+
+Profiles
+--------
+
+Profiles provide a convenient way to apply sets of parameters to a machine. Multiple profiles can be assigned to one machine, and will be referenced in the order they are listed.
+
+Parameters can be linked to specific profiles through the profiles page, which can then be attached to machines through the machines UI.
