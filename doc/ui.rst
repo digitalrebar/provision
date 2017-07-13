@@ -60,6 +60,15 @@ Profiles provide a convenient way to apply sets of parameters to a machine. Mult
 
 Parameters can be linked to specific profiles through the profiles page, which can then be attached to machines through the machines UI.
 
+.. _rs_ui_templates:
+
+Templates
+---------
+
+Templates contain important instructions for the provisioning process, and are comprised of `golang text/template <https://golang.org/pkg/text/template/#hdr-Actions>`_ strings. Once templates are rendered along with any assigned parameters, they are used by the BootEnv to boot the target machine.
+
+Templates may contain other templates, known as sub-templates.
+
 .. _rs_ui_params:
 
 Parameters (params)
