@@ -43,6 +43,31 @@ An example command sequence for Linux would be:
 At this point, the **install.sh** script is available in the **tools** directory.  It can be used to continue the process or
 continue following the steps in the next sections.  *tools/install.sh --help* will provide help and context information.
 
+Configuration Options
+---------------------
+
+Using ``dr-provision --help`` will provide the most complete list of configuration options.  The following common items are provided for reference.
+
+  ::
+  
+      --version                Print Version and exit
+      --disable-provisioner    Disable provisioner
+      --disable-dhcp           Disable DHCP
+      --static-port=           Port the static HTTP file server should listen on (default: 8091)
+      --tftp-port=             Port for the TFTP server to listen on (default: 69)
+      --api-port=              Port for the API server to listen on (default: 8092)
+      --dhcp-port=             Port for the DHCP server to listen on (default: 67)
+      --backend=               Storage backend to use. Can be either 'consul' or 'directory' (default: directory)
+      --data-root=             Location we should store runtime information in (default: /var/lib/dr-provision)
+      --static-ip=             IP address to advertise for the static HTTP file server (default: 192.168.124.11)
+      --file-root=             Root of filesystem we should manage (default: /var/lib/tftpboot)
+      --dhcp-ifs=              Comma-seperated list of interfaces to listen for DHCP packets
+      --debug-bootenv=         Debug level for the BootEnv System - 0 = off, 1 = info, 2 = debug (default: 0)
+      --debug-dhcp=            Debug level for the DHCP Server - 0 = off, 1 = info, 2 = debug (default: 0)
+      --debug-renderer=        Debug level for the Template Renderer - 0 = off, 1 = info, 2 = debug (default: 0)
+      --tls-key=               The TLS Key File (default: server.key)
+      --tls-cert=              The TLS Cert File (default: server.crt)
+
 Prerequisites
 -------------
 
