@@ -48,3 +48,12 @@ Profiles
 Profiles provide a convenient way to apply sets of parameters to a machine. Multiple profiles can be assigned to one machine, and will be referenced in the order they are listed.
 
 Parameters can be linked to specific profiles through the profiles page, which can then be attached to machines through the machines UI.
+
+.. _rs_ui_reservations:
+
+Reservations
+------------
+
+Reservations link tokens to specific IP addresses. This view shows a list of existing reservations along with tokens and strategies associated with each. Currently, MAC is the only available strategy.
+
+Reservations may contain options to be applied to connected servers, which are also visible through the UI.
