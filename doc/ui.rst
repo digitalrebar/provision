@@ -57,3 +57,12 @@ Reservations
 Reservations link tokens to specific IP addresses. This view shows a list of existing reservations along with tokens and strategies associated with each. Currently, MAC is the only available strategy.
 
 Reservations may contain options to be applied to connected servers, which are also visible through the UI.
+
+.. _rs_ui_leases:
+
+Leases
+------
+
+Leases show individual links between tokens and addresses, created through reservation or subnet strategies. Leases remain valid for short periods of time, and cannot be edited. 
+
+The expiration time of each lease is visible through the UI. Once a lease has expired, it may be removed.
