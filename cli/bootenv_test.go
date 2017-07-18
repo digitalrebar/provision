@@ -508,7 +508,7 @@ func TestBootEnvCli(t *testing.T) {
 		testCli(t, test)
 	}
 
-	midlayer.ServeStatic("127.0.0.1:10003", backend.NewFS("test-data", nil), nil)
+	midlayer.ServeStatic("127.0.0.1:10003", backend.NewFS("test-data", nil), nil, backend.NewPublishers())
 
 	os.RemoveAll("bootenvs/fredhammer.yml")
 	if err := os.MkdirAll("bootenvs", 0755); err != nil {
