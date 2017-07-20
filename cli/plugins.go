@@ -47,6 +47,8 @@ func (be PluginOps) List(parms map[string]string) (interface{}, error) {
 		switch k {
 		case "Name":
 			params = params.WithName(&v)
+		case "Provider":
+			params = params.WithProvider(&v)
 		}
 	}
 	d, e := session.Plugins.ListPlugins(params, basicAuth)

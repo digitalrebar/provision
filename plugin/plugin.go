@@ -36,6 +36,10 @@ var (
 	debug = false
 )
 
+func Log(format string, args ...interface{}) {
+	fmt.Fprintf(os.Stderr, format, args...)
+}
+
 func InitApp(use, short, version string, def *midlayer.PluginProvider) {
 	App.Use = use
 	App.Short = short
@@ -93,6 +97,8 @@ func prettyPrint(o interface{}) (err error) {
 func Run() {
 	files := filePair{reader: os.Stdin, writer: os.Stdout}
 	// GREG: errors and retry and exit?
+
+	Log("Run: Server Listening")
 	jsonrpc.ServeConn(&files)
 
 }

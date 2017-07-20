@@ -17,7 +17,7 @@ func (be TaskOps) GetType() interface{} {
 
 func (be TaskOps) GetId(obj interface{}) (string, error) {
 	task, ok := obj.(*models.Task)
-	if !ok {
+	if !ok || task.Name == nil {
 		return "", fmt.Errorf("Invalid type passed to task create")
 	}
 	return *task.Name, nil

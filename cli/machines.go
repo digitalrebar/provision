@@ -406,7 +406,7 @@ func addMachineCommands() (res *cobra.Command) {
 		Long:  `Helper function to display the machine's action.`,
 		RunE: func(c *cobra.Command, args []string) error {
 			if len(args) != 2 {
-				return fmt.Errorf("%v requires 1 argument", c.UseLine())
+				return fmt.Errorf("%v requires 2 arguments", c.UseLine())
 			}
 			uuid := args[0]
 			action := args[1]
@@ -454,7 +454,7 @@ func addMachineCommands() (res *cobra.Command) {
 					actionParams[args[i]] = obj
 				}
 			} else if len(args) < 2 || len(args)%2 == 1 {
-				return fmt.Errorf("runaction either takes a single argument or a multiple of two, not %d", len(args))
+				return fmt.Errorf("runaction either takes three arguments or a multiple of two, not %d", len(args))
 			}
 			uuid := args[0]
 			command := args[1]

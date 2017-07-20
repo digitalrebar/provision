@@ -253,7 +253,11 @@ var machineParamsMissingMachineErrorString string = "Error: machines GET Params:
 var machinesParamsSetMissingMachineString string = "Error: machines SET Params: john2: Not Found\n\n"
 
 var machineParamsStartingString string = `{
-  "john3": 4
+  "asgdasdg": 1,
+  "john3": 4,
+  "parm1": 1,
+  "parm2": 10,
+  "parm5": 20
 }
 `
 var machinesParamsNextString string = `{
@@ -290,6 +294,59 @@ var machineJeanCreate string = `{
 }
 `
 
+var machineActionsNoArgErrorString string = "Error: drpcli machines actions [id] requires 1 argument"
+var machineActionNoArgErrorString string = "Error: drpcli machines action [id] [action] requires 2 argument"
+var machineActionsMissingMachineErrorString string = "Error: machines Actions Get: john: Not Found\n\n"
+var machineActionMissingMachineErrorString string = "Error: machines Action Get: john: Not Found\n\n"
+var machineActionMissingActionErrorString string = "Error: machines Action Get: 3e7031fe-3062-45f1-835c-92541bc9cbd3: Not Found: Action command\n\n"
+
+var machineActionsListString string = `[
+  {
+    "Command": "increment",
+    "OptionalParams": [
+      "incrementer.step"
+    ],
+    "Provider": "incrementer",
+    "RequiredParams": [
+      "incrementer.parameter"
+    ]
+  }
+]
+`
+var machineActionShowString string = `{
+  "Command": "increment",
+  "OptionalParams": [
+    "incrementer.step"
+  ],
+  "Provider": "incrementer",
+  "RequiredParams": [
+    "incrementer.parameter"
+  ]
+}
+`
+
+var machinePluginCreateString string = `{
+  "Errors": null,
+  "Name": "incr",
+  "Provider": "incrementer"
+}
+`
+
+var machineRunActionNoArgsErrorString string = "Error: runaction either takes three arguments or a multiple of two, not 0"
+var machineRunActionOneArgErrorString string = "Error: runaction either takes three arguments or a multiple of two, not 1"
+var machineRunActionMissingFredErrorString string = "Error: machines Call Action: machine fred: Not Found\n\n"
+var machineRunActionBadCommandErrorString string = "Error: machines Call Action: action command: Not Found\n\n"
+var machineRunActionMissingCommandParametersErrorString string = "Error: machines Call Action: machine 3e7031fe-3062-45f1-835c-92541bc9cbd3: Missing Parameter incrementer.parameter\n\n"
+var machineRunActionBadJSONThridArgErrorString string = "Error: Invalid parameters: error unmarshaling JSON: json: cannot unmarshal string into Go value of type map[string]interface {}\n\n\n"
+var machineRunActionBadStepErrorString string = "Error: machines Call Action machine 3e7031fe-3062-45f1-835c-92541bc9cbd3: Invalid Parameter: incrementer.step: :/n(root): Invalid type. Expected: integer, given: string\n\n"
+
+var machineRunActionMissingParameterStdinString string = "{}"
+var machineRunActionGoodStdinString string = `{
+	"incrementer.parameter": "parm5",
+	"incrementer.step": 10
+}
+`
+
 func TestMachineCli(t *testing.T) {
 	if err := os.MkdirAll("bootenvs", 0755); err != nil {
 		t.Errorf("Failed to create bootenvs dir: %v\n", err)
@@ -312,6 +369,7 @@ func TestMachineCli(t *testing.T) {
 		CliTest{false, false, []string{"bootenvs", "install", "bootenvs/local.yml"}, noStdinString, bootEnvInstallLocalSuccessString, noErrorString},
 		CliTest{false, false, []string{"profiles", "create", "jill"}, noStdinString, machineJillCreate, noErrorString},
 		CliTest{false, false, []string{"profiles", "create", "jean"}, noStdinString, machineJeanCreate, noErrorString},
+		CliTest{false, false, []string{"plugins", "create", machinePluginCreateString}, noStdinString, machinePluginCreateString, noErrorString},
 
 		CliTest{true, false, []string{"machines"}, noStdinString, "Access CLI commands relating to machines\n", ""},
 		CliTest{false, false, []string{"machines", "list"}, noStdinString, machineDefaultListString, noErrorString},
@@ -410,6 +468,39 @@ func TestMachineCli(t *testing.T) {
 		CliTest{false, false, []string{"machines", "get", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "param", "john2"}, noStdinString, "null\n", noErrorString},
 		CliTest{false, false, []string{"machines", "get", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "param", "john3"}, noStdinString, "4\n", noErrorString},
 
+		CliTest{true, true, []string{"machines", "actions"}, noStdinString, noContentString, machineActionsNoArgErrorString},
+		CliTest{false, true, []string{"machines", "actions", "john"}, noStdinString, noContentString, machineActionsMissingMachineErrorString},
+		CliTest{false, false, []string{"machines", "actions", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, machineActionsListString, noErrorString},
+		CliTest{true, true, []string{"machines", "action"}, noStdinString, noContentString, machineActionNoArgErrorString},
+		CliTest{true, true, []string{"machines", "action", "john"}, noStdinString, noContentString, machineActionNoArgErrorString},
+		CliTest{false, true, []string{"machines", "action", "john", "command"}, noStdinString, noContentString, machineActionMissingMachineErrorString},
+		CliTest{false, true, []string{"machines", "action", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "command"}, noStdinString, noContentString, machineActionMissingActionErrorString},
+		CliTest{false, false, []string{"machines", "action", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "increment"}, noStdinString, machineActionShowString, noErrorString},
+
+		CliTest{true, true, []string{"machines", "runaction"}, noStdinString, noContentString, machineRunActionNoArgsErrorString},
+		CliTest{true, true, []string{"machines", "runaction", "fred"}, noStdinString, noContentString, machineRunActionOneArgErrorString},
+		CliTest{false, true, []string{"machines", "runaction", "fred", "command"}, noStdinString, noContentString, machineRunActionMissingFredErrorString},
+		CliTest{false, true, []string{"machines", "runaction", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "command"}, noStdinString, noContentString, machineRunActionBadCommandErrorString},
+		CliTest{false, true, []string{"machines", "runaction", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "increment"}, noStdinString, noContentString, machineRunActionMissingCommandParametersErrorString},
+		CliTest{false, true, []string{"machines", "runaction", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "increment", "fred"}, noStdinString, noContentString, machineRunActionBadJSONThridArgErrorString},
+		CliTest{false, true, []string{"machines", "runaction", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "increment", "fred", "val"}, noStdinString, noContentString, machineRunActionMissingCommandParametersErrorString},
+		CliTest{false, false, []string{"machines", "runaction", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "increment", "incrementer.parameter", "asgdasdg"}, noStdinString, "{}\n", noErrorString},
+
+		// GREG: Attach param to the machine to meet the needs of the plugin
+
+		CliTest{false, false, []string{"machines", "runaction", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "increment", "incrementer.parameter", "parm1", "extra", "10"}, noStdinString, "{}\n", noErrorString},
+		CliTest{false, false, []string{"machines", "get", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "param", "parm1"}, noStdinString, "1\n", noErrorString},
+		CliTest{false, true, []string{"machines", "runaction", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "increment", "incrementer.parameter", "parm2", "incrementer.step", "asgdasdg"}, noStdinString, noContentString, machineRunActionBadStepErrorString},
+		CliTest{false, false, []string{"machines", "get", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "param", "parm2"}, noStdinString, "null\n", noErrorString},
+		CliTest{false, false, []string{"machines", "runaction", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "increment", "incrementer.parameter", "parm2", "incrementer.step", "10"}, noStdinString, "{}\n", noErrorString},
+		CliTest{false, false, []string{"machines", "get", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "param", "parm2"}, noStdinString, "10\n", noErrorString},
+
+		CliTest{false, true, []string{"machines", "runaction", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "increment", "-"}, "fred", noContentString, machineRunActionBadJSONThridArgErrorString},
+		CliTest{false, true, []string{"machines", "runaction", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "increment", "-"}, machineRunActionMissingParameterStdinString, noContentString, machineRunActionMissingCommandParametersErrorString},
+		CliTest{false, false, []string{"machines", "runaction", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "increment", "-"}, machineRunActionGoodStdinString, "{}\n", noErrorString},
+		CliTest{false, false, []string{"machines", "runaction", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "increment", "-"}, machineRunActionGoodStdinString, "{}\n", noErrorString},
+		CliTest{false, false, []string{"machines", "get", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "param", "parm5"}, noStdinString, "20\n", noErrorString},
+
 		CliTest{true, true, []string{"machines", "params"}, noStdinString, noContentString, machineParamsNoArgErrorString},
 		CliTest{false, true, []string{"machines", "params", "john2"}, noStdinString, noContentString, machineParamsMissingMachineErrorString},
 		CliTest{false, false, []string{"machines", "params", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, machineParamsStartingString, noErrorString},
@@ -422,6 +513,7 @@ func TestMachineCli(t *testing.T) {
 		CliTest{false, false, []string{"machines", "destroy", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, machineDestroyJohnString, noErrorString},
 		CliTest{false, false, []string{"machines", "list"}, noStdinString, machineDefaultListString, noErrorString},
 
+		CliTest{false, false, []string{"plugins", "destroy", "incr"}, noStdinString, "Deleted plugin incr\n", noErrorString},
 		CliTest{false, false, []string{"profiles", "destroy", "jill"}, noStdinString, "Deleted profile jill\n", noErrorString},
 		CliTest{false, false, []string{"profiles", "destroy", "jean"}, noStdinString, "Deleted profile jean\n", noErrorString},
 		CliTest{false, false, []string{"bootenvs", "destroy", "local"}, noStdinString, "Deleted bootenv local\n", noErrorString},
