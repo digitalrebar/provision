@@ -9,6 +9,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"sync/atomic"
+	"time"
 
 	"github.com/digitalrebar/provision/backend"
 	"github.com/spf13/cobra"
@@ -91,7 +93,7 @@ func prettyPrint(o interface{}) (err error) {
 }
 
 func Run(pc PluginConfig) error {
-	// read command's stdin line by line - for logging
+	var ops int64 = 0
 	in := bufio.NewScanner(os.Stdin)
 	for in.Scan() {
 		jsonString := in.Text()
@@ -99,77 +101,89 @@ func Run(pc PluginConfig) error {
 		var req PluginClientRequest
 		err := json.Unmarshal([]byte(jsonString), &req)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "Failed to process: %v\n", err)
+			Log("Failed to process: %v\n", err)
 			continue
 		}
 
-		if req.Action == "Config" {
-			resp := &PluginClientReply{Id: req.Id}
+		atomic.AddInt64(&ops, 1)
+		go handleRequest(pc, &req, &ops)
+	}
+	if err := in.Err(); err != nil {
+		Log("Plugin error: %s", err)
+	}
 
-			var params map[string]interface{}
-			if jerr := json.Unmarshal(req.Data, &params); jerr != nil {
+	for a := atomic.LoadInt64(&ops); a > 0; {
+		Log("Exiting ... waiting on %d go routines to leave\n", a)
+		time.Sleep(time.Second * 1)
+	}
+
+	return nil
+}
+
+func handleRequest(pc PluginConfig, req *PluginClientRequest, ops *int64) {
+	defer atomic.AddInt64(ops, -1)
+
+	if req.Action == "Config" {
+		resp := &PluginClientReply{Id: req.Id}
+
+		var params map[string]interface{}
+		if jerr := json.Unmarshal(req.Data, &params); jerr != nil {
+			resp.Code = 400
+			resp.Data, _ = json.Marshal(&backend.Error{Code: 400, Model: "plugin", Type: "Config", Messages: []string{fmt.Sprintf("Failed to unmarshal data: %v", jerr)}})
+		} else {
+			if err := pc.Config(params); err != nil {
+				resp.Code = err.Code
+				resp.Data, _ = json.Marshal(err)
+			}
+		}
+		bytes, _ := json.Marshal(resp)
+		fmt.Println(string(bytes))
+	} else if req.Action == "Action" {
+		resp := &PluginClientReply{Id: req.Id}
+
+		var actionInfo MachineAction
+		if jerr := json.Unmarshal(req.Data, &actionInfo); jerr != nil {
+			resp.Code = 400
+			resp.Data, _ = json.Marshal(&backend.Error{Code: 400, Model: "plugin", Type: "Action", Messages: []string{fmt.Sprintf("Failed to unmarshal data: %v", jerr)}})
+		} else {
+			s, ok := pc.(PluginActor)
+			if !ok {
 				resp.Code = 400
-				resp.Data, _ = json.Marshal(&backend.Error{Code: 400, Model: "plugin", Type: "Config", Messages: []string{fmt.Sprintf("Failed to unmarshal data: %v", jerr)}})
+				resp.Data, _ = json.Marshal(&backend.Error{Code: 400, Model: "plugin", Type: "Action", Messages: []string{"Plugin doesn't support Action"}})
 			} else {
-				if err := pc.Config(params); err != nil {
+				if err := s.Action(&actionInfo); err != nil {
 					resp.Code = err.Code
 					resp.Data, _ = json.Marshal(err)
 				}
 			}
-			bytes, _ := json.Marshal(resp)
-			fmt.Println(string(bytes))
-		} else if req.Action == "Action" {
-			resp := &PluginClientReply{Id: req.Id}
-
-			var actionInfo MachineAction
-			if jerr := json.Unmarshal(req.Data, &actionInfo); jerr != nil {
-				resp.Code = 400
-				resp.Data, _ = json.Marshal(&backend.Error{Code: 400, Model: "plugin", Type: "Action", Messages: []string{fmt.Sprintf("Failed to unmarshal data: %v", jerr)}})
-			} else {
-				s, ok := pc.(PluginActor)
-				if !ok {
-					resp.Code = 400
-					resp.Data, _ = json.Marshal(&backend.Error{Code: 400, Model: "plugin", Type: "Action", Messages: []string{"Plugin doesn't support Action"}})
-				} else {
-					if err := s.Action(&actionInfo); err != nil {
-						resp.Code = err.Code
-						resp.Data, _ = json.Marshal(err)
-					}
-				}
-			}
-			bytes, _ := json.Marshal(resp)
-			fmt.Println(string(bytes))
-		} else if req.Action == "Publish" {
-			resp := &PluginClientReply{Id: req.Id}
-
-			var event backend.Event
-			if jerr := json.Unmarshal(req.Data, &event); jerr != nil {
-				resp.Code = 400
-				resp.Data, _ = json.Marshal(&backend.Error{Code: 400, Model: "plugin", Type: "Publish", Messages: []string{fmt.Sprintf("Failed to unmarshal data: %v", jerr)}})
-			} else {
-				s, ok := pc.(PluginPublisher)
-				if !ok {
-					resp.Code = 400
-					resp.Data, _ = json.Marshal(&backend.Error{Code: 400, Model: "plugin", Type: "Publish", Messages: []string{"Plugin doesn't support Publish"}})
-				} else {
-					if err := s.Publish(&event); err != nil {
-						resp.Code = err.Code
-						resp.Data, _ = json.Marshal(err)
-					}
-				}
-			}
-			bytes, _ := json.Marshal(resp)
-			fmt.Println(string(bytes))
-		} else {
-			resp := &PluginClientReply{Code: 400, Id: req.Id}
-			resp.Data, _ = json.Marshal(&backend.Error{Code: 400, Model: "plugin", Type: "Publish", Messages: []string{"Plugin unknown command type"}})
-			bytes, _ := json.Marshal(resp)
-			fmt.Println(string(bytes))
 		}
-	}
-	if err := in.Err(); err != nil {
-		fmt.Printf("Plugin error: %s", err)
-	}
+		bytes, _ := json.Marshal(resp)
+		fmt.Println(string(bytes))
+	} else if req.Action == "Publish" {
+		resp := &PluginClientReply{Id: req.Id}
 
-	return nil
+		var event backend.Event
+		if jerr := json.Unmarshal(req.Data, &event); jerr != nil {
+			resp.Code = 400
+			resp.Data, _ = json.Marshal(&backend.Error{Code: 400, Model: "plugin", Type: "Publish", Messages: []string{fmt.Sprintf("Failed to unmarshal data: %v", jerr)}})
+		} else {
+			s, ok := pc.(PluginPublisher)
+			if !ok {
+				resp.Code = 400
+				resp.Data, _ = json.Marshal(&backend.Error{Code: 400, Model: "plugin", Type: "Publish", Messages: []string{"Plugin doesn't support Publish"}})
+			} else {
+				if err := s.Publish(&event); err != nil {
+					resp.Code = err.Code
+					resp.Data, _ = json.Marshal(err)
+				}
+			}
+		}
+		bytes, _ := json.Marshal(resp)
+		fmt.Println(string(bytes))
+	} else {
+		resp := &PluginClientReply{Code: 400, Id: req.Id}
+		resp.Data, _ = json.Marshal(&backend.Error{Code: 400, Model: "plugin", Type: "Publish", Messages: []string{"Plugin unknown command type"}})
+		bytes, _ := json.Marshal(resp)
+		fmt.Println(string(bytes))
+	}
 }
