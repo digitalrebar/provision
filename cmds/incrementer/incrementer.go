@@ -7,6 +7,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"sync"
 
 	"github.com/digitalrebar/provision"
 	"github.com/digitalrebar/provision/backend"
@@ -19,18 +20,22 @@ var (
 	def     = plugin.PluginProvider{
 		Name:       "incrementer",
 		Version:    version,
-		HasPublish: false,
+		HasPublish: true,
 		AvailableActions: []*plugin.AvailableAction{
 			&plugin.AvailableAction{Command: "increment",
-				RequiredParams: []string{"incrementer.parameter"},
-				OptionalParams: []string{"incrementer.step"},
+				OptionalParams: []string{"incrementer.step", "incrementer.parameter"},
+			},
+			&plugin.AvailableAction{Command: "reset_count",
+				RequiredParams: []string{"incrementer.touched"},
 			},
 		},
 		Parameters: []*backend.Param{
 			&backend.Param{Name: "incrementer.parameter", Schema: map[string]interface{}{"type": "string"}},
 			&backend.Param{Name: "incrementer.step", Schema: map[string]interface{}{"type": "integer"}},
+			&backend.Param{Name: "incrementer.touched", Schema: map[string]interface{}{"type": "integer"}},
 		},
 	}
+	lock sync.Mutex
 )
 
 type Plugin struct {
@@ -43,8 +48,9 @@ func (p *Plugin) Config(config map[string]interface{}) *backend.Error {
 }
 
 func executeDrpCliCommand(args ...string) (string, error) {
-	old := os.Stdout // keep backup of the real stdout
 	r, w, _ := os.Pipe()
+	lock.Lock()
+	savedOut := os.Stdout
 	os.Stdout = w
 
 	outC := make(chan string)
@@ -61,12 +67,74 @@ func executeDrpCliCommand(args ...string) (string, error) {
 
 	// back to normal state
 	w.Close()
-	os.Stdout = old // restoring the real stdout
+	os.Stdout = savedOut
+	lock.Unlock()
 	out := <-outC
 
-	plugin.Log("DrpCli: %s\nerr: %v\n", out, err2)
-
 	return out, err2
+}
+
+func updateOrCreateParameter(uuid, parameter string, step int) *backend.Error {
+	out, err2 := executeDrpCliCommand("machines", "get", uuid, "param", parameter)
+	if err2 != nil {
+		return &backend.Error{Code: 409,
+			Model:    "plugin",
+			Key:      "incrementer",
+			Type:     "plugin",
+			Messages: []string{fmt.Sprintf("Finding parameter failed: %s\n", err2.Error())}}
+	}
+
+	if strings.TrimSpace(out) == "null" {
+		_, err2 = executeDrpCliCommand("machines", "set", uuid, "param", parameter, "to", fmt.Sprintf("%d", step))
+		if err2 != nil {
+			return &backend.Error{Code: 409,
+				Model:    "plugin",
+				Key:      "incrementer",
+				Type:     "plugin",
+				Messages: []string{fmt.Sprintf("Failed to set an int to 0: %s\n", err2.Error())}}
+		}
+	} else {
+		i, err2 := strconv.ParseInt(strings.TrimSpace(out), 10, 64)
+		if err2 != nil {
+			return &backend.Error{Code: 409,
+				Model:    "plugin",
+				Key:      "incrementer",
+				Type:     "plugin",
+				Messages: []string{fmt.Sprintf("Retrieved something not an int: %s\n", err2.Error())}}
+		}
+
+		_, err2 = executeDrpCliCommand("machines", "set", uuid, "param", parameter, "to", fmt.Sprintf("%d", i+int64(step)))
+		if err2 != nil {
+			return &backend.Error{Code: 409,
+				Model:    "plugin",
+				Key:      "incrementer",
+				Type:     "plugin",
+				Messages: []string{fmt.Sprintf("Failed to set an int: %s\n", err2.Error())}}
+		}
+	}
+
+	return &backend.Error{Code: 0,
+		Model:    "plugin",
+		Key:      "incrementer",
+		Type:     "plugin",
+		Messages: []string{}}
+}
+
+func removeParameter(uuid, parameter string) *backend.Error {
+	_, err2 := executeDrpCliCommand("machines", "set", uuid, "param", parameter, "to", "null")
+	if err2 != nil {
+		return &backend.Error{Code: 409,
+			Model:    "plugin",
+			Key:      "incrementer",
+			Type:     "plugin",
+			Messages: []string{fmt.Sprintf("Failed to remove param %s: %s\n", parameter, err2.Error())}}
+	}
+
+	return &backend.Error{Code: 0,
+		Model:    "plugin",
+		Key:      "incrementer",
+		Type:     "plugin",
+		Messages: []string{}}
 }
 
 func (p *Plugin) Action(ma *plugin.MachineAction) *backend.Error {
@@ -74,11 +142,7 @@ func (p *Plugin) Action(ma *plugin.MachineAction) *backend.Error {
 	if ma.Command == "increment" {
 		parameter, ok := ma.Params["incrementer.parameter"].(string)
 		if !ok {
-			return &backend.Error{Code: 404,
-				Model:    "plugin",
-				Key:      "incrementer",
-				Type:     "plugin",
-				Messages: []string{fmt.Sprintf("Parameter is not specified: %s\n", ma.Command)}}
+			parameter = "incrementer.default"
 		}
 
 		step := 1
@@ -94,48 +158,13 @@ func (p *Plugin) Action(ma *plugin.MachineAction) *backend.Error {
 			}
 		}
 
-		out, err2 := executeDrpCliCommand("machines", "get", ma.Uuid.String(), "param", parameter)
-		if err2 != nil {
-			return &backend.Error{Code: 409,
-				Model:    "plugin",
-				Key:      "incrementer",
-				Type:     "plugin",
-				Messages: []string{fmt.Sprintf("Finding parameter failed: %s\n", err2.Error())}}
+		err := updateOrCreateParameter(ma.Uuid.String(), parameter, step)
+		if err.Code == 0 {
+			updateOrCreateParameter(ma.Uuid.String(), "incrementer.touched", 1)
 		}
-
-		if strings.TrimSpace(out) == "null" {
-			_, err2 = executeDrpCliCommand("machines", "set", ma.Uuid.String(), "param", parameter, "to", fmt.Sprintf("%d", step))
-			if err2 != nil {
-				return &backend.Error{Code: 409,
-					Model:    "plugin",
-					Key:      "incrementer",
-					Type:     "plugin",
-					Messages: []string{fmt.Sprintf("Failed to set an int to 0: %s\n", err2.Error())}}
-			}
-		} else {
-			i, err2 := strconv.ParseInt(strings.TrimSpace(out), 10, 64)
-			if err2 != nil {
-				return &backend.Error{Code: 409,
-					Model:    "plugin",
-					Key:      "incrementer",
-					Type:     "plugin",
-					Messages: []string{fmt.Sprintf("Retrieved something not an int: %s\n", err2.Error())}}
-			}
-
-			_, err2 = executeDrpCliCommand("machines", "set", ma.Uuid.String(), "param", parameter, "to", fmt.Sprintf("%d", i+int64(step)))
-			if err2 != nil {
-				return &backend.Error{Code: 409,
-					Model:    "plugin",
-					Key:      "incrementer",
-					Type:     "plugin",
-					Messages: []string{fmt.Sprintf("Failed to set an int: %s\n", err2.Error())}}
-			}
-		}
-		return &backend.Error{Code: 0,
-			Model:    "plugin",
-			Key:      "incrementer",
-			Type:     "plugin",
-			Messages: []string{}}
+		return err
+	} else if ma.Command == "reset_count" {
+		return removeParameter(ma.Uuid.String(), "incrementer.touched")
 	} else {
 		return &backend.Error{Code: 404,
 			Model:    "plugin",
@@ -143,6 +172,14 @@ func (p *Plugin) Action(ma *plugin.MachineAction) *backend.Error {
 			Type:     "plugin",
 			Messages: []string{fmt.Sprintf("Unknown command: %s\n", ma.Command)}}
 	}
+}
+
+func (p *Plugin) Publish(e *backend.Event) *backend.Error {
+	return &backend.Error{Code: 0,
+		Model:    "plugin",
+		Type:     "publish",
+		Key:      "incrementer",
+		Messages: []string{}}
 }
 
 func main() {

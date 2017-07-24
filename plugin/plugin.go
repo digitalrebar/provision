@@ -94,6 +94,8 @@ func prettyPrint(o interface{}) (err error) {
 
 func Run(pc PluginConfig) error {
 	var ops int64 = 0
+	origStdOut := os.Stdout
+
 	in := bufio.NewScanner(os.Stdin)
 	for in.Scan() {
 		jsonString := in.Text()
@@ -106,7 +108,7 @@ func Run(pc PluginConfig) error {
 		}
 
 		atomic.AddInt64(&ops, 1)
-		go handleRequest(pc, &req, &ops)
+		go handleRequest(pc, &req, &ops, origStdOut)
 	}
 	if err := in.Err(); err != nil {
 		Log("Plugin error: %s", err)
@@ -120,7 +122,7 @@ func Run(pc PluginConfig) error {
 	return nil
 }
 
-func handleRequest(pc PluginConfig, req *PluginClientRequest, ops *int64) {
+func handleRequest(pc PluginConfig, req *PluginClientRequest, ops *int64, origStdOut *os.File) {
 	defer atomic.AddInt64(ops, -1)
 
 	if req.Action == "Config" {
@@ -137,7 +139,7 @@ func handleRequest(pc PluginConfig, req *PluginClientRequest, ops *int64) {
 			}
 		}
 		bytes, _ := json.Marshal(resp)
-		fmt.Println(string(bytes))
+		fmt.Fprintln(origStdOut, string(bytes))
 	} else if req.Action == "Action" {
 		resp := &PluginClientReply{Id: req.Id}
 
@@ -158,7 +160,7 @@ func handleRequest(pc PluginConfig, req *PluginClientRequest, ops *int64) {
 			}
 		}
 		bytes, _ := json.Marshal(resp)
-		fmt.Println(string(bytes))
+		fmt.Fprintln(origStdOut, string(bytes))
 	} else if req.Action == "Publish" {
 		resp := &PluginClientReply{Id: req.Id}
 
@@ -179,11 +181,11 @@ func handleRequest(pc PluginConfig, req *PluginClientRequest, ops *int64) {
 			}
 		}
 		bytes, _ := json.Marshal(resp)
-		fmt.Println(string(bytes))
+		fmt.Fprintln(origStdOut, string(bytes))
 	} else {
 		resp := &PluginClientReply{Code: 400, Id: req.Id}
 		resp.Data, _ = json.Marshal(&backend.Error{Code: 400, Model: "plugin", Type: "Publish", Messages: []string{"Plugin unknown command type"}})
 		bytes, _ := json.Marshal(resp)
-		fmt.Println(string(bytes))
+		fmt.Fprintln(origStdOut, string(bytes))
 	}
 }
