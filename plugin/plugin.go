@@ -1,31 +1,26 @@
 package plugin
 
 import (
+	"bufio"
 	"encoding/json"
 	"fmt"
-	"net/rpc/jsonrpc"
 	"os"
 
+	"github.com/digitalrebar/provision/backend"
 	"github.com/digitalrebar/provision/midlayer"
 	"github.com/spf13/cobra"
 )
 
-type filePair struct {
-	reader *os.File
-	writer *os.File
+type PluginConfig interface {
+	Config(map[string]interface{}) *backend.Error
 }
 
-func (fp *filePair) Read(p []byte) (int, error) {
-	return fp.reader.Read(p)
+type PluginPublisher interface {
+	Publish(*backend.Event) *backend.Error
 }
 
-func (fp *filePair) Write(p []byte) (int, error) {
-	return fp.writer.Write(p)
-}
-
-func (fp *filePair) Close() error {
-	fp.writer.Close()
-	return fp.reader.Close()
+type PluginActor interface {
+	Action(*midlayer.MachineAction) *backend.Error
 }
 
 var (
@@ -40,7 +35,7 @@ func Log(format string, args ...interface{}) {
 	fmt.Fprintf(os.Stderr, format, args...)
 }
 
-func InitApp(use, short, version string, def *midlayer.PluginProvider) {
+func InitApp(use, short, version string, def *midlayer.PluginProvider, pc PluginConfig) {
 	App.Use = use
 	App.Short = short
 
@@ -80,9 +75,7 @@ func InitApp(use, short, version string, def *midlayer.PluginProvider) {
 		Use:   "listen",
 		Short: "Digital Rebar Provision CLI Command Listen",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			Run()
-			// No return!
-			return nil
+			return Run(pc)
 		},
 	})
 }
@@ -94,11 +87,98 @@ func prettyPrint(o interface{}) (err error) {
 	return nil
 }
 
-func Run() {
-	files := filePair{reader: os.Stdin, writer: os.Stdout}
-	// GREG: errors and retry and exit?
+func Run(pc PluginConfig) error {
+	// read command's stdin line by line - for logging
+	in := bufio.NewScanner(os.Stdin)
+	for in.Scan() {
+		jsonString := in.Text()
 
-	Log("Run: Server Listening")
-	jsonrpc.ServeConn(&files)
+		var req midlayer.PluginClientRequest
+		err := json.Unmarshal([]byte(jsonString), &req)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Failed to process: %v\n", err)
+			continue
+		}
 
+		if req.Action == "Config" {
+			params := make(map[string]interface{}, 0)
+			if req.Data != nil {
+				params = req.Data.(map[string]interface{})
+			}
+			err := pc.Config(params)
+			code := 0
+			if err != nil {
+				code = err.Code
+			}
+
+			resp := &midlayer.PluginClientReply{Code: code, Id: req.Id, Data: err}
+			bytes, _ := json.Marshal(resp)
+			fmt.Println(string(bytes))
+		} else if req.Action == "Action" {
+			fmt.Fprintf(os.Stderr, "GREG: Data type = %V\n", req.Data)
+			fmt.Fprintf(os.Stderr, "GREG: Data type = %v\n", req.Data)
+			fmt.Fprintf(os.Stderr, "GREG: Data type = %T\n", req.Data)
+			fmt.Fprintf(os.Stderr, "GREG: Data type = %t\n", req.Data)
+			actionInfo, ok := req.Data.(midlayer.MachineAction)
+			if !ok {
+				resp := &midlayer.PluginClientReply{Code: 400, Id: req.Id, Data: "Unknown data type"}
+				bytes, _ := json.Marshal(resp)
+				fmt.Println(string(bytes))
+				continue
+			}
+
+			s, ok := pc.(PluginActor)
+			if !ok {
+				resp := &midlayer.PluginClientReply{Code: 400, Id: req.Id, Data: "Plugin doesn't support Action"}
+				bytes, _ := json.Marshal(resp)
+				fmt.Println(string(bytes))
+				continue
+			}
+
+			err := s.Action(&actionInfo)
+			code := 0
+			if err != nil {
+				code = err.Code
+			}
+
+			resp := &midlayer.PluginClientReply{Code: code, Id: req.Id, Data: err}
+			bytes, _ := json.Marshal(resp)
+			fmt.Println(string(bytes))
+		} else if req.Action == "Publish" {
+			event, ok := req.Data.(backend.Event)
+			if !ok {
+				resp := &midlayer.PluginClientReply{Code: 400, Id: req.Id, Data: "Unknown data type"}
+				bytes, _ := json.Marshal(resp)
+				fmt.Println(string(bytes))
+				continue
+			}
+
+			s, ok := pc.(PluginPublisher)
+			if !ok {
+				resp := &midlayer.PluginClientReply{Code: 400, Id: req.Id, Data: "Plugin doesn't support Publish"}
+				bytes, _ := json.Marshal(resp)
+				fmt.Println(string(bytes))
+				continue
+			}
+
+			err := s.Publish(&event)
+			code := 0
+			if err != nil {
+				code = err.Code
+			}
+
+			resp := &midlayer.PluginClientReply{Code: code, Id: req.Id, Data: err}
+			bytes, _ := json.Marshal(resp)
+			fmt.Println(string(bytes))
+		} else {
+			resp := &midlayer.PluginClientReply{Code: 400, Id: req.Id, Data: "Unknown op"}
+			bytes, _ := json.Marshal(resp)
+			fmt.Println(string(bytes))
+		}
+	}
+	if err := in.Err(); err != nil {
+		fmt.Printf("Plugin error: %s", err)
+	}
+
+	return nil
 }

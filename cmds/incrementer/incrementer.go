@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"fmt"
 	"io"
-	"net/rpc"
 	"os"
 	"strconv"
 	"strings"
@@ -38,10 +37,10 @@ var (
 type Plugin struct {
 }
 
-func (p *Plugin) Config(config map[string]interface{}, err *backend.Error) error {
-	*err = backend.Error{Code: 0, Model: "plugin", Key: "incrementer", Type: "rpc", Messages: []string{}}
+func (p *Plugin) Config(config map[string]interface{}) *backend.Error {
+	err := &backend.Error{Code: 0, Model: "plugin", Key: "incrementer", Type: "plugin", Messages: []string{}}
 	plugin.Log("Config: %v\n", config)
-	return nil
+	return err
 }
 
 func executeDrpCliCommand(args ...string) (string, error) {
@@ -71,17 +70,16 @@ func executeDrpCliCommand(args ...string) (string, error) {
 	return out, err2
 }
 
-func (p *Plugin) Action(ma midlayer.MachineAction, err *backend.Error) error {
+func (p *Plugin) Action(ma *midlayer.MachineAction) *backend.Error {
 	plugin.Log("Action: %v\n", ma)
 	if ma.Command == "increment" {
 		parameter, ok := ma.Params["incrementer.parameter"].(string)
 		if !ok {
-			*err = backend.Error{Code: 404,
+			return &backend.Error{Code: 404,
 				Model:    "plugin",
 				Key:      "incrementer",
-				Type:     "rpc",
+				Type:     "plugin",
 				Messages: []string{fmt.Sprintf("Parameter is not specified: %s\n", ma.Command)}}
-			return nil
 		}
 
 		step := 1
@@ -99,65 +97,57 @@ func (p *Plugin) Action(ma midlayer.MachineAction, err *backend.Error) error {
 
 		out, err2 := executeDrpCliCommand("machines", "get", ma.Uuid.String(), "param", parameter)
 		if err2 != nil {
-			*err = backend.Error{Code: 409,
+			return &backend.Error{Code: 409,
 				Model:    "plugin",
 				Key:      "incrementer",
-				Type:     "rpc",
+				Type:     "plugin",
 				Messages: []string{fmt.Sprintf("Finding parameter failed: %s\n", err2.Error())}}
-			return nil
 		}
 
 		if strings.TrimSpace(out) == "null" {
 			_, err2 = executeDrpCliCommand("machines", "set", ma.Uuid.String(), "param", parameter, "to", fmt.Sprintf("%d", step))
 			if err2 != nil {
-				*err = backend.Error{Code: 409,
+				return &backend.Error{Code: 409,
 					Model:    "plugin",
 					Key:      "incrementer",
-					Type:     "rpc",
+					Type:     "plugin",
 					Messages: []string{fmt.Sprintf("Failed to set an int to 0: %s\n", err2.Error())}}
-				return nil
 			}
 		} else {
 			i, err2 := strconv.ParseInt(strings.TrimSpace(out), 10, 64)
 			if err2 != nil {
-				*err = backend.Error{Code: 409,
+				return &backend.Error{Code: 409,
 					Model:    "plugin",
 					Key:      "incrementer",
-					Type:     "rpc",
+					Type:     "plugin",
 					Messages: []string{fmt.Sprintf("Retrieved something not an int: %s\n", err2.Error())}}
-				return nil
 			}
 
 			_, err2 = executeDrpCliCommand("machines", "set", ma.Uuid.String(), "param", parameter, "to", fmt.Sprintf("%d", i+int64(step)))
 			if err2 != nil {
-				*err = backend.Error{Code: 409,
+				return &backend.Error{Code: 409,
 					Model:    "plugin",
 					Key:      "incrementer",
-					Type:     "rpc",
+					Type:     "plugin",
 					Messages: []string{fmt.Sprintf("Failed to set an int: %s\n", err2.Error())}}
-				return nil
 			}
 		}
-		*err = backend.Error{Code: 0,
+		return &backend.Error{Code: 0,
 			Model:    "plugin",
 			Key:      "incrementer",
-			Type:     "rpc",
+			Type:     "plugin",
 			Messages: []string{}}
 	} else {
-		*err = backend.Error{Code: 404,
+		return &backend.Error{Code: 404,
 			Model:    "plugin",
 			Key:      "incrementer",
-			Type:     "rpc",
+			Type:     "plugin",
 			Messages: []string{fmt.Sprintf("Unknown command: %s\n", ma.Command)}}
 	}
-	return nil
 }
 
 func main() {
-	plugin.InitApp("incrementer", "Increments a parameter on a machine", version, &def)
-
-	rpc.Register(&Plugin{})
-
+	plugin.InitApp("incrementer", "Increments a parameter on a machine", version, &def, &Plugin{})
 	err := plugin.App.Execute()
 	if err != nil {
 		os.Exit(1)
