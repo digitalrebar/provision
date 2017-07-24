@@ -8,7 +8,6 @@ import (
 	"os"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/digitalrebar/provision"
 	"github.com/digitalrebar/provision/backend"
@@ -151,17 +150,6 @@ func (p *Plugin) Action(ma midlayer.MachineAction, err *backend.Error) error {
 			Type:     "rpc",
 			Messages: []string{fmt.Sprintf("Unknown command: %s\n", ma.Command)}}
 	}
-	return nil
-}
-
-func (p *Plugin) Stop(dummmy int, err *backend.Error) error {
-	*err = backend.Error{Code: 0, Model: "plugin", Key: "incrementer", Type: "rpc", Messages: []string{}}
-	const delay = 5000 * time.Millisecond
-	go func() {
-		time.Sleep(delay)
-		os.Exit(0)
-	}()
-
 	return nil
 }
 
