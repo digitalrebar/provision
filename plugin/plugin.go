@@ -9,6 +9,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"sync/atomic"
+	"time"
 
 	"github.com/digitalrebar/provision/backend"
 	"github.com/spf13/cobra"
@@ -91,6 +93,7 @@ func prettyPrint(o interface{}) (err error) {
 }
 
 func Run(pc PluginConfig) error {
+	var ops int64 = 0
 	origStdOut := os.Stdout
 
 	in := bufio.NewScanner(os.Stdin)
@@ -104,16 +107,24 @@ func Run(pc PluginConfig) error {
 			continue
 		}
 
-		go handleRequest(pc, &req, origStdOut)
+		atomic.AddInt64(&ops, 1)
+		go handleRequest(pc, &req, &ops, origStdOut)
 	}
 	if err := in.Err(); err != nil {
 		Log("Plugin error: %s", err)
 	}
 
+	for a := atomic.LoadInt64(&ops); a > 0; {
+		Log("Exiting ... waiting on %d go routines to leave\n", a)
+		time.Sleep(time.Second * 1)
+	}
+
 	return nil
 }
 
-func handleRequest(pc PluginConfig, req *PluginClientRequest, origStdOut *os.File) {
+func handleRequest(pc PluginConfig, req *PluginClientRequest, ops *int64, origStdOut *os.File) {
+	defer atomic.AddInt64(ops, -1)
+
 	if req.Action == "Config" {
 		resp := &PluginClientReply{Id: req.Id}
 
