@@ -19,14 +19,22 @@ var plugin_providerListString string = `[
       {
         "Command": "increment",
         "OptionalParams": [
-          "incrementer.step"
+          "incrementer.step",
+          "incrementer.parameter"
         ],
         "Provider": "incrementer",
+        "RequiredParams": null
+      },
+      {
+        "Command": "reset_count",
+        "OptionalParams": null,
+        "Provider": "incrementer",
         "RequiredParams": [
-          "incrementer.parameter"
+          "incrementer.touched"
         ]
       }
     ],
+    "HasPublish": true,
     "Name": "incrementer",
     "OptionalParams": null,
     "Parameters": [
@@ -38,6 +46,12 @@ var plugin_providerListString string = `[
       },
       {
         "Name": "incrementer.step",
+        "Schema": {
+          "type": "integer"
+        }
+      },
+      {
+        "Name": "incrementer.touched",
         "Schema": {
           "type": "integer"
         }
@@ -53,14 +67,22 @@ var plugin_providerShowIncrementerString string = `{
     {
       "Command": "increment",
       "OptionalParams": [
-        "incrementer.step"
+        "incrementer.step",
+        "incrementer.parameter"
       ],
       "Provider": "incrementer",
+      "RequiredParams": null
+    },
+    {
+      "Command": "reset_count",
+      "OptionalParams": null,
+      "Provider": "incrementer",
       "RequiredParams": [
-        "incrementer.parameter"
+        "incrementer.touched"
       ]
     }
   ],
+  "HasPublish": true,
   "Name": "incrementer",
   "OptionalParams": null,
   "Parameters": [
@@ -72,6 +94,12 @@ var plugin_providerShowIncrementerString string = `{
     },
     {
       "Name": "incrementer.step",
+      "Schema": {
+        "type": "integer"
+      }
+    },
+    {
+      "Name": "incrementer.touched",
       "Schema": {
         "type": "integer"
       }

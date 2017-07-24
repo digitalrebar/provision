@@ -165,13 +165,13 @@ func (p *Plugin) Action(ma *plugin.MachineAction) *backend.Error {
 		return err
 	} else if ma.Command == "reset_count" {
 		return removeParameter(ma.Uuid.String(), "incrementer.touched")
-	} else {
-		return &backend.Error{Code: 404,
-			Model:    "plugin",
-			Key:      "incrementer",
-			Type:     "plugin",
-			Messages: []string{fmt.Sprintf("Unknown command: %s\n", ma.Command)}}
 	}
+
+	return &backend.Error{Code: 404,
+		Model:    "plugin",
+		Key:      "incrementer",
+		Type:     "plugin",
+		Messages: []string{fmt.Sprintf("Unknown command: %s\n", ma.Command)}}
 }
 
 func (p *Plugin) Publish(e *backend.Event) *backend.Error {
