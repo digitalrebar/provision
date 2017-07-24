@@ -29,6 +29,8 @@ SEE ALSO
    relating to bootenvs
 -  `drpcli files <drpcli_files.html>`__ - Commands to manage files on
    the provisioner
+-  `drpcli info <drpcli_info.html>`__ - Access CLI commands relating to
+   info
 -  `drpcli interfaces <drpcli_interfaces.html>`__ - Access CLI commands
    relating to interfaces
 -  `drpcli isos <drpcli_isos.html>`__ - Commands to manage isos on the
