@@ -1,4 +1,4 @@
-package midlayer
+package plugin
 
 import (
 	"context"
@@ -197,21 +197,17 @@ func (pc *PluginController) Publish(e *backend.Event) error {
 }
 
 func (pc *PluginController) GetPluginProvider(name string) *PluginProvider {
-	pc.logger.Printf("GREG: GetPlugingProvider: %s\n", name)
 	pc.lock.Lock()
 	defer pc.lock.Unlock()
 
 	if pp, ok := pc.AvailableProviders[name]; !ok {
-		pc.logger.Printf("GREG: GetPlugingProvider %s: nil\n", name)
 		return nil
 	} else {
-		pc.logger.Printf("GREG: GetPlugingProvider %s: %v\n", name, pp)
 		return pp
 	}
 }
 
 func (pc *PluginController) GetPluginProviders() []*PluginProvider {
-	pc.logger.Printf("GREG: GetPlugingProviders\n")
 	pc.lock.Lock()
 	defer pc.lock.Unlock()
 
@@ -226,7 +222,6 @@ func (pc *PluginController) GetPluginProviders() []*PluginProvider {
 	for _, key := range keys {
 		answer = append(answer, pc.AvailableProviders[key])
 	}
-	pc.logger.Printf("GREG: GetPlugingProviders: %v\n", answer)
 	return answer
 }
 

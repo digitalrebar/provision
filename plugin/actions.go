@@ -1,4 +1,4 @@
-package midlayer
+package plugin
 
 import (
 	"fmt"

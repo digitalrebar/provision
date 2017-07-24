@@ -1,4 +1,4 @@
-package midlayer
+package plugin
 
 import (
 	"bufio"
@@ -30,15 +30,30 @@ type PluginClient struct {
 type PluginClientRequest struct {
 	Id     int
 	Action string
-	Data   interface{}
+	Data   []byte
 
-	caller chan string
+	caller chan *PluginClientReply
 }
 
+// If code == 0,2xx, then success and call should json decode.
+// If code != 0,2xx, then error and data is backend.Error.
 type PluginClientReply struct {
 	Id   int
 	Code int
-	Data interface{}
+	Data []byte
+}
+
+func (r *PluginClientReply) Error() *backend.Error {
+	var err backend.Error
+	jerr := json.Unmarshal(r.Data, &err)
+	if jerr != nil {
+		err = backend.Error{Code: 400, Messages: []string{jerr.Error()}, Model: "plugin", Type: "plugin"}
+	}
+	return &err
+}
+
+func (r *PluginClientReply) HasError() bool {
+	return r.Code != 0 && (r.Code < 200 || r.Code > 299)
 }
 
 func (pc *PluginClient) ReadLog() {
@@ -72,7 +87,7 @@ func (pc *PluginClient) ReadReply() {
 			continue
 		}
 
-		req.caller <- jsonString
+		req.caller <- &resp
 
 		pc.lock.Lock()
 		delete(pc.pending, resp.Id)
@@ -84,18 +99,25 @@ func (pc *PluginClient) ReadReply() {
 	pc.finished <- true
 }
 
-func (pc *PluginClient) writeRequest(action string, data interface{}) (chan string, error) {
+func (pc *PluginClient) writeRequest(action string, data interface{}) (chan *PluginClientReply, error) {
 	pc.lock.Lock()
 	defer pc.lock.Unlock()
 
-	mychan := make(chan string)
+	mychan := make(chan *PluginClientReply)
 	id := pc.nextId
-	pc.pending[id] = &PluginClientRequest{Id: id, Action: action, Data: data, caller: mychan}
+	pc.pending[id] = &PluginClientRequest{Id: id, Action: action, caller: mychan}
 	pc.nextId += 1
+
+	if dataBytes, err := json.Marshal(data); err != nil {
+		delete(pc.pending, id)
+		return mychan, err
+	} else {
+		pc.pending[id].Data = dataBytes
+	}
 
 	if bytes, err := json.Marshal(pc.pending[id]); err != nil {
 		delete(pc.pending, id)
-		return mychan, nil
+		return mychan, err
 	} else {
 		n, err := pc.stdin.Write(bytes)
 		if err != nil {
@@ -118,7 +140,9 @@ func (pc *PluginClient) Config(params map[string]interface{}) error {
 		return err
 	} else {
 		s := <-mychan
-		pc.logger.Printf("GREG: Config Reply: %s\n", s)
+		if s.HasError() {
+			return s.Error()
+		}
 	}
 	return nil
 }
@@ -127,8 +151,11 @@ func (pc *PluginClient) Publish(e *backend.Event) error {
 	if mychan, err := pc.writeRequest("Publish", e); err != nil {
 		return err
 	} else {
-		answer := <-mychan
-		pc.logger.Printf("GREG: Publish Reply: %s\n", answer)
+		s := <-mychan
+
+		if s.HasError() {
+			return s.Error()
+		}
 	}
 	return nil
 }
@@ -137,25 +164,23 @@ func (pc *PluginClient) Action(a *MachineAction) error {
 	if mychan, err := pc.writeRequest("Action", a); err != nil {
 		return err
 	} else {
-		answer := <-mychan
-		pc.logger.Printf("GREG: Action Reply: %s\n", answer)
+		s := <-mychan
+		if s.HasError() {
+			return s.Error()
+		}
 	}
 	return nil
 }
 
 func (pc *PluginClient) Stop() error {
 	// Close stdin / writer.  To close, the program.
-	pc.logger.Printf("GREG: Stopping program by closing STDIN\n")
 	pc.stdin.Close()
 
 	// Wait for reader to exit
-	pc.logger.Printf("GREG: Waiting for log reader to finish\n")
 	<-pc.finished
-	pc.logger.Printf("GREG: Waiting for reply reader to finish\n")
 	<-pc.finished
 
 	// Wait for exit
-	pc.logger.Printf("GREG: Wait for command to exit\n")
 	pc.cmd.Wait()
 	return nil
 }
@@ -189,9 +214,7 @@ func NewPluginClient(plugin string, logger *log.Logger, apiPort int, path string
 
 	answer.cmd.Start()
 
-	answer.logger.Printf("GREG: Calling plugin.config %v\n", params)
 	terr := answer.Config(params)
-	answer.logger.Printf("GREG: returned plugin.config %v\n", terr)
 	if terr != nil {
 		answer.Stop()
 		theErr = terr

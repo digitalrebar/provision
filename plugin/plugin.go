@@ -1,5 +1,9 @@
 package plugin
 
+/*
+ * This is used by plugins to define their base App.
+ */
+
 import (
 	"bufio"
 	"encoding/json"
@@ -7,7 +11,6 @@ import (
 	"os"
 
 	"github.com/digitalrebar/provision/backend"
-	"github.com/digitalrebar/provision/midlayer"
 	"github.com/spf13/cobra"
 )
 
@@ -20,7 +23,7 @@ type PluginPublisher interface {
 }
 
 type PluginActor interface {
-	Action(*midlayer.MachineAction) *backend.Error
+	Action(*MachineAction) *backend.Error
 }
 
 var (
@@ -35,7 +38,7 @@ func Log(format string, args ...interface{}) {
 	fmt.Fprintf(os.Stderr, format, args...)
 }
 
-func InitApp(use, short, version string, def *midlayer.PluginProvider, pc PluginConfig) {
+func InitApp(use, short, version string, def *PluginProvider, pc PluginConfig) {
 	App.Use = use
 	App.Short = short
 
@@ -93,7 +96,7 @@ func Run(pc PluginConfig) error {
 	for in.Scan() {
 		jsonString := in.Text()
 
-		var req midlayer.PluginClientRequest
+		var req PluginClientRequest
 		err := json.Unmarshal([]byte(jsonString), &req)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Failed to process: %v\n", err)
@@ -101,77 +104,65 @@ func Run(pc PluginConfig) error {
 		}
 
 		if req.Action == "Config" {
-			params := make(map[string]interface{}, 0)
-			if req.Data != nil {
-				params = req.Data.(map[string]interface{})
-			}
-			err := pc.Config(params)
-			code := 0
-			if err != nil {
-				code = err.Code
-			}
+			resp := &PluginClientReply{Id: req.Id}
 
-			resp := &midlayer.PluginClientReply{Code: code, Id: req.Id, Data: err}
+			var params map[string]interface{}
+			if jerr := json.Unmarshal(req.Data, &params); jerr != nil {
+				resp.Code = 400
+				resp.Data, _ = json.Marshal(&backend.Error{Code: 400, Model: "plugin", Type: "Config", Messages: []string{fmt.Sprintf("Failed to unmarshal data: %v", jerr)}})
+			} else {
+				if err := pc.Config(params); err != nil {
+					resp.Code = err.Code
+					resp.Data, _ = json.Marshal(err)
+				}
+			}
 			bytes, _ := json.Marshal(resp)
 			fmt.Println(string(bytes))
 		} else if req.Action == "Action" {
-			fmt.Fprintf(os.Stderr, "GREG: Data type = %V\n", req.Data)
-			fmt.Fprintf(os.Stderr, "GREG: Data type = %v\n", req.Data)
-			fmt.Fprintf(os.Stderr, "GREG: Data type = %T\n", req.Data)
-			fmt.Fprintf(os.Stderr, "GREG: Data type = %t\n", req.Data)
-			actionInfo, ok := req.Data.(midlayer.MachineAction)
-			if !ok {
-				resp := &midlayer.PluginClientReply{Code: 400, Id: req.Id, Data: "Unknown data type"}
-				bytes, _ := json.Marshal(resp)
-				fmt.Println(string(bytes))
-				continue
-			}
+			resp := &PluginClientReply{Id: req.Id}
 
-			s, ok := pc.(PluginActor)
-			if !ok {
-				resp := &midlayer.PluginClientReply{Code: 400, Id: req.Id, Data: "Plugin doesn't support Action"}
-				bytes, _ := json.Marshal(resp)
-				fmt.Println(string(bytes))
-				continue
+			var actionInfo MachineAction
+			if jerr := json.Unmarshal(req.Data, &actionInfo); jerr != nil {
+				resp.Code = 400
+				resp.Data, _ = json.Marshal(&backend.Error{Code: 400, Model: "plugin", Type: "Action", Messages: []string{fmt.Sprintf("Failed to unmarshal data: %v", jerr)}})
+			} else {
+				s, ok := pc.(PluginActor)
+				if !ok {
+					resp.Code = 400
+					resp.Data, _ = json.Marshal(&backend.Error{Code: 400, Model: "plugin", Type: "Action", Messages: []string{"Plugin doesn't support Action"}})
+				} else {
+					if err := s.Action(&actionInfo); err != nil {
+						resp.Code = err.Code
+						resp.Data, _ = json.Marshal(err)
+					}
+				}
 			}
-
-			err := s.Action(&actionInfo)
-			code := 0
-			if err != nil {
-				code = err.Code
-			}
-
-			resp := &midlayer.PluginClientReply{Code: code, Id: req.Id, Data: err}
 			bytes, _ := json.Marshal(resp)
 			fmt.Println(string(bytes))
 		} else if req.Action == "Publish" {
-			event, ok := req.Data.(backend.Event)
-			if !ok {
-				resp := &midlayer.PluginClientReply{Code: 400, Id: req.Id, Data: "Unknown data type"}
-				bytes, _ := json.Marshal(resp)
-				fmt.Println(string(bytes))
-				continue
-			}
+			resp := &PluginClientReply{Id: req.Id}
 
-			s, ok := pc.(PluginPublisher)
-			if !ok {
-				resp := &midlayer.PluginClientReply{Code: 400, Id: req.Id, Data: "Plugin doesn't support Publish"}
-				bytes, _ := json.Marshal(resp)
-				fmt.Println(string(bytes))
-				continue
+			var event backend.Event
+			if jerr := json.Unmarshal(req.Data, &event); jerr != nil {
+				resp.Code = 400
+				resp.Data, _ = json.Marshal(&backend.Error{Code: 400, Model: "plugin", Type: "Publish", Messages: []string{fmt.Sprintf("Failed to unmarshal data: %v", jerr)}})
+			} else {
+				s, ok := pc.(PluginPublisher)
+				if !ok {
+					resp.Code = 400
+					resp.Data, _ = json.Marshal(&backend.Error{Code: 400, Model: "plugin", Type: "Publish", Messages: []string{"Plugin doesn't support Publish"}})
+				} else {
+					if err := s.Publish(&event); err != nil {
+						resp.Code = err.Code
+						resp.Data, _ = json.Marshal(err)
+					}
+				}
 			}
-
-			err := s.Publish(&event)
-			code := 0
-			if err != nil {
-				code = err.Code
-			}
-
-			resp := &midlayer.PluginClientReply{Code: code, Id: req.Id, Data: err}
 			bytes, _ := json.Marshal(resp)
 			fmt.Println(string(bytes))
 		} else {
-			resp := &midlayer.PluginClientReply{Code: 400, Id: req.Id, Data: "Unknown op"}
+			resp := &PluginClientReply{Code: 400, Id: req.Id}
+			resp.Data, _ = json.Marshal(&backend.Error{Code: 400, Model: "plugin", Type: "Publish", Messages: []string{"Plugin unknown command type"}})
 			bytes, _ := json.Marshal(resp)
 			fmt.Println(string(bytes))
 		}

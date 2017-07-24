@@ -11,18 +11,17 @@ import (
 	"github.com/digitalrebar/provision"
 	"github.com/digitalrebar/provision/backend"
 	"github.com/digitalrebar/provision/cli"
-	"github.com/digitalrebar/provision/midlayer"
 	"github.com/digitalrebar/provision/plugin"
 )
 
 var (
 	version = provision.RS_VERSION
-	def     = midlayer.PluginProvider{
+	def     = plugin.PluginProvider{
 		Name:       "incrementer",
 		Version:    version,
 		HasPublish: false,
-		AvailableActions: []*midlayer.AvailableAction{
-			&midlayer.AvailableAction{Command: "increment",
+		AvailableActions: []*plugin.AvailableAction{
+			&plugin.AvailableAction{Command: "increment",
 				RequiredParams: []string{"incrementer.parameter"},
 				OptionalParams: []string{"incrementer.step"},
 			},
@@ -70,7 +69,7 @@ func executeDrpCliCommand(args ...string) (string, error) {
 	return out, err2
 }
 
-func (p *Plugin) Action(ma *midlayer.MachineAction) *backend.Error {
+func (p *Plugin) Action(ma *plugin.MachineAction) *backend.Error {
 	plugin.Log("Action: %v\n", ma)
 	if ma.Command == "increment" {
 		parameter, ok := ma.Params["incrementer.parameter"].(string)
