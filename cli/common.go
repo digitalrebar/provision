@@ -44,6 +44,7 @@ var (
 	basicAuth runtime.ClientAuthInfoWriter
 	uf        func(*cobra.Command) error
 	dumpUsage = true
+	force     = false
 )
 
 func MyUsage(c *cobra.Command) error {
@@ -89,6 +90,9 @@ func init() {
 	App.PersistentFlags().StringVarP(&format,
 		"format", "F", "json",
 		`The serialzation we expect for output.  Can be "json" or "yaml"`)
+	App.PersistentFlags().BoolVarP(&force,
+		"force", "f", false,
+		"When needed, attempt to force the operation - used on some update/patch calls")
 
 	uf = App.UsageFunc()
 	App.SetUsageFunc(MyUsage)

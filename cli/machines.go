@@ -98,7 +98,12 @@ func (be MachineOps) Patch(id string, obj interface{}) (interface{}, error) {
 	if !ok {
 		return nil, fmt.Errorf("Invalid type passed to machine patch")
 	}
-	d, e := session.Machines.PatchMachine(machines.NewPatchMachineParams().WithUUID(strfmt.UUID(id)).WithBody(data), basicAuth)
+	a := machines.NewPatchMachineParams().WithUUID(strfmt.UUID(id)).WithBody(data)
+	if force {
+		s := "true"
+		a = a.WithForce(&s)
+	}
+	d, e := session.Machines.PatchMachine(a, basicAuth)
 	if e != nil {
 		return nil, e
 	}
