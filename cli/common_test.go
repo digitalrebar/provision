@@ -285,6 +285,7 @@ func TestMain(m *testing.M) {
 		"--static-port", "10002",
 		"--tftp-port", "10003",
 		"--disable-dhcp",
+		"--drp-id", "Fred",
 	}
 
 	c_opts := generateArgs(testArgs)
