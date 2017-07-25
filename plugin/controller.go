@@ -282,6 +282,7 @@ func (pc *PluginController) startPlugin(d backend.Stores, plugin *backend.Plugin
 			plugin.Errors = errors
 			pc.dataTracker.Update(d, plugin)
 		}
+		pc.publishers.Publish("plugin", "started", plugin.Name, plugin)
 		pc.logger.Printf("Starting plugin: %s(%s) complete\n", plugin.Name, plugin.Provider)
 	} else {
 		pc.logger.Printf("Starting plugin: %s(%s) missing provider\n", plugin.Name, plugin.Provider)
@@ -295,7 +296,7 @@ func (pc *PluginController) startPlugin(d backend.Stores, plugin *backend.Plugin
 func (pc *PluginController) stopPlugin(plugin *backend.Plugin) {
 	rp, ok := pc.runningPlugins[plugin.Name]
 	if ok {
-		pc.logger.Printf("Stoping plugin: %s(%s)\n", plugin.Name, plugin.Provider)
+		pc.logger.Printf("Stopping plugin: %s(%s)\n", plugin.Name, plugin.Provider)
 		delete(pc.runningPlugins, plugin.Name)
 
 		if rp.Provider.HasPublish {
@@ -306,6 +307,7 @@ func (pc *PluginController) stopPlugin(plugin *backend.Plugin) {
 		}
 		rp.Client.Stop()
 		pc.logger.Printf("Stoping plugin: %s(%s) complete\n", plugin.Name, plugin.Provider)
+		pc.publishers.Publish("plugin", "stopped", plugin.Name, plugin)
 	}
 }
 
@@ -355,6 +357,7 @@ func (pc *PluginController) importPluginProvider(provider string) error {
 					pc.logger.Printf("Adding plugin provider: %s\n", pp.Name)
 					pc.AvailableProviders[pp.Name] = &pp
 					pp.path = pc.pluginDir + "/" + provider
+					pc.publishers.Publish("plugin_provider", "create", pp.Name, pp)
 					return pc.walkPlugins(provider)
 				} else {
 					pc.logger.Printf("Already exists plugin provider: %s\n", pp.Name)
@@ -391,6 +394,7 @@ func (pc *PluginController) removePluginProvider(provider string) {
 		}
 
 		pc.logger.Printf("Removing plugin provider: %s\n", name)
+		pc.publishers.Publish("plugin_provider", "delete", name, pc.AvailableProviders[name])
 		delete(pc.AvailableProviders, name)
 	}
 }
