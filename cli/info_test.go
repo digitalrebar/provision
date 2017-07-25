@@ -43,4 +43,7 @@ func TestInfoCli(t *testing.T) {
 	if info.Version != provision.RS_VERSION {
 		t.Errorf("Expected matching os: %s %s\n", info.Version, provision.RS_VERSION)
 	}
+	if info.ID != "Fred" {
+		t.Errorf("Expected matching id: %s %s\n", info.ID, "Fred")
+	}
 }
