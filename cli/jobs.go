@@ -83,11 +83,17 @@ func (be JobOps) Create(obj interface{}) (interface{}, error) {
 	if !ok {
 		return nil, fmt.Errorf("Invalid type passed to job create")
 	}
-	d, e := session.Jobs.CreateJob(jobs.NewCreateJobParams().WithBody(job), basicAuth)
+	newJob, oldJob, _, e := session.Jobs.CreateJob(jobs.NewCreateJobParams().WithBody(job), basicAuth)
 	if e != nil {
 		return nil, e
 	}
-	return d.Payload, nil
+	if newJob != nil {
+		return newJob.Payload, nil
+	}
+	if oldJob != nil {
+		return oldJob.Payload, nil
+	}
+	return nil, nil
 }
 
 func (be JobOps) Patch(id string, obj interface{}) (interface{}, error) {

@@ -28,6 +28,7 @@ var machineShowMachineString string = `{
     "Tasks": null
   },
   "Profiles": null,
+  "Runnable": true,
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
 }
@@ -62,6 +63,7 @@ var machineCreateJohnString string = `{
     "Tasks": null
   },
   "Profiles": null,
+  "Runnable": true,
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
 }
@@ -81,6 +83,7 @@ var machineListMachinesString = `[
       "Tasks": null
     },
     "Profiles": null,
+    "Runnable": true,
     "Tasks": [],
     "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
   }
@@ -107,6 +110,7 @@ var machineUpdateJohnString string = `{
     "Tasks": null
   },
   "Profiles": null,
+  "Runnable": true,
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
 }
@@ -122,6 +126,7 @@ var machinePatchBadBaseJSONErrorString = "Error: Unable to parse drpcli machines
 var machinePatchBaseString string = `{
   "Address": "192.168.100.110",
   "BootEnv": "local",
+  "CurrentTask": 0,
   "Description": "lpxelinux.0",
   "Errors": null,
   "Name": "john",
@@ -129,6 +134,7 @@ var machinePatchBaseString string = `{
     "Name": ""
   },
   "Profiles": null,
+  "Runnable": true,
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
 }
@@ -149,6 +155,7 @@ var machinePatchJohnString string = `{
     "Tasks": null
   },
   "Profiles": null,
+  "Runnable": true,
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
 }
@@ -163,6 +170,7 @@ var machinePatchMissingBaseString string = `{
     "Name": ""
   },
   "Profiles": null,
+  "Runnable": true,
   "Tasks": [],
   "Uuid": "3e7031fe-5555-45f1-835c-92541bc9cbd3"
 }
@@ -183,6 +191,7 @@ var machineAddProfileJillString string = `{
   "Profiles": [
     "jill"
   ],
+  "Runnable": true,
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
 }
@@ -202,6 +211,7 @@ var machineAddProfileJillJeanString string = `{
     "jill",
     "jean"
   ],
+  "Runnable": true,
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
 }
@@ -221,6 +231,7 @@ var machineRemoveProfileJeanString string = `{
   "Profiles": [
     "jean"
   ],
+  "Runnable": true,
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
 }
@@ -237,6 +248,7 @@ var machineRemoveProfileAllGoneString string = `{
     "Tasks": null
   },
   "Profiles": null,
+  "Runnable": true,
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
 }
@@ -290,6 +302,7 @@ var machineUpdateJohnWithParamsString string = `{
     "Tasks": null
   },
   "Profiles": null,
+  "Runnable": true,
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
 }
@@ -544,6 +557,7 @@ var machineUpdateLocal2String string = `{
     "Tasks": null
   },
   "Profiles": null,
+  "Runnable": true,
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
 }
@@ -552,7 +566,7 @@ var machineUpdateLocal2String string = `{
 var machineUpdateLocalJamieString string = `{
   "Address": "192.168.100.110",
   "BootEnv": "local",
-  "CurrentTask": 0,
+  "CurrentTask": -1,
   "Description": "lpxelinux.0",
   "Errors": null,
   "Name": "john",
@@ -561,6 +575,7 @@ var machineUpdateLocalJamieString string = `{
     "Tasks": null
   },
   "Profiles": null,
+  "Runnable": true,
   "Tasks": [
     "jamie"
   ],
