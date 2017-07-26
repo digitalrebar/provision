@@ -108,7 +108,10 @@ func InitPluginController(pluginDir string, dt *backend.DataTracker, logger *log
 					ref := dt.NewPlugin()
 					d, unlocker := dt.LockEnts(ref.Locks("get")...)
 					ref2 := d(ref.Prefix()).Find(event.Key)
-					pc.startPlugin(d, ref2.(*backend.Plugin))
+					// May be deleted before we get here.
+					if ref2 != nil {
+						pc.startPlugin(d, ref2.(*backend.Plugin))
+					}
 					unlocker()
 					pc.lock.Unlock()
 				} else if event.Action == "save" {
@@ -116,15 +119,21 @@ func InitPluginController(pluginDir string, dt *backend.DataTracker, logger *log
 					ref := dt.NewPlugin()
 					d, unlocker := dt.LockEnts(ref.Locks("get")...)
 					ref2 := d(ref.Prefix()).Find(event.Key)
-					pc.restartPlugin(d, ref2.(*backend.Plugin))
+					// May be deleted before we get here.
+					if ref2 != nil {
+						pc.restartPlugin(d, ref2.(*backend.Plugin))
+					}
 					unlocker()
 					pc.lock.Unlock()
 				} else if event.Action == "update" {
 					pc.lock.Lock()
 					ref := dt.NewPlugin()
 					d, unlocker := dt.LockEnts(ref.Locks("get")...)
+					// May be deleted before we get here.
 					ref2 := d(ref.Prefix()).Find(event.Key)
-					pc.restartPlugin(d, ref2.(*backend.Plugin))
+					if ref2 != nil {
+						pc.restartPlugin(d, ref2.(*backend.Plugin))
+					}
 					unlocker()
 					pc.lock.Unlock()
 				} else if event.Action == "delete" {
