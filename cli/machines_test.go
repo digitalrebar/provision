@@ -177,6 +177,25 @@ var machinePatchMissingBaseString string = `{
 `
 var machinePatchJohnMissingErrorString string = "Error: machines: PATCH 3e7031fe-5555-45f1-835c-92541bc9cbd3: Not Found\n\n"
 
+var machineAddProfileJill2String string = `{
+  "Address": "192.168.100.110",
+  "BootEnv": "local2",
+  "CurrentTask": 0,
+  "Description": "lpxelinux.0",
+  "Errors": null,
+  "Name": "john",
+  "Profile": {
+    "Name": "",
+    "Tasks": null
+  },
+  "Profiles": [
+    "jill"
+  ],
+  "Runnable": true,
+  "Tasks": [],
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+}
+`
 var machineAddProfileJillString string = `{
   "Address": "192.168.100.110",
   "BootEnv": "local",
@@ -254,6 +273,26 @@ var machineRemoveProfileAllGoneString string = `{
 }
 `
 
+var machineRemoveProfileAllGone2String string = `{
+  "Address": "192.168.100.110",
+  "BootEnv": "local2",
+  "CurrentTask": -1,
+  "Description": "lpxelinux.0",
+  "Errors": null,
+  "Name": "john",
+  "Profile": {
+    "Name": "",
+    "Tasks": null
+  },
+  "Profiles": null,
+  "Runnable": true,
+  "Tasks": [
+    "justine"
+  ],
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+}
+`
+
 var machineDestroyNoArgErrorString string = "Error: drpcli machines destroy [id] requires 1 argument"
 var machineDestroyTooManyArgErrorString string = "Error: drpcli machines destroy [id] requires 1 argument"
 var machineDestroyJohnString string = "Deleted machine 3e7031fe-3062-45f1-835c-92541bc9cbd3\n"
@@ -316,6 +355,13 @@ var machineJillCreate string = `{
 var machineJeanCreate string = `{
   "Name": "jean",
   "Tasks": null
+}
+`
+var machineProfileJamieUpdate string = `{
+  "Name": "jill",
+  "Tasks": [
+    "justine"
+  ]
 }
 `
 
@@ -403,6 +449,13 @@ var machineRunActionGoodStdinString string = `{
 
 var machineJamieCreate string = `{
   "Name": "jamie",
+  "OptionalParams": null,
+  "RequiredParams": null,
+  "Templates": null
+}
+`
+var machineJustineCreate string = `{
+  "Name": "justine",
   "OptionalParams": null,
   "RequiredParams": null,
   "Templates": null
@@ -563,6 +616,28 @@ var machineUpdateLocal2String string = `{
 }
 `
 
+var machineUpdateLocal3String string = `{
+  "Address": "192.168.100.110",
+  "BootEnv": "local2",
+  "CurrentTask": -1,
+  "Description": "lpxelinux.0",
+  "Errors": null,
+  "Name": "john",
+  "Profile": {
+    "Name": "",
+    "Tasks": null
+  },
+  "Profiles": [
+    "jill"
+  ],
+  "Runnable": true,
+  "Tasks": [
+    "justine"
+  ],
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+}
+`
+
 var machineUpdateLocalJamieString string = `{
   "Address": "192.168.100.110",
   "BootEnv": "local",
@@ -574,10 +649,13 @@ var machineUpdateLocalJamieString string = `{
     "Name": "",
     "Tasks": null
   },
-  "Profiles": null,
+  "Profiles": [
+    "jill"
+  ],
   "Runnable": true,
   "Tasks": [
-    "jamie"
+    "jamie",
+    "justine"
   ],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
 }
@@ -606,6 +684,7 @@ func TestMachineCli(t *testing.T) {
 		CliTest{false, false, []string{"profiles", "create", "jill"}, noStdinString, machineJillCreate, noErrorString},
 		CliTest{false, false, []string{"profiles", "create", "jean"}, noStdinString, machineJeanCreate, noErrorString},
 		CliTest{false, false, []string{"tasks", "create", "jamie"}, noStdinString, machineJamieCreate, noErrorString},
+		CliTest{false, false, []string{"tasks", "create", "justine"}, noStdinString, machineJustineCreate, noErrorString},
 		CliTest{false, false, []string{"bootenvs", "create", machineLocal2CreateInput}, noStdinString, machineLocal2Create, noErrorString},
 		CliTest{false, false, []string{"plugins", "create", machinePluginCreateString}, noStdinString, machinePluginCreateString, noErrorString},
 
@@ -680,11 +759,14 @@ func TestMachineCli(t *testing.T) {
 		CliTest{false, true, []string{"machines", "bootenv", "john", "john2"}, noStdinString, noContentString, machineBootEnvMissingMachineErrorString},
 		CliTest{false, true, []string{"machines", "bootenv", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "john2"}, noStdinString, noContentString, machineBootEnvErrorBootEnvString},
 		CliTest{false, false, []string{"machines", "bootenv", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "local2"}, noStdinString, machineUpdateLocal2String, noErrorString},
+		CliTest{false, false, []string{"machines", "addprofile", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "jill"}, noStdinString, machineAddProfileJill2String, noErrorString},
+		CliTest{false, false, []string{"profiles", "update", "jill", "{ \"Tasks\": [ \"justine\" ] }"}, noStdinString, machineProfileJamieUpdate, noErrorString},
 		CliTest{false, false, []string{"bootenvs", "update", "local", "{ \"Tasks\": [ \"jamie\" ] }"}, noStdinString, machineBootEnvJamieUpdate, noErrorString},
 		CliTest{false, false, []string{"machines", "bootenv", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "local"}, noStdinString, machineUpdateLocalJamieString, noErrorString},
 		CliTest{false, true, []string{"machines", "bootenv", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "local2"}, noStdinString, noContentString, machineUpdateBootEnvMissingForceErrorString},
-		CliTest{false, false, []string{"machines", "bootenv", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "local2", "--force"}, noStdinString, machineUpdateLocal2String, noErrorString},
+		CliTest{false, false, []string{"machines", "bootenv", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "local2", "--force"}, noStdinString, machineUpdateLocal3String, noErrorString},
 		CliTest{false, false, []string{"bootenvs", "update", "local", "{ \"Tasks\": [ ] }"}, noStdinString, machineBootEnvNoJamieUpdate, noErrorString},
+		CliTest{false, false, []string{"machines", "removeprofile", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "jill"}, noStdinString, machineRemoveProfileAllGone2String, noErrorString},
 
 		CliTest{false, false, []string{"machines", "bootenv", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "local"}, noStdinString, machineUpdateJohnString, noErrorString},
 
@@ -770,6 +852,7 @@ func TestMachineCli(t *testing.T) {
 		CliTest{false, false, []string{"bootenvs", "destroy", "local"}, noStdinString, "Deleted bootenv local\n", noErrorString},
 		CliTest{false, false, []string{"bootenvs", "destroy", "local2"}, noStdinString, "Deleted bootenv local2\n", noErrorString},
 		CliTest{false, false, []string{"tasks", "destroy", "jamie"}, noStdinString, "Deleted task jamie\n", noErrorString},
+		CliTest{false, false, []string{"tasks", "destroy", "justine"}, noStdinString, "Deleted task justine\n", noErrorString},
 		CliTest{false, false, []string{"templates", "destroy", "local-pxelinux.tmpl"}, noStdinString, "Deleted template local-pxelinux.tmpl\n", noErrorString},
 		CliTest{false, false, []string{"templates", "destroy", "local-elilo.tmpl"}, noStdinString, "Deleted template local-elilo.tmpl\n", noErrorString},
 		CliTest{false, false, []string{"templates", "destroy", "local-ipxe.tmpl"}, noStdinString, "Deleted template local-ipxe.tmpl\n", noErrorString},
