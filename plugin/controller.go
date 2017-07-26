@@ -196,6 +196,13 @@ func (pc *PluginController) Publish(e *backend.Event) error {
 	return nil
 }
 
+// This never gets unloaded.
+func (pc *PluginController) Reserve() error {
+	return nil
+}
+func (pc *PluginController) Release() {}
+func (pc *PluginController) Unload()  {}
+
 func (pc *PluginController) GetPluginProvider(name string) *PluginProvider {
 	pc.lock.Lock()
 	defer pc.lock.Unlock()
@@ -227,6 +234,9 @@ func (pc *PluginController) GetPluginProviders() []*PluginProvider {
 
 func (pc *PluginController) startPlugin(d backend.Stores, plugin *backend.Plugin) {
 	pc.logger.Printf("Starting plugin: %s(%s)\n", plugin.Name, plugin.Provider)
+	if _, ok := pc.runningPlugins[plugin.Name]; ok {
+		pc.logger.Printf("Already started plugin: %s(%s)\n", plugin.Name, plugin.Provider)
+	}
 	pp, ok := pc.AvailableProviders[plugin.Provider]
 	if ok {
 		errors := []string{}
@@ -389,7 +399,9 @@ func (pc *PluginController) removePluginProvider(provider string) {
 			d, unlocker := pc.dataTracker.LockEnts(ref.Locks("get")...)
 			pc.stopPlugin(p)
 			ref2 := d(ref.Prefix()).Find(p.Name)
-			pc.startPlugin(d, ref2.(*backend.Plugin))
+			myPP := ref2.(*backend.Plugin)
+			myPP.Errors = []string{fmt.Sprintf("Missing Plugin Provider: %s", provider)}
+			pc.dataTracker.Update(d, myPP)
 			unlocker()
 		}
 

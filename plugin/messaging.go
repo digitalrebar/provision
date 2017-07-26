@@ -9,6 +9,7 @@ import (
 	"os"
 	"os/exec"
 	"sync"
+	"time"
 
 	"github.com/digitalrebar/provision/backend"
 )
@@ -24,6 +25,10 @@ type PluginClient struct {
 	lock     sync.Mutex
 	nextId   int
 	pending  map[int]*PluginClientRequest
+
+	publock   sync.Mutex
+	inflight  int
+	unloading bool
 }
 
 // Id of request, and JSON blob
@@ -145,6 +150,35 @@ func (pc *PluginClient) Config(params map[string]interface{}) error {
 		}
 	}
 	return nil
+}
+
+func (pc *PluginClient) Reserve() error {
+	pc.publock.Lock()
+	defer pc.publock.Unlock()
+
+	if pc.unloading {
+		return fmt.Errorf("Publish not available %s: unloading\n", pc.plugin)
+	}
+	pc.inflight += 1
+	return nil
+}
+
+func (pc *PluginClient) Release() {
+	pc.publock.Lock()
+	defer pc.publock.Unlock()
+	pc.inflight -= 1
+}
+
+func (pc *PluginClient) Unload() {
+	pc.publock.Lock()
+	pc.unloading = true
+	for pc.inflight != 0 {
+		pc.publock.Unlock()
+		time.Sleep(time.Millisecond * 15)
+		pc.publock.Lock()
+	}
+	pc.publock.Unlock()
+	return
 }
 
 func (pc *PluginClient) Publish(e *backend.Event) error {
