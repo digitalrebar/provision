@@ -114,9 +114,11 @@ func Run(pc PluginConfig) error {
 		Log("Plugin error: %s", err)
 	}
 
-	for a := atomic.LoadInt64(&ops); a > 0; {
-		Log("Exiting ... waiting on %d go routines to leave\n", a)
+	count := 0
+	for a := atomic.LoadInt64(&ops); a > 0 && count < 10; {
+		Log("Exiting ... waiting on %d go routines to leave: %d\n", a, count)
 		time.Sleep(time.Second * 1)
+		count += 1
 	}
 
 	return nil
