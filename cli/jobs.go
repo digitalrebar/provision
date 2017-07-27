@@ -81,6 +81,7 @@ func (be JobOps) Get(id string) (interface{}, error) {
 func (be JobOps) Create(obj interface{}) (interface{}, error) {
 	job, ok := obj.(*models.Job)
 	if !ok {
+		// GREG: Add helper here. string uuid for machine
 		return nil, fmt.Errorf("Invalid type passed to job create")
 	}
 	newJob, oldJob, _, e := session.Jobs.CreateJob(jobs.NewCreateJobParams().WithBody(job), basicAuth)
