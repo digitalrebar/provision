@@ -113,6 +113,12 @@ var userTokenUserNotFoundErrorString string = "Error: User GET: greg: Not Found\
 var userTokenTTLNotNumberErrorString string = "Error: ttl should be a number: strconv.ParseInt: parsing \"cow\": invalid syntax\n\n"
 var userTokenSuccessString string = `RE:
 {
+  "Info": {
+    "arch": "[\s\S]*",
+    "id": "Fred",
+    "os": "[\s\S]*",
+    "version": "[\s\S]*"
+  },
   "Token": "[\s\S]*"
 }
 `
