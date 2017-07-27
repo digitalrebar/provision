@@ -7,6 +7,7 @@ import (
 	"github.com/digitalrebar/provision/client/jobs"
 	"github.com/digitalrebar/provision/models"
 	"github.com/go-openapi/strfmt"
+	"github.com/pborman/uuid"
 	"github.com/spf13/cobra"
 )
 
@@ -81,8 +82,30 @@ func (be JobOps) Get(id string) (interface{}, error) {
 func (be JobOps) Create(obj interface{}) (interface{}, error) {
 	job, ok := obj.(*models.Job)
 	if !ok {
-		// GREG: Add helper here. string uuid for machine
-		return nil, fmt.Errorf("Invalid type passed to job create")
+		if s, ok := obj.(string); ok {
+			uu := uuid.Parse(s)
+			if uu == nil {
+				mo := &MachineOps{}
+				if answer, err := mo.List(map[string]string{"Name": s}); err != nil {
+					return nil, fmt.Errorf("List machine failed: %s", err)
+				} else {
+					list := answer.([]*models.Machine)
+					if len(list) != 1 {
+						return nil, fmt.Errorf("Invalid machine name passed to job create: %s", s)
+					}
+					m := list[0]
+
+					job = &models.Job{}
+					job.Machine = m.UUID
+				}
+			} else {
+				job = &models.Job{}
+				u := strfmt.UUID(s)
+				job.Machine = &u
+			}
+		} else {
+			return nil, fmt.Errorf("Invalid type passed to job create")
+		}
 	}
 	newJob, oldJob, _, e := session.Jobs.CreateJob(jobs.NewCreateJobParams().WithBody(job), basicAuth)
 	if e != nil {

@@ -59,6 +59,8 @@ func (be MachineOps) List(parms map[string]string) (interface{}, error) {
 			params = params.WithUUID(&v)
 		case "Address":
 			params = params.WithAddress(&v)
+		case "Runnable":
+			params = params.WithRunnable(&v)
 		}
 	}
 	d, e := session.Machines.ListMachines(params, basicAuth)

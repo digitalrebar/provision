@@ -241,6 +241,7 @@ var jobExistsMissingJohnString string = "Error: jobs GET: john: Not Found\n\n"
 var jobExpireTimeErrorString string = "Error: Invalid UUID: false\n\n"
 var jobDestroyBadString string = "Error: Jobs 00000000-0000-0000-0000-000000000001 is not in a deletable state: created\n\n"
 var jobBadTimeFormatString string = "Error: parsing time \"fred\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"fred\" as \"2006\"\n\n"
+var jobCreateJobInvalidMachineNameErrorString string = "Error: Unable to create new job: Invalid machine name passed to job create: james\n\n"
 
 func TestJobCli(t *testing.T) {
 	if err := os.MkdirAll("bootenvs", 0755); err != nil {
@@ -279,6 +280,10 @@ func TestJobCli(t *testing.T) {
 		CliTest{false, true, []string{"jobs", "create", jobCreateBadJSON2String}, noStdinString, noContentString, jobCreateBadJSON2ErrorString},
 		CliTest{false, false, []string{"jobs", "create", jobCreateInputString}, noStdinString, jobCreateJohnString, noErrorString},
 		CliTest{false, true, []string{"jobs", "create", jobCreateInputString}, noStdinString, noContentString, jobCreateJobAlreadyRunningErrorString},
+
+		CliTest{false, true, []string{"jobs", "create", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, noContentString, jobCreateJobAlreadyRunningErrorString},
+		CliTest{false, true, []string{"jobs", "create", "john"}, noStdinString, noContentString, jobCreateJobAlreadyRunningErrorString},
+		CliTest{false, true, []string{"jobs", "create", "james"}, noStdinString, noContentString, jobCreateJobInvalidMachineNameErrorString},
 
 		CliTest{true, true, []string{"jobs", "show"}, noStdinString, noContentString, jobShowNoArgErrorString},
 		CliTest{true, true, []string{"jobs", "show", "john", "john2"}, noStdinString, noContentString, jobShowTooManyArgErrorString},

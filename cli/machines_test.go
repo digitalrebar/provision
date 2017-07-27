@@ -661,6 +661,8 @@ var machineUpdateLocalJamieString string = `{
 }
 `
 
+var machineBadBoolString string = "Error: Runnable must be true or false\n\n"
+
 func TestMachineCli(t *testing.T) {
 	if err := os.MkdirAll("bootenvs", 0755); err != nil {
 		t.Errorf("Failed to create bootenvs dir: %v\n", err)
@@ -714,6 +716,9 @@ func TestMachineCli(t *testing.T) {
 		CliTest{false, false, []string{"machines", "list", "UUID=4e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, machineEmptyListString, noErrorString},
 		CliTest{false, false, []string{"machines", "list", "UUID=3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, machineListMachinesString, noErrorString},
 		CliTest{false, true, []string{"machines", "list", "UUID=false"}, noStdinString, noContentString, machineExpireTimeErrorString},
+		CliTest{false, false, []string{"machines", "list", "Runnable=true"}, noStdinString, machineListMachinesString, noErrorString},
+		CliTest{false, false, []string{"machines", "list", "Runnable=false"}, noStdinString, machineEmptyListString, noErrorString},
+		CliTest{false, true, []string{"machines", "list", "Runnable=fred"}, noStdinString, noContentString, machineBadBoolString},
 
 		CliTest{true, true, []string{"machines", "show"}, noStdinString, noContentString, machineShowNoArgErrorString},
 		CliTest{true, true, []string{"machines", "show", "john", "john2"}, noStdinString, noContentString, machineShowTooManyArgErrorString},
