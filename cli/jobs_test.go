@@ -19,7 +19,13 @@ var jobTask2Create string = `{
   "Name": "task2",
   "OptionalParams": null,
   "RequiredParams": null,
-  "Templates": null
+  "Templates": [
+    {
+      "Contents": "Fred rules",
+      "Name": "part 1",
+      "Path": ""
+    }
+  ]
 }
 `
 var jobTask3Create string = `{
@@ -550,6 +556,20 @@ var jobDestroy002String = "Deleted job 00000000-0000-0000-0000-000000000002\n"
 var jobDestroy003String = "Deleted job 00000000-0000-0000-0000-000000000003\n"
 var jobDestroy004String = "Deleted job 00000000-0000-0000-0000-000000000004\n"
 
+var jobActionsNoArgErrorString = "Error: drpcli jobs actions [id] requires 1 argument\n"
+var jobActionsTooManyArgErrorString = "Error: drpcli jobs actions [id] requires 1 argument\n"
+var jobActionsMissingJobErrorString = "Error: Job john does not exist\n\n"
+var jobActionsRenderedTask1String = "[]\n"
+var jobActionsRenderedTask2String = `[
+  {
+    "Content": "Fred rules",
+    "Path": ""
+  }
+]
+`
+var jobActionsMissingMachineRenderErrorString = "Error: Machine 3e7031fe-3062-45f1-835c-92541bc9cbd3 does not exist\n\n"
+var jobActionsMissingTaskRenderErrorString = "Error: Task task2 does not exist\n\n"
+
 func TestJobCli(t *testing.T) {
 	if err := os.MkdirAll("bootenvs", 0755); err != nil {
 		t.Errorf("Failed to create bootenvs dir: %v\n", err)
@@ -571,7 +591,7 @@ func TestJobCli(t *testing.T) {
 	tests := []CliTest{
 		CliTest{false, false, []string{"bootenvs", "install", "bootenvs/local.yml"}, noStdinString, bootEnvInstallLocalSuccessString, noErrorString},
 		CliTest{false, false, []string{"tasks", "create", "task1"}, noStdinString, jobTask1Create, noErrorString},
-		CliTest{false, false, []string{"tasks", "create", "task2"}, noStdinString, jobTask2Create, noErrorString},
+		CliTest{false, false, []string{"tasks", "create", "-"}, jobTask2Create, jobTask2Create, noErrorString},
 		CliTest{false, false, []string{"tasks", "create", "task3"}, noStdinString, jobTask3Create, noErrorString},
 		CliTest{false, false, []string{"bootenvs", "create", jobLocal2CreateInput}, noStdinString, jobLocal2Create, noErrorString},
 		CliTest{false, false, []string{"bootenvs", "update", "local", jobLocalUpdateInput}, noStdinString, jobLocalUpdateString, noErrorString},
@@ -673,6 +693,20 @@ func TestJobCli(t *testing.T) {
 
 		CliTest{false, false, []string{"jobs", "list"}, noStdinString, jobFullListString, noErrorString},
 
+		CliTest{true, true, []string{"jobs", "actions"}, noStdinString, noContentString, jobActionsNoArgErrorString},
+		CliTest{true, true, []string{"jobs", "actions", "john", "june"}, noStdinString, noContentString, jobActionsTooManyArgErrorString},
+		CliTest{false, true, []string{"jobs", "actions", "john"}, noStdinString, noContentString, jobActionsMissingJobErrorString},
+		CliTest{false, false, []string{"jobs", "actions", "00000000-0000-0000-0000-000000000001"}, noStdinString, jobActionsRenderedTask1String, noErrorString},
+		CliTest{false, false, []string{"jobs", "actions", "00000000-0000-0000-0000-000000000003"}, noStdinString, jobActionsRenderedTask2String, noErrorString},
+		CliTest{false, false, []string{"machines", "destroy", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, machineDestroyJohnString, noErrorString},
+		CliTest{false, true, []string{"jobs", "actions", "00000000-0000-0000-0000-000000000003"}, noStdinString, noContentString, jobActionsMissingMachineRenderErrorString},
+		CliTest{false, false, []string{"bootenvs", "destroy", "local"}, noStdinString, "Deleted bootenv local\n", noErrorString},
+		CliTest{false, false, []string{"bootenvs", "destroy", "local2"}, noStdinString, "Deleted bootenv local2\n", noErrorString},
+		CliTest{false, false, []string{"tasks", "destroy", "task1"}, noStdinString, "Deleted task task1\n", noErrorString},
+		CliTest{false, false, []string{"tasks", "destroy", "task2"}, noStdinString, "Deleted task task2\n", noErrorString},
+		CliTest{false, false, []string{"tasks", "destroy", "task3"}, noStdinString, "Deleted task task3\n", noErrorString},
+		CliTest{false, true, []string{"jobs", "actions", "00000000-0000-0000-0000-000000000003"}, noStdinString, noContentString, jobActionsMissingTaskRenderErrorString},
+
 		CliTest{true, true, []string{"jobs", "destroy"}, noStdinString, noContentString, jobDestroyNoArgErrorString},
 		CliTest{true, true, []string{"jobs", "destroy", "john", "june"}, noStdinString, noContentString, jobDestroyTooManyArgErrorString},
 		CliTest{false, true, []string{"jobs", "destroy", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, noContentString, jobDestroyMissingJohnString},
@@ -682,12 +716,6 @@ func TestJobCli(t *testing.T) {
 		CliTest{false, false, []string{"jobs", "destroy", "00000000-0000-0000-0000-000000000004"}, noStdinString, jobDestroy004String, noErrorString},
 		CliTest{false, false, []string{"jobs", "list"}, noStdinString, jobDefaultListString, noErrorString},
 
-		CliTest{false, false, []string{"machines", "destroy", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, machineDestroyJohnString, noErrorString},
-		CliTest{false, false, []string{"bootenvs", "destroy", "local"}, noStdinString, "Deleted bootenv local\n", noErrorString},
-		CliTest{false, false, []string{"bootenvs", "destroy", "local2"}, noStdinString, "Deleted bootenv local2\n", noErrorString},
-		CliTest{false, false, []string{"tasks", "destroy", "task1"}, noStdinString, "Deleted task task1\n", noErrorString},
-		CliTest{false, false, []string{"tasks", "destroy", "task2"}, noStdinString, "Deleted task task2\n", noErrorString},
-		CliTest{false, false, []string{"tasks", "destroy", "task3"}, noStdinString, "Deleted task task3\n", noErrorString},
 		CliTest{false, false, []string{"templates", "destroy", "local-pxelinux.tmpl"}, noStdinString, "Deleted template local-pxelinux.tmpl\n", noErrorString},
 		CliTest{false, false, []string{"templates", "destroy", "local-elilo.tmpl"}, noStdinString, "Deleted template local-elilo.tmpl\n", noErrorString},
 		CliTest{false, false, []string{"templates", "destroy", "local-ipxe.tmpl"}, noStdinString, "Deleted template local-ipxe.tmpl\n", noErrorString},

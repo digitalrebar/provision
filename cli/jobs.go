@@ -156,6 +156,24 @@ func addJobCommands() (res *cobra.Command) {
 
 	mo := &JobOps{}
 	commands := commonOps(singularName, name, mo)
+
+	commands = append(commands, &cobra.Command{
+		Use:   "actions [id]",
+		Short: "Get the actions for this job",
+		RunE: func(c *cobra.Command, args []string) error {
+			if len(args) != 1 {
+				return fmt.Errorf("%v requires 1 argument", c.UseLine())
+			}
+			uuid := args[0]
+			dumpUsage = false
+			if resp, err := session.Jobs.GetJobActions(jobs.NewGetJobActionsParams().WithUUID(strfmt.UUID(uuid)), basicAuth); err != nil {
+				return generateError(err, "Error running action")
+			} else {
+				return prettyPrint(resp.Payload)
+			}
+		},
+	})
+
 	res.AddCommand(commands...)
 	return res
 }
