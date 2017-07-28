@@ -14,7 +14,7 @@
 # limitations under the License.
 
 # pip install requests
-import requests, argparse
+import requests, argparse, json
   
 '''
 Usage: https://github.com/digitalrebar/provision/tree/master/integration/ansible
@@ -44,18 +44,20 @@ def main():
     if list_inventory:
         URL = addr + "/api/v3/machines"
     elif ansible_host:
-        URL = addr + "/api/v3/machines?name=" + ansible_host
+        URL = addr + "/api/v3/machines?Name=" + ansible_host
     else:
         URL = addr + "/api/v3/machines"
 
     Headers = {'content-type': 'application/json'}
     print("URL ", URL, " via user ", user)
-    r = requests.get(URL,headers=Headers,auth=(user,password),verify=False)
+    raw = requests.get(URL,headers=Headers,auth=(user,password),verify=False)
 
-    if r.status_code == 200: 
-        print r.text
+    if raw.status_code == 200: 
+        for machine in raw.json():
+            name = machine[u'Name']
+            print name
     else:
-        raise IOError(r.text)
+        raise IOError(raw.text)
 
 if __name__ == "__main__":
     main()  
