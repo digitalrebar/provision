@@ -41,6 +41,17 @@ def main():
     list_inventory = cli_args.list_inventory
     ansible_host = cli_args.ansible_host
 
+    Headers = {'content-type': 'application/json'}
+    print("# Digital Rebar URL " + addr + " via user " + user)
+
+    profiles = {}
+    profiles_raw = requests.get(addr + "/api/v3/profiles",headers=Headers,auth=(user,password),verify=False)
+    if profiles_raw.status_code == 200: 
+        for profile in profiles_raw.json():
+            profiles[profile[u"Name"]] = [] 
+    else:
+        raise IOError(profiles_raw.text)
+
     if list_inventory:
         URL = addr + "/api/v3/machines"
     elif ansible_host:
@@ -48,16 +59,24 @@ def main():
     else:
         URL = addr + "/api/v3/machines"
 
-    Headers = {'content-type': 'application/json'}
-    print("URL ", URL, " via user ", user)
     raw = requests.get(URL,headers=Headers,auth=(user,password),verify=False)
 
     if raw.status_code == 200: 
         for machine in raw.json():
             name = machine[u'Name']
-            print name
+            # TODO, should we only show machines that are in local bootenv?  others could be transistioning
+            # if the machine has profiles, collect them
+            if machine[u"Profiles"]:
+                for profile in machine[u"Profiles"]:
+                    profiles[profile].append(name)
+            print name + " ansible_host=" + machine[u"Address"] 
     else:
         raise IOError(raw.text)
+
+    for profile in profiles:
+        print "[" + profile + "]"
+        for machine in profiles[profile]:
+            print machine
 
 if __name__ == "__main__":
     main()  
