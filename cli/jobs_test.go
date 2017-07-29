@@ -563,6 +563,7 @@ var jobActionsRenderedTask1String = "[]\n"
 var jobActionsRenderedTask2String = `[
   {
     "Content": "Fred rules",
+    "Name": "part 1",
     "Path": ""
   }
 ]
