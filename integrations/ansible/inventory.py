@@ -14,7 +14,7 @@
 # limitations under the License.
 
 # pip install requests
-import requests, argparse, json
+import requests, argparse, json, urllib3
   
 '''
 Usage: https://github.com/digitalrebar/provision/tree/master/integration/ansible
@@ -42,6 +42,7 @@ def main():
     ansible_host = cli_args.ansible_host
 
     Headers = {'content-type': 'application/json'}
+    urllib3.disable_warnings()
     print("# Digital Rebar URL " + addr + " via user " + user)
 
     profiles = {}
