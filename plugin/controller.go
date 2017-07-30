@@ -84,18 +84,21 @@ func InitPluginController(pluginDir string, dt *backend.DataTracker, logger *log
 		for !done {
 			select {
 			case event := <-pc.watcher.Events:
-				pc.logger.Println("file event:", event)
+				// Skip events on the parent directory.
+				if event.Name == pc.pluginDir {
+					continue
+				}
 				arr := strings.Split(event.Name, "/")
 				file := arr[len(arr)-1]
-				if event.Op&fsnotify.Write == fsnotify.Write ||
+				if event.Op&fsnotify.Remove == fsnotify.Remove {
+					pc.lock.Lock()
+					pc.removePluginProvider(file)
+					pc.lock.Unlock()
+				} else if event.Op&fsnotify.Write == fsnotify.Write ||
 					event.Op&fsnotify.Create == fsnotify.Create ||
 					event.Op&fsnotify.Chmod == fsnotify.Chmod {
 					pc.lock.Lock()
 					pc.importPluginProvider(file)
-					pc.lock.Unlock()
-				} else if event.Op&fsnotify.Remove == fsnotify.Remove {
-					pc.lock.Lock()
-					pc.removePluginProvider(file)
 					pc.lock.Unlock()
 				} else if event.Op&fsnotify.Rename == fsnotify.Rename {
 					pc.logger.Printf("Rename file: %s %v\n", event.Name, event)
