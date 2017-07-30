@@ -1,7 +1,10 @@
 package cli
 
 import (
+	"bytes"
 	"fmt"
+	"io/ioutil"
+	"os"
 
 	"github.com/digitalrebar/provision/backend"
 	"github.com/digitalrebar/provision/client/jobs"
@@ -170,6 +173,51 @@ func addJobCommands() (res *cobra.Command) {
 				return generateError(err, "Error running action")
 			} else {
 				return prettyPrint(resp.Payload)
+			}
+		},
+	})
+
+	commands = append(commands, &cobra.Command{
+		Use:   "log [id] [- or string]",
+		Short: "Gets the log or appends to the log if a second argument or stream is given",
+		RunE: func(c *cobra.Command, args []string) error {
+			if len(args) < 1 {
+				return fmt.Errorf("%v requires at least 1 argument", c.UseLine())
+			}
+			if len(args) > 2 {
+				return fmt.Errorf("%v requires at most 2 arguments", c.UseLine())
+			}
+			uuid := args[0]
+			dumpUsage = false
+
+			if len(args) == 2 {
+				var buf []byte
+				var err error
+				if args[1] == "-" {
+					buf, err = ioutil.ReadAll(os.Stdin)
+					if err != nil {
+						return fmt.Errorf("Error reading from stdin: %v", err)
+					}
+				} else {
+					buf = []byte(args[1])
+				}
+				s := string(buf)
+
+				if _, err := session.Jobs.PutJobLog(jobs.NewPutJobLogParams().WithUUID(strfmt.UUID(uuid)).WithBody(&s), basicAuth); err != nil {
+					return generateError(err, "Error appending log")
+				} else {
+					fmt.Println("Success")
+					return nil
+				}
+			} else {
+				b := bytes.NewBuffer(nil)
+				if _, err := session.Jobs.GetJobLog(jobs.NewGetJobLogParams().WithUUID(strfmt.UUID(uuid)), basicAuth, b); err != nil {
+					return generateError(err, "Error get log")
+				} else {
+
+					fmt.Printf("%s", string(b.Bytes()))
+					return nil
+				}
 			}
 		},
 	})

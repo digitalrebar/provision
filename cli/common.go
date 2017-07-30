@@ -45,6 +45,7 @@ var (
 	uf        func(*cobra.Command) error
 	dumpUsage = true
 	force     = false
+	noPretty  = false
 )
 
 func MyUsage(c *cobra.Command) error {
@@ -195,6 +196,10 @@ func d(msg string, args ...interface{}) {
 }
 
 func prettyPrint(o interface{}) (err error) {
+	if noPretty {
+		fmt.Printf("%v", o)
+		return nil
+	}
 	var buf []byte
 	switch format {
 	case "json":

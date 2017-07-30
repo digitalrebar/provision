@@ -214,10 +214,12 @@ var jobCreateNextInput5String string = `{
   "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
 }
 `
-var jobCreateJohnString string = `{
+var jobCreateJohnString string = `RE:
+{
   "Archived": false,
   "BootEnv": "local",
   "EndTime": "0001-01-01T00:00:00Z",
+  "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000001",
   "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Previous": "00000000-0000-0000-0000-000000000000",
   "StartTime": "0001-01-01T00:00:00Z",
@@ -226,11 +228,13 @@ var jobCreateJohnString string = `{
   "Uuid": "00000000-0000-0000-0000-000000000001"
 }
 `
-var jobListJobsString string = `[
+var jobListJobsString string = `RE:
+\[
   {
     "Archived": false,
     "BootEnv": "local",
     "EndTime": "0001-01-01T00:00:00Z",
+    "LogPath": "[\S\s]*/job-logs/00000000-0000-0000-0000-000000000001",
     "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
     "Previous": "00000000-0000-0000-0000-000000000000",
     "StartTime": "0001-01-01T00:00:00Z",
@@ -238,7 +242,7 @@ var jobListJobsString string = `[
     "Task": "task1",
     "Uuid": "00000000-0000-0000-0000-000000000001"
   }
-]
+\]
 `
 
 var jobCreateJobAlreadyRunningErrorString string = "Error: Machine 3e7031fe-3062-45f1-835c-92541bc9cbd3 already has running or created job\n\n"
@@ -246,10 +250,12 @@ var jobCreateJobAlreadyRunningErrorString string = "Error: Machine 3e7031fe-3062
 var jobShowNoArgErrorString string = "Error: drpcli jobs show [id] requires 1 argument"
 var jobShowTooManyArgErrorString string = "Error: drpcli jobs show [id] requires 1 argument"
 var jobShowMissingArgErrorString string = "Error: jobs GET: john: Not Found\n\n"
-var jobShowJobString string = `{
+var jobShowJobString string = `RE:
+{
   "Archived": false,
   "BootEnv": "local",
   "EndTime": "0001-01-01T00:00:00Z",
+  "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000001",
   "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Previous": "00000000-0000-0000-0000-000000000000",
   "StartTime": "0001-01-01T00:00:00Z",
@@ -300,10 +306,12 @@ var jobUpdateBadJSON2ErrorString string = "Error: Unable to merge objects: json:
 var jobUpdateInputString string = "{ \"State\": \"incomplete\" }"
 var jobUpdateBadInputString string = "{ \"State\": \"fred\" }"
 var jobUpdateBadInputErrorString string = "Error: Jobs 00000000-0000-0000-0000-000000000001 wants State fred, which is not valid\n\n"
-var jobUpdateJohnString string = `{
+var jobUpdateJohnString string = `RE:
+{
   "Archived": false,
   "BootEnv": "local",
   "EndTime": "0001-01-01T00:00:00Z",
+  "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000001",
   "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Previous": "00000000-0000-0000-0000-000000000000",
   "StartTime": "0001-01-01T00:00:00Z",
@@ -354,6 +362,7 @@ var jobPatchInputReplyString = `RE:
   "Archived": false,
   "BootEnv": "local",
   "EndTime": "0001-01-01T00:00:00Z",
+  "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000001",
   "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Previous": "00000000-0000-0000-0000-000000000000",
   "StartTime": "20[\s\S]*",
@@ -368,6 +377,7 @@ var jobPatchJohnString = `RE:
   "Archived": false,
   "BootEnv": "local",
   "EndTime": "0001-01-01T00:00:00Z",
+  "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000001",
   "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Previous": "00000000-0000-0000-0000-000000000000",
   "StartTime": "20[\s\S]*",
@@ -394,6 +404,7 @@ var jobUpdateFailedJobUpdateString = `RE:
   "Archived": false,
   "BootEnv": "local",
   "EndTime": "20[\s\S]*",
+  "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000001",
   "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Previous": "00000000-0000-0000-0000-000000000000",
   "StartTime": "20[\s\S]*",
@@ -424,10 +435,12 @@ var jobUpdateMachineRunnableString = `{
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
 }
 `
-var jobCreateNextString = `{
+var jobCreateNextString = `RE:
+{
   "Archived": false,
   "BootEnv": "local",
   "EndTime": "0001-01-01T00:00:00Z",
+  "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000002",
   "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Previous": "00000000-0000-0000-0000-000000000001",
   "StartTime": "0001-01-01T00:00:00Z",
@@ -442,6 +455,7 @@ var jobUpdateFinishedJob2UpdateString = `RE:
   "Archived": false,
   "BootEnv": "local",
   "EndTime": "20[\s\S]*",
+  "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000002",
   "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Previous": "00000000-0000-0000-0000-000000000001",
   "StartTime": "0001-01-01T00:00:00Z",
@@ -450,10 +464,12 @@ var jobUpdateFinishedJob2UpdateString = `RE:
   "Uuid": "00000000-0000-0000-0000-000000000002"
 }
 `
-var jobCreateNext3String = `{
+var jobCreateNext3String = `RE:
+{
   "Archived": false,
   "BootEnv": "local",
   "EndTime": "0001-01-01T00:00:00Z",
+  "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000003",
   "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Previous": "00000000-0000-0000-0000-000000000002",
   "StartTime": "0001-01-01T00:00:00Z",
@@ -467,6 +483,7 @@ var jobUpdateFinishedJob3UpdateString = `RE:
   "Archived": false,
   "BootEnv": "local",
   "EndTime": "20[\s\S]*",
+  "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000003",
   "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Previous": "00000000-0000-0000-0000-000000000002",
   "StartTime": "0001-01-01T00:00:00Z",
@@ -475,10 +492,12 @@ var jobUpdateFinishedJob3UpdateString = `RE:
   "Uuid": "00000000-0000-0000-0000-000000000003"
 }
 `
-var jobCreateNext4String = `{
+var jobCreateNext4String = `RE:
+{
   "Archived": false,
   "BootEnv": "local",
   "EndTime": "0001-01-01T00:00:00Z",
+  "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000004",
   "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Previous": "00000000-0000-0000-0000-000000000003",
   "StartTime": "0001-01-01T00:00:00Z",
@@ -492,6 +511,7 @@ var jobUpdateFinishedJob4UpdateString = `RE:
   "Archived": false,
   "BootEnv": "local",
   "EndTime": "20[\s\S]*",
+  "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000004",
   "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Previous": "00000000-0000-0000-0000-000000000003",
   "StartTime": "0001-01-01T00:00:00Z",
@@ -506,6 +526,7 @@ var jobFullListString = `RE:
     "Archived": false,
     "BootEnv": "local",
     "EndTime": "20[\s\S]*",
+    "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000001",
     "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
     "Previous": "00000000-0000-0000-0000-000000000000",
     "StartTime": "20[\s\S]*",
@@ -517,6 +538,7 @@ var jobFullListString = `RE:
     "Archived": false,
     "BootEnv": "local",
     "EndTime": "20[\s\S]*",
+    "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000002",
     "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
     "Previous": "00000000-0000-0000-0000-000000000001",
     "StartTime": "0001-01-01T00:00:00Z",
@@ -528,6 +550,7 @@ var jobFullListString = `RE:
     "Archived": false,
     "BootEnv": "local",
     "EndTime": "20[\s\S]*",
+    "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000003",
     "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
     "Previous": "00000000-0000-0000-0000-000000000002",
     "StartTime": "0001-01-01T00:00:00Z",
@@ -539,6 +562,7 @@ var jobFullListString = `RE:
     "Archived": false,
     "BootEnv": "local",
     "EndTime": "20[\s\S]*",
+    "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000004",
     "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
     "Previous": "00000000-0000-0000-0000-000000000003",
     "StartTime": "0001-01-01T00:00:00Z",
@@ -570,6 +594,10 @@ var jobActionsRenderedTask2String = `[
 `
 var jobActionsMissingMachineRenderErrorString = "Error: Machine 3e7031fe-3062-45f1-835c-92541bc9cbd3 does not exist\n\n"
 var jobActionsMissingTaskRenderErrorString = "Error: Task task2 does not exist\n\n"
+
+var jobLogNoArgErrorString = "Error: drpcli jobs log [id] [- or string] requires at least 1 argument\n"
+var jobLogTooManyArgsErrorString = "Error: drpcli jobs log [id] [- or string] requires at most 2 arguments\n"
+var jobLogUnknownJobErrorString = "Error: Job john does not exist\n\n"
 
 func TestJobCli(t *testing.T) {
 	if err := os.MkdirAll("bootenvs", 0755); err != nil {
@@ -656,6 +684,15 @@ func TestJobCli(t *testing.T) {
 		CliTest{false, true, []string{"jobs", "list", "UUID=false"}, noStdinString, noContentString, jobExpireTimeErrorString},
 
 		CliTest{false, true, []string{"jobs", "destroy", "00000000-0000-0000-0000-000000000001"}, noStdinString, noContentString, jobDestroyBadString},
+
+		CliTest{true, true, []string{"jobs", "log"}, noStdinString, noContentString, jobLogNoArgErrorString},
+		CliTest{true, true, []string{"jobs", "log", "john", "john2", "john3"}, noStdinString, noContentString, jobLogTooManyArgsErrorString},
+		CliTest{false, true, []string{"jobs", "log", "john"}, noStdinString, noContentString, jobLogUnknownJobErrorString},
+		CliTest{false, false, []string{"jobs", "log", "00000000-0000-0000-0000-000000000001"}, noStdinString, "Log for Job: 00000000-0000-0000-0000-000000000001\n", noErrorString},
+		CliTest{false, false, []string{"jobs", "log", "00000000-0000-0000-0000-000000000001", "Fred\n"}, noStdinString, "Success\n", noErrorString},
+		CliTest{false, false, []string{"jobs", "log", "00000000-0000-0000-0000-000000000001"}, noStdinString, "Log for Job: 00000000-0000-0000-0000-000000000001\nFred\n", noErrorString},
+		CliTest{false, false, []string{"jobs", "log", "00000000-0000-0000-0000-000000000001", "-"}, "Freddy\n", "Success\n", noErrorString},
+		CliTest{false, false, []string{"jobs", "log", "00000000-0000-0000-0000-000000000001"}, noStdinString, "Log for Job: 00000000-0000-0000-0000-000000000001\nFred\nFreddy\n", noErrorString},
 
 		CliTest{true, true, []string{"jobs", "update"}, noStdinString, noContentString, jobUpdateNoArgErrorString},
 		CliTest{true, true, []string{"jobs", "update", "john", "john2", "john3"}, noStdinString, noContentString, jobUpdateTooManyArgErrorString},
