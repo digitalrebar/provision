@@ -46,6 +46,8 @@ func (be SubnetOps) List(parms map[string]string) (interface{}, error) {
 		switch k {
 		case "Name":
 			params = params.WithName(&v)
+		case "Enabled":
+			params = params.WithEnabled(&v)
 		case "Subnet":
 			params = params.WithSubnet(&v)
 		case "Strategy":
