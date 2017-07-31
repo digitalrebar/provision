@@ -114,9 +114,24 @@ var userTokenTTLNotNumberErrorString string = "Error: ttl should be a number: st
 var userTokenSuccessString string = `RE:
 {
   "Info": {
+    "api_port": 10001,
     "arch": "[\s\S]*",
+    "dhcp_enabled": false,
+    "file_port": 10002,
     "id": "Fred",
     "os": "[\s\S]*",
+    "prov_enabled": true,
+    "stats": \[
+      {
+        "count": 0,
+        "name": "machines.count"
+      },
+      {
+        "count": 0,
+        "name": "subnets.count"
+      }
+    \],
+    "tftp_enabled": true,
     "version": "[\s\S]*"
   },
   "Token": "[\s\S]*"
