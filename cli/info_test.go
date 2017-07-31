@@ -34,16 +34,16 @@ func TestInfoCli(t *testing.T) {
 		t.Errorf("Failed to unmarshal sout: %s\n%v\n", sout, err)
 	}
 
-	if info.Arch != runtime.GOARCH {
+	if *info.Arch != runtime.GOARCH {
 		t.Errorf("Expected matching arch: %s %s\n", info.Arch, runtime.GOARCH)
 	}
-	if info.Os != runtime.GOOS {
+	if *info.Os != runtime.GOOS {
 		t.Errorf("Expected matching os: %s %s\n", info.Os, runtime.GOOS)
 	}
-	if info.Version != provision.RS_VERSION {
+	if *info.Version != provision.RS_VERSION {
 		t.Errorf("Expected matching os: %s %s\n", info.Version, provision.RS_VERSION)
 	}
-	if info.ID != "Fred" {
+	if *info.ID != "Fred" {
 		t.Errorf("Expected matching id: %s %s\n", info.ID, "Fred")
 	}
 }
