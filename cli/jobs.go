@@ -1,12 +1,16 @@
 package cli
 
 import (
+	"bytes"
 	"fmt"
+	"io/ioutil"
+	"os"
 
 	"github.com/digitalrebar/provision/backend"
 	"github.com/digitalrebar/provision/client/jobs"
 	"github.com/digitalrebar/provision/models"
 	"github.com/go-openapi/strfmt"
+	"github.com/pborman/uuid"
 	"github.com/spf13/cobra"
 )
 
@@ -81,13 +85,42 @@ func (be JobOps) Get(id string) (interface{}, error) {
 func (be JobOps) Create(obj interface{}) (interface{}, error) {
 	job, ok := obj.(*models.Job)
 	if !ok {
-		return nil, fmt.Errorf("Invalid type passed to job create")
+		if s, ok := obj.(string); ok {
+			uu := uuid.Parse(s)
+			if uu == nil {
+				mo := &MachineOps{}
+				if answer, err := mo.List(map[string]string{"Name": s}); err != nil {
+					return nil, fmt.Errorf("List machine failed: %s", err)
+				} else {
+					list := answer.([]*models.Machine)
+					if len(list) != 1 {
+						return nil, fmt.Errorf("Invalid machine name passed to job create: %s", s)
+					}
+					m := list[0]
+
+					job = &models.Job{}
+					job.Machine = m.UUID
+				}
+			} else {
+				job = &models.Job{}
+				u := strfmt.UUID(s)
+				job.Machine = &u
+			}
+		} else {
+			return nil, fmt.Errorf("Invalid type passed to job create")
+		}
 	}
-	d, e := session.Jobs.CreateJob(jobs.NewCreateJobParams().WithBody(job), basicAuth)
+	newJob, oldJob, _, e := session.Jobs.CreateJob(jobs.NewCreateJobParams().WithBody(job), basicAuth)
 	if e != nil {
 		return nil, e
 	}
-	return d.Payload, nil
+	if newJob != nil {
+		return newJob.Payload, nil
+	}
+	if oldJob != nil {
+		return oldJob.Payload, nil
+	}
+	return nil, nil
 }
 
 func (be JobOps) Patch(id string, obj interface{}) (interface{}, error) {
@@ -126,6 +159,69 @@ func addJobCommands() (res *cobra.Command) {
 
 	mo := &JobOps{}
 	commands := commonOps(singularName, name, mo)
+
+	commands = append(commands, &cobra.Command{
+		Use:   "actions [id]",
+		Short: "Get the actions for this job",
+		RunE: func(c *cobra.Command, args []string) error {
+			if len(args) != 1 {
+				return fmt.Errorf("%v requires 1 argument", c.UseLine())
+			}
+			uuid := args[0]
+			dumpUsage = false
+			if resp, err := session.Jobs.GetJobActions(jobs.NewGetJobActionsParams().WithUUID(strfmt.UUID(uuid)), basicAuth); err != nil {
+				return generateError(err, "Error running action")
+			} else {
+				return prettyPrint(resp.Payload)
+			}
+		},
+	})
+
+	commands = append(commands, &cobra.Command{
+		Use:   "log [id] [- or string]",
+		Short: "Gets the log or appends to the log if a second argument or stream is given",
+		RunE: func(c *cobra.Command, args []string) error {
+			if len(args) < 1 {
+				return fmt.Errorf("%v requires at least 1 argument", c.UseLine())
+			}
+			if len(args) > 2 {
+				return fmt.Errorf("%v requires at most 2 arguments", c.UseLine())
+			}
+			uuid := args[0]
+			dumpUsage = false
+
+			if len(args) == 2 {
+				var buf []byte
+				var err error
+				if args[1] == "-" {
+					buf, err = ioutil.ReadAll(os.Stdin)
+					if err != nil {
+						return fmt.Errorf("Error reading from stdin: %v", err)
+					}
+				} else {
+					buf = []byte(args[1])
+				}
+				s := string(buf)
+
+				if _, err := session.Jobs.PutJobLog(jobs.NewPutJobLogParams().WithUUID(strfmt.UUID(uuid)).WithBody(&s), basicAuth); err != nil {
+					return generateError(err, "Error appending log")
+				} else {
+					fmt.Println("Success")
+					return nil
+				}
+			} else {
+				b := bytes.NewBuffer(nil)
+				if _, err := session.Jobs.GetJobLog(jobs.NewGetJobLogParams().WithUUID(strfmt.UUID(uuid)), basicAuth, b); err != nil {
+					return generateError(err, "Error get log")
+				} else {
+
+					fmt.Printf("%s", string(b.Bytes()))
+					return nil
+				}
+			}
+		},
+	})
+
 	res.AddCommand(commands...)
 	return res
 }

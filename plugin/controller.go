@@ -84,18 +84,21 @@ func InitPluginController(pluginDir string, dt *backend.DataTracker, logger *log
 		for !done {
 			select {
 			case event := <-pc.watcher.Events:
-				pc.logger.Println("file event:", event)
+				// Skip events on the parent directory.
+				if event.Name == pc.pluginDir {
+					continue
+				}
 				arr := strings.Split(event.Name, "/")
 				file := arr[len(arr)-1]
-				if event.Op&fsnotify.Write == fsnotify.Write ||
+				if event.Op&fsnotify.Remove == fsnotify.Remove {
+					pc.lock.Lock()
+					pc.removePluginProvider(file)
+					pc.lock.Unlock()
+				} else if event.Op&fsnotify.Write == fsnotify.Write ||
 					event.Op&fsnotify.Create == fsnotify.Create ||
 					event.Op&fsnotify.Chmod == fsnotify.Chmod {
 					pc.lock.Lock()
 					pc.importPluginProvider(file)
-					pc.lock.Unlock()
-				} else if event.Op&fsnotify.Remove == fsnotify.Remove {
-					pc.lock.Lock()
-					pc.removePluginProvider(file)
 					pc.lock.Unlock()
 				} else if event.Op&fsnotify.Rename == fsnotify.Rename {
 					pc.logger.Printf("Rename file: %s %v\n", event.Name, event)
@@ -299,7 +302,7 @@ func (pc *PluginController) startPlugin(d backend.Stores, plugin *backend.Plugin
 
 		if len(plugin.Errors) != len(errors) {
 			plugin.Errors = errors
-			pc.dataTracker.Update(d, plugin)
+			pc.dataTracker.Update(d, plugin, nil)
 		}
 		pc.publishers.Publish("plugin", "started", plugin.Name, plugin)
 		pc.logger.Printf("Starting plugin: %s(%s) complete\n", plugin.Name, plugin.Provider)
@@ -307,7 +310,7 @@ func (pc *PluginController) startPlugin(d backend.Stores, plugin *backend.Plugin
 		pc.logger.Printf("Starting plugin: %s(%s) missing provider\n", plugin.Name, plugin.Provider)
 		if plugin.Errors == nil || len(plugin.Errors) == 0 {
 			plugin.Errors = []string{fmt.Sprintf("Missing Plugin Provider: %s", plugin.Provider)}
-			pc.dataTracker.Update(d, plugin)
+			pc.dataTracker.Update(d, plugin, nil)
 		}
 	}
 }
@@ -362,7 +365,7 @@ func (pc *PluginController) importPluginProvider(provider string) error {
 					d, unlocker := pc.dataTracker.LockEnts(ref.Locks("create")...)
 					ref2 := d(ref.Prefix()).Find(p.Name)
 					if ref2 == nil {
-						if _, err := pc.dataTracker.Create(d, p); err != nil {
+						if _, err := pc.dataTracker.Create(d, p, nil); err != nil {
 							pc.logger.Printf("Skipping %s because parameter could not be created: %s %s\n", pp.Name, p.Name, err)
 							skip = true
 						}
@@ -410,7 +413,7 @@ func (pc *PluginController) removePluginProvider(provider string) {
 			ref2 := d(ref.Prefix()).Find(p.Name)
 			myPP := ref2.(*backend.Plugin)
 			myPP.Errors = []string{fmt.Sprintf("Missing Plugin Provider: %s", provider)}
-			pc.dataTracker.Update(d, myPP)
+			pc.dataTracker.Update(d, myPP, nil)
 			unlocker()
 		}
 

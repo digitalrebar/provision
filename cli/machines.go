@@ -1,10 +1,18 @@
 package cli
 
 import (
+	"crypto/tls"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"net/http"
+	"net/url"
 	"os"
+	"os/signal"
+	"strconv"
+	"strings"
+	"time"
 
 	"github.com/VictorLowther/jsonpatch2"
 	"github.com/VictorLowther/jsonpatch2/utils"
@@ -13,6 +21,7 @@ import (
 	"github.com/digitalrebar/provision/models"
 	"github.com/ghodss/yaml"
 	"github.com/go-openapi/strfmt"
+	"github.com/gorilla/websocket"
 	"github.com/spf13/cobra"
 )
 
@@ -59,6 +68,8 @@ func (be MachineOps) List(parms map[string]string) (interface{}, error) {
 			params = params.WithUUID(&v)
 		case "Address":
 			params = params.WithAddress(&v)
+		case "Runnable":
+			params = params.WithRunnable(&v)
 		}
 	}
 	d, e := session.Machines.ListMachines(params, basicAuth)
@@ -98,7 +109,12 @@ func (be MachineOps) Patch(id string, obj interface{}) (interface{}, error) {
 	if !ok {
 		return nil, fmt.Errorf("Invalid type passed to machine patch")
 	}
-	d, e := session.Machines.PatchMachine(machines.NewPatchMachineParams().WithUUID(strfmt.UUID(id)).WithBody(data), basicAuth)
+	a := machines.NewPatchMachineParams().WithUUID(strfmt.UUID(id)).WithBody(data)
+	if force {
+		s := "true"
+		a = a.WithForce(&s)
+	}
+	d, e := session.Machines.PatchMachine(a, basicAuth)
 	if e != nil {
 		return nil, e
 	}
@@ -118,6 +134,39 @@ func init() {
 	App.AddCommand(tree)
 }
 
+func testMachine(field, value string, fields map[string]interface{}) (bool, error) {
+	var err error
+	matched := false
+
+	if d, ok := fields[field]; ok {
+		switch v := d.(type) {
+		case bool:
+			var bval bool
+			bval, err = strconv.ParseBool(value)
+			if err == nil {
+				if v == bval {
+					matched = true
+				}
+			}
+		case string:
+			if v == value {
+				matched = true
+			}
+		case int:
+			var ival int64
+			ival, err = strconv.ParseInt(value, 10, 64)
+			if err == nil {
+				if int(ival) == v {
+					matched = true
+				}
+			}
+		default:
+			err = fmt.Errorf("Unsupported field type: %T\n", d)
+		}
+	}
+	return matched, err
+}
+
 func addMachineCommands() (res *cobra.Command) {
 	singularName := "machine"
 	name := "machines"
@@ -130,6 +179,153 @@ func addMachineCommands() (res *cobra.Command) {
 	mo := &MachineOps{}
 
 	commands := commonOps(singularName, name, mo)
+
+	commands = append(commands, &cobra.Command{
+		Use:   "wait [id] [field] [value] [timeout]",
+		Short: fmt.Sprintf("Wait for a machine's field to become a value within a number of seconds"),
+		Long: `
+This function opens a web socket, registers for machine events, and waits for the value to become the new value.
+
+Timeout is optional, defaults to indefinite, and is measured in seconds.
+
+Returns the following strings:
+  complete - field is equal to value
+  interrupt - user interrupted the command
+  timeout - timeout has exceeded
+		`,
+		RunE: func(c *cobra.Command, args []string) error {
+			if len(args) < 3 {
+				return fmt.Errorf("%v requires at least 3 arguments", c.UseLine())
+			}
+			if len(args) > 4 {
+				return fmt.Errorf("%v requires at most 4 arguments", c.UseLine())
+			}
+			dumpUsage = false
+
+			id := args[0]
+			field := args[1]
+			value := args[2]
+			timeout := int64(100000000)
+			if len(args) == 4 {
+				var e error
+				if timeout, e = strconv.ParseInt(args[3], 10, 64); e != nil {
+					return e
+				}
+			}
+
+			interrupt := make(chan os.Signal, 1)
+			signal.Notify(interrupt, os.Interrupt)
+
+			u := url.URL{Scheme: "wss", Host: strings.TrimPrefix(endpoint, "https://"), Path: "/api/v3/ws"}
+			// Set up auth stuff.
+			websocket.DefaultDialer.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
+			h := http.Header(make(map[string][]string))
+			h["Authorization"] = []string{"Basic " + base64.StdEncoding.EncodeToString([]byte(username+":"+password))}
+			if token != "" {
+				h["Authorization"] = []string{"Bearer " + token}
+			}
+
+			// Get the socket.
+			conn, _, err := websocket.DefaultDialer.Dial(u.String(), h)
+			if err != nil {
+				return err
+			}
+			defer conn.Close()
+
+			done := make(chan struct{})
+			var machine *models.Machine
+
+			go func() {
+				defer close(done)
+				for {
+					_, message, err := conn.ReadMessage()
+					if err != nil {
+						if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseNormalClosure) {
+							fmt.Println("read:", err)
+						}
+						return
+					}
+
+					data := map[string]interface{}{}
+					err = json.Unmarshal(message, &data)
+					if err != nil {
+						fmt.Println("json error: ", err)
+						return
+					}
+
+					if md, ok := data["Object"].(map[string]interface{}); ok {
+						if m, e := testMachine(field, value, md); e == nil && m {
+							fmt.Println("complete")
+							return
+						}
+					}
+				}
+			}()
+
+			// register for events.
+			do_wait := true
+			err = conn.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf("register machines.update.%s\n", id)))
+			if err != nil {
+				do_wait = false
+			}
+			err = conn.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf("register machines.save.%s\n", id)))
+			if err != nil {
+				do_wait = false
+			}
+
+			data, err := mo.Get(id)
+			if err != nil {
+				err = generateError(err, "Failed to fetch %v: %v", singularName, id)
+				do_wait = false
+			}
+			machine, _ = data.(*models.Machine)
+
+			if do_wait {
+				var jstring []byte
+				jstring, err = json.Marshal(machine)
+				if err == nil {
+					data := map[string]interface{}{}
+					err = json.Unmarshal(jstring, &data)
+					if err == nil {
+						var matched bool
+						if matched, err = testMachine(field, value, data); err == nil && matched {
+							fmt.Println("complete")
+							do_wait = false
+						} else if err != nil {
+							do_wait = false
+						}
+					}
+				}
+
+			}
+
+			if do_wait {
+				// Wait for reader to close (error, closed connection, or matched field)
+				// Wait for timeout
+				// Wait for user interrupt
+				select {
+				case <-done:
+				case <-time.After(time.Second * time.Duration(timeout)):
+					fmt.Println("timeout")
+				case <-interrupt:
+					fmt.Println("interrupt")
+				}
+			}
+
+			// To cleanly close a connection, a client should send a close
+			// frame and wait for the server to close the connection.
+			terr := conn.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, ""))
+			if terr != nil && err == nil {
+				err = terr
+			}
+			select {
+			case <-done:
+			case <-time.After(time.Second):
+			}
+
+			return err
+		},
+	})
 
 	commands = append(commands, &cobra.Command{
 		Use:   "bootenv [id] [bootenv]",

@@ -44,6 +44,8 @@ var (
 	basicAuth runtime.ClientAuthInfoWriter
 	uf        func(*cobra.Command) error
 	dumpUsage = true
+	force     = false
+	noPretty  = false
 )
 
 func MyUsage(c *cobra.Command) error {
@@ -89,6 +91,9 @@ func init() {
 	App.PersistentFlags().StringVarP(&format,
 		"format", "F", "json",
 		`The serialzation we expect for output.  Can be "json" or "yaml"`)
+	App.PersistentFlags().BoolVarP(&force,
+		"force", "f", false,
+		"When needed, attempt to force the operation - used on some update/patch calls")
 
 	uf = App.UsageFunc()
 	App.SetUsageFunc(MyUsage)
@@ -191,6 +196,10 @@ func d(msg string, args ...interface{}) {
 }
 
 func prettyPrint(o interface{}) (err error) {
+	if noPretty {
+		fmt.Printf("%v", o)
+		return nil
+	}
 	var buf []byte
 	switch format {
 	case "json":
