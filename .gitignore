@@ -18,6 +18,7 @@ drpcli
 drpcli-docs
 drpcli.amd64.linux
 drpcli.amd64.darwin
+bin
 vendor
 coverage.txt
 ALL-LICENSE

@@ -3,6 +3,8 @@ package cli
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"os"
 
 	"github.com/VictorLowther/jsonpatch2"
 	"github.com/VictorLowther/jsonpatch2/utils"
@@ -376,6 +378,92 @@ func addMachineCommands() (res *cobra.Command) {
 				return generateError(err, "Failed to post params %v: %v", singularName, uuid)
 			}
 			return prettyPrint(value)
+		},
+	})
+
+	commands = append(commands, &cobra.Command{
+		Use:   "actions [id]",
+		Short: fmt.Sprintf("Display actions for this machine"),
+		Long:  `Helper function to display the machine's actions.`,
+		RunE: func(c *cobra.Command, args []string) error {
+			if len(args) != 1 {
+				return fmt.Errorf("%v requires 1 argument", c.UseLine())
+			}
+			uuid := args[0]
+			dumpUsage = false
+
+			d, err := session.Machines.GetMachineActions(machines.NewGetMachineActionsParams().WithUUID(strfmt.UUID(uuid)), basicAuth)
+			if err != nil {
+				return generateError(err, "Failed to fetch actions %v: %v", singularName, uuid)
+			}
+			pp := d.Payload
+			return prettyPrint(pp)
+		},
+	})
+	commands = append(commands, &cobra.Command{
+		Use:   "action [id] [action]",
+		Short: fmt.Sprintf("Display the action for this machine"),
+		Long:  `Helper function to display the machine's action.`,
+		RunE: func(c *cobra.Command, args []string) error {
+			if len(args) != 2 {
+				return fmt.Errorf("%v requires 2 arguments", c.UseLine())
+			}
+			uuid := args[0]
+			action := args[1]
+			dumpUsage = false
+
+			d, err := session.Machines.GetMachineAction(machines.NewGetMachineActionParams().WithUUID(strfmt.UUID(uuid)).WithName(action), basicAuth)
+			if err != nil {
+				return generateError(err, "Failed to fetch action %v: %v %v", singularName, uuid, action)
+			}
+			pp := d.Payload
+			return prettyPrint(pp)
+		},
+	})
+
+	commands = append(commands, &cobra.Command{
+		Use:   "runaction [id] [command] [- | JSON or YAML Map of objects | pairs of string objects]",
+		Short: "Set preferences",
+		RunE: func(c *cobra.Command, args []string) error {
+			actionParams := map[string]interface{}{}
+			if len(args) == 3 {
+				var buf []byte
+				var err error
+				if args[2] == `-` {
+					buf, err = ioutil.ReadAll(os.Stdin)
+					if err != nil {
+						dumpUsage = false
+						return fmt.Errorf("Error reading from stdin: %v", err)
+					}
+				} else {
+					buf = []byte(args[2])
+				}
+				err = yaml.Unmarshal(buf, &actionParams)
+				if err != nil {
+					dumpUsage = false
+					return fmt.Errorf("Invalid parameters: %v\n", err)
+				}
+			} else if len(args) > 3 && len(args)%2 == 0 {
+				for i := 2; i < len(args); i += 2 {
+					var obj interface{}
+					err := yaml.Unmarshal([]byte(args[i+1]), &obj)
+					if err != nil {
+						dumpUsage = false
+						return fmt.Errorf("Invalid parameters: %s %v\n", args[i+1], err)
+					}
+					actionParams[args[i]] = obj
+				}
+			} else if len(args) < 2 || len(args)%2 == 1 {
+				return fmt.Errorf("runaction either takes three arguments or a multiple of two, not %d", len(args))
+			}
+			uuid := args[0]
+			command := args[1]
+			dumpUsage = false
+			if resp, err := session.Machines.PostMachineAction(machines.NewPostMachineActionParams().WithBody(actionParams).WithUUID(strfmt.UUID(uuid)).WithName(command), basicAuth); err != nil {
+				return generateError(err, "Error running action")
+			} else {
+				return prettyPrint(resp)
+			}
 		},
 	})
 

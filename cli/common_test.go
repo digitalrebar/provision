@@ -9,6 +9,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/exec"
 	"regexp"
 	"strings"
 	"testing"
@@ -278,6 +279,7 @@ func TestMain(m *testing.M) {
 
 	testArgs := []string{
 		"--data-root", tmpDir + "/digitalrebar",
+		"--plugin-root", tmpDir + "/plugins",
 		"--file-root", tmpDir + "/tftpboot",
 		"--tls-key", tmpDir + "/server.key",
 		"--tls-cert", tmpDir + "/server.crt",
@@ -286,6 +288,18 @@ func TestMain(m *testing.M) {
 		"--tftp-port", "10003",
 		"--disable-dhcp",
 		"--drp-id", "Fred",
+	}
+
+	err = os.MkdirAll(tmpDir+"/plugins", 0755)
+	if err != nil {
+		log.Printf("Error creating required directory %s: %v", d, err)
+		os.Exit(1)
+	}
+
+	out, err := exec.Command("go", "build", "-o", tmpDir+"/plugins/incrementer", "../cmds/incrementer/incrementer.go").CombinedOutput()
+	if err != nil {
+		log.Printf("Failed to build incrementer plugin: %v, %s", err, string(out))
+		os.Exit(1)
 	}
 
 	c_opts := generateArgs(testArgs)
