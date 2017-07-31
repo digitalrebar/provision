@@ -17,6 +17,7 @@ var subnetShowJohnString string = `{
   "ActiveEnd": "192.168.100.100",
   "ActiveLeaseTime": 60,
   "ActiveStart": "192.168.100.20",
+  "Enabled": false,
   "Name": "john",
   "NextServer": "3.3.3.3",
   "OnlyReservations": false,
@@ -66,6 +67,7 @@ var subnetCreateJohnString string = `{
   "ActiveEnd": "192.168.100.100",
   "ActiveLeaseTime": 60,
   "ActiveStart": "192.168.100.20",
+  "Enabled": false,
   "Name": "john",
   "NextServer": "3.3.3.3",
   "OnlyReservations": false,
@@ -96,6 +98,7 @@ var subnetListBothEnvsString = `[
     "ActiveEnd": "192.168.100.100",
     "ActiveLeaseTime": 60,
     "ActiveStart": "192.168.100.20",
+    "Enabled": false,
     "Name": "john",
     "NextServer": "3.3.3.3",
     "OnlyReservations": false,
@@ -133,6 +136,7 @@ var subnetUpdateJohnString string = `{
   "ActiveEnd": "192.168.100.100",
   "ActiveLeaseTime": 60,
   "ActiveStart": "192.168.100.20",
+  "Enabled": false,
   "Name": "john",
   "NextServer": "3.3.3.3",
   "OnlyReservations": false,
@@ -199,6 +203,7 @@ var subnetPatchJohnString string = `{
   "ActiveEnd": "192.168.100.100",
   "ActiveLeaseTime": 60,
   "ActiveStart": "192.168.100.20",
+  "Enabled": false,
   "Name": "john",
   "NextServer": "3.3.3.3",
   "OnlyReservations": false,
@@ -226,6 +231,7 @@ var subnetPatchMissingBaseString string = `{
   "ActiveEnd": "192.168.100.100",
   "ActiveLeaseTime": 60,
   "ActiveStart": "192.168.100.20",
+  "Enabled": false,
   "Name": "john2",
   "NextServer": "3.3.3.3",
   "OnlyReservations": false,
@@ -256,6 +262,8 @@ var subnetDestroyTooManyArgErrorString string = "Error: drpcli subnets destroy [
 var subnetDestroyJohnString string = "Deleted subnet john\n"
 var subnetDestroyMissingJohnString string = "Error: subnets: DELETE john: Not Found\n\n"
 
+var subnetInvalidEnabledBooleanListString = "Error: Enabled must be true or false\n\n"
+
 func TestSubnetCli(t *testing.T) {
 	tests := []CliTest{
 		CliTest{true, false, []string{"subnets"}, noStdinString, "Access CLI commands relating to subnets\n", ""},
@@ -283,6 +291,9 @@ func TestSubnetCli(t *testing.T) {
 		CliTest{false, false, []string{"subnets", "list", "Subnet=192.168.103.0/24"}, noStdinString, subnetEmptyListString, noErrorString},
 		CliTest{false, false, []string{"subnets", "list", "Subnet=192.168.100.0/24"}, noStdinString, subnetListBothEnvsString, noErrorString},
 		CliTest{false, true, []string{"subnets", "list", "Subnet=false"}, noStdinString, noContentString, subnetExpireTimeErrorString},
+		CliTest{false, false, []string{"subnets", "list", "Enabled=false"}, noStdinString, subnetListBothEnvsString, noErrorString},
+		CliTest{false, false, []string{"subnets", "list", "Enabled=true"}, noStdinString, subnetEmptyListString, noErrorString},
+		CliTest{false, true, []string{"subnets", "list", "Enabled=george"}, noStdinString, noContentString, subnetInvalidEnabledBooleanListString},
 
 		CliTest{true, true, []string{"subnets", "show"}, noStdinString, noContentString, subnetShowNoArgErrorString},
 		CliTest{true, true, []string{"subnets", "show", "john", "john2"}, noStdinString, noContentString, subnetShowTooManyArgErrorString},
