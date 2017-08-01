@@ -30,19 +30,19 @@ var paramEmptyListString string = "[]\n"
 
 var paramShowNoArgErrorString string = "Error: drpcli params show [id] requires 1 argument\n"
 var paramShowTooManyArgErrorString string = "Error: drpcli params show [id] requires 1 argument\n"
-var paramShowMissingArgErrorString string = "Error: params GET: fred2: Not Found\n\n"
+var paramShowMissingArgErrorString string = "Error: params GET: john2: Not Found\n\n"
 var paramShowParamString string = `{
-  "Name": "fred",
-  "Description": "FRED",
-  "Documentation": "could be anything",
-  "Schema": {"string":"default"}
+  "Name": "john",
+  "Schema": {
+    "type": "string"
+  }
 }
 `
 
 var paramExistsNoArgErrorString string = "Error: drpcli params exists [id] requires 1 argument"
 var paramExistsTooManyArgErrorString string = "Error: drpcli params exists [id] requires 1 argument"
 var paramExistsParamString string = ""
-var paramExistsMissingJohnString string = "Error: params GET: fred2: Not Found\n\n"
+var paramExistsMissingJohnString string = "Error: params GET: john2: Not Found\n\n"
 
 var paramCreateNoArgErrorString string = "Error: drpcli params create [json] requires 1 argument\n"
 var paramCreateTooManyArgErrorString string = "Error: drpcli params create [json] requires 1 argument\n"
@@ -140,8 +140,11 @@ var paramPatchInputString string = `{
 }
 `
 var paramPatchJohnString string = `{
+  "Description": "Foo",
   "Name": "john",
-  "Description": "Foo"
+  "Schema": {
+    "type": "string"
+  }
 }
 `
 var paramPatchMissingBaseString string = `{
@@ -184,31 +187,31 @@ func TestParamCli(t *testing.T) {
 		CliTest{false, false, []string{"params", "list", "Name=fred"}, noStdinString, paramEmptyListString, noErrorString},
 		CliTest{false, false, []string{"params", "list", "Name=john"}, noStdinString, paramListJohnOnlyString, noErrorString},
 
-		// CliTest{true, true, []string{"params", "show"}, noStdinString, noContentString, paramShowNoArgErrorString},
-		// CliTest{true, true, []string{"params", "show", "john", "john2"}, noStdinString, noContentString, paramShowTooManyArgErrorString},
-		// CliTest{false, true, []string{"params", "show", "john2"}, noStdinString, noContentString, paramShowMissingArgErrorString},
-		// CliTest{false, false, []string{"params", "show", "john"}, noStdinString, paramShowParamString, noErrorString},
+		CliTest{true, true, []string{"params", "show"}, noStdinString, noContentString, paramShowNoArgErrorString},
+		CliTest{true, true, []string{"params", "show", "john", "john2"}, noStdinString, noContentString, paramShowTooManyArgErrorString},
+		CliTest{false, true, []string{"params", "show", "john2"}, noStdinString, noContentString, paramShowMissingArgErrorString},
+		CliTest{false, false, []string{"params", "show", "john"}, noStdinString, paramShowParamString, noErrorString},
 
-		// CliTest{true, true, []string{"params", "exists"}, noStdinString, noContentString, paramExistsNoArgErrorString},
-		// CliTest{true, true, []string{"params", "exists", "john", "john2"}, noStdinString, noContentString, paramExistsTooManyArgErrorString},
-		// CliTest{false, false, []string{"params", "exists", "john"}, noStdinString, paramExistsParamString, noErrorString},
-		// CliTest{false, true, []string{"params", "exists", "john2"}, noStdinString, noContentString, paramExistsMissingJohnString},
-		// CliTest{true, true, []string{"params", "exists", "john", "john2"}, noStdinString, noContentString, paramExistsTooManyArgErrorString},
+		CliTest{true, true, []string{"params", "exists"}, noStdinString, noContentString, paramExistsNoArgErrorString},
+		CliTest{true, true, []string{"params", "exists", "john", "john2"}, noStdinString, noContentString, paramExistsTooManyArgErrorString},
+		CliTest{false, false, []string{"params", "exists", "john"}, noStdinString, paramExistsParamString, noErrorString},
+		CliTest{false, true, []string{"params", "exists", "john2"}, noStdinString, noContentString, paramExistsMissingJohnString},
+		CliTest{true, true, []string{"params", "exists", "john", "john2"}, noStdinString, noContentString, paramExistsTooManyArgErrorString},
 
-		// CliTest{true, true, []string{"params", "update"}, noStdinString, noContentString, paramUpdateNoArgErrorString},
-		// CliTest{true, true, []string{"params", "update", "john", "john2", "john3"}, noStdinString, noContentString, paramUpdateTooManyArgErrorString},
-		// CliTest{false, true, []string{"params", "update", "john", paramUpdateBadJSONString}, noStdinString, noContentString, paramUpdateBadJSONErrorString},
-		// CliTest{false, false, []string{"params", "update", "john", paramUpdateInputString}, noStdinString, paramUpdateJohnString, noErrorString},
-		// CliTest{false, true, []string{"params", "update", "john2", paramUpdateInputString}, noStdinString, noContentString, paramUpdateJohnMissingErrorString},
-		// CliTest{false, false, []string{"params", "show", "john"}, noStdinString, paramUpdateJohnString, noErrorString},
+		CliTest{true, true, []string{"params", "update"}, noStdinString, noContentString, paramUpdateNoArgErrorString},
+		CliTest{true, true, []string{"params", "update", "john", "john2", "john3"}, noStdinString, noContentString, paramUpdateTooManyArgErrorString},
+		CliTest{false, true, []string{"params", "update", "john", paramUpdateBadJSONString}, noStdinString, noContentString, paramUpdateBadJSONErrorString},
+		CliTest{false, false, []string{"params", "update", "john", paramUpdateInputString}, noStdinString, paramUpdateJohnString, noErrorString},
+		CliTest{false, true, []string{"params", "update", "john2", paramUpdateInputString}, noStdinString, noContentString, paramUpdateJohnMissingErrorString},
+		CliTest{false, false, []string{"params", "show", "john"}, noStdinString, paramUpdateJohnString, noErrorString},
 
-		// CliTest{true, true, []string{"params", "patch"}, noStdinString, noContentString, paramPatchNoArgErrorString},
-		// CliTest{true, true, []string{"params", "patch", "john", "john2", "john3"}, noStdinString, noContentString, paramPatchTooManyArgErrorString},
-		// CliTest{false, true, []string{"params", "patch", paramPatchBaseString, paramPatchBadPatchJSONString}, noStdinString, noContentString, paramPatchBadPatchJSONErrorString},
-		// CliTest{false, true, []string{"params", "patch", paramPatchBadBaseJSONString, paramPatchInputString}, noStdinString, noContentString, paramPatchBadBaseJSONErrorString},
-		// CliTest{false, false, []string{"params", "patch", paramPatchBaseString, paramPatchInputString}, noStdinString, paramPatchJohnString, noErrorString},
-		// CliTest{false, true, []string{"params", "patch", paramPatchMissingBaseString, paramPatchInputString}, noStdinString, noContentString, paramPatchJohnMissingErrorString},
-		// CliTest{false, false, []string{"params", "show", "john"}, noStdinString, paramPatchJohnString, noErrorString},
+		CliTest{true, true, []string{"params", "patch"}, noStdinString, noContentString, paramPatchNoArgErrorString},
+		CliTest{true, true, []string{"params", "patch", "john", "john2", "john3"}, noStdinString, noContentString, paramPatchTooManyArgErrorString},
+		CliTest{false, true, []string{"params", "patch", paramPatchBaseString, paramPatchBadPatchJSONString}, noStdinString, noContentString, paramPatchBadPatchJSONErrorString},
+		CliTest{false, true, []string{"params", "patch", paramPatchBadBaseJSONString, paramPatchInputString}, noStdinString, noContentString, paramPatchBadBaseJSONErrorString},
+		CliTest{false, false, []string{"params", "patch", paramPatchBaseString, paramPatchInputString}, noStdinString, paramPatchJohnString, noErrorString},
+		CliTest{false, true, []string{"params", "patch", paramPatchMissingBaseString, paramPatchInputString}, noStdinString, noContentString, paramPatchJohnMissingErrorString},
+		CliTest{false, false, []string{"params", "show", "john"}, noStdinString, paramPatchJohnString, noErrorString},
 
 		// CliTest{true, true, []string{"params", "destroy"}, noStdinString, noContentString, paramDestroyNoArgErrorString},
 		// CliTest{true, true, []string{"params", "destroy", "john", "june"}, noStdinString, noContentString, paramDestroyTooManyArgErrorString},
