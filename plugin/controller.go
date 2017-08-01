@@ -4,9 +4,13 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
+	"net/http"
+	"os"
 	"os/exec"
+	"path"
 	"sort"
 	"strings"
 	"sync"
@@ -14,6 +18,7 @@ import (
 	"github.com/digitalrebar/provision/backend"
 	"github.com/digitalrebar/provision/backend/index"
 	"github.com/fsnotify/fsnotify"
+	"github.com/gin-gonic/gin"
 )
 
 // Plugin Provider describes the available functions that could be
@@ -33,6 +38,12 @@ type PluginProvider struct {
 	Parameters []*backend.Param
 
 	path string
+}
+
+// swagger:model
+type PluginProviderUploadInfo struct {
+	Path string `json:"path"`
+	Size int64  `json:"size"`
 }
 
 type RunningPlugin struct {
@@ -86,6 +97,10 @@ func InitPluginController(pluginDir string, dt *backend.DataTracker, logger *log
 			case event := <-pc.watcher.Events:
 				// Skip events on the parent directory.
 				if event.Name == pc.pluginDir {
+					continue
+				}
+				// Skip downloading files
+				if strings.HasSuffix(event.Name, ".part") {
 					continue
 				}
 				arr := strings.Split(event.Name, "/")
@@ -379,6 +394,9 @@ func (pc *PluginController) importPluginProvider(provider string) error {
 					pc.logger.Printf("Adding plugin provider: %s\n", pp.Name)
 					pc.AvailableProviders[pp.Name] = &pp
 					pp.path = pc.pluginDir + "/" + provider
+					for _, aa := range pp.AvailableActions {
+						aa.Provider = pp.Name
+					}
 					pc.publishers.Publish("plugin_provider", "create", pp.Name, pp)
 					return pc.walkPlugins(provider)
 				} else {
@@ -421,4 +439,46 @@ func (pc *PluginController) removePluginProvider(provider string) {
 		pc.publishers.Publish("plugin_provider", "delete", name, pc.AvailableProviders[name])
 		delete(pc.AvailableProviders, name)
 	}
+}
+
+func (pc *PluginController) UploadPlugin(c *gin.Context, name string) (*PluginProviderUploadInfo, *backend.Error) {
+	if c.Request.Header.Get(`Content-Type`) != `application/octet-stream` {
+		return nil, backend.NewError("API ERROR", http.StatusUnsupportedMediaType,
+			fmt.Sprintf("upload: plugin_provider %s must have content-type application/octet-stream", name))
+	}
+	if c.Request.Body == nil {
+		return nil, backend.NewError("API ERROR", http.StatusBadRequest,
+			fmt.Sprintf("upload: Unable to upload %s: missing body", name))
+	}
+
+	ppTmpName := path.Join(pc.pluginDir, fmt.Sprintf(`.%s.part`, path.Base(name)))
+	ppName := path.Join(pc.pluginDir, path.Base(name))
+	if _, err := os.Open(ppTmpName); err == nil {
+		return nil, backend.NewError("API ERROR", http.StatusConflict, fmt.Sprintf("upload: plugin_provider %s already uploading", name))
+	}
+	tgt, err := os.Create(ppTmpName)
+	if err != nil {
+		return nil, backend.NewError("API ERROR", http.StatusConflict, fmt.Sprintf("upload: Unable to upload %s: %v", name, err))
+	}
+
+	copied, err := io.Copy(tgt, c.Request.Body)
+	if err != nil {
+		os.Remove(ppTmpName)
+		return nil, backend.NewError("API ERROR",
+			http.StatusInsufficientStorage, fmt.Sprintf("upload: Failed to upload %s: %v", name, err))
+	}
+	if c.Request.ContentLength > 0 && copied != c.Request.ContentLength {
+		os.Remove(ppTmpName)
+		return nil, backend.NewError("API ERROR", http.StatusBadRequest,
+			fmt.Sprintf("upload: Failed to upload entire file %s: %d bytes expected, %d bytes received", name, c.Request.ContentLength, copied))
+	}
+	os.Remove(ppName)
+	os.Rename(ppTmpName, ppName)
+	os.Chmod(ppName, 0700)
+	return &PluginProviderUploadInfo{Path: name, Size: copied}, nil
+}
+
+func (pc *PluginController) RemovePlugin(name string) error {
+	pluginProviderName := path.Join(pc.pluginDir, path.Base(name))
+	return os.Remove(pluginProviderName)
 }

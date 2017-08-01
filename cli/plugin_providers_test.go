@@ -1,7 +1,9 @@
 package cli
 
 import (
+	"os/exec"
 	"testing"
+	"time"
 )
 
 var plugin_providerShowNoArgErrorString string = "Error: drpcli plugin_providers show [id] requires 1 argument\n"
@@ -110,7 +112,33 @@ var plugin_providerShowIncrementerString string = `{
 }
 `
 
+var plugin_providerUploadSuccessString = `RE:
+{
+  "path": "incrementer",
+  "size": [\d]+
+}
+`
+
+var plugin_providerDestroyNoArgErrorString = "Error: drpcli plugin_providers destroy [id] requires 1 argument\n"
+var plugin_providerDestroyTooManyArgErrorString = "Error: drpcli plugin_providers destroy [id] requires 1 argument\n"
+var plugin_providerDestroyMissingArgErrorString = "Error: delete: unable to delete john\n\n"
+var plugin_providerUploadNoArgErrorString = "Error: Wrong number of args: expected 3, got 0\n"
+var plugin_providerUploadTooFewArgErrorString = "Error: Wrong number of args: expected 3, got 1\n"
+var plugin_providerUploadTooManyArgErrorString = "Error: Wrong number of args: expected 3, got 4\n"
+var plugin_providerUploadMissingArgErrorString = "Error: Failed to open john: open john: no such file or directory\n\n"
+
+var plugin_providerDestroySuccesString = "Deleted plugin_provider incrementer\n"
+
 func TestPluginProviderCli(t *testing.T) {
+
+	srcFolder := tmpDir + "/plugins/incrementer"
+	destFolder := tmpDir + "/incrementer"
+	cpCmd := exec.Command("cp", "-rf", srcFolder, destFolder)
+	err := cpCmd.Run()
+	if err != nil {
+		t.Errorf("Failed to copy incrementer: %v\n", err)
+	}
+
 	tests := []CliTest{
 		CliTest{true, false, []string{"plugin_providers"}, noStdinString, "Access CLI commands relating to plugin_providers\n", ""},
 
@@ -125,9 +153,37 @@ func TestPluginProviderCli(t *testing.T) {
 		CliTest{false, false, []string{"plugin_providers", "exists", "incrementer"}, noStdinString, noContentString, noErrorString},
 
 		CliTest{false, false, []string{"plugin_providers", "list"}, noStdinString, plugin_providerListString, noErrorString},
+
+		CliTest{true, true, []string{"plugin_providers", "destroy"}, noStdinString, noContentString, plugin_providerDestroyNoArgErrorString},
+		CliTest{true, true, []string{"plugin_providers", "destroy", "john", "john2"}, noStdinString, noContentString, plugin_providerDestroyTooManyArgErrorString},
+		CliTest{false, true, []string{"plugin_providers", "destroy", "john"}, noStdinString, noContentString, plugin_providerDestroyMissingArgErrorString},
+		CliTest{false, false, []string{"plugin_providers", "destroy", "incrementer"}, noStdinString, plugin_providerDestroySuccesString, noErrorString},
+	}
+	for _, test := range tests {
+		testCli(t, test)
 	}
 
-	for _, test := range tests {
+	time.Sleep(3 * time.Second)
+
+	tests2 := []CliTest{
+		CliTest{false, false, []string{"plugin_providers", "list"}, noStdinString, "[]\n", noErrorString},
+		CliTest{true, true, []string{"plugin_providers", "upload"}, noStdinString, noContentString, plugin_providerUploadNoArgErrorString},
+		CliTest{true, true, []string{"plugin_providers", "upload", "john"}, noStdinString, noContentString, plugin_providerUploadTooFewArgErrorString},
+		CliTest{true, true, []string{"plugin_providers", "upload", "john", "as", "john2", "asdga"}, noStdinString, noContentString, plugin_providerUploadTooManyArgErrorString},
+		CliTest{false, true, []string{"plugin_providers", "upload", "john", "as", "john"}, noStdinString, noContentString, plugin_providerUploadMissingArgErrorString},
+		CliTest{false, false, []string{"plugin_providers", "upload", destFolder, "as", "incrementer"}, noStdinString, plugin_providerUploadSuccessString, noErrorString},
+	}
+
+	for _, test := range tests2 {
+		testCli(t, test)
+	}
+
+	time.Sleep(3 * time.Second)
+
+	tests3 := []CliTest{
+		CliTest{false, false, []string{"plugin_providers", "list"}, noStdinString, plugin_providerListString, noErrorString},
+	}
+	for _, test := range tests3 {
 		testCli(t, test)
 	}
 }
