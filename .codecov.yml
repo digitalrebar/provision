@@ -1,0 +1,7 @@
+coverage:
+  range: 50..75
+  round: down
+  precision: 2
+
+codecov:
+  strict_yaml_branch: master
