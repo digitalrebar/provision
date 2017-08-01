@@ -462,6 +462,8 @@ func (pc *PluginController) UploadPlugin(c *gin.Context, name string) (*PluginPr
 	}
 
 	copied, err := io.Copy(tgt, c.Request.Body)
+	tgt.Close()
+
 	if err != nil {
 		os.Remove(ppTmpName)
 		return nil, backend.NewError("API ERROR",
