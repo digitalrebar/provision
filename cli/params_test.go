@@ -213,23 +213,19 @@ func TestParamCli(t *testing.T) {
 		CliTest{false, true, []string{"params", "patch", paramPatchMissingBaseString, paramPatchInputString}, noStdinString, noContentString, paramPatchJohnMissingErrorString},
 		CliTest{false, false, []string{"params", "show", "john"}, noStdinString, paramPatchJohnString, noErrorString},
 
-		// CliTest{true, true, []string{"params", "destroy"}, noStdinString, noContentString, paramDestroyNoArgErrorString},
-		// CliTest{true, true, []string{"params", "destroy", "john", "june"}, noStdinString, noContentString, paramDestroyTooManyArgErrorString},
-		// CliTest{false, false, []string{"params", "destroy", "john"}, noStdinString, paramDestroyJohnString, noErrorString},
-		// CliTest{false, true, []string{"params", "destroy", "john"}, noStdinString, noContentString, paramDestroyMissingJohnString},
-		// CliTest{false, false, []string{"params", "list"}, noStdinString, paramDefaultListString, noErrorString},
+		CliTest{true, true, []string{"params", "destroy"}, noStdinString, noContentString, paramDestroyNoArgErrorString},
+		CliTest{true, true, []string{"params", "destroy", "john", "june"}, noStdinString, noContentString, paramDestroyTooManyArgErrorString},
+		CliTest{false, false, []string{"params", "destroy", "john"}, noStdinString, paramDestroyJohnString, noErrorString},
+		CliTest{false, true, []string{"params", "destroy", "john"}, noStdinString, noContentString, paramDestroyMissingJohnString},
+		CliTest{false, false, []string{"params", "list"}, noStdinString, paramDefaultListString, noErrorString},
 
-		// CliTest{false, false, []string{"params", "create", "-"}, paramCreateInputString + "\n", paramCreateJohnString, noErrorString},
-		// CliTest{false, false, []string{"params", "list"}, noStdinString, paramListParamsString, noErrorString},
-		// CliTest{false, false, []string{"params", "update", "john", "-"}, paramUpdateInputString + "\n", paramUpdateJohnString, noErrorString},
-		// CliTest{false, false, []string{"params", "show", "john"}, noStdinString, paramUpdateJohnString, noErrorString},
+		CliTest{false, false, []string{"params", "create", "-"}, paramCreateInputString + "\n", paramCreateJohnString, noErrorString},
+		CliTest{false, false, []string{"params", "list"}, noStdinString, paramListParamsString, noErrorString},
+		CliTest{false, false, []string{"params", "update", "john", "-"}, paramUpdateInputString + "\n", paramUpdateJohnString, noErrorString},
+		CliTest{false, false, []string{"params", "show", "john"}, noStdinString, paramUpdateJohnString, noErrorString},
 
-		// CliTest{true, true, []string{"params", "get"}, noStdinString, noContentString, paramGetNoArgErrorString},
-		// CliTest{false, true, []string{"params", "get", "john2", "param", "john2"}, noStdinString, noContentString, paramGetMissingParamErrorString},
-		// CliTest{false, false, []string{"params", "get", "john", "param", "john2"}, noStdinString, "null\n", noErrorString},
-
-		// CliTest{false, false, []string{"params", "destroy", "john"}, noStdinString, paramDestroyJohnString, noErrorString},
-		// CliTest{false, false, []string{"params", "list"}, noStdinString, paramDefaultListString, noErrorString},
+		CliTest{false, false, []string{"params", "destroy", "john"}, noStdinString, paramDestroyJohnString, noErrorString},
+		CliTest{false, false, []string{"params", "list"}, noStdinString, paramDefaultListString, noErrorString},
 	}
 
 	for _, test := range tests {
