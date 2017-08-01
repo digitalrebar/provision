@@ -2,6 +2,7 @@ package cli
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/digitalrebar/provision/client/plugin_providers"
 	"github.com/spf13/cobra"
@@ -27,6 +28,22 @@ func (be PluginProviderOps) Get(id string) (interface{}, error) {
 		return nil, e
 	}
 	return d.Payload, nil
+}
+
+func (be PluginProviderOps) Upload(name string, f *os.File) (interface{}, error) {
+	d, e := session.PluginProviders.UploadPluginProvider(plugin_providers.NewUploadPluginProviderParams().WithName(name).WithBody(f), basicAuth)
+	if e != nil {
+		return nil, e
+	}
+	return d.Payload, nil
+}
+
+func (be PluginProviderOps) Delete(name string) (interface{}, error) {
+	_, e := session.PluginProviders.DeletePluginProvider(plugin_providers.NewDeletePluginProviderParams().WithName(name), basicAuth)
+	if e != nil {
+		return nil, e
+	}
+	return "Good", nil
 }
 
 func init() {
