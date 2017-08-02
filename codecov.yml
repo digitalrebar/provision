@@ -3,5 +3,3 @@ coverage:
   round: down
   precision: 2
 
-codecov:
-  strict_yaml_branch: master
