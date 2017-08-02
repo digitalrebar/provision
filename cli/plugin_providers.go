@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type PluginProviderOps struct{}
+type PluginProviderOps struct{ CommonOps }
 
 func (be PluginProviderOps) GetIndexes() map[string]string {
 	return map[string]string{}
@@ -59,7 +59,7 @@ func addPluginProviderCommands() (res *cobra.Command) {
 		Use:   name,
 		Short: fmt.Sprintf("Access CLI commands relating to %v", name),
 	}
-	commands := commonOps(singularName, name, &PluginProviderOps{})
+	commands := commonOps(&PluginProviderOps{CommonOps{Name: name, SingularName: singularName}})
 	res.AddCommand(commands...)
 	return res
 }

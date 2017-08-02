@@ -14,7 +14,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type JobOps struct{}
+type JobOps struct{ CommonOps }
 
 func (be JobOps) GetType() interface{} {
 	return &models.Job{}
@@ -157,8 +157,8 @@ func addJobCommands() (res *cobra.Command) {
 		Short: fmt.Sprintf("Access CLI commands relating to %v", name),
 	}
 
-	mo := &JobOps{}
-	commands := commonOps(singularName, name, mo)
+	mo := &JobOps{CommonOps{Name: name, SingularName: singularName}}
+	commands := commonOps(mo)
 
 	commands = append(commands, &cobra.Command{
 		Use:   "actions [id]",

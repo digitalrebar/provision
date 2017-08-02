@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type SubnetOps struct{}
+type SubnetOps struct{ CommonOps }
 
 func (be SubnetOps) GetType() interface{} {
 	return &models.Subnet{}
@@ -117,7 +117,7 @@ func addSubnetCommands() (res *cobra.Command) {
 		Use:   name,
 		Short: fmt.Sprintf("Access CLI commands relating to %v", name),
 	}
-	commands := commonOps(singularName, name, &SubnetOps{})
+	commands := commonOps(&SubnetOps{CommonOps{Name: name, SingularName: singularName}})
 	res.AddCommand(commands...)
 	return res
 }

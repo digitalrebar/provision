@@ -216,6 +216,19 @@ func prettyPrint(o interface{}) (err error) {
 	return nil
 }
 
+type CommonOps struct {
+	Name         string
+	SingularName string
+}
+
+func (co CommonOps) GetName() string {
+	return co.Name
+}
+
+func (co CommonOps) GetSingularName() string {
+	return co.SingularName
+}
+
 type Payloader interface {
 	GetPayload() interface{}
 }
@@ -223,11 +236,15 @@ type Payloader interface {
 type ListOp interface {
 	List(params map[string]string) (interface{}, error)
 	GetIndexes() map[string]string
+	GetName() string
+	GetSingularName() string
 }
 
 type GetOp interface {
 	Get(string) (interface{}, error)
 	GetIndexes() map[string]string
+	GetName() string
+	GetSingularName() string
 }
 
 type ModOps interface {
@@ -235,18 +252,26 @@ type ModOps interface {
 	GetId(interface{}) (string, error)
 	Create(interface{}) (interface{}, error)
 	Patch(string, interface{}) (interface{}, error)
+	GetName() string
+	GetSingularName() string
 }
 
 type UpdateOps interface {
 	Update(string, interface{}) (interface{}, error)
+	GetName() string
+	GetSingularName() string
 }
 
 type DeleteOps interface {
 	Delete(string) (interface{}, error)
+	GetName() string
+	GetSingularName() string
 }
 
 type UploadOp interface {
 	Upload(string, *os.File) (interface{}, error)
+	GetName() string
+	GetSingularName() string
 }
 
 func generateError(err error, sfmt string, args ...interface{}) error {
@@ -282,7 +307,105 @@ func generateError(err error, sfmt string, args ...interface{}) error {
 var listLimit = -1
 var listOffset = -1
 
-func commonOps(singularName, name string, pobj interface{}) (commands []*cobra.Command) {
+func Get(id string, gptrs GetOp) (interface{}, error) {
+	return gptrs.Get(id)
+}
+
+func Create(input string, ptrs ModOps) (interface{}, error) {
+	var buf []byte
+	var err error
+	if input == "-" {
+		buf, err = ioutil.ReadAll(os.Stdin)
+		if err != nil {
+			return nil, fmt.Errorf("Error reading from stdin: %v", err)
+		}
+	} else {
+		buf = []byte(input)
+	}
+	var obj interface{}
+	obj = ptrs.GetType()
+	err = yaml.Unmarshal(buf, obj)
+	if err != nil {
+		obj = ""
+		err2 := yaml.Unmarshal(buf, &obj)
+		if err2 != nil {
+			return nil, fmt.Errorf("Invalid %v object: %v and %v", ptrs.GetSingularName(), err, err2)
+		}
+	}
+	if data, err := ptrs.Create(obj); err != nil {
+		return nil, generateError(err, "Unable to create new %v", ptrs.GetSingularName())
+	} else {
+		return data, nil
+	}
+}
+
+func Update(id, input string, ptrs ModOps) (interface{}, error) {
+	var buf []byte
+	var err error
+	if input == "-" {
+		buf, err = ioutil.ReadAll(os.Stdin)
+		if err != nil {
+			return nil, fmt.Errorf("Error reading from stdin: %v", err)
+		}
+	} else {
+		buf = []byte(input)
+	}
+	var intermediate interface{}
+	err = yaml.Unmarshal(buf, &intermediate)
+	if err != nil {
+		return nil, fmt.Errorf("Unable to unmarshal input stream: %v\n", err)
+	}
+
+	updateObj, err := json.Marshal(intermediate)
+	if err != nil {
+		return nil, fmt.Errorf("Unable to marshal input stream: %v\n", err)
+	}
+	data, err := Get(id, ptrs.(GetOp))
+	if err != nil {
+		return nil, generateError(err, "Failed to fetch %v: %v", ptrs.GetSingularName(), id)
+	}
+	baseObj, err := json.Marshal(data)
+	if err != nil {
+		return nil, fmt.Errorf("Unable to marshal object: %v\n", err)
+	}
+
+	merged, err := safeMergeJSON(data, updateObj)
+	if err != nil {
+		return nil, fmt.Errorf("Unable to merge objects: %v\n", err)
+	}
+
+	// if the caller provides update, use it because we have Patch issues.
+	if uptrs, ok := ptrs.(UpdateOps); ok {
+		obj := ptrs.GetType()
+		err = yaml.Unmarshal(merged, obj)
+		if err != nil {
+			return nil, fmt.Errorf("Unable to unmarshal merged input stream: %v\n", err)
+		}
+
+		return uptrs.Update(id, obj)
+	}
+	// Else use Patch
+	patch, err := jsonpatch2.Generate(baseObj, merged, true)
+	if err != nil {
+		return nil, fmt.Errorf("Error generating patch: %v", err)
+	}
+	p := models.Patch{}
+	if err := utils.Remarshal(&patch, &p); err != nil {
+		return nil, fmt.Errorf("Error translating patch: %v", err)
+	}
+
+	if data, err := ptrs.Patch(id, p); err != nil {
+		return nil, generateError(err, "Unable to patch %v", id)
+	} else {
+		return data, nil
+	}
+}
+
+func Delete(id string, ptrs DeleteOps) (interface{}, error) {
+	return ptrs.Delete(id)
+}
+
+func commonOps(pobj interface{}) (commands []*cobra.Command) {
 	commands = make([]*cobra.Command, 0, 0)
 	if ptrs, ok := pobj.(ListOp); ok {
 		idxs := ptrs.GetIndexes()
@@ -333,8 +456,8 @@ Example:
 		}
 		listCmd := &cobra.Command{
 			Use:   "list [key=value] ...",
-			Short: fmt.Sprintf("List all %v", name),
-			Long:  fmt.Sprintf("This will list all %v by default.\n%s\n", name, bigidxstr),
+			Short: fmt.Sprintf("List all %v", ptrs.GetName()),
+			Long:  fmt.Sprintf("This will list all %v by default.\n%s\n", ptrs.GetName(), bigidxstr),
 			RunE: func(c *cobra.Command, args []string) error {
 				dumpUsage = false
 
@@ -346,7 +469,7 @@ Example:
 				}
 
 				if data, err := ptrs.List(parms); err != nil {
-					return generateError(err, "Error listing %v", name)
+					return generateError(err, "Error listing %v", ptrs.GetName())
 				} else {
 					return prettyPrint(data)
 				}
@@ -398,15 +521,15 @@ Example:
 		}
 		commands = append(commands, &cobra.Command{
 			Use:   "show [id]",
-			Short: fmt.Sprintf("Show a single %v by id", singularName),
-			Long:  fmt.Sprintf("This will show a %v.\n%s\n", name, bigidxstr),
+			Short: fmt.Sprintf("Show a single %v by id", gptrs.GetSingularName()),
+			Long:  fmt.Sprintf("This will show a %v.\n%s\n", gptrs.GetName(), bigidxstr),
 			RunE: func(c *cobra.Command, args []string) error {
 				if len(args) != 1 {
 					return fmt.Errorf("%v requires 1 argument", c.UseLine())
 				}
 				dumpUsage = false
-				if data, err := gptrs.Get(args[0]); err != nil {
-					return generateError(err, "Failed to fetch %v: %v", singularName, args[0])
+				if data, err := Get(args[0], gptrs); err != nil {
+					return generateError(err, "Failed to fetch %v: %v", gptrs.GetSingularName(), args[0])
 				} else {
 					return prettyPrint(data)
 				}
@@ -414,15 +537,15 @@ Example:
 		})
 		commands = append(commands, &cobra.Command{
 			Use:   "exists [id]",
-			Short: fmt.Sprintf("See if a %v exists by id", singularName),
-			Long:  fmt.Sprintf("This will detect if a %v exists.\n%s\n", name, bigidxstr),
+			Short: fmt.Sprintf("See if a %v exists by id", gptrs.GetSingularName()),
+			Long:  fmt.Sprintf("This will detect if a %v exists.\n%s\n", gptrs.GetName(), bigidxstr),
 			RunE: func(c *cobra.Command, args []string) error {
 				if len(args) != 1 {
 					return fmt.Errorf("%v requires 1 argument", c.UseLine())
 				}
 				dumpUsage = false
-				if _, err := gptrs.Get(args[0]); err != nil {
-					return generateError(err, "Failed to fetch %v: %v", singularName, args[0])
+				if _, err := Get(args[0], gptrs); err != nil {
+					return generateError(err, "Failed to fetch %v: %v", gptrs.GetSingularName(), args[0])
 				}
 				return nil
 			},
@@ -431,7 +554,7 @@ Example:
 		if ptrs, ok := pobj.(ModOps); ok {
 			commands = append(commands, &cobra.Command{
 				Use:   "create [json]",
-				Short: fmt.Sprintf("Create a new %v with the passed-in JSON or string key", singularName),
+				Short: fmt.Sprintf("Create a new %v with the passed-in JSON or string key", ptrs.GetSingularName()),
 				Long: `
 As a useful shortcut, you can pass '-' to indicate that the JSON should be read from stdin.
 
@@ -443,28 +566,9 @@ empty object of that type.  For User, BootEnv, Machine, and Profile, it will be 
 						return fmt.Errorf("%v requires 1 argument", c.UseLine())
 					}
 					dumpUsage = false
-					var buf []byte
-					var err error
-					if args[0] == "-" {
-						buf, err = ioutil.ReadAll(os.Stdin)
-						if err != nil {
-							return fmt.Errorf("Error reading from stdin: %v", err)
-						}
-					} else {
-						buf = []byte(args[0])
-					}
-					var obj interface{}
-					obj = ptrs.GetType()
-					err = yaml.Unmarshal(buf, obj)
-					if err != nil {
-						obj = ""
-						err2 := yaml.Unmarshal(buf, &obj)
-						if err2 != nil {
-							return fmt.Errorf("Invalid %v object: %v and %v", singularName, err, err2)
-						}
-					}
-					if data, err := ptrs.Create(obj); err != nil {
-						return generateError(err, "Unable to create new %v", singularName)
+
+					if data, err := Create(args[0], ptrs); err != nil {
+						return err
 					} else {
 						return prettyPrint(data)
 					}
@@ -473,7 +577,7 @@ empty object of that type.  For User, BootEnv, Machine, and Profile, it will be 
 
 			commands = append(commands, &cobra.Command{
 				Use:   "update [id] [json]",
-				Short: fmt.Sprintf("Unsafely update %v by id with the passed-in JSON", singularName),
+				Short: fmt.Sprintf("Unsafely update %v by id with the passed-in JSON", ptrs.GetSingularName()),
 				Long:  `As a useful shortcut, you can pass '-' to indicate that the JSON should be read from stdin`,
 				RunE: func(c *cobra.Command, args []string) error {
 					if len(args) != 2 {
@@ -481,66 +585,8 @@ empty object of that type.  For User, BootEnv, Machine, and Profile, it will be 
 					}
 					dumpUsage = false
 
-					var buf []byte
-					var err error
-					if args[1] == "-" {
-						buf, err = ioutil.ReadAll(os.Stdin)
-						if err != nil {
-							return fmt.Errorf("Error reading from stdin: %v", err)
-						}
-					} else {
-						buf = []byte(args[1])
-					}
-					var intermediate interface{}
-					err = yaml.Unmarshal(buf, &intermediate)
-					if err != nil {
-						return fmt.Errorf("Unable to unmarshal input stream: %v\n", err)
-					}
-
-					updateObj, err := json.Marshal(intermediate)
-					if err != nil {
-						return fmt.Errorf("Unable to marshal input stream: %v\n", err)
-					}
-					data, err := gptrs.Get(args[0])
-					if err != nil {
-						return generateError(err, "Failed to fetch %v: %v", singularName, args[0])
-					}
-					baseObj, err := json.Marshal(data)
-					if err != nil {
-						return fmt.Errorf("Unable to marshal object: %v\n", err)
-					}
-
-					merged, err := safeMergeJSON(data, updateObj)
-					if err != nil {
-						return fmt.Errorf("Unable to merge objects: %v\n", err)
-					}
-
-					// if the caller provides update, use it because we have Patch issues.
-					if uptrs, ok := pobj.(UpdateOps); ok {
-						obj := ptrs.GetType()
-						err = yaml.Unmarshal(merged, obj)
-						if err != nil {
-							return fmt.Errorf("Unable to unmarshal merged input stream: %v\n", err)
-						}
-
-						if data, err := uptrs.Update(args[0], obj); err != nil {
-							return generateError(err, "Unable to update %v", args[0])
-						} else {
-							return prettyPrint(data)
-						}
-					}
-					// Else use Patch
-					patch, err := jsonpatch2.Generate(baseObj, merged, true)
-					if err != nil {
-						return fmt.Errorf("Error generating patch: %v", err)
-					}
-					p := models.Patch{}
-					if err := utils.Remarshal(&patch, &p); err != nil {
-						return fmt.Errorf("Error translating patch: %v", err)
-					}
-
-					if data, err := ptrs.Patch(args[0], p); err != nil {
-						return generateError(err, "Unable to patch %v", args[0])
+					if data, err := Update(args[0], args[1], ptrs); err != nil {
+						return err
 					} else {
 						return prettyPrint(data)
 					}
@@ -549,7 +595,7 @@ empty object of that type.  For User, BootEnv, Machine, and Profile, it will be 
 
 			commands = append(commands, &cobra.Command{
 				Use:   "patch [objectJson] [changesJson]",
-				Short: fmt.Sprintf("Patch %v with the passed-in JSON", singularName),
+				Short: fmt.Sprintf("Patch %v with the passed-in JSON", ptrs.GetSingularName()),
 				RunE: func(c *cobra.Command, args []string) error {
 					if len(args) != 2 {
 						return fmt.Errorf("%v requires 2 arguments", c.UseLine())
@@ -591,16 +637,16 @@ empty object of that type.  For User, BootEnv, Machine, and Profile, it will be 
 	if ptrs, ok := pobj.(DeleteOps); ok {
 		commands = append(commands, &cobra.Command{
 			Use:   "destroy [id]",
-			Short: fmt.Sprintf("Destroy %v by id", singularName),
+			Short: fmt.Sprintf("Destroy %v by id", ptrs.GetSingularName()),
 			RunE: func(c *cobra.Command, args []string) error {
 				if len(args) != 1 {
 					return fmt.Errorf("%v requires 1 argument", c.UseLine())
 				}
 				dumpUsage = false
-				if _, err := ptrs.Delete(args[0]); err != nil {
-					return generateError(err, "Unable to destroy %v %v", singularName, args[0])
+				if _, err := Delete(args[0], ptrs); err != nil {
+					return generateError(err, "Unable to destroy %v %v", ptrs.GetSingularName(), args[0])
 				} else {
-					fmt.Printf("Deleted %v %v\n", singularName, args[0])
+					fmt.Printf("Deleted %v %v\n", ptrs.GetSingularName(), args[0])
 					return nil
 				}
 			},

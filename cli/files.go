@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type FileOps struct{}
+type FileOps struct{ CommonOps }
 
 func (be FileOps) GetIndexes() map[string]string {
 	return map[string]string{}
@@ -61,7 +61,7 @@ func addFileCommands() (res *cobra.Command) {
 		Use:   name,
 		Short: "Commands to manage files on the provisioner",
 	}
-	commands := commonOps(singularName, name, &FileOps{})
+	commands := commonOps(&FileOps{CommonOps{Name: name, SingularName: singularName}})
 	res.AddCommand(commands...)
 	return res
 }

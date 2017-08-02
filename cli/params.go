@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type ParamOps struct{}
+type ParamOps struct{ CommonOps }
 
 func (be ParamOps) GetType() interface{} {
 	return &models.Param{}
@@ -113,8 +113,8 @@ func addParamCommands() (res *cobra.Command) {
 		Short: fmt.Sprintf("Access CLI commands relating to %v", name),
 	}
 
-	mo := &ParamOps{}
-	commands := commonOps(singularName, name, mo)
+	mo := &ParamOps{CommonOps{Name: name, SingularName: singularName}}
+	commands := commonOps(mo)
 	res.AddCommand(commands...)
 	return res
 }

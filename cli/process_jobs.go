@@ -1,0 +1,394 @@
+package cli
+
+import (
+	"bufio"
+	"fmt"
+	"io"
+	"io/ioutil"
+	"os"
+	"os/exec"
+	"strconv"
+	"strings"
+	"syscall"
+	"time"
+
+	"github.com/digitalrebar/provision/client/jobs"
+	"github.com/digitalrebar/provision/models"
+	"github.com/go-openapi/strfmt"
+	"github.com/spf13/cobra"
+)
+
+func Log(uuid *strfmt.UUID, s string) error {
+	_, err := session.Jobs.PutJobLog(jobs.NewPutJobLogParams().WithUUID(*uuid).WithBody(s), basicAuth)
+	return err
+}
+
+func writeStringToFile(path, content string) error {
+	fo, err := os.Create(path)
+	if err != nil {
+		return err
+	}
+	defer fo.Close()
+
+	_, err = io.Copy(fo, strings.NewReader(content))
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func markJob(uuid, state string, ops ModOps) error {
+	j := fmt.Sprintf("{\"State\": \"%s\"}", state)
+	if _, err := Update(uuid, j, ops); err != nil {
+		fmt.Printf("Error marking job, %s, as %s: %v, continuing\n", uuid, state, err)
+		return err
+	}
+	return nil
+}
+
+func markMachineRunnable(uuid string, ops ModOps) error {
+	if _, err := Update(uuid, `{"Runnable": true}`, ops); err != nil {
+		fmt.Printf("Error marking machine as runnable: %v, continuing to wait for runnable...\n", err)
+		return err
+	}
+	return nil
+}
+
+type CommandRunner struct {
+	name string
+	uuid *strfmt.UUID
+
+	cmd      *exec.Cmd
+	stderr   io.ReadCloser
+	stdout   io.ReadCloser
+	stdin    io.WriteCloser
+	finished chan bool
+}
+
+func (cr *CommandRunner) ReadLog() {
+	// read command's stderr line by line - for logging
+	in := bufio.NewScanner(cr.stderr)
+	for in.Scan() {
+		Log(cr.uuid, in.Text())
+	}
+	if err := in.Err(); err != nil {
+		fmt.Printf("CommandRunner %s: error: %s\n", cr.name, err)
+	}
+	cr.finished <- true
+}
+
+func (cr *CommandRunner) ReadReply() {
+	// read command's stdout line by line - for replies
+	in := bufio.NewScanner(cr.stdout)
+	for in.Scan() {
+		Log(cr.uuid, in.Text())
+	}
+	if err := in.Err(); err != nil {
+		fmt.Printf("CommandRunner %s: error: %s", cr.name, err)
+	}
+	cr.finished <- true
+}
+
+func (cr *CommandRunner) Stop() error {
+	// Close stdin / writer.  To close, the program.
+	cr.stdin.Close()
+
+	// Wait for reader to exit
+	<-cr.finished
+	<-cr.finished
+
+	// Remove script
+	os.Remove(cr.cmd.Path)
+
+	return nil
+}
+
+func (cr *CommandRunner) Run() (failed, incomplete, reboot bool) {
+	err := cr.cmd.Run()
+	if exiterr, ok := err.(*exec.ExitError); ok {
+		// The program has exited with an exit code != 0
+
+		// This works on both Unix and Windows. Although package
+		// syscall is generally platform dependent, WaitStatus is
+		// defined for both Unix and Windows and in both cases has
+		// an ExitStatus() method with the same signature.
+		if status, ok := exiterr.Sys().(syscall.WaitStatus); ok {
+			code := status.ExitStatus()
+			switch code {
+			case 0:
+				failed = false
+				reboot = false
+				s := fmt.Sprintf("Command %s succeeded\n", cr.name)
+				fmt.Printf(s)
+				Log(cr.uuid, s)
+			case 1:
+				failed = false
+				reboot = true
+				s := fmt.Sprintf("Command %s succeeded (wants reboot)\n", cr.name)
+				fmt.Printf(s)
+				Log(cr.uuid, s)
+			case 2:
+				incomplete = true
+				reboot = false
+				s := fmt.Sprintf("Command %s incomplete\n", cr.name)
+				fmt.Printf(s)
+				Log(cr.uuid, s)
+			case 3:
+				incomplete = true
+				reboot = true
+				s := fmt.Sprintf("Command %s incomplete (wants reboot)\n", cr.name)
+				fmt.Printf(s)
+				Log(cr.uuid, s)
+			default:
+				failed = true
+				reboot = false
+				s := fmt.Sprintf("Command %s failed\n", cr.name)
+				fmt.Printf(s)
+				Log(cr.uuid, s)
+			}
+		}
+	} else {
+		if err != nil {
+			failed = true
+			reboot = false
+			s := fmt.Sprintf("Command %s failed: %v\n", cr.name, err)
+			fmt.Printf(s)
+			Log(cr.uuid, s)
+		} else {
+			failed = false
+			reboot = false
+			s := fmt.Sprintf("Command %s succeeded\n", cr.name)
+			fmt.Printf(s)
+			Log(cr.uuid, s)
+		}
+	}
+
+	// Just to be sure all threads are cleaned.
+	cr.Stop()
+
+	return
+}
+
+func NewCommandRunner(uuid *strfmt.UUID, name, content string) (*CommandRunner, error) {
+	answer := &CommandRunner{name: name, uuid: uuid}
+
+	// Make script file
+	tmpFile, err := ioutil.TempFile(".", "script")
+	if err != nil {
+		return nil, err
+	}
+	if _, err := tmpFile.Write([]byte(content)); err != nil {
+		return nil, err
+	}
+	path := "./" + tmpFile.Name()
+	if err := tmpFile.Close(); err != nil {
+		return nil, err
+	}
+	os.Chmod(path, 0700)
+
+	answer.cmd = exec.Command(path)
+
+	var err2 error
+	answer.stderr, err2 = answer.cmd.StderrPipe()
+	if err2 != nil {
+		return nil, err2
+	}
+	answer.stdout, err2 = answer.cmd.StdoutPipe()
+	if err2 != nil {
+		return nil, err2
+	}
+	answer.stdin, err2 = answer.cmd.StdinPipe()
+	if err2 != nil {
+		return nil, err2
+	}
+
+	answer.finished = make(chan bool, 2)
+	go answer.ReadLog()
+	go answer.ReadReply()
+
+	return answer, nil
+}
+
+func runContent(uuid *strfmt.UUID, action *models.JobAction) (failed, incomplete, reboot bool) {
+
+	Log(uuid, fmt.Sprintf("Starting Content Execution for: %s\n", *action.Name))
+
+	runner, err := NewCommandRunner(uuid, *action.Name, *action.Content)
+	if err != nil {
+		failed = true
+		s := fmt.Sprintf("Creating command %s failed: %v\n", *action.Name, err)
+		fmt.Printf(s)
+		Log(uuid, s)
+	} else {
+		failed, incomplete, reboot = runner.Run()
+	}
+	return
+}
+
+func processJobsCommand() *cobra.Command {
+	mo := &MachineOps{CommonOps{Name: "machines", SingularName: "machine"}}
+	jo := &JobOps{CommonOps{Name: "jobs", SingularName: "job"}}
+
+	command := &cobra.Command{
+		Use:   "processjobs [id] [wait]",
+		Short: "For the given machine, process pending jobs until done.",
+		Long: `
+For the provided machine, identified by UUID, process the task list on
+that machine until an error occurs or all jobs are complete.  Upon 
+completion, optionally wait for additional jobs as specified by
+the boolean wait flag.
+`,
+		RunE: func(c *cobra.Command, args []string) error {
+			var err error
+			if len(args) < 1 {
+				return fmt.Errorf("%v requires at least 1 argument", c.UseLine())
+
+			}
+			if len(args) > 2 {
+				return fmt.Errorf("%v requires less than 3 arguments", c.UseLine())
+			}
+			dumpUsage = false
+
+			uuid := args[0]
+			wait := false
+			if len(args) == 2 {
+				wait, err = strconv.ParseBool(args[1])
+				if err != nil {
+					return fmt.Errorf("Error reading wait argument: %v", err)
+				}
+			}
+
+			waitStr := "will not wait for new jobs"
+			if wait {
+				waitStr = "will wait for new jobs"
+			}
+			fmt.Printf("Processing jobs for %s (%s)\n", uuid, waitStr)
+
+			var machine *models.Machine
+			if obj, err := Get(uuid, mo); err != nil {
+				return fmt.Errorf("Error getting machine: %v", err)
+			} else {
+				machine = obj.(*models.Machine)
+			}
+
+			// Get Current Job and mark it failed if it is running.
+			if obj, err := Get(machine.CurrentJob.String(), jo); err == nil {
+				job := obj.(*models.Job)
+				// If job is running or created, mark it as failed
+				if *job.State == "running" || *job.State == "created" {
+					markJob(machine.CurrentJob.String(), "failed", jo)
+				}
+			}
+
+			// Mark Machine runnnable
+			markMachineRunnable(machine.UUID.String(), mo)
+
+			did_job := false
+			for {
+				// Wait for machine to be runnable.
+				if answer, err := mo.DoWait(machine.UUID.String(), "Runnable", "true", 100000000); err != nil {
+					fmt.Printf("Error waiting for machine to be runnable: %v, try again...\n", err)
+					time.Sleep(5 * time.Second)
+					continue
+				} else if answer == "timeout" {
+					fmt.Printf("Waiting for machine runnable returned with, %s, trying again.\n", answer)
+					continue
+				} else if answer == "interrupt" {
+					fmt.Printf("User interrupted the wait, exiting ...\n")
+					break
+				}
+
+				// Create a job for tasks
+				var job *models.Job
+				if obj, err := jo.Create(&models.Job{Machine: machine.UUID}); err != nil {
+					fmt.Printf("Error creating a job for machine: %v, continuing\n", err)
+					time.Sleep(5 * time.Second)
+					continue
+				} else {
+					if obj == nil {
+						if did_job {
+							fmt.Println("Jobs finished")
+							did_job = false
+						}
+						if wait {
+							// Wait for new jobs - XXX: Web socket one day.
+							// Create a not equal waiter
+							time.Sleep(5 * time.Second)
+							continue
+						} else {
+							break
+						}
+					}
+					job = obj.(*models.Job)
+				}
+				did_job = true
+
+				// Get the job data
+				var list []*models.JobAction
+				if resp, err := session.Jobs.GetJobActions(jobs.NewGetJobActionsParams().WithUUID(*job.UUID), basicAuth); err != nil {
+					fmt.Printf("Error loading task content: %v, continuing", err)
+					markJob(job.UUID.String(), "failed", jo)
+					continue
+				} else {
+					list = resp.Payload
+				}
+
+				// Mark job as running
+				if _, err := Update(job.UUID.String(), `{"State": "running"}`, jo); err != nil {
+					fmt.Printf("Error marking job as running: %v, continue\n", err)
+					markJob(job.UUID.String(), "failed", jo)
+					continue
+				}
+				fmt.Printf("Starting Task: %s (%s)\n", job.Task, job.UUID.String())
+
+				failed := false
+				incomplete := false
+				reboot := false
+				state := "finished"
+
+				for _, action := range list {
+					// GREG: Issue event about task starting.
+
+					// Excute task
+					if *action.Path == "" {
+						fmt.Printf("Running Task Template: %s\n", *action.Name)
+						failed, incomplete, reboot = runContent(job.UUID, action)
+					} else {
+						fmt.Printf("Putting Content in place for Task Template: %s\n", *action.Name)
+						if err := writeStringToFile(*action.Path, *action.Content); err != nil {
+							Log(job.UUID, fmt.Sprintf("Task Template: %s - Coping contents to %s failed\n%v", *action.Name, *action.Path, err))
+							failed = true
+						} else {
+							Log(job.UUID, fmt.Sprintf("Task Template: %s - Copied contents to %s successfully\n", *action.Name, *action.Path))
+						}
+					}
+
+					if failed {
+						state = "failed"
+					} else if incomplete {
+						state = "incomplete"
+					}
+
+					// GREG: Issue event about task done with state
+					fmt.Printf("Task Template , %s, %s\n", *action.Name, state)
+
+					if failed || incomplete || reboot {
+						break
+					}
+				}
+
+				fmt.Printf("Task: %s %s\n", job.Task, state)
+				markJob(job.UUID.String(), state, jo)
+				// Loop back and wait for the machine to get marked runnable again
+
+				if reboot {
+					// GREG: Issue reboot call
+				}
+			}
+
+			return nil
+		},
+	}
+
+	return command
+}

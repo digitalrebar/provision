@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type LeaseOps struct{}
+type LeaseOps struct{ CommonOps }
 
 func convertStringToAddress(id string) (strfmt.IPv4, error) {
 	var s strfmt.IPv4
@@ -137,7 +137,7 @@ func addLeaseCommands() (res *cobra.Command) {
 		Short: fmt.Sprintf("Access CLI commands relating to %v", name),
 	}
 
-	commands := commonOps(singularName, name, &LeaseOps{})
+	commands := commonOps(&LeaseOps{CommonOps{Name: name, SingularName: singularName}})
 	res.AddCommand(commands...)
 	return res
 }

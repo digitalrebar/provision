@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type ReservationOps struct{}
+type ReservationOps struct{ CommonOps }
 
 func (be ReservationOps) GetType() interface{} {
 	return &models.Reservation{}
@@ -126,7 +126,7 @@ func addReservationCommands() (res *cobra.Command) {
 		Use:   name,
 		Short: fmt.Sprintf("Access CLI commands relating to %v", name),
 	}
-	commands := commonOps(singularName, name, &ReservationOps{})
+	commands := commonOps(&ReservationOps{CommonOps{Name: name, SingularName: singularName}})
 	res.AddCommand(commands...)
 	return res
 }

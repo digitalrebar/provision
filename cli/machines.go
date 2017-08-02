@@ -25,7 +25,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type MachineOps struct{}
+type MachineOps struct{ CommonOps }
 
 func (be MachineOps) GetType() interface{} {
 	return &models.Machine{}
@@ -129,6 +129,126 @@ func (be MachineOps) Delete(id string) (interface{}, error) {
 	return d.Payload, nil
 }
 
+func (be MachineOps) DoWait(id, field, value string, timeout int64) (string, error) {
+	interrupt := make(chan os.Signal, 1)
+	signal.Notify(interrupt, os.Interrupt)
+	defer signal.Reset(os.Interrupt)
+
+	u := url.URL{Scheme: "wss", Host: strings.TrimPrefix(endpoint, "https://"), Path: "/api/v3/ws"}
+	// Set up auth stuff.
+	websocket.DefaultDialer.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
+	h := http.Header(make(map[string][]string))
+	h["Authorization"] = []string{"Basic " + base64.StdEncoding.EncodeToString([]byte(username+":"+password))}
+	if token != "" {
+		h["Authorization"] = []string{"Bearer " + token}
+	}
+
+	// Get the socket.
+	conn, _, err := websocket.DefaultDialer.Dial(u.String(), h)
+	if err != nil {
+		return "", err
+	}
+	defer conn.Close()
+
+	done := make(chan struct{})
+	var machine *models.Machine
+	answer := ""
+
+	go func() {
+		defer close(done)
+		for {
+			_, message, err := conn.ReadMessage()
+			if err != nil {
+				if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseNormalClosure) {
+					fmt.Println("read:", err)
+				}
+				return
+			}
+
+			data := map[string]interface{}{}
+			err = json.Unmarshal(message, &data)
+			if err != nil {
+				fmt.Println("json error: ", err)
+				return
+			}
+
+			if md, ok := data["Object"].(map[string]interface{}); ok {
+				if m, e := testMachine(field, value, md); e == nil && m {
+					answer = "complete"
+					return
+				}
+			}
+		}
+	}()
+
+	// register for events.
+	do_wait := true
+	err = conn.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf("register machines.update.%s\n", id)))
+	if err != nil {
+		do_wait = false
+	}
+	err = conn.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf("register machines.save.%s\n", id)))
+	if err != nil {
+		do_wait = false
+	}
+
+	data, err := Get(id, be)
+	if err != nil {
+		err = generateError(err, "Failed to fetch %v: %v", be.GetSingularName(), id)
+		do_wait = false
+	}
+	machine, _ = data.(*models.Machine)
+
+	if do_wait {
+		var jstring []byte
+		jstring, err = json.Marshal(machine)
+		if err == nil {
+			data := map[string]interface{}{}
+			err = json.Unmarshal(jstring, &data)
+			if err == nil {
+				var matched bool
+				if matched, err = testMachine(field, value, data); err == nil && matched {
+					answer = "complete"
+					do_wait = false
+				} else if err != nil {
+					do_wait = false
+				}
+			}
+		}
+
+	}
+
+	if do_wait {
+		timer := time.NewTimer(time.Second * time.Duration(timeout))
+		// Wait for reader to close (error, closed connection, or matched field)
+		// Wait for timeout
+		// Wait for user interrupt
+		select {
+		case <-done:
+		case <-timer.C:
+			answer = "timeout"
+		case <-interrupt:
+			answer = "interrupt"
+		}
+		timer.Stop()
+	}
+
+	// To cleanly close a connection, a client should send a close
+	// frame and wait for the server to close the connection.
+	terr := conn.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, ""))
+	if terr != nil && err == nil {
+		err = terr
+	}
+	timer := time.NewTimer(time.Second)
+	select {
+	case <-done:
+	case <-timer.C:
+	}
+	timer.Stop()
+
+	return answer, err
+}
+
 func init() {
 	tree := addMachineCommands()
 	App.AddCommand(tree)
@@ -176,9 +296,9 @@ func addMachineCommands() (res *cobra.Command) {
 		Short: fmt.Sprintf("Access CLI commands relating to %v", name),
 	}
 
-	mo := &MachineOps{}
+	mo := &MachineOps{CommonOps{Name: name, SingularName: singularName}}
 
-	commands := commonOps(singularName, name, mo)
+	commands := commonOps(mo)
 
 	commands = append(commands, &cobra.Command{
 		Use:   "wait [id] [field] [value] [timeout]",
@@ -213,116 +333,10 @@ Returns the following strings:
 				}
 			}
 
-			interrupt := make(chan os.Signal, 1)
-			signal.Notify(interrupt, os.Interrupt)
-
-			u := url.URL{Scheme: "wss", Host: strings.TrimPrefix(endpoint, "https://"), Path: "/api/v3/ws"}
-			// Set up auth stuff.
-			websocket.DefaultDialer.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
-			h := http.Header(make(map[string][]string))
-			h["Authorization"] = []string{"Basic " + base64.StdEncoding.EncodeToString([]byte(username+":"+password))}
-			if token != "" {
-				h["Authorization"] = []string{"Bearer " + token}
+			answer, err := mo.DoWait(id, field, value, timeout)
+			if answer != "" {
+				fmt.Println(answer)
 			}
-
-			// Get the socket.
-			conn, _, err := websocket.DefaultDialer.Dial(u.String(), h)
-			if err != nil {
-				return err
-			}
-			defer conn.Close()
-
-			done := make(chan struct{})
-			var machine *models.Machine
-
-			go func() {
-				defer close(done)
-				for {
-					_, message, err := conn.ReadMessage()
-					if err != nil {
-						if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseNormalClosure) {
-							fmt.Println("read:", err)
-						}
-						return
-					}
-
-					data := map[string]interface{}{}
-					err = json.Unmarshal(message, &data)
-					if err != nil {
-						fmt.Println("json error: ", err)
-						return
-					}
-
-					if md, ok := data["Object"].(map[string]interface{}); ok {
-						if m, e := testMachine(field, value, md); e == nil && m {
-							fmt.Println("complete")
-							return
-						}
-					}
-				}
-			}()
-
-			// register for events.
-			do_wait := true
-			err = conn.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf("register machines.update.%s\n", id)))
-			if err != nil {
-				do_wait = false
-			}
-			err = conn.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf("register machines.save.%s\n", id)))
-			if err != nil {
-				do_wait = false
-			}
-
-			data, err := mo.Get(id)
-			if err != nil {
-				err = generateError(err, "Failed to fetch %v: %v", singularName, id)
-				do_wait = false
-			}
-			machine, _ = data.(*models.Machine)
-
-			if do_wait {
-				var jstring []byte
-				jstring, err = json.Marshal(machine)
-				if err == nil {
-					data := map[string]interface{}{}
-					err = json.Unmarshal(jstring, &data)
-					if err == nil {
-						var matched bool
-						if matched, err = testMachine(field, value, data); err == nil && matched {
-							fmt.Println("complete")
-							do_wait = false
-						} else if err != nil {
-							do_wait = false
-						}
-					}
-				}
-
-			}
-
-			if do_wait {
-				// Wait for reader to close (error, closed connection, or matched field)
-				// Wait for timeout
-				// Wait for user interrupt
-				select {
-				case <-done:
-				case <-time.After(time.Second * time.Duration(timeout)):
-					fmt.Println("timeout")
-				case <-interrupt:
-					fmt.Println("interrupt")
-				}
-			}
-
-			// To cleanly close a connection, a client should send a close
-			// frame and wait for the server to close the connection.
-			terr := conn.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, ""))
-			if terr != nil && err == nil {
-				err = terr
-			}
-			select {
-			case <-done:
-			case <-time.After(time.Second):
-			}
-
 			return err
 		},
 	})
@@ -662,6 +676,8 @@ Returns the following strings:
 			}
 		},
 	})
+
+	commands = append(commands, processJobsCommand())
 
 	res.AddCommand(commands...)
 	return res
