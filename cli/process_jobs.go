@@ -71,9 +71,6 @@ func (cr *CommandRunner) ReadLog() {
 	for in.Scan() {
 		Log(cr.uuid, in.Text())
 	}
-	if err := in.Err(); err != nil {
-		fmt.Printf("CommandRunner %s: error: %s\n", cr.name, err)
-	}
 	cr.finished <- true
 }
 
@@ -82,9 +79,6 @@ func (cr *CommandRunner) ReadReply() {
 	in := bufio.NewScanner(cr.stdout)
 	for in.Scan() {
 		Log(cr.uuid, in.Text())
-	}
-	if err := in.Err(); err != nil {
-		fmt.Printf("CommandRunner %s: error: %s", cr.name, err)
 	}
 	cr.finished <- true
 }
@@ -245,7 +239,7 @@ the boolean wait flag.
 
 			}
 			if len(args) > 2 {
-				return fmt.Errorf("%v requires less than 3 arguments", c.UseLine())
+				return fmt.Errorf("%v requires at most 2 arguments", c.UseLine())
 			}
 			dumpUsage = false
 
@@ -262,14 +256,15 @@ the boolean wait flag.
 			if wait {
 				waitStr = "will wait for new jobs"
 			}
-			fmt.Printf("Processing jobs for %s (%s)\n", uuid, waitStr)
 
 			var machine *models.Machine
 			if obj, err := Get(uuid, mo); err != nil {
-				return fmt.Errorf("Error getting machine: %v", err)
+				return generateError(err, "Error getting machine")
 			} else {
 				machine = obj.(*models.Machine)
 			}
+
+			fmt.Printf("Processing jobs for %s (%s)\n", uuid, waitStr)
 
 			// Get Current Job and mark it failed if it is running.
 			if obj, err := Get(machine.CurrentJob.String(), jo); err == nil {
