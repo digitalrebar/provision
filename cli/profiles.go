@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type ProfileOps struct{}
+type ProfileOps struct{ CommonOps }
 
 func (be ProfileOps) GetType() interface{} {
 	return &models.Profile{}
@@ -114,9 +114,9 @@ func addProfileCommands() (res *cobra.Command) {
 		Short: fmt.Sprintf("Access CLI commands relating to %v", name),
 	}
 
-	mo := &ProfileOps{}
+	mo := &ProfileOps{CommonOps{Name: name, SingularName: singularName}}
 
-	commands := commonOps(singularName, name, mo)
+	commands := commonOps(mo)
 
 	commands = append(commands, &cobra.Command{
 		Use:   "params [id] [json]",

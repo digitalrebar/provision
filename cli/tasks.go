@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type TaskOps struct{}
+type TaskOps struct{ CommonOps }
 
 func (be TaskOps) GetType() interface{} {
 	return &models.Task{}
@@ -113,8 +113,8 @@ func addTaskCommands() (res *cobra.Command) {
 		Short: fmt.Sprintf("Access CLI commands relating to %v", name),
 	}
 
-	mo := &TaskOps{}
-	commands := commonOps(singularName, name, mo)
+	mo := &TaskOps{CommonOps{Name: name, SingularName: singularName}}
+	commands := commonOps(mo)
 	res.AddCommand(commands...)
 	return res
 }

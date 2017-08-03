@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type PluginOps struct{}
+type PluginOps struct{ CommonOps }
 
 func (be PluginOps) GetType() interface{} {
 	return &models.Plugin{}
@@ -116,9 +116,9 @@ func addPluginCommands() (res *cobra.Command) {
 		Short: fmt.Sprintf("Access CLI commands relating to %v", name),
 	}
 
-	mo := &PluginOps{}
+	mo := &PluginOps{CommonOps{Name: name, SingularName: singularName}}
 
-	commands := commonOps(singularName, name, mo)
+	commands := commonOps(mo)
 
 	commands = append(commands, &cobra.Command{
 		Use:   "params [id] [json]",

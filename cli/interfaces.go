@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type InterfaceOps struct{}
+type InterfaceOps struct{ CommonOps }
 
 func (be InterfaceOps) GetIndexes() map[string]string {
 	return map[string]string{}
@@ -42,7 +42,7 @@ func addInterfaceCommands() (res *cobra.Command) {
 		Use:   name,
 		Short: fmt.Sprintf("Access CLI commands relating to %v", name),
 	}
-	commands := commonOps(singularName, name, &InterfaceOps{})
+	commands := commonOps(&InterfaceOps{CommonOps{Name: name, SingularName: singularName}})
 	res.AddCommand(commands...)
 	return res
 }

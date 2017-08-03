@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type IsoOps struct{}
+type IsoOps struct{ CommonOps }
 
 func (be IsoOps) GetIndexes() map[string]string {
 	return map[string]string{}
@@ -50,7 +50,7 @@ func addIsoCommands() (res *cobra.Command) {
 		Use:   name,
 		Short: "Commands to manage isos on the provisioner",
 	}
-	commands := commonOps(singularName, name, &IsoOps{})
+	commands := commonOps(&IsoOps{CommonOps{Name: name, SingularName: singularName}})
 	res.AddCommand(commands...)
 	return res
 }
