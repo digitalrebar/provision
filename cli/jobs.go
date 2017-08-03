@@ -3,7 +3,7 @@ package cli
 import (
 	"bytes"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 
 	"github.com/digitalrebar/provision/backend"
@@ -187,23 +187,21 @@ func addJobCommands() (res *cobra.Command) {
 			if len(args) > 2 {
 				return fmt.Errorf("%v requires at most 2 arguments", c.UseLine())
 			}
-			uuid := args[0]
+			uuid := strfmt.UUID(args[0])
 			dumpUsage = false
 
 			if len(args) == 2 {
-				var buf []byte
-				var err error
+				var src io.Reader
 				if args[1] == "-" {
-					buf, err = ioutil.ReadAll(os.Stdin)
-					if err != nil {
-						return fmt.Errorf("Error reading from stdin: %v", err)
-					}
+					src = os.Stdin
 				} else {
-					buf = []byte(args[1])
+					buf := bytes.NewBufferString(args[1])
+					src = buf
 				}
-				s := string(buf)
-
-				if _, err := session.Jobs.PutJobLog(jobs.NewPutJobLogParams().WithUUID(strfmt.UUID(uuid)).WithBody(&s), basicAuth); err != nil {
+				if _, err := session.Jobs.PutJobLog(
+					jobs.NewPutJobLogParams().
+						WithUUID(strfmt.UUID(uuid)).
+						WithBody(src), basicAuth); err != nil {
 					return generateError(err, "Error appending log")
 				} else {
 					fmt.Println("Success")
@@ -211,7 +209,7 @@ func addJobCommands() (res *cobra.Command) {
 				}
 			} else {
 				b := bytes.NewBuffer(nil)
-				if _, err := session.Jobs.GetJobLog(jobs.NewGetJobLogParams().WithUUID(strfmt.UUID(uuid)), basicAuth, b); err != nil {
+				if _, err := session.Jobs.GetJobLog(jobs.NewGetJobLogParams().WithUUID(uuid), basicAuth, b); err != nil {
 					return generateError(err, "Error get log")
 				} else {
 
