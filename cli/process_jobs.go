@@ -18,6 +18,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var exitOnFailure = false
+
 func Log(uuid *strfmt.UUID, s string) error {
 	_, err := session.Jobs.PutJobLog(jobs.NewPutJobLogParams().WithUUID(*uuid).WithBody(s), basicAuth)
 	return err
@@ -350,12 +352,15 @@ the boolean wait flag.
 						failed, incomplete, reboot = runContent(job.UUID, action)
 					} else {
 						fmt.Printf("Putting Content in place for Task Template: %s\n", *action.Name)
+						var s string
 						if err := writeStringToFile(*action.Path, *action.Content); err != nil {
-							Log(job.UUID, fmt.Sprintf("Task Template: %s - Coping contents to %s failed\n%v", *action.Name, *action.Path, err))
 							failed = true
+							s = fmt.Sprintf("Task Template: %s - Copying contents to %s failed\n%v", *action.Name, *action.Path, err)
 						} else {
-							Log(job.UUID, fmt.Sprintf("Task Template: %s - Copied contents to %s successfully\n", *action.Name, *action.Path))
+							s = fmt.Sprintf("Task Template: %s - Copied contents to %s successfully\n", *action.Name, *action.Path)
 						}
+						fmt.Printf(s)
+						Log(job.UUID, s)
 					}
 
 					if failed {
@@ -379,11 +384,17 @@ the boolean wait flag.
 				if reboot {
 					// GREG: Issue reboot call
 				}
+
+				// If we failed, should we exit
+				if exitOnFailure && failed {
+					return fmt.Errorf("Task failed, exiting ...\n")
+				}
 			}
 
 			return nil
 		},
 	}
+	command.Flags().BoolVar(&exitOnFailure, "exit-on-failure", false, "Exit on failure of a task")
 
 	return command
 }
