@@ -90,22 +90,23 @@ func (cr *CommandRunner) ReadReply() {
 	cr.finished <- true
 }
 
-func (cr *CommandRunner) Stop() error {
-	// Close stdin / writer.  To close, the program.
-	cr.stdin.Close()
-
-	// Wait for reader to exit
-	<-cr.finished
-	<-cr.finished
-
-	// Remove script
-	os.Remove(cr.cmd.Path)
-
-	return nil
-}
-
 func (cr *CommandRunner) Run() (failed, incomplete, reboot bool) {
-	err := cr.cmd.Run()
+	// Start command running
+	err := cr.cmd.Start()
+	if err != nil {
+		failed = true
+		reboot = false
+		s := fmt.Sprintf("Command %s failed to start: %v\n", cr.name, err)
+		fmt.Printf(s)
+		Log(cr.uuid, s)
+		return
+	}
+
+	// Wait for readers to exit
+	<-cr.finished
+	<-cr.finished
+
+	err = cr.cmd.Wait()
 	if exiterr, ok := err.(*exec.ExitError); ok {
 		// The program has exited with an exit code != 0
 
@@ -164,8 +165,8 @@ func (cr *CommandRunner) Run() (failed, incomplete, reboot bool) {
 		}
 	}
 
-	// Just to be sure all threads are cleaned.
-	cr.Stop()
+	// Remove script
+	os.Remove(cr.cmd.Path)
 
 	return
 }
