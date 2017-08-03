@@ -2,6 +2,7 @@ package cli
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -21,7 +22,11 @@ import (
 var exitOnFailure = false
 
 func Log(uuid *strfmt.UUID, s string) error {
-	_, err := session.Jobs.PutJobLog(jobs.NewPutJobLogParams().WithUUID(*uuid).WithBody(s), basicAuth)
+	buf := bytes.NewBufferString(s)
+	_, err := session.Jobs.PutJobLog(jobs.NewPutJobLogParams().WithUUID(*uuid).WithBody(buf), basicAuth)
+	if err != nil {
+		fmt.Printf("Failed to log to job log, %s: %v\n", uuid.String(), err)
+	}
 	return err
 }
 
