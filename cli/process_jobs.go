@@ -13,6 +13,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/digitalrebar/provision/client/events"
 	"github.com/digitalrebar/provision/client/jobs"
 	"github.com/digitalrebar/provision/models"
 	"github.com/go-openapi/strfmt"
@@ -350,7 +351,11 @@ the boolean wait flag.
 				state := "finished"
 
 				for _, action := range list {
-					// GREG: Issue event about task starting.
+					event := &models.Event{Time: strfmt.DateTime(time.Now()), Type: "jobs", Action: "action_start", Key: job.UUID.String(), Object: fmt.Sprintf("Starting task: %s, template: %s", job.Task, *action.Name)}
+
+					if _, err := session.Events.PostEvent(events.NewPostEventParams().WithBody(event), basicAuth); err != nil {
+						fmt.Printf("Error posting event: %v\n", err)
+					}
 
 					// Excute task
 					if *action.Path == "" {
@@ -375,8 +380,12 @@ the boolean wait flag.
 						state = "incomplete"
 					}
 
-					// GREG: Issue event about task done with state
 					fmt.Printf("Task Template , %s, %s\n", *action.Name, state)
+					event = &models.Event{Time: strfmt.DateTime(time.Now()), Type: "jobs", Action: "action_stop", Key: job.UUID.String(), Object: fmt.Sprintf("Finished task: %s, template: %s, state: %s", job.Task, *action.Name, state)}
+
+					if _, err := session.Events.PostEvent(events.NewPostEventParams().WithBody(event), basicAuth); err != nil {
+						fmt.Printf("Error posting event: %v\n", err)
+					}
 
 					if failed || incomplete || reboot {
 						break
