@@ -21,6 +21,11 @@ Usage: https://github.com/digitalrebar/provision/tree/master/integration/ansible
 
 example: ansible -i inventory.py all -a "uname -a"
 '''
+
+# Children Group Support
+#   1. Create a "ansible-children" parameter
+#   2. Add that parameter to the parent profile
+#   3. Set the "ansible-children" parameter in the parent profile to the list of children's profiles
     
 def main():
 
@@ -88,10 +93,18 @@ def main():
         else:
             print "\n\n# Skipping Group " + profile + " (no machines)"
 
-        if len(profiles_vars[profile]) > 0:
+        if u'ansible-children' in profiles_vars[profile].keys():
+            print "\n\n # Parent Group " + profile
+            print "[" + profile + ":children]"
+            for child in profiles_vars[profile][u'ansible-children']:
+                print child
+        elif len(profiles_vars[profile]) > 0:
             print "\n[" + profile + ":vars]"
             for param in profiles_vars[profile]:
-                print param + "=" + profiles_vars[profile][param]
+                value = profiles_vars[profile][param]
+                if isinstance(value, (str, unicode)):
+                    print param + "=" + profiles_vars[profile][param]
+
         else:
             print "# Skipping Group " + profile + ":vars (no variables)"            
 
