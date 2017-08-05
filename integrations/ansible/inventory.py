@@ -45,13 +45,15 @@ def main():
 
     Headers = {'content-type': 'application/json'}
     urllib3.disable_warnings()
-    print("# Digital Rebar URL " + addr + " via user " + user)
+    print("# Digital Rebar URL " + addr + " via user " + user + "\n\n")
 
     profiles = {}
+    profiles_vars = {}
     profiles_raw = requests.get(addr + "/api/v3/profiles",headers=Headers,auth=(user,password),verify=False)
     if profiles_raw.status_code == 200: 
         for profile in profiles_raw.json():
-            profiles[profile[u"Name"]] = [] 
+            profiles[profile[u"Name"]] = []
+            profiles_vars[profile[u"Name"]] = profile[u"Params"] 
     else:
         raise IOError(profiles_raw.text)
 
@@ -65,6 +67,7 @@ def main():
     raw = requests.get(URL,headers=Headers,auth=(user,password),verify=False)
 
     if raw.status_code == 200: 
+        print "# All Machines with SSH address"
         for machine in raw.json():
             name = machine[u'Name']
             # TODO, should we only show machines that are in local bootenv?  others could be transistioning
@@ -77,9 +80,20 @@ def main():
         raise IOError(raw.text)
 
     for profile in profiles:
-        print "[" + profile + "]"
-        for machine in profiles[profile]:
-            print machine
+        if len(profiles[profile]) > 0:
+            print "\n\n# Group " + profile
+            print "[" + profile + "]"
+            for machine in profiles[profile]:
+                print machine
+        else:
+            print "\n\n# Skipping Group " + profile + " (no machines)"
+
+        if len(profiles_vars[profile]) > 0:
+            print "\n[" + profile + ":vars]"
+            for param in profiles_vars[profile]:
+                print param + "=" + profiles_vars[profile][param]
+        else:
+            print "# Skipping Group " + profile + ":vars (no variables)"            
 
 if __name__ == "__main__":
     main()  
