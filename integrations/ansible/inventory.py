@@ -14,8 +14,8 @@
 # limitations under the License.
 
 # pip install requests
-import requests, argparse, json, urllib3
-  
+import requests, argparse, json, urllib3, os
+
 '''
 Usage: https://github.com/digitalrebar/provision/tree/master/integration/ansible
 
@@ -25,9 +25,11 @@ example: ansible -i inventory.py all -a "uname -a"
 def main():
 
     # change these values to match your DigitalRebar installation
-    addr = "https://127.0.0.1:8092"
-    user = "rocketskates"
-    password = "r0cketsk8ts"
+    addr = os.getenv('RS_ENDPOINT', "https://127.0.0.1:8092")
+    ups = os.getenv('RS_KEY', "rocketskates:r0cketsk8ts")
+    arr = ups.split(":")
+    user = arr[0]
+    password = arr[1]
 
     # Argument parsing 
     parser = argparse.ArgumentParser(description="Ansible dynamic inventory via DigitalRebar")
