@@ -87,21 +87,25 @@ def main():
         raise IOError(raw.text)
 
     for profile in profiles:
-        inventory[profile] = { }
+        section = {}
         if len(profiles[profile]) > 0:
-            inventory[profile]["hosts"] = []
+            section["hosts"] = []
             for machine in profiles[profile]:
-                inventory[profile]["hosts"].extend([machine])
+                section["hosts"].extend([machine])
 
         if u'ansible-children' in profiles_vars[profile].keys():
-            inventory[profile]["children"] = []
+            section["children"] = []
             for child in profiles_vars[profile][u'ansible-children']:
-                inventory[profile]["children"].extend([child])
+                section["children"].extend([child])
         elif len(profiles_vars[profile]) > 0:
-            inventory[profile]["vars"] = {}
+            section["vars"] = {}
             for param in profiles_vars[profile]:
                 value = profiles_vars[profile][param]
-                inventory[profile]["vars"][param] = value
+                section["vars"][param] = value
+
+        if len(section.keys()) > 0:
+            inventory[profile] = section
+
 
     print json.dumps(inventory)
 
