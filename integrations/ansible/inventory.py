@@ -82,7 +82,7 @@ def main():
             if machine[u"Profiles"]:
                 for profile in machine[u"Profiles"]:
                     profiles[profile].append(name)
-            inventory["_meta"]["hostvars"][name] = {"ansible_host": machine[u"Address"]} 
+            inventory["_meta"]["hostvars"][name] = {"ansible_ssh_user": "root", "ansible_host": machine[u"Address"]} 
     else:
         raise IOError(raw.text)
 
