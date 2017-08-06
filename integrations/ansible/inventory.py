@@ -29,6 +29,8 @@ example: ansible -i inventory.py all -a "uname -a"
     
 def main():
 
+    inventory = { "_meta": { "hostvars": {} } }
+
     # change these values to match your DigitalRebar installation
     addr = os.getenv('RS_ENDPOINT', "https://127.0.0.1:8092")
     ups = os.getenv('RS_KEY', "rocketskates:r0cketsk8ts")
@@ -50,7 +52,8 @@ def main():
 
     Headers = {'content-type': 'application/json'}
     urllib3.disable_warnings()
-    print("# Digital Rebar URL " + addr + " via user " + user + "\n\n")
+    inventory["_meta"]["rebar_url"] = addr
+    inventory["_meta"]["rebar_user"] = user
 
     profiles = {}
     profiles_vars = {}
@@ -72,7 +75,6 @@ def main():
     raw = requests.get(URL,headers=Headers,auth=(user,password),verify=False)
 
     if raw.status_code == 200: 
-        print "# All Machines with SSH address"
         for machine in raw.json():
             name = machine[u'Name']
             # TODO, should we only show machines that are in local bootenv?  others could be transistioning
@@ -80,33 +82,28 @@ def main():
             if machine[u"Profiles"]:
                 for profile in machine[u"Profiles"]:
                     profiles[profile].append(name)
-            print name + " ansible_host=" + machine[u"Address"] 
+            inventory["_meta"]["hostvars"][name] = {"ansible_host": machine[u"Address"]} 
     else:
         raise IOError(raw.text)
 
     for profile in profiles:
+        inventory[profile] = { }
         if len(profiles[profile]) > 0:
-            print "\n\n# Group " + profile
-            print "[" + profile + "]"
+            inventory[profile]["hosts"] = []
             for machine in profiles[profile]:
-                print machine
-        else:
-            print "\n\n# Skipping Group " + profile + " (no machines)"
+                inventory[profile]["hosts"].extend([machine])
 
         if u'ansible-children' in profiles_vars[profile].keys():
-            print "\n\n # Parent Group " + profile
-            print "[" + profile + ":children]"
+            inventory[profile]["children"] = []
             for child in profiles_vars[profile][u'ansible-children']:
-                print child
+                inventory[profile]["children"].extend([child])
         elif len(profiles_vars[profile]) > 0:
-            print "\n[" + profile + ":vars]"
+            inventory[profile]["vars"] = {}
             for param in profiles_vars[profile]:
                 value = profiles_vars[profile][param]
-                if isinstance(value, (str, unicode)):
-                    print param + "=" + profiles_vars[profile][param]
+                inventory[profile]["vars"][param] = value
 
-        else:
-            print "# Skipping Group " + profile + ":vars (no variables)"            
+    print json.dumps(inventory)
 
 if __name__ == "__main__":
     main()  
