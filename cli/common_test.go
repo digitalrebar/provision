@@ -286,6 +286,7 @@ func TestMain(m *testing.M) {
 		"--tftp-port", "10003",
 		"--disable-dhcp",
 		"--drp-id", "Fred",
+		"--backend", "memory:///",
 	}
 
 	err = os.MkdirAll(tmpDir+"/plugins", 0755)
