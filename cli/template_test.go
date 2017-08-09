@@ -11,6 +11,11 @@ var templateEmptyListString string = "[]\n"
 
 var templateDefaultListString string = `[
   {
+    "Contents": "etc\n",
+    "Description": "A test template for LocalStore testing",
+    "ID": "etc"
+  },
+  {
     "Contents": "exit\n",
     "ID": "local-elilo.tmpl"
   },
@@ -21,6 +26,11 @@ var templateDefaultListString string = `[
   {
     "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
     "ID": "local-pxelinux.tmpl"
+  },
+  {
+    "Contents": "usrshare\n",
+    "Description": "A test template for DefaultStore testing",
+    "ID": "usrshare"
   }
 ]
 `
@@ -64,6 +74,11 @@ var templateListJohnOnlyString = `[
 `
 var templateListBothEnvsString = `[
   {
+    "Contents": "etc\n",
+    "Description": "A test template for LocalStore testing",
+    "ID": "etc"
+  },
+  {
     "Contents": "John Rules",
     "ID": "john"
   },
@@ -78,6 +93,11 @@ var templateListBothEnvsString = `[
   {
     "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
     "ID": "local-pxelinux.tmpl"
+  },
+  {
+    "Contents": "usrshare\n",
+    "Description": "A test template for DefaultStore testing",
+    "ID": "usrshare"
   }
 ]
 `
@@ -225,6 +245,10 @@ func TestTemplateCli(t *testing.T) {
 		CliTest{false, false, []string{"templates", "upload", "template.go", "as", "greg"}, noStdinString, templatesUploadSuccessString, noErrorString},
 		CliTest{false, false, []string{"templates", "upload", "lease.go", "as", "greg"}, noStdinString, templatesUploadReplaceSuccessString, noErrorString},
 		CliTest{false, false, []string{"templates", "destroy", "greg"}, noStdinString, templateDestroyGregString, noErrorString},
+		CliTest{false, false, []string{"templates", "exists", "etc"}, noStdinString, noContentString, noErrorString},
+		CliTest{false, false, []string{"templates", "exists", "usrshare"}, noStdinString, noContentString, noErrorString},
+		CliTest{false, true, []string{"templates", "destroy", "etc"}, noStdinString, noContentString, "Error: readonly: etc\n\n"},
+		CliTest{false, true, []string{"templates", "destroy", "usrshare"}, noStdinString, noContentString, "Error: readonly: usrshare\n\n"},
 	}
 
 	for _, test := range tests {

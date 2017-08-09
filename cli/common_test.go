@@ -271,6 +271,7 @@ func TestCorePieces(t *testing.T) {
 
 func TestMain(m *testing.M) {
 	var err error
+
 	tmpDir, err = ioutil.TempDir("", "cli-")
 	if err != nil {
 		log.Printf("Creating temp dir for file root failed: %v", err)
@@ -287,8 +288,8 @@ func TestMain(m *testing.M) {
 		"--disable-dhcp",
 		"--drp-id", "Fred",
 		"--backend", "memory:///",
-		"--local-content", "",
-		"--default-content", "",
+		"--local-content", "directory:../test-data/etc/?codec=yaml",
+		"--default-content", "directory:../test-data/usr/share/?codec=yaml",
 	}
 
 	err = os.MkdirAll(tmpDir+"/plugins", 0755)
