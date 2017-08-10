@@ -10,8 +10,8 @@ var reservationExpireTimeErrorString string = "Error: Invalid Address: false\n\n
 var reservationDefaultListString string = "[]\n"
 var reservationEmptyListString string = "[]\n"
 
-var reservationShowNoArgErrorString string = "Error: drpcli reservations show [id] requires 1 argument\n"
-var reservationShowTooManyArgErrorString string = "Error: drpcli reservations show [id] requires 1 argument\n"
+var reservationShowNoArgErrorString string = "Error: drpcli reservations show [id] [flags] requires 1 argument\n"
+var reservationShowTooManyArgErrorString string = "Error: drpcli reservations show [id] [flags] requires 1 argument\n"
 var reservationShowMissingArgErrorString string = "Error: reservations GET: C0A86467: Not Found\n\n"
 var reservationShowJohnString string = `{
   "Addr": "192.168.100.100",
@@ -22,13 +22,13 @@ var reservationShowJohnString string = `{
 }
 `
 
-var reservationExistsNoArgErrorString string = "Error: drpcli reservations exists [id] requires 1 argument"
-var reservationExistsTooManyArgErrorString string = "Error: drpcli reservations exists [id] requires 1 argument"
+var reservationExistsNoArgErrorString string = "Error: drpcli reservations exists [id] [flags] requires 1 argument"
+var reservationExistsTooManyArgErrorString string = "Error: drpcli reservations exists [id] [flags] requires 1 argument"
 var reservationExistsIgnoreString string = ""
 var reservationExistsMissingIgnoreString string = "Error: reservation get: address not valid: ignore\n\n"
 
-var reservationCreateNoArgErrorString string = "Error: drpcli reservations create [json] requires 1 argument\n"
-var reservationCreateTooManyArgErrorString string = "Error: drpcli reservations create [json] requires 1 argument\n"
+var reservationCreateNoArgErrorString string = "Error: drpcli reservations create [json] [flags] requires 1 argument\n"
+var reservationCreateTooManyArgErrorString string = "Error: drpcli reservations create [json] [flags] requires 1 argument\n"
 var reservationCreateBadJSONString = "asdgasdg"
 var reservationCreateBadJSONErrorString = "Error: Unable to create new reservation: Invalid type passed to reservation create\n\n"
 var reservationCreateInputString string = `{
@@ -69,8 +69,8 @@ var reservationListBothEnvsString = `[
 ]
 `
 
-var reservationUpdateNoArgErrorString string = "Error: drpcli reservations update [id] [json] requires 2 arguments"
-var reservationUpdateTooManyArgErrorString string = "Error: drpcli reservations update [id] [json] requires 2 arguments"
+var reservationUpdateNoArgErrorString string = "Error: drpcli reservations update [id] [json] [flags] requires 2 arguments"
+var reservationUpdateTooManyArgErrorString string = "Error: drpcli reservations update [id] [json] [flags] requires 2 arguments"
 var reservationUpdateBadJSONString = "asdgasdg"
 var reservationUpdateBadJSONErrorString = "Error: Unable to merge objects: json: cannot unmarshal string into Go value of type map[string]interface {}\n\n\n"
 var reservationUpdateInputString string = `{
@@ -92,12 +92,12 @@ var reservationUpdateJohnString string = `{
 `
 var reservationUpdateJohnMissingErrorString string = "Error: reservations GET: C0A86467: Not Found\n\n"
 
-var reservationPatchNoArgErrorString string = "Error: drpcli reservations patch [objectJson] [changesJson] requires 2 arguments"
-var reservationPatchTooManyArgErrorString string = "Error: drpcli reservations patch [objectJson] [changesJson] requires 2 arguments"
+var reservationPatchNoArgErrorString string = "Error: drpcli reservations patch [objectJson] [changesJson] [flags] requires 2 arguments"
+var reservationPatchTooManyArgErrorString string = "Error: drpcli reservations patch [objectJson] [changesJson] [flags] requires 2 arguments"
 var reservationPatchBadPatchJSONString = "asdgasdg"
-var reservationPatchBadPatchJSONErrorString = "Error: Unable to parse drpcli reservations patch [objectJson] [changesJson] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Reservation\n\n"
+var reservationPatchBadPatchJSONErrorString = "Error: Unable to parse drpcli reservations patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Reservation\n\n"
 var reservationPatchBadBaseJSONString = "asdgasdg"
-var reservationPatchBadBaseJSONErrorString = "Error: Unable to parse drpcli reservations patch [objectJson] [changesJson] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Reservation\n\n"
+var reservationPatchBadBaseJSONErrorString = "Error: Unable to parse drpcli reservations patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Reservation\n\n"
 var reservationPatchBaseString string = `{
   "Addr": "192.168.100.100",
   "Strategy": "MAC",
@@ -130,8 +130,8 @@ var reservationPatchMissingBaseString string = `{
 `
 var reservationPatchJohnMissingErrorString string = "Error: reservations: PATCH C1A86464: Not Found\n\n"
 
-var reservationDestroyNoArgErrorString string = "Error: drpcli reservations destroy [id] requires 1 argument"
-var reservationDestroyTooManyArgErrorString string = "Error: drpcli reservations destroy [id] requires 1 argument"
+var reservationDestroyNoArgErrorString string = "Error: drpcli reservations destroy [id] [flags] requires 1 argument"
+var reservationDestroyTooManyArgErrorString string = "Error: drpcli reservations destroy [id] [flags] requires 1 argument"
 var reservationDestroyJohnString string = "Deleted reservation 192.168.100.100\n"
 var reservationDestroyMissingJohnString string = "Error: reservations: DELETE C0A86464: Not Found\n\n"
 

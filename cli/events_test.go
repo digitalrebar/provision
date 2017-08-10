@@ -10,8 +10,8 @@ import (
 )
 
 var eventsIntroString = "DigitalRebar Provision Event Commands\n"
-var eventsPostNoArgString = "Error: drpcli events post [- | JSON or YAML Event] requires 1 argument\n"
-var eventsPostTooManyArgsString = "Error: drpcli events post [- | JSON or YAML Event] requires 1 argument\n"
+var eventsPostNoArgString = "Error: drpcli events post [- | JSON or YAML Event] [flags] requires 1 argument\n"
+var eventsPostTooManyArgsString = "Error: drpcli events post [- | JSON or YAML Event] [flags] requires 1 argument\n"
 var eventsPostBadJsonString = "Error: Invalid event: error converting YAML to JSON: yaml: line 1: did not find expected ',' or '}'\n\n\n"
 var eventsPostBadJson1String = "Error: Invalid event: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Event\n\n\n"
 

@@ -5,8 +5,8 @@ import (
 	"testing"
 )
 
-var machineAddProfileNoArgErrorString string = "Error: drpcli machines addprofile [id] [profile] requires 2 arguments\n"
-var machineRemoveProfileNoArgErrorString string = "Error: drpcli machines removeprofile [id] [profile] requires 2 arguments\n"
+var machineAddProfileNoArgErrorString string = "Error: drpcli machines addprofile [id] [profile] [flags] requires 2 arguments\n"
+var machineRemoveProfileNoArgErrorString string = "Error: drpcli machines removeprofile [id] [profile] [flags] requires 2 arguments\n"
 
 var machineAddrErrorString string = "Error: Invalid address: fred\n\n"
 var machineExpireTimeErrorString string = "Error: Invalid UUID: false\n\n"
@@ -14,8 +14,8 @@ var machineExpireTimeErrorString string = "Error: Invalid UUID: false\n\n"
 var machineEmptyListString string = "[]\n"
 var machineDefaultListString string = "[]\n"
 
-var machineShowNoArgErrorString string = "Error: drpcli machines show [id] requires 1 argument\n"
-var machineShowTooManyArgErrorString string = "Error: drpcli machines show [id] requires 1 argument\n"
+var machineShowNoArgErrorString string = "Error: drpcli machines show [id] [flags] requires 1 argument\n"
+var machineShowTooManyArgErrorString string = "Error: drpcli machines show [id] [flags] requires 1 argument\n"
 var machineShowMissingArgErrorString string = "Error: machines GET: john: Not Found\n\n"
 var machineShowMachineString string = `{
   "Address": "192.168.100.110",
@@ -34,13 +34,13 @@ var machineShowMachineString string = `{
 }
 `
 
-var machineExistsNoArgErrorString string = "Error: drpcli machines exists [id] requires 1 argument"
-var machineExistsTooManyArgErrorString string = "Error: drpcli machines exists [id] requires 1 argument"
+var machineExistsNoArgErrorString string = "Error: drpcli machines exists [id] [flags] requires 1 argument"
+var machineExistsTooManyArgErrorString string = "Error: drpcli machines exists [id] [flags] requires 1 argument"
 var machineExistsMachineString string = ""
 var machineExistsMissingJohnString string = "Error: machines GET: john: Not Found\n\n"
 
-var machineCreateNoArgErrorString string = "Error: drpcli machines create [json] requires 1 argument\n"
-var machineCreateTooManyArgErrorString string = "Error: drpcli machines create [json] requires 1 argument\n"
+var machineCreateNoArgErrorString string = "Error: drpcli machines create [json] [flags] requires 1 argument\n"
+var machineCreateTooManyArgErrorString string = "Error: drpcli machines create [json] [flags] requires 1 argument\n"
 var machineCreateBadJSONString = "{asdgasdg"
 var machineCreateBadJSONErrorString = "Error: Invalid machine object: error converting YAML to JSON: yaml: line 1: did not find expected ',' or '}' and error converting YAML to JSON: yaml: line 1: did not find expected ',' or '}'\n\n"
 var machineCreateBadJSON2String = "[asdgasdg]"
@@ -90,8 +90,8 @@ var machineListMachinesString = `[
 ]
 `
 
-var machineUpdateNoArgErrorString string = "Error: drpcli machines update [id] [json] requires 2 arguments"
-var machineUpdateTooManyArgErrorString string = "Error: drpcli machines update [id] [json] requires 2 arguments"
+var machineUpdateNoArgErrorString string = "Error: drpcli machines update [id] [json] [flags] requires 2 arguments"
+var machineUpdateTooManyArgErrorString string = "Error: drpcli machines update [id] [json] [flags] requires 2 arguments"
 var machineUpdateBadJSONString = "asdgasdg"
 var machineUpdateBadJSONErrorString = "Error: Unable to merge objects: json: cannot unmarshal string into Go value of type map[string]interface {}\n\n\n"
 var machineUpdateInputString string = `{
@@ -117,12 +117,12 @@ var machineUpdateJohnString string = `{
 `
 var machineUpdateJohnMissingErrorString string = "Error: machines GET: john2: Not Found\n\n"
 
-var machinePatchNoArgErrorString string = "Error: drpcli machines patch [objectJson] [changesJson] requires 2 arguments"
-var machinePatchTooManyArgErrorString string = "Error: drpcli machines patch [objectJson] [changesJson] requires 2 arguments"
+var machinePatchNoArgErrorString string = "Error: drpcli machines patch [objectJson] [changesJson] [flags] requires 2 arguments"
+var machinePatchTooManyArgErrorString string = "Error: drpcli machines patch [objectJson] [changesJson] [flags] requires 2 arguments"
 var machinePatchBadPatchJSONString = "asdgasdg"
-var machinePatchBadPatchJSONErrorString = "Error: Unable to parse drpcli machines patch [objectJson] [changesJson] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Machine\n\n"
+var machinePatchBadPatchJSONErrorString = "Error: Unable to parse drpcli machines patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Machine\n\n"
 var machinePatchBadBaseJSONString = "asdgasdg"
-var machinePatchBadBaseJSONErrorString = "Error: Unable to parse drpcli machines patch [objectJson] [changesJson] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Machine\n\n"
+var machinePatchBadBaseJSONErrorString = "Error: Unable to parse drpcli machines patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Machine\n\n"
 var machinePatchBaseString string = `{
   "Address": "192.168.100.110",
   "BootEnv": "local",
@@ -293,22 +293,22 @@ var machineRemoveProfileAllGone2String string = `{
 }
 `
 
-var machineDestroyNoArgErrorString string = "Error: drpcli machines destroy [id] requires 1 argument"
-var machineDestroyTooManyArgErrorString string = "Error: drpcli machines destroy [id] requires 1 argument"
+var machineDestroyNoArgErrorString string = "Error: drpcli machines destroy [id] [flags] requires 1 argument"
+var machineDestroyTooManyArgErrorString string = "Error: drpcli machines destroy [id] [flags] requires 1 argument"
 var machineDestroyJohnString string = "Deleted machine 3e7031fe-3062-45f1-835c-92541bc9cbd3\n"
 var machineDestroyMissingJohnString string = "Error: machines: DELETE 3e7031fe-3062-45f1-835c-92541bc9cbd3: Not Found\n\n"
 
-var machineBootEnvNoArgErrorString string = "Error: drpcli machines bootenv [id] [bootenv] requires 2 arguments"
+var machineBootEnvNoArgErrorString string = "Error: drpcli machines bootenv [id] [bootenv] [flags] requires 2 arguments"
 var machineBootEnvMissingMachineErrorString string = "Error: machines GET: john: Not Found\n\n"
 var machineBootEnvErrorBootEnvString string = "Error: Bootenv john2 does not exist\n\n"
 
-var machineGetNoArgErrorString string = "Error: drpcli machines get [id] param [key] requires 3 arguments"
+var machineGetNoArgErrorString string = "Error: drpcli machines get [id] param [key] [flags] requires 3 arguments"
 var machineGetMissingMachineErrorString string = "Error: machines GET Params: john: Not Found\n\n"
 
-var machineSetNoArgErrorString string = "Error: drpcli machines set [id] param [key] to [json blob] requires 5 arguments"
+var machineSetNoArgErrorString string = "Error: drpcli machines set [id] param [key] to [json blob] [flags] requires 5 arguments"
 var machineSetMissingMachineErrorString string = "Error: machines GET Params: john: Not Found\n\n"
 
-var machineParamsNoArgErrorString string = "Error: drpcli machines params [id] [json] requires 1 or 2 arguments\n"
+var machineParamsNoArgErrorString string = "Error: drpcli machines params [id] [json] [flags] requires 1 or 2 arguments\n"
 var machineParamsMissingMachineErrorString string = "Error: machines GET Params: john2: Not Found\n\n"
 var machinesParamsSetMissingMachineString string = "Error: machines SET Params: john2: Not Found\n\n"
 
@@ -365,8 +365,8 @@ var machineProfileJamieUpdate string = `{
 }
 `
 
-var machineActionsNoArgErrorString string = "Error: drpcli machines actions [id] requires 1 argument"
-var machineActionNoArgErrorString string = "Error: drpcli machines action [id] [action] requires 2 argument"
+var machineActionsNoArgErrorString string = "Error: drpcli machines actions [id] [flags] requires 1 argument"
+var machineActionNoArgErrorString string = "Error: drpcli machines action [id] [action] [flags] requires 2 argument"
 var machineActionsMissingMachineErrorString string = "Error: machines Actions Get: john: Not Found\n\n"
 var machineActionMissingMachineErrorString string = "Error: machines Action Get: john: Not Found\n\n"
 var machineActionMissingActionErrorString string = "Error: machines Call Action: action command: Not Found\n\n"
@@ -662,8 +662,8 @@ var machineUpdateLocalJamieString string = `{
 `
 var machineBadBoolString string = "Error: Runnable must be true or false\n\n"
 
-var machineWaitNoArgErrorString = "Error: drpcli machines wait [id] [field] [value] [timeout] requires at least 3 arguments\n"
-var machineWaitTooManyArgErrorString = "Error: drpcli machines wait [id] [field] [value] [timeout] requires at most 4 arguments\n"
+var machineWaitNoArgErrorString = "Error: drpcli machines wait [id] [field] [value] [timeout] [flags] requires at least 3 arguments\n"
+var machineWaitTooManyArgErrorString = "Error: drpcli machines wait [id] [field] [value] [timeout] [flags] requires at most 4 arguments\n"
 var machineWaitBadTimeoutErrorString = "Error: strconv.ParseInt: parsing \"jk\": invalid syntax\n\n"
 var machineWaitMissingMachineErrorString = "Error: machines GET: jk: Not Found\n\n"
 var machineWaitBadBoolErrorString = "Error: strconv.ParseBool: parsing \"fred\": invalid syntax\n\n"

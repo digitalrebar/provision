@@ -9,7 +9,7 @@ import (
 	"github.com/digitalrebar/provision/models"
 )
 
-var infoGetTooManyArgsErrorString string = "Error: drpcli info get requires no arguments"
+var infoGetTooManyArgsErrorString string = "Error: drpcli info get [flags] requires no arguments"
 
 func TestInfoCli(t *testing.T) {
 	// Since this data is dynamic, we will test errors here.

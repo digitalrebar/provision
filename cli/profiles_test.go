@@ -14,8 +14,8 @@ var profileDefaultListString string = `[
 
 var profileEmptyListString string = "[]\n"
 
-var profileShowNoArgErrorString string = "Error: drpcli profiles show [id] requires 1 argument\n"
-var profileShowTooManyArgErrorString string = "Error: drpcli profiles show [id] requires 1 argument\n"
+var profileShowNoArgErrorString string = "Error: drpcli profiles show [id] [flags] requires 1 argument\n"
+var profileShowTooManyArgErrorString string = "Error: drpcli profiles show [id] [flags] requires 1 argument\n"
 var profileShowMissingArgErrorString string = "Error: profiles GET: john2: Not Found\n\n"
 var profileShowProfileString string = `{
   "Name": "john",
@@ -26,13 +26,13 @@ var profileShowProfileString string = `{
 }
 `
 
-var profileExistsNoArgErrorString string = "Error: drpcli profiles exists [id] requires 1 argument"
-var profileExistsTooManyArgErrorString string = "Error: drpcli profiles exists [id] requires 1 argument"
+var profileExistsNoArgErrorString string = "Error: drpcli profiles exists [id] [flags] requires 1 argument"
+var profileExistsTooManyArgErrorString string = "Error: drpcli profiles exists [id] [flags] requires 1 argument"
 var profileExistsProfileString string = ""
 var profileExistsMissingJohnString string = "Error: profiles GET: john2: Not Found\n\n"
 
-var profileCreateNoArgErrorString string = "Error: drpcli profiles create [json] requires 1 argument\n"
-var profileCreateTooManyArgErrorString string = "Error: drpcli profiles create [json] requires 1 argument\n"
+var profileCreateNoArgErrorString string = "Error: drpcli profiles create [json] [flags] requires 1 argument\n"
+var profileCreateTooManyArgErrorString string = "Error: drpcli profiles create [json] [flags] requires 1 argument\n"
 var profileCreateBadJSONString = "{asdgasdg"
 var profileCreateBadJSONErrorString = "Error: Invalid profile object: error converting YAML to JSON: yaml: line 1: did not find expected ',' or '}' and error converting YAML to JSON: yaml: line 1: did not find expected ',' or '}'\n\n"
 var profileCreateBadJSON2String = "[asdgasdg]"
@@ -79,8 +79,8 @@ var profileListJohnOnlyString = `[
 ]
 `
 
-var profileUpdateNoArgErrorString string = "Error: drpcli profiles update [id] [json] requires 2 arguments"
-var profileUpdateTooManyArgErrorString string = "Error: drpcli profiles update [id] [json] requires 2 arguments"
+var profileUpdateNoArgErrorString string = "Error: drpcli profiles update [id] [json] [flags] requires 2 arguments"
+var profileUpdateTooManyArgErrorString string = "Error: drpcli profiles update [id] [json] [flags] requires 2 arguments"
 var profileUpdateBadJSONString = "asdgasdg"
 var profileUpdateBadJSONErrorString = "Error: Unable to merge objects: json: cannot unmarshal string into Go value of type map[string]interface {}\n\n\n"
 var profileUpdateInputString string = `{
@@ -100,12 +100,12 @@ var profileUpdateJohnString string = `{
 `
 var profileUpdateJohnMissingErrorString string = "Error: profiles GET: john2: Not Found\n\n"
 
-var profilePatchNoArgErrorString string = "Error: drpcli profiles patch [objectJson] [changesJson] requires 2 arguments"
-var profilePatchTooManyArgErrorString string = "Error: drpcli profiles patch [objectJson] [changesJson] requires 2 arguments"
+var profilePatchNoArgErrorString string = "Error: drpcli profiles patch [objectJson] [changesJson] [flags] requires 2 arguments"
+var profilePatchTooManyArgErrorString string = "Error: drpcli profiles patch [objectJson] [changesJson] [flags] requires 2 arguments"
 var profilePatchBadPatchJSONString = "asdgasdg"
-var profilePatchBadPatchJSONErrorString = "Error: Unable to parse drpcli profiles patch [objectJson] [changesJson] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Profile\n\n"
+var profilePatchBadPatchJSONErrorString = "Error: Unable to parse drpcli profiles patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Profile\n\n"
 var profilePatchBadBaseJSONString = "asdgasdg"
-var profilePatchBadBaseJSONErrorString = "Error: Unable to parse drpcli profiles patch [objectJson] [changesJson] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Profile\n\n"
+var profilePatchBadBaseJSONErrorString = "Error: Unable to parse drpcli profiles patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Profile\n\n"
 var profilePatchBaseString string = `{
   "Name": "john",
   "Params": {
@@ -141,21 +141,21 @@ var profilePatchMissingBaseString string = `{
 `
 var profilePatchJohnMissingErrorString string = "Error: profiles: PATCH john2: Not Found\n\n"
 
-var profileDestroyNoArgErrorString string = "Error: drpcli profiles destroy [id] requires 1 argument"
-var profileDestroyTooManyArgErrorString string = "Error: drpcli profiles destroy [id] requires 1 argument"
+var profileDestroyNoArgErrorString string = "Error: drpcli profiles destroy [id] [flags] requires 1 argument"
+var profileDestroyTooManyArgErrorString string = "Error: drpcli profiles destroy [id] [flags] requires 1 argument"
 var profileDestroyJohnString string = "Deleted profile john\n"
 var profileDestroyMissingJohnString string = "Error: profiles: DELETE john: Not Found\n\n"
 
-var profileBootEnvNoArgErrorString string = "Error: drpcli profiles bootenv [id] [bootenv] requires 2 arguments"
+var profileBootEnvNoArgErrorString string = "Error: drpcli profiles bootenv [id] [bootenv] [flags] requires 2 arguments"
 var profileBootEnvMissingProfileErrorString string = "Error: profiles GET: john: Not Found\n\n"
 
-var profileGetNoArgErrorString string = "Error: drpcli profiles get [id] param [key] requires 3 arguments"
+var profileGetNoArgErrorString string = "Error: drpcli profiles get [id] param [key] [flags] requires 3 arguments"
 var profileGetMissingProfileErrorString string = "Error: profiles GET Params: john2: Not Found\n\n"
 
-var profileSetNoArgErrorString string = "Error: drpcli profiles set [id] param [key] to [json blob] requires 5 arguments"
+var profileSetNoArgErrorString string = "Error: drpcli profiles set [id] param [key] to [json blob] [flags] requires 5 arguments"
 var profileSetMissingProfileErrorString string = "Error: profiles GET Params: john2: Not Found\n\n"
 
-var profileParamsNoArgErrorString string = "Error: drpcli profiles params [id] [json] requires 1 or 2 arguments\n"
+var profileParamsNoArgErrorString string = "Error: drpcli profiles params [id] [json] [flags] requires 1 or 2 arguments\n"
 var profileParamsMissingProfileErrorString string = "Error: profiles GET Params: john2: Not Found\n\n"
 var profilesParamsSetMissingProfileString string = "Error: profiles SET Params: john2: Not Found\n\n"
 

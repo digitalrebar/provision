@@ -182,8 +182,8 @@ var jobLocalUpdateString string = `{
 }
 `
 
-var jobCreateNoArgErrorString string = "Error: drpcli jobs create [json] requires 1 argument"
-var jobCreateTooManyArgErrorString string = "Error: drpcli jobs create [json] requires 1 argument"
+var jobCreateNoArgErrorString string = "Error: drpcli jobs create [json] [flags] requires 1 argument"
+var jobCreateTooManyArgErrorString string = "Error: drpcli jobs create [json] [flags] requires 1 argument"
 var jobCreateBadJSONErrorString string = "Error: Invalid job object: error converting YAML to JSON: yaml: line 1: did not find expected ',' or '}' and error converting YAML to JSON: yaml: line 1: did not find expected ',' or '}'\n\n"
 var jobCreateBadJSON2ErrorString string = "Error: Unable to create new job: Invalid type passed to job create\n\n"
 
@@ -247,8 +247,8 @@ var jobListJobsString string = `RE:
 
 var jobCreateJobAlreadyRunningErrorString string = "Error: Machine 3e7031fe-3062-45f1-835c-92541bc9cbd3 already has running or created job\n\n"
 
-var jobShowNoArgErrorString string = "Error: drpcli jobs show [id] requires 1 argument"
-var jobShowTooManyArgErrorString string = "Error: drpcli jobs show [id] requires 1 argument"
+var jobShowNoArgErrorString string = "Error: drpcli jobs show [id] [flags] requires 1 argument"
+var jobShowTooManyArgErrorString string = "Error: drpcli jobs show [id] [flags] requires 1 argument"
 var jobShowMissingArgErrorString string = "Error: jobs GET: john: Not Found\n\n"
 var jobShowJobString string = `RE:
 {
@@ -264,8 +264,8 @@ var jobShowJobString string = `RE:
   "Uuid": "00000000-0000-0000-0000-000000000001"
 }
 `
-var jobExistsNoArgErrorString string = "Error: drpcli jobs exists [id] requires 1 argument"
-var jobExistsTooManyArgErrorString string = "Error: drpcli jobs exists [id] requires 1 argument"
+var jobExistsNoArgErrorString string = "Error: drpcli jobs exists [id] [flags] requires 1 argument"
+var jobExistsTooManyArgErrorString string = "Error: drpcli jobs exists [id] [flags] requires 1 argument"
 var jobExistsJobString string = ""
 var jobExistsMissingJohnString string = "Error: jobs GET: john: Not Found\n\n"
 
@@ -274,8 +274,8 @@ var jobDestroyBadString string = "Error: Jobs 00000000-0000-0000-0000-0000000000
 var jobBadTimeFormatString string = "Error: parsing time \"fred\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"fred\" as \"2006\"\n\n"
 var jobCreateJobInvalidMachineNameErrorString string = "Error: Unable to create new job: Invalid machine name passed to job create: james\n\n"
 
-var jobUpdateNoArgErrorString string = "Error: drpcli jobs update [id] [json] requires 2 arguments\n"
-var jobUpdateTooManyArgErrorString string = "Error: drpcli jobs update [id] [json] requires 2 arguments\n"
+var jobUpdateNoArgErrorString string = "Error: drpcli jobs update [id] [json] [flags] requires 2 arguments\n"
+var jobUpdateTooManyArgErrorString string = "Error: drpcli jobs update [id] [json] [flags] requires 2 arguments\n"
 
 var jobShowMachineJohnString string = `{
   "Address": "192.168.100.110",
@@ -323,8 +323,8 @@ var jobUpdateJohnString string = `RE:
 
 var jobUpdateJohnMissingErrorString string = "Error: jobs GET: john2: Not Found\n\n"
 
-var jobPatchNoArgErrorString string = "Error: drpcli jobs patch [objectJson] [changesJson] requires 2 arguments\n"
-var jobPatchTooManyArgErrorString = "Error: drpcli jobs patch [objectJson] [changesJson] requires 2 arguments\n"
+var jobPatchNoArgErrorString string = "Error: drpcli jobs patch [objectJson] [changesJson] [flags] requires 2 arguments\n"
+var jobPatchTooManyArgErrorString = "Error: drpcli jobs patch [objectJson] [changesJson] [flags] requires 2 arguments\n"
 var jobPatchBaseString = `{
   "Archived": false,
   "BootEnv": "local",
@@ -346,13 +346,13 @@ var jobPatchBase2String = `{
 }
 `
 var jobPatchBadPatchJSONString = "{asdgasdg"
-var jobPatchBadPatchJSONErrorString = "Error: Unable to parse drpcli jobs patch [objectJson] [changesJson] JSON {asdgasdg\nError: error converting YAML to JSON: yaml: line 1: did not find expected ',' or '}'\n\n"
+var jobPatchBadPatchJSONErrorString = "Error: Unable to parse drpcli jobs patch [objectJson] [changesJson] [flags] JSON {asdgasdg\nError: error converting YAML to JSON: yaml: line 1: did not find expected ',' or '}'\n\n"
 
 var jobPatchBadPatchJSON2String = "[ \"asdgasdg\" ]"
-var jobPatchBadPatchJSON2ErrorString = "Error: Unable to parse drpcli jobs patch [objectJson] [changesJson] JSON [ \"asdgasdg\" ]\nError: error unmarshaling JSON: json: cannot unmarshal array into Go value of type models.Job\n\n"
+var jobPatchBadPatchJSON2ErrorString = "Error: Unable to parse drpcli jobs patch [objectJson] [changesJson] [flags] JSON [ \"asdgasdg\" ]\nError: error unmarshaling JSON: json: cannot unmarshal array into Go value of type models.Job\n\n"
 
 var jobPatchBadBaseJSONString = "{ badbase"
-var jobPatchBadBaseJSONErrorString = "Error: Unable to parse drpcli jobs patch [objectJson] [changesJson] JSON { badbase\nError: error converting YAML to JSON: yaml: line 1: did not find expected ',' or '}'\n\n"
+var jobPatchBadBaseJSONErrorString = "Error: Unable to parse drpcli jobs patch [objectJson] [changesJson] [flags] JSON { badbase\nError: error converting YAML to JSON: yaml: line 1: did not find expected ',' or '}'\n\n"
 
 var jobPatchBadInputString = "{ \"State\": \"fred\"}"
 var jobPatchBadInputErrorString = "Error: Jobs 00000000-0000-0000-0000-000000000001 wants State fred, which is not valid\n\n"
@@ -572,16 +572,16 @@ var jobFullListString = `RE:
   }
 ]
 `
-var jobDestroyNoArgErrorString = "Error: drpcli jobs destroy [id] requires 1 argument\n"
-var jobDestroyTooManyArgErrorString = "Error: drpcli jobs destroy [id] requires 1 argument\n"
+var jobDestroyNoArgErrorString = "Error: drpcli jobs destroy [id] [flags] requires 1 argument\n"
+var jobDestroyTooManyArgErrorString = "Error: drpcli jobs destroy [id] [flags] requires 1 argument\n"
 var jobDestroyMissingJohnString = "Error: jobs: DELETE 3e7031fe-3062-45f1-835c-92541bc9cbd3: Not Found\n\n"
 var jobDestroy001String = "Deleted job 00000000-0000-0000-0000-000000000001\n"
 var jobDestroy002String = "Deleted job 00000000-0000-0000-0000-000000000002\n"
 var jobDestroy003String = "Deleted job 00000000-0000-0000-0000-000000000003\n"
 var jobDestroy004String = "Deleted job 00000000-0000-0000-0000-000000000004\n"
 
-var jobActionsNoArgErrorString = "Error: drpcli jobs actions [id] requires 1 argument\n"
-var jobActionsTooManyArgErrorString = "Error: drpcli jobs actions [id] requires 1 argument\n"
+var jobActionsNoArgErrorString = "Error: drpcli jobs actions [id] [flags] requires 1 argument\n"
+var jobActionsTooManyArgErrorString = "Error: drpcli jobs actions [id] [flags] requires 1 argument\n"
 var jobActionsMissingJobErrorString = "Error: Job john does not exist\n\n"
 var jobActionsRenderedTask1String = "[]\n"
 var jobActionsRenderedTask2String = `[
@@ -595,8 +595,8 @@ var jobActionsRenderedTask2String = `[
 var jobActionsMissingMachineRenderErrorString = "Error: Machine 3e7031fe-3062-45f1-835c-92541bc9cbd3 does not exist\n\n"
 var jobActionsMissingTaskRenderErrorString = "Error: Task task2 does not exist\n\n"
 
-var jobLogNoArgErrorString = "Error: drpcli jobs log [id] [- or string] requires at least 1 argument\n"
-var jobLogTooManyArgsErrorString = "Error: drpcli jobs log [id] [- or string] requires at most 2 arguments\n"
+var jobLogNoArgErrorString = "Error: drpcli jobs log [id] [- or string] [flags] requires at least 1 argument\n"
+var jobLogTooManyArgsErrorString = "Error: drpcli jobs log [id] [- or string] [flags] requires at most 2 arguments\n"
 var jobLogUnknownJobErrorString = "Error: Job john does not exist\n\n"
 
 func TestJobCli(t *testing.T) {
