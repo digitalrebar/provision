@@ -95,3 +95,12 @@ Leases
 Leases show individual links between tokens and addresses, created through reservation or subnet strategies. Leases remain valid for short periods of time, and cannot be edited. 
 
 The expiration time of each lease is visible through the UI. Once a lease has expired, it may be removed.
+
+.. _rs_ui_tasks:
+
+Tasks
+-----
+
+During the boot process, tasks provide additional configuration to machines in the form of templates. BootEnvs will use these sets of templates to construct specific jobs for a machine.
+
+Within a task, templates are processed in the order they are assigned, so it's important to check that templates are attached correctly to a task.
