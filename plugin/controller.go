@@ -277,7 +277,7 @@ func (pc *PluginController) startPlugin(d backend.Stores, plugin *backend.Plugin
 				if pobj != nil {
 					rp := pobj.(*backend.Param)
 
-					if ev := rp.Validate(obj); ev != nil {
+					if ev := rp.ValidateValue(obj); ev != nil {
 						errors = append(errors, ev.Error())
 					}
 				}
@@ -290,7 +290,7 @@ func (pc *PluginController) startPlugin(d backend.Stores, plugin *backend.Plugin
 				if pobj != nil {
 					rp := pobj.(*backend.Param)
 
-					if ev := rp.Validate(obj); ev != nil {
+					if ev := rp.ValidateValue(obj); ev != nil {
 						errors = append(errors, ev.Error())
 					}
 				}
