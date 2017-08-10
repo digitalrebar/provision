@@ -104,3 +104,12 @@ Tasks
 During the boot process, tasks provide additional configuration to machines in the form of templates. BootEnvs will use these sets of templates to construct specific jobs for a machine.
 
 Within a task, templates are processed in the order they are assigned, so it's important to check that templates are attached correctly to a task.
+
+.. _rs_ui_jobs:
+
+Jobs
+-----
+
+A job defines a machine's current step in its boot process. After completing a job, the machine creates a new job from the next instruction in the machine's task list. 
+
+Machines will only process one job at a time, and jobs aren't created until the instant they are required.
