@@ -6,12 +6,12 @@ import (
 	"time"
 )
 
-var plugin_providerShowNoArgErrorString string = "Error: drpcli plugin_providers show [id] requires 1 argument\n"
-var plugin_providerShowTooManyArgErrorString string = "Error: drpcli plugin_providers show [id] requires 1 argument\n"
+var plugin_providerShowNoArgErrorString string = "Error: drpcli plugin_providers show [id] [flags] requires 1 argument\n"
+var plugin_providerShowTooManyArgErrorString string = "Error: drpcli plugin_providers show [id] [flags] requires 1 argument\n"
 var plugin_providerShowMissingArgErrorString string = "Error: plugin provider get: not found: john\n\n"
 
-var plugin_providerExistsNoArgErrorString string = "Error: drpcli plugin_providers exists [id] requires 1 argument"
-var plugin_providerExistsTooManyArgErrorString string = "Error: drpcli plugin_providers exists [id] requires 1 argument"
+var plugin_providerExistsNoArgErrorString string = "Error: drpcli plugin_providers exists [id] [flags] requires 1 argument"
+var plugin_providerExistsTooManyArgErrorString string = "Error: drpcli plugin_providers exists [id] [flags] requires 1 argument"
 var plugin_providerExistsIgnoreString string = ""
 var plugin_providerExistsMissingJohnString string = "Error: plugin provider get: not found: john\n\n"
 
@@ -119,8 +119,8 @@ var plugin_providerUploadSuccessString = `RE:
 }
 `
 
-var plugin_providerDestroyNoArgErrorString = "Error: drpcli plugin_providers destroy [id] requires 1 argument\n"
-var plugin_providerDestroyTooManyArgErrorString = "Error: drpcli plugin_providers destroy [id] requires 1 argument\n"
+var plugin_providerDestroyNoArgErrorString = "Error: drpcli plugin_providers destroy [id] [flags] requires 1 argument\n"
+var plugin_providerDestroyTooManyArgErrorString = "Error: drpcli plugin_providers destroy [id] [flags] requires 1 argument\n"
 var plugin_providerDestroyMissingArgErrorString = "Error: delete: unable to delete john\n\n"
 var plugin_providerUploadNoArgErrorString = "Error: Wrong number of args: expected 3, got 0\n"
 var plugin_providerUploadTooFewArgErrorString = "Error: Wrong number of args: expected 3, got 1\n"

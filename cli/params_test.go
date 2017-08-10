@@ -28,8 +28,8 @@ var paramDefaultListString string = `[
 
 var paramEmptyListString string = "[]\n"
 
-var paramShowNoArgErrorString string = "Error: drpcli params show [id] requires 1 argument\n"
-var paramShowTooManyArgErrorString string = "Error: drpcli params show [id] requires 1 argument\n"
+var paramShowNoArgErrorString string = "Error: drpcli params show [id] [flags] requires 1 argument\n"
+var paramShowTooManyArgErrorString string = "Error: drpcli params show [id] [flags] requires 1 argument\n"
 var paramShowMissingArgErrorString string = "Error: params GET: john2: Not Found\n\n"
 var paramShowParamString string = `{
   "Name": "john",
@@ -39,13 +39,13 @@ var paramShowParamString string = `{
 }
 `
 
-var paramExistsNoArgErrorString string = "Error: drpcli params exists [id] requires 1 argument"
-var paramExistsTooManyArgErrorString string = "Error: drpcli params exists [id] requires 1 argument"
+var paramExistsNoArgErrorString string = "Error: drpcli params exists [id] [flags] requires 1 argument"
+var paramExistsTooManyArgErrorString string = "Error: drpcli params exists [id] [flags] requires 1 argument"
 var paramExistsParamString string = ""
 var paramExistsMissingJohnString string = "Error: params GET: john2: Not Found\n\n"
 
-var paramCreateNoArgErrorString string = "Error: drpcli params create [json] requires 1 argument\n"
-var paramCreateTooManyArgErrorString string = "Error: drpcli params create [json] requires 1 argument\n"
+var paramCreateNoArgErrorString string = "Error: drpcli params create [json] [flags] requires 1 argument\n"
+var paramCreateTooManyArgErrorString string = "Error: drpcli params create [json] [flags] requires 1 argument\n"
 var paramCreateBadJSONString = "{asdgasdg"
 var paramCreateBadJSONErrorString = "Error: Invalid param object: error converting YAML to JSON: yaml: line 1: did not find expected ',' or '}' and error converting YAML to JSON: yaml: line 1: did not find expected ',' or '}'\n\n"
 var paramCreateBadJSON2String = "[asdgasdg]"
@@ -103,8 +103,8 @@ var paramListJohnOnlyString = `[
 ]
 `
 
-var paramUpdateNoArgErrorString string = "Error: drpcli params update [id] [json] requires 2 arguments"
-var paramUpdateTooManyArgErrorString string = "Error: drpcli params update [id] [json] requires 2 arguments"
+var paramUpdateNoArgErrorString string = "Error: drpcli params update [id] [json] [flags] requires 2 arguments"
+var paramUpdateTooManyArgErrorString string = "Error: drpcli params update [id] [json] [flags] requires 2 arguments"
 var paramUpdateBadJSONString = "asdgasdg"
 var paramUpdateBadJSONErrorString = "Error: Unable to merge objects: json: cannot unmarshal string into Go value of type map[string]interface {}\n\n\n"
 var paramUpdateInputString string = `{
@@ -122,12 +122,12 @@ var paramUpdateJohnString string = `{
 `
 var paramUpdateJohnMissingErrorString string = "Error: params GET: john2: Not Found\n\n"
 
-var paramPatchNoArgErrorString string = "Error: drpcli params patch [objectJson] [changesJson] requires 2 arguments"
-var paramPatchTooManyArgErrorString string = "Error: drpcli params patch [objectJson] [changesJson] requires 2 arguments"
+var paramPatchNoArgErrorString string = "Error: drpcli params patch [objectJson] [changesJson] [flags] requires 2 arguments"
+var paramPatchTooManyArgErrorString string = "Error: drpcli params patch [objectJson] [changesJson] [flags] requires 2 arguments"
 var paramPatchBadPatchJSONString = "asdgasdg"
-var paramPatchBadPatchJSONErrorString = "Error: Unable to parse drpcli params patch [objectJson] [changesJson] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Param\n\n"
+var paramPatchBadPatchJSONErrorString = "Error: Unable to parse drpcli params patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Param\n\n"
 var paramPatchBadBaseJSONString = "asdgasdg"
-var paramPatchBadBaseJSONErrorString = "Error: Unable to parse drpcli params patch [objectJson] [changesJson] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Param\n\n"
+var paramPatchBadBaseJSONErrorString = "Error: Unable to parse drpcli params patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Param\n\n"
 var paramPatchBaseString string = `{
   "Name": "john",
   "Schema": {
@@ -154,15 +154,15 @@ var paramPatchMissingBaseString string = `{
 `
 var paramPatchJohnMissingErrorString string = "Error: params: PATCH john2: Not Found\n\n"
 
-var paramDestroyNoArgErrorString string = "Error: drpcli params destroy [id] requires 1 argument"
-var paramDestroyTooManyArgErrorString string = "Error: drpcli params destroy [id] requires 1 argument"
+var paramDestroyNoArgErrorString string = "Error: drpcli params destroy [id] [flags] requires 1 argument"
+var paramDestroyTooManyArgErrorString string = "Error: drpcli params destroy [id] [flags] requires 1 argument"
 var paramDestroyJohnString string = "Deleted param john\n"
 var paramDestroyMissingJohnString string = "Error: params: DELETE john: Not Found\n\n"
 
-var paramBootEnvNoArgErrorString string = "Error: drpcli params bootenv [id] [bootenv] requires 2 arguments"
+var paramBootEnvNoArgErrorString string = "Error: drpcli params bootenv [id] [bootenv] [flags] requires 2 arguments"
 var paramBootEnvMissingParamErrorString string = "Error: params GET: john: Not Found\n\n"
 
-var paramGetNoArgErrorString string = "Error: drpcli params get [id] param [key] requires 3 arguments"
+var paramGetNoArgErrorString string = "Error: drpcli params get [id] param [key] [flags] requires 3 arguments"
 var paramGetMissingParamErrorString string = "Error: params GET Params: john2: Not Found\n\n"
 
 func TestParamCli(t *testing.T) {

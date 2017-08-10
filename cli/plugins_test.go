@@ -7,8 +7,8 @@ import (
 var pluginEmptyListString string = "[]\n"
 var pluginDefaultListString string = "[]\n"
 
-var pluginShowNoArgErrorString string = "Error: drpcli plugins show [id] requires 1 argument\n"
-var pluginShowTooManyArgErrorString string = "Error: drpcli plugins show [id] requires 1 argument\n"
+var pluginShowNoArgErrorString string = "Error: drpcli plugins show [id] [flags] requires 1 argument\n"
+var pluginShowTooManyArgErrorString string = "Error: drpcli plugins show [id] [flags] requires 1 argument\n"
 var pluginShowMissingArgErrorString string = "Error: plugins GET: john: Not Found\n\n"
 var pluginShowPluginString string = `{
   "Errors": null,
@@ -17,13 +17,13 @@ var pluginShowPluginString string = `{
 }
 `
 
-var pluginExistsNoArgErrorString string = "Error: drpcli plugins exists [id] requires 1 argument"
-var pluginExistsTooManyArgErrorString string = "Error: drpcli plugins exists [id] requires 1 argument"
+var pluginExistsNoArgErrorString string = "Error: drpcli plugins exists [id] [flags] requires 1 argument"
+var pluginExistsTooManyArgErrorString string = "Error: drpcli plugins exists [id] [flags] requires 1 argument"
 var pluginExistsPluginString string = ""
 var pluginExistsMissingJohnString string = "Error: plugins GET: john: Not Found\n\n"
 
-var pluginCreateNoArgErrorString string = "Error: drpcli plugins create [json] requires 1 argument\n"
-var pluginCreateTooManyArgErrorString string = "Error: drpcli plugins create [json] requires 1 argument\n"
+var pluginCreateNoArgErrorString string = "Error: drpcli plugins create [json] [flags] requires 1 argument\n"
+var pluginCreateTooManyArgErrorString string = "Error: drpcli plugins create [json] [flags] requires 1 argument\n"
 var pluginCreateBadJSONString = "{asdgasdg"
 var pluginCreateBadJSONErrorString = "Error: Invalid plugin object: error converting YAML to JSON: yaml: line 1: did not find expected ',' or '}' and error converting YAML to JSON: yaml: line 1: did not find expected ',' or '}'\n\n"
 var pluginCreateBadJSON2String = "[asdgasdg]"
@@ -61,8 +61,8 @@ var pluginListPluginsString = `[
 ]
 `
 
-var pluginUpdateNoArgErrorString string = "Error: drpcli plugins update [id] [json] requires 2 arguments"
-var pluginUpdateTooManyArgErrorString string = "Error: drpcli plugins update [id] [json] requires 2 arguments"
+var pluginUpdateNoArgErrorString string = "Error: drpcli plugins update [id] [json] [flags] requires 2 arguments"
+var pluginUpdateTooManyArgErrorString string = "Error: drpcli plugins update [id] [json] [flags] requires 2 arguments"
 var pluginUpdateBadJSONString = "asdgasdg"
 var pluginUpdateBadJSONErrorString = "Error: Unable to merge objects: json: cannot unmarshal string into Go value of type map[string]interface {}\n\n\n"
 var pluginUpdateInputString string = `{
@@ -78,12 +78,12 @@ var pluginUpdateJohnString string = `{
 `
 var pluginUpdateJohnMissingErrorString string = "Error: plugins GET: john2: Not Found\n\n"
 
-var pluginPatchNoArgErrorString string = "Error: drpcli plugins patch [objectJson] [changesJson] requires 2 arguments"
-var pluginPatchTooManyArgErrorString string = "Error: drpcli plugins patch [objectJson] [changesJson] requires 2 arguments"
+var pluginPatchNoArgErrorString string = "Error: drpcli plugins patch [objectJson] [changesJson] [flags] requires 2 arguments"
+var pluginPatchTooManyArgErrorString string = "Error: drpcli plugins patch [objectJson] [changesJson] [flags] requires 2 arguments"
 var pluginPatchBadPatchJSONString = "asdgasdg"
-var pluginPatchBadPatchJSONErrorString = "Error: Unable to parse drpcli plugins patch [objectJson] [changesJson] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Plugin\n\n"
+var pluginPatchBadPatchJSONErrorString = "Error: Unable to parse drpcli plugins patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Plugin\n\n"
 var pluginPatchBadBaseJSONString = "asdgasdg"
-var pluginPatchBadBaseJSONErrorString = "Error: Unable to parse drpcli plugins patch [objectJson] [changesJson] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Plugin\n\n"
+var pluginPatchBadBaseJSONErrorString = "Error: Unable to parse drpcli plugins patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Plugin\n\n"
 var pluginPatchBaseString string = `{
   "Description": "lpxelinux.0",
   "Errors": null,
@@ -111,22 +111,22 @@ var pluginPatchMissingBaseString string = `{
 `
 var pluginPatchJohnMissingErrorString string = "Error: plugins: PATCH spider-woman: Not Found\n\n"
 
-var pluginDestroyNoArgErrorString string = "Error: drpcli plugins destroy [id] requires 1 argument"
-var pluginDestroyTooManyArgErrorString string = "Error: drpcli plugins destroy [id] requires 1 argument"
+var pluginDestroyNoArgErrorString string = "Error: drpcli plugins destroy [id] [flags] requires 1 argument"
+var pluginDestroyTooManyArgErrorString string = "Error: drpcli plugins destroy [id] [flags] requires 1 argument"
 var pluginDestroyJohnString string = "Deleted plugin i-woman\n"
 var pluginDestroyMissingJohnString string = "Error: plugins: DELETE i-woman: Not Found\n\n"
 
-var pluginBootEnvNoArgErrorString string = "Error: drpcli plugins bootenv [id] [bootenv] requires 2 arguments"
+var pluginBootEnvNoArgErrorString string = "Error: drpcli plugins bootenv [id] [bootenv] [flags] requires 2 arguments"
 var pluginBootEnvMissingPluginErrorString string = "Error: plugins GET: john: Not Found\n\n"
 var pluginBootEnvErrorBootEnvString string = "Error: Bootenv john2 does not exist\n\n"
 
-var pluginGetNoArgErrorString string = "Error: drpcli plugins get [id] param [key] requires 3 arguments"
+var pluginGetNoArgErrorString string = "Error: drpcli plugins get [id] param [key] [flags] requires 3 arguments"
 var pluginGetMissingPluginErrorString string = "Error: plugins GET Params: john: Not Found\n\n"
 
-var pluginSetNoArgErrorString string = "Error: drpcli plugins set [id] param [key] to [json blob] requires 5 arguments"
+var pluginSetNoArgErrorString string = "Error: drpcli plugins set [id] param [key] to [json blob] [flags] requires 5 arguments"
 var pluginSetMissingPluginErrorString string = "Error: plugins GET Params: john: Not Found\n\n"
 
-var pluginParamsNoArgErrorString string = "Error: drpcli plugins params [id] [json] requires 1 or 2 arguments\n"
+var pluginParamsNoArgErrorString string = "Error: drpcli plugins params [id] [json] [flags] requires 1 or 2 arguments\n"
 var pluginParamsMissingPluginErrorString string = "Error: plugins GET Params: john2: Not Found\n\n"
 var pluginsParamsSetMissingPluginString string = "Error: plugins SET Params: john2: Not Found\n\n"
 

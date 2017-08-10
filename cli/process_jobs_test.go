@@ -152,8 +152,8 @@ var processJobsSetMachineToLocal2OutputString = `{
 }
 `
 
-var processJobsNoArgsString = "Error: drpcli machines processjobs [id] [wait] requires at least 1 argument\n"
-var processJobsTooManyArgsString = "Error: drpcli machines processjobs [id] [wait] requires at most 2 arguments\n"
+var processJobsNoArgsString = "Error: drpcli machines processjobs [id] [wait] [flags] requires at least 1 argument\n"
+var processJobsTooManyArgsString = "Error: drpcli machines processjobs [id] [wait] [flags] requires at most 2 arguments\n"
 var processJobsMissingMachineString = "Error: machines GET: p1: Not Found\n\n"
 var processJobsBadBooleanString = "Error: Error reading wait argument: strconv.ParseBool: parsing \"asga\": invalid syntax\n\n"
 var processJobsNoJobsNoWait = "Processing jobs for 3e7031fe-3062-45f1-835c-92541bc9cbd3 (will not wait for new jobs)\n"

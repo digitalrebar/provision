@@ -12,8 +12,8 @@ var taskExpireTimeErrorString string = "Error: Invalid Address: false\n\n"
 var taskDefaultListString string = "[]\n"
 var taskEmptyListString string = "[]\n"
 
-var taskShowNoArgErrorString string = "Error: drpcli tasks show [id] requires 1 argument\n"
-var taskShowTooManyArgErrorString string = "Error: drpcli tasks show [id] requires 1 argument\n"
+var taskShowNoArgErrorString string = "Error: drpcli tasks show [id] [flags] requires 1 argument\n"
+var taskShowTooManyArgErrorString string = "Error: drpcli tasks show [id] [flags] requires 1 argument\n"
 var taskShowMissingArgErrorString string = "Error: tasks GET: jill: Not Found\n\n"
 var taskShowJohnString string = `{
   "Name": "john",
@@ -23,13 +23,13 @@ var taskShowJohnString string = `{
 }
 `
 
-var taskExistsNoArgErrorString string = "Error: drpcli tasks exists [id] requires 1 argument"
-var taskExistsTooManyArgErrorString string = "Error: drpcli tasks exists [id] requires 1 argument"
+var taskExistsNoArgErrorString string = "Error: drpcli tasks exists [id] [flags] requires 1 argument"
+var taskExistsTooManyArgErrorString string = "Error: drpcli tasks exists [id] [flags] requires 1 argument"
 var taskExistsIgnoreString string = ""
 var taskExistsMissingString string = "Error: tasks GET: jill: Not Found\n\n"
 
-var taskCreateNoArgErrorString string = "Error: drpcli tasks create [json] requires 1 argument\n"
-var taskCreateTooManyArgErrorString string = "Error: drpcli tasks create [json] requires 1 argument\n"
+var taskCreateNoArgErrorString string = "Error: drpcli tasks create [json] [flags] requires 1 argument\n"
+var taskCreateTooManyArgErrorString string = "Error: drpcli tasks create [json] [flags] requires 1 argument\n"
 var taskCreateBadJSONString = "{asdgasdg}"
 var taskCreateBadJSONErrorString = "Error: dataTracker create tasks: Empty key not allowed\n\n"
 var taskCreateInputString string = `{
@@ -67,8 +67,8 @@ var taskListBothEnvsString = `[
 ]
 `
 
-var taskUpdateNoArgErrorString string = "Error: drpcli tasks update [id] [json] requires 2 arguments"
-var taskUpdateTooManyArgErrorString string = "Error: drpcli tasks update [id] [json] requires 2 arguments"
+var taskUpdateNoArgErrorString string = "Error: drpcli tasks update [id] [json] [flags] requires 2 arguments"
+var taskUpdateTooManyArgErrorString string = "Error: drpcli tasks update [id] [json] [flags] requires 2 arguments"
 var taskUpdateBadJSONString = "asdgasdg"
 var taskUpdateBadJSONErrorString = "Error: Unable to merge objects: json: cannot unmarshal string into Go value of type map[string]interface {}\n\n\n"
 var taskUpdateInputString string = `{
@@ -86,12 +86,12 @@ var taskUpdateJohnString string = `{
 `
 var taskUpdateJohnMissingErrorString string = "Error: tasks GET: jill: Not Found\n\n"
 
-var taskPatchNoArgErrorString string = "Error: drpcli tasks patch [objectJson] [changesJson] requires 2 arguments"
-var taskPatchTooManyArgErrorString string = "Error: drpcli tasks patch [objectJson] [changesJson] requires 2 arguments"
+var taskPatchNoArgErrorString string = "Error: drpcli tasks patch [objectJson] [changesJson] [flags] requires 2 arguments"
+var taskPatchTooManyArgErrorString string = "Error: drpcli tasks patch [objectJson] [changesJson] [flags] requires 2 arguments"
 var taskPatchBadPatchJSONString = "asdgasdg"
-var taskPatchBadPatchJSONErrorString = "Error: Unable to parse drpcli tasks patch [objectJson] [changesJson] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Task\n\n"
+var taskPatchBadPatchJSONErrorString = "Error: Unable to parse drpcli tasks patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Task\n\n"
 var taskPatchBadBaseJSONString = "asdgasdg"
-var taskPatchBadBaseJSONErrorString = "Error: Unable to parse drpcli tasks patch [objectJson] [changesJson] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Task\n\n"
+var taskPatchBadBaseJSONErrorString = "Error: Unable to parse drpcli tasks patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Task\n\n"
 var taskPatchOldBaseString string = `{
   "Name": "john",
   "OptionalParams": null,
@@ -137,8 +137,8 @@ var taskPatchBadBaseString string = `{
 `
 var taskPatchBadBaseErrorString string = "Error: Cannot get key for obj: Invalid type passed to task create\n\n"
 
-var taskDestroyNoArgErrorString string = "Error: drpcli tasks destroy [id] requires 1 argument"
-var taskDestroyTooManyArgErrorString string = "Error: drpcli tasks destroy [id] requires 1 argument"
+var taskDestroyNoArgErrorString string = "Error: drpcli tasks destroy [id] [flags] requires 1 argument"
+var taskDestroyTooManyArgErrorString string = "Error: drpcli tasks destroy [id] [flags] requires 1 argument"
 var taskDestroyJohnString string = "Deleted task john\n"
 var taskDestroyMissingJohnString string = "Error: tasks: DELETE jill: Not Found\n\n"
 

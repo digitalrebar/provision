@@ -10,8 +10,8 @@ var subnetExpireTimeErrorString string = "Error: Invalid subnet CIDR: false\n\n"
 var subnetDefaultListString string = "[]\n"
 var subnetEmptyListString string = "[]\n"
 
-var subnetShowNoArgErrorString string = "Error: drpcli subnets show [id] requires 1 argument\n"
-var subnetShowTooManyArgErrorString string = "Error: drpcli subnets show [id] requires 1 argument\n"
+var subnetShowNoArgErrorString string = "Error: drpcli subnets show [id] [flags] requires 1 argument\n"
+var subnetShowTooManyArgErrorString string = "Error: drpcli subnets show [id] [flags] requires 1 argument\n"
 var subnetShowMissingArgErrorString string = "Error: subnets GET: ignore: Not Found\n\n"
 var subnetShowJohnString string = `{
   "ActiveEnd": "192.168.100.100",
@@ -42,13 +42,13 @@ var subnetShowJohnString string = `{
 }
 `
 
-var subnetExistsNoArgErrorString string = "Error: drpcli subnets exists [id] requires 1 argument"
-var subnetExistsTooManyArgErrorString string = "Error: drpcli subnets exists [id] requires 1 argument"
+var subnetExistsNoArgErrorString string = "Error: drpcli subnets exists [id] [flags] requires 1 argument"
+var subnetExistsTooManyArgErrorString string = "Error: drpcli subnets exists [id] [flags] requires 1 argument"
 var subnetExistsIgnoreString string = ""
 var subnetExistsMissingIgnoreString string = "Error: subnets GET: ignore: Not Found\n\n"
 
-var subnetCreateNoArgErrorString string = "Error: drpcli subnets create [json] requires 1 argument\n"
-var subnetCreateTooManyArgErrorString string = "Error: drpcli subnets create [json] requires 1 argument\n"
+var subnetCreateNoArgErrorString string = "Error: drpcli subnets create [json] [flags] requires 1 argument\n"
+var subnetCreateTooManyArgErrorString string = "Error: drpcli subnets create [json] [flags] requires 1 argument\n"
 var subnetCreateBadJSONString = "asdgasdg"
 var subnetCreateBadJSONErrorString = "Error: Unable to create new subnet: Invalid type passed to subnet create\n\n"
 var subnetCreateInputString string = `{
@@ -124,8 +124,8 @@ var subnetListBothEnvsString = `[
 ]
 `
 
-var subnetUpdateNoArgErrorString string = "Error: drpcli subnets update [id] [json] requires 2 arguments"
-var subnetUpdateTooManyArgErrorString string = "Error: drpcli subnets update [id] [json] requires 2 arguments"
+var subnetUpdateNoArgErrorString string = "Error: drpcli subnets update [id] [json] [flags] requires 2 arguments"
+var subnetUpdateTooManyArgErrorString string = "Error: drpcli subnets update [id] [json] [flags] requires 2 arguments"
 var subnetUpdateBadJSONString = "asdgasdg"
 var subnetUpdateBadJSONErrorString = "Error: Unable to merge objects: json: cannot unmarshal string into Go value of type map[string]interface {}\n\n\n"
 var subnetUpdateInputString string = `{
@@ -162,12 +162,12 @@ var subnetUpdateJohnString string = `{
 `
 var subnetUpdateJohnMissingErrorString string = "Error: subnets GET: john2: Not Found\n\n"
 
-var subnetPatchNoArgErrorString string = "Error: drpcli subnets patch [objectJson] [changesJson] requires 2 arguments"
-var subnetPatchTooManyArgErrorString string = "Error: drpcli subnets patch [objectJson] [changesJson] requires 2 arguments"
+var subnetPatchNoArgErrorString string = "Error: drpcli subnets patch [objectJson] [changesJson] [flags] requires 2 arguments"
+var subnetPatchTooManyArgErrorString string = "Error: drpcli subnets patch [objectJson] [changesJson] [flags] requires 2 arguments"
 var subnetPatchBadPatchJSONString = "asdgasdg"
-var subnetPatchBadPatchJSONErrorString = "Error: Unable to parse drpcli subnets patch [objectJson] [changesJson] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Subnet\n\n"
+var subnetPatchBadPatchJSONErrorString = "Error: Unable to parse drpcli subnets patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Subnet\n\n"
 var subnetPatchBadBaseJSONString = "asdgasdg"
-var subnetPatchBadBaseJSONErrorString = "Error: Unable to parse drpcli subnets patch [objectJson] [changesJson] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Subnet\n\n"
+var subnetPatchBadBaseJSONErrorString = "Error: Unable to parse drpcli subnets patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Subnet\n\n"
 var subnetPatchBaseString string = `{
   "ActiveEnd": "192.168.100.100",
   "ActiveLeaseTime": 60,
@@ -257,51 +257,51 @@ var subnetPatchMissingBaseString string = `{
 `
 var subnetPatchJohnMissingErrorString string = "Error: subnets: PATCH john2: Not Found\n\n"
 
-var subnetDestroyNoArgErrorString string = "Error: drpcli subnets destroy [id] requires 1 argument"
-var subnetDestroyTooManyArgErrorString string = "Error: drpcli subnets destroy [id] requires 1 argument"
+var subnetDestroyNoArgErrorString string = "Error: drpcli subnets destroy [id] [flags] requires 1 argument"
+var subnetDestroyTooManyArgErrorString string = "Error: drpcli subnets destroy [id] [flags] requires 1 argument"
 var subnetDestroyJohnString string = "Deleted subnet john\n"
 var subnetDestroyMissingJohnString string = "Error: subnets: DELETE john: Not Found\n\n"
 
 var subnetInvalidEnabledBooleanListString = "Error: Enabled must be true or false\n\n"
 
-var subnetRangeNoArgErrorString string = "Error: drpcli subnets range [subnetName] [startIP] [endIP] requires 3 arguments\n"
-var subnetRangeTooManyArgErrorString string = "Error: drpcli subnets range [subnetName] [startIP] [endIP] requires 3 arguments\n"
+var subnetRangeNoArgErrorString string = "Error: drpcli subnets range [subnetName] [startIP] [endIP] [flags] requires 3 arguments\n"
+var subnetRangeTooManyArgErrorString string = "Error: drpcli subnets range [subnetName] [startIP] [endIP] [flags] requires 3 arguments\n"
 var subnetRangeIPSuccessString string = "startIP: 192.168.100.10\nendIP: 192.168.100.200\n"
 
 var subnetRangeIPFailureString string = "Error: invalid IP address: cq.98.42.1234\n\n"
 var subnetRangeIPBadIpString string = "Error: invalid IP address: 192.168.100.500\n\n"
 
-var subnetSubnetNoArgErrorString string = "Error: drpcli subnets subnet [subnetName] [subnet CIDR] requires 2 arguments\n"
-var subnetSubnetTooManyArgErrorString string = "Error: drpcli subnets subnet [subnetName] [subnet CIDR] requires 2 arguments\n"
+var subnetSubnetNoArgErrorString string = "Error: drpcli subnets subnet [subnetName] [subnet CIDR] [flags] requires 2 arguments\n"
+var subnetSubnetTooManyArgErrorString string = "Error: drpcli subnets subnet [subnetName] [subnet CIDR] [flags] requires 2 arguments\n"
 var subnetSubnetCIDRSuccessString = "192.168.100.0/10\n"
 var subnetSubnetCIDRFailureString = "Error: 1111.11.2223.544/66666 is not a valid subnet CIDR\n\n"
 
-var subnetStrategyNoArgErrorString string = "Error: drpcli subnets strategy [subnetName] [MAC] requires 2 arguments\n"
-var subnetStrategyTooManyArgErrorString string = "Error: drpcli subnets strategy [subnetName] [MAC] requires 2 arguments\n"
+var subnetStrategyNoArgErrorString string = "Error: drpcli subnets strategy [subnetName] [MAC] [flags] requires 2 arguments\n"
+var subnetStrategyTooManyArgErrorString string = "Error: drpcli subnets strategy [subnetName] [MAC] [flags] requires 2 arguments\n"
 var subnetStrategyMacSuccessString string = "a3:b3:51:66:7e:11\n"
 var subnetStrategyMacFailureErrorString string = "Error: t5:44:llll:b is not a valid MAC address\n\n"
 
-var subnetPickersNoArgErrorString string = "Error: drpcli subnets pickers [subnetName] [list] requires 2 arguments\n"
-var subnetPickersTooManyArgErrorString string = "Error: drpcli subnets pickers [subnetName] [list] requires 2 arguments\n"
+var subnetPickersNoArgErrorString string = "Error: drpcli subnets pickers [subnetName] [list] [flags] requires 2 arguments\n"
+var subnetPickersTooManyArgErrorString string = "Error: drpcli subnets pickers [subnetName] [list] [flags] requires 2 arguments\n"
 var subnetPickersSuccessString string = "none, nextFree, mostExpired"
 
-var subnetNextserverNoArgErrorString string = "Error: drpcli subnets nextserver [subnetName] [IP] requires 2 arguments\n"
-var subnetNextserverTooManyArgErrorString string = "Error: drpcli subnets nextserver [subnetName] [IP] requires 2 arguments\n"
+var subnetNextserverNoArgErrorString string = "Error: drpcli subnets nextserver [subnetName] [IP] [flags] requires 2 arguments\n"
+var subnetNextserverTooManyArgErrorString string = "Error: drpcli subnets nextserver [subnetName] [IP] [flags] requires 2 arguments\n"
 var subnetNextserverIPSuccess string = "1.24.36.16\n"
 
-var subnetLeasetimesNoArgErrorString string = "Error: drpcli subnets leasetimes [subnetName] [active] [reserved] requires 3 arguments\n"
-var subnetLeasetimesTooManyArgErrorString string = "Error: drpcli subnets leasetimes [subnetName] [active] [reserved] requires 3 arguments\n"
+var subnetLeasetimesNoArgErrorString string = "Error: drpcli subnets leasetimes [subnetName] [active] [reserved] [flags] requires 3 arguments\n"
+var subnetLeasetimesTooManyArgErrorString string = "Error: drpcli subnets leasetimes [subnetName] [active] [reserved] [flags] requires 3 arguments\n"
 var subnetLeasetimesSuccessString string = "Active Lease Times=65\nReserved Lease Times=7300\n"
 var subnetLeasetimesIntFailureString string = "Error: 4x5 could not be read as a number\n\n"
 
-var subnetSetNoArgErrorString string = "Error: drpcli subnets set [subnetName] option [number] to [value] requires 5 arguments\n"
-var subnetSetTooManyArgErrorString string = "Error: drpcli subnets set [subnetName] option [number] to [value] requires 5 arguments\n"
+var subnetSetNoArgErrorString string = "Error: drpcli subnets set [subnetName] option [number] to [value] [flags] requires 5 arguments\n"
+var subnetSetTooManyArgErrorString string = "Error: drpcli subnets set [subnetName] option [number] to [value] [flags] requires 5 arguments\n"
 var subnetSetIntFailureErrorString string = "Error: 6tl could not be read as a number\n\n"
 var subnetSetTo66 string = "6 to 66\n"
 var subnetSetToNull string = "2 to null\n"
 
-var subnetGetNoArgErrorString string = "Error: drpcli subnets get [subnetName] option [number] requires 3 arguments\n"
-var subnetGetTooManyArgErrorString string = "Error: drpcli subnets get [subnetName] option [number] requires 3 arguments\n"
+var subnetGetNoArgErrorString string = "Error: drpcli subnets get [subnetName] option [number] [flags] requires 3 arguments\n"
+var subnetGetTooManyArgErrorString string = "Error: drpcli subnets get [subnetName] option [number] [flags] requires 3 arguments\n"
 var subnetGetTo66 string = "Option 6: 66\n"
 var subnetGetToNull string = "Option 2: null\n"
 

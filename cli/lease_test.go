@@ -10,8 +10,8 @@ var leaseEmptyListString string = "[]\n"
 var leaseAddrErrorString string = "Error: Addr must be an IP address\n\n"
 var leaseExpireTimeErrorString string = "Error: ExpireTime is not valid: parsing time \"false\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"false\" as \"2006\"\n\n"
 
-var leaseShowNoArgErrorString string = "Error: drpcli leases show [id] requires 1 argument\n"
-var leaseShowTooManyArgErrorString string = "Error: drpcli leases show [id] requires 1 argument\n"
+var leaseShowNoArgErrorString string = "Error: drpcli leases show [id] [flags] requires 1 argument\n"
+var leaseShowTooManyArgErrorString string = "Error: drpcli leases show [id] [flags] requires 1 argument\n"
 var leaseShowMissingArgErrorString string = "Error: leases GET: C0A8646F: Not Found\n\n"
 var leaseShowLeaseString string = `{
   "Addr": "192.168.100.110",
@@ -21,13 +21,13 @@ var leaseShowLeaseString string = `{
 }
 `
 
-var leaseExistsNoArgErrorString string = "Error: drpcli leases exists [id] requires 1 argument"
-var leaseExistsTooManyArgErrorString string = "Error: drpcli leases exists [id] requires 1 argument"
+var leaseExistsNoArgErrorString string = "Error: drpcli leases exists [id] [flags] requires 1 argument"
+var leaseExistsTooManyArgErrorString string = "Error: drpcli leases exists [id] [flags] requires 1 argument"
 var leaseExistsLeaseString string = ""
 var leaseExistsMissingJohnString string = "Error: leases GET: C0A8646F: Not Found\n\n"
 
-var leaseCreateNoArgErrorString string = "Error: drpcli leases create [json] requires 1 argument\n"
-var leaseCreateTooManyArgErrorString string = "Error: drpcli leases create [json] requires 1 argument\n"
+var leaseCreateNoArgErrorString string = "Error: drpcli leases create [json] [flags] requires 1 argument\n"
+var leaseCreateTooManyArgErrorString string = "Error: drpcli leases create [json] [flags] requires 1 argument\n"
 var leaseCreateBadJSONString = "asdgasdg"
 var leaseCreateBadJSONErrorString = "Error: Unable to create new lease: Invalid type passed to lease create\n\n"
 var leaseCreateInputString string = `{
@@ -56,8 +56,8 @@ var leaseListLeasesString = `[
 ]
 `
 
-var leaseUpdateNoArgErrorString string = "Error: drpcli leases update [id] [json] requires 2 arguments"
-var leaseUpdateTooManyArgErrorString string = "Error: drpcli leases update [id] [json] requires 2 arguments"
+var leaseUpdateNoArgErrorString string = "Error: drpcli leases update [id] [json] [flags] requires 2 arguments"
+var leaseUpdateTooManyArgErrorString string = "Error: drpcli leases update [id] [json] [flags] requires 2 arguments"
 var leaseUpdateBadJSONString = "asdgasdg"
 var leaseUpdateBadJSONErrorString = "Error: Unable to merge objects: json: cannot unmarshal string into Go value of type map[string]interface {}\n\n\n"
 var leaseUpdateInputString string = `{
@@ -73,12 +73,12 @@ var leaseUpdateJohnString string = `{
 `
 var leaseUpdateJohnMissingErrorString string = "Error: leases GET: C0A8646F: Not Found\n\n"
 
-var leasePatchNoArgErrorString string = "Error: drpcli leases patch [objectJson] [changesJson] requires 2 arguments"
-var leasePatchTooManyArgErrorString string = "Error: drpcli leases patch [objectJson] [changesJson] requires 2 arguments"
+var leasePatchNoArgErrorString string = "Error: drpcli leases patch [objectJson] [changesJson] [flags] requires 2 arguments"
+var leasePatchTooManyArgErrorString string = "Error: drpcli leases patch [objectJson] [changesJson] [flags] requires 2 arguments"
 var leasePatchBadPatchJSONString = "asdgasdg"
-var leasePatchBadPatchJSONErrorString = "Error: Unable to parse drpcli leases patch [objectJson] [changesJson] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Lease\n\n"
+var leasePatchBadPatchJSONErrorString = "Error: Unable to parse drpcli leases patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Lease\n\n"
 var leasePatchBadBaseJSONString = "asdgasdg"
-var leasePatchBadBaseJSONErrorString = "Error: Unable to parse drpcli leases patch [objectJson] [changesJson] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Lease\n\n"
+var leasePatchBadBaseJSONErrorString = "Error: Unable to parse drpcli leases patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Lease\n\n"
 var leasePatchBaseString string = `{
   "Addr": "192.168.100.110",
   "ExpireTime": "2019-03-31T00:11:21.028-05:00",
@@ -106,8 +106,8 @@ var leasePatchMissingBaseString string = `{
 `
 var leasePatchJohnMissingErrorString string = "Error: leases: PATCH C0A8646F: Not Found\n\n"
 
-var leaseDestroyNoArgErrorString string = "Error: drpcli leases destroy [id] requires 1 argument"
-var leaseDestroyTooManyArgErrorString string = "Error: drpcli leases destroy [id] requires 1 argument"
+var leaseDestroyNoArgErrorString string = "Error: drpcli leases destroy [id] [flags] requires 1 argument"
+var leaseDestroyTooManyArgErrorString string = "Error: drpcli leases destroy [id] [flags] requires 1 argument"
 var leaseDestroyJohnString string = "Deleted lease 192.168.100.110\n"
 var leaseDestroyMissingJohnString string = "Error: leases: DELETE C0A8646E: Not Found\n\n"
 
