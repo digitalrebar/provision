@@ -233,45 +233,57 @@ type Payloader interface {
 	GetPayload() interface{}
 }
 
-type ListOp interface {
-	List(params map[string]string) (interface{}, error)
-	GetIndexes() map[string]string
+type ICommonOps interface {
 	GetName() string
 	GetSingularName() string
+}
+
+type CommonTypeOps interface {
+	GetType() interface{}
+	GetId(interface{}) (string, error)
+}
+
+type ListOp interface {
+	ICommonOps
+	List(params map[string]string) (interface{}, error)
+	GetIndexes() map[string]string
 }
 
 type GetOp interface {
+	ICommonOps
 	Get(string) (interface{}, error)
 	GetIndexes() map[string]string
-	GetName() string
-	GetSingularName() string
+}
+
+type CreateOps interface {
+	ICommonOps
+	CommonTypeOps
+	Create(interface{}) (interface{}, error)
 }
 
 type ModOps interface {
-	GetType() interface{}
-	GetId(interface{}) (string, error)
-	Create(interface{}) (interface{}, error)
+	ICommonOps
+	CommonTypeOps
+}
+
+type PatchOps interface {
+	ModOps
 	Patch(string, interface{}) (interface{}, error)
-	GetName() string
-	GetSingularName() string
 }
 
 type UpdateOps interface {
+	ModOps
 	Update(string, interface{}) (interface{}, error)
-	GetName() string
-	GetSingularName() string
 }
 
 type DeleteOps interface {
+	ICommonOps
 	Delete(string) (interface{}, error)
-	GetName() string
-	GetSingularName() string
 }
 
 type UploadOp interface {
+	ICommonOps
 	Upload(string, *os.File) (interface{}, error)
-	GetName() string
-	GetSingularName() string
 }
 
 func generateError(err error, sfmt string, args ...interface{}) error {
@@ -311,7 +323,7 @@ func Get(id string, gptrs GetOp) (interface{}, error) {
 	return gptrs.Get(id)
 }
 
-func Create(input string, ptrs ModOps) (interface{}, error) {
+func Create(input string, ptrs CreateOps) (interface{}, error) {
 	var buf []byte
 	var err error
 	if input == "-" {
@@ -394,7 +406,8 @@ func Update(id, input string, ptrs ModOps) (interface{}, error) {
 		return nil, fmt.Errorf("Error translating patch: %v", err)
 	}
 
-	if data, err := ptrs.Patch(id, p); err != nil {
+	pptrs, _ := ptrs.(PatchOps)
+	if data, err := pptrs.Patch(id, p); err != nil {
 		return nil, generateError(err, "Unable to patch %v", id)
 	} else {
 		return data, nil
@@ -407,6 +420,7 @@ func Delete(id string, ptrs DeleteOps) (interface{}, error) {
 
 func commonOps(pobj interface{}) (commands []*cobra.Command) {
 	commands = make([]*cobra.Command, 0, 0)
+	updateAdded := false
 	if ptrs, ok := pobj.(ListOp); ok {
 		idxs := ptrs.GetIndexes()
 		bigidxstr := ""
@@ -465,11 +479,14 @@ Example:
 
 				for _, a := range args {
 					ar := strings.SplitN(a, "=", 2)
+					if len(ar) != 2 {
+						return fmt.Errorf("Filter argument requires an '=' separator: %s", a)
+					}
 					parms[ar[0]] = ar[1]
 				}
 
 				if data, err := ptrs.List(parms); err != nil {
-					return generateError(err, "Error listing %v", ptrs.GetName())
+					return generateError(err, "listing %v", ptrs.GetName())
 				} else {
 					return prettyPrint(data)
 				}
@@ -551,7 +568,7 @@ Example:
 			},
 		})
 
-		if ptrs, ok := pobj.(ModOps); ok {
+		if ptrs, ok := pobj.(CreateOps); ok {
 			commands = append(commands, &cobra.Command{
 				Use:   "create [json]",
 				Short: fmt.Sprintf("Create a new %v with the passed-in JSON or string key", ptrs.GetSingularName()),
@@ -574,7 +591,10 @@ empty object of that type.  For User, BootEnv, Machine, and Profile, it will be 
 					}
 				},
 			})
+		}
 
+		if ptrs, ok := pobj.(PatchOps); ok {
+			updateAdded = true
 			commands = append(commands, &cobra.Command{
 				Use:   "update [id] [json]",
 				Short: fmt.Sprintf("Unsafely update %v by id with the passed-in JSON", ptrs.GetSingularName()),
@@ -631,6 +651,28 @@ empty object of that type.  For User, BootEnv, Machine, and Profile, it will be 
 					}
 				},
 			})
+		}
+
+		if !updateAdded {
+			if ptrs, ok := pobj.(UpdateOps); ok {
+				commands = append(commands, &cobra.Command{
+					Use:   "update [id] [json]",
+					Short: fmt.Sprintf("Unsafely update %v by id with the passed-in JSON", ptrs.GetSingularName()),
+					Long:  `As a useful shortcut, you can pass '-' to indicate that the JSON should be read from stdin`,
+					RunE: func(c *cobra.Command, args []string) error {
+						if len(args) != 2 {
+							return fmt.Errorf("%v requires 2 arguments", c.UseLine())
+						}
+						dumpUsage = false
+
+						if data, err := Update(args[0], args[1], ptrs); err != nil {
+							return err
+						} else {
+							return prettyPrint(data)
+						}
+					},
+				})
+			}
 		}
 	}
 

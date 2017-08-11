@@ -27,6 +27,9 @@ func (be ContentOps) GetIndexes() map[string]string {
 }
 
 func (be ContentOps) List(parms map[string]string) (interface{}, error) {
+	if len(parms) > 0 {
+		return nil, fmt.Errorf("Does not support filtering")
+	}
 	params := contents.NewListContentsParams()
 	d, e := session.Contents.ListContents(params, basicAuth)
 	if e != nil {
