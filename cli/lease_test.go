@@ -76,9 +76,9 @@ var leaseUpdateJohnMissingErrorString string = "Error: leases GET: C0A8646F: Not
 var leasePatchNoArgErrorString string = "Error: drpcli leases patch [objectJson] [changesJson] [flags] requires 2 arguments"
 var leasePatchTooManyArgErrorString string = "Error: drpcli leases patch [objectJson] [changesJson] [flags] requires 2 arguments"
 var leasePatchBadPatchJSONString = "asdgasdg"
-var leasePatchBadPatchJSONErrorString = "Error: Unable to parse drpcli leases patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Lease\n\n"
+var leasePatchBadPatchJSONErrorString = "Error: Unable to parse drpcli leases patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Lease\n\n"
 var leasePatchBadBaseJSONString = "asdgasdg"
-var leasePatchBadBaseJSONErrorString = "Error: Unable to parse drpcli leases patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Lease\n\n"
+var leasePatchBadBaseJSONErrorString = "Error: Unable to parse drpcli leases patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Lease\n\n"
 var leasePatchBaseString string = `{
   "Addr": "192.168.100.110",
   "ExpireTime": "2019-03-31T00:11:21.028-05:00",

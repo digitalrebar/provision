@@ -349,7 +349,7 @@ var jobPatchBadPatchJSONString = "{asdgasdg"
 var jobPatchBadPatchJSONErrorString = "Error: Unable to parse drpcli jobs patch [objectJson] [changesJson] [flags] JSON {asdgasdg\nError: error converting YAML to JSON: yaml: line 1: did not find expected ',' or '}'\n\n"
 
 var jobPatchBadPatchJSON2String = "[ \"asdgasdg\" ]"
-var jobPatchBadPatchJSON2ErrorString = "Error: Unable to parse drpcli jobs patch [objectJson] [changesJson] [flags] JSON [ \"asdgasdg\" ]\nError: error unmarshaling JSON: json: cannot unmarshal array into Go value of type models.Job\n\n"
+var jobPatchBadPatchJSON2ErrorString = "Error: Unable to parse drpcli jobs patch [objectJson] [changesJson] [flags] JSON [ \"asdgasdg\" ]\nError: error unmarshaling JSON: json: cannot unmarshal array into Go value of type genmodels.Job\n\n"
 
 var jobPatchBadBaseJSONString = "{ badbase"
 var jobPatchBadBaseJSONErrorString = "Error: Unable to parse drpcli jobs patch [objectJson] [changesJson] [flags] JSON { badbase\nError: error converting YAML to JSON: yaml: line 1: did not find expected ',' or '}'\n\n"

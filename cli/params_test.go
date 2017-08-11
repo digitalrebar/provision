@@ -125,9 +125,9 @@ var paramUpdateJohnMissingErrorString string = "Error: params GET: john2: Not Fo
 var paramPatchNoArgErrorString string = "Error: drpcli params patch [objectJson] [changesJson] [flags] requires 2 arguments"
 var paramPatchTooManyArgErrorString string = "Error: drpcli params patch [objectJson] [changesJson] [flags] requires 2 arguments"
 var paramPatchBadPatchJSONString = "asdgasdg"
-var paramPatchBadPatchJSONErrorString = "Error: Unable to parse drpcli params patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Param\n\n"
+var paramPatchBadPatchJSONErrorString = "Error: Unable to parse drpcli params patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Param\n\n"
 var paramPatchBadBaseJSONString = "asdgasdg"
-var paramPatchBadBaseJSONErrorString = "Error: Unable to parse drpcli params patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Param\n\n"
+var paramPatchBadBaseJSONErrorString = "Error: Unable to parse drpcli params patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Param\n\n"
 var paramPatchBaseString string = `{
   "Name": "john",
   "Schema": {

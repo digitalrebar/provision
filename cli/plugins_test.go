@@ -81,9 +81,9 @@ var pluginUpdateJohnMissingErrorString string = "Error: plugins GET: john2: Not 
 var pluginPatchNoArgErrorString string = "Error: drpcli plugins patch [objectJson] [changesJson] [flags] requires 2 arguments"
 var pluginPatchTooManyArgErrorString string = "Error: drpcli plugins patch [objectJson] [changesJson] [flags] requires 2 arguments"
 var pluginPatchBadPatchJSONString = "asdgasdg"
-var pluginPatchBadPatchJSONErrorString = "Error: Unable to parse drpcli plugins patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Plugin\n\n"
+var pluginPatchBadPatchJSONErrorString = "Error: Unable to parse drpcli plugins patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Plugin\n\n"
 var pluginPatchBadBaseJSONString = "asdgasdg"
-var pluginPatchBadBaseJSONErrorString = "Error: Unable to parse drpcli plugins patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Plugin\n\n"
+var pluginPatchBadBaseJSONErrorString = "Error: Unable to parse drpcli plugins patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Plugin\n\n"
 var pluginPatchBaseString string = `{
   "Description": "lpxelinux.0",
   "Errors": null,

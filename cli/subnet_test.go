@@ -165,9 +165,9 @@ var subnetUpdateJohnMissingErrorString string = "Error: subnets GET: john2: Not 
 var subnetPatchNoArgErrorString string = "Error: drpcli subnets patch [objectJson] [changesJson] [flags] requires 2 arguments"
 var subnetPatchTooManyArgErrorString string = "Error: drpcli subnets patch [objectJson] [changesJson] [flags] requires 2 arguments"
 var subnetPatchBadPatchJSONString = "asdgasdg"
-var subnetPatchBadPatchJSONErrorString = "Error: Unable to parse drpcli subnets patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Subnet\n\n"
+var subnetPatchBadPatchJSONErrorString = "Error: Unable to parse drpcli subnets patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Subnet\n\n"
 var subnetPatchBadBaseJSONString = "asdgasdg"
-var subnetPatchBadBaseJSONErrorString = "Error: Unable to parse drpcli subnets patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Subnet\n\n"
+var subnetPatchBadBaseJSONErrorString = "Error: Unable to parse drpcli subnets patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Subnet\n\n"
 var subnetPatchBaseString string = `{
   "ActiveEnd": "192.168.100.100",
   "ActiveLeaseTime": 60,

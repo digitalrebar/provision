@@ -89,9 +89,9 @@ var taskUpdateJohnMissingErrorString string = "Error: tasks GET: jill: Not Found
 var taskPatchNoArgErrorString string = "Error: drpcli tasks patch [objectJson] [changesJson] [flags] requires 2 arguments"
 var taskPatchTooManyArgErrorString string = "Error: drpcli tasks patch [objectJson] [changesJson] [flags] requires 2 arguments"
 var taskPatchBadPatchJSONString = "asdgasdg"
-var taskPatchBadPatchJSONErrorString = "Error: Unable to parse drpcli tasks patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Task\n\n"
+var taskPatchBadPatchJSONErrorString = "Error: Unable to parse drpcli tasks patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Task\n\n"
 var taskPatchBadBaseJSONString = "asdgasdg"
-var taskPatchBadBaseJSONErrorString = "Error: Unable to parse drpcli tasks patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Task\n\n"
+var taskPatchBadBaseJSONErrorString = "Error: Unable to parse drpcli tasks patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Task\n\n"
 var taskPatchOldBaseString string = `{
   "Name": "john",
   "OptionalParams": null,
