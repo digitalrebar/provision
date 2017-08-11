@@ -479,11 +479,14 @@ Example:
 
 				for _, a := range args {
 					ar := strings.SplitN(a, "=", 2)
+					if len(ar) != 2 {
+						return fmt.Errorf("Filter argument requires an '=' separator: %s", a)
+					}
 					parms[ar[0]] = ar[1]
 				}
 
 				if data, err := ptrs.List(parms); err != nil {
-					return generateError(err, "Error listing %v", ptrs.GetName())
+					return generateError(err, "listing %v", ptrs.GetName())
 				} else {
 					return prettyPrint(data)
 				}

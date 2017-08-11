@@ -258,7 +258,7 @@ var jsonTestString = `[
 
 func TestCorePieces(t *testing.T) {
 	tests := []CliTest{
-		CliTest{false, true, []string{"-E", "khttps://1.1.1.2:325", "bootenvs", "list"}, noStdinString, noContentString, "Error: Error listing bootenvs: Get khttps://1.1.1.2:325/api/v3/bootenvs: unsupported protocol scheme \"khttps\"\n\n"},
+		CliTest{false, true, []string{"-E", "khttps://1.1.1.2:325", "bootenvs", "list"}, noStdinString, noContentString, "Error: listing bootenvs: Get khttps://1.1.1.2:325/api/v3/bootenvs: unsupported protocol scheme \"khttps\"\n\n"},
 		CliTest{false, false, []string{"-E", "https://127.0.0.1:10001", "-U", "rocketskates", "-P", "r0cketsk8ts", "version"}, noStdinString, "Version: " + version + "\n", noErrorString},
 		CliTest{false, true, []string{"-F", "cow", "bootenvs", "list"}, noStdinString, noContentString, "Error: Unknown pretty format cow\n\n"},
 		CliTest{false, false, []string{"-F", "yaml", "bootenvs", "list"}, noStdinString, yamlTestString, noErrorString},
