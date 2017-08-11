@@ -31,6 +31,12 @@ server.key
 server.crt
 # Pip stuff for docs
 src
+test-data/etc/._Description.meta
+test-data/etc/._Name.meta
+test-data/etc/._Version.meta
+test-data/usr/share/._Description.meta
+test-data/usr/share/._Name.meta
+test-data/usr/share/._Version.meta
 
 # documentation
 builddir/

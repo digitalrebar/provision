@@ -47,7 +47,7 @@ func writeStringToFile(path, content string) error {
 
 func markJob(uuid, state string, ops ModOps) error {
 	j := fmt.Sprintf("{\"State\": \"%s\"}", state)
-	if _, err := Update(uuid, j, ops); err != nil {
+	if _, err := Update(uuid, j, ops, false); err != nil {
 		fmt.Printf("Error marking job, %s, as %s: %v, continuing\n", uuid, state, err)
 		return err
 	}
@@ -55,7 +55,7 @@ func markJob(uuid, state string, ops ModOps) error {
 }
 
 func markMachineRunnable(uuid string, ops ModOps) error {
-	if _, err := Update(uuid, `{"Runnable": true}`, ops); err != nil {
+	if _, err := Update(uuid, `{"Runnable": true}`, ops, false); err != nil {
 		fmt.Printf("Error marking machine as runnable: %v, continuing to wait for runnable...\n", err)
 		return err
 	}
@@ -338,7 +338,7 @@ the boolean wait flag.
 				}
 
 				// Mark job as running
-				if _, err := Update(job.UUID.String(), `{"State": "running"}`, jo); err != nil {
+				if _, err := Update(job.UUID.String(), `{"State": "running"}`, jo, false); err != nil {
 					fmt.Printf("Error marking job as running: %v, continue\n", err)
 					markJob(job.UUID.String(), "failed", jo)
 					continue
