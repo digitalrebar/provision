@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/digitalrebar/provision/models"
+	models "github.com/digitalrebar/provision/genmodels"
 )
 
 var interfaceShowNoArgErrorString string = "Error: drpcli interfaces show [id] [flags] requires 1 argument\n"

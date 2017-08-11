@@ -8,7 +8,7 @@ import (
 
 	"github.com/digitalrebar/provision/backend"
 	"github.com/digitalrebar/provision/client/jobs"
-	"github.com/digitalrebar/provision/models"
+	models "github.com/digitalrebar/provision/genmodels"
 	"github.com/go-openapi/strfmt"
 	"github.com/pborman/uuid"
 	"github.com/spf13/cobra"

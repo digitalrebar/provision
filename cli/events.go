@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/digitalrebar/provision/client/events"
-	"github.com/digitalrebar/provision/models"
+	models "github.com/digitalrebar/provision/genmodels"
 	"github.com/ghodss/yaml"
 	"github.com/spf13/cobra"
 )

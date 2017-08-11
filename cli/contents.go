@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/digitalrebar/provision/client/contents"
-	"github.com/digitalrebar/provision/models"
+	models "github.com/digitalrebar/provision/genmodels"
 	"github.com/spf13/cobra"
 )
 

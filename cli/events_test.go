@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/digitalrebar/provision/models"
+	models "github.com/digitalrebar/provision/genmodels"
 	"github.com/go-openapi/strfmt"
 )
 

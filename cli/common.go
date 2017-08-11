@@ -20,7 +20,7 @@ import (
 	"github.com/VictorLowther/jsonpatch2/utils"
 	"github.com/digitalrebar/provision"
 	apiclient "github.com/digitalrebar/provision/client"
-	"github.com/digitalrebar/provision/models"
+	models "github.com/digitalrebar/provision/genmodels"
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
 	strfmt "github.com/go-openapi/strfmt"
