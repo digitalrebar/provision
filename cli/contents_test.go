@@ -124,9 +124,15 @@ var contentListContentsString = `[
 var contentUpdateNoArgErrorString string = "Error: drpcli contents update [id] [json] [flags] requires 2 arguments"
 var contentUpdateTooManyArgErrorString string = "Error: drpcli contents update [id] [json] [flags] requires 2 arguments"
 var contentUpdateBadJSONString = "asdgasdg"
-var contentUpdateBadJSONErrorString = "Error: Unable to merge objects: json: cannot unmarshal string into Go value of type map[string]interface {}\n\n\n"
+var contentUpdateBadJSONErrorString = "Error: Unable to unmarshal merged input stream: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Content\n\n\n"
+var contentUpdateBadInputString string = `{
+  "Name": "john2"
+}
+`
+var contentUpdateBadInputErrorString string = "Error: Name must match: john2 != john\n\n\n"
 var contentUpdateInputString string = `{
-  "Description": "Fred Rules"
+  "Description": "Fred Rules",
+  "Name": "john"
 }
 `
 var contentUpdateJohnString string = `{
@@ -172,6 +178,7 @@ func TestContentCli(t *testing.T) {
 		CliTest{true, true, []string{"contents", "update"}, noStdinString, noContentString, contentUpdateNoArgErrorString},
 		CliTest{true, true, []string{"contents", "update", "john", "john2", "john3"}, noStdinString, noContentString, contentUpdateTooManyArgErrorString},
 		CliTest{false, true, []string{"contents", "update", "john", contentUpdateBadJSONString}, noStdinString, noContentString, contentUpdateBadJSONErrorString},
+		CliTest{false, true, []string{"contents", "update", "john", contentUpdateBadInputString}, noStdinString, noContentString, contentUpdateBadInputErrorString},
 		CliTest{false, false, []string{"contents", "update", "john", contentUpdateInputString}, noStdinString, contentUpdateJohnString, noErrorString},
 		CliTest{false, true, []string{"contents", "update", "john2", contentUpdateInputString}, noStdinString, noContentString, contentUpdateJohnMissingErrorString},
 		CliTest{false, false, []string{"contents", "show", "john"}, noStdinString, contentUpdateJohnString, noErrorString},

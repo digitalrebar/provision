@@ -84,6 +84,19 @@ var contentPack1ProfileListString = `[
 ]
 `
 
+var contentPack1UpdateProfileListString = `[
+  {
+    "Name": "global",
+    "Tasks": null
+  },
+  {
+    "Description": "pack1-2",
+    "Name": "p1-prof",
+    "Tasks": null
+  }
+]
+`
+
 var contentNoPackProfileListString = `[
   {
     "Name": "global",
@@ -169,6 +182,43 @@ var contentBootenvGregCreateSuccessString = `{
 
 var contentPack1DestroyErrorString = "Error: Profile p1-prof (at 0) does not exist\n\n"
 
+var contentPack1BadUpdateString = `{
+  "Name": "Pack1",
+  "Version": "0.2",
+  "Sections": {
+    "profiles": {
+      "p2-prof": {
+	"Description": "pack1-2",
+        "Name": "p2-prof"
+      }
+    }
+  }
+}
+`
+var contentPack1BadUpdateErrorString = "Error: Profile p1-prof (at 0) does not exist\n\n"
+
+var contentPack1UpdateString = `{
+  "Name": "Pack1",
+  "Version": "0.2",
+  "Sections": {
+    "profiles": {
+      "p1-prof": {
+	"Description": "pack1-2",
+        "Name": "p1-prof"
+      }
+    }
+  }
+}
+`
+var contentPack1UpdateSuccessString = `{
+  "Counts": {
+    "profiles": 1
+  },
+  "Name": "Pack1",
+  "Version": "0.2"
+}
+`
+
 func TestContentFunctionalCli(t *testing.T) {
 
 	tests := []CliTest{
@@ -185,6 +235,11 @@ func TestContentFunctionalCli(t *testing.T) {
 
 		CliTest{false, true, []string{"contents", "destroy", "Pack1"}, noStdinString, noContentString, contentPack1DestroyErrorString},
 		CliTest{false, false, []string{"profiles", "list"}, noStdinString, contentPack1ProfileListString, noErrorString},
+
+		CliTest{false, true, []string{"contents", "update", "Pack1", contentPack1BadUpdateString}, noStdinString, noContentString, contentPack1BadUpdateErrorString},
+		CliTest{false, false, []string{"profiles", "list"}, noStdinString, contentPack1ProfileListString, noErrorString},
+		CliTest{false, false, []string{"contents", "update", "Pack1", contentPack1UpdateString}, noStdinString, contentPack1UpdateSuccessString, noErrorString},
+		CliTest{false, false, []string{"profiles", "list"}, noStdinString, contentPack1UpdateProfileListString, noErrorString},
 
 		CliTest{false, false, []string{"machines", "destroy", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, "Deleted machine 3e7031fe-3062-45f1-835c-92541bc9cbd3\n", noErrorString},
 

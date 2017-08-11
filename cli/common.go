@@ -351,7 +351,7 @@ func Create(input string, ptrs CreateOps) (interface{}, error) {
 	}
 }
 
-func Update(id, input string, ptrs ModOps) (interface{}, error) {
+func Update(id, input string, ptrs ModOps, replace bool) (interface{}, error) {
 	var buf []byte
 	var err error
 	if input == "-" {
@@ -381,9 +381,14 @@ func Update(id, input string, ptrs ModOps) (interface{}, error) {
 		return nil, fmt.Errorf("Unable to marshal object: %v\n", err)
 	}
 
-	merged, err := safeMergeJSON(data, updateObj)
-	if err != nil {
-		return nil, fmt.Errorf("Unable to merge objects: %v\n", err)
+	var merged []byte
+	if replace {
+		merged = updateObj
+	} else {
+		merged, err = safeMergeJSON(data, updateObj)
+		if err != nil {
+			return nil, fmt.Errorf("Unable to merge objects: %v\n", err)
+		}
 	}
 
 	// if the caller provides update, use it because we have Patch issues.
@@ -394,7 +399,11 @@ func Update(id, input string, ptrs ModOps) (interface{}, error) {
 			return nil, fmt.Errorf("Unable to unmarshal merged input stream: %v\n", err)
 		}
 
-		return uptrs.Update(id, obj)
+		if data, err := uptrs.Update(id, obj); err != nil {
+			return nil, generateError(err, "Unable to update %v", id)
+		} else {
+			return data, nil
+		}
 	}
 	// Else use Patch
 	patch, err := jsonpatch2.Generate(baseObj, merged, true)
@@ -605,7 +614,7 @@ empty object of that type.  For User, BootEnv, Machine, and Profile, it will be 
 					}
 					dumpUsage = false
 
-					if data, err := Update(args[0], args[1], ptrs); err != nil {
+					if data, err := Update(args[0], args[1], ptrs, false); err != nil {
 						return err
 					} else {
 						return prettyPrint(data)
@@ -665,7 +674,7 @@ empty object of that type.  For User, BootEnv, Machine, and Profile, it will be 
 						}
 						dumpUsage = false
 
-						if data, err := Update(args[0], args[1], ptrs); err != nil {
+						if data, err := Update(args[0], args[1], ptrs, true); err != nil {
 							return err
 						} else {
 							return prettyPrint(data)
