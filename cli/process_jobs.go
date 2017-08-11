@@ -15,7 +15,7 @@ import (
 
 	"github.com/digitalrebar/provision/client/events"
 	"github.com/digitalrebar/provision/client/jobs"
-	"github.com/digitalrebar/provision/models"
+	models "github.com/digitalrebar/provision/genmodels"
 	"github.com/go-openapi/strfmt"
 	"github.com/spf13/cobra"
 )

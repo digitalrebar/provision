@@ -121,9 +121,9 @@ var templateUpdateJohnMissingErrorString string = "Error: templates GET: john2: 
 var templatePatchNoArgErrorString string = "Error: drpcli templates patch [objectJson] [changesJson] [flags] requires 2 arguments"
 var templatePatchTooManyArgErrorString string = "Error: drpcli templates patch [objectJson] [changesJson] [flags] requires 2 arguments"
 var templatePatchBadPatchJSONString = "asdgasdg"
-var templatePatchBadPatchJSONErrorString = "Error: Unable to parse drpcli templates patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Template\n\n"
+var templatePatchBadPatchJSONErrorString = "Error: Unable to parse drpcli templates patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Template\n\n"
 var templatePatchBadBaseJSONString = "asdgasdg"
-var templatePatchBadBaseJSONErrorString = "Error: Unable to parse drpcli templates patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Template\n\n"
+var templatePatchBadBaseJSONErrorString = "Error: Unable to parse drpcli templates patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Template\n\n"
 var templatePatchBaseString string = `{
   "Contents": "John Rules",
   "Description": "NewStrat",

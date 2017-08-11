@@ -103,9 +103,9 @@ var profileUpdateJohnMissingErrorString string = "Error: profiles GET: john2: No
 var profilePatchNoArgErrorString string = "Error: drpcli profiles patch [objectJson] [changesJson] [flags] requires 2 arguments"
 var profilePatchTooManyArgErrorString string = "Error: drpcli profiles patch [objectJson] [changesJson] [flags] requires 2 arguments"
 var profilePatchBadPatchJSONString = "asdgasdg"
-var profilePatchBadPatchJSONErrorString = "Error: Unable to parse drpcli profiles patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Profile\n\n"
+var profilePatchBadPatchJSONErrorString = "Error: Unable to parse drpcli profiles patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Profile\n\n"
 var profilePatchBadBaseJSONString = "asdgasdg"
-var profilePatchBadBaseJSONErrorString = "Error: Unable to parse drpcli profiles patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Profile\n\n"
+var profilePatchBadBaseJSONErrorString = "Error: Unable to parse drpcli profiles patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Profile\n\n"
 var profilePatchBaseString string = `{
   "Name": "john",
   "Params": {

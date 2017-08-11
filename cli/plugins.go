@@ -5,7 +5,7 @@ import (
 
 	"github.com/digitalrebar/provision/backend"
 	"github.com/digitalrebar/provision/client/plugins"
-	"github.com/digitalrebar/provision/models"
+	models "github.com/digitalrebar/provision/genmodels"
 	"github.com/ghodss/yaml"
 	"github.com/spf13/cobra"
 )

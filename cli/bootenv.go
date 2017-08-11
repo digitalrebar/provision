@@ -15,7 +15,7 @@ import (
 	bootenvs "github.com/digitalrebar/provision/client/boot_envs"
 	"github.com/digitalrebar/provision/client/isos"
 	"github.com/digitalrebar/provision/client/templates"
-	"github.com/digitalrebar/provision/models"
+	models "github.com/digitalrebar/provision/genmodels"
 	"github.com/spf13/cobra"
 )
 

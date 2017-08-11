@@ -120,9 +120,9 @@ var machineUpdateJohnMissingErrorString string = "Error: machines GET: john2: No
 var machinePatchNoArgErrorString string = "Error: drpcli machines patch [objectJson] [changesJson] [flags] requires 2 arguments"
 var machinePatchTooManyArgErrorString string = "Error: drpcli machines patch [objectJson] [changesJson] [flags] requires 2 arguments"
 var machinePatchBadPatchJSONString = "asdgasdg"
-var machinePatchBadPatchJSONErrorString = "Error: Unable to parse drpcli machines patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Machine\n\n"
+var machinePatchBadPatchJSONErrorString = "Error: Unable to parse drpcli machines patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Machine\n\n"
 var machinePatchBadBaseJSONString = "asdgasdg"
-var machinePatchBadBaseJSONErrorString = "Error: Unable to parse drpcli machines patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Machine\n\n"
+var machinePatchBadBaseJSONErrorString = "Error: Unable to parse drpcli machines patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Machine\n\n"
 var machinePatchBaseString string = `{
   "Address": "192.168.100.110",
   "BootEnv": "local",

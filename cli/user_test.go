@@ -89,9 +89,9 @@ var userUpdateJohnMissingErrorString string = "Error: users GET: john2: Not Foun
 var userPatchNoArgErrorString string = "Error: drpcli users patch [objectJson] [changesJson] [flags] requires 2 arguments"
 var userPatchTooManyArgErrorString string = "Error: drpcli users patch [objectJson] [changesJson] [flags] requires 2 arguments"
 var userPatchBadPatchJSONString = "asdgasdg"
-var userPatchBadPatchJSONErrorString = "Error: Unable to parse drpcli users patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.User\n\n"
+var userPatchBadPatchJSONErrorString = "Error: Unable to parse drpcli users patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.User\n\n"
 var userPatchBadBaseJSONString = "asdgasdg"
-var userPatchBadBaseJSONErrorString = "Error: Unable to parse drpcli users patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.User\n\n"
+var userPatchBadBaseJSONErrorString = "Error: Unable to parse drpcli users patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.User\n\n"
 var userPatchBaseString string = `{
   "Name": "john"
 }

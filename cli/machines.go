@@ -18,7 +18,7 @@ import (
 	"github.com/VictorLowther/jsonpatch2/utils"
 	"github.com/digitalrebar/provision/backend"
 	"github.com/digitalrebar/provision/client/machines"
-	"github.com/digitalrebar/provision/models"
+	models "github.com/digitalrebar/provision/genmodels"
 	"github.com/ghodss/yaml"
 	"github.com/go-openapi/strfmt"
 	"github.com/gorilla/websocket"

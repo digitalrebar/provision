@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/digitalrebar/provision"
-	"github.com/digitalrebar/provision/models"
+	models "github.com/digitalrebar/provision/genmodels"
 )
 
 var infoGetTooManyArgsErrorString string = "Error: drpcli info get [flags] requires no arguments"

@@ -95,9 +95,9 @@ var reservationUpdateJohnMissingErrorString string = "Error: reservations GET: C
 var reservationPatchNoArgErrorString string = "Error: drpcli reservations patch [objectJson] [changesJson] [flags] requires 2 arguments"
 var reservationPatchTooManyArgErrorString string = "Error: drpcli reservations patch [objectJson] [changesJson] [flags] requires 2 arguments"
 var reservationPatchBadPatchJSONString = "asdgasdg"
-var reservationPatchBadPatchJSONErrorString = "Error: Unable to parse drpcli reservations patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Reservation\n\n"
+var reservationPatchBadPatchJSONErrorString = "Error: Unable to parse drpcli reservations patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Reservation\n\n"
 var reservationPatchBadBaseJSONString = "asdgasdg"
-var reservationPatchBadBaseJSONErrorString = "Error: Unable to parse drpcli reservations patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Reservation\n\n"
+var reservationPatchBadBaseJSONErrorString = "Error: Unable to parse drpcli reservations patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Reservation\n\n"
 var reservationPatchBaseString string = `{
   "Addr": "192.168.100.100",
   "Strategy": "MAC",

@@ -237,9 +237,9 @@ var bootEnvUpdateJohnMissingErrorString string = "Error: bootenvs GET: john2: No
 var bootEnvPatchNoArgErrorString string = "Error: drpcli bootenvs patch [objectJson] [changesJson] [flags] requires 2 arguments"
 var bootEnvPatchTooManyArgErrorString string = "Error: drpcli bootenvs patch [objectJson] [changesJson] [flags] requires 2 arguments"
 var bootEnvPatchBadPatchJSONString = "asdgasdg"
-var bootEnvPatchBadPatchJSONErrorString = "Error: Unable to parse drpcli bootenvs patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.BootEnv\n\n"
+var bootEnvPatchBadPatchJSONErrorString = "Error: Unable to parse drpcli bootenvs patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.BootEnv\n\n"
 var bootEnvPatchBadBaseJSONString = "asdgasdg"
-var bootEnvPatchBadBaseJSONErrorString = "Error: Unable to parse drpcli bootenvs patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.BootEnv\n\n"
+var bootEnvPatchBadBaseJSONErrorString = "Error: Unable to parse drpcli bootenvs patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.BootEnv\n\n"
 var bootEnvPatchBaseString string = `{
   "Available": false,
   "BootParams": "",
@@ -316,7 +316,7 @@ var bootEnvInstallTooManyArgUsageString string = "Error: drpcli bootenvs install
 var bootEnvInstallBadBootEnvDirErrorString string = "Error: Error determining whether bootenvs dir exists: stat bootenvs: no such file or directory\n\n"
 var bootEnvInstallBootEnvDirIsFileErrorString string = "Error: bootenvs is not a directory\n\n"
 var bootEnvInstallNoSledgehammerErrorString string = "Error: No bootenv bootenvs/fredhammer.yml\n\n"
-var bootEnvInstallSledgehammerBadJsonErrorString string = "Error: Invalid bootenv object: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.BootEnv\n\n\n"
+var bootEnvInstallSledgehammerBadJsonErrorString string = "Error: Invalid bootenv object: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.BootEnv\n\n\n"
 
 var bootEnvInstallSledgehammerSuccessWithErrorsString string = `RE:
 {

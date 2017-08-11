@@ -23,7 +23,7 @@ vendor
 coverage.txt
 ALL-LICENSE
 client
-models
+genmodels
 assets/isos/
 dr-provision.zip
 dr-provision.sha256
