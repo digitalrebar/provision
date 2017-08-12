@@ -108,6 +108,14 @@ func findOrFake(field string, args map[string]string) *string {
 	}
 }
 
+func writeMetaFile(field string, data *string) error {
+	if data == nil {
+		return nil
+	}
+	fname := fmt.Sprintf("._%s.meta", field)
+	return ioutil.WriteFile(fname, []byte(*data), 0640)
+}
+
 var typeToObject = map[string](func() store.KeySaver){
 	"machines":     (&backend.Machine{}).New,
 	"params":       (&backend.Param{}).New,
@@ -205,6 +213,71 @@ func addContentCommands() (res *cobra.Command) {
 					return fmt.Errorf("Failed to write file: %v", err)
 				}
 			}
+			return nil
+		},
+	})
+
+	commands = append(commands, &cobra.Command{
+		Use:   "unbundle [file]",
+		Short: "Unbundle a [file] into the local directory.",
+		Long:  "Unbundle assumes that the current directory is the target",
+		RunE: func(c *cobra.Command, args []string) error {
+			if len(args) != 1 {
+				return fmt.Errorf("Must provide a file")
+			}
+			dumpUsage = false
+			filename := args[0]
+
+			ext := path.Ext(filename)
+			codec := store.DefaultCodec
+			if ext == ".yaml" || ext == ".yml" {
+				codec = store.YamlCodec
+			}
+
+			content := &models.Content{}
+			if buf, err := ioutil.ReadFile(filename); err != nil {
+				return err
+			} else {
+				if err := codec.Decode(buf, content); err != nil {
+					return err
+				}
+			}
+
+			// Record Meta fields
+			if err := writeMetaFile("Name", content.Meta.Name); err != nil {
+				return err
+			}
+			s := content.Meta.Source
+			if err := writeMetaFile("Source", &s); err != nil {
+				return err
+			}
+			s = content.Meta.Description
+			if err := writeMetaFile("Description", &s); err != nil {
+				return err
+			}
+			s = content.Meta.Version
+			if err := writeMetaFile("Version", &s); err != nil {
+				return err
+			}
+
+			// Write sections
+			for prefix, data := range content.Sections {
+				if err := os.MkdirAll(prefix, 0750); err != nil {
+					return err
+				}
+
+				for name, obj := range data {
+					fname := fmt.Sprintf("%s/%s.%s", prefix, name, ext)
+					if jobj, err := codec.Encode(obj); err != nil {
+						return err
+					} else {
+						if err := ioutil.WriteFile(fname, jobj, 0640); err != nil {
+							return err
+						}
+					}
+				}
+			}
+
 			return nil
 		},
 	})
