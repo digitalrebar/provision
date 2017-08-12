@@ -21,25 +21,32 @@ var contentDefaultListString string = `[
       "templates": 0,
       "users": 1
     },
-    "Description": "Writable backing store",
-    "Name": "BackingStore",
-    "Version": "user"
+    "meta": {
+      "Description": "Writable backing store",
+      "Name": "BackingStore",
+      "Version": "user"
+    }
   },
   {
     "Counts": {
       "templates": 1
     },
-    "Description": "Local Override Store",
-    "Name": "LocalStore",
-    "Version": "user"
+    "meta": {
+      "Description": "Local Override Store",
+      "Name": "LocalStore",
+      "Version": "user"
+    }
   },
   {
     "Counts": {
       "templates": 1
     },
-    "Description": "Initial Default Content",
-    "Name": "DefaultStore",
-    "Version": "user"
+    "meta": {
+      "Description": "Initial Default Content",
+      "Name": "DefaultStore",
+      "Source": "Unspecified",
+      "Version": "user"
+    }
   }
 ]
 `
@@ -53,7 +60,9 @@ var contentShowNoArgErrorString string = "Error: drpcli contents show [id] [flag
 var contentShowTooManyArgErrorString string = "Error: drpcli contents show [id] [flags] requires 1 argument\n"
 var contentShowMissingArgErrorString string = "Error: content get: not found: john2\n\n"
 var contentShowContentString string = `{
-  "Name": "john"
+  "meta": {
+    "Name": "john"
+  }
 }
 `
 
@@ -69,11 +78,15 @@ var contentCreateBadJSONErrorString = "Error: Invalid content object: error conv
 var contentCreateBadJSON2String = "[asdgasdg]"
 var contentCreateBadJSON2ErrorString = "Error: Unable to create new content: Invalid type passed to content create\n\n"
 var contentCreateInputString string = `{
-  "Name": "john"
+  "meta": {
+    "Name": "john"
+  }
 }
 `
 var contentCreateJohnString string = `{
-  "Name": "john"
+  "meta": {
+    "Name": "john"
+  }
 }
 `
 var contentCreateDuplicateErrorString = "Error: content post: already exists: john\n\n"
@@ -95,28 +108,37 @@ var contentListContentsString = `[
       "templates": 0,
       "users": 1
     },
-    "Description": "Writable backing store",
-    "Name": "BackingStore",
-    "Version": "user"
+    "meta": {
+      "Description": "Writable backing store",
+      "Name": "BackingStore",
+      "Version": "user"
+    }
   },
   {
     "Counts": {
       "templates": 1
     },
-    "Description": "Local Override Store",
-    "Name": "LocalStore",
-    "Version": "user"
+    "meta": {
+      "Description": "Local Override Store",
+      "Name": "LocalStore",
+      "Version": "user"
+    }
   },
   {
-    "Name": "john"
+    "meta": {
+      "Name": "john"
+    }
   },
   {
     "Counts": {
       "templates": 1
     },
-    "Description": "Initial Default Content",
-    "Name": "DefaultStore",
-    "Version": "user"
+    "meta": {
+      "Description": "Initial Default Content",
+      "Name": "DefaultStore",
+      "Source": "Unspecified",
+      "Version": "user"
+    }
   }
 ]
 `
@@ -126,18 +148,24 @@ var contentUpdateTooManyArgErrorString string = "Error: drpcli contents update [
 var contentUpdateBadJSONString = "asdgasdg"
 var contentUpdateBadJSONErrorString = "Error: Unable to unmarshal merged input stream: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Content\n\n\n"
 var contentUpdateBadInputString string = `{
-  "Name": "john2"
+  "meta": {
+    "Name": "john2"
+  }
 }
 `
 var contentUpdateBadInputErrorString string = "Error: Name must match: john2 != john\n\n\n"
 var contentUpdateInputString string = `{
-  "Description": "Fred Rules",
-  "Name": "john"
+  "meta": {
+    "Description": "Fred Rules",
+    "Name": "john"
+  }
 }
 `
 var contentUpdateJohnString string = `{
-  "Description": "Fred Rules",
-  "Name": "john"
+  "meta": {
+    "Description": "Fred Rules",
+    "Name": "john"
+  }
 }
 `
 var contentUpdateJohnMissingErrorString string = "Error: content get: not found: john2\n\n"

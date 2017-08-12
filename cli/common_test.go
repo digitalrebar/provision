@@ -319,8 +319,8 @@ func TestMain(m *testing.M) {
 		"--disable-dhcp",
 		"--drp-id", "Fred",
 		"--backend", "memory:///",
-		"--local-content", "directory:../test-data/etc/?codec=yaml",
-		"--default-content", "directory:../test-data/usr/share/?codec=yaml",
+		"--local-content", "directory:../test-data/etc/dr-provision?codec=yaml",
+		"--default-content", "file:../test-data/usr/share/dr-provision/default.yaml?codec=yaml",
 	}
 
 	err = os.MkdirAll(tmpDir+"/plugins", 0755)

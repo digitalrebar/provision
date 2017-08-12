@@ -33,9 +33,11 @@ var contentMyLocalBootEnvString = `{
 `
 
 var contentPack1String = `{
-  "Name": "Pack1",
-  "Version": "0.1",
-  "Sections": {
+  "meta": {
+    "Name": "Pack1",
+    "Version": "0.1",
+  },
+  "sections": {
     "profiles": {
       "p1-prof": {
 	"Description": "pack1",
@@ -50,15 +52,19 @@ var contentPack1CreateSuccessString = `{
   "Counts": {
     "profiles": 1
   },
-  "Name": "Pack1",
-  "Version": "0.1"
+  "meta": {
+    "Name": "Pack1",
+    "Version": "0.1"
+  }
 }
 `
 
 var contentPack2String = `{
-  "Name": "Pack2",
-  "Version": "0.2",
-  "Sections": {
+  "meta": {
+    "Name": "Pack2",
+    "Version": "0.2",
+  },
+  "sections": {
     "profiles": {
       "p1-prof": {
 	"Description": "pack2",
@@ -183,9 +189,11 @@ var contentBootenvGregCreateSuccessString = `{
 var contentPack1DestroyErrorString = "Error: Profile p1-prof (at 0) does not exist\n\n"
 
 var contentPack1BadUpdateString = `{
-  "Name": "Pack1",
-  "Version": "0.2",
-  "Sections": {
+  "meta": {
+    "Name": "Pack1",
+    "Version": "0.2",
+  },
+  "sections": {
     "profiles": {
       "p2-prof": {
 	"Description": "pack1-2",
@@ -198,9 +206,11 @@ var contentPack1BadUpdateString = `{
 var contentPack1BadUpdateErrorString = "Error: Profile p1-prof (at 0) does not exist\n\n"
 
 var contentPack1UpdateString = `{
-  "Name": "Pack1",
-  "Version": "0.2",
-  "Sections": {
+  "meta": {
+    "Name": "Pack1",
+    "Version": "0.2",
+  },
+  "sections": {
     "profiles": {
       "p1-prof": {
 	"Description": "pack1-2",
@@ -214,8 +224,10 @@ var contentPack1UpdateSuccessString = `{
   "Counts": {
     "profiles": 1
   },
-  "Name": "Pack1",
-  "Version": "0.2"
+  "meta": {
+    "Name": "Pack1",
+    "Version": "0.2"
+  }
 }
 `
 
