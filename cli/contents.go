@@ -95,7 +95,9 @@ func init() {
 }
 
 func findOrFake(field string, args map[string]string) *string {
-	buf, err := ioutil.ReadFile(fmt.Sprintf("._%s.meta", field))
+	filepath := fmt.Sprintf("._%s.meta", field)
+	fmt.Printf("Processing Meta: %s\n", filepath)
+	buf, err := ioutil.ReadFile(filepath)
 	if err == nil {
 		s := string(buf)
 		return &s
@@ -113,6 +115,7 @@ func writeMetaFile(field string, data *string) error {
 		return nil
 	}
 	fname := fmt.Sprintf("._%s.meta", field)
+	fmt.Printf("Writing Meta: %s\n", fname)
 	return ioutil.WriteFile(fname, []byte(*data), 0640)
 }
 
@@ -185,11 +188,20 @@ func addContentCommands() (res *cobra.Command) {
 
 						obj := fn()
 
+						fmt.Printf("Processing: %s\n", filepath)
 						if buf, err := ioutil.ReadFile(filepath); err != nil {
 							return err
 						} else {
 							if err := codec.Decode(buf, obj); err != nil {
-								return err
+								if prefix == "templates" {
+									// Templates could be plain.
+									id := path.Base(filepath)
+									tmpl := &backend.Template{ID: id}
+									tmpl.Contents = string(buf)
+									obj = tmpl
+								} else {
+									return err
+								}
 							}
 						}
 
@@ -235,6 +247,7 @@ func addContentCommands() (res *cobra.Command) {
 			}
 
 			content := &models.Content{}
+			fmt.Printf("Processing: %s\n", filename)
 			if buf, err := ioutil.ReadFile(filename); err != nil {
 				return err
 			} else {
@@ -267,12 +280,24 @@ func addContentCommands() (res *cobra.Command) {
 				}
 
 				for name, obj := range data {
-					fname := fmt.Sprintf("%s/%s.%s", prefix, name, ext)
-					if jobj, err := codec.Encode(obj); err != nil {
-						return err
-					} else {
-						if err := ioutil.WriteFile(fname, jobj, 0640); err != nil {
+					fname := fmt.Sprintf("%s/%s%s", prefix, name, ext)
+					if prefix == "templates" {
+						mobj := obj.(map[string]interface{})
+						name := mobj["ID"].(string)
+						contents := mobj["Contents"].(string)
+						fname = fmt.Sprintf("%s/%s", prefix, name)
+						fmt.Printf("Writing: %s\n", fname)
+						if err := ioutil.WriteFile(fname, []byte(contents), 0640); err != nil {
 							return err
+						}
+					} else {
+						if jobj, err := codec.Encode(obj); err != nil {
+							return err
+						} else {
+							fmt.Printf("Writing: %s\n", fname)
+							if err := ioutil.WriteFile(fname, jobj, 0640); err != nil {
+								return err
+							}
 						}
 					}
 				}
