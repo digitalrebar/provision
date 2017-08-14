@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"time"
 
 	"github.com/ghodss/yaml"
 
@@ -165,7 +166,8 @@ func addBootEnvCommands() (res *cobra.Command) {
 		Short: fmt.Sprintf("Access CLI commands relating to %v", name),
 	}
 
-	commands := commonOps(&BootEnvOps{CommonOps{Name: name, SingularName: singularName}})
+	beo := &BootEnvOps{CommonOps{Name: name, SingularName: singularName}}
+	commands := commonOps(beo)
 
 	installCmd := &cobra.Command{
 		Use:   "install [bootenvFile] [isoPath]",
@@ -316,6 +318,53 @@ using isos upload.git `,
 	}
 	installCmd.Flags().BoolVar(&installSkipDownloadIsos, "skip-download", false, "Whether to try to download ISOs from their upstream")
 	commands = append(commands, installCmd)
+
+	uploadisoCmd := &cobra.Command{
+		Use:   "uploadiso [id]",
+		Short: "This will attempt to upload the ISO from the specified ISO URL.",
+		Long:  "This will attempt to upload the ISO from the specified ISO URL.",
+		RunE: func(c *cobra.Command, args []string) error {
+			if len(args) != 1 {
+				return fmt.Errorf("%v requires 1 argument", c.UseLine())
+			}
+			dumpUsage = false
+
+			id := args[0]
+			obj, err := beo.Get(id)
+			if err != nil {
+				return generateError(err, "Failed to fetch %v: %v", singularName, id)
+			}
+			bootEnv := obj.(*models.BootEnv)
+			isoUrl := bootEnv.OS.IsoURL.String()
+
+			// We need to install the ISO
+			err = func() error {
+				// It is not present locally, we need to download it
+				if isoUrl == "" {
+					return fmt.Errorf("Unable to automatically download %s", isoUrl)
+				}
+				isoDlResp, err := http.Get(isoUrl)
+				if err != nil {
+					return fmt.Errorf("Unable to connect to %s: %v", isoUrl, err)
+				}
+				defer isoDlResp.Body.Close()
+				if isoDlResp.StatusCode >= 300 {
+					return fmt.Errorf("Unable to initiate download of %s: %s", isoUrl, isoDlResp.Status)
+				}
+
+				params := isos.NewUploadIsoParams().
+					WithTimeout(30 * time.Minute).
+					WithPath(bootEnv.OS.IsoFile).
+					WithBody(isoDlResp.Body)
+				if _, err := session.Isos.UploadIso(params, basicAuth); err != nil {
+					return generateError(err, "Error uploading %s", bootEnv.OS.IsoFile)
+				}
+				return nil
+			}()
+			return err
+		},
+	}
+	commands = append(commands, uploadisoCmd)
 
 	res.AddCommand(commands...)
 	return res
