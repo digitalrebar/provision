@@ -15,11 +15,11 @@ import (
 	bootenvs "github.com/digitalrebar/provision/client/boot_envs"
 	"github.com/digitalrebar/provision/client/isos"
 	"github.com/digitalrebar/provision/client/templates"
-	"github.com/digitalrebar/provision/models"
+	models "github.com/digitalrebar/provision/genmodels"
 	"github.com/spf13/cobra"
 )
 
-type BootEnvOps struct{}
+type BootEnvOps struct{ CommonOps }
 
 func (be BootEnvOps) GetType() interface{} {
 	return &models.BootEnv{}
@@ -165,7 +165,7 @@ func addBootEnvCommands() (res *cobra.Command) {
 		Short: fmt.Sprintf("Access CLI commands relating to %v", name),
 	}
 
-	commands := commonOps(singularName, name, &BootEnvOps{})
+	commands := commonOps(&BootEnvOps{CommonOps{Name: name, SingularName: singularName}})
 
 	installCmd := &cobra.Command{
 		Use:   "install [bootenvFile] [isoPath]",

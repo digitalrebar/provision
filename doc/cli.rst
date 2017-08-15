@@ -53,13 +53,13 @@ Token    RS_TOKEN             N/A              Base64 encoded string from a gene
 Endpoint RS_ENDPOINT          -E or --endpoint URL for access, https://IP:PORT. e.g. https://127.0.0.1:8092
 ======== ==================== ================ ==============================================================
 
-.. note:: You must specify either a username and password or a token.
+.. note:: It is necessary to specify either a username and password or a token.
 
-Another useful flag is *--format*.  You can use this to have the tool output YAML instead of JSON.  This can
-be helpful when editting files by hand.  e.g. *--format yaml*
+Another useful flag is *--format*.  this will change the tool output to YAML instead of JSON.  This can
+be helpful when editing files by hand.  e.g. *--format yaml*
 
-For Bash users, the drpcli can generate its own bash completion file.  Once generated, you will need to restart 
-your terminal/shell or reload the completions.
+For Bash users, the drpcli can generate its own bash completion file.  Once generated, it is necessary to restart 
+the terminal/shell or reload the completions.
 
 .. admonition:: linux
 
@@ -70,7 +70,7 @@ your terminal/shell or reload the completions.
 
 .. admonition:: Darwin
 
-  Assuming you are using Brew to update and manage bash and bash autocompletion.
+  Assuming that Brew is in use to update and manage bash and bash autocompletion.
 
   ::
 

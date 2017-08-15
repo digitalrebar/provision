@@ -6,11 +6,11 @@ import (
 
 	"github.com/digitalrebar/provision/backend"
 	"github.com/digitalrebar/provision/client/users"
-	"github.com/digitalrebar/provision/models"
+	models "github.com/digitalrebar/provision/genmodels"
 	"github.com/spf13/cobra"
 )
 
-type UserOps struct{}
+type UserOps struct{ CommonOps }
 
 func (be UserOps) GetType() interface{} {
 	return &models.User{}
@@ -113,7 +113,7 @@ func addUserCommands() (res *cobra.Command) {
 		Use:   name,
 		Short: fmt.Sprintf("Access CLI commands relating to %v", name),
 	}
-	commands := commonOps(singularName, name, &UserOps{})
+	commands := commonOps(&UserOps{CommonOps{Name: name, SingularName: singularName}})
 
 	passwordCmd := &cobra.Command{
 		Use:   "password [id] [password]",

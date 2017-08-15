@@ -94,3 +94,26 @@ v3.0.2 to v3.0.3
 ----------------
 This is a quick turn release to address the issue with updating bootenvs.  This is a CLI code and docs only change.
 
+v3.0.3 to v3.0.4
+----------------
+Nothing needs to be done.
+
+v3.0.4 to v3.0.5
+----------------
+Nothing needs to be done.
+
+v3.0.5 to NEXT
+--------------
+The subnet objects have an enabled flag that allows for subnets to be turned off without deleting them.  This value
+defaults to false (off).  To enable existing subnets, you will need to do the following for each subnet in your system:
+
+  ::
+
+    drpcli subnets update subnet1 '{ "Enabled": true }'
+
+Replace *subnet1* with the name of your subnet.
+
+
+
+
+

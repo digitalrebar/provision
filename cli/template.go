@@ -8,11 +8,11 @@ import (
 
 	"github.com/digitalrebar/provision/backend"
 	"github.com/digitalrebar/provision/client/templates"
-	"github.com/digitalrebar/provision/models"
+	models "github.com/digitalrebar/provision/genmodels"
 	"github.com/spf13/cobra"
 )
 
-type TemplateOps struct{}
+type TemplateOps struct{ CommonOps }
 
 func (be TemplateOps) GetType() interface{} {
 	return &models.Template{}
@@ -137,7 +137,7 @@ func addTemplateCommands() (res *cobra.Command) {
 		Use:   name,
 		Short: fmt.Sprintf("Access CLI commands relating to %v", name),
 	}
-	commands := commonOps(singularName, name, &TemplateOps{})
+	commands := commonOps(&TemplateOps{CommonOps{Name: name, SingularName: singularName}})
 	res.AddCommand(commands...)
 	return res
 }

@@ -9,16 +9,19 @@
 Quick Start
 ~~~~~~~~~~~
 
-Typically, Curl and Bash are unsafe, but they are simple and quick.
+This quick start guide provides a basic installation and start point for further exploration.  The guide has been designed for UNIX systems: Mac OS, Linux OS, Linux VMs and Linux Packet Servers.  The guide employs Curl and Bash commands which are not typically considered safe, but they do provide a simple and quick process for start up.
 
+For a full install, please see :ref:`rs_install`
+
+To begin, execute the following command in a shell or terminal: 
   ::
 
     curl -fsSL https://raw.githubusercontent.com/digitalrebar/provision/master/tools/install.sh | bash -s -- --isolated install
 
-This will pull the latest code bundle and checksum from github, extract the code files,
-make sure prerequisites are installed, and create some initial directories and links.
+The command will pull the latest code bundle and checksum from github, extract the code files,
+verify prerequisites are installed, and create some initial directories and links.
 
-It should display something like this:
+The terminal should then display something like this:
 
   ::
 
@@ -32,12 +35,17 @@ It should display something like this:
 
     tools/discovery-load.sh
 
-The sudo command will run an instance of Digital Rebar Provision that uses the drp-data
+The next step is to execute the sudo command which will run an instance of Digital Rebar Provision that uses the drp-data
 directory for object and file storage.  Additionally, *dr-provision* will attempt
 to use the IP address best suited for client interaction, however if that detection fails, the IP
-address specified in by *--static-ip* will be used.
+address specified in by *--static-ip* will be used.  After Digital Rebar Provision has started a prompt for a username and password will appear.  
+
+.. note:: On MAC DARWIN there are two additional steps. First, use the ``--static-ip=`` flag to help the service understand traffic targets.  Second, you may have to add a route for broadcast addresses to work.  This can be done with the following comand.  The 192.168.100.1 is the IP address of the interface that you want to send messages through. The install script will make suggestions for you.
 
 The default username & password is ``rocketskates & r0cketsk8ts``.
+
+With Digital Rebar Provision running it is now time to install the specialized Digital Rebar Provision images, 
+and the required boot environments.
 
 The *tools/discovery-load.sh* command will use the default credentials to install
 the discovery, sledgehammer, and local boot environments.  This will download the
@@ -45,7 +53,10 @@ sledgehammer tarball and upload into Digital Rebar Provision.  It will also chan
 default and unknown boot environments to do dynamic discovery.  This script needs to be
 run after beginning *dr-provision*.
 
-.. note:: Quickstart does NOT create a production deployment and the deployment will NOT restart on failure or reboot.
+When the *tools/discovery-load.sh* script finishes Digital Rebar Provision will be installed and operational.  
+
+
+.. note:: This quick start guide does NOT create a production deployment and the deployment will NOT restart on failure or reboot.
 
 * Remember to check :ref:`rs_install` for general install information.
 * Remember to check :ref:`rs_arch_ports` if there are port access issues.

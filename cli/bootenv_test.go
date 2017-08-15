@@ -28,6 +28,7 @@ var bootEnvDefaultListString string = `[
     "OnlyUnknown": true,
     "OptionalParams": null,
     "RequiredParams": null,
+    "Tasks": null,
     "Templates": [
       {
         "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
@@ -44,13 +45,14 @@ var bootEnvDefaultListString string = `[
         "Name": "ipxe",
         "Path": "default.ipxe"
       }
-    ]
+    ],
+    "Validated": true
   }
 ]
 `
 
-var bootEnvShowNoArgErrorString string = "Error: drpcli bootenvs show [id] requires 1 argument\n"
-var bootEnvShowTooManyArgErrorString string = "Error: drpcli bootenvs show [id] requires 1 argument\n"
+var bootEnvShowNoArgErrorString string = "Error: drpcli bootenvs show [id] [flags] requires 1 argument\n"
+var bootEnvShowTooManyArgErrorString string = "Error: drpcli bootenvs show [id] [flags] requires 1 argument\n"
 var bootEnvShowMissingArgErrorString string = "Error: bootenvs GET: john: Not Found\n\n"
 var bootEnvShowIgnoreString string = `{
   "Available": true,
@@ -66,6 +68,7 @@ var bootEnvShowIgnoreString string = `{
   "OnlyUnknown": true,
   "OptionalParams": null,
   "RequiredParams": null,
+  "Tasks": null,
   "Templates": [
     {
       "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
@@ -82,17 +85,18 @@ var bootEnvShowIgnoreString string = `{
       "Name": "ipxe",
       "Path": "default.ipxe"
     }
-  ]
+  ],
+  "Validated": true
 }
 `
 
-var bootEnvExistsNoArgErrorString string = "Error: drpcli bootenvs exists [id] requires 1 argument"
-var bootEnvExistsTooManyArgErrorString string = "Error: drpcli bootenvs exists [id] requires 1 argument"
+var bootEnvExistsNoArgErrorString string = "Error: drpcli bootenvs exists [id] [flags] requires 1 argument"
+var bootEnvExistsTooManyArgErrorString string = "Error: drpcli bootenvs exists [id] [flags] requires 1 argument"
 var bootEnvExistsIgnoreString string = ""
 var bootEnvExistsMissingJohnString string = "Error: bootenvs GET: john: Not Found\n\n"
 
-var bootEnvCreateNoArgErrorString string = "Error: drpcli bootenvs create [json] requires 1 argument\n"
-var bootEnvCreateTooManyArgErrorString string = "Error: drpcli bootenvs create [json] requires 1 argument\n"
+var bootEnvCreateNoArgErrorString string = "Error: drpcli bootenvs create [json] [flags] requires 1 argument\n"
+var bootEnvCreateTooManyArgErrorString string = "Error: drpcli bootenvs create [json] [flags] requires 1 argument\n"
 var bootEnvCreateBadJSONString = "{asdgasdg}"
 var bootEnvCreateBadJSONErrorString = "Error: dataTracker create bootenvs: Empty key not allowed\n\n"
 var bootEnvCreateInputString string = `{
@@ -114,7 +118,9 @@ var bootEnvCreateJohnString string = `{
   "OnlyUnknown": false,
   "OptionalParams": null,
   "RequiredParams": null,
-  "Templates": null
+  "Tasks": null,
+  "Templates": null,
+  "Validated": true
 }
 `
 var bootEnvCreateFredInputString string = `fred`
@@ -133,7 +139,9 @@ var bootEnvCreateFredString string = `{
   "OnlyUnknown": false,
   "OptionalParams": null,
   "RequiredParams": null,
-  "Templates": null
+  "Tasks": null,
+  "Templates": null,
+  "Validated": true
 }
 `
 var bootEnvDeleteFredString string = "Deleted bootenv fred\n"
@@ -154,6 +162,7 @@ var bootEnvListBothEnvsString = `[
     "OnlyUnknown": true,
     "OptionalParams": null,
     "RequiredParams": null,
+    "Tasks": null,
     "Templates": [
       {
         "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
@@ -170,7 +179,8 @@ var bootEnvListBothEnvsString = `[
         "Name": "ipxe",
         "Path": "default.ipxe"
       }
-    ]
+    ],
+    "Validated": true
   },
   {
     "Available": false,
@@ -187,13 +197,15 @@ var bootEnvListBothEnvsString = `[
     "OnlyUnknown": false,
     "OptionalParams": null,
     "RequiredParams": null,
-    "Templates": null
+    "Tasks": null,
+    "Templates": null,
+    "Validated": true
   }
 ]
 `
 
-var bootEnvUpdateNoArgErrorString string = "Error: drpcli bootenvs update [id] [json] requires 2 arguments"
-var bootEnvUpdateTooManyArgErrorString string = "Error: drpcli bootenvs update [id] [json] requires 2 arguments"
+var bootEnvUpdateNoArgErrorString string = "Error: drpcli bootenvs update [id] [json] [flags] requires 2 arguments"
+var bootEnvUpdateTooManyArgErrorString string = "Error: drpcli bootenvs update [id] [json] [flags] requires 2 arguments"
 var bootEnvUpdateBadJSONString = "asdgasdg"
 var bootEnvUpdateBadJSONErrorString = "Error: Unable to merge objects: json: cannot unmarshal string into Go value of type map[string]interface {}\n\n\n"
 var bootEnvUpdateInputString string = `{
@@ -215,17 +227,19 @@ var bootEnvUpdateJohnString string = `{
   "OnlyUnknown": false,
   "OptionalParams": null,
   "RequiredParams": null,
-  "Templates": null
+  "Tasks": null,
+  "Templates": null,
+  "Validated": true
 }
 `
 var bootEnvUpdateJohnMissingErrorString string = "Error: bootenvs GET: john2: Not Found\n\n"
 
-var bootEnvPatchNoArgErrorString string = "Error: drpcli bootenvs patch [objectJson] [changesJson] requires 2 arguments"
-var bootEnvPatchTooManyArgErrorString string = "Error: drpcli bootenvs patch [objectJson] [changesJson] requires 2 arguments"
+var bootEnvPatchNoArgErrorString string = "Error: drpcli bootenvs patch [objectJson] [changesJson] [flags] requires 2 arguments"
+var bootEnvPatchTooManyArgErrorString string = "Error: drpcli bootenvs patch [objectJson] [changesJson] [flags] requires 2 arguments"
 var bootEnvPatchBadPatchJSONString = "asdgasdg"
-var bootEnvPatchBadPatchJSONErrorString = "Error: Unable to parse drpcli bootenvs patch [objectJson] [changesJson] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.BootEnv\n\n"
+var bootEnvPatchBadPatchJSONErrorString = "Error: Unable to parse drpcli bootenvs patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.BootEnv\n\n"
 var bootEnvPatchBadBaseJSONString = "asdgasdg"
-var bootEnvPatchBadBaseJSONErrorString = "Error: Unable to parse drpcli bootenvs patch [objectJson] [changesJson] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.BootEnv\n\n"
+var bootEnvPatchBadBaseJSONErrorString = "Error: Unable to parse drpcli bootenvs patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.BootEnv\n\n"
 var bootEnvPatchBaseString string = `{
   "Available": false,
   "BootParams": "",
@@ -241,7 +255,9 @@ var bootEnvPatchBaseString string = `{
   "OnlyUnknown": false,
   "OptionalParams": null,
   "RequiredParams": null,
-  "Templates": null
+  "Tasks": null,
+  "Templates": null,
+  "Validated": true
 }
 `
 var bootEnvPatchInputString string = `{
@@ -263,7 +279,9 @@ var bootEnvPatchJohnString string = `{
   "OnlyUnknown": false,
   "OptionalParams": null,
   "RequiredParams": null,
-  "Templates": null
+  "Tasks": null,
+  "Templates": null,
+  "Validated": true
 }
 `
 var bootEnvPatchMissingBaseString string = `{
@@ -281,22 +299,24 @@ var bootEnvPatchMissingBaseString string = `{
   "OnlyUnknown": false,
   "OptionalParams": null,
   "RequiredParams": null,
-  "Templates": null
+  "Tasks": null,
+  "Templates": null,
+  "Validated": true
 }
 `
 var bootEnvPatchJohnMissingErrorString string = "Error: bootenvs: PATCH john2: Not Found\n\n"
 
-var bootEnvDestroyNoArgErrorString string = "Error: drpcli bootenvs destroy [id] requires 1 argument"
-var bootEnvDestroyTooManyArgErrorString string = "Error: drpcli bootenvs destroy [id] requires 1 argument"
+var bootEnvDestroyNoArgErrorString string = "Error: drpcli bootenvs destroy [id] [flags] requires 1 argument"
+var bootEnvDestroyTooManyArgErrorString string = "Error: drpcli bootenvs destroy [id] [flags] requires 1 argument"
 var bootEnvDestroyJohnString string = "Deleted bootenv john\n"
 var bootEnvDestroyMissingJohnString string = "Error: bootenvs: DELETE john: Not Found\n\n"
 
-var bootEnvInstallNoArgUsageString string = "Error: drpcli bootenvs install [bootenvFile] [isoPath] needs at least 1 arg\n"
-var bootEnvInstallTooManyArgUsageString string = "Error: drpcli bootenvs install [bootenvFile] [isoPath] has Too many args\n"
+var bootEnvInstallNoArgUsageString string = "Error: drpcli bootenvs install [bootenvFile] [isoPath] [flags] needs at least 1 arg\n"
+var bootEnvInstallTooManyArgUsageString string = "Error: drpcli bootenvs install [bootenvFile] [isoPath] [flags] has Too many args\n"
 var bootEnvInstallBadBootEnvDirErrorString string = "Error: Error determining whether bootenvs dir exists: stat bootenvs: no such file or directory\n\n"
 var bootEnvInstallBootEnvDirIsFileErrorString string = "Error: bootenvs is not a directory\n\n"
 var bootEnvInstallNoSledgehammerErrorString string = "Error: No bootenv bootenvs/fredhammer.yml\n\n"
-var bootEnvInstallSledgehammerBadJsonErrorString string = "Error: Invalid bootenv object: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.BootEnv\n\n\n"
+var bootEnvInstallSledgehammerBadJsonErrorString string = "Error: Invalid bootenv object: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.BootEnv\n\n\n"
 
 var bootEnvInstallSledgehammerSuccessWithErrorsString string = `RE:
 {
@@ -333,9 +353,11 @@ var bootEnvInstallSledgehammerSuccessString string = `RE:
     "access_keys"
   \],
   "RequiredParams": null,
+  "Tasks": null,
   "Templates": \[
 [\s\S]*
-  \]
+  \],
+  "Validated": [\s\S]*
 }
 `
 
@@ -354,6 +376,7 @@ var bootEnvInstallLocalSuccessString string = `{
   "OnlyUnknown": false,
   "OptionalParams": null,
   "RequiredParams": null,
+  "Tasks": null,
   "Templates": [
     {
       "ID": "local-pxelinux.tmpl",
@@ -370,7 +393,8 @@ var bootEnvInstallLocalSuccessString string = `{
       "Name": "ipxe",
       "Path": "{{.Machine.Address}}.ipxe"
     }
-  ]
+  ],
+  "Validated": true
 }
 `
 
@@ -484,7 +508,7 @@ func TestBootEnvCli(t *testing.T) {
 		testCli(t, test)
 	}
 
-	midlayer.ServeStatic("127.0.0.1:10003", backend.NewFS("test-data", nil), nil)
+	midlayer.ServeStatic("127.0.0.1:10003", backend.NewFS("test-data", nil), nil, backend.NewPublishers(nil))
 
 	os.RemoveAll("bootenvs/fredhammer.yml")
 	if err := os.MkdirAll("bootenvs", 0755); err != nil {

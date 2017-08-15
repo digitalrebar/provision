@@ -28,8 +28,8 @@ var isosGregListString string = `[
   "greg"
 ]
 `
-var isosDestroyNoArgsErrorString = "Error: drpcli isos destroy [id] requires 1 argument\n"
-var isosDestroyTwoArgsErrorString = "Error: drpcli isos destroy [id] requires 1 argument\n"
+var isosDestroyNoArgsErrorString = "Error: drpcli isos destroy [id] [flags] requires 1 argument\n"
+var isosDestroyTwoArgsErrorString = "Error: drpcli isos destroy [id] [flags] requires 1 argument\n"
 var isosDestroyGregSuccessString = "Deleted iso greg\n"
 var isosDestroyFredErrorString = "Error: delete: unable to delete fred\n\n"
 
