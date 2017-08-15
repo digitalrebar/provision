@@ -11,8 +11,9 @@ Quick Start
 
 This quick start guide provides a basic installation and start point for further exploration.  The guide has been designed for UNIX systems: Mac OS, Linux OS, Linux VMs and Linux Packet Servers.  The guide employs Curl and Bash commands which are not typically considered safe, but they do provide a simple and quick process for start up.
 
-To begin, execute the following command in a shell or terminal: 
+For a full install, please see :ref:`rs_install`
 
+To begin, execute the following command in a shell or terminal: 
   ::
 
     curl -fsSL https://raw.githubusercontent.com/digitalrebar/provision/master/tools/install.sh | bash -s -- --isolated install
@@ -38,6 +39,8 @@ The next step is to execute the sudo command which will run an instance of Digit
 directory for object and file storage.  Additionally, *dr-provision* will attempt
 to use the IP address best suited for client interaction, however if that detection fails, the IP
 address specified in by *--static-ip* will be used.  After Digital Rebar Provision has started a prompt for a username and password will appear.  
+
+.. note:: On MAC DARWIN there are two additional steps. First, use the ``--static-ip=`` flag to help the service understand traffic targets.  Second, you may have to add a route for broadcast addresses to work.  This can be done with the following comand.  The 192.168.100.1 is the IP address of the interface that you want to send messages through. The install script will make suggestions for you.
 
 The default username & password is ``rocketskates & r0cketsk8ts``.
 

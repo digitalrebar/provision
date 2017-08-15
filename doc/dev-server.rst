@@ -57,7 +57,9 @@ command on both the server and the cli.
 Serving UI from File System
 ---------------------------
 
-When working on the Digital Rebar Provision UI, it is possible to skip the generate steps by using the `--dev-ui` flag.  Generally, this is started using `--dev-ui ./embedded/assets/ui`
+When working on the Digital Rebar Provision UI, it is possible to skip the generate steps by using the ``--dev-ui`` flag.  Generally, this is started using ``--dev-ui ./embedded/assets/ui/public``.
+
+You will need brunch (``npm install brunch -g``) to build new versions of the ui. use ``brunch build --production`` to use minify javascript.
 
 
 .. _rs_testing:
@@ -67,9 +69,9 @@ Running the Tests
 
 Digital Rebar Provision uses the Golang test libraries and the development team works hard to maintain test coverage.
 
-The `tools/test.sh` in the provision root directory is the main way to test the entire code base.
+The ``tools/test.sh`` in the provision root directory is the main way to test the entire code base.
 
-To test individual modules from their subdirectories run: `go test`
+To test individual modules from their subdirectories run: ``go test``
 
 How to get Swagger-Ui
 ---------------------

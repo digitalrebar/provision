@@ -37,8 +37,8 @@ var filesGregListString string = `[
   "jq"
 ]
 `
-var filesDestroyNoArgsErrorString = "Error: drpcli files destroy [id] requires 1 argument\n"
-var filesDestroyTwoArgsErrorString = "Error: drpcli files destroy [id] requires 1 argument\n"
+var filesDestroyNoArgsErrorString = "Error: drpcli files destroy [id] [flags] requires 1 argument\n"
+var filesDestroyTwoArgsErrorString = "Error: drpcli files destroy [id] [flags] requires 1 argument\n"
 var filesDestroyGregSuccessString = "Deleted file greg\n"
 var filesDestroyFredErrorString = "Error: delete: unable to delete /fred\n\n"
 

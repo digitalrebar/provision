@@ -14,21 +14,23 @@ Options
 ::
 
       -d, --debug             Whether the CLI should run in debug mode
-      -E, --endpoint string   The Rocket-Skates API endpoint to talk to (default "https://127.0.0.1:8092")
+      -E, --endpoint string   The Digital Rebar Provision API endpoint to talk to (default "https://127.0.0.1:8092")
       -F, --format string     The serialzation we expect for output.  Can be "json" or "yaml" (default "json")
-      -P, --password string   password of the Rocket-Skates user (default "r0cketsk8ts")
-      -T, --token string      token of the Rocket-Skates access
-      -U, --username string   Name of the Rocket-Skates user to talk to (default "rocketskates")
+      -P, --password string   password of the Digital Rebar Provision user (default "r0cketsk8ts")
+      -T, --token string      token of the Digital Rebar Provision access
+      -U, --username string   Name of the Digital Rebar Provision user to talk to (default "rocketskates")
 
 SEE ALSO
 --------
 
--  `drpcli autocomplete <drpcli_autocomplete.html>`__ - Rocket-Skates
-   CLI Command Bash AutoCompletion File
+-  `drpcli autocomplete <drpcli_autocomplete.html>`__ - Digital Rebar
+   Provision CLI Command Bash AutoCompletion File
 -  `drpcli bootenvs <drpcli_bootenvs.html>`__ - Access CLI commands
    relating to bootenvs
 -  `drpcli files <drpcli_files.html>`__ - Commands to manage files on
    the provisioner
+-  `drpcli info <drpcli_info.html>`__ - Access CLI commands relating to
+   info
 -  `drpcli interfaces <drpcli_interfaces.html>`__ - Access CLI commands
    relating to interfaces
 -  `drpcli isos <drpcli_isos.html>`__ - Commands to manage isos on the
@@ -49,5 +51,5 @@ SEE ALSO
    relating to templates
 -  `drpcli users <drpcli_users.html>`__ - Access CLI commands relating
    to users
--  `drpcli version <drpcli_version.html>`__ - Rocket-Skates CLI Command
-   Version
+-  `drpcli version <drpcli_version.html>`__ - Digital Rebar Provision
+   CLI Command Version

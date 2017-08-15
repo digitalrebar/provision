@@ -9,7 +9,7 @@
 Install
 ~~~~~~~
 
-The install script executes the following steps (in a slightly different order).
+The install script does the following steps (in a slightly different order).  See :ref:`rs_quickstart` for details about the script.
 
 Get Code
 --------
@@ -21,7 +21,7 @@ There are at least 3 releases to choose from:
 
   * **tip** - This is the most recent code.  This is the latest build of master.  It is bleeding edge and while the project attempts to be very stable with master, it can have issues.
   * **stable** - This is the most recent **stable** code.  This is a tag that tracks the version-based tag.
-  * **v3.0.0** - There will be a set of Semantic Versioning named releases.
+  * **v3.0.0** - There will be a set of Semantic Versioning (aka semver) named releases.
 
 Previous releases will continue to be available in tag/release history.  For additional information, see
 :ref:`rs_release_process`.
@@ -43,6 +43,31 @@ An example command sequence for Linux would be:
 At this point, the **install.sh** script is available in the **tools** directory.  It can be used to continue the process or
 continue following the steps in the next sections.  *tools/install.sh --help* will provide help and context information.
 
+Configuration Options
+---------------------
+
+Using ``dr-provision --help`` will provide the most complete list of configuration options.  The following common items are provided for reference.
+
+  ::
+  
+      --version                Print Version and exit
+      --disable-provisioner    Disable provisioner
+      --disable-dhcp           Disable DHCP
+      --static-port=           Port the static HTTP file server should listen on (default: 8091)
+      --tftp-port=             Port for the TFTP server to listen on (default: 69)
+      --api-port=              Port for the API server to listen on (default: 8092)
+      --dhcp-port=             Port for the DHCP server to listen on (default: 67)
+      --backend=               Storage backend to use. Can be either 'consul' or 'directory' (default: directory)
+      --data-root=             Location we should store runtime information in (default: /var/lib/dr-provision)
+      --static-ip=             IP address to advertise for the static HTTP file server (default: 192.168.124.11)
+      --file-root=             Root of filesystem we should manage (default: /var/lib/tftpboot)
+      --dhcp-ifs=              Comma-seperated list of interfaces to listen for DHCP packets
+      --debug-bootenv=         Debug level for the BootEnv System - 0 = off, 1 = info, 2 = debug (default: 0)
+      --debug-dhcp=            Debug level for the DHCP Server - 0 = off, 1 = info, 2 = debug (default: 0)
+      --debug-renderer=        Debug level for the Template Renderer - 0 = off, 1 = info, 2 = debug (default: 0)
+      --tls-key=               The TLS Key File (default: server.key)
+      --tls-cert=              The TLS Cert File (default: server.crt)
+
 Prerequisites
 -------------
 
@@ -61,7 +86,7 @@ For Linux, the **bsdtar** and **p7zip** packages are required.
 
 .. admonition:: Darwin
 
-  The new package, **p7zip** is required, and **tar** must also be updated.  The **tar** program on Darwin is already **bsdtar**.
+  The new package, **p7zip** is required, and **tar** must also be updated.  The **tar** program on Darwin is already **bsdtar**
 
   * 7z - install from homebrew: brew install p7zip
   * libarchive - update from homebrew to get a functional tar: brew install libarchive
@@ -98,7 +123,7 @@ Once running, the following endpoints are available:
 * https://127.0.0.1:8092/swagger.json - API Swagger JSON file
 * https://127.0.0.1:8092/api/v3 - Raw api endpoint
 * https://127.0.0.1:8092/ui - User Configuration Pages
-* https://127.0.0.1:8091 - Static files served by http from the *test-data/tftpboot* directory
+* http://127.0.0.1:8091 - Static files served by http from the *test-data/tftpboot* directory
 * udp 69 - Static files served from the test-data/tftpboot directory through the tftp protocol
 * udp 67 - DHCP Server listening socket - will only serve addresses when once configured.  By default, silent.
 
@@ -106,11 +131,8 @@ The API, File Server, DHCP, and TFTP ports can be configured, but DHCP and TFTP 
 
 If the SSL certificate is not valid, then follow the :ref:`rs_gen_cert` steps.
 
-.. note:: On Darwin, it may be necessary to add a route for broadcast addresses to work.  This can be done with the below command.  The 192.168.100.1 is the IP address of the interface that the messages should be sent through. The install script will provide suggestions.
+.. note:: On MAC DARWIN there are two additional steps. First, use the ``--static-ip=`` flag to help the service understand traffic targets.  Second, you may have to add a route for broadcast addresses to work.  This can be done with the following comand.  The 192.168.100.1 is the IP address of the interface that you want to send messages through. The install script will make suggestions for you.
 
   ::
 
     sudo route add 255.255.255.255 192.168.100.1
-    # or < 10.9 OSX/Darwin
-    sudo route -n add -net 255.255.255.255 192.168.100.1
-

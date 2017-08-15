@@ -4,15 +4,15 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/digitalrebar/provision/models"
+	models "github.com/digitalrebar/provision/genmodels"
 )
 
-var interfaceShowNoArgErrorString string = "Error: drpcli interfaces show [id] requires 1 argument\n"
-var interfaceShowTooManyArgErrorString string = "Error: drpcli interfaces show [id] requires 1 argument\n"
+var interfaceShowNoArgErrorString string = "Error: drpcli interfaces show [id] [flags] requires 1 argument\n"
+var interfaceShowTooManyArgErrorString string = "Error: drpcli interfaces show [id] [flags] requires 1 argument\n"
 var interfaceShowMissingArgErrorString string = "Error: interface get: not found: john\n\n"
 
-var interfaceExistsNoArgErrorString string = "Error: drpcli interfaces exists [id] requires 1 argument"
-var interfaceExistsTooManyArgErrorString string = "Error: drpcli interfaces exists [id] requires 1 argument"
+var interfaceExistsNoArgErrorString string = "Error: drpcli interfaces exists [id] [flags] requires 1 argument"
+var interfaceExistsTooManyArgErrorString string = "Error: drpcli interfaces exists [id] [flags] requires 1 argument"
 var interfaceExistsIgnoreString string = ""
 var interfaceExistsMissingJohnString string = "Error: interface get: not found: john\n\n"
 

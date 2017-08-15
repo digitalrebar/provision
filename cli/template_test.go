@@ -11,22 +11,32 @@ var templateEmptyListString string = "[]\n"
 
 var templateDefaultListString string = `[
   {
+    "Contents": "etc\n",
+    "Description": "A test template for LocalStore testing",
+    "ID": "etc"
+  },
+  {
     "Contents": "exit\n",
     "ID": "local-elilo.tmpl"
   },
   {
-    "Contents": "#!ipxe\nexit",
+    "Contents": "#!ipxe\nexit\n",
     "ID": "local-ipxe.tmpl"
   },
   {
     "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
     "ID": "local-pxelinux.tmpl"
+  },
+  {
+    "Contents": "usrshare\n",
+    "Description": "A test template for DefaultStore testing",
+    "ID": "usrshare"
   }
 ]
 `
 
-var templateShowNoArgErrorString string = "Error: drpcli templates show [id] requires 1 argument\n"
-var templateShowTooManyArgErrorString string = "Error: drpcli templates show [id] requires 1 argument\n"
+var templateShowNoArgErrorString string = "Error: drpcli templates show [id] [flags] requires 1 argument\n"
+var templateShowTooManyArgErrorString string = "Error: drpcli templates show [id] [flags] requires 1 argument\n"
 var templateShowMissingArgErrorString string = "Error: templates GET: ignore: Not Found\n\n"
 var templateShowJohnString string = `{
   "Contents": "John Rules",
@@ -34,13 +44,13 @@ var templateShowJohnString string = `{
 }
 `
 
-var templateExistsNoArgErrorString string = "Error: drpcli templates exists [id] requires 1 argument"
-var templateExistsTooManyArgErrorString string = "Error: drpcli templates exists [id] requires 1 argument"
+var templateExistsNoArgErrorString string = "Error: drpcli templates exists [id] [flags] requires 1 argument"
+var templateExistsTooManyArgErrorString string = "Error: drpcli templates exists [id] [flags] requires 1 argument"
 var templateExistsIgnoreString string = ""
 var templateExistsMissingIgnoreString string = "Error: templates GET: ignore: Not Found\n\n"
 
-var templateCreateNoArgErrorString string = "Error: drpcli templates create [json] requires 1 argument\n"
-var templateCreateTooManyArgErrorString string = "Error: drpcli templates create [json] requires 1 argument\n"
+var templateCreateNoArgErrorString string = "Error: drpcli templates create [json] [flags] requires 1 argument\n"
+var templateCreateTooManyArgErrorString string = "Error: drpcli templates create [json] [flags] requires 1 argument\n"
 var templateCreateBadJSONString = "asdgasdg"
 var templateCreateBadJSONErrorString = "Error: Unable to create new template: Invalid type passed to template create\n\n"
 var templateCreateInputString string = `{
@@ -64,6 +74,11 @@ var templateListJohnOnlyString = `[
 `
 var templateListBothEnvsString = `[
   {
+    "Contents": "etc\n",
+    "Description": "A test template for LocalStore testing",
+    "ID": "etc"
+  },
+  {
     "Contents": "John Rules",
     "ID": "john"
   },
@@ -72,18 +87,23 @@ var templateListBothEnvsString = `[
     "ID": "local-elilo.tmpl"
   },
   {
-    "Contents": "#!ipxe\nexit",
+    "Contents": "#!ipxe\nexit\n",
     "ID": "local-ipxe.tmpl"
   },
   {
     "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
     "ID": "local-pxelinux.tmpl"
+  },
+  {
+    "Contents": "usrshare\n",
+    "Description": "A test template for DefaultStore testing",
+    "ID": "usrshare"
   }
 ]
 `
 
-var templateUpdateNoArgErrorString string = "Error: drpcli templates update [id] [json] requires 2 arguments"
-var templateUpdateTooManyArgErrorString string = "Error: drpcli templates update [id] [json] requires 2 arguments"
+var templateUpdateNoArgErrorString string = "Error: drpcli templates update [id] [json] [flags] requires 2 arguments"
+var templateUpdateTooManyArgErrorString string = "Error: drpcli templates update [id] [json] [flags] requires 2 arguments"
 var templateUpdateBadJSONString = "asdgasdg"
 var templateUpdateBadJSONErrorString = "Error: Unable to merge objects: json: cannot unmarshal string into Go value of type map[string]interface {}\n\n\n"
 var templateUpdateInputString string = `{
@@ -98,12 +118,12 @@ var templateUpdateJohnString string = `{
 `
 var templateUpdateJohnMissingErrorString string = "Error: templates GET: john2: Not Found\n\n"
 
-var templatePatchNoArgErrorString string = "Error: drpcli templates patch [objectJson] [changesJson] requires 2 arguments"
-var templatePatchTooManyArgErrorString string = "Error: drpcli templates patch [objectJson] [changesJson] requires 2 arguments"
+var templatePatchNoArgErrorString string = "Error: drpcli templates patch [objectJson] [changesJson] [flags] requires 2 arguments"
+var templatePatchTooManyArgErrorString string = "Error: drpcli templates patch [objectJson] [changesJson] [flags] requires 2 arguments"
 var templatePatchBadPatchJSONString = "asdgasdg"
-var templatePatchBadPatchJSONErrorString = "Error: Unable to parse drpcli templates patch [objectJson] [changesJson] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Template\n\n"
+var templatePatchBadPatchJSONErrorString = "Error: Unable to parse drpcli templates patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Template\n\n"
 var templatePatchBadBaseJSONString = "asdgasdg"
-var templatePatchBadBaseJSONErrorString = "Error: Unable to parse drpcli templates patch [objectJson] [changesJson] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.Template\n\n"
+var templatePatchBadBaseJSONErrorString = "Error: Unable to parse drpcli templates patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Template\n\n"
 var templatePatchBaseString string = `{
   "Contents": "John Rules",
   "Description": "NewStrat",
@@ -128,8 +148,8 @@ var templatePatchMissingBaseString string = `{
 `
 var templatePatchJohnMissingErrorString string = "Error: templates: PATCH john2: Not Found\n\n"
 
-var templateDestroyNoArgErrorString string = "Error: drpcli templates destroy [id] requires 1 argument"
-var templateDestroyTooManyArgErrorString string = "Error: drpcli templates destroy [id] requires 1 argument"
+var templateDestroyNoArgErrorString string = "Error: drpcli templates destroy [id] [flags] requires 1 argument"
+var templateDestroyTooManyArgErrorString string = "Error: drpcli templates destroy [id] [flags] requires 1 argument"
 var templateDestroyJohnString string = "Deleted template john\n"
 var templateDestroyMissingJohnString string = "Error: templates: DELETE john: Not Found\n\n"
 
@@ -225,6 +245,10 @@ func TestTemplateCli(t *testing.T) {
 		CliTest{false, false, []string{"templates", "upload", "template.go", "as", "greg"}, noStdinString, templatesUploadSuccessString, noErrorString},
 		CliTest{false, false, []string{"templates", "upload", "lease.go", "as", "greg"}, noStdinString, templatesUploadReplaceSuccessString, noErrorString},
 		CliTest{false, false, []string{"templates", "destroy", "greg"}, noStdinString, templateDestroyGregString, noErrorString},
+		CliTest{false, false, []string{"templates", "exists", "etc"}, noStdinString, noContentString, noErrorString},
+		CliTest{false, false, []string{"templates", "exists", "usrshare"}, noStdinString, noContentString, noErrorString},
+		CliTest{false, true, []string{"templates", "destroy", "etc"}, noStdinString, noContentString, "Error: readonly: etc\n\n"},
+		CliTest{false, true, []string{"templates", "destroy", "usrshare"}, noStdinString, noContentString, "Error: readonly: usrshare\n\n"},
 	}
 
 	for _, test := range tests {

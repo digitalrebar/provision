@@ -1,13 +1,14 @@
 package cli
 
 import (
+	"bytes"
 	"os"
 
 	"github.com/digitalrebar/provision/client/files"
 	"github.com/spf13/cobra"
 )
 
-type FileOps struct{}
+type FileOps struct{ CommonOps }
 
 func (be FileOps) GetIndexes() map[string]string {
 	return map[string]string{}
@@ -19,6 +20,16 @@ func (be FileOps) List(parms map[string]string) (interface{}, error) {
 		return nil, e
 	}
 	return d.Payload, nil
+}
+
+func (be FileOps) Get(path string) (interface{}, error) {
+	b := bytes.NewBuffer(nil)
+	_, e := session.Files.GetFile(files.NewGetFileParams().WithPath(path), basicAuth, b)
+	if e != nil {
+		return nil, e
+	}
+	noPretty = true
+	return string(b.Bytes()), nil
 }
 
 func (be FileOps) Upload(path string, f *os.File) (interface{}, error) {
@@ -50,7 +61,7 @@ func addFileCommands() (res *cobra.Command) {
 		Use:   name,
 		Short: "Commands to manage files on the provisioner",
 	}
-	commands := commonOps(singularName, name, &FileOps{})
+	commands := commonOps(&FileOps{CommonOps{Name: name, SingularName: singularName}})
 	res.AddCommand(commands...)
 	return res
 }

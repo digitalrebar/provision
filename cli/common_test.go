@@ -9,6 +9,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/exec"
 	"regexp"
 	"strings"
 	"testing"
@@ -195,6 +196,7 @@ var yamlTestString = `- Available: true
   OnlyUnknown: true
   OptionalParams: null
   RequiredParams: null
+  Tasks: null
   Templates:
   - Contents: |
       DEFAULT local
@@ -212,6 +214,7 @@ var yamlTestString = `- Available: true
       chain tftp://{{.ProvisionerAddress}}/${netX/ip}.ipxe || exit
     Name: ipxe
     Path: default.ipxe
+  Validated: true
 
 `
 
@@ -230,6 +233,7 @@ var jsonTestString = `[
     "OnlyUnknown": true,
     "OptionalParams": null,
     "RequiredParams": null,
+    "Tasks": null,
     "Templates": [
       {
         "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
@@ -246,14 +250,15 @@ var jsonTestString = `[
         "Name": "ipxe",
         "Path": "default.ipxe"
       }
-    ]
+    ],
+    "Validated": true
   }
 ]
 `
 
 func TestCorePieces(t *testing.T) {
 	tests := []CliTest{
-		CliTest{false, true, []string{"-E", "khttps://1.1.1.2:325", "bootenvs", "list"}, noStdinString, noContentString, "Error: Error listing bootenvs: Get khttps://1.1.1.2:325/api/v3/bootenvs: unsupported protocol scheme \"khttps\"\n\n"},
+		CliTest{false, true, []string{"-E", "khttps://1.1.1.2:325", "bootenvs", "list"}, noStdinString, noContentString, "Error: listing bootenvs: Get khttps://1.1.1.2:325/api/v3/bootenvs: unsupported protocol scheme \"khttps\"\n\n"},
 		CliTest{false, false, []string{"-E", "https://127.0.0.1:10001", "-U", "rocketskates", "-P", "r0cketsk8ts", "version"}, noStdinString, "Version: " + version + "\n", noErrorString},
 		CliTest{false, true, []string{"-F", "cow", "bootenvs", "list"}, noStdinString, noContentString, "Error: Unknown pretty format cow\n\n"},
 		CliTest{false, false, []string{"-F", "yaml", "bootenvs", "list"}, noStdinString, yamlTestString, noErrorString},
@@ -266,6 +271,7 @@ func TestCorePieces(t *testing.T) {
 
 func TestMain(m *testing.M) {
 	var err error
+
 	tmpDir, err = ioutil.TempDir("", "cli-")
 	if err != nil {
 		log.Printf("Creating temp dir for file root failed: %v", err)
@@ -273,14 +279,29 @@ func TestMain(m *testing.M) {
 	}
 
 	testArgs := []string{
-		"--data-root", tmpDir + "/digitalrebar",
-		"--file-root", tmpDir + "/tftpboot",
+		"--base-root", tmpDir,
 		"--tls-key", tmpDir + "/server.key",
 		"--tls-cert", tmpDir + "/server.crt",
 		"--api-port", "10001",
 		"--static-port", "10002",
 		"--tftp-port", "10003",
 		"--disable-dhcp",
+		"--drp-id", "Fred",
+		"--backend", "memory:///",
+		"--local-content", "directory:../test-data/etc/?codec=yaml",
+		"--default-content", "directory:../test-data/usr/share/?codec=yaml",
+	}
+
+	err = os.MkdirAll(tmpDir+"/plugins", 0755)
+	if err != nil {
+		log.Printf("Error creating required directory %s: %v", d, err)
+		os.Exit(1)
+	}
+
+	out, err := exec.Command("go", "build", "-o", tmpDir+"/plugins/incrementer", "../cmds/incrementer/incrementer.go").CombinedOutput()
+	if err != nil {
+		log.Printf("Failed to build incrementer plugin: %v, %s", err, string(out))
+		os.Exit(1)
 	}
 
 	c_opts := generateArgs(testArgs)
