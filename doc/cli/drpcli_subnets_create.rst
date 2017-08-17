@@ -6,7 +6,7 @@ Create a new subnet with the passed-in JSON or string key
 Synopsis
 --------
 
-As a useful shortcut, you can pass '-' to indicate that the JSON should
+As a useful shortcut, pass '-' to indicate that the JSON should
 be read from stdin.
 
 In either case, for the Machine, BootEnv, User, and Profile objects, a
