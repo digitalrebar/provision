@@ -133,8 +133,8 @@ Run Nodes
 At this point, it is possible to boot some nodes and run them.  They can have pre-existing nodes or discovered nodes.  This will
 use discovered nodes.
 
-First, we start some nodes.  I used my kvm-slave tool that starts KVM on my Digital Rebar Provision network. .e.g. tools/kvm-slave
-Anything that PXEs and you can three will work.
+First, start some nodes.  The Digital Rebar team prefers kvm-slave tool that starts KVM on my Digital Rebar Provision network. .e.g. tools/kvm-slave
+Anything that PXEs and can three will work.
 
 Once they are discovered, something like this from **drpcli machines list** should appear: 
 
