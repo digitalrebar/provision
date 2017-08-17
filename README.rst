@@ -91,8 +91,8 @@ Table of Contents
    doc/Swagger
    doc/cli
    doc/api
-   doc/dev-server
-   doc/dev-cli
-   doc/dev-docs
+   doc/dev/dev-server
+   doc/dev/dev-cli
+   doc/dev/dev-docs
    doc/faq-troubleshooting
    LICENSE
