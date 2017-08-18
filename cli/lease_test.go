@@ -15,9 +15,12 @@ var leaseShowTooManyArgErrorString string = "Error: drpcli leases show [id] [fla
 var leaseShowMissingArgErrorString string = "Error: leases GET: C0A8646F: Not Found\n\n"
 var leaseShowLeaseString string = `{
   "Addr": "192.168.100.110",
+  "Available": true,
+  "Errors": [],
   "ExpireTime": "2017-03-31T00:11:21.028-05:00",
   "Strategy": "MAC",
-  "Token": "08:00:27:33:77:de"
+  "Token": "08:00:27:33:77:de",
+  "Validated": true
 }
 `
 
@@ -39,9 +42,12 @@ var leaseCreateInputString string = `{
 `
 var leaseCreateJohnString string = `{
   "Addr": "192.168.100.110",
+  "Available": true,
+  "Errors": [],
   "ExpireTime": "2017-03-31T00:11:21.028-05:00",
   "Strategy": "MAC",
-  "Token": "08:00:27:33:77:de"
+  "Token": "08:00:27:33:77:de",
+  "Validated": true
 }
 `
 var leaseCreateDuplicateErrorString = "Error: dataTracker create leases: C0A8646E already exists\n\n"
@@ -49,9 +55,12 @@ var leaseCreateDuplicateErrorString = "Error: dataTracker create leases: C0A8646
 var leaseListLeasesString = `[
   {
     "Addr": "192.168.100.110",
+    "Available": true,
+    "Errors": [],
     "ExpireTime": "2017-03-31T00:11:21.028-05:00",
     "Strategy": "MAC",
-    "Token": "08:00:27:33:77:de"
+    "Token": "08:00:27:33:77:de",
+    "Validated": true
   }
 ]
 `
@@ -66,9 +75,12 @@ var leaseUpdateInputString string = `{
 `
 var leaseUpdateJohnString string = `{
   "Addr": "192.168.100.110",
+  "Available": true,
+  "Errors": [],
   "ExpireTime": "2019-03-31T00:11:21.028-05:00",
   "Strategy": "MAC",
-  "Token": "08:00:27:33:77:de"
+  "Token": "08:00:27:33:77:de",
+  "Validated": true
 }
 `
 var leaseUpdateJohnMissingErrorString string = "Error: leases GET: C0A8646F: Not Found\n\n"
@@ -81,9 +93,12 @@ var leasePatchBadBaseJSONString = "asdgasdg"
 var leasePatchBadBaseJSONErrorString = "Error: Unable to parse drpcli leases patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Lease\n\n"
 var leasePatchBaseString string = `{
   "Addr": "192.168.100.110",
+  "Available": true,
+  "Errors": [],
   "ExpireTime": "2019-03-31T00:11:21.028-05:00",
   "Strategy": "MAC",
-  "Token": "08:00:27:33:77:de"
+  "Token": "08:00:27:33:77:de",
+  "Validated": true
 }
 `
 var leasePatchInputString string = `{
@@ -92,16 +107,22 @@ var leasePatchInputString string = `{
 `
 var leasePatchJohnString string = `{
   "Addr": "192.168.100.110",
+  "Available": true,
+  "Errors": [],
   "ExpireTime": "2018-03-31T00:11:21.028-05:00",
   "Strategy": "MAC",
-  "Token": "08:00:27:33:77:de"
+  "Token": "08:00:27:33:77:de",
+  "Validated": true
 }
 `
 var leasePatchMissingBaseString string = `{
   "Addr": "192.168.100.111",
+  "Available": true,
+  "Errors": [],
   "ExpireTime": "2018-03-31T00:11:21.028-05:00",
   "Strategy": "MAC",
-  "Token": "08:00:27:33:77:de"
+  "Token": "08:00:27:33:77:de",
+  "Validated": true
 }
 `
 var leasePatchJohnMissingErrorString string = "Error: leases: PATCH C0A8646F: Not Found\n\n"

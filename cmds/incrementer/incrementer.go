@@ -10,8 +10,8 @@ import (
 	"sync"
 
 	"github.com/digitalrebar/provision"
-	"github.com/digitalrebar/provision/backend"
 	"github.com/digitalrebar/provision/cli"
+	"github.com/digitalrebar/provision/models"
 	"github.com/digitalrebar/provision/plugin"
 )
 
@@ -29,10 +29,10 @@ var (
 				RequiredParams: []string{"incrementer.touched"},
 			},
 		},
-		Parameters: []*backend.Param{
-			&backend.Param{Name: "incrementer.parameter", Schema: map[string]interface{}{"type": "string"}},
-			&backend.Param{Name: "incrementer.step", Schema: map[string]interface{}{"type": "integer"}},
-			&backend.Param{Name: "incrementer.touched", Schema: map[string]interface{}{"type": "integer"}},
+		Parameters: []*models.Param{
+			&models.Param{Name: "incrementer.parameter", Schema: map[string]interface{}{"type": "string"}},
+			&models.Param{Name: "incrementer.step", Schema: map[string]interface{}{"type": "integer"}},
+			&models.Param{Name: "incrementer.touched", Schema: map[string]interface{}{"type": "integer"}},
 		},
 	}
 	lock sync.Mutex
@@ -41,8 +41,8 @@ var (
 type Plugin struct {
 }
 
-func (p *Plugin) Config(config map[string]interface{}) *backend.Error {
-	err := &backend.Error{Code: 0, Model: "plugin", Key: "incrementer", Type: "plugin", Messages: []string{}}
+func (p *Plugin) Config(config map[string]interface{}) *models.Error {
+	err := &models.Error{Code: 0, Model: "plugin", Key: "incrementer", Type: "plugin", Messages: []string{}}
 	plugin.Log("Config: %v\n", config)
 	return err
 }
@@ -74,10 +74,10 @@ func executeDrpCliCommand(args ...string) (string, error) {
 	return out, err2
 }
 
-func updateOrCreateParameter(uuid, parameter string, step int) *backend.Error {
+func updateOrCreateParameter(uuid, parameter string, step int) *models.Error {
 	out, err2 := executeDrpCliCommand("machines", "get", uuid, "param", parameter)
 	if err2 != nil {
-		return &backend.Error{Code: 409,
+		return &models.Error{Code: 409,
 			Model:    "plugin",
 			Key:      "incrementer",
 			Type:     "plugin",
@@ -87,7 +87,7 @@ func updateOrCreateParameter(uuid, parameter string, step int) *backend.Error {
 	if strings.TrimSpace(out) == "null" {
 		_, err2 = executeDrpCliCommand("machines", "set", uuid, "param", parameter, "to", fmt.Sprintf("%d", step))
 		if err2 != nil {
-			return &backend.Error{Code: 409,
+			return &models.Error{Code: 409,
 				Model:    "plugin",
 				Key:      "incrementer",
 				Type:     "plugin",
@@ -96,7 +96,7 @@ func updateOrCreateParameter(uuid, parameter string, step int) *backend.Error {
 	} else {
 		i, err2 := strconv.ParseInt(strings.TrimSpace(out), 10, 64)
 		if err2 != nil {
-			return &backend.Error{Code: 409,
+			return &models.Error{Code: 409,
 				Model:    "plugin",
 				Key:      "incrementer",
 				Type:     "plugin",
@@ -105,7 +105,7 @@ func updateOrCreateParameter(uuid, parameter string, step int) *backend.Error {
 
 		_, err2 = executeDrpCliCommand("machines", "set", uuid, "param", parameter, "to", fmt.Sprintf("%d", i+int64(step)))
 		if err2 != nil {
-			return &backend.Error{Code: 409,
+			return &models.Error{Code: 409,
 				Model:    "plugin",
 				Key:      "incrementer",
 				Type:     "plugin",
@@ -113,31 +113,31 @@ func updateOrCreateParameter(uuid, parameter string, step int) *backend.Error {
 		}
 	}
 
-	return &backend.Error{Code: 0,
+	return &models.Error{Code: 0,
 		Model:    "plugin",
 		Key:      "incrementer",
 		Type:     "plugin",
 		Messages: []string{}}
 }
 
-func removeParameter(uuid, parameter string) *backend.Error {
+func removeParameter(uuid, parameter string) *models.Error {
 	_, err2 := executeDrpCliCommand("machines", "set", uuid, "param", parameter, "to", "null")
 	if err2 != nil {
-		return &backend.Error{Code: 409,
+		return &models.Error{Code: 409,
 			Model:    "plugin",
 			Key:      "incrementer",
 			Type:     "plugin",
 			Messages: []string{fmt.Sprintf("Failed to remove param %s: %s\n", parameter, err2.Error())}}
 	}
 
-	return &backend.Error{Code: 0,
+	return &models.Error{Code: 0,
 		Model:    "plugin",
 		Key:      "incrementer",
 		Type:     "plugin",
 		Messages: []string{}}
 }
 
-func (p *Plugin) Action(ma *plugin.MachineAction) *backend.Error {
+func (p *Plugin) Action(ma *plugin.MachineAction) *models.Error {
 	plugin.Log("Action: %v\n", ma)
 	if ma.Command == "increment" {
 		parameter, ok := ma.Params["incrementer.parameter"].(string)
@@ -167,15 +167,15 @@ func (p *Plugin) Action(ma *plugin.MachineAction) *backend.Error {
 		return removeParameter(ma.Uuid.String(), "incrementer.touched")
 	}
 
-	return &backend.Error{Code: 404,
+	return &models.Error{Code: 404,
 		Model:    "plugin",
 		Key:      "incrementer",
 		Type:     "plugin",
 		Messages: []string{fmt.Sprintf("Unknown command: %s\n", ma.Command)}}
 }
 
-func (p *Plugin) Publish(e *backend.Event) *backend.Error {
-	return &backend.Error{Code: 0,
+func (p *Plugin) Publish(e *models.Event) *models.Error {
+	return &models.Error{Code: 0,
 		Model:    "plugin",
 		Type:     "publish",
 		Key:      "incrementer",

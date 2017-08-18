@@ -17,6 +17,7 @@ import (
 
 	"github.com/digitalrebar/provision/backend"
 	"github.com/digitalrebar/provision/backend/index"
+	"github.com/digitalrebar/provision/models"
 	"github.com/fsnotify/fsnotify"
 	"github.com/gin-gonic/gin"
 )
@@ -35,7 +36,7 @@ type PluginProvider struct {
 	OptionalParams []string
 
 	// Ensure that these are in the system.
-	Parameters []*backend.Param
+	Parameters []*models.Param
 
 	path string
 }
@@ -62,7 +63,7 @@ type PluginController struct {
 	watcher            *fsnotify.Watcher
 	done               chan bool
 	finished           chan bool
-	events             chan *backend.Event
+	events             chan *models.Event
 	publishers         *backend.Publishers
 	MachineActions     *MachineActions
 	apiPort            int
@@ -88,7 +89,7 @@ func InitPluginController(pluginDir string, dt *backend.DataTracker, logger *log
 
 	pc.done = make(chan bool)
 	pc.finished = make(chan bool)
-	pc.events = make(chan *backend.Event, 1000)
+	pc.events = make(chan *models.Event, 1000)
 
 	go func() {
 		done := false
@@ -123,7 +124,7 @@ func InitPluginController(pluginDir string, dt *backend.DataTracker, logger *log
 			case event := <-pc.events:
 				if event.Action == "create" {
 					pc.lock.Lock()
-					ref := dt.NewPlugin()
+					ref := &backend.Plugin{}
 					d, unlocker := dt.LockEnts(ref.Locks("get")...)
 					ref2 := d(ref.Prefix()).Find(event.Key)
 					// May be deleted before we get here.
@@ -134,7 +135,7 @@ func InitPluginController(pluginDir string, dt *backend.DataTracker, logger *log
 					pc.lock.Unlock()
 				} else if event.Action == "save" {
 					pc.lock.Lock()
-					ref := dt.NewPlugin()
+					ref := &backend.Plugin{}
 					d, unlocker := dt.LockEnts(ref.Locks("get")...)
 					ref2 := d(ref.Prefix()).Find(event.Key)
 					// May be deleted before we get here.
@@ -145,7 +146,7 @@ func InitPluginController(pluginDir string, dt *backend.DataTracker, logger *log
 					pc.lock.Unlock()
 				} else if event.Action == "update" {
 					pc.lock.Lock()
-					ref := dt.NewPlugin()
+					ref := &backend.Plugin{}
 					d, unlocker := dt.LockEnts(ref.Locks("get")...)
 					// May be deleted before we get here.
 					ref2 := d(ref.Prefix()).Find(event.Key)
@@ -192,7 +193,7 @@ func InitPluginController(pluginDir string, dt *backend.DataTracker, logger *log
 func (pc *PluginController) walkPlugins(provider string) (err error) {
 	// Walk all plugin objects from dt.
 	var idx *index.Index
-	ref := pc.dataTracker.NewPlugin()
+	ref := &backend.Plugin{}
 	d, unlocker := pc.dataTracker.LockEnts(ref.Locks("get")...)
 	defer unlocker()
 	idx, err = index.All([]index.Filter{index.Native()}...)(&d(ref.Prefix()).Index)
@@ -215,7 +216,7 @@ func (pc *PluginController) Shutdown(ctx context.Context) error {
 	return pc.watcher.Close()
 }
 
-func (pc *PluginController) Publish(e *backend.Event) error {
+func (pc *PluginController) Publish(e *models.Event) error {
 	if e.Type != "plugins" {
 		return nil
 	}
@@ -317,7 +318,7 @@ func (pc *PluginController) startPlugin(d backend.Stores, plugin *backend.Plugin
 
 		if len(plugin.Errors) != len(errors) {
 			plugin.Errors = errors
-			pc.dataTracker.Update(d, plugin, nil)
+			pc.dataTracker.Update(d, plugin)
 		}
 		pc.publishers.Publish("plugin", "started", plugin.Name, plugin)
 		pc.logger.Printf("Starting plugin: %s(%s) complete\n", plugin.Name, plugin.Provider)
@@ -325,7 +326,7 @@ func (pc *PluginController) startPlugin(d backend.Stores, plugin *backend.Plugin
 		pc.logger.Printf("Starting plugin: %s(%s) missing provider\n", plugin.Name, plugin.Provider)
 		if plugin.Errors == nil || len(plugin.Errors) == 0 {
 			plugin.Errors = []string{fmt.Sprintf("Missing Plugin Provider: %s", plugin.Provider)}
-			pc.dataTracker.Update(d, plugin, nil)
+			pc.dataTracker.Update(d, plugin)
 		}
 	}
 }
@@ -370,17 +371,16 @@ func (pc *PluginController) importPluginProvider(provider string) error {
 
 			skip := false
 			for _, p := range pp.Parameters {
-				err := p.BeforeSave()
-				if err != nil {
+				if err := p.ValidateSchema(); err != nil {
 					pc.logger.Printf("Skipping %s because of bad required scheme: %s %s\n", pp.Name, p.Name, err)
 					skip = true
 				} else {
 					// Attempt create if it doesn't exist already.
-					ref := pc.dataTracker.NewParam()
+					ref := &backend.Param{}
 					d, unlocker := pc.dataTracker.LockEnts(ref.Locks("create")...)
 					ref2 := d(ref.Prefix()).Find(p.Name)
 					if ref2 == nil {
-						if _, err := pc.dataTracker.Create(d, p, nil); err != nil {
+						if _, err := pc.dataTracker.Create(d, p); err != nil {
 							pc.logger.Printf("Skipping %s because parameter could not be created: %s %s\n", pp.Name, p.Name, err)
 							skip = true
 						}
@@ -425,13 +425,13 @@ func (pc *PluginController) removePluginProvider(provider string) {
 			}
 		}
 		for _, p := range remove {
-			ref := pc.dataTracker.NewPlugin()
+			ref := &backend.Plugin{}
 			d, unlocker := pc.dataTracker.LockEnts(ref.Locks("get")...)
 			pc.stopPlugin(p)
 			ref2 := d(ref.Prefix()).Find(p.Name)
 			myPP := ref2.(*backend.Plugin)
 			myPP.Errors = []string{fmt.Sprintf("Missing Plugin Provider: %s", provider)}
-			pc.dataTracker.Update(d, myPP, nil)
+			pc.dataTracker.Update(d, myPP)
 			unlocker()
 		}
 
@@ -441,24 +441,24 @@ func (pc *PluginController) removePluginProvider(provider string) {
 	}
 }
 
-func (pc *PluginController) UploadPlugin(c *gin.Context, name string) (*PluginProviderUploadInfo, *backend.Error) {
+func (pc *PluginController) UploadPlugin(c *gin.Context, name string) (*PluginProviderUploadInfo, *models.Error) {
 	if c.Request.Header.Get(`Content-Type`) != `application/octet-stream` {
-		return nil, backend.NewError("API ERROR", http.StatusUnsupportedMediaType,
+		return nil, models.NewError("API ERROR", http.StatusUnsupportedMediaType,
 			fmt.Sprintf("upload: plugin_provider %s must have content-type application/octet-stream", name))
 	}
 	if c.Request.Body == nil {
-		return nil, backend.NewError("API ERROR", http.StatusBadRequest,
+		return nil, models.NewError("API ERROR", http.StatusBadRequest,
 			fmt.Sprintf("upload: Unable to upload %s: missing body", name))
 	}
 
 	ppTmpName := path.Join(pc.pluginDir, fmt.Sprintf(`.%s.part`, path.Base(name)))
 	ppName := path.Join(pc.pluginDir, path.Base(name))
 	if _, err := os.Open(ppTmpName); err == nil {
-		return nil, backend.NewError("API ERROR", http.StatusConflict, fmt.Sprintf("upload: plugin_provider %s already uploading", name))
+		return nil, models.NewError("API ERROR", http.StatusConflict, fmt.Sprintf("upload: plugin_provider %s already uploading", name))
 	}
 	tgt, err := os.Create(ppTmpName)
 	if err != nil {
-		return nil, backend.NewError("API ERROR", http.StatusConflict, fmt.Sprintf("upload: Unable to upload %s: %v", name, err))
+		return nil, models.NewError("API ERROR", http.StatusConflict, fmt.Sprintf("upload: Unable to upload %s: %v", name, err))
 	}
 
 	copied, err := io.Copy(tgt, c.Request.Body)
@@ -466,12 +466,12 @@ func (pc *PluginController) UploadPlugin(c *gin.Context, name string) (*PluginPr
 
 	if err != nil {
 		os.Remove(ppTmpName)
-		return nil, backend.NewError("API ERROR",
+		return nil, models.NewError("API ERROR",
 			http.StatusInsufficientStorage, fmt.Sprintf("upload: Failed to upload %s: %v", name, err))
 	}
 	if c.Request.ContentLength > 0 && copied != c.Request.ContentLength {
 		os.Remove(ppTmpName)
-		return nil, backend.NewError("API ERROR", http.StatusBadRequest,
+		return nil, models.NewError("API ERROR", http.StatusBadRequest,
 			fmt.Sprintf("upload: Failed to upload entire file %s: %d bytes expected, %d bytes received", name, c.Request.ContentLength, copied))
 	}
 	os.Remove(ppName)

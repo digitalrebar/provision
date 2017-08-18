@@ -11,7 +11,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/digitalrebar/provision/backend"
+	"github.com/digitalrebar/provision/models"
 )
 
 type PluginClient struct {
@@ -41,18 +41,18 @@ type PluginClientRequest struct {
 }
 
 // If code == 0,2xx, then success and call should json decode.
-// If code != 0,2xx, then error and data is backend.Error.
+// If code != 0,2xx, then error and data is models.Error.
 type PluginClientReply struct {
 	Id   int
 	Code int
 	Data []byte
 }
 
-func (r *PluginClientReply) Error() *backend.Error {
-	var err backend.Error
+func (r *PluginClientReply) Error() *models.Error {
+	var err models.Error
 	jerr := json.Unmarshal(r.Data, &err)
 	if jerr != nil {
-		err = backend.Error{Code: 400, Messages: []string{jerr.Error()}, Model: "plugin", Type: "plugin"}
+		err = models.Error{Code: 400, Messages: []string{jerr.Error()}, Model: "plugin", Type: "plugin"}
 	}
 	return &err
 }
@@ -181,7 +181,7 @@ func (pc *PluginClient) Unload() {
 	return
 }
 
-func (pc *PluginClient) Publish(e *backend.Event) error {
+func (pc *PluginClient) Publish(e *models.Event) error {
 	if mychan, err := pc.writeRequest("Publish", e); err != nil {
 		return err
 	} else {
