@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"os"
 	"os/exec"
 	"sync"
@@ -21,7 +20,7 @@ type PluginClient struct {
 	stdout   io.ReadCloser
 	stdin    io.WriteCloser
 	finished chan bool
-	logger   *log.Logger
+	dt       *backend.DataTracker
 	lock     sync.Mutex
 	nextId   int
 	pending  map[int]*PluginClientRequest
@@ -65,10 +64,10 @@ func (pc *PluginClient) ReadLog() {
 	// read command's stderr line by line - for logging
 	in := bufio.NewScanner(pc.stderr)
 	for in.Scan() {
-		pc.logger.Printf("Plugin " + pc.plugin + ": " + in.Text()) // write each line to your log, or anything you need
+		pc.dt.Infof("debugPlugins", "Plugin "+pc.plugin+": "+in.Text()) // write each line to your log, or anything you need
 	}
 	if err := in.Err(); err != nil {
-		pc.logger.Printf("Plugin %s: error: %s", pc.plugin, err)
+		pc.dt.Infof("debugPlugins", "Plugin %s: error: %s", pc.plugin, err)
 	}
 	pc.finished <- true
 }
@@ -82,13 +81,13 @@ func (pc *PluginClient) ReadReply() {
 		var resp PluginClientReply
 		err := json.Unmarshal([]byte(jsonString), &resp)
 		if err != nil {
-			pc.logger.Printf("Failed to process: %v\n", err)
+			pc.dt.Infof("debugPlugins", "Failed to process: %v\n", err)
 			continue
 		}
 
 		req, ok := pc.pending[resp.Id]
 		if !ok {
-			pc.logger.Printf("Failed to find request for: %v\n", resp.Id)
+			pc.dt.Infof("debugPlugins", "Failed to find request for: %v\n", resp.Id)
 			continue
 		}
 
@@ -99,7 +98,7 @@ func (pc *PluginClient) ReadReply() {
 		pc.lock.Unlock()
 	}
 	if err := in.Err(); err != nil {
-		pc.logger.Printf("Reply %s: error: %s", pc.plugin, err)
+		pc.dt.Infof("debugPlugins", "Reply %s: error: %s", pc.plugin, err)
 	}
 	pc.finished <- true
 }
@@ -219,8 +218,8 @@ func (pc *PluginClient) Stop() error {
 	return nil
 }
 
-func NewPluginClient(plugin string, logger *log.Logger, apiPort int, path string, params map[string]interface{}) (answer *PluginClient, theErr error) {
-	answer = &PluginClient{plugin: plugin, logger: logger, pending: make(map[int]*PluginClientRequest, 0)}
+func NewPluginClient(plugin string, dt *backend.DataTracker, apiPort int, path string, params map[string]interface{}) (answer *PluginClient, theErr error) {
+	answer = &PluginClient{plugin: plugin, dt: dt, pending: make(map[int]*PluginClientRequest, 0)}
 
 	answer.cmd = exec.Command(path, "listen")
 	// Setup env vars to run drpcli - auth should be parameters.
