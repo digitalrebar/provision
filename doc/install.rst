@@ -144,12 +144,12 @@ Production Deployments
 The following items should be considered for production deployments.  Recommendations may be missing so operators should use their best judgement.
 
 System Logs
-~~~~~~~~~~~
+===========
 
 The Digital Rebar Provision service logs by sending output to standard error.  To capture system logs, SystemD (or Docker) should be configured to direct this output to the desired log management infrastructrure.
 
 Job Log Rotation
-~~~~~~~~~~~~~~~~
+================
 
 If you are using the jobs system, Digital Rebar Provision stores job logs based on the directory configuration of the system.  This data is considered compliance related information; consequently, the system does not automatically remove these records.
 
