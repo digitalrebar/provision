@@ -242,9 +242,41 @@ var yamlTestString = `- Available: true
     Path: elilo.conf
   - Contents: |
       #!ipxe
-      chain tftp://{{.ProvisionerAddress}}/${netX/ip}.ipxe || exit
+      exit
     Name: ipxe
     Path: default.ipxe
+  Validated: true
+- Available: true
+  BootParams: ""
+  Description: The boot environment you should use to have known machines boot off
+    their local hard drive
+  Errors: null
+  Initrds: null
+  Kernel: ""
+  Name: local
+  OS:
+    Name: local
+  OnlyUnknown: false
+  OptionalParams: null
+  RequiredParams: null
+  Tasks: null
+  Templates:
+  - Contents: |
+      DEFAULT local
+      PROMPT 0
+      TIMEOUT 10
+      LABEL local
+      localboot 0
+    Name: pxelinux
+    Path: pxelinux.cfg/{{.Machine.HexAddress}}
+  - Contents: exit
+    Name: elilo
+    Path: '{{.Machine.HexAddress}}.conf'
+  - Contents: |
+      #!ipxe
+      exit
+    Name: ipxe
+    Path: '{{.Machine.Address}}.ipxe'
   Validated: true
 
 `
@@ -277,9 +309,43 @@ var jsonTestString = `[
         "Path": "elilo.conf"
       },
       {
-        "Contents": "#!ipxe\nchain tftp://{{.ProvisionerAddress}}/${netX/ip}.ipxe || exit\n",
+        "Contents": "#!ipxe\nexit\n",
         "Name": "ipxe",
         "Path": "default.ipxe"
+      }
+    ],
+    "Validated": true
+  },
+  {
+    "Available": true,
+    "BootParams": "",
+    "Description": "The boot environment you should use to have known machines boot off their local hard drive",
+    "Errors": null,
+    "Initrds": null,
+    "Kernel": "",
+    "Name": "local",
+    "OS": {
+      "Name": "local"
+    },
+    "OnlyUnknown": false,
+    "OptionalParams": null,
+    "RequiredParams": null,
+    "Tasks": null,
+    "Templates": [
+      {
+        "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
+        "Name": "pxelinux",
+        "Path": "pxelinux.cfg/{{.Machine.HexAddress}}"
+      },
+      {
+        "Contents": "exit",
+        "Name": "elilo",
+        "Path": "{{.Machine.HexAddress}}.conf"
+      },
+      {
+        "Contents": "#!ipxe\nexit\n",
+        "Name": "ipxe",
+        "Path": "{{.Machine.Address}}.ipxe"
       }
     ],
     "Validated": true
@@ -319,6 +385,8 @@ func TestMain(m *testing.M) {
 		"--disable-dhcp",
 		"--drp-id", "Fred",
 		"--backend", "memory:///",
+		"--debug-frontend", "0",
+		"--debug-renderer", "0",
 		"--local-content", "directory:../test-data/etc/dr-provision?codec=yaml",
 		"--default-content", "file:../test-data/usr/share/dr-provision/default.yaml?codec=yaml",
 	}

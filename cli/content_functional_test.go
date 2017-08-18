@@ -7,9 +7,9 @@ import (
 var contentMyLocalBootEnvString = `{
   "BootParams": "",
   "Kernel": "",
-  "Name": "local",
+  "Name": "mylocal",
   "OS": {
-    "Name": "local"
+    "Name": "mylocal"
   },
   "OnlyUnknown": false,
   "Templates": [
@@ -113,12 +113,12 @@ var contentNoPackProfileListString = `[
 
 var contentMachineCreateString = `{
   "Name": "greg",
-  "BootEnv": "local",
+  "BootEnv": "mylocal",
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
 }
 `
 var contentMachineCreateSuccessString = `{
-  "BootEnv": "local",
+  "BootEnv": "mylocal",
   "CurrentTask": 0,
   "Errors": null,
   "Name": "greg",
@@ -134,7 +134,7 @@ var contentMachineCreateSuccessString = `{
 `
 
 var contentMachineAddProfileString = `{
-  "BootEnv": "local",
+  "BootEnv": "mylocal",
   "CurrentTask": 0,
   "Errors": null,
   "Name": "greg",
@@ -157,9 +157,9 @@ var contentBootenvGregCreateSuccessString = `{
   "Errors": null,
   "Initrds": null,
   "Kernel": "",
-  "Name": "local",
+  "Name": "mylocal",
   "OS": {
-    "Name": "local"
+    "Name": "mylocal"
   },
   "OnlyUnknown": false,
   "OptionalParams": null,
@@ -258,7 +258,7 @@ func TestContentFunctionalCli(t *testing.T) {
 		CliTest{false, false, []string{"contents", "destroy", "Pack1"}, noStdinString, "Deleted content Pack1\n", noErrorString},
 		CliTest{false, false, []string{"profiles", "list"}, noStdinString, contentNoPackProfileListString, noErrorString},
 
-		CliTest{false, false, []string{"bootenvs", "destroy", "local"}, noStdinString, "Deleted bootenv local\n", noErrorString},
+		CliTest{false, false, []string{"bootenvs", "destroy", "mylocal"}, noStdinString, "Deleted bootenv mylocal\n", noErrorString},
 		CliTest{false, false, []string{"contents", "list"}, noStdinString, contentDefaultListString, noErrorString},
 	}
 

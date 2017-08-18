@@ -16,18 +16,6 @@ var templateDefaultListString string = `[
     "ID": "etc"
   },
   {
-    "Contents": "exit\n",
-    "ID": "local-elilo.tmpl"
-  },
-  {
-    "Contents": "#!ipxe\nexit\n",
-    "ID": "local-ipxe.tmpl"
-  },
-  {
-    "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
-    "ID": "local-pxelinux.tmpl"
-  },
-  {
     "Contents": "usrshare\n",
     "Description": "A test template for DefaultStore testing",
     "ID": "usrshare"
@@ -81,18 +69,6 @@ var templateListBothEnvsString = `[
   {
     "Contents": "John Rules",
     "ID": "john"
-  },
-  {
-    "Contents": "exit\n",
-    "ID": "local-elilo.tmpl"
-  },
-  {
-    "Contents": "#!ipxe\nexit\n",
-    "ID": "local-ipxe.tmpl"
-  },
-  {
-    "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
-    "ID": "local-pxelinux.tmpl"
   },
   {
     "Contents": "usrshare\n",

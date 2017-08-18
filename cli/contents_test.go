@@ -7,7 +7,7 @@ import (
 var contentDefaultListString string = `[
   {
     "Counts": {
-      "bootenvs": 1,
+      "bootenvs": 2,
       "jobs": 0,
       "leases": 0,
       "machines": 0,
@@ -94,7 +94,7 @@ var contentCreateDuplicateErrorString = "Error: content post: already exists: jo
 var contentListContentsString = `[
   {
     "Counts": {
-      "bootenvs": 1,
+      "bootenvs": 2,
       "jobs": 0,
       "leases": 0,
       "machines": 0,

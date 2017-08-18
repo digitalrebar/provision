@@ -58,7 +58,7 @@ var processJobsJillCreateOutputString string = `{
 
 var processJobsAddProfileJillOutputString = `{
   "Address": "192.168.100.110",
-  "BootEnv": "local",
+  "BootEnv": "local3",
   "CurrentTask": 0,
   "Errors": null,
   "Name": "john",
@@ -93,17 +93,17 @@ var processJobsLocal2UpdateOutputString = `{
   ],
   "Templates": [
     {
-      "ID": "local-pxelinux.tmpl",
+      "ID": "local3-pxelinux.tmpl",
       "Name": "pxelinux",
       "Path": "pxelinux.cfg/{{.Machine.HexAddress}}"
     },
     {
-      "ID": "local-elilo.tmpl",
+      "ID": "local3-elilo.tmpl",
       "Name": "elilo",
       "Path": "{{.Machine.HexAddress}}.conf"
     },
     {
-      "ID": "local-ipxe.tmpl",
+      "ID": "local3-ipxe.tmpl",
       "Name": "ipxe",
       "Path": "{{.Machine.Address}}.ipxe"
     }
@@ -114,7 +114,7 @@ var processJobsLocal2UpdateOutputString = `{
 
 var processJobsSetMachineToLocalOutputString = `{
   "Address": "192.168.100.110",
-  "BootEnv": "local",
+  "BootEnv": "local3",
   "CurrentTask": 0,
   "Errors": null,
   "Name": "john",
@@ -212,7 +212,7 @@ var processJobsRemoveProfileSuccessString = `RE:
 var processJobsResetToLocalSuccessString = `RE:
 {
   "Address": "192.168.100.110",
-  "BootEnv": "local",
+  "BootEnv": "local3",
   "CurrentJob": "[\S\s]*",
   "CurrentTask": 0,
   "Errors": null,
@@ -294,9 +294,26 @@ Jobs finished
 `
 
 func TestProcessJobsCli(t *testing.T) {
-	// Assumes that local is present (from prefs)
+	if err := os.MkdirAll("bootenvs", 0755); err != nil {
+		t.Errorf("Failed to create bootenvs dir: %v\n", err)
+	}
+	if err := os.Symlink("../test-data/local3.yml", "bootenvs/local3.yml"); err != nil {
+		t.Errorf("Failed to create link to local3.yml: %v\n", err)
+	}
+
+	if err := os.MkdirAll("templates", 0755); err != nil {
+		t.Errorf("Failed to create templates dir: %v\n", err)
+	}
+	tmpls := []string{"local3-pxelinux.tmpl", "local3-elilo.tmpl", "local3-ipxe.tmpl"}
+	for _, tmpl := range tmpls {
+		if err := os.Symlink("../test-data/"+tmpl, "templates/"+tmpl); err != nil {
+			t.Errorf("Failed to create link to %s: %v\n", tmpl, err)
+		}
+	}
 
 	tests := []CliTest{
+		CliTest{false, false, []string{"bootenvs", "install", "bootenvs/local3.yml"}, noStdinString, bootEnvInstallLocalSuccessString, bootEnvInstallLocal3ErrorString},
+
 		CliTest{false, false, []string{"profiles", "create", "jill"}, noStdinString, processJobsJillCreateOutputString, noErrorString},
 		CliTest{false, false, []string{"profiles", "create", "jean"}, noStdinString, machineJeanCreate, noErrorString},
 		CliTest{false, false, []string{"tasks", "create", "jamie"}, noStdinString, machineJamieCreate, noErrorString},
@@ -314,7 +331,7 @@ func TestProcessJobsCli(t *testing.T) {
 		CliTest{false, false, []string{"machines", "addprofile", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "jill"}, noStdinString, processJobsAddProfileJillOutputString, noErrorString},
 		CliTest{false, false, []string{"profiles", "update", "jill", "{ \"Tasks\": [ \"justine\" ] }"}, noStdinString, machineProfileJamieUpdate, noErrorString},
 		CliTest{false, false, []string{"bootenvs", "update", "local2", "{ \"Tasks\": [ \"jamie\" ] }"}, noStdinString, processJobsLocal2UpdateOutputString, noErrorString},
-		CliTest{false, false, []string{"machines", "bootenv", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "local"}, noStdinString, processJobsSetMachineToLocalOutputString, noErrorString},
+		CliTest{false, false, []string{"machines", "bootenv", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "local3"}, noStdinString, processJobsSetMachineToLocalOutputString, noErrorString},
 		CliTest{false, false, []string{"machines", "bootenv", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "local2"}, noStdinString, processJobsSetMachineToLocal2OutputString, noErrorString},
 		CliTest{false, true, []string{"machines", "processjobs", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "--exit-on-failure"}, noStdinString, processJobsOutputSuccessString, processJobsErrorSuccessString},
 		CliTest{false, false, []string{"machines", "show", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, processJobsShowFailedMachineString, noErrorString},
@@ -322,14 +339,18 @@ func TestProcessJobsCli(t *testing.T) {
 		CliTest{false, false, []string{"machines", "processjobs", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, processJobsOutputSecondPassSuccessString, noErrorString},
 
 		CliTest{false, false, []string{"machines", "removeprofile", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "jill"}, noStdinString, processJobsRemoveProfileSuccessString, noErrorString},
-		CliTest{false, false, []string{"machines", "bootenv", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "local"}, noStdinString, processJobsResetToLocalSuccessString, noErrorString},
+		CliTest{false, false, []string{"machines", "bootenv", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "local3"}, noStdinString, processJobsResetToLocalSuccessString, noErrorString},
 
 		CliTest{false, false, []string{"machines", "destroy", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, machineDestroyJohnString, noErrorString},
 		CliTest{false, false, []string{"profiles", "destroy", "jill"}, noStdinString, "Deleted profile jill\n", noErrorString},
 		CliTest{false, false, []string{"profiles", "destroy", "jean"}, noStdinString, "Deleted profile jean\n", noErrorString},
+		CliTest{false, false, []string{"bootenvs", "destroy", "local3"}, noStdinString, "Deleted bootenv local3\n", noErrorString},
 		CliTest{false, false, []string{"bootenvs", "destroy", "local2"}, noStdinString, "Deleted bootenv local2\n", noErrorString},
 		CliTest{false, false, []string{"tasks", "destroy", "jamie"}, noStdinString, "Deleted task jamie\n", noErrorString},
 		CliTest{false, false, []string{"tasks", "destroy", "justine"}, noStdinString, "Deleted task justine\n", noErrorString},
+		CliTest{false, false, []string{"templates", "destroy", "local3-pxelinux.tmpl"}, noStdinString, "Deleted template local3-pxelinux.tmpl\n", noErrorString},
+		CliTest{false, false, []string{"templates", "destroy", "local3-elilo.tmpl"}, noStdinString, "Deleted template local3-elilo.tmpl\n", noErrorString},
+		CliTest{false, false, []string{"templates", "destroy", "local3-ipxe.tmpl"}, noStdinString, "Deleted template local3-ipxe.tmpl\n", noErrorString},
 	}
 
 	for _, test := range tests {
@@ -349,4 +370,10 @@ func TestProcessJobsCli(t *testing.T) {
 	os.Remove("test.txt")
 	os.Remove("failed.txt")
 	os.Remove("incomplete.txt")
+
+	os.RemoveAll("bootenvs")
+	os.RemoveAll("templates")
+	os.RemoveAll("isos")
+	os.RemoveAll("ic")
+
 }
