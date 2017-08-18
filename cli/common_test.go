@@ -250,7 +250,7 @@ var yamlTestString = `- Available: true
   BootParams: ""
   Description: The boot environment you should use to have known machines boot off
     their local hard drive
-  Errors: null
+  Errors: []
   Initrds: null
   Kernel: ""
   Name: local
@@ -320,7 +320,7 @@ var jsonTestString = `[
     "Available": true,
     "BootParams": "",
     "Description": "The boot environment you should use to have known machines boot off their local hard drive",
-    "Errors": null,
+    "Errors": [],
     "Initrds": null,
     "Kernel": "",
     "Name": "local",

@@ -18,10 +18,11 @@ var machineShowNoArgErrorString string = "Error: drpcli machines show [id] [flag
 var machineShowTooManyArgErrorString string = "Error: drpcli machines show [id] [flags] requires 1 argument\n"
 var machineShowMissingArgErrorString string = "Error: machines GET: john: Not Found\n\n"
 var machineShowMachineString string = `{
+  "Available": true,
   "Address": "192.168.100.110",
   "BootEnv": "local3",
   "CurrentTask": 0,
-  "Errors": null,
+  "Errors": [],
   "Name": "john",
   "Profile": {
     "Name": "",
@@ -30,7 +31,8 @@ var machineShowMachineString string = `{
   "Profiles": null,
   "Runnable": true,
   "Tasks": [],
-  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
 }
 `
 
@@ -53,10 +55,11 @@ var machineCreateInputString string = `{
 }
 `
 var machineCreateJohnString string = `{
+  "Available": true,
   "Address": "192.168.100.110",
   "BootEnv": "local3",
   "CurrentTask": 0,
-  "Errors": null,
+  "Errors": [],
   "Name": "john",
   "Profile": {
     "Name": "",
@@ -65,7 +68,8 @@ var machineCreateJohnString string = `{
   "Profiles": null,
   "Runnable": true,
   "Tasks": [],
-  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
 }
 `
 
@@ -73,10 +77,11 @@ var machineCreateDuplicateErrorString = "Error: dataTracker create machines: 3e7
 
 var machineListMachinesString = `[
   {
+    "Available": true,
     "Address": "192.168.100.110",
     "BootEnv": "local3",
     "CurrentTask": 0,
-    "Errors": null,
+    "Errors": [],
     "Name": "john",
     "Profile": {
       "Name": "",
@@ -85,7 +90,8 @@ var machineListMachinesString = `[
     "Profiles": null,
     "Runnable": true,
     "Tasks": [],
-    "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+    "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+    "Validated": true
   }
 ]
 `
@@ -100,10 +106,11 @@ var machineUpdateInputString string = `{
 `
 var machineUpdateJohnString string = `{
   "Address": "192.168.100.110",
+  "Available": true,
   "BootEnv": "local3",
   "CurrentTask": 0,
   "Description": "lpxelinux.0",
-  "Errors": null,
+  "Errors": [],
   "Name": "john",
   "Profile": {
     "Name": "",
@@ -112,7 +119,8 @@ var machineUpdateJohnString string = `{
   "Profiles": null,
   "Runnable": true,
   "Tasks": [],
-  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
 }
 `
 var machineUpdateJohnMissingErrorString string = "Error: machines GET: john2: Not Found\n\n"
@@ -144,11 +152,12 @@ var machinePatchInputString string = `{
 }
 `
 var machinePatchJohnString string = `{
+  "Available": true,
   "Address": "192.168.100.110",
   "BootEnv": "local3",
   "CurrentTask": 0,
   "Description": "bootx64.efi",
-  "Errors": null,
+  "Errors": [],
   "Name": "john",
   "Profile": {
     "Name": "",
@@ -157,7 +166,8 @@ var machinePatchJohnString string = `{
   "Profiles": null,
   "Runnable": true,
   "Tasks": [],
-  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
 }
 `
 var machinePatchMissingBaseString string = `{
@@ -179,52 +189,66 @@ var machinePatchJohnMissingErrorString string = "Error: machines: PATCH 3e7031fe
 
 var machineAddProfileJill2String string = `{
   "Address": "192.168.100.110",
+  "Available": true,
   "BootEnv": "local2",
   "CurrentTask": 0,
   "Description": "lpxelinux.0",
   "Errors": null,
   "Name": "john",
   "Profile": {
+    "Available": false,
+    "Errors": null,
     "Name": "",
-    "Tasks": null
+    "Tasks": null,
+    "Validated": false
   },
   "Profiles": [
     "jill"
   ],
   "Runnable": true,
   "Tasks": [],
-  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
 }
 `
 var machineAddProfileJillString string = `{
   "Address": "192.168.100.110",
+  "Available": true,
   "BootEnv": "local3",
   "CurrentTask": 0,
   "Description": "lpxelinux.0",
   "Errors": null,
   "Name": "john",
   "Profile": {
+    "Available": false,
+    "Errors": null,
     "Name": "",
-    "Tasks": null
+    "Tasks": null,
+    "Validated": false
   },
   "Profiles": [
     "jill"
   ],
   "Runnable": true,
   "Tasks": [],
-  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
 }
 `
 var machineAddProfileJillJeanString string = `{
   "Address": "192.168.100.110",
+  "Available": true,
   "BootEnv": "local3",
   "CurrentTask": 0,
   "Description": "lpxelinux.0",
   "Errors": null,
   "Name": "john",
   "Profile": {
+    "Available": false,
+    "Errors": null,
     "Name": "",
-    "Tasks": null
+    "Tasks": null,
+    "Validated": false
   },
   "Profiles": [
     "jill",
@@ -232,64 +256,80 @@ var machineAddProfileJillJeanString string = `{
   ],
   "Runnable": true,
   "Tasks": [],
-  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
 }
 `
 var machineAddProfileJillJeanJillErrorString string = "Error: Duplicate profile jill: at 0 and 2\n\n"
 var machineRemoveProfileJeanString string = `{
   "Address": "192.168.100.110",
+  "Available": true,
   "BootEnv": "local3",
   "CurrentTask": 0,
   "Description": "lpxelinux.0",
   "Errors": null,
   "Name": "john",
   "Profile": {
+    "Available": false,
+    "Errors": null,
     "Name": "",
-    "Tasks": null
+    "Tasks": null,
+    "Validated": false
   },
   "Profiles": [
     "jean"
   ],
   "Runnable": true,
   "Tasks": [],
-  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
 }
 `
 var machineRemoveProfileAllGoneString string = `{
   "Address": "192.168.100.110",
+  "Available": true,
   "BootEnv": "local3",
   "CurrentTask": 0,
   "Description": "lpxelinux.0",
-  "Errors": null,
+  "Errors": [],
   "Name": "john",
   "Profile": {
+    "Available": false,
+    "Errors": null,
     "Name": "",
-    "Tasks": null
+    "Tasks": null,
+    "Validated": false
   },
   "Profiles": null,
   "Runnable": true,
   "Tasks": [],
-  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
 }
 `
 
 var machineRemoveProfileAllGone2String string = `{
   "Address": "192.168.100.110",
+  "Available": true,
   "BootEnv": "local2",
   "CurrentTask": -1,
   "Description": "lpxelinux.0",
-  "Errors": null,
+  "Errors": [],
   "Name": "john",
   "Profile": {
+    "Available": false,
+    "Errors": null,
     "Name": "",
-    "Tasks": null
+    "Tasks": null,
+    "Validated": false
   },
   "Profiles": null,
   "Runnable": true,
   "Tasks": [
     "justine"
   ],
-  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
 }
 `
 
@@ -328,40 +368,53 @@ var machinesParamsNextString string = `{
 `
 var machineUpdateJohnWithParamsString string = `{
   "Address": "192.168.100.110",
+  "Available": true,
   "BootEnv": "local3",
   "CurrentTask": 0,
   "Description": "lpxelinux.0",
   "Errors": null,
   "Name": "john",
   "Profile": {
+    "Errors": null,
     "Name": "",
     "Params": {
       "jj": 3
     },
-    "Tasks": null
+    "Tasks": null,
+    "Validated": false
   },
   "Profiles": null,
   "Runnable": true,
   "Tasks": [],
-  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
 }
 `
 
 var machineJillCreate string = `{
+  "Available": true,
+  "Errors": [],
   "Name": "jill",
-  "Tasks": null
+  "Tasks": null,
+  "Validated": true
 }
 `
 var machineJeanCreate string = `{
+  "Available": true,
+  "Errors": [],
   "Name": "jean",
-  "Tasks": null
+  "Tasks": null,
+  "Validated": true
 }
 `
 var machineProfileJamieUpdate string = `{
+  "Available": true,
+  "Errors": [],
   "Name": "jill",
   "Tasks": [
     "justine"
-  ]
+  ],
+  "Validated": true
 }
 `
 

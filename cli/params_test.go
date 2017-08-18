@@ -6,22 +6,31 @@ import (
 
 var paramDefaultListString string = `[
   {
+    "Available": true,
+    "Errors": [],
     "Name": "incrementer.parameter",
     "Schema": {
       "type": "string"
-    }
+    },
+    "Validated": true
   },
   {
+    "Available": true,
+    "Errors": [],
     "Name": "incrementer.step",
     "Schema": {
       "type": "integer"
-    }
+    },
+    "Validated": true
   },
   {
+    "Available": true,
+    "Errors": [],
     "Name": "incrementer.touched",
     "Schema": {
       "type": "integer"
-    }
+    },
+    "Validated": true
   }
 ]
 `
@@ -32,10 +41,13 @@ var paramShowNoArgErrorString string = "Error: drpcli params show [id] [flags] r
 var paramShowTooManyArgErrorString string = "Error: drpcli params show [id] [flags] requires 1 argument\n"
 var paramShowMissingArgErrorString string = "Error: params GET: john2: Not Found\n\n"
 var paramShowParamString string = `{
+  "Available": true,
+  "Errors": [],
   "Name": "john",
   "Schema": {
     "type": "string"
-  }
+  },
+  "Validated": true
 }
 `
 
@@ -58,47 +70,65 @@ var paramCreateInputString string = `{
 }
 `
 var paramCreateJohnString string = `{
+  "Available": true,
+  "Errors": [],
   "Name": "john",
   "Schema": {
     "type": "string"
-  }
+  },
+  "Validated": true
 }
 `
 var paramCreateDuplicateErrorString = "Error: dataTracker create params: john already exists\n\n"
 
 var paramListParamsString = `[
   {
+    "Available": true,
+    "Errors": [],
     "Name": "incrementer.parameter",
     "Schema": {
       "type": "string"
-    }
+    },
+    "Validated": true
   },
   {
+    "Available": true,
+    "Errors": [],
     "Name": "incrementer.step",
     "Schema": {
       "type": "integer"
-    }
+    },
+    "Validated": true
   },
   {
+    "Available": true,
+    "Errors": [],
     "Name": "incrementer.touched",
     "Schema": {
       "type": "integer"
-    }
+    },
+    "Validated": true
   },
   {
+    "Available": true,
+    "Errors": [],
     "Name": "john",
     "Schema": {
       "type": "string"
-    }
+    },
+    "Validated": true
   }
 ]
 `
 var paramListJohnOnlyString = `[
   {
+    "Available": true,
+    "Errors": [],
     "Name": "john",
     "Schema": {
       "type": "string"
-    }
+    },
+    "Validated": true
   }
 ]
 `
@@ -114,10 +144,13 @@ var paramUpdateInputString string = `{
 }
 `
 var paramUpdateJohnString string = `{
+  "Available": true,
+  "Errors": [],
   "Name": "john",
   "Schema": {
     "type": "string"
-  }
+  },
+  "Validated": true
 }
 `
 var paramUpdateJohnMissingErrorString string = "Error: params GET: john2: Not Found\n\n"
@@ -129,10 +162,13 @@ var paramPatchBadPatchJSONErrorString = "Error: Unable to parse drpcli params pa
 var paramPatchBadBaseJSONString = "asdgasdg"
 var paramPatchBadBaseJSONErrorString = "Error: Unable to parse drpcli params patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Param\n\n"
 var paramPatchBaseString string = `{
+  "Available": true,
+  "Errors": [],
   "Name": "john",
   "Schema": {
     "type": "string"
-  }
+  },
+  "Validated": true
 }
 `
 var paramPatchInputString string = `{
@@ -140,11 +176,14 @@ var paramPatchInputString string = `{
 }
 `
 var paramPatchJohnString string = `{
+  "Available": true,
+  "Errors": [],
   "Description": "Foo",
   "Name": "john",
   "Schema": {
     "type": "string"
-  }
+  },
+  "Validated": true
 }
 `
 var paramPatchMissingBaseString string = `{

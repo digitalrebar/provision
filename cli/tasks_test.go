@@ -16,10 +16,13 @@ var taskShowNoArgErrorString string = "Error: drpcli tasks show [id] [flags] req
 var taskShowTooManyArgErrorString string = "Error: drpcli tasks show [id] [flags] requires 1 argument\n"
 var taskShowMissingArgErrorString string = "Error: tasks GET: jill: Not Found\n\n"
 var taskShowJohnString string = `{
+  "Available": true,
+  "Errors": [],
   "Name": "john",
   "OptionalParams": null,
   "RequiredParams": null,
-  "Templates": null
+  "Templates": null,
+  "Validated": true
 }
 `
 
@@ -40,29 +43,38 @@ var taskCreateInputString string = `{
 }
 `
 var taskCreateJohnString string = `{
+  "Available": true,
+  "Errors": [],
   "Name": "john",
   "OptionalParams": null,
   "RequiredParams": null,
-  "Templates": null
+  "Templates": null,
+  "Validated": true
 }
 `
 var taskCreateDuplicateErrorString = "Error: dataTracker create tasks: john already exists\n\n"
 
 var taskListTasksString = `[
   {
+    "Available": true,
+    "Errors": [],
     "Name": "john",
     "OptionalParams": null,
     "RequiredParams": null,
-    "Templates": null
+    "Templates": null,
+    "Validated": true
   }
 ]
 `
 var taskListBothEnvsString = `[
   {
+    "Available": true,
+    "Errors": [],
     "Name": "john",
     "OptionalParams": null,
     "RequiredParams": null,
-    "Templates": null
+    "Templates": null,
+    "Validated": true
   }
 ]
 `
@@ -76,12 +88,15 @@ var taskUpdateInputString string = `{
 }
 `
 var taskUpdateJohnString string = `{
+  "Available": true,
+  "Errors": [],
   "Name": "john",
   "OptionalParams": [
     "jillparam"
   ],
   "RequiredParams": null,
-  "Templates": null
+  "Templates": null,
+  "Validated": true
 }
 `
 var taskUpdateJohnMissingErrorString string = "Error: tasks GET: jill: Not Found\n\n"
@@ -112,12 +127,15 @@ var taskPatchInputString string = `{
 }
 `
 var taskPatchJohnString string = `{
+  "Available": true,
+  "Errors": [],
   "Name": "john",
   "OptionalParams": [
     "joan"
   ],
   "RequiredParams": null,
-  "Templates": null
+  "Templates": null,
+  "Validated": true
 }
 `
 var taskPatchMissingBaseString string = `{

@@ -79,34 +79,49 @@ var contentPack2CreateErrorString = "Error: New layer violates key restrictions:
 
 var contentPack1ProfileListString = `[
   {
+    "Available": false,
+    "Errors": [],
     "Name": "global",
-    "Tasks": null
+    "Tasks": [],
+    "Validated": false
   },
   {
+    "Available": false,
     "Description": "pack1",
+    "Errors": null,
     "Name": "p1-prof",
-    "Tasks": null
+    "Tasks": [],
+    "Validated": false
   }
 ]
 `
 
 var contentPack1UpdateProfileListString = `[
   {
+    "Available": false,
+    "Errors": [],
     "Name": "global",
-    "Tasks": null
+    "Tasks": [],
+    "Validated": false
   },
   {
+    "Available": false,
     "Description": "pack1-2",
+    "Errors": [],
     "Name": "p1-prof",
-    "Tasks": null
+    "Tasks": [],
+    "Validated": false
   }
 ]
 `
 
 var contentNoPackProfileListString = `[
   {
+    "Available": false,
+    "Errors": [],
     "Name": "global",
-    "Tasks": null
+    "Tasks": [],
+    "Validated": false
   }
 ]
 `
@@ -118,43 +133,57 @@ var contentMachineCreateString = `{
 }
 `
 var contentMachineCreateSuccessString = `{
+  "Available": false,
   "BootEnv": "mylocal",
   "CurrentTask": 0,
-  "Errors": null,
+  "Errors": [
+    "Machine 3e7031fe-3062-45f1-835c-92541bc9cbd3 wants BootEnv mylocal, which is not available"
+  ],
   "Name": "greg",
   "Profile": {
+    "Available": false,
+    "Errors": null,
     "Name": "",
-    "Tasks": null
+    "Tasks": null,
+    "Validated": false
   },
   "Profiles": null,
-  "Runnable": true,
-  "Tasks": [],
-  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+  "Runnable": false,
+  "Tasks": null,
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
 }
 `
 
 var contentMachineAddProfileString = `{
+  "Available": false,
   "BootEnv": "mylocal",
   "CurrentTask": 0,
-  "Errors": null,
+  "Errors": [
+    "Machine 3e7031fe-3062-45f1-835c-92541bc9cbd3 wants BootEnv mylocal, which is not available"
+  ],
   "Name": "greg",
   "Profile": {
+    "Available": false,
+    "Errors": null,
     "Name": "",
-    "Tasks": null
+    "Tasks": null,
+    "Validated": false
   },
   "Profiles": [
     "p1-prof"
   ],
-  "Runnable": true,
-  "Tasks": [],
-  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+  "Runnable": false,
+  "Tasks": null,
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
 }
 `
 
 var contentBootenvGregCreateSuccessString = `{
   "Available": true,
   "BootParams": "",
-  "Errors": null,
+  "Errors": [],
   "Initrds": null,
   "Kernel": "",
   "Name": "mylocal",
@@ -231,7 +260,7 @@ var contentPack1UpdateSuccessString = `{
 }
 `
 
-func TestContentFunctionalCli(t *testing.T) {
+func TestContentsFunctionalCli(t *testing.T) {
 
 	tests := []CliTest{
 		CliTest{false, false, []string{"contents", "list"}, noStdinString, contentDefaultListString, noErrorString},
