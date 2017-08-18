@@ -36,3 +36,7 @@ func (t *Task) Prefix() string {
 func (t *Task) Key() string {
 	return t.Name
 }
+
+func (t *Task) AuthKey() string {
+	return t.Key()
+}

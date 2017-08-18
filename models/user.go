@@ -37,3 +37,7 @@ func (u *User) Sanitize() Model {
 	res.(*User).PasswordHash = []byte{}
 	return res
 }
+
+func (u *User) AuthKey() string {
+	return u.Key()
+}

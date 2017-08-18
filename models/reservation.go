@@ -37,3 +37,7 @@ func (r *Reservation) Prefix() string {
 func (r *Reservation) Key() string {
 	return Hexaddr(r.Addr)
 }
+
+func (r *Reservation) AuthKey() string {
+	return r.Key()
+}

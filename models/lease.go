@@ -50,3 +50,7 @@ func (l *Lease) Prefix() string {
 func (l *Lease) Key() string {
 	return Hexaddr(l.Addr)
 }
+
+func (l *Lease) AuthKey() string {
+	return l.Key()
+}

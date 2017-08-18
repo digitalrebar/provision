@@ -32,6 +32,10 @@ func (p *Param) Key() string {
 	return p.Name
 }
 
+func (p *Param) AuthKey() string {
+	return p.Key()
+}
+
 func (p *Param) ValidateSchema() error {
 	_, err := gojsonschema.NewSchema(gojsonschema.NewGoLoader(p.Schema))
 	return err

@@ -6,6 +6,19 @@ import (
 	"github.com/pborman/uuid"
 )
 
+// Job Action is something that job runner will need to do.
+// If path is specified, then the runner will place the contents into that location.
+// If path is not specified, then the runner will attempt to bash exec the contents.
+// swagger:model
+type JobAction struct {
+	// required: true
+	Name string
+	// required: true
+	Path string
+	// required: true
+	Content string
+}
+
 // swagger:model
 type Job struct {
 	Validation
@@ -46,4 +59,8 @@ func (j *Job) Prefix() string {
 
 func (j *Job) Key() string {
 	return j.Uuid.String()
+}
+
+func (j *Job) AuthKey() string {
+	return j.Machine.String()
 }

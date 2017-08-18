@@ -13,20 +13,29 @@ import (
 type Validation struct {
 	// Validated tracks whether or not the model has been validated.
 	// read only: true
-	Validated bool `json:",omitempty"`
+	Validated bool
 	// Available tracks whether or not the model passed validation.
 	// read only: true
-	Available bool `json:",omitempty"`
+	Available bool
 	// If there are any errors in the validation process, they will be
 	// available here.
 	// read only: true
-	Errors []string `json:",omitempty"`
+	Errors      []string
+	forceChange bool
 }
 
 func (v *Validation) ClearValidation() {
 	v.Validated = false
 	v.Available = false
 	v.Errors = []string{}
+}
+
+func (v *Validation) ForceChange() {
+	v.forceChange = true
+}
+
+func (v *Validation) ChangeForced() bool {
+	return v.forceChange
 }
 
 func (v *Validation) Errorf(fmtStr string, args ...interface{}) {

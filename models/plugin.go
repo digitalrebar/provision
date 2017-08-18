@@ -29,3 +29,7 @@ func (n *Plugin) Prefix() string {
 func (n *Plugin) Key() string {
 	return n.Name
 }
+
+func (n *Plugin) AuthKey() string {
+	return n.Key()
+}

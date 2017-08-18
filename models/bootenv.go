@@ -94,3 +94,7 @@ func (b *BootEnv) Prefix() string {
 func (b *BootEnv) Key() string {
 	return b.Name
 }
+
+func (b *BootEnv) AuthKey() string {
+	return b.Key()
+}

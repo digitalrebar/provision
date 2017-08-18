@@ -16,3 +16,7 @@ func (p *Pref) Prefix() string {
 func (p *Pref) Key() string {
 	return p.Name
 }
+
+func (p *Pref) AuthKey() string {
+	return p.Key()
+}

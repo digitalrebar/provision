@@ -103,3 +103,7 @@ func (s *Subnet) Prefix() string {
 func (s *Subnet) Key() string {
 	return s.Name
 }
+
+func (s *Subnet) AuthKey() string {
+	return s.Key()
+}

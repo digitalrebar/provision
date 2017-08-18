@@ -33,3 +33,7 @@ func (p *Profile) Prefix() string {
 func (p *Profile) Key() string {
 	return p.Name
 }
+
+func (p *Profile) AuthKey() string {
+	return p.Key()
+}

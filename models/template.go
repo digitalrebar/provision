@@ -26,3 +26,7 @@ func (t *Template) Prefix() string {
 func (t *Template) Key() string {
 	return t.ID
 }
+
+func (t *Template) AuthKey() string {
+	return t.Key()
+}

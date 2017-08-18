@@ -9,13 +9,18 @@ var jobEmptyListString string = "[]\n"
 var jobDefaultListString string = "[]\n"
 
 var jobTask1Create string = `{
+  "Available": true,
+  "Errors": [],
   "Name": "task1",
   "OptionalParams": null,
   "RequiredParams": null,
-  "Templates": null
+  "Templates": null,
+  "Validated": true
 }
 `
 var jobTask2Create string = `{
+  "Available": true,
+  "Errors": [],
   "Name": "task2",
   "OptionalParams": null,
   "RequiredParams": null,
@@ -25,21 +30,25 @@ var jobTask2Create string = `{
       "Name": "part 1",
       "Path": ""
     }
-  ]
+  ],
+  "Validated": true
 }
 `
 var jobTask3Create string = `{
+  "Available": true,
+  "Errors": [],
   "Name": "task3",
   "OptionalParams": null,
   "RequiredParams": null,
-  "Templates": null
+  "Templates": null,
+  "Validated": true
 }
 `
 
 var jobLocal2Create string = `{
   "Available": true,
   "BootParams": "",
-  "Errors": null,
+  "Errors": [],
   "Initrds": null,
   "Kernel": "",
   "Name": "local2",
@@ -76,7 +85,7 @@ var jobLocal2Create string = `{
 `
 var jobLocal2CreateInput string = `{
   "BootParams": "",
-  "Errors": null,
+  "Errors": [],
   "Initrds": null,
   "Kernel": "",
   "Name": "local2",
@@ -120,13 +129,17 @@ var jobCreateMachineInputString string = `{
 `
 var jobCreateMachineJohnString string = `{
   "Address": "192.168.100.110",
+  "Available": true,
   "BootEnv": "local",
   "CurrentTask": -1,
-  "Errors": null,
+  "Errors": [],
   "Name": "john",
   "Profile": {
+    "Available": false,
+    "Errors": null,
     "Name": "",
-    "Tasks": null
+    "Tasks": null,
+    "Validated": false
   },
   "Profiles": null,
   "Runnable": true,
@@ -135,7 +148,8 @@ var jobCreateMachineJohnString string = `{
     "task2",
     "task3"
   ],
-  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
 }
 `
 
@@ -146,7 +160,7 @@ var jobLocalUpdateInput string = `{
 var jobLocalUpdateString string = `{
   "Available": true,
   "BootParams": "",
-  "Errors": null,
+  "Errors": [],
   "Initrds": null,
   "Kernel": "",
   "Name": "local",
@@ -217,30 +231,36 @@ var jobCreateNextInput5String string = `{
 var jobCreateJohnString string = `RE:
 {
   "Archived": false,
+  "Available": true,
   "BootEnv": "local",
   "EndTime": "0001-01-01T00:00:00Z",
+  "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000001",
   "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Previous": "00000000-0000-0000-0000-000000000000",
   "StartTime": "0001-01-01T00:00:00Z",
   "State": "created",
   "Task": "task1",
-  "Uuid": "00000000-0000-0000-0000-000000000001"
+  "Uuid": "00000000-0000-0000-0000-000000000001",
+  "Validated": true
 }
 `
 var jobListJobsString string = `RE:
 \[
   {
     "Archived": false,
+    "Available": true,
     "BootEnv": "local",
     "EndTime": "0001-01-01T00:00:00Z",
+    "Errors": [],
     "LogPath": "[\S\s]*/job-logs/00000000-0000-0000-0000-000000000001",
     "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
     "Previous": "00000000-0000-0000-0000-000000000000",
     "StartTime": "0001-01-01T00:00:00Z",
     "State": "created",
     "Task": "task1",
-    "Uuid": "00000000-0000-0000-0000-000000000001"
+    "Uuid": "00000000-0000-0000-0000-000000000001",
+    "Validated": true
   }
 \]
 `
@@ -253,15 +273,18 @@ var jobShowMissingArgErrorString string = "Error: jobs GET: john: Not Found\n\n"
 var jobShowJobString string = `RE:
 {
   "Archived": false,
+  "Available": true,
   "BootEnv": "local",
   "EndTime": "0001-01-01T00:00:00Z",
+  "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000001",
   "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Previous": "00000000-0000-0000-0000-000000000000",
   "StartTime": "0001-01-01T00:00:00Z",
   "State": "created",
   "Task": "task1",
-  "Uuid": "00000000-0000-0000-0000-000000000001"
+  "Uuid": "00000000-0000-0000-0000-000000000001",
+  "Validated": true
 }
 `
 var jobExistsNoArgErrorString string = "Error: drpcli jobs exists [id] [flags] requires 1 argument"
@@ -279,14 +302,18 @@ var jobUpdateTooManyArgErrorString string = "Error: drpcli jobs update [id] [jso
 
 var jobShowMachineJohnString string = `{
   "Address": "192.168.100.110",
+  "Available": true,
   "BootEnv": "local",
   "CurrentJob": "00000000-0000-0000-0000-000000000001",
   "CurrentTask": 0,
-  "Errors": null,
+  "Errors": [],
   "Name": "john",
   "Profile": {
+    "Available": false,
+    "Errors": null,
     "Name": "",
-    "Tasks": null
+    "Tasks": null,
+    "Validated": false
   },
   "Profiles": null,
   "Runnable": true,
@@ -295,7 +322,8 @@ var jobShowMachineJohnString string = `{
     "task2",
     "task3"
   ],
-  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
 }
 `
 
@@ -309,15 +337,18 @@ var jobUpdateBadInputErrorString string = "Error: Jobs 00000000-0000-0000-0000-0
 var jobUpdateJohnString string = `RE:
 {
   "Archived": false,
+  "Available": true,
   "BootEnv": "local",
   "EndTime": "0001-01-01T00:00:00Z",
+  "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000001",
   "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Previous": "00000000-0000-0000-0000-000000000000",
   "StartTime": "0001-01-01T00:00:00Z",
   "State": "incomplete",
   "Task": "task1",
-  "Uuid": "00000000-0000-0000-0000-000000000001"
+  "Uuid": "00000000-0000-0000-0000-000000000001",
+  "Validated": true
 }
 `
 
@@ -327,22 +358,28 @@ var jobPatchNoArgErrorString string = "Error: drpcli jobs patch [objectJson] [ch
 var jobPatchTooManyArgErrorString = "Error: drpcli jobs patch [objectJson] [changesJson] [flags] requires 2 arguments\n"
 var jobPatchBaseString = `{
   "Archived": false,
+  "Available": true,
   "BootEnv": "local",
+  "Errors": [],
   "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Previous": "00000000-0000-0000-0000-000000000000",
   "State": "incomplete",
   "Task": "task1",
-  "Uuid": "00000000-0000-0000-0000-000000000001"
+  "Uuid": "00000000-0000-0000-0000-000000000001",
+  "Validated": true
 }
 `
 var jobPatchBase2String = `{
   "Archived": false,
+  "Available": true,
   "BootEnv": "local",
+  "Errors": [],
   "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Previous": "00000000-0000-0000-0000-000000000000",
   "State": "running",
   "Task": "task1",
-  "Uuid": "00000000-0000-0000-0000-000000000001"
+  "Uuid": "00000000-0000-0000-0000-000000000001",
+  "Validated": true
 }
 `
 var jobPatchBadPatchJSONString = "{asdgasdg"
@@ -360,40 +397,49 @@ var jobPatchInputString = "{ \"State\": \"running\"}"
 var jobPatchInputReplyString = `RE:
 {
   "Archived": false,
+  "Available": true,
   "BootEnv": "local",
   "EndTime": "0001-01-01T00:00:00Z",
+  "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000001",
   "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Previous": "00000000-0000-0000-0000-000000000000",
   "StartTime": "20[\s\S]*",
   "State": "running",
   "Task": "task1",
-  "Uuid": "00000000-0000-0000-0000-000000000001"
+  "Uuid": "00000000-0000-0000-0000-000000000001",
+  "Validated": true
 }
 `
 var jobPatchInput2String = "{ \"State\": \"incomplete\"}"
 var jobPatchJohnString = `RE:
 {
   "Archived": false,
+  "Available": true,
   "BootEnv": "local",
   "EndTime": "0001-01-01T00:00:00Z",
+  "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000001",
   "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Previous": "00000000-0000-0000-0000-000000000000",
   "StartTime": "20[\s\S]*",
   "State": "incomplete",
   "Task": "task1",
-  "Uuid": "00000000-0000-0000-0000-000000000001"
+  "Uuid": "00000000-0000-0000-0000-000000000001",
+  "Validated": true
 }
 `
 var jobPatchMissingBaseString = `{
   "Archived": false,
+  "Available": true,
   "BootEnv": "local",
+  "Errors": [],
   "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Previous": "00000000-0000-0000-0000-000000000000",
   "State": "incomplete",
   "Task": "task1",
-  "Uuid": "10000000-0000-0000-0000-000000000001"
+  "Uuid": "10000000-0000-0000-0000-000000000001",
+  "Validated": true
 }
 `
 var jobPatchJohnMissingErrorString = "Error: jobs: PATCH 10000000-0000-0000-0000-000000000001: Not Found\n\n"
@@ -402,28 +448,35 @@ var jobUpdateFailedJobInputString = "{ \"State\": \"failed\" }"
 var jobUpdateFailedJobUpdateString = `RE:
 {
   "Archived": false,
+  "Available": true,
   "BootEnv": "local",
   "EndTime": "20[\s\S]*",
+  "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000001",
   "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Previous": "00000000-0000-0000-0000-000000000000",
   "StartTime": "20[\s\S]*",
   "State": "failed",
   "Task": "task1",
-  "Uuid": "00000000-0000-0000-0000-000000000001"
+  "Uuid": "00000000-0000-0000-0000-000000000001",
+  "Validated": true
 }
 `
 var jobCreateMachineNotRunningErrorString = "Error: Machine 3e7031fe-3062-45f1-835c-92541bc9cbd3 is not runnable\n\n"
 var jobUpdateMachineRunnableString = `{
   "Address": "192.168.100.110",
+  "Available": true,
   "BootEnv": "local",
   "CurrentJob": "00000000-0000-0000-0000-000000000001",
   "CurrentTask": 0,
-  "Errors": null,
+  "Errors": [],
   "Name": "john",
   "Profile": {
+    "Available": false,
+    "Errors": null,
     "Name": "",
-    "Tasks": null
+    "Tasks": null,
+    "Validated": false
   },
   "Profiles": null,
   "Runnable": true,
@@ -432,143 +485,174 @@ var jobUpdateMachineRunnableString = `{
     "task2",
     "task3"
   ],
-  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
 }
 `
 var jobCreateNextString = `RE:
 {
   "Archived": false,
+  "Available": true,
   "BootEnv": "local",
   "EndTime": "0001-01-01T00:00:00Z",
+  "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000002",
   "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Previous": "00000000-0000-0000-0000-000000000001",
   "StartTime": "0001-01-01T00:00:00Z",
   "State": "created",
   "Task": "task1",
-  "Uuid": "00000000-0000-0000-0000-000000000002"
+  "Uuid": "00000000-0000-0000-0000-000000000002",
+  "Validated": true
 }
 `
 var jobUpdateFinishedJobInputString = "{ \"State\": \"finished\" }"
 var jobUpdateFinishedJob2UpdateString = `RE:
 {
   "Archived": false,
+  "Available": true,
   "BootEnv": "local",
   "EndTime": "20[\s\S]*",
+  "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000002",
   "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Previous": "00000000-0000-0000-0000-000000000001",
   "StartTime": "0001-01-01T00:00:00Z",
   "State": "finished",
   "Task": "task1",
-  "Uuid": "00000000-0000-0000-0000-000000000002"
+  "Uuid": "00000000-0000-0000-0000-000000000002",
+  "Validated": true
 }
 `
 var jobCreateNext3String = `RE:
 {
   "Archived": false,
+  "Available": true,
   "BootEnv": "local",
   "EndTime": "0001-01-01T00:00:00Z",
+  "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000003",
   "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Previous": "00000000-0000-0000-0000-000000000002",
   "StartTime": "0001-01-01T00:00:00Z",
   "State": "created",
   "Task": "task2",
-  "Uuid": "00000000-0000-0000-0000-000000000003"
+  "Uuid": "00000000-0000-0000-0000-000000000003",
+  "Validated": true
 }
 `
 var jobUpdateFinishedJob3UpdateString = `RE:
 {
   "Archived": false,
+  "Available": true,
   "BootEnv": "local",
   "EndTime": "20[\s\S]*",
+  "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000003",
   "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Previous": "00000000-0000-0000-0000-000000000002",
   "StartTime": "0001-01-01T00:00:00Z",
   "State": "finished",
   "Task": "task2",
-  "Uuid": "00000000-0000-0000-0000-000000000003"
+  "Uuid": "00000000-0000-0000-0000-000000000003",
+  "Validated": true
 }
 `
 var jobCreateNext4String = `RE:
 {
   "Archived": false,
+  "Available": true,
   "BootEnv": "local",
   "EndTime": "0001-01-01T00:00:00Z",
+  "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000004",
   "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Previous": "00000000-0000-0000-0000-000000000003",
   "StartTime": "0001-01-01T00:00:00Z",
   "State": "created",
   "Task": "task3",
-  "Uuid": "00000000-0000-0000-0000-000000000004"
+  "Uuid": "00000000-0000-0000-0000-000000000004",
+  "Validated": true
 }
 `
 var jobUpdateFinishedJob4UpdateString = `RE:
 {
   "Archived": false,
+  "Available": true,
   "BootEnv": "local",
   "EndTime": "20[\s\S]*",
+  "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000004",
   "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Previous": "00000000-0000-0000-0000-000000000003",
   "StartTime": "0001-01-01T00:00:00Z",
   "State": "finished",
   "Task": "task3",
-  "Uuid": "00000000-0000-0000-0000-000000000004"
+  "Uuid": "00000000-0000-0000-0000-000000000004",
+  "Validated": true
 }
 `
 var jobFullListString = `RE:
 [
   {
     "Archived": false,
+    "Available": true,
     "BootEnv": "local",
     "EndTime": "20[\s\S]*",
+    "Errors": [],
     "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000001",
     "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
     "Previous": "00000000-0000-0000-0000-000000000000",
     "StartTime": "20[\s\S]*",
     "State": "failed",
     "Task": "task1",
-    "Uuid": "00000000-0000-0000-0000-000000000001"
+    "Uuid": "00000000-0000-0000-0000-000000000001",
+    "Validated": true
   },
   {
     "Archived": false,
+    "Available": true,
     "BootEnv": "local",
     "EndTime": "20[\s\S]*",
+    "Errors": [],
     "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000002",
     "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
     "Previous": "00000000-0000-0000-0000-000000000001",
     "StartTime": "0001-01-01T00:00:00Z",
     "State": "finished",
     "Task": "task1",
-    "Uuid": "00000000-0000-0000-0000-000000000002"
+    "Uuid": "00000000-0000-0000-0000-000000000002",
+    "Validated": true
   },
   {
     "Archived": false,
+    "Available": true,
     "BootEnv": "local",
     "EndTime": "20[\s\S]*",
+    "Errors": [],
     "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000003",
     "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
     "Previous": "00000000-0000-0000-0000-000000000002",
     "StartTime": "0001-01-01T00:00:00Z",
     "State": "finished",
     "Task": "task2",
-    "Uuid": "00000000-0000-0000-0000-000000000003"
+    "Uuid": "00000000-0000-0000-0000-000000000003",
+    "Validated": true
   },
   {
     "Archived": false,
+    "Available": true,
     "BootEnv": "local",
     "EndTime": "20[\s\S]*",
+    "Errors": [],
     "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000004",
     "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
     "Previous": "00000000-0000-0000-0000-000000000003",
     "StartTime": "0001-01-01T00:00:00Z",
     "State": "finished",
     "Task": "task3",
-    "Uuid": "00000000-0000-0000-0000-000000000004"
+    "Uuid": "00000000-0000-0000-0000-000000000004",
+    "Validated": true
   }
 ]
 `

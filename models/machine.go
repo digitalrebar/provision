@@ -71,3 +71,7 @@ func (n *Machine) Prefix() string {
 func (n *Machine) Key() string {
 	return n.UUID()
 }
+
+func (n *Machine) AuthKey() string {
+	return n.Key()
+}

@@ -92,6 +92,30 @@ type CliTest struct {
 	expectedStdErr string
 }
 
+func diff(a, b string) (string, error) {
+	f1, err := ioutil.TempFile("", "clitest-diff-src")
+	if err != nil {
+		return "", err
+	}
+	defer f1.Close()
+	defer os.Remove(f1.Name())
+	f2, err := ioutil.TempFile("", "clitest-diff-dest")
+	if err != nil {
+		return "", err
+	}
+	defer f2.Close()
+	defer os.Remove(f2.Name())
+	if _, err := io.WriteString(f1, a); err != nil {
+		return "", err
+	}
+	if _, err := io.WriteString(f2, b); err != nil {
+		return "", err
+	}
+	cmd := exec.Command("diff", "-u", f1.Name(), f2.Name())
+	res, err := cmd.CombinedOutput()
+	return string(res), err
+}
+
 func testCli(t *testing.T, test CliTest) {
 	t.Logf("Testing: %v (stdin: %s)\n", test.args, test.stdin)
 
@@ -127,21 +151,26 @@ func testCli(t *testing.T, test CliTest) {
 	// if we are not dumping usage, expect exact/regexp matches
 	// If we are dumping usage and there is an error, expect out to match exact and error to prefix match
 	// If we are dumping usage and there is not an error, expect err to match exact and out to prefix match
+	patchSO, _ := diff(test.expectedStdOut, so)
+	patchSE, _ := diff(test.expectedStdErr, se)
 	if !test.dumpUsage {
 		if strings.HasPrefix(test.expectedStdOut, "RE:\n") {
 			if matched, err := regexp.MatchString(test.expectedStdOut[4:], so); err != nil || !matched {
 				if err != nil {
 					t.Errorf("Expected StdOut: regexp fail: %v\n", err)
 				}
-				t.Errorf("Expected StdOut: aa%saa, but got: aa%saa\n", test.expectedStdOut[4:], so)
+				t.Errorf("Expected StdOut: %s", test.expectedStdOut[4:])
+				t.Errorf("Got: %s", so)
 			}
 		} else {
 			if so != test.expectedStdOut {
-				t.Errorf("Expected StdOut: aa%saa, but got: aa%saa\n", test.expectedStdOut, so)
+				t.Errorf("Expected StdOut: %s", test.expectedStdOut)
+				t.Errorf("Got: %s", patchSO)
 			}
-		}
-		if se != test.expectedStdErr {
-			t.Errorf("Expected StdErr: aa%saa, but got: aa%saa\n", test.expectedStdErr, se)
+			if se != test.expectedStdErr {
+				t.Errorf("Expected StdErr: %s", test.expectedStdErr)
+				t.Errorf("Got: %s", patchSE)
+			}
 		}
 	} else {
 		if test.genError {
@@ -149,14 +178,16 @@ func testCli(t *testing.T, test CliTest) {
 				t.Errorf("Expected StdErr to start with: aa%saa, but got: aa%saa\n", test.expectedStdErr, se)
 			}
 			if so != test.expectedStdOut {
-				t.Errorf("Expected StdOut: aa%saa, but got: aa%saa\n", test.expectedStdOut, so)
+				t.Errorf("Expected StdOut: %s", test.expectedStdOut)
+				t.Errorf("Got: %s", patchSO)
 			}
 			if !strings.Contains(se, "Usage:") {
 				t.Errorf("Expected StdErr to have Usage, but didn't")
 			}
 		} else {
 			if se != test.expectedStdErr {
-				t.Errorf("Expected StdErr: aa%saa, but got: aa%saa\n", test.expectedStdErr, se)
+				t.Errorf("Expected StdErr: %s", test.expectedStdErr)
+				t.Errorf("Got: %s", patchSE)
 			}
 			if !strings.HasPrefix(so, test.expectedStdOut) {
 				t.Errorf("Expected StdOut to start with: aa%saa, but got: aa%saa\n", test.expectedStdOut, so)
@@ -187,7 +218,7 @@ var yamlTestString = `- Available: true
   BootParams: ""
   Description: The boot environment you should use to have unknown machines boot off
     their local hard drive
-  Errors: null
+  Errors: []
   Initrds: null
   Kernel: ""
   Name: ignore
@@ -223,7 +254,7 @@ var jsonTestString = `[
     "Available": true,
     "BootParams": "",
     "Description": "The boot environment you should use to have unknown machines boot off their local hard drive",
-    "Errors": null,
+    "Errors": [],
     "Initrds": null,
     "Kernel": "",
     "Name": "ignore",

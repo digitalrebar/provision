@@ -17,7 +17,9 @@ var subnetShowJohnString string = `{
   "ActiveEnd": "192.168.100.100",
   "ActiveLeaseTime": 60,
   "ActiveStart": "192.168.100.20",
+  "Available": true,
   "Enabled": false,
+  "Errors": [],
   "Name": "john",
   "NextServer": "3.3.3.3",
   "OnlyReservations": false,
@@ -38,7 +40,8 @@ var subnetShowJohnString string = `{
   ],
   "ReservedLeaseTime": 7200,
   "Strategy": "MAC",
-  "Subnet": "192.168.100.0/24"
+  "Subnet": "192.168.100.0/24",
+  "Validated": true
 }
 `
 
@@ -67,7 +70,9 @@ var subnetCreateJohnString string = `{
   "ActiveEnd": "192.168.100.100",
   "ActiveLeaseTime": 60,
   "ActiveStart": "192.168.100.20",
+  "Available": true,
   "Enabled": false,
+  "Errors": [],
   "Name": "john",
   "NextServer": "3.3.3.3",
   "OnlyReservations": false,
@@ -88,7 +93,8 @@ var subnetCreateJohnString string = `{
   ],
   "ReservedLeaseTime": 7200,
   "Strategy": "MAC",
-  "Subnet": "192.168.100.0/24"
+  "Subnet": "192.168.100.0/24",
+  "Validated": true
 }
 `
 var subnetCreateDuplicateErrorString = "Error: dataTracker create subnets: john already exists\n\n"
@@ -98,7 +104,9 @@ var subnetListBothEnvsString = `[
     "ActiveEnd": "192.168.100.100",
     "ActiveLeaseTime": 60,
     "ActiveStart": "192.168.100.20",
+    "Available": true,
     "Enabled": false,
+    "Errors": [],
     "Name": "john",
     "NextServer": "3.3.3.3",
     "OnlyReservations": false,
@@ -119,7 +127,8 @@ var subnetListBothEnvsString = `[
     ],
     "ReservedLeaseTime": 7200,
     "Strategy": "MAC",
-    "Subnet": "192.168.100.0/24"
+    "Subnet": "192.168.100.0/24",
+    "Validated": true
   }
 ]
 `
@@ -136,7 +145,9 @@ var subnetUpdateJohnString string = `{
   "ActiveEnd": "192.168.100.100",
   "ActiveLeaseTime": 60,
   "ActiveStart": "192.168.100.20",
+  "Available": true,
   "Enabled": false,
+  "Errors": [],
   "Name": "john",
   "NextServer": "3.3.3.3",
   "OnlyReservations": false,
@@ -157,7 +168,8 @@ var subnetUpdateJohnString string = `{
   ],
   "ReservedLeaseTime": 7200,
   "Strategy": "NewStrat",
-  "Subnet": "192.168.100.0/24"
+  "Subnet": "192.168.100.0/24",
+  "Validated": true
 }
 `
 var subnetUpdateJohnMissingErrorString string = "Error: subnets GET: john2: Not Found\n\n"
@@ -172,6 +184,9 @@ var subnetPatchBaseString string = `{
   "ActiveEnd": "192.168.100.100",
   "ActiveLeaseTime": 60,
   "ActiveStart": "192.168.100.20",
+  "Available": true,
+  "Enabled": false,
+  "Errors": [],
   "Name": "john",
   "NextServer": "3.3.3.3",
   "OnlyReservations": false,
@@ -192,7 +207,8 @@ var subnetPatchBaseString string = `{
   ],
   "ReservedLeaseTime": 7200,
   "Strategy": "NewStrat",
-  "Subnet": "192.168.100.0/24"
+  "Subnet": "192.168.100.0/24",
+  "Validated": true
 }
 `
 var subnetPatchInputString string = `{
@@ -203,7 +219,9 @@ var subnetPatchJohnString string = `{
   "ActiveEnd": "192.168.100.100",
   "ActiveLeaseTime": 60,
   "ActiveStart": "192.168.100.20",
+  "Available": true,
   "Enabled": false,
+  "Errors": [],
   "Name": "john",
   "NextServer": "3.3.3.3",
   "OnlyReservations": false,
@@ -224,7 +242,8 @@ var subnetPatchJohnString string = `{
   ],
   "ReservedLeaseTime": 7200,
   "Strategy": "bootx64.efi",
-  "Subnet": "192.168.100.0/24"
+  "Subnet": "192.168.100.0/24",
+  "Validated": true
 }
 `
 var subnetPatchMissingBaseString string = `{
