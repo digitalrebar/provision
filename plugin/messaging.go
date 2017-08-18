@@ -10,6 +10,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/digitalrebar/provision/backend"
 	"github.com/digitalrebar/provision/models"
 )
 

@@ -8,9 +8,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/digitalrebar/provision/backend"
 	"github.com/digitalrebar/provision/client/contents"
 	models "github.com/digitalrebar/provision/genmodels"
+	prmodels "github.com/digitalrebar/provision/models"
 	"github.com/digitalrebar/store"
 	"github.com/spf13/cobra"
 )
@@ -119,21 +119,6 @@ func writeMetaFile(field string, data *string) error {
 	return ioutil.WriteFile(fname, []byte(*data), 0640)
 }
 
-var typeToObject = map[string](func() store.KeySaver){
-	"machines":     (&backend.Machine{}).New,
-	"params":       (&backend.Param{}).New,
-	"profiles":     (&backend.Profile{}).New,
-	"users":        (&backend.User{}).New,
-	"templates":    (&backend.Template{}).New,
-	"bootenvs":     (&backend.BootEnv{}).New,
-	"leases":       (&backend.Lease{}).New,
-	"reservations": (&backend.Reservation{}).New,
-	"subnets":      (&backend.Subnet{}).New,
-	"tasks":        (&backend.Task{}).New,
-	"jobs":         (&backend.Job{}).New,
-	"plugins":      (&backend.Plugin{}).New,
-}
-
 func addContentCommands() (res *cobra.Command) {
 	singularName := "content"
 	name := "contents"
@@ -175,7 +160,14 @@ func addContentCommands() (res *cobra.Command) {
 			content.Sections = models.Sections{}
 
 			// for each valid content type, load it
-			for prefix, fn := range typeToObject {
+			files, _ := ioutil.ReadDir("./")
+			for _, f := range files {
+				prefix := f.Name()
+
+				if _, err := prmodels.New(prefix); err != nil {
+					// Skip things we can instantiate
+					continue
+				}
 				objs := map[string]interface{}{}
 
 				err := filepath.Walk(fmt.Sprintf("./%s", prefix), func(filepath string, info os.FileInfo, err error) error {
@@ -186,7 +178,7 @@ func addContentCommands() (res *cobra.Command) {
 							codec = store.YamlCodec
 						}
 
-						obj := fn()
+						obj, _ := prmodels.New(prefix)
 
 						fmt.Printf("Processing: %s\n", filepath)
 						if buf, err := ioutil.ReadFile(filepath); err != nil {
@@ -196,7 +188,7 @@ func addContentCommands() (res *cobra.Command) {
 								if prefix == "templates" {
 									// Templates could be plain.
 									id := path.Base(filepath)
-									tmpl := &backend.Template{ID: id}
+									tmpl := &prmodels.Template{ID: id}
 									tmpl.Contents = string(buf)
 									obj = tmpl
 								} else {
