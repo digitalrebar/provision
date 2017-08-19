@@ -355,7 +355,30 @@ var machineDestroyMissingJohnString string = "Error: machines: DELETE 3e7031fe-3
 
 var machineBootEnvNoArgErrorString string = "Error: drpcli machines bootenv [id] [bootenv] [flags] requires 2 arguments"
 var machineBootEnvMissingMachineErrorString string = "Error: machines GET: john: Not Found\n\n"
-var machineBootEnvErrorBootEnvString string = "Error: Bootenv john2 does not exist\n\n"
+var machineBootEnvErrorBootEnvString string = `{
+  "Address": "192.168.100.110",
+  "Available": false,
+  "BootEnv": "john2",
+  "CurrentTask": 0,
+  "Description": "lpxelinux.0",
+  "Errors": [
+    "Bootenv john2 does not exist"
+  ],
+  "Name": "john",
+  "Profile": {
+    "Available": false,
+    "Errors": null,
+    "Name": "",
+    "Tasks": null,
+    "Validated": false
+  },
+  "Profiles": null,
+  "Runnable": false,
+  "Tasks": [],
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
+}
+`
 
 var machineGetNoArgErrorString string = "Error: drpcli machines get [id] param [key] [flags] requires 3 arguments"
 var machineGetMissingMachineErrorString string = "Error: machines GET Params: john: Not Found\n\n"
@@ -509,7 +532,7 @@ var machineRunActionMissingFredErrorString string = "Error: machines Call Action
 var machineRunActionBadCommandErrorString string = "Error: machines Call Action: action command: Not Found\n\n"
 var machineRunActionMissingCommandParametersErrorString string = "Error: machines Call Action: machine 3e7031fe-3062-45f1-835c-92541bc9cbd3: Missing Parameter incrementer.touched\n\n"
 var machineRunActionBadJSONThridArgErrorString string = "Error: Invalid parameters: error unmarshaling JSON: json: cannot unmarshal string into Go value of type map[string]interface {}\n\n\n"
-var machineRunActionBadStepErrorString string = "Error: machines Call Action machine 3e7031fe-3062-45f1-835c-92541bc9cbd3: Invalid Parameter: incrementer.step: :/n(root): Invalid type. Expected: integer, given: string\n\n"
+var machineRunActionBadStepErrorString string = "Error: machines Call Action machine 3e7031fe-3062-45f1-835c-92541bc9cbd3: Invalid Parameter: incrementer.step: :\n(root): Invalid type. Expected: integer, given: string\n\n"
 
 var machineRunActionMissingParameterStdinString string = "{}"
 var machineRunActionGoodStdinString string = `{
@@ -677,6 +700,30 @@ var machineLocal2CreateInput string = `{
   "Validated": true
 }
 `
+
+var machineUpdateLocalWithoutRunnable2String = `{
+  "Address": "192.168.100.110",
+  "Available": true,
+  "BootEnv": "local2",
+  "CurrentTask": 0,
+  "Description": "lpxelinux.0",
+  "Errors": [],
+  "Name": "john",
+  "Profile": {
+    "Available": false,
+    "Errors": null,
+    "Name": "",
+    "Tasks": null,
+    "Validated": false
+  },
+  "Profiles": null,
+  "Runnable": false,
+  "Tasks": [],
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
+}
+`
+
 var machineUpdateLocal2String string = `{
   "Address": "192.168.100.110",
   "Available": true,
@@ -702,6 +749,7 @@ var machineUpdateLocal2String string = `{
 
 var machineUpdateLocal3String string = `{
   "Address": "192.168.100.110",
+  "Available": true,
   "BootEnv": "local2",
   "CurrentTask": -1,
   "Description": "lpxelinux.0",
@@ -721,7 +769,8 @@ var machineUpdateLocal3String string = `{
   "Tasks": [
     "justine"
   ],
-  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
 }
 `
 
@@ -743,7 +792,7 @@ var machineUpdateLocalJamieString string = `{
   "Profiles": [
     "jill"
   ],
-  "Runnable": false,
+  "Runnable": true,
   "Tasks": [
     "jamie",
     "justine"
@@ -859,8 +908,9 @@ func TestMachineCli(t *testing.T) {
 
 		CliTest{true, true, []string{"machines", "bootenv"}, noStdinString, noContentString, machineBootEnvNoArgErrorString},
 		CliTest{false, true, []string{"machines", "bootenv", "john", "john2"}, noStdinString, noContentString, machineBootEnvMissingMachineErrorString},
-		CliTest{false, true, []string{"machines", "bootenv", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "john2"}, noStdinString, noContentString, machineBootEnvErrorBootEnvString},
-		CliTest{false, false, []string{"machines", "bootenv", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "local2"}, noStdinString, machineUpdateLocal2String, noErrorString},
+		CliTest{false, false, []string{"machines", "bootenv", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "john2"}, noStdinString, machineBootEnvErrorBootEnvString, noErrorString},
+		CliTest{false, false, []string{"machines", "bootenv", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "local2"}, noStdinString, machineUpdateLocalWithoutRunnable2String, noErrorString},
+		CliTest{false, false, []string{"machines", "update", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "{ \"Runnable\": true }"}, noStdinString, machineUpdateLocal2String, noErrorString},
 		CliTest{false, false, []string{"machines", "addprofile", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "jill"}, noStdinString, machineAddProfileJill2String, noErrorString},
 		CliTest{false, false, []string{"profiles", "update", "jill", "{ \"Tasks\": [ \"justine\" ] }"}, noStdinString, machineProfileJamieUpdate, noErrorString},
 		CliTest{false, false, []string{"bootenvs", "update", "local3", "{ \"Tasks\": [ \"jamie\" ] }"}, noStdinString, machineBootEnvJamieUpdate, noErrorString},

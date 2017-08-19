@@ -66,6 +66,11 @@ func (v *Validation) Useable() bool {
 	return v.Validated
 }
 
+func (v *Validation) SetInvalid() bool {
+	v.Validated = false
+	return v.Validated
+}
+
 func (v *Validation) SetValid() bool {
 	v.Validated = v.Validated || len(v.Errors) == 0
 	return v.Validated
