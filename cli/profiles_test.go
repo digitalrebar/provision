@@ -9,7 +9,7 @@ var profileDefaultListString string = `[
     "Available": true,
     "Errors": [],
     "Name": "global",
-    "Tasks": null,
+    "Tasks": [],
     "Validated": true
   }
 ]
@@ -68,7 +68,7 @@ var profileListProfilesString = `[
     "Available": true,
     "Errors": [],
     "Name": "global",
-    "Tasks": null,
+    "Tasks": [],
     "Validated": true
   },
   {

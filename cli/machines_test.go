@@ -18,15 +18,18 @@ var machineShowNoArgErrorString string = "Error: drpcli machines show [id] [flag
 var machineShowTooManyArgErrorString string = "Error: drpcli machines show [id] [flags] requires 1 argument\n"
 var machineShowMissingArgErrorString string = "Error: machines GET: john: Not Found\n\n"
 var machineShowMachineString string = `{
-  "Available": true,
   "Address": "192.168.100.110",
+  "Available": true,
   "BootEnv": "local3",
   "CurrentTask": 0,
   "Errors": [],
   "Name": "john",
   "Profile": {
+    "Available": false,
+    "Errors": null,
     "Name": "",
-    "Tasks": null
+    "Tasks": null,
+    "Validated": false
   },
   "Profiles": null,
   "Runnable": true,
@@ -55,15 +58,18 @@ var machineCreateInputString string = `{
 }
 `
 var machineCreateJohnString string = `{
-  "Available": true,
   "Address": "192.168.100.110",
+  "Available": true,
   "BootEnv": "local3",
   "CurrentTask": 0,
   "Errors": [],
   "Name": "john",
   "Profile": {
+    "Available": false,
+    "Errors": null,
     "Name": "",
-    "Tasks": null
+    "Tasks": null,
+    "Validated": false
   },
   "Profiles": null,
   "Runnable": true,
@@ -77,15 +83,18 @@ var machineCreateDuplicateErrorString = "Error: dataTracker create machines: 3e7
 
 var machineListMachinesString = `[
   {
-    "Available": true,
     "Address": "192.168.100.110",
+    "Available": true,
     "BootEnv": "local3",
     "CurrentTask": 0,
     "Errors": [],
     "Name": "john",
     "Profile": {
+      "Available": false,
+      "Errors": null,
       "Name": "",
-      "Tasks": null
+      "Tasks": null,
+      "Validated": false
     },
     "Profiles": null,
     "Runnable": true,
@@ -113,8 +122,11 @@ var machineUpdateJohnString string = `{
   "Errors": [],
   "Name": "john",
   "Profile": {
+    "Available": false,
+    "Errors": null,
     "Name": "",
-    "Tasks": null
+    "Tasks": null,
+    "Validated": false
   },
   "Profiles": null,
   "Runnable": true,
@@ -152,16 +164,19 @@ var machinePatchInputString string = `{
 }
 `
 var machinePatchJohnString string = `{
-  "Available": true,
   "Address": "192.168.100.110",
+  "Available": true,
   "BootEnv": "local3",
   "CurrentTask": 0,
   "Description": "bootx64.efi",
   "Errors": [],
   "Name": "john",
   "Profile": {
+    "Available": false,
+    "Errors": null,
     "Name": "",
-    "Tasks": null
+    "Tasks": null,
+    "Validated": false
   },
   "Profiles": null,
   "Runnable": true,
@@ -193,7 +208,7 @@ var machineAddProfileJill2String string = `{
   "BootEnv": "local2",
   "CurrentTask": 0,
   "Description": "lpxelinux.0",
-  "Errors": null,
+  "Errors": [],
   "Name": "john",
   "Profile": {
     "Available": false,
@@ -217,7 +232,7 @@ var machineAddProfileJillString string = `{
   "BootEnv": "local3",
   "CurrentTask": 0,
   "Description": "lpxelinux.0",
-  "Errors": null,
+  "Errors": [],
   "Name": "john",
   "Profile": {
     "Available": false,
@@ -241,7 +256,7 @@ var machineAddProfileJillJeanString string = `{
   "BootEnv": "local3",
   "CurrentTask": 0,
   "Description": "lpxelinux.0",
-  "Errors": null,
+  "Errors": [],
   "Name": "john",
   "Profile": {
     "Available": false,
@@ -267,7 +282,7 @@ var machineRemoveProfileJeanString string = `{
   "BootEnv": "local3",
   "CurrentTask": 0,
   "Description": "lpxelinux.0",
-  "Errors": null,
+  "Errors": [],
   "Name": "john",
   "Profile": {
     "Available": false,
@@ -372,9 +387,10 @@ var machineUpdateJohnWithParamsString string = `{
   "BootEnv": "local3",
   "CurrentTask": 0,
   "Description": "lpxelinux.0",
-  "Errors": null,
+  "Errors": [],
   "Name": "john",
   "Profile": {
+    "Available": false,
     "Errors": null,
     "Name": "",
     "Params": {
@@ -479,9 +495,11 @@ var machineActionShowResetString string = `{
 `
 
 var machinePluginCreateString string = `{
-  "Errors": null,
+  "Available": true,
+  "Errors": [],
   "Name": "incr",
-  "Provider": "incrementer"
+  "Provider": "incrementer",
+  "Validated": true
 }
 `
 
@@ -501,23 +519,29 @@ var machineRunActionGoodStdinString string = `{
 `
 
 var machineJamieCreate string = `{
+  "Available": true,
+  "Errors": [],
   "Name": "jamie",
   "OptionalParams": null,
   "RequiredParams": null,
-  "Templates": null
+  "Templates": null,
+  "Validated": true
 }
 `
 var machineJustineCreate string = `{
+  "Available": true,
+  "Errors": [],
   "Name": "justine",
   "OptionalParams": null,
   "RequiredParams": null,
-  "Templates": null
+  "Templates": null,
+  "Validated": true
 }
 `
 var machineBootEnvNoJamieUpdate string = `{
   "Available": true,
   "BootParams": "",
-  "Errors": null,
+  "Errors": [],
   "Initrds": null,
   "Kernel": "",
   "Name": "local3",
@@ -551,7 +575,7 @@ var machineBootEnvNoJamieUpdate string = `{
 var machineBootEnvJamieUpdate string = `{
   "Available": true,
   "BootParams": "",
-  "Errors": null,
+  "Errors": [],
   "Initrds": null,
   "Kernel": "",
   "Name": "local3",
@@ -588,7 +612,7 @@ var machineUpdateBootEnvMissingForceErrorString string = "Error: Can not change 
 var machineLocal2Create string = `{
   "Available": true,
   "BootParams": "",
-  "Errors": null,
+  "Errors": [],
   "Initrds": null,
   "Kernel": "",
   "Name": "local2",
@@ -620,8 +644,9 @@ var machineLocal2Create string = `{
 }
 `
 var machineLocal2CreateInput string = `{
+  "Available": true,
   "BootParams": "",
-  "Errors": null,
+  "Errors": [],
   "Initrds": null,
   "Kernel": "",
   "Name": "local2",
@@ -648,24 +673,30 @@ var machineLocal2CreateInput string = `{
       "Name": "ipxe",
       "Path": "{{.Machine.Address}}.ipxe"
     }
-  ]
+  ],
+  "Validated": true
 }
 `
 var machineUpdateLocal2String string = `{
   "Address": "192.168.100.110",
+  "Available": true,
   "BootEnv": "local2",
   "CurrentTask": 0,
   "Description": "lpxelinux.0",
-  "Errors": null,
+  "Errors": [],
   "Name": "john",
   "Profile": {
+    "Available": false,
+    "Errors": null,
     "Name": "",
-    "Tasks": null
+    "Tasks": null,
+    "Validated": false
   },
   "Profiles": null,
   "Runnable": true,
   "Tasks": [],
-  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
 }
 `
 
@@ -674,11 +705,14 @@ var machineUpdateLocal3String string = `{
   "BootEnv": "local2",
   "CurrentTask": -1,
   "Description": "lpxelinux.0",
-  "Errors": null,
+  "Errors": [],
   "Name": "john",
   "Profile": {
+    "Available": false,
+    "Errors": null,
     "Name": "",
-    "Tasks": null
+    "Tasks": null,
+    "Validated": false
   },
   "Profiles": [
     "jill"
@@ -693,24 +727,29 @@ var machineUpdateLocal3String string = `{
 
 var machineUpdateLocalJamieString string = `{
   "Address": "192.168.100.110",
+  "Available": true,
   "BootEnv": "local3",
   "CurrentTask": -1,
   "Description": "lpxelinux.0",
-  "Errors": null,
+  "Errors": [],
   "Name": "john",
   "Profile": {
+    "Available": false,
+    "Errors": null,
     "Name": "",
-    "Tasks": null
+    "Tasks": null,
+    "Validated": false
   },
   "Profiles": [
     "jill"
   ],
-  "Runnable": true,
+  "Runnable": false,
   "Tasks": [
     "jamie",
     "justine"
   ],
-  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
 }
 `
 var machineBadBoolString string = "Error: Runnable must be true or false\n\n"

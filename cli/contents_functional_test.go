@@ -79,49 +79,49 @@ var contentPack2CreateErrorString = "Error: New layer violates key restrictions:
 
 var contentPack1ProfileListString = `[
   {
-    "Available": false,
+    "Available": true,
     "Errors": [],
     "Name": "global",
     "Tasks": [],
-    "Validated": false
+    "Validated": true
   },
   {
-    "Available": false,
+    "Available": true,
     "Description": "pack1",
     "Errors": null,
     "Name": "p1-prof",
     "Tasks": [],
-    "Validated": false
+    "Validated": true
   }
 ]
 `
 
 var contentPack1UpdateProfileListString = `[
   {
-    "Available": false,
+    "Available": true,
     "Errors": [],
     "Name": "global",
     "Tasks": [],
-    "Validated": false
+    "Validated": true
   },
   {
-    "Available": false,
+    "Available": true,
     "Description": "pack1-2",
     "Errors": [],
     "Name": "p1-prof",
     "Tasks": [],
-    "Validated": false
+    "Validated": true
   }
 ]
 `
 
 var contentNoPackProfileListString = `[
   {
-    "Available": false,
+    "Available": true,
     "Errors": [],
     "Name": "global",
     "Tasks": [],
-    "Validated": false
+    "Validated": true
   }
 ]
 `
@@ -133,12 +133,10 @@ var contentMachineCreateString = `{
 }
 `
 var contentMachineCreateSuccessString = `{
-  "Available": false,
+  "Available": true,
   "BootEnv": "mylocal",
   "CurrentTask": 0,
-  "Errors": [
-    "Machine 3e7031fe-3062-45f1-835c-92541bc9cbd3 wants BootEnv mylocal, which is not available"
-  ],
+  "Errors": [],
   "Name": "greg",
   "Profile": {
     "Available": false,
@@ -148,20 +146,18 @@ var contentMachineCreateSuccessString = `{
     "Validated": false
   },
   "Profiles": null,
-  "Runnable": false,
-  "Tasks": null,
+  "Runnable": true,
+  "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Validated": true
 }
 `
 
 var contentMachineAddProfileString = `{
-  "Available": false,
+  "Available": true,
   "BootEnv": "mylocal",
   "CurrentTask": 0,
-  "Errors": [
-    "Machine 3e7031fe-3062-45f1-835c-92541bc9cbd3 wants BootEnv mylocal, which is not available"
-  ],
+  "Errors": [],
   "Name": "greg",
   "Profile": {
     "Available": false,
@@ -173,8 +169,8 @@ var contentMachineAddProfileString = `{
   "Profiles": [
     "p1-prof"
   ],
-  "Runnable": false,
-  "Tasks": null,
+  "Runnable": true,
+  "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Validated": true
 }

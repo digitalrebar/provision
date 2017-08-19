@@ -28,6 +28,8 @@ var processJobsJustineCreateTaskString = `{
 }
 `
 var processJobsJustineCreateOutputString string = `{
+  "Available": true,
+  "Errors": [],
   "Name": "justine",
   "OptionalParams": null,
   "RequiredParams": null,
@@ -47,38 +49,47 @@ var processJobsJustineCreateOutputString string = `{
       "Name": "part 3 - Test Return Codes",
       "Path": ""
     }
-  ]
+  ],
+  "Validated": true
 }
 `
 var processJobsJillCreateOutputString string = `{
+  "Available": true,
+  "Errors": [],
   "Name": "jill",
-  "Tasks": null
+  "Tasks": null,
+  "Validated": true
 }
 `
 
 var processJobsAddProfileJillOutputString = `{
   "Address": "192.168.100.110",
+  "Available": true,
   "BootEnv": "local3",
   "CurrentTask": 0,
-  "Errors": null,
+  "Errors": [],
   "Name": "john",
   "Profile": {
+    "Available": false,
+    "Errors": null,
     "Name": "",
-    "Tasks": null
+    "Tasks": null,
+    "Validated": false
   },
   "Profiles": [
     "jill"
   ],
   "Runnable": true,
   "Tasks": [],
-  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
 }
 `
 
 var processJobsLocal2UpdateOutputString = `{
   "Available": true,
   "BootParams": "",
-  "Errors": null,
+  "Errors": [],
   "Initrds": null,
   "Kernel": "",
   "Name": "local2",
@@ -114,31 +125,40 @@ var processJobsLocal2UpdateOutputString = `{
 
 var processJobsSetMachineToLocalOutputString = `{
   "Address": "192.168.100.110",
+  "Available": true,
   "BootEnv": "local3",
   "CurrentTask": 0,
-  "Errors": null,
+  "Errors": [],
   "Name": "john",
   "Profile": {
+    "Available": false,
+    "Errors": null,
     "Name": "",
-    "Tasks": null
+    "Tasks": null,
+    "Validated": false
   },
   "Profiles": [
     "jill"
   ],
   "Runnable": true,
   "Tasks": [],
-  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
 }
 `
 var processJobsSetMachineToLocal2OutputString = `{
   "Address": "192.168.100.110",
+  "Available": true,
   "BootEnv": "local2",
   "CurrentTask": -1,
-  "Errors": null,
+  "Errors": [],
   "Name": "john",
   "Profile": {
+    "Available": false,
+    "Errors": null,
     "Name": "",
-    "Tasks": null
+    "Tasks": null,
+    "Validated": false
   },
   "Profiles": [
     "jill"
@@ -148,7 +168,8 @@ var processJobsSetMachineToLocal2OutputString = `{
     "jamie",
     "justine"
   ],
-  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
 }
 `
 
@@ -190,14 +211,18 @@ Task: justine failed
 var processJobsRemoveProfileSuccessString = `RE:
 {
   "Address": "192.168.100.110",
+  "Available": true,
   "BootEnv": "local2",
   "CurrentJob": "[\S\s]*",
   "CurrentTask": 2,
-  "Errors": null,
+  "Errors": \[\],
   "Name": "john",
   "Profile": {
+    "Available": false,
+    "Errors": null,
     "Name": "",
-    "Tasks": null
+    "Tasks": null,
+    "Validated": false
   },
   "Profiles": null,
   "Runnable": true,
@@ -205,40 +230,50 @@ var processJobsRemoveProfileSuccessString = `RE:
     "jamie",
     "justine"
   \],
-  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
 }
 `
 
 var processJobsResetToLocalSuccessString = `RE:
 {
   "Address": "192.168.100.110",
+  "Available": true,
   "BootEnv": "local3",
   "CurrentJob": "[\S\s]*",
   "CurrentTask": 0,
-  "Errors": null,
+  "Errors": \[\],
   "Name": "john",
   "Profile": {
+    "Available": false,
+    "Errors": null,
     "Name": "",
-    "Tasks": null
+    "Tasks": null,
+    "Validated": false
   },
   "Profiles": null,
   "Runnable": true,
   "Tasks": \[\],
-  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
 }
 `
 
 var processJobsShowFailedMachineString string = `RE:
 {
   "Address": "192.168.100.110",
+  "Available": true,
   "BootEnv": "local2",
   "CurrentJob": "[\S\s]*",
   "CurrentTask": 1,
-  "Errors": null,
+  "Errors": \[\],
   "Name": "john",
   "Profile": {
+    "Available": false,
+    "Errors": null,
     "Name": "",
-    "Tasks": null
+    "Tasks": null,
+    "Validated": false
   },
   "Profiles": \[
     "jill"
@@ -248,7 +283,8 @@ var processJobsShowFailedMachineString string = `RE:
     "jamie",
     "justine"
   \],
-  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
 }
 `
 
@@ -256,14 +292,18 @@ var processJobsRunnableString = `{ "Runnable": true }`
 var processJobsShowRunnableMachineString = `RE:
 {
   "Address": "192.168.100.110",
+  "Available": true,
   "BootEnv": "local2",
   "CurrentJob": "[\S\s]*",
   "CurrentTask": 1,
-  "Errors": null,
+  "Errors": \[\],
   "Name": "john",
   "Profile": {
+    "Available": false,
+    "Errors": null,
     "Name": "",
-    "Tasks": null
+    "Tasks": null,
+    "Validated": false
   },
   "Profiles": \[
     "jill"
@@ -273,7 +313,8 @@ var processJobsShowRunnableMachineString = `RE:
     "jamie",
     "justine"
   \],
-  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
 }
 `
 

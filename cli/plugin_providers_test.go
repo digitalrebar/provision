@@ -41,22 +41,31 @@ var plugin_providerListString string = `[
     "OptionalParams": null,
     "Parameters": [
       {
+        "Available": true,
+        "Errors": [],
         "Name": "incrementer.parameter",
         "Schema": {
           "type": "string"
-        }
+        },
+        "Validated": true
       },
       {
+        "Available": true,
+        "Errors": [],
         "Name": "incrementer.step",
         "Schema": {
           "type": "integer"
-        }
+        },
+        "Validated": true
       },
       {
+        "Available": true,
+        "Errors": [],
         "Name": "incrementer.touched",
         "Schema": {
           "type": "integer"
-        }
+        },
+        "Validated": true
       }
     ],
     "RequiredParams": null,

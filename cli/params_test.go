@@ -177,8 +177,8 @@ var paramPatchInputString string = `{
 `
 var paramPatchJohnString string = `{
   "Available": true,
-  "Errors": [],
   "Description": "Foo",
+  "Errors": [],
   "Name": "john",
   "Schema": {
     "type": "string"

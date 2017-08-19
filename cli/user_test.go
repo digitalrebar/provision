@@ -7,11 +7,11 @@ import (
 var userEmptyListString string = "[]\n"
 var userDefaultListString string = `[
   {
-    "Available": false,
+    "Available": true,
     "Errors": null,
     "Name": "rocketskates",
     "PasswordHash": null,
-    "Validated": false
+    "Validated": true
   }
 ]
 `
@@ -20,11 +20,11 @@ var userShowNoArgErrorString string = "Error: drpcli users show [id] [flags] req
 var userShowTooManyArgErrorString string = "Error: drpcli users show [id] [flags] requires 1 argument\n"
 var userShowMissingArgErrorString string = "Error: users GET: ignore: Not Found\n\n"
 var userShowJohnString string = `{
-  "Available": false,
+  "Available": true,
   "Errors": null,
   "Name": "john",
   "PasswordHash": null,
-  "Validated": false
+  "Validated": true
 }
 `
 
@@ -45,20 +45,20 @@ var userCreateInputString string = `{
 }
 `
 var userCreateJohnString string = `{
-  "Available": false,
+  "Available": true,
   "Errors": null,
   "Name": "john",
   "PasswordHash": null,
-  "Validated": false
+  "Validated": true
 }
 `
 var userCreateFredInputString string = `fred`
 var userCreateFredString string = `{
-  "Available": false,
+  "Available": true,
   "Errors": null,
   "Name": "fred",
   "PasswordHash": null,
-  "Validated": false
+  "Validated": true
 }
 `
 var userDestroyFredString string = "Deleted user fred\n"
@@ -66,28 +66,28 @@ var userCreateDuplicateErrorString = "Error: dataTracker create users: john alre
 
 var userListJohnOnlyString = `[
   {
-    "Available": false,
+    "Available": true,
     "Errors": null,
     "Name": "john",
     "PasswordHash": null,
-    "Validated": false
+    "Validated": true
   }
 ]
 `
 var userListBothEnvsString = `[
   {
-    "Available": false,
+    "Available": true,
     "Errors": null,
     "Name": "john",
     "PasswordHash": null,
-    "Validated": false
+    "Validated": true
   },
   {
-    "Available": false,
+    "Available": true,
     "Errors": null,
     "Name": "rocketskates",
     "PasswordHash": null,
-    "Validated": false
+    "Validated": true
   }
 ]
 `
@@ -101,11 +101,11 @@ var userUpdateInputString string = `{
 }
 `
 var userUpdateJohnString string = `{
-  "Available": false,
+  "Available": true,
   "Errors": null,
   "Name": "john",
   "PasswordHash": null,
-  "Validated": false
+  "Validated": true
 }
 `
 var userUpdateJohnMissingErrorString string = "Error: users GET: john2: Not Found\n\n"
@@ -125,11 +125,11 @@ var userPatchInputString string = `{
 }
 `
 var userPatchJohnString string = `{
-  "Available": false,
+  "Available": true,
   "Errors": null,
   "Name": "john",
   "PasswordHash": null,
-  "Validated": false
+  "Validated": true
 }
 `
 var userPatchMissingBaseString string = `{

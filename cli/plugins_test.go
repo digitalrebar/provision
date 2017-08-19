@@ -106,10 +106,12 @@ var pluginPatchInputString string = `{
 }
 `
 var pluginPatchJohnString string = `{
+  "Available": true,
   "Description": "bootx64.efi",
   "Errors": [],
   "Name": "i-woman",
-  "Provider": "incrementer"
+  "Provider": "incrementer",
+  "Validated": true
 }
 `
 var pluginPatchMissingBaseString string = `{
@@ -157,7 +159,7 @@ var pluginUpdateJohnWithParamsString string = `{
     "jj": 3
   },
   "Provider": "incrementer",
-  "Validated: true
+  "Validated": true
 }
 `
 

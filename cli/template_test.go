@@ -14,7 +14,7 @@ var templateDefaultListString string = `[
     "Available": true,
     "Contents": "etc\n",
     "Description": "A test template for LocalStore testing",
-    "Errors": [],
+    "Errors": null,
     "ID": "etc",
     "Validated": true
   },
@@ -22,7 +22,7 @@ var templateDefaultListString string = `[
     "Available": true,
     "Contents": "usrshare\n",
     "Description": "A test template for DefaultStore testing",
-    "Errors": [],
+    "Errors": null,
     "ID": "usrshare",
     "Validated": true
   }
@@ -80,8 +80,8 @@ var templateListBothEnvsString = `[
     "Available": true,
     "Contents": "etc\n",
     "Description": "A test template for LocalStore testing",
-    "Errors": [],
-    "ID": "etc"
+    "Errors": null,
+    "ID": "etc",
     "Validated": true
   },
   {
@@ -95,8 +95,8 @@ var templateListBothEnvsString = `[
     "Available": true,
     "Contents": "usrshare\n",
     "Description": "A test template for DefaultStore testing",
-    "Errors": [],
-    "ID": "usrshare"
+    "Errors": null,
+    "ID": "usrshare",
     "Validated": true
   }
 ]
