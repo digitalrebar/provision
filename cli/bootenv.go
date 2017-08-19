@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"os"
 	"path"
+	"time"
 
 	"github.com/ghodss/yaml"
 
@@ -140,7 +140,7 @@ func uploadTemplateFile(tid string) error {
 	if err == nil {
 		return nil
 	}
-	log.Printf("Installing template %s", tid)
+	fmt.Fprintf(os.Stderr, "Installing template %s\n", tid)
 	tmpl := &models.Template{}
 	tmpl.ID = &tid
 	tmplName := path.Join("templates", tid)
@@ -165,7 +165,8 @@ func addBootEnvCommands() (res *cobra.Command) {
 		Short: fmt.Sprintf("Access CLI commands relating to %v", name),
 	}
 
-	commands := commonOps(&BootEnvOps{CommonOps{Name: name, SingularName: singularName}})
+	beo := &BootEnvOps{CommonOps{Name: name, SingularName: singularName}}
+	commands := commonOps(beo)
 
 	installCmd := &cobra.Command{
 		Use:   "install [bootenvFile] [isoPath]",
@@ -237,7 +238,7 @@ using isos upload.git `,
 				return fmt.Errorf("Error ensuring ISO cache exists: %s", err)
 			}
 			// Upload the bootenv
-			log.Printf("Installing bootenv %s", *bootEnv.Name)
+			fmt.Fprintf(os.Stderr, "Installing bootenv %s\n", *bootEnv.Name)
 			resp, err := session.BootEnvs.CreateBootEnv(bootenvs.NewCreateBootEnvParams().WithBody(bootEnv), basicAuth)
 			if err != nil {
 				return generateError(err, "Unable to create new %v", singularName)
@@ -260,8 +261,8 @@ using isos upload.git `,
 			if _, err := os.Stat(isoPath); err != nil {
 				isoUrl := bootEnv.OS.IsoURL.String()
 				if installSkipDownloadIsos {
-					log.Printf("Skipping ISO download as requested")
-					log.Printf("Upload with `drpcli isos upload %s as %s` when you have it", bootEnv.OS.IsoFile, bootEnv.OS.IsoFile)
+					fmt.Fprintf(os.Stderr, "Skipping ISO download as requested\n")
+					fmt.Fprintf(os.Stderr, "Upload with `drpcli isos upload %s as %s` when you have it\n", bootEnv.OS.IsoFile, bootEnv.OS.IsoFile)
 					return prettyPrint(resp.Payload)
 				}
 				err = func() error {
@@ -269,7 +270,7 @@ using isos upload.git `,
 					if isoUrl == "" {
 						return fmt.Errorf("Unable to automatically download %s", isoUrl)
 					}
-					log.Printf("Downloading %s to %s", isoUrl, isoPath)
+					fmt.Fprintf(os.Stderr, "Downloading %s to %s\n", isoUrl, isoPath)
 					isoTarget, err := os.Create(isoPath)
 					defer isoTarget.Close()
 					if err != nil {
@@ -287,7 +288,7 @@ using isos upload.git `,
 					if err != nil {
 						return fmt.Errorf("Download of %s aborted: %v", isoUrl, err)
 					}
-					log.Printf("Downloaded %d bytes", byteCount)
+					fmt.Fprintf(os.Stderr, "Downloaded %d bytes\n", byteCount)
 					return nil
 				}()
 				if err != nil {
@@ -295,7 +296,7 @@ using isos upload.git `,
 				}
 			}
 			// We have the ISO now.
-			log.Printf("Uploading %s to DigitalRebar Provision", isoPath)
+			fmt.Fprintf(os.Stderr, "Uploading %s to DigitalRebar Provision\n", isoPath)
 			isoTarget, err := os.Open(isoPath)
 			if err != nil {
 				return fmt.Errorf("Unable to open %s for upload: %v", isoPath, err)
@@ -316,6 +317,53 @@ using isos upload.git `,
 	}
 	installCmd.Flags().BoolVar(&installSkipDownloadIsos, "skip-download", false, "Whether to try to download ISOs from their upstream")
 	commands = append(commands, installCmd)
+
+	uploadisoCmd := &cobra.Command{
+		Use:   "uploadiso [id]",
+		Short: "This will attempt to upload the ISO from the specified ISO URL.",
+		Long:  "This will attempt to upload the ISO from the specified ISO URL.",
+		RunE: func(c *cobra.Command, args []string) error {
+			if len(args) != 1 {
+				return fmt.Errorf("%v requires 1 argument", c.UseLine())
+			}
+			dumpUsage = false
+
+			id := args[0]
+			obj, err := beo.Get(id)
+			if err != nil {
+				return generateError(err, "Failed to fetch %v: %v", singularName, id)
+			}
+			bootEnv := obj.(*models.BootEnv)
+			isoUrl := bootEnv.OS.IsoURL.String()
+
+			// We need to install the ISO
+			err = func() error {
+				// It is not present locally, we need to download it
+				if isoUrl == "" {
+					return fmt.Errorf("Unable to automatically download %s", isoUrl)
+				}
+				isoDlResp, err := http.Get(isoUrl)
+				if err != nil {
+					return fmt.Errorf("Unable to connect to %s: %v", isoUrl, err)
+				}
+				defer isoDlResp.Body.Close()
+				if isoDlResp.StatusCode >= 300 {
+					return fmt.Errorf("Unable to initiate download of %s: %s", isoUrl, isoDlResp.Status)
+				}
+
+				params := isos.NewUploadIsoParams().
+					WithTimeout(30 * time.Minute).
+					WithPath(bootEnv.OS.IsoFile).
+					WithBody(isoDlResp.Body)
+				if _, err := session.Isos.UploadIso(params, basicAuth); err != nil {
+					return generateError(err, "Error uploading %s", bootEnv.OS.IsoFile)
+				}
+				return nil
+			}()
+			return err
+		},
+	}
+	commands = append(commands, uploadisoCmd)
 
 	res.AddCommand(commands...)
 	return res

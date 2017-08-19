@@ -13,6 +13,80 @@ var limitNegativeError string = "Error: Limit cannot be negative\n\n"
 var offsetNegativeError string = "Error: Offset cannot be negative\n\n"
 
 var bootEnvEmptyListString string = "[]\n"
+var bootEnvIgnoreOnlyListString string = `[
+  {
+    "Available": true,
+    "BootParams": "",
+    "Description": "The boot environment you should use to have unknown machines boot off their local hard drive",
+    "Errors": [],
+    "Initrds": null,
+    "Kernel": "",
+    "Name": "ignore",
+    "OS": {
+      "Name": "ignore"
+    },
+    "OnlyUnknown": true,
+    "OptionalParams": null,
+    "RequiredParams": null,
+    "Tasks": null,
+    "Templates": [
+      {
+        "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
+        "Name": "pxelinux",
+        "Path": "pxelinux.cfg/default"
+      },
+      {
+        "Contents": "exit",
+        "Name": "elilo",
+        "Path": "elilo.conf"
+      },
+      {
+        "Contents": "#!ipxe\nexit\n",
+        "Name": "ipxe",
+        "Path": "default.ipxe"
+      }
+    ],
+    "Validated": true
+  }
+]
+`
+var bootEnvLocalOnlyListString string = `[
+  {
+    "Available": true,
+    "BootParams": "",
+    "Description": "The boot environment you should use to have known machines boot off their local hard drive",
+    "Errors": [],
+    "Initrds": null,
+    "Kernel": "",
+    "Name": "local",
+    "OS": {
+      "Name": "local"
+    },
+    "OnlyUnknown": false,
+    "OptionalParams": null,
+    "RequiredParams": null,
+    "Tasks": null,
+    "Templates": [
+      {
+        "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
+        "Name": "pxelinux",
+        "Path": "pxelinux.cfg/{{.Machine.HexAddress}}"
+      },
+      {
+        "Contents": "exit",
+        "Name": "elilo",
+        "Path": "{{.Machine.HexAddress}}.conf"
+      },
+      {
+        "Contents": "#!ipxe\nexit\n",
+        "Name": "ipxe",
+        "Path": "{{.Machine.Address}}.ipxe"
+      }
+    ],
+    "Validated": true
+  }
+]
+`
 var bootEnvDefaultListString string = `[
   {
     "Available": true,
@@ -41,9 +115,43 @@ var bootEnvDefaultListString string = `[
         "Path": "elilo.conf"
       },
       {
-        "Contents": "#!ipxe\nchain tftp://{{.ProvisionerAddress}}/${netX/ip}.ipxe || exit\n",
+        "Contents": "#!ipxe\nexit\n",
         "Name": "ipxe",
         "Path": "default.ipxe"
+      }
+    ],
+    "Validated": true
+  },
+  {
+    "Available": true,
+    "BootParams": "",
+    "Description": "The boot environment you should use to have known machines boot off their local hard drive",
+    "Errors": [],
+    "Initrds": null,
+    "Kernel": "",
+    "Name": "local",
+    "OS": {
+      "Name": "local"
+    },
+    "OnlyUnknown": false,
+    "OptionalParams": null,
+    "RequiredParams": null,
+    "Tasks": null,
+    "Templates": [
+      {
+        "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
+        "Name": "pxelinux",
+        "Path": "pxelinux.cfg/{{.Machine.HexAddress}}"
+      },
+      {
+        "Contents": "exit",
+        "Name": "elilo",
+        "Path": "{{.Machine.HexAddress}}.conf"
+      },
+      {
+        "Contents": "#!ipxe\nexit\n",
+        "Name": "ipxe",
+        "Path": "{{.Machine.Address}}.ipxe"
       }
     ],
     "Validated": true
@@ -81,7 +189,7 @@ var bootEnvShowIgnoreString string = `{
       "Path": "elilo.conf"
     },
     {
-      "Contents": "#!ipxe\nchain tftp://{{.ProvisionerAddress}}/${netX/ip}.ipxe || exit\n",
+      "Contents": "#!ipxe\nexit\n",
       "Name": "ipxe",
       "Path": "default.ipxe"
     }
@@ -175,7 +283,7 @@ var bootEnvListBothEnvsString = `[
         "Path": "elilo.conf"
       },
       {
-        "Contents": "#!ipxe\nchain tftp://{{.ProvisionerAddress}}/${netX/ip}.ipxe || exit\n",
+        "Contents": "#!ipxe\nexit\n",
         "Name": "ipxe",
         "Path": "default.ipxe"
       }
@@ -199,6 +307,40 @@ var bootEnvListBothEnvsString = `[
     "RequiredParams": null,
     "Tasks": null,
     "Templates": null,
+    "Validated": true
+  },
+  {
+    "Available": true,
+    "BootParams": "",
+    "Description": "The boot environment you should use to have known machines boot off their local hard drive",
+    "Errors": [],
+    "Initrds": null,
+    "Kernel": "",
+    "Name": "local",
+    "OS": {
+      "Name": "local"
+    },
+    "OnlyUnknown": false,
+    "OptionalParams": null,
+    "RequiredParams": null,
+    "Tasks": null,
+    "Templates": [
+      {
+        "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
+        "Name": "pxelinux",
+        "Path": "pxelinux.cfg/{{.Machine.HexAddress}}"
+      },
+      {
+        "Contents": "exit",
+        "Name": "elilo",
+        "Path": "{{.Machine.HexAddress}}.conf"
+      },
+      {
+        "Contents": "#!ipxe\nexit\n",
+        "Name": "ipxe",
+        "Path": "{{.Machine.Address}}.ipxe"
+      }
+    ],
     "Validated": true
   }
 ]
@@ -361,7 +503,7 @@ var bootEnvInstallSledgehammerSuccessString string = `RE:
 }
 `
 
-var bootEnvInstallLocalMissingTemplatesErrorString string = "Error: Unable to find template: local-pxelinux.tmpl: open templates/local-pxelinux.tmpl: no such file or directory\n\n"
+var bootEnvInstallLocalMissingTemplatesErrorString string = "Installing template local3-pxelinux.tmpl\nError: Unable to find template: local3-pxelinux.tmpl: open templates/local3-pxelinux.tmpl: no such file or directory\n\n"
 
 var bootEnvInstallLocalSuccessString string = `{
   "Available": true,
@@ -369,9 +511,9 @@ var bootEnvInstallLocalSuccessString string = `{
   "Errors": [],
   "Initrds": null,
   "Kernel": "",
-  "Name": "local",
+  "Name": "local3",
   "OS": {
-    "Name": "local"
+    "Name": "local3"
   },
   "OnlyUnknown": false,
   "OptionalParams": null,
@@ -379,17 +521,17 @@ var bootEnvInstallLocalSuccessString string = `{
   "Tasks": null,
   "Templates": [
     {
-      "ID": "local-pxelinux.tmpl",
+      "ID": "local3-pxelinux.tmpl",
       "Name": "pxelinux",
       "Path": "pxelinux.cfg/{{.Machine.HexAddress}}"
     },
     {
-      "ID": "local-elilo.tmpl",
+      "ID": "local3-elilo.tmpl",
       "Name": "elilo",
       "Path": "{{.Machine.HexAddress}}.conf"
     },
     {
-      "ID": "local-ipxe.tmpl",
+      "ID": "local3-ipxe.tmpl",
       "Name": "ipxe",
       "Path": "{{.Machine.Address}}.ipxe"
     }
@@ -397,6 +539,12 @@ var bootEnvInstallLocalSuccessString string = `{
   "Validated": true
 }
 `
+
+var bootEnvSkipDownloadErrorString = "Installing bootenv fredhammer\nSkipping ISO download as requested\nUpload with `drpcli isos upload sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar as sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar` when you have it\n"
+
+var bootEnvDownloadErrorString = "Installing bootenv fredhammer\nDownloading http://127.0.0.1:10003/sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar to isos/sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar\nDownloaded 5120 bytes\nUploading isos/sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar to DigitalRebar Provision\n"
+
+var bootEnvInstallLocal3ErrorString = "Installing template local3-pxelinux.tmpl\nInstalling template local3-elilo.tmpl\nInstalling template local3-ipxe.tmpl\nInstalling bootenv local3\n"
 
 func TestBootEnvCli(t *testing.T) {
 	tests := []CliTest{
@@ -409,11 +557,11 @@ func TestBootEnvCli(t *testing.T) {
 		CliTest{false, true, []string{"bootenvs", "list", "--limit=10", "--offset=-10"}, noStdinString, noContentString, offsetNegativeError},
 		CliTest{false, false, []string{"bootenvs", "list", "--limit=-1", "--offset=-1"}, noStdinString, bootEnvDefaultListString, noErrorString},
 		CliTest{false, false, []string{"bootenvs", "list", "Name=fred"}, noStdinString, bootEnvEmptyListString, noErrorString},
-		CliTest{false, false, []string{"bootenvs", "list", "Name=ignore"}, noStdinString, bootEnvDefaultListString, noErrorString},
+		CliTest{false, false, []string{"bootenvs", "list", "Name=ignore"}, noStdinString, bootEnvIgnoreOnlyListString, noErrorString},
 		CliTest{false, false, []string{"bootenvs", "list", "Available=true"}, noStdinString, bootEnvDefaultListString, noErrorString},
 		CliTest{false, false, []string{"bootenvs", "list", "Available=false"}, noStdinString, bootEnvEmptyListString, noErrorString},
-		CliTest{false, false, []string{"bootenvs", "list", "OnlyUnknown=true"}, noStdinString, bootEnvDefaultListString, noErrorString},
-		CliTest{false, false, []string{"bootenvs", "list", "OnlyUnknown=false"}, noStdinString, bootEnvEmptyListString, noErrorString},
+		CliTest{false, false, []string{"bootenvs", "list", "OnlyUnknown=true"}, noStdinString, bootEnvIgnoreOnlyListString, noErrorString},
+		CliTest{false, false, []string{"bootenvs", "list", "OnlyUnknown=false"}, noStdinString, bootEnvLocalOnlyListString, noErrorString},
 
 		CliTest{true, true, []string{"bootenvs", "show"}, noStdinString, noContentString, bootEnvShowNoArgErrorString},
 		CliTest{true, true, []string{"bootenvs", "show", "john", "john2"}, noStdinString, noContentString, bootEnvShowTooManyArgErrorString},
@@ -517,11 +665,11 @@ func TestBootEnvCli(t *testing.T) {
 	if err := os.Symlink("../test-data/fredhammer.yml", "bootenvs/fredhammer.yml"); err != nil {
 		t.Errorf("Failed to create link to fredhammer.yml: %v\n", err)
 	}
-	if err := os.Symlink("../../assets/bootenvs/local.yml", "bootenvs/local.yml"); err != nil {
-		t.Errorf("Failed to create link to local.yml: %v\n", err)
+	if err := os.Symlink("../test-data/local3.yml", "bootenvs/local3.yml"); err != nil {
+		t.Errorf("Failed to create link to local3.yml: %v\n", err)
 	}
 	tests = []CliTest{
-		CliTest{false, false, []string{"bootenvs", "install", "--skip-download", "bootenvs/fredhammer.yml"}, noStdinString, bootEnvInstallSledgehammerSuccessWithErrorsString, noErrorString},
+		CliTest{false, false, []string{"bootenvs", "install", "--skip-download", "bootenvs/fredhammer.yml"}, noStdinString, bootEnvInstallSledgehammerSuccessWithErrorsString, bootEnvSkipDownloadErrorString},
 		CliTest{false, false, []string{"bootenvs", "destroy", "fredhammer"}, noStdinString, "Deleted bootenv fredhammer\n", noErrorString},
 	}
 	for _, test := range tests {
@@ -530,8 +678,8 @@ func TestBootEnvCli(t *testing.T) {
 
 	installSkipDownloadIsos = false
 	tests = []CliTest{
-		CliTest{false, false, []string{"bootenvs", "install", "bootenvs/fredhammer.yml"}, noStdinString, bootEnvInstallSledgehammerSuccessString, noErrorString},
-		CliTest{false, true, []string{"bootenvs", "install", "bootenvs/local.yml"}, noStdinString, noContentString, bootEnvInstallLocalMissingTemplatesErrorString},
+		CliTest{false, false, []string{"bootenvs", "install", "bootenvs/fredhammer.yml"}, noStdinString, bootEnvInstallSledgehammerSuccessString, bootEnvDownloadErrorString},
+		CliTest{false, true, []string{"bootenvs", "install", "bootenvs/local3.yml"}, noStdinString, noContentString, bootEnvInstallLocalMissingTemplatesErrorString},
 	}
 	for _, test := range tests {
 		testCli(t, test)
@@ -540,23 +688,23 @@ func TestBootEnvCli(t *testing.T) {
 	if err := os.MkdirAll("templates", 0755); err != nil {
 		t.Errorf("Failed to create templates dir: %v\n", err)
 	}
-	tmpls := []string{"local-pxelinux.tmpl", "local-elilo.tmpl", "local-ipxe.tmpl"}
+	tmpls := []string{"local3-pxelinux.tmpl", "local3-elilo.tmpl", "local3-ipxe.tmpl"}
 	for _, tmpl := range tmpls {
-		if err := os.Symlink("../../assets/templates/"+tmpl, "templates/"+tmpl); err != nil {
+		if err := os.Symlink("../test-data/"+tmpl, "templates/"+tmpl); err != nil {
 			t.Errorf("Failed to create link to %s: %v\n", tmpl, err)
 		}
 	}
 	tests = []CliTest{
-		CliTest{false, false, []string{"bootenvs", "install", "bootenvs/local.yml", "ic"}, noStdinString, bootEnvInstallLocalSuccessString, noErrorString},
+		CliTest{false, false, []string{"bootenvs", "install", "bootenvs/local3.yml", "ic"}, noStdinString, bootEnvInstallLocalSuccessString, bootEnvInstallLocal3ErrorString},
 		CliTest{false, false, []string{"bootenvs", "destroy", "fredhammer"}, noStdinString, "Deleted bootenv fredhammer\n", noErrorString},
-		CliTest{false, false, []string{"bootenvs", "install", "bootenvs/fredhammer.yml"}, noStdinString, bootEnvInstallSledgehammerSuccessString, noErrorString},
+		CliTest{false, false, []string{"bootenvs", "install", "bootenvs/fredhammer.yml"}, noStdinString, bootEnvInstallSledgehammerSuccessString, "Installing bootenv fredhammer\n"},
 
 		// Clean up
 		CliTest{false, false, []string{"bootenvs", "destroy", "fredhammer"}, noStdinString, "Deleted bootenv fredhammer\n", noErrorString},
-		CliTest{false, false, []string{"bootenvs", "destroy", "local"}, noStdinString, "Deleted bootenv local\n", noErrorString},
-		CliTest{false, false, []string{"templates", "destroy", "local-pxelinux.tmpl"}, noStdinString, "Deleted template local-pxelinux.tmpl\n", noErrorString},
-		CliTest{false, false, []string{"templates", "destroy", "local-elilo.tmpl"}, noStdinString, "Deleted template local-elilo.tmpl\n", noErrorString},
-		CliTest{false, false, []string{"templates", "destroy", "local-ipxe.tmpl"}, noStdinString, "Deleted template local-ipxe.tmpl\n", noErrorString},
+		CliTest{false, false, []string{"bootenvs", "destroy", "local3"}, noStdinString, "Deleted bootenv local3\n", noErrorString},
+		CliTest{false, false, []string{"templates", "destroy", "local3-pxelinux.tmpl"}, noStdinString, "Deleted template local3-pxelinux.tmpl\n", noErrorString},
+		CliTest{false, false, []string{"templates", "destroy", "local3-elilo.tmpl"}, noStdinString, "Deleted template local3-elilo.tmpl\n", noErrorString},
+		CliTest{false, false, []string{"templates", "destroy", "local3-ipxe.tmpl"}, noStdinString, "Deleted template local3-ipxe.tmpl\n", noErrorString},
 		CliTest{false, false, []string{"isos", "destroy", "sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar"}, noStdinString, "Deleted iso sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar\n", noErrorString},
 	}
 	for _, test := range tests {

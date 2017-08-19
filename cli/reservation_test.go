@@ -15,10 +15,13 @@ var reservationShowTooManyArgErrorString string = "Error: drpcli reservations sh
 var reservationShowMissingArgErrorString string = "Error: reservations GET: C0A86467: Not Found\n\n"
 var reservationShowJohnString string = `{
   "Addr": "192.168.100.100",
+  "Available": true,
+  "Errors": [],
   "NextServer": "2.2.2.2",
   "Options": null,
   "Strategy": "MAC",
-  "Token": "john"
+  "Token": "john",
+  "Validated": true
 }
 `
 
@@ -40,10 +43,13 @@ var reservationCreateInputString string = `{
 `
 var reservationCreateJohnString string = `{
   "Addr": "192.168.100.100",
+  "Available": true,
+  "Errors": [],
   "NextServer": "2.2.2.2",
   "Options": null,
   "Strategy": "MAC",
-  "Token": "john"
+  "Token": "john",
+  "Validated": true
 }
 `
 var reservationCreateDuplicateErrorString = "Error: dataTracker create reservations: C0A86464 already exists\n\n"
@@ -51,20 +57,26 @@ var reservationCreateDuplicateErrorString = "Error: dataTracker create reservati
 var reservationListReservationsString = `[
   {
     "Addr": "192.168.100.100",
+    "Available": true,
+    "Errors": [],
     "NextServer": "2.2.2.2",
     "Options": null,
     "Strategy": "MAC",
-    "Token": "john"
+    "Token": "john",
+    "Validated": true
   }
 ]
 `
 var reservationListBothEnvsString = `[
   {
     "Addr": "192.168.100.100",
+    "Available": true,
+    "Errors": [],
     "NextServer": "2.2.2.2",
     "Options": null,
     "Strategy": "MAC",
-    "Token": "john"
+    "Token": "john",
+    "Validated": true
   }
 ]
 `
@@ -79,6 +91,8 @@ var reservationUpdateInputString string = `{
 `
 var reservationUpdateJohnString string = `{
   "Addr": "192.168.100.100",
+  "Available": true,
+  "Errors": [],
   "NextServer": "2.2.2.2",
   "Options": [
     {
@@ -87,7 +101,8 @@ var reservationUpdateJohnString string = `{
     }
   ],
   "Strategy": "MAC",
-  "Token": "john"
+  "Token": "john",
+  "Validated": true
 }
 `
 var reservationUpdateJohnMissingErrorString string = "Error: reservations GET: C0A86467: Not Found\n\n"
@@ -110,6 +125,8 @@ var reservationPatchInputString string = `{
 `
 var reservationPatchJohnString string = `{
   "Addr": "192.168.100.100",
+  "Available": true,
+  "Errors": [],
   "NextServer": "2.2.2.2",
   "Options": [
     {
@@ -118,7 +135,8 @@ var reservationPatchJohnString string = `{
     }
   ],
   "Strategy": "MAC",
-  "Token": "john"
+  "Token": "john",
+  "Validated": true
 }
 `
 var reservationPatchMissingBaseString string = `{

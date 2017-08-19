@@ -195,24 +195,32 @@ func d(msg string, args ...interface{}) {
 	}
 }
 
-func prettyPrint(o interface{}) (err error) {
-	if noPretty {
-		fmt.Printf("%v", o)
-		return nil
-	}
-	var buf []byte
+func prettyPrintBuf(o interface{}) (buf []byte, err error) {
 	switch format {
 	case "json":
 		buf, err = json.MarshalIndent(o, "", "  ")
 	case "yaml":
 		buf, err = yaml.Marshal(o)
 	default:
-		return fmt.Errorf("Unknown pretty format %s", format)
+		err = fmt.Errorf("Unknown pretty format %s", format)
+		return
 	}
 	if err != nil {
-		return fmt.Errorf("Failed to unmarshal returned object! %s", err.Error())
+		err = fmt.Errorf("Failed to unmarshal returned object! %s", err.Error())
 	}
-	fmt.Println(string(buf))
+	return
+}
+
+func prettyPrint(o interface{}) (err error) {
+	if noPretty {
+		fmt.Printf("%v", o)
+		return nil
+	}
+	if buf, err := prettyPrintBuf(o); err != nil {
+		return err
+	} else {
+		fmt.Println(string(buf))
+	}
 	return nil
 }
 

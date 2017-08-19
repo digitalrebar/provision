@@ -65,17 +65,17 @@ var jobLocal2Create string = `{
   ],
   "Templates": [
     {
-      "ID": "local-pxelinux.tmpl",
+      "ID": "local3-pxelinux.tmpl",
       "Name": "pxelinux",
       "Path": "pxelinux.cfg/{{.Machine.HexAddress}}"
     },
     {
-      "ID": "local-elilo.tmpl",
+      "ID": "local3-elilo.tmpl",
       "Name": "elilo",
       "Path": "{{.Machine.HexAddress}}.conf"
     },
     {
-      "ID": "local-ipxe.tmpl",
+      "ID": "local3-ipxe.tmpl",
       "Name": "ipxe",
       "Path": "{{.Machine.Address}}.ipxe"
     }
@@ -102,17 +102,17 @@ var jobLocal2CreateInput string = `{
   ],
   "Templates": [
     {
-      "ID": "local-pxelinux.tmpl",
+      "ID": "local3-pxelinux.tmpl",
       "Name": "pxelinux",
       "Path": "pxelinux.cfg/{{.Machine.HexAddress}}"
     },
     {
-      "ID": "local-elilo.tmpl",
+      "ID": "local3-elilo.tmpl",
       "Name": "elilo",
       "Path": "{{.Machine.HexAddress}}.conf"
     },
     {
-      "ID": "local-ipxe.tmpl",
+      "ID": "local3-ipxe.tmpl",
       "Name": "ipxe",
       "Path": "{{.Machine.Address}}.ipxe"
     }
@@ -124,13 +124,13 @@ var jobCreateMachineInputString string = `{
   "Address": "192.168.100.110",
   "name": "john",
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
-  "bootenv": "local"
+  "bootenv": "local3"
 }
 `
 var jobCreateMachineJohnString string = `{
   "Address": "192.168.100.110",
   "Available": true,
-  "BootEnv": "local",
+  "BootEnv": "local3",
   "CurrentTask": -1,
   "Errors": [],
   "Name": "john",
@@ -163,9 +163,9 @@ var jobLocalUpdateString string = `{
   "Errors": [],
   "Initrds": null,
   "Kernel": "",
-  "Name": "local",
+  "Name": "local3",
   "OS": {
-    "Name": "local"
+    "Name": "local3"
   },
   "OnlyUnknown": false,
   "OptionalParams": null,
@@ -177,17 +177,17 @@ var jobLocalUpdateString string = `{
   ],
   "Templates": [
     {
-      "ID": "local-pxelinux.tmpl",
+      "ID": "local3-pxelinux.tmpl",
       "Name": "pxelinux",
       "Path": "pxelinux.cfg/{{.Machine.HexAddress}}"
     },
     {
-      "ID": "local-elilo.tmpl",
+      "ID": "local3-elilo.tmpl",
       "Name": "elilo",
       "Path": "{{.Machine.HexAddress}}.conf"
     },
     {
-      "ID": "local-ipxe.tmpl",
+      "ID": "local3-ipxe.tmpl",
       "Name": "ipxe",
       "Path": "{{.Machine.Address}}.ipxe"
     }
@@ -232,7 +232,7 @@ var jobCreateJohnString string = `RE:
 {
   "Archived": false,
   "Available": true,
-  "BootEnv": "local",
+  "BootEnv": "local3",
   "EndTime": "0001-01-01T00:00:00Z",
   "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000001",
@@ -250,7 +250,7 @@ var jobListJobsString string = `RE:
   {
     "Archived": false,
     "Available": true,
-    "BootEnv": "local",
+    "BootEnv": "local3",
     "EndTime": "0001-01-01T00:00:00Z",
     "Errors": [],
     "LogPath": "[\S\s]*/job-logs/00000000-0000-0000-0000-000000000001",
@@ -274,7 +274,7 @@ var jobShowJobString string = `RE:
 {
   "Archived": false,
   "Available": true,
-  "BootEnv": "local",
+  "BootEnv": "local3",
   "EndTime": "0001-01-01T00:00:00Z",
   "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000001",
@@ -303,7 +303,7 @@ var jobUpdateTooManyArgErrorString string = "Error: drpcli jobs update [id] [jso
 var jobShowMachineJohnString string = `{
   "Address": "192.168.100.110",
   "Available": true,
-  "BootEnv": "local",
+  "BootEnv": "local3",
   "CurrentJob": "00000000-0000-0000-0000-000000000001",
   "CurrentTask": 0,
   "Errors": [],
@@ -338,7 +338,7 @@ var jobUpdateJohnString string = `RE:
 {
   "Archived": false,
   "Available": true,
-  "BootEnv": "local",
+  "BootEnv": "local3",
   "EndTime": "0001-01-01T00:00:00Z",
   "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000001",
@@ -359,7 +359,7 @@ var jobPatchTooManyArgErrorString = "Error: drpcli jobs patch [objectJson] [chan
 var jobPatchBaseString = `{
   "Archived": false,
   "Available": true,
-  "BootEnv": "local",
+  "BootEnv": "local3",
   "Errors": [],
   "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Previous": "00000000-0000-0000-0000-000000000000",
@@ -372,7 +372,7 @@ var jobPatchBaseString = `{
 var jobPatchBase2String = `{
   "Archived": false,
   "Available": true,
-  "BootEnv": "local",
+  "BootEnv": "local3",
   "Errors": [],
   "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Previous": "00000000-0000-0000-0000-000000000000",
@@ -398,7 +398,7 @@ var jobPatchInputReplyString = `RE:
 {
   "Archived": false,
   "Available": true,
-  "BootEnv": "local",
+  "BootEnv": "local3",
   "EndTime": "0001-01-01T00:00:00Z",
   "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000001",
@@ -416,7 +416,7 @@ var jobPatchJohnString = `RE:
 {
   "Archived": false,
   "Available": true,
-  "BootEnv": "local",
+  "BootEnv": "local3",
   "EndTime": "0001-01-01T00:00:00Z",
   "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000001",
@@ -432,7 +432,7 @@ var jobPatchJohnString = `RE:
 var jobPatchMissingBaseString = `{
   "Archived": false,
   "Available": true,
-  "BootEnv": "local",
+  "BootEnv": "local3",
   "Errors": [],
   "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Previous": "00000000-0000-0000-0000-000000000000",
@@ -449,7 +449,7 @@ var jobUpdateFailedJobUpdateString = `RE:
 {
   "Archived": false,
   "Available": true,
-  "BootEnv": "local",
+  "BootEnv": "local3",
   "EndTime": "20[\s\S]*",
   "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000001",
@@ -466,7 +466,7 @@ var jobCreateMachineNotRunningErrorString = "Error: Machine 3e7031fe-3062-45f1-8
 var jobUpdateMachineRunnableString = `{
   "Address": "192.168.100.110",
   "Available": true,
-  "BootEnv": "local",
+  "BootEnv": "local3",
   "CurrentJob": "00000000-0000-0000-0000-000000000001",
   "CurrentTask": 0,
   "Errors": [],
@@ -493,7 +493,7 @@ var jobCreateNextString = `RE:
 {
   "Archived": false,
   "Available": true,
-  "BootEnv": "local",
+  "BootEnv": "local3",
   "EndTime": "0001-01-01T00:00:00Z",
   "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000002",
@@ -511,7 +511,7 @@ var jobUpdateFinishedJob2UpdateString = `RE:
 {
   "Archived": false,
   "Available": true,
-  "BootEnv": "local",
+  "BootEnv": "local3",
   "EndTime": "20[\s\S]*",
   "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000002",
@@ -528,7 +528,7 @@ var jobCreateNext3String = `RE:
 {
   "Archived": false,
   "Available": true,
-  "BootEnv": "local",
+  "BootEnv": "local3",
   "EndTime": "0001-01-01T00:00:00Z",
   "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000003",
@@ -545,7 +545,7 @@ var jobUpdateFinishedJob3UpdateString = `RE:
 {
   "Archived": false,
   "Available": true,
-  "BootEnv": "local",
+  "BootEnv": "local3",
   "EndTime": "20[\s\S]*",
   "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000003",
@@ -562,7 +562,7 @@ var jobCreateNext4String = `RE:
 {
   "Archived": false,
   "Available": true,
-  "BootEnv": "local",
+  "BootEnv": "local3",
   "EndTime": "0001-01-01T00:00:00Z",
   "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000004",
@@ -579,7 +579,7 @@ var jobUpdateFinishedJob4UpdateString = `RE:
 {
   "Archived": false,
   "Available": true,
-  "BootEnv": "local",
+  "BootEnv": "local3",
   "EndTime": "20[\s\S]*",
   "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000004",
@@ -597,7 +597,7 @@ var jobFullListString = `RE:
   {
     "Archived": false,
     "Available": true,
-    "BootEnv": "local",
+    "BootEnv": "local3",
     "EndTime": "20[\s\S]*",
     "Errors": [],
     "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000001",
@@ -612,7 +612,7 @@ var jobFullListString = `RE:
   {
     "Archived": false,
     "Available": true,
-    "BootEnv": "local",
+    "BootEnv": "local3",
     "EndTime": "20[\s\S]*",
     "Errors": [],
     "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000002",
@@ -627,7 +627,7 @@ var jobFullListString = `RE:
   {
     "Archived": false,
     "Available": true,
-    "BootEnv": "local",
+    "BootEnv": "local3",
     "EndTime": "20[\s\S]*",
     "Errors": [],
     "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000003",
@@ -642,7 +642,7 @@ var jobFullListString = `RE:
   {
     "Archived": false,
     "Available": true,
-    "BootEnv": "local",
+    "BootEnv": "local3",
     "EndTime": "20[\s\S]*",
     "Errors": [],
     "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000004",
@@ -687,27 +687,27 @@ func TestJobCli(t *testing.T) {
 	if err := os.MkdirAll("bootenvs", 0755); err != nil {
 		t.Errorf("Failed to create bootenvs dir: %v\n", err)
 	}
-	if err := os.Symlink("../../assets/bootenvs/local.yml", "bootenvs/local.yml"); err != nil {
+	if err := os.Symlink("../test-data/local3.yml", "bootenvs/local3.yml"); err != nil {
 		t.Errorf("Failed to create link to local.yml: %v\n", err)
 	}
 
 	if err := os.MkdirAll("templates", 0755); err != nil {
 		t.Errorf("Failed to create templates dir: %v\n", err)
 	}
-	tmpls := []string{"local-pxelinux.tmpl", "local-elilo.tmpl", "local-ipxe.tmpl"}
+	tmpls := []string{"local3-pxelinux.tmpl", "local3-elilo.tmpl", "local3-ipxe.tmpl"}
 	for _, tmpl := range tmpls {
-		if err := os.Symlink("../../assets/templates/"+tmpl, "templates/"+tmpl); err != nil {
+		if err := os.Symlink("../test-data/"+tmpl, "templates/"+tmpl); err != nil {
 			t.Errorf("Failed to create link to %s: %v\n", tmpl, err)
 		}
 	}
 
 	tests := []CliTest{
-		CliTest{false, false, []string{"bootenvs", "install", "bootenvs/local.yml"}, noStdinString, bootEnvInstallLocalSuccessString, noErrorString},
+		CliTest{false, false, []string{"bootenvs", "install", "bootenvs/local3.yml"}, noStdinString, bootEnvInstallLocalSuccessString, bootEnvInstallLocal3ErrorString},
 		CliTest{false, false, []string{"tasks", "create", "task1"}, noStdinString, jobTask1Create, noErrorString},
 		CliTest{false, false, []string{"tasks", "create", "-"}, jobTask2Create, jobTask2Create, noErrorString},
 		CliTest{false, false, []string{"tasks", "create", "task3"}, noStdinString, jobTask3Create, noErrorString},
 		CliTest{false, false, []string{"bootenvs", "create", jobLocal2CreateInput}, noStdinString, jobLocal2Create, noErrorString},
-		CliTest{false, false, []string{"bootenvs", "update", "local", jobLocalUpdateInput}, noStdinString, jobLocalUpdateString, noErrorString},
+		CliTest{false, false, []string{"bootenvs", "update", "local3", jobLocalUpdateInput}, noStdinString, jobLocalUpdateString, noErrorString},
 
 		CliTest{false, false, []string{"machines", "create", jobCreateMachineInputString}, noStdinString, jobCreateMachineJohnString, noErrorString},
 
@@ -746,7 +746,7 @@ func TestJobCli(t *testing.T) {
 		CliTest{false, true, []string{"jobs", "list", "--limit=-10", "--offset=0"}, noStdinString, noContentString, limitNegativeError},
 		CliTest{false, true, []string{"jobs", "list", "--limit=10", "--offset=-10"}, noStdinString, noContentString, offsetNegativeError},
 		CliTest{false, false, []string{"jobs", "list", "--limit=-1", "--offset=-1"}, noStdinString, jobListJobsString, noErrorString},
-		CliTest{false, false, []string{"jobs", "list", "BootEnv=local"}, noStdinString, jobListJobsString, noErrorString},
+		CliTest{false, false, []string{"jobs", "list", "BootEnv=local3"}, noStdinString, jobListJobsString, noErrorString},
 		CliTest{false, false, []string{"jobs", "list", "BootEnv=false"}, noStdinString, jobEmptyListString, noErrorString},
 		CliTest{false, false, []string{"jobs", "list", "Task=task1"}, noStdinString, jobListJobsString, noErrorString},
 		CliTest{false, false, []string{"jobs", "list", "Task=false"}, noStdinString, jobEmptyListString, noErrorString},
@@ -822,7 +822,7 @@ func TestJobCli(t *testing.T) {
 		CliTest{false, false, []string{"jobs", "actions", "00000000-0000-0000-0000-000000000003"}, noStdinString, jobActionsRenderedTask2String, noErrorString},
 		CliTest{false, false, []string{"machines", "destroy", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, machineDestroyJohnString, noErrorString},
 		CliTest{false, true, []string{"jobs", "actions", "00000000-0000-0000-0000-000000000003"}, noStdinString, noContentString, jobActionsMissingMachineRenderErrorString},
-		CliTest{false, false, []string{"bootenvs", "destroy", "local"}, noStdinString, "Deleted bootenv local\n", noErrorString},
+		CliTest{false, false, []string{"bootenvs", "destroy", "local3"}, noStdinString, "Deleted bootenv local3\n", noErrorString},
 		CliTest{false, false, []string{"bootenvs", "destroy", "local2"}, noStdinString, "Deleted bootenv local2\n", noErrorString},
 		CliTest{false, false, []string{"tasks", "destroy", "task1"}, noStdinString, "Deleted task task1\n", noErrorString},
 		CliTest{false, false, []string{"tasks", "destroy", "task2"}, noStdinString, "Deleted task task2\n", noErrorString},
@@ -838,9 +838,9 @@ func TestJobCli(t *testing.T) {
 		CliTest{false, false, []string{"jobs", "destroy", "00000000-0000-0000-0000-000000000004"}, noStdinString, jobDestroy004String, noErrorString},
 		CliTest{false, false, []string{"jobs", "list"}, noStdinString, jobDefaultListString, noErrorString},
 
-		CliTest{false, false, []string{"templates", "destroy", "local-pxelinux.tmpl"}, noStdinString, "Deleted template local-pxelinux.tmpl\n", noErrorString},
-		CliTest{false, false, []string{"templates", "destroy", "local-elilo.tmpl"}, noStdinString, "Deleted template local-elilo.tmpl\n", noErrorString},
-		CliTest{false, false, []string{"templates", "destroy", "local-ipxe.tmpl"}, noStdinString, "Deleted template local-ipxe.tmpl\n", noErrorString},
+		CliTest{false, false, []string{"templates", "destroy", "local3-pxelinux.tmpl"}, noStdinString, "Deleted template local3-pxelinux.tmpl\n", noErrorString},
+		CliTest{false, false, []string{"templates", "destroy", "local3-elilo.tmpl"}, noStdinString, "Deleted template local3-elilo.tmpl\n", noErrorString},
+		CliTest{false, false, []string{"templates", "destroy", "local3-ipxe.tmpl"}, noStdinString, "Deleted template local3-ipxe.tmpl\n", noErrorString},
 	}
 
 	for _, test := range tests {

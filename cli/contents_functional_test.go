@@ -7,9 +7,9 @@ import (
 var contentMyLocalBootEnvString = `{
   "BootParams": "",
   "Kernel": "",
-  "Name": "local",
+  "Name": "mylocal",
   "OS": {
-    "Name": "local"
+    "Name": "mylocal"
   },
   "OnlyUnknown": false,
   "Templates": [
@@ -32,10 +32,30 @@ var contentMyLocalBootEnvString = `{
 }
 `
 
+var contentPackBadString = `{
+  "meta": {
+    "Name": "PackBad",
+    "Version": "0.1",
+  },
+  "sections": {
+    "profiles": {
+      "p1-bad": {
+	"Description": "packbad",
+	"Tasks": 12
+      }
+    }
+  }
+}
+`
+
+var contentPackBadCreateErrorString = "Error: Unable to load profiles: error unmarshaling JSON: json: cannot unmarshal number into Go struct field Profile.Tasks of type []string\n\n"
+
 var contentPack1String = `{
-  "Name": "Pack1",
-  "Version": "0.1",
-  "Sections": {
+  "meta": {
+    "Name": "Pack1",
+    "Version": "0.1",
+  },
+  "sections": {
     "profiles": {
       "p1-prof": {
 	"Description": "pack1",
@@ -50,15 +70,19 @@ var contentPack1CreateSuccessString = `{
   "Counts": {
     "profiles": 1
   },
-  "Name": "Pack1",
-  "Version": "0.1"
+  "meta": {
+    "Name": "Pack1",
+    "Version": "0.1"
+  }
 }
 `
 
 var contentPack2String = `{
-  "Name": "Pack2",
-  "Version": "0.2",
-  "Sections": {
+  "meta": {
+    "Name": "Pack2",
+    "Version": "0.2",
+  },
+  "sections": {
     "profiles": {
       "p1-prof": {
 	"Description": "pack2",
@@ -73,87 +97,112 @@ var contentPack2CreateErrorString = "Error: New layer violates key restrictions:
 
 var contentPack1ProfileListString = `[
   {
+    "Available": true,
+    "Errors": [],
     "Name": "global",
-    "Tasks": null
+    "Tasks": [],
+    "Validated": true
   },
   {
+    "Available": true,
     "Description": "pack1",
+    "Errors": null,
     "Name": "p1-prof",
-    "Tasks": null
+    "Tasks": [],
+    "Validated": true
   }
 ]
 `
 
 var contentPack1UpdateProfileListString = `[
   {
+    "Available": true,
+    "Errors": [],
     "Name": "global",
-    "Tasks": null
+    "Tasks": [],
+    "Validated": true
   },
   {
+    "Available": true,
     "Description": "pack1-2",
+    "Errors": null,
     "Name": "p1-prof",
-    "Tasks": null
+    "Tasks": [],
+    "Validated": true
   }
 ]
 `
 
 var contentNoPackProfileListString = `[
   {
+    "Available": true,
+    "Errors": [],
     "Name": "global",
-    "Tasks": null
+    "Tasks": [],
+    "Validated": true
   }
 ]
 `
 
 var contentMachineCreateString = `{
   "Name": "greg",
-  "BootEnv": "local",
+  "BootEnv": "mylocal",
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
 }
 `
 var contentMachineCreateSuccessString = `{
-  "BootEnv": "local",
+  "Available": true,
+  "BootEnv": "mylocal",
   "CurrentTask": 0,
-  "Errors": null,
+  "Errors": [],
   "Name": "greg",
   "Profile": {
+    "Available": false,
+    "Errors": null,
     "Name": "",
-    "Tasks": null
+    "Tasks": null,
+    "Validated": false
   },
   "Profiles": null,
   "Runnable": true,
   "Tasks": [],
-  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
 }
 `
 
 var contentMachineAddProfileString = `{
-  "BootEnv": "local",
+  "Available": true,
+  "BootEnv": "mylocal",
   "CurrentTask": 0,
-  "Errors": null,
+  "Errors": [],
   "Name": "greg",
   "Profile": {
+    "Available": false,
+    "Errors": null,
     "Name": "",
-    "Tasks": null
+    "Tasks": null,
+    "Validated": false
   },
   "Profiles": [
     "p1-prof"
   ],
   "Runnable": true,
   "Tasks": [],
-  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
 }
 `
 
 var contentBootenvGregCreateSuccessString = `{
   "Available": true,
   "BootParams": "",
-  "Errors": null,
+  "Errors": [],
   "Initrds": null,
   "Kernel": "",
-  "Name": "local",
+  "Name": "mylocal",
   "OS": {
-    "Name": "local"
+    "Name": "mylocal"
   },
   "OnlyUnknown": false,
   "OptionalParams": null,
@@ -183,9 +232,11 @@ var contentBootenvGregCreateSuccessString = `{
 var contentPack1DestroyErrorString = "Error: Profile p1-prof (at 0) does not exist\n\n"
 
 var contentPack1BadUpdateString = `{
-  "Name": "Pack1",
-  "Version": "0.2",
-  "Sections": {
+  "meta": {
+    "Name": "Pack1",
+    "Version": "0.2",
+  },
+  "sections": {
     "profiles": {
       "p2-prof": {
 	"Description": "pack1-2",
@@ -197,10 +248,30 @@ var contentPack1BadUpdateString = `{
 `
 var contentPack1BadUpdateErrorString = "Error: Profile p1-prof (at 0) does not exist\n\n"
 
+var contentPack1BadSyntaxUpdateString = `{
+  "meta": {
+    "Name": "Pack1",
+    "Version": "0.2",
+  },
+  "sections": {
+    "profiles": {
+      "p2-prof": {
+	"Description": "pack1-2",
+        "Name": "p2-prof",
+	"Tasks": 12
+      }
+    }
+  }
+}
+`
+var contentPack1BadSyntaxUpdateErrorString = "Error: Unable to load profiles: error unmarshaling JSON: json: cannot unmarshal number into Go struct field Profile.Tasks of type []string\n\n"
+
 var contentPack1UpdateString = `{
-  "Name": "Pack1",
-  "Version": "0.2",
-  "Sections": {
+  "meta": {
+    "Name": "Pack1",
+    "Version": "0.2",
+  },
+  "sections": {
     "profiles": {
       "p1-prof": {
 	"Description": "pack1-2",
@@ -214,17 +285,20 @@ var contentPack1UpdateSuccessString = `{
   "Counts": {
     "profiles": 1
   },
-  "Name": "Pack1",
-  "Version": "0.2"
+  "meta": {
+    "Name": "Pack1",
+    "Version": "0.2"
+  }
 }
 `
 
-func TestContentFunctionalCli(t *testing.T) {
+func TestContentsFunctionalCli(t *testing.T) {
 
 	tests := []CliTest{
 		CliTest{false, false, []string{"contents", "list"}, noStdinString, contentDefaultListString, noErrorString},
 		CliTest{false, false, []string{"bootenvs", "create", contentMyLocalBootEnvString}, noStdinString, contentBootenvGregCreateSuccessString, noErrorString},
 
+		CliTest{false, true, []string{"contents", "create", contentPackBadString}, noStdinString, noContentString, contentPackBadCreateErrorString},
 		CliTest{false, false, []string{"contents", "create", contentPack1String}, noStdinString, contentPack1CreateSuccessString, noErrorString},
 		CliTest{false, false, []string{"profiles", "list"}, noStdinString, contentPack1ProfileListString, noErrorString},
 		CliTest{false, true, []string{"contents", "create", contentPack2String}, noStdinString, noContentString, contentPack2CreateErrorString},
@@ -236,6 +310,7 @@ func TestContentFunctionalCli(t *testing.T) {
 		CliTest{false, true, []string{"contents", "destroy", "Pack1"}, noStdinString, noContentString, contentPack1DestroyErrorString},
 		CliTest{false, false, []string{"profiles", "list"}, noStdinString, contentPack1ProfileListString, noErrorString},
 
+		CliTest{false, true, []string{"contents", "update", "Pack1", contentPack1BadSyntaxUpdateString}, noStdinString, noContentString, contentPack1BadSyntaxUpdateErrorString},
 		CliTest{false, true, []string{"contents", "update", "Pack1", contentPack1BadUpdateString}, noStdinString, noContentString, contentPack1BadUpdateErrorString},
 		CliTest{false, false, []string{"profiles", "list"}, noStdinString, contentPack1ProfileListString, noErrorString},
 		CliTest{false, false, []string{"contents", "update", "Pack1", contentPack1UpdateString}, noStdinString, contentPack1UpdateSuccessString, noErrorString},
@@ -246,7 +321,7 @@ func TestContentFunctionalCli(t *testing.T) {
 		CliTest{false, false, []string{"contents", "destroy", "Pack1"}, noStdinString, "Deleted content Pack1\n", noErrorString},
 		CliTest{false, false, []string{"profiles", "list"}, noStdinString, contentNoPackProfileListString, noErrorString},
 
-		CliTest{false, false, []string{"bootenvs", "destroy", "local"}, noStdinString, "Deleted bootenv local\n", noErrorString},
+		CliTest{false, false, []string{"bootenvs", "destroy", "mylocal"}, noStdinString, "Deleted bootenv mylocal\n", noErrorString},
 		CliTest{false, false, []string{"contents", "list"}, noStdinString, contentDefaultListString, noErrorString},
 	}
 

@@ -1,12 +1,12 @@
 package plugin
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"os"
 	"os/exec"
@@ -54,11 +54,10 @@ type RunningPlugin struct {
 }
 
 type PluginController struct {
-	logger             *log.Logger
 	lock               sync.Mutex
 	AvailableProviders map[string]*PluginProvider
 	runningPlugins     map[string]*RunningPlugin
-	dataTracker        *backend.DataTracker
+	dt                 *backend.DataTracker
 	pluginDir          string
 	watcher            *fsnotify.Watcher
 	done               chan bool
@@ -69,8 +68,8 @@ type PluginController struct {
 	apiPort            int
 }
 
-func InitPluginController(pluginDir string, dt *backend.DataTracker, logger *log.Logger, pubs *backend.Publishers, apiPort int) (pc *PluginController, err error) {
-	pc = &PluginController{pluginDir: pluginDir, dataTracker: dt, publishers: pubs, logger: logger,
+func InitPluginController(pluginDir string, dt *backend.DataTracker, pubs *backend.Publishers, apiPort int) (pc *PluginController, err error) {
+	pc = &PluginController{pluginDir: pluginDir, dt: dt, publishers: pubs,
 		AvailableProviders: make(map[string]*PluginProvider, 0), apiPort: apiPort,
 		runningPlugins: make(map[string]*RunningPlugin, 0)}
 
@@ -104,6 +103,7 @@ func InitPluginController(pluginDir string, dt *backend.DataTracker, logger *log
 				if strings.HasSuffix(event.Name, ".part") {
 					continue
 				}
+
 				arr := strings.Split(event.Name, "/")
 				file := arr[len(arr)-1]
 				if event.Op&fsnotify.Remove == fsnotify.Remove {
@@ -117,9 +117,9 @@ func InitPluginController(pluginDir string, dt *backend.DataTracker, logger *log
 					pc.importPluginProvider(file)
 					pc.lock.Unlock()
 				} else if event.Op&fsnotify.Rename == fsnotify.Rename {
-					pc.logger.Printf("Rename file: %s %v\n", event.Name, event)
+					pc.dt.Infof("debugPlugins", "Rename file: %s %v\n", event.Name, event)
 				} else {
-					pc.logger.Println("Unhandled file event:", event.Name)
+					pc.dt.Infof("debugPlugins", "Unhandled file event:", event.Name)
 				}
 			case event := <-pc.events:
 				if event.Action == "create" {
@@ -160,10 +160,10 @@ func InitPluginController(pluginDir string, dt *backend.DataTracker, logger *log
 					pc.stopPlugin(event.Object.(*backend.Plugin))
 					pc.lock.Unlock()
 				} else {
-					pc.logger.Println("internal event:", event)
+					pc.dt.Infof("debugPlugins", "internal event:", event)
 				}
 			case err := <-pc.watcher.Errors:
-				pc.logger.Println("error:", err)
+				pc.dt.Infof("debugPlugins", "error:", err)
 			case <-pc.done:
 				done = true
 			}
@@ -194,7 +194,7 @@ func (pc *PluginController) walkPlugins(provider string) (err error) {
 	// Walk all plugin objects from dt.
 	var idx *index.Index
 	ref := &backend.Plugin{}
-	d, unlocker := pc.dataTracker.LockEnts(ref.Locks("get")...)
+	d, unlocker := pc.dt.LockEnts(ref.Locks("get")...)
 	defer unlocker()
 	idx, err = index.All([]index.Filter{index.Native()}...)(&d(ref.Prefix()).Index)
 	if err != nil {
@@ -261,9 +261,9 @@ func (pc *PluginController) GetPluginProviders() []*PluginProvider {
 }
 
 func (pc *PluginController) startPlugin(d backend.Stores, plugin *backend.Plugin) {
-	pc.logger.Printf("Starting plugin: %s(%s)\n", plugin.Name, plugin.Provider)
+	pc.dt.Infof("debugPlugins", "Starting plugin: %s(%s)\n", plugin.Name, plugin.Provider)
 	if _, ok := pc.runningPlugins[plugin.Name]; ok {
-		pc.logger.Printf("Already started plugin: %s(%s)\n", plugin.Name, plugin.Provider)
+		pc.dt.Infof("debugPlugins", "Already started plugin: %s(%s)\n", plugin.Name, plugin.Provider)
 	}
 	pp, ok := pc.AvailableProviders[plugin.Provider]
 	if ok {
@@ -299,7 +299,7 @@ func (pc *PluginController) startPlugin(d backend.Stores, plugin *backend.Plugin
 		}
 
 		if len(errors) == 0 {
-			thingee, err := NewPluginClient(plugin.Name, pc.logger, pc.apiPort, pp.path, plugin.Params)
+			thingee, err := NewPluginClient(plugin.Name, pc.dt, pc.apiPort, pp.path, plugin.Params)
 			if err == nil {
 				rp := &RunningPlugin{Plugin: plugin, Client: thingee, Provider: pp}
 				if pp.HasPublish {
@@ -318,15 +318,15 @@ func (pc *PluginController) startPlugin(d backend.Stores, plugin *backend.Plugin
 
 		if len(plugin.Errors) != len(errors) {
 			plugin.Errors = errors
-			pc.dataTracker.Update(d, plugin)
+			pc.dt.Update(d, plugin)
 		}
 		pc.publishers.Publish("plugin", "started", plugin.Name, plugin)
-		pc.logger.Printf("Starting plugin: %s(%s) complete\n", plugin.Name, plugin.Provider)
+		pc.dt.Infof("debugPlugins", "Starting plugin: %s(%s) complete\n", plugin.Name, plugin.Provider)
 	} else {
-		pc.logger.Printf("Starting plugin: %s(%s) missing provider\n", plugin.Name, plugin.Provider)
+		pc.dt.Infof("debugPlugins", "Starting plugin: %s(%s) missing provider\n", plugin.Name, plugin.Provider)
 		if plugin.Errors == nil || len(plugin.Errors) == 0 {
 			plugin.Errors = []string{fmt.Sprintf("Missing Plugin Provider: %s", plugin.Provider)}
-			pc.dataTracker.Update(d, plugin)
+			pc.dt.Update(d, plugin)
 		}
 	}
 }
@@ -334,7 +334,7 @@ func (pc *PluginController) startPlugin(d backend.Stores, plugin *backend.Plugin
 func (pc *PluginController) stopPlugin(plugin *backend.Plugin) {
 	rp, ok := pc.runningPlugins[plugin.Name]
 	if ok {
-		pc.logger.Printf("Stopping plugin: %s(%s)\n", plugin.Name, plugin.Provider)
+		pc.dt.Infof("debugPlugins", "Stopping plugin: %s(%s)\n", plugin.Name, plugin.Provider)
 		delete(pc.runningPlugins, plugin.Name)
 
 		if rp.Provider.HasPublish {
@@ -344,54 +344,63 @@ func (pc *PluginController) stopPlugin(plugin *backend.Plugin) {
 			pc.MachineActions.Remove(aa)
 		}
 		rp.Client.Stop()
-		pc.logger.Printf("Stoping plugin: %s(%s) complete\n", plugin.Name, plugin.Provider)
+		pc.dt.Infof("debugPlugins", "Stoping plugin: %s(%s) complete\n", plugin.Name, plugin.Provider)
 		pc.publishers.Publish("plugin", "stopped", plugin.Name, plugin)
 	}
 }
 
 func (pc *PluginController) restartPlugin(d backend.Stores, plugin *backend.Plugin) {
-	pc.logger.Printf("Restarting plugin: %s(%s)\n", plugin.Name, plugin.Provider)
+	pc.dt.Infof("debugPlugins", "Restarting plugin: %s(%s)\n", plugin.Name, plugin.Provider)
 	pc.stopPlugin(plugin)
 	pc.startPlugin(d, plugin)
-	pc.logger.Printf("Restarting plugin: %s(%s) complete\n", plugin.Name, plugin.Provider)
+	pc.dt.Infof("debugPlugins", "Restarting plugin: %s(%s) complete\n", plugin.Name, plugin.Provider)
 }
 
 // Try to add to available - Must lock before calling
 func (pc *PluginController) importPluginProvider(provider string) error {
-	pc.logger.Printf("Importing plugin provider: %s\n", provider)
+	pc.dt.Infof("debugPlugins", "Importing plugin provider: %s\n", provider)
 	out, err := exec.Command(pc.pluginDir+"/"+provider, "define").Output()
 	if err != nil {
-		pc.logger.Printf("Skipping %s because %s\n", provider, err)
+		pc.dt.Infof("debugPlugins", "Skipping %s because %s\n", provider, err)
 	} else {
 		var pp PluginProvider
 		err = json.Unmarshal(out, &pp)
 		if err != nil {
-			pc.logger.Printf("Skipping %s because of bad json: %s\n%s\n", provider, err, out)
+			pc.dt.Infof("debugPlugins", "Skipping %s because of bad json: %s\n%s\n", provider, err, out)
 		} else {
-
 			skip := false
 			for _, p := range pp.Parameters {
-				if err := p.ValidateSchema(); err != nil {
-					pc.logger.Printf("Skipping %s because of bad required scheme: %s %s\n", pp.Name, p.Name, err)
+				p.ClearValidation()
+				p.AddError(p.ValidateSchema())
+				if err := p.MakeError(422, "ValidateError", p); err != nil {
+					pc.dt.Infof("debugPlugins", "Skipping %s because of bad required scheme: %s %s\n", pp.Name, p.Name, err)
 					skip = true
 				} else {
 					// Attempt create if it doesn't exist already.
 					ref := &backend.Param{}
-					d, unlocker := pc.dataTracker.LockEnts(ref.Locks("create")...)
+					d, unlocker := pc.dt.LockEnts(ref.Locks("create")...)
 					ref2 := d(ref.Prefix()).Find(p.Name)
 					if ref2 == nil {
-						if _, err := pc.dataTracker.Create(d, p); err != nil {
-							pc.logger.Printf("Skipping %s because parameter could not be created: %s %s\n", pp.Name, p.Name, err)
+						if _, err := pc.dt.Create(d, p); err != nil {
+							pc.dt.Infof("debugPlugins", "Skipping %s because parameter could not be created: %s %s\n", pp.Name, p.Name, err)
 							skip = true
+						}
+					} else {
+						j1str, _ := json.Marshal(p.Schema)
+						j2str, _ := json.Marshal(ref2.(*backend.Param).Schema)
+						if bytes.Compare(j1str, j2str) != 0 {
+							p.Errorf("%s schema in plugin doesn't match existing parameter", p.Name)
 						}
 					}
 					unlocker()
 				}
+				p.SetValid()
+				p.SetAvailable()
 			}
 
 			if !skip {
 				if _, ok := pc.AvailableProviders[pp.Name]; !ok {
-					pc.logger.Printf("Adding plugin provider: %s\n", pp.Name)
+					pc.dt.Infof("debugPlugins", "Adding plugin provider: %s\n", pp.Name)
 					pc.AvailableProviders[pp.Name] = &pp
 					pp.path = pc.pluginDir + "/" + provider
 					for _, aa := range pp.AvailableActions {
@@ -400,7 +409,7 @@ func (pc *PluginController) importPluginProvider(provider string) error {
 					pc.publishers.Publish("plugin_provider", "create", pp.Name, pp)
 					return pc.walkPlugins(provider)
 				} else {
-					pc.logger.Printf("Already exists plugin provider: %s\n", pp.Name)
+					pc.dt.Infof("debugPlugins", "Already exists plugin provider: %s\n", pp.Name)
 				}
 			}
 		}
@@ -426,16 +435,16 @@ func (pc *PluginController) removePluginProvider(provider string) {
 		}
 		for _, p := range remove {
 			ref := &backend.Plugin{}
-			d, unlocker := pc.dataTracker.LockEnts(ref.Locks("get")...)
+			d, unlocker := pc.dt.LockEnts(ref.Locks("get")...)
 			pc.stopPlugin(p)
 			ref2 := d(ref.Prefix()).Find(p.Name)
 			myPP := ref2.(*backend.Plugin)
 			myPP.Errors = []string{fmt.Sprintf("Missing Plugin Provider: %s", provider)}
-			pc.dataTracker.Update(d, myPP)
+			pc.dt.Update(d, myPP)
 			unlocker()
 		}
 
-		pc.logger.Printf("Removing plugin provider: %s\n", name)
+		pc.dt.Infof("debugPlugins", "Removing plugin provider: %s\n", name)
 		pc.publishers.Publish("plugin_provider", "delete", name, pc.AvailableProviders[name])
 		delete(pc.AvailableProviders, name)
 	}

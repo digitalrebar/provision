@@ -8,8 +8,10 @@ import (
 var prefsDefaultListString = `{
   "debugBootEnv": "0",
   "debugDhcp": "0",
+  "debugFrontend": "0",
+  "debugPlugins": "0",
   "debugRenderer": "0",
-  "defaultBootEnv": "sledgehammer",
+  "defaultBootEnv": "local",
   "knownTokenTimeout": "3600",
   "unknownBootEnv": "ignore",
   "unknownTokenTimeout": "600"
@@ -24,8 +26,10 @@ var prefsSetEmptyJSONString string = "{}"
 var prefsSetJSONResponseString string = `{
   "debugBootEnv": "0",
   "debugDhcp": "0",
+  "debugFrontend": "0",
+  "debugPlugins": "0",
   "debugRenderer": "0",
-  "defaultBootEnv": "local",
+  "defaultBootEnv": "local3",
   "knownTokenTimeout": "3600",
   "unknownBootEnv": "ignore",
   "unknownTokenTimeout": "600"
@@ -37,8 +41,10 @@ var prefsSetInvalidPrefResponseString string = "Error: Unknown Preference greg\n
 var prefsChangedListString = `{
   "debugBootEnv": "0",
   "debugDhcp": "0",
+  "debugFrontend": "0",
+  "debugPlugins": "0",
   "debugRenderer": "0",
-  "defaultBootEnv": "local",
+  "defaultBootEnv": "local3",
   "knownTokenTimeout": "3600",
   "unknownBootEnv": "ignore",
   "unknownTokenTimeout": "600"
@@ -48,7 +54,7 @@ var prefsChangedListString = `{
 var prefsSetStdinBadJSONString = "fred\n"
 var prefsSetStdinBadJSONErrorString = ""
 var prefsSetStdinJSONString = `{
-  "defaultBootEnv": "local",
+  "defaultBootEnv": "local3",
   "unknownBootEnv": "ignore"
 }
 `
@@ -59,8 +65,10 @@ var prefsSetBadUnknownTokenTimeoutErrorString = "Error: Preference unknownTokenT
 var prefsKnownChangedListString = `{
   "debugBootEnv": "0",
   "debugDhcp": "0",
+  "debugFrontend": "0",
+  "debugPlugins": "0",
   "debugRenderer": "0",
-  "defaultBootEnv": "local",
+  "defaultBootEnv": "local3",
   "knownTokenTimeout": "5000",
   "unknownBootEnv": "ignore",
   "unknownTokenTimeout": "600"
@@ -69,8 +77,10 @@ var prefsKnownChangedListString = `{
 var prefsBothPreDebugChangedListString = `{
   "debugBootEnv": "0",
   "debugDhcp": "0",
+  "debugFrontend": "0",
+  "debugPlugins": "0",
   "debugRenderer": "0",
-  "defaultBootEnv": "local",
+  "defaultBootEnv": "local3",
   "knownTokenTimeout": "5000",
   "unknownBootEnv": "ignore",
   "unknownTokenTimeout": "7000"
@@ -79,34 +89,50 @@ var prefsBothPreDebugChangedListString = `{
 var prefsBothChangedListString = `{
   "debugBootEnv": "1",
   "debugDhcp": "2",
+  "debugFrontend": "0",
+  "debugPlugins": "0",
   "debugRenderer": "1",
-  "defaultBootEnv": "local",
+  "defaultBootEnv": "local3",
   "knownTokenTimeout": "5000",
   "unknownBootEnv": "ignore",
   "unknownTokenTimeout": "7000"
 }
 `
 
+var prefsFinalListString = `{
+  "debugBootEnv": "0",
+  "debugDhcp": "0",
+  "debugFrontend": "0",
+  "debugPlugins": "0",
+  "debugRenderer": "0",
+  "defaultBootEnv": "local",
+  "knownTokenTimeout": "5000",
+  "unknownBootEnv": "ignore",
+  "unknownTokenTimeout": "7000"
+}
+`
+var prefsFailedToDeleteBootenvErrorString = "Error: BootEnv local3 is the active defaultBootEnv, cannot remove it\n\n"
+
 func TestPrefsCli(t *testing.T) {
 	if err := os.MkdirAll("bootenvs", 0755); err != nil {
 		t.Errorf("Failed to create bootenvs dir: %v\n", err)
 	}
-	if err := os.Symlink("../../assets/bootenvs/local.yml", "bootenvs/local.yml"); err != nil {
-		t.Errorf("Failed to create link to local.yml: %v\n", err)
+	if err := os.Symlink("../test-data/local3.yml", "bootenvs/local3.yml"); err != nil {
+		t.Errorf("Failed to create link to local3.yml: %v\n", err)
 	}
 
 	if err := os.MkdirAll("templates", 0755); err != nil {
 		t.Errorf("Failed to create templates dir: %v\n", err)
 	}
-	tmpls := []string{"local-pxelinux.tmpl", "local-elilo.tmpl", "local-ipxe.tmpl"}
+	tmpls := []string{"local3-pxelinux.tmpl", "local3-elilo.tmpl", "local3-ipxe.tmpl"}
 	for _, tmpl := range tmpls {
-		if err := os.Symlink("../../assets/templates/"+tmpl, "templates/"+tmpl); err != nil {
+		if err := os.Symlink("../test-data/"+tmpl, "templates/"+tmpl); err != nil {
 			t.Errorf("Failed to create link to %s: %v\n", tmpl, err)
 		}
 	}
 
 	tests := []CliTest{
-		CliTest{false, false, []string{"bootenvs", "install", "bootenvs/local.yml"}, noStdinString, bootEnvInstallLocalSuccessString, noErrorString},
+		CliTest{false, false, []string{"bootenvs", "install", "bootenvs/local3.yml"}, noStdinString, bootEnvInstallLocalSuccessString, bootEnvInstallLocal3ErrorString},
 
 		CliTest{true, false, []string{"prefs"}, noStdinString, "List and set DigitalRebar Provision operational preferences\n", noErrorString},
 		CliTest{false, false, []string{"prefs", "list"}, noStdinString, prefsDefaultListString, noErrorString},
@@ -119,7 +145,7 @@ func TestPrefsCli(t *testing.T) {
 		CliTest{false, false, []string{"prefs", "set", prefsSetEmptyJSONString}, noStdinString, prefsDefaultListString, noErrorString},
 		CliTest{false, false, []string{"prefs", "list"}, noStdinString, prefsDefaultListString, noErrorString},
 
-		CliTest{false, false, []string{"prefs", "set", "defaultBootEnv", "local"}, noStdinString, prefsSetJSONResponseString, noErrorString},
+		CliTest{false, false, []string{"prefs", "set", "defaultBootEnv", "local3"}, noStdinString, prefsSetJSONResponseString, noErrorString},
 		CliTest{false, false, []string{"prefs", "list"}, noStdinString, prefsChangedListString, noErrorString},
 
 		CliTest{false, true, []string{"prefs", "set", "defaultBootEnv", "illegal"}, noStdinString, noContentString, prefsSetIllegalJSONResponseString},
@@ -140,7 +166,13 @@ func TestPrefsCli(t *testing.T) {
 		CliTest{false, false, []string{"prefs", "set", "-"}, prefsSetStdinJSONString, prefsBothChangedListString, noErrorString},
 		CliTest{false, false, []string{"prefs", "list"}, noStdinString, prefsBothChangedListString, noErrorString},
 
-		// Clean-up - can't happen now.
+		CliTest{false, true, []string{"bootenvs", "destroy", "local3"}, noStdinString, noContentString, prefsFailedToDeleteBootenvErrorString},
+		CliTest{false, false, []string{"prefs", "set", "defaultBootEnv", "local", "debugDhcp", "0", "debugRenderer", "0", "debugBootEnv", "0"}, noStdinString, prefsFinalListString, noErrorString},
+
+		CliTest{false, false, []string{"bootenvs", "destroy", "local3"}, noStdinString, "Deleted bootenv local3\n", noErrorString},
+		CliTest{false, false, []string{"templates", "destroy", "local3-pxelinux.tmpl"}, noStdinString, "Deleted template local3-pxelinux.tmpl\n", noErrorString},
+		CliTest{false, false, []string{"templates", "destroy", "local3-elilo.tmpl"}, noStdinString, "Deleted template local3-elilo.tmpl\n", noErrorString},
+		CliTest{false, false, []string{"templates", "destroy", "local3-ipxe.tmpl"}, noStdinString, "Deleted template local3-ipxe.tmpl\n", noErrorString},
 	}
 	for _, test := range tests {
 		testCli(t, test)

@@ -1,0 +1,14 @@
+Name: local3
+OS:
+  Name: local3
+Templates:
+- ID: local3-pxelinux.tmpl
+  Name: pxelinux
+  Path: "pxelinux.cfg/{{.Machine.HexAddress}}"
+- ID: local3-elilo.tmpl
+  Name: elilo
+  Path: "{{.Machine.HexAddress}}.conf"
+- ID: local3-ipxe.tmpl
+  Name: ipxe
+  Path: "{{.Machine.Address}}.ipxe"
+TenantId: 1

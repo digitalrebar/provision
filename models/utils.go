@@ -48,5 +48,6 @@ func Clone(m Model) (Model, error) {
 	if err != nil {
 		return nil, err
 	}
-	return res, dec.Decode(&res)
+	err = dec.Decode(res)
+	return res, err
 }

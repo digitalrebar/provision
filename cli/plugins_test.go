@@ -11,9 +11,11 @@ var pluginShowNoArgErrorString string = "Error: drpcli plugins show [id] [flags]
 var pluginShowTooManyArgErrorString string = "Error: drpcli plugins show [id] [flags] requires 1 argument\n"
 var pluginShowMissingArgErrorString string = "Error: plugins GET: john: Not Found\n\n"
 var pluginShowPluginString string = `{
-  "Errors": null,
+  "Available": true,
+  "Errors": [],
   "Name": "i-woman",
-  "Provider": "incrementer"
+  "Provider": "incrementer",
+  "Validated": true
 }
 `
 
@@ -44,9 +46,11 @@ var pluginCreateInputString string = `{
 }
 `
 var pluginCreateJohnString string = `{
-  "Errors": null,
+  "Available": true,
+  "Errors": [],
   "Name": "i-woman",
-  "Provider": "incrementer"
+  "Provider": "incrementer",
+  "Validated": true
 }
 `
 
@@ -54,9 +58,11 @@ var pluginCreateDuplicateErrorString = "Error: dataTracker create plugins: i-wom
 
 var pluginListPluginsString = `[
   {
-    "Errors": null,
+    "Available": true,
+    "Errors": [],
     "Name": "i-woman",
-    "Provider": "incrementer"
+    "Provider": "incrementer",
+    "Validated": true
   }
 ]
 `
@@ -70,10 +76,12 @@ var pluginUpdateInputString string = `{
 }
 `
 var pluginUpdateJohnString string = `{
+  "Available": true,
   "Description": "lpxelinux.0",
-  "Errors": null,
+  "Errors": [],
   "Name": "i-woman",
-  "Provider": "incrementer"
+  "Provider": "incrementer",
+  "Validated": true
 }
 `
 var pluginUpdateJohnMissingErrorString string = "Error: plugins GET: john2: Not Found\n\n"
@@ -85,10 +93,12 @@ var pluginPatchBadPatchJSONErrorString = "Error: Unable to parse drpcli plugins 
 var pluginPatchBadBaseJSONString = "asdgasdg"
 var pluginPatchBadBaseJSONErrorString = "Error: Unable to parse drpcli plugins patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Plugin\n\n"
 var pluginPatchBaseString string = `{
+  "Available": true,
   "Description": "lpxelinux.0",
-  "Errors": null,
+  "Errors": [],
   "Name": "i-woman",
-  "Provider": "incrementer"
+  "Provider": "incrementer",
+  "Validated": true
 }
 `
 var pluginPatchInputString string = `{
@@ -96,15 +106,17 @@ var pluginPatchInputString string = `{
 }
 `
 var pluginPatchJohnString string = `{
+  "Available": true,
   "Description": "bootx64.efi",
-  "Errors": null,
+  "Errors": [],
   "Name": "i-woman",
-  "Provider": "incrementer"
+  "Provider": "incrementer",
+  "Validated": true
 }
 `
 var pluginPatchMissingBaseString string = `{
   "Description": "bootx64.efi",
-  "Errors": null,
+  "Errors": [],
   "Name": "spider-woman",
   "Provider": "incrementer"
 }
@@ -139,13 +151,15 @@ var pluginsParamsNextString string = `{
 }
 `
 var pluginUpdateJohnWithParamsString string = `{
+  "Available": true,
   "Description": "lpxelinux.0",
-  "Errors": null,
+  "Errors": [],
   "Name": "i-woman",
   "Params": {
     "jj": 3
   },
-  "Provider": "incrementer"
+  "Provider": "incrementer",
+  "Validated": true
 }
 `
 

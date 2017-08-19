@@ -1,0 +1,12 @@
+meta:
+  Description: Initial Default Content
+  Name: DefaultStore
+  Source: Unspecified
+  Version: user
+sections:
+  templates:
+    usrshare:
+      Contents: |
+        usrshare
+      Description: A test template for DefaultStore testing
+      ID: usrshare

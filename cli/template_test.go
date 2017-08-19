@@ -11,26 +11,20 @@ var templateEmptyListString string = "[]\n"
 
 var templateDefaultListString string = `[
   {
+    "Available": true,
     "Contents": "etc\n",
     "Description": "A test template for LocalStore testing",
-    "ID": "etc"
+    "Errors": null,
+    "ID": "etc",
+    "Validated": true
   },
   {
-    "Contents": "exit\n",
-    "ID": "local-elilo.tmpl"
-  },
-  {
-    "Contents": "#!ipxe\nexit\n",
-    "ID": "local-ipxe.tmpl"
-  },
-  {
-    "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
-    "ID": "local-pxelinux.tmpl"
-  },
-  {
+    "Available": true,
     "Contents": "usrshare\n",
     "Description": "A test template for DefaultStore testing",
-    "ID": "usrshare"
+    "Errors": null,
+    "ID": "usrshare",
+    "Validated": true
   }
 ]
 `
@@ -39,8 +33,11 @@ var templateShowNoArgErrorString string = "Error: drpcli templates show [id] [fl
 var templateShowTooManyArgErrorString string = "Error: drpcli templates show [id] [flags] requires 1 argument\n"
 var templateShowMissingArgErrorString string = "Error: templates GET: ignore: Not Found\n\n"
 var templateShowJohnString string = `{
+  "Available": true,
   "Contents": "John Rules",
-  "ID": "john"
+  "Errors": [],
+  "ID": "john",
+  "Validated": true
 }
 `
 
@@ -59,45 +56,48 @@ var templateCreateInputString string = `{
 }
 `
 var templateCreateJohnString string = `{
+  "Available": true,
   "Contents": "John Rules",
-  "ID": "john"
+  "Errors": [],
+  "ID": "john",
+  "Validated": true
 }
 `
 var templateCreateDuplicateErrorString = "Error: dataTracker create templates: john already exists\n\n"
 
 var templateListJohnOnlyString = `[
   {
+    "Available": true,
     "Contents": "John Rules",
-    "ID": "john"
+    "Errors": [],
+    "ID": "john",
+    "Validated": true
   }
 ]
 `
 var templateListBothEnvsString = `[
   {
+    "Available": true,
     "Contents": "etc\n",
     "Description": "A test template for LocalStore testing",
-    "ID": "etc"
+    "Errors": null,
+    "ID": "etc",
+    "Validated": true
   },
   {
+    "Available": true,
     "Contents": "John Rules",
-    "ID": "john"
+    "Errors": [],
+    "ID": "john",
+    "Validated": true
   },
   {
-    "Contents": "exit\n",
-    "ID": "local-elilo.tmpl"
-  },
-  {
-    "Contents": "#!ipxe\nexit\n",
-    "ID": "local-ipxe.tmpl"
-  },
-  {
-    "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
-    "ID": "local-pxelinux.tmpl"
-  },
-  {
+    "Available": true,
     "Contents": "usrshare\n",
     "Description": "A test template for DefaultStore testing",
-    "ID": "usrshare"
+    "Errors": null,
+    "ID": "usrshare",
+    "Validated": true
   }
 ]
 `
@@ -111,9 +111,12 @@ var templateUpdateInputString string = `{
 }
 `
 var templateUpdateJohnString string = `{
+  "Available": true,
   "Contents": "John Rules",
   "Description": "NewStrat",
-  "ID": "john"
+  "Errors": [],
+  "ID": "john",
+  "Validated": true
 }
 `
 var templateUpdateJohnMissingErrorString string = "Error: templates GET: john2: Not Found\n\n"
@@ -125,9 +128,12 @@ var templatePatchBadPatchJSONErrorString = "Error: Unable to parse drpcli templa
 var templatePatchBadBaseJSONString = "asdgasdg"
 var templatePatchBadBaseJSONErrorString = "Error: Unable to parse drpcli templates patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Template\n\n"
 var templatePatchBaseString string = `{
+  "Available": true,
   "Contents": "John Rules",
   "Description": "NewStrat",
-  "ID": "john"
+  "Errors": [],
+  "ID": "john",
+  "Validated": true
 }
 `
 var templatePatchInputString string = `{
@@ -135,9 +141,12 @@ var templatePatchInputString string = `{
 }
 `
 var templatePatchJohnString string = `{
+  "Available": true,
   "Contents": "John Rules",
   "Description": "bootx64.efi",
-  "ID": "john"
+  "Errors": [],
+  "ID": "john",
+  "Validated": true
 }
 `
 var templatePatchMissingBaseString string = `{
@@ -158,13 +167,19 @@ var templatesUploadOneArgsErrorString string = "Error: Wrong number of args: exp
 var templatesUploadFourArgsErrorString string = "Error: Wrong number of args: expected 3, got 4\n"
 var templatesUploadMissingFileErrorString string = "Error: Failed to open greg: open greg: no such file or directory\n\n"
 var templatesUploadSuccessString string = `{
+  "Available": true,
   "Contents": *REPLACE_WITH_TEMPLATE_GO_CONTENT*,
-  "ID": "greg"
+  "Errors": [],
+  "ID": "greg",
+  "Validated": true
 }
 `
 var templatesUploadReplaceSuccessString string = `{
+  "Available": true,
   "Contents": *REPLACE_WITH_LEASE_GO_CONTENT*,
-  "ID": "greg"
+  "Errors": [],
+  "ID": "greg",
+  "Validated": true
 }
 `
 var templateDestroyGregString string = "Deleted template greg\n"
