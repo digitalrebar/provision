@@ -32,6 +32,24 @@ var contentMyLocalBootEnvString = `{
 }
 `
 
+var contentPackBadString = `{
+  "meta": {
+    "Name": "PackBad",
+    "Version": "0.1",
+  },
+  "sections": {
+    "profiles": {
+      "p1-bad": {
+	"Description": "packbad",
+	"Tasks": 12
+      }
+    }
+  }
+}
+`
+
+var contentPackBadCreateErrorString = "Error: Unable to load profiles: error unmarshaling JSON: json: cannot unmarshal number into Go struct field Profile.Tasks of type []string\n\n"
+
 var contentPack1String = `{
   "meta": {
     "Name": "Pack1",
@@ -107,7 +125,7 @@ var contentPack1UpdateProfileListString = `[
   {
     "Available": true,
     "Description": "pack1-2",
-    "Errors": [],
+    "Errors": null,
     "Name": "p1-prof",
     "Tasks": [],
     "Validated": true
@@ -230,6 +248,24 @@ var contentPack1BadUpdateString = `{
 `
 var contentPack1BadUpdateErrorString = "Error: Profile p1-prof (at 0) does not exist\n\n"
 
+var contentPack1BadSyntaxUpdateString = `{
+  "meta": {
+    "Name": "Pack1",
+    "Version": "0.2",
+  },
+  "sections": {
+    "profiles": {
+      "p2-prof": {
+	"Description": "pack1-2",
+        "Name": "p2-prof",
+	"Tasks": 12
+      }
+    }
+  }
+}
+`
+var contentPack1BadSyntaxUpdateErrorString = "Error: Unable to load profiles: error unmarshaling JSON: json: cannot unmarshal number into Go struct field Profile.Tasks of type []string\n\n"
+
 var contentPack1UpdateString = `{
   "meta": {
     "Name": "Pack1",
@@ -262,6 +298,7 @@ func TestContentsFunctionalCli(t *testing.T) {
 		CliTest{false, false, []string{"contents", "list"}, noStdinString, contentDefaultListString, noErrorString},
 		CliTest{false, false, []string{"bootenvs", "create", contentMyLocalBootEnvString}, noStdinString, contentBootenvGregCreateSuccessString, noErrorString},
 
+		CliTest{false, true, []string{"contents", "create", contentPackBadString}, noStdinString, noContentString, contentPackBadCreateErrorString},
 		CliTest{false, false, []string{"contents", "create", contentPack1String}, noStdinString, contentPack1CreateSuccessString, noErrorString},
 		CliTest{false, false, []string{"profiles", "list"}, noStdinString, contentPack1ProfileListString, noErrorString},
 		CliTest{false, true, []string{"contents", "create", contentPack2String}, noStdinString, noContentString, contentPack2CreateErrorString},
@@ -273,6 +310,7 @@ func TestContentsFunctionalCli(t *testing.T) {
 		CliTest{false, true, []string{"contents", "destroy", "Pack1"}, noStdinString, noContentString, contentPack1DestroyErrorString},
 		CliTest{false, false, []string{"profiles", "list"}, noStdinString, contentPack1ProfileListString, noErrorString},
 
+		CliTest{false, true, []string{"contents", "update", "Pack1", contentPack1BadSyntaxUpdateString}, noStdinString, noContentString, contentPack1BadSyntaxUpdateErrorString},
 		CliTest{false, true, []string{"contents", "update", "Pack1", contentPack1BadUpdateString}, noStdinString, noContentString, contentPack1BadUpdateErrorString},
 		CliTest{false, false, []string{"profiles", "list"}, noStdinString, contentPack1ProfileListString, noErrorString},
 		CliTest{false, false, []string{"contents", "update", "Pack1", contentPack1UpdateString}, noStdinString, contentPack1UpdateSuccessString, noErrorString},
