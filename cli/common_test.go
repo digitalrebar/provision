@@ -387,6 +387,7 @@ func TestMain(m *testing.M) {
 		"--backend", "memory:///",
 		"--debug-frontend", "0",
 		"--debug-renderer", "0",
+		"--debug-plugins", "0",
 		"--local-content", "directory:../test-data/etc/dr-provision?codec=yaml",
 		"--default-content", "file:../test-data/usr/share/dr-provision/default.yaml?codec=yaml",
 	}

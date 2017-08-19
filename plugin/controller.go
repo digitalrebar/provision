@@ -1,6 +1,7 @@
 package plugin
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -102,6 +103,7 @@ func InitPluginController(pluginDir string, dt *backend.DataTracker, pubs *backe
 				if strings.HasSuffix(event.Name, ".part") {
 					continue
 				}
+
 				arr := strings.Split(event.Name, "/")
 				file := arr[len(arr)-1]
 				if event.Op&fsnotify.Remove == fsnotify.Remove {
@@ -366,10 +368,11 @@ func (pc *PluginController) importPluginProvider(provider string) error {
 		if err != nil {
 			pc.dt.Infof("debugPlugins", "Skipping %s because of bad json: %s\n%s\n", provider, err, out)
 		} else {
-
 			skip := false
 			for _, p := range pp.Parameters {
-				if err := p.ValidateSchema(); err != nil {
+				p.ClearValidation()
+				p.AddError(p.ValidateSchema())
+				if err := p.MakeError(422, "ValidateError", p); err != nil {
 					pc.dt.Infof("debugPlugins", "Skipping %s because of bad required scheme: %s %s\n", pp.Name, p.Name, err)
 					skip = true
 				} else {
@@ -382,9 +385,17 @@ func (pc *PluginController) importPluginProvider(provider string) error {
 							pc.dt.Infof("debugPlugins", "Skipping %s because parameter could not be created: %s %s\n", pp.Name, p.Name, err)
 							skip = true
 						}
+					} else {
+						j1str, _ := json.Marshal(p.Schema)
+						j2str, _ := json.Marshal(ref2.(*backend.Param).Schema)
+						if bytes.Compare(j1str, j2str) != 0 {
+							p.Errorf("%s schema in plugin doesn't match existing parameter", p.Name)
+						}
 					}
 					unlocker()
 				}
+				p.SetValid()
+				p.SetAvailable()
 			}
 
 			if !skip {
