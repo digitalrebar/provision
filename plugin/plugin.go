@@ -25,7 +25,7 @@ type PluginPublisher interface {
 }
 
 type PluginActor interface {
-	Action(*MachineAction) *models.Error
+	Action(*models.MachineAction) *models.Error
 }
 
 var (
@@ -40,7 +40,7 @@ func Log(format string, args ...interface{}) {
 	fmt.Fprintf(os.Stderr, format, args...)
 }
 
-func InitApp(use, short, version string, def *PluginProvider, pc PluginConfig) {
+func InitApp(use, short, version string, def *models.PluginProvider, pc PluginConfig) {
 	App.Use = use
 	App.Short = short
 
@@ -100,7 +100,7 @@ func Run(pc PluginConfig) error {
 	for in.Scan() {
 		jsonString := in.Text()
 
-		var req PluginClientRequest
+		var req models.PluginClientRequest
 		err := json.Unmarshal([]byte(jsonString), &req)
 		if err != nil {
 			Log("Failed to process: %v\n", err)
@@ -124,11 +124,11 @@ func Run(pc PluginConfig) error {
 	return nil
 }
 
-func handleRequest(pc PluginConfig, req *PluginClientRequest, ops *int64, origStdOut *os.File) {
+func handleRequest(pc PluginConfig, req *models.PluginClientRequest, ops *int64, origStdOut *os.File) {
 	defer atomic.AddInt64(ops, -1)
 
 	if req.Action == "Config" {
-		resp := &PluginClientReply{Id: req.Id}
+		resp := &models.PluginClientReply{Id: req.Id}
 
 		var params map[string]interface{}
 		if jerr := json.Unmarshal(req.Data, &params); jerr != nil {
@@ -143,9 +143,9 @@ func handleRequest(pc PluginConfig, req *PluginClientRequest, ops *int64, origSt
 		bytes, _ := json.Marshal(resp)
 		fmt.Fprintln(origStdOut, string(bytes))
 	} else if req.Action == "Action" {
-		resp := &PluginClientReply{Id: req.Id}
+		resp := &models.PluginClientReply{Id: req.Id}
 
-		var actionInfo MachineAction
+		var actionInfo models.MachineAction
 		if jerr := json.Unmarshal(req.Data, &actionInfo); jerr != nil {
 			resp.Code = 400
 			resp.Data, _ = json.Marshal(&models.Error{Code: 400, Model: "plugin", Type: "Action", Messages: []string{fmt.Sprintf("Failed to unmarshal data: %v", jerr)}})
@@ -164,7 +164,7 @@ func handleRequest(pc PluginConfig, req *PluginClientRequest, ops *int64, origSt
 		bytes, _ := json.Marshal(resp)
 		fmt.Fprintln(origStdOut, string(bytes))
 	} else if req.Action == "Publish" {
-		resp := &PluginClientReply{Id: req.Id}
+		resp := &models.PluginClientReply{Id: req.Id}
 
 		var event models.Event
 		if jerr := json.Unmarshal(req.Data, &event); jerr != nil {
@@ -185,7 +185,7 @@ func handleRequest(pc PluginConfig, req *PluginClientRequest, ops *int64, origSt
 		bytes, _ := json.Marshal(resp)
 		fmt.Fprintln(origStdOut, string(bytes))
 	} else {
-		resp := &PluginClientReply{Code: 400, Id: req.Id}
+		resp := &models.PluginClientReply{Code: 400, Id: req.Id}
 		resp.Data, _ = json.Marshal(&models.Error{Code: 400, Model: "plugin", Type: "Publish", Messages: []string{"Plugin unknown command type"}})
 		bytes, _ := json.Marshal(resp)
 		fmt.Fprintln(origStdOut, string(bytes))
