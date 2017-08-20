@@ -17,15 +17,15 @@ import (
 
 var (
 	version = provision.RS_VERSION
-	def     = plugin.PluginProvider{
+	def     = models.PluginProvider{
 		Name:       "incrementer",
 		Version:    version,
 		HasPublish: true,
-		AvailableActions: []*plugin.AvailableAction{
-			&plugin.AvailableAction{Command: "increment",
+		AvailableActions: []*models.AvailableAction{
+			&models.AvailableAction{Command: "increment",
 				OptionalParams: []string{"incrementer.step", "incrementer.parameter"},
 			},
-			&plugin.AvailableAction{Command: "reset_count",
+			&models.AvailableAction{Command: "reset_count",
 				RequiredParams: []string{"incrementer.touched"},
 			},
 		},
@@ -137,7 +137,7 @@ func removeParameter(uuid, parameter string) *models.Error {
 		Messages: []string{}}
 }
 
-func (p *Plugin) Action(ma *plugin.MachineAction) *models.Error {
+func (p *Plugin) Action(ma *models.MachineAction) *models.Error {
 	plugin.Log("Action: %v\n", ma)
 	if ma.Command == "increment" {
 		parameter, ok := ma.Params["incrementer.parameter"].(string)
