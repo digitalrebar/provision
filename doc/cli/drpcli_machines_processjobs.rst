@@ -1,0 +1,43 @@
+drpcli machines processjobs
+===========================
+
+For the given machine, process pending jobs until done.
+
+Synopsis
+--------
+
+For the provided machine, identified by UUID, process the task list on
+that machine until an error occurs or all jobs are complete. Upon
+completion, optionally wait for additional jobs as specified by the
+boolean wait flag.
+
+::
+
+    drpcli machines processjobs [id] [wait] [flags]
+
+Options
+-------
+
+::
+
+          --exit-on-failure   Exit on failure of a task
+      -h, --help              help for processjobs
+
+Options inherited from parent commands
+--------------------------------------
+
+::
+
+      -d, --debug             Whether the CLI should run in debug mode
+      -E, --endpoint string   The Digital Rebar Provision API endpoint to talk to (default "https://127.0.0.1:8092")
+      -f, --force             When needed, attempt to force the operation - used on some update/patch calls
+      -F, --format string     The serialzation we expect for output.  Can be "json" or "yaml" (default "json")
+      -P, --password string   password of the Digital Rebar Provision user (default "r0cketsk8ts")
+      -T, --token string      token of the Digital Rebar Provision access
+      -U, --username string   Name of the Digital Rebar Provision user to talk to (default "rocketskates")
+
+SEE ALSO
+--------
+
+-  `drpcli machines <drpcli_machines.html>`__ - Access CLI commands
+   relating to machines

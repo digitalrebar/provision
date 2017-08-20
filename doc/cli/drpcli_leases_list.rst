@@ -41,13 +41,14 @@ Example:
 
 ::
 
-    drpcli leases list [key=value] ...
+    drpcli leases list [key=value] ... [flags]
 
 Options
 -------
 
 ::
 
+      -h, --help         help for list
           --limit int    Maximum number of items to return (default -1)
           --offset int   Number of items to skip before starting to return data (default -1)
 
@@ -58,6 +59,7 @@ Options inherited from parent commands
 
       -d, --debug             Whether the CLI should run in debug mode
       -E, --endpoint string   The Digital Rebar Provision API endpoint to talk to (default "https://127.0.0.1:8092")
+      -f, --force             When needed, attempt to force the operation - used on some update/patch calls
       -F, --format string     The serialzation we expect for output.  Can be "json" or "yaml" (default "json")
       -P, --password string   password of the Digital Rebar Provision user (default "r0cketsk8ts")
       -T, --token string      token of the Digital Rebar Provision access
