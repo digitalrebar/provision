@@ -41,7 +41,7 @@ var bootEnvIgnoreOnlyListString string = `[
         "Path": "elilo.conf"
       },
       {
-        "Contents": "#!ipxe\nexit\n",
+        "Contents": "#!ipxe\nchain tftp://{{.ProvisionerAddress}}/${netX/ip}.ipxe || exit\n",
         "Name": "ipxe",
         "Path": "default.ipxe"
       }
@@ -115,7 +115,7 @@ var bootEnvDefaultListString string = `[
         "Path": "elilo.conf"
       },
       {
-        "Contents": "#!ipxe\nexit\n",
+        "Contents": "#!ipxe\nchain tftp://{{.ProvisionerAddress}}/${netX/ip}.ipxe || exit\n",
         "Name": "ipxe",
         "Path": "default.ipxe"
       }
@@ -189,7 +189,7 @@ var bootEnvShowIgnoreString string = `{
       "Path": "elilo.conf"
     },
     {
-      "Contents": "#!ipxe\nexit\n",
+      "Contents": "#!ipxe\nchain tftp://{{.ProvisionerAddress}}/${netX/ip}.ipxe || exit\n",
       "Name": "ipxe",
       "Path": "default.ipxe"
     }
@@ -283,7 +283,7 @@ var bootEnvListBothEnvsString = `[
         "Path": "elilo.conf"
       },
       {
-        "Contents": "#!ipxe\nexit\n",
+        "Contents": "#!ipxe\nchain tftp://{{.ProvisionerAddress}}/${netX/ip}.ipxe || exit\n",
         "Name": "ipxe",
         "Path": "default.ipxe"
       }
