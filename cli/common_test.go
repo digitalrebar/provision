@@ -242,7 +242,7 @@ var yamlTestString = `- Available: true
     Path: elilo.conf
   - Contents: |
       #!ipxe
-      exit
+      chain tftp://{{.ProvisionerAddress}}/${netX/ip}.ipxe || exit
     Name: ipxe
     Path: default.ipxe
   Validated: true
@@ -309,7 +309,7 @@ var jsonTestString = `[
         "Path": "elilo.conf"
       },
       {
-        "Contents": "#!ipxe\nexit\n",
+        "Contents": "#!ipxe\nchain tftp://{{.ProvisionerAddress}}/${netX/ip}.ipxe || exit\n",
         "Name": "ipxe",
         "Path": "default.ipxe"
       }
