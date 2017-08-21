@@ -16,7 +16,7 @@ For a full install, please see :ref:`rs_install`
 To begin, execute the following command in a shell or terminal: 
   ::
 
-    curl -fsSL https://raw.githubusercontent.com/digitalrebar/provision/master/tools/install.sh | bash -s -- --isolated install
+    curl -fsSL https://raw.githubusercontent.com/digitalrebar/provision/stable/tools/install.sh | bash -s -- --isolated install
     
 .. note:: If you want to try the latest code, you can checkout the development tip using ``curl -fsSL https://raw.githubusercontent.com/digitalrebar/provision/tip/tools/install.sh | bash -s -- --isolated install --drp-version=tip``
 
