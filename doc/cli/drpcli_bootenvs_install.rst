@@ -6,7 +6,7 @@ Install a bootenv along with everything it requires
 Synopsis
 --------
 
-bootenvs install assumes you are in a directory with two subdirectories:
+bootenvs install assumes a directory with two subdirectories:
 bootenvs/ templates/
 
 bootenvs must contain [bootenvFile] templates must contain any templates
