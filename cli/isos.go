@@ -22,7 +22,7 @@ func (be IsoOps) List(parms map[string]string) (interface{}, error) {
 }
 
 func (be IsoOps) Upload(path string, f *os.File) (interface{}, error) {
-	d, e := session.Isos.UploadIso(isos.NewUploadIsoParams().WithPath(path).WithBody(f), basicAuth)
+	d, e := session.Isos.UploadIso(isos.NewUploadIsoParams().WithTimeout(30*time.Minute).WithPath(path).WithBody(f), basicAuth)
 	if e != nil {
 		return nil, e
 	}
