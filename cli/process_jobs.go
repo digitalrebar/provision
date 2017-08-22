@@ -397,7 +397,10 @@ the boolean wait flag.
 				// Loop back and wait for the machine to get marked runnable again
 
 				if reboot {
-					// GREG: Issue reboot call
+					_, err := exec.Command("reboot").Output()
+					if err != nil {
+						Log(job.UUID, "Failed to issue reboot\n")
+					}
 				}
 
 				// If we failed, should we exit
