@@ -2,6 +2,7 @@ package cli
 
 import (
 	"os"
+	"time"
 
 	"github.com/digitalrebar/provision/client/isos"
 	"github.com/spf13/cobra"
