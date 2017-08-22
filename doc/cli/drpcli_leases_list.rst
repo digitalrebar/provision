@@ -8,7 +8,7 @@ Synopsis
 
 This will list all leases by default.
 
-You may specify:
+It is possible specify:
 
 -  Offset = integer, 0-based inclusive starting point in filter data.
 -  Limit = integer, number of items to return
