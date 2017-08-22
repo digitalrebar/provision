@@ -43,8 +43,8 @@ currently build windows, linux, and darwin for amd64.
 Running Client
 --------------
 
-After building the code, you can use the tools/install.sh script to get a cli
-and dr-provision binary in the top-level directory for your platform.
+After building the code, use the tools/install.sh script to get a cli
+and dr-provision binary in the top-level directory for the platform.
 
 * tools/install.sh --isolated install
 

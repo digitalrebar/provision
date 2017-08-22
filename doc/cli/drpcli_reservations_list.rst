@@ -8,7 +8,7 @@ Synopsis
 
 This will list all reservations by default.
 
-You may specify:
+It is possible to specify:
 
 -  Offset = integer, 0-based inclusive starting point in filter data.
 -  Limit = integer, number of items to return

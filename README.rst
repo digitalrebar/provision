@@ -79,6 +79,7 @@ Table of Contents
    
    doc/quickstart
    doc/install
+   doc/integrations/ansible
    doc/configuring
    doc/release
    doc/upgrade
@@ -91,8 +92,8 @@ Table of Contents
    doc/Swagger
    doc/cli
    doc/api
-   doc/dev-server
-   doc/dev-cli
-   doc/dev-docs
+   doc/dev/dev-server
+   doc/dev/dev-cli
+   doc/dev/dev-docs
    doc/faq-troubleshooting
    LICENSE

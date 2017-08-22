@@ -122,7 +122,8 @@ Once running, the following endpoints are available:
 * https://127.0.0.1:8092/swagger-ui - swagger-ui to explore the API
 * https://127.0.0.1:8092/swagger.json - API Swagger JSON file
 * https://127.0.0.1:8092/api/v3 - Raw api endpoint
-* https://127.0.0.1:8092/ui - User Configuration Pages
+* https://127.0.0.1:8092/ui - User Configuration Pages (3.0 only, removed after 3.1)
+* https://127.0.0.1:8092/ux - Redirects to Community Portal (maintained by RackN)
 * http://127.0.0.1:8091 - Static files served by http from the *test-data/tftpboot* directory
 * udp 69 - Static files served from the test-data/tftpboot directory through the tftp protocol
 * udp 67 - DHCP Server listening socket - will only serve addresses when once configured.  By default, silent.
@@ -136,3 +137,20 @@ If the SSL certificate is not valid, then follow the :ref:`rs_gen_cert` steps.
   ::
 
     sudo route add 255.255.255.255 192.168.100.1
+
+Production Deployments
+----------------------
+
+The following items should be considered for production deployments.  Recommendations may be missing so operators should use their best judgement.
+
+System Logs
+===========
+
+The Digital Rebar Provision service logs by sending output to standard error.  To capture system logs, SystemD (or Docker) should be configured to direct this output to the desired log management infrastructrure.
+
+Job Log Rotation
+================
+
+If you are using the jobs system, Digital Rebar Provision stores job logs based on the directory configuration of the system.  This data is considered compliance related information; consequently, the system does not automatically remove these records.
+
+Operators should set up a job log rotation mechanism to ensure that these logs to not exhaust available disk space.
