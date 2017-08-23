@@ -61,7 +61,10 @@ Community Resources
 Install & Quick Start
 ---------------------
 
-Our `Quick Start <http://provision.readthedocs.io/en/stable/doc/quickstart.html>`_ has fast play-with-it steps.  Don't worry, they are very simple and take about 5 minutes.
+Our `Stable Quick Start <http://provision.readthedocs.io/en/stable/doc/quickstart.html>`_ has fast play-with-it steps.  Don't worry, they are very simple and take about 5 minutes.
+
+Want the `Latest Quick Start <http://provision.readthedocs.io/en/tip/doc/quickstart.html>`_? You'll have access to the newest features in tested work for the next release.  This is NOT the bleeding edge! 
+
 
 Regular `Install <http://provision.readthedocs.io/en/stable/doc/install.html>`_ for more details on the install steps.  These include production options.
 
