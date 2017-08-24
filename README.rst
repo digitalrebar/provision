@@ -10,15 +10,15 @@ Digital Rebar Provision
 
 *simple, fast and open API-driven server provisioning.*
 
-.. figure::  doc/images/dr_provision.png
-   :align:   right
-   :width: 320 px
-   :alt: Digital Rebar Provision
-   :target: https://github.com/digitalrebar/provision
-
 **DR Provision** is a APLv2 simple Golang executable that provides a simple yet complete API-driven DHCP/PXE/TFTP provisioning system. It is designed to stand alone or operate as part of the `Digital Rebar <http://rebar.digital>`_ management system.
 
 Simply, Digital Rebar Provisioner acts as a Cobbler Replacement
+
+.. figure::  doc/images/dr_provision.png
+   :align:   right
+   :width: 200 px
+   :alt: Digital Rebar Provision
+   :target: https://github.com/digitalrebar/provision
 
 .. _rs_community:
 
@@ -61,9 +61,9 @@ Community Resources
 Install & Quick Start
 ---------------------
 
-Our `Quick Start <http://provision.readthedocs.io/en/stable/doc/quickstart.html>`_ has fast play-with-it steps.  Don't worry, they are very simple and take about 5 minutes.
+Our `Quick Start <http://provision.readthedocs.io/en/latest/doc/quickstart.html>`_ has fast play-with-it steps.  Don't worry, they are very simple and take about 5 minutes.
 
-Regular `Install <http://provision.readthedocs.io/en/stable/doc/install.html>`_ for more details on the install steps.  These include production options.
+Regular `Install <http://provision.readthedocs.io/en/latest/doc/install.html>`_ for more details on the install steps.  These include production options. (`Previous Version Docs<http://provision.readthedocs.io/en/latest/doc/quickstart.html>`_)
 
 .. _rs_toc:
 
