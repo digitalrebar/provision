@@ -6,6 +6,24 @@ import (
 	"fmt"
 )
 
+func All() []Model {
+	return []Model{
+		&BootEnv{},
+		&Job{},
+		&Lease{},
+		&Machine{},
+		&Param{},
+		&Plugin{},
+		&Pref{},
+		&Profile{},
+		&Reservation{},
+		&Subnet{},
+		&Task{},
+		&Template{},
+		&User{},
+	}
+}
+
 func New(kind string) (Model, error) {
 	switch kind {
 	case "bootenvs", "bootenv":
@@ -18,6 +36,8 @@ func New(kind string) (Model, error) {
 		return &Machine{}, nil
 	case "params", "param":
 		return &Param{}, nil
+	case "plugins", "plugin":
+		return &Plugin{}, nil
 	case "prefs", "pref":
 		return &Pref{}, nil
 	case "profiles", "profile":
