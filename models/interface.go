@@ -2,6 +2,7 @@ package models
 
 // swagger:model
 type Interface struct {
+	Access
 	// Name of the interface
 	//
 	// required: true

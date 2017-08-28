@@ -18,6 +18,7 @@ var leaseShowLeaseString string = `{
   "Available": true,
   "Errors": [],
   "ExpireTime": "2017-03-31T00:11:21.028-05:00",
+  "ReadOnly": false,
   "Strategy": "MAC",
   "Token": "08:00:27:33:77:de",
   "Validated": true
@@ -45,6 +46,7 @@ var leaseCreateJohnString string = `{
   "Available": true,
   "Errors": [],
   "ExpireTime": "2017-03-31T00:11:21.028-05:00",
+  "ReadOnly": false,
   "Strategy": "MAC",
   "Token": "08:00:27:33:77:de",
   "Validated": true
@@ -58,6 +60,7 @@ var leaseListLeasesString = `[
     "Available": true,
     "Errors": [],
     "ExpireTime": "2017-03-31T00:11:21.028-05:00",
+    "ReadOnly": false,
     "Strategy": "MAC",
     "Token": "08:00:27:33:77:de",
     "Validated": true
@@ -78,6 +81,7 @@ var leaseUpdateJohnString string = `{
   "Available": true,
   "Errors": [],
   "ExpireTime": "2019-03-31T00:11:21.028-05:00",
+  "ReadOnly": false,
   "Strategy": "MAC",
   "Token": "08:00:27:33:77:de",
   "Validated": true
@@ -110,6 +114,7 @@ var leasePatchJohnString string = `{
   "Available": true,
   "Errors": [],
   "ExpireTime": "2018-03-31T00:11:21.028-05:00",
+  "ReadOnly": false,
   "Strategy": "MAC",
   "Token": "08:00:27:33:77:de",
   "Validated": true

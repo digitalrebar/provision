@@ -226,6 +226,7 @@ var yamlTestString = `- Available: true
     Name: ignore
   OnlyUnknown: true
   OptionalParams: null
+  ReadOnly: false
   RequiredParams: null
   Tasks: null
   Templates:
@@ -258,6 +259,7 @@ var yamlTestString = `- Available: true
     Name: local
   OnlyUnknown: false
   OptionalParams: null
+  ReadOnly: false
   RequiredParams: null
   Tasks: null
   Templates:
@@ -295,6 +297,7 @@ var jsonTestString = `[
     },
     "OnlyUnknown": true,
     "OptionalParams": null,
+    "ReadOnly": false,
     "RequiredParams": null,
     "Tasks": null,
     "Templates": [
@@ -329,6 +332,7 @@ var jsonTestString = `[
     },
     "OnlyUnknown": false,
     "OptionalParams": null,
+    "ReadOnly": false,
     "RequiredParams": null,
     "Tasks": null,
     "Templates": [

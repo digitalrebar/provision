@@ -9,6 +9,7 @@ var paramDefaultListString string = `[
     "Available": true,
     "Errors": [],
     "Name": "incrementer.parameter",
+    "ReadOnly": false,
     "Schema": {
       "type": "string"
     },
@@ -18,6 +19,7 @@ var paramDefaultListString string = `[
     "Available": true,
     "Errors": [],
     "Name": "incrementer.step",
+    "ReadOnly": false,
     "Schema": {
       "type": "integer"
     },
@@ -27,6 +29,7 @@ var paramDefaultListString string = `[
     "Available": true,
     "Errors": [],
     "Name": "incrementer.touched",
+    "ReadOnly": false,
     "Schema": {
       "type": "integer"
     },
@@ -44,6 +47,7 @@ var paramShowParamString string = `{
   "Available": true,
   "Errors": [],
   "Name": "john",
+  "ReadOnly": false,
   "Schema": {
     "type": "string"
   },
@@ -73,6 +77,7 @@ var paramCreateJohnString string = `{
   "Available": true,
   "Errors": [],
   "Name": "john",
+  "ReadOnly": false,
   "Schema": {
     "type": "string"
   },
@@ -86,6 +91,7 @@ var paramListParamsString = `[
     "Available": true,
     "Errors": [],
     "Name": "incrementer.parameter",
+    "ReadOnly": false,
     "Schema": {
       "type": "string"
     },
@@ -95,6 +101,7 @@ var paramListParamsString = `[
     "Available": true,
     "Errors": [],
     "Name": "incrementer.step",
+    "ReadOnly": false,
     "Schema": {
       "type": "integer"
     },
@@ -104,6 +111,7 @@ var paramListParamsString = `[
     "Available": true,
     "Errors": [],
     "Name": "incrementer.touched",
+    "ReadOnly": false,
     "Schema": {
       "type": "integer"
     },
@@ -113,6 +121,7 @@ var paramListParamsString = `[
     "Available": true,
     "Errors": [],
     "Name": "john",
+    "ReadOnly": false,
     "Schema": {
       "type": "string"
     },
@@ -125,6 +134,7 @@ var paramListJohnOnlyString = `[
     "Available": true,
     "Errors": [],
     "Name": "john",
+    "ReadOnly": false,
     "Schema": {
       "type": "string"
     },
@@ -147,6 +157,7 @@ var paramUpdateJohnString string = `{
   "Available": true,
   "Errors": [],
   "Name": "john",
+  "ReadOnly": false,
   "Schema": {
     "type": "string"
   },
@@ -180,6 +191,7 @@ var paramPatchJohnString string = `{
   "Description": "Foo",
   "Errors": [],
   "Name": "john",
+  "ReadOnly": false,
   "Schema": {
     "type": "string"
   },

@@ -28,10 +28,12 @@ var machineShowMachineString string = `{
     "Available": false,
     "Errors": null,
     "Name": "",
+    "ReadOnly": false,
     "Tasks": null,
     "Validated": false
   },
   "Profiles": null,
+  "ReadOnly": false,
   "Runnable": true,
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
@@ -68,10 +70,12 @@ var machineCreateJohnString string = `{
     "Available": false,
     "Errors": null,
     "Name": "",
+    "ReadOnly": false,
     "Tasks": null,
     "Validated": false
   },
   "Profiles": null,
+  "ReadOnly": false,
   "Runnable": true,
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
@@ -93,10 +97,12 @@ var machineListMachinesString = `[
       "Available": false,
       "Errors": null,
       "Name": "",
+      "ReadOnly": false,
       "Tasks": null,
       "Validated": false
     },
     "Profiles": null,
+    "ReadOnly": false,
     "Runnable": true,
     "Tasks": [],
     "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
@@ -125,10 +131,12 @@ var machineUpdateJohnString string = `{
     "Available": false,
     "Errors": null,
     "Name": "",
+    "ReadOnly": false,
     "Tasks": null,
     "Validated": false
   },
   "Profiles": null,
+  "ReadOnly": false,
   "Runnable": true,
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
@@ -175,10 +183,12 @@ var machinePatchJohnString string = `{
     "Available": false,
     "Errors": null,
     "Name": "",
+    "ReadOnly": false,
     "Tasks": null,
     "Validated": false
   },
   "Profiles": null,
+  "ReadOnly": false,
   "Runnable": true,
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
@@ -214,12 +224,14 @@ var machineAddProfileJill2String string = `{
     "Available": false,
     "Errors": null,
     "Name": "",
+    "ReadOnly": false,
     "Tasks": null,
     "Validated": false
   },
   "Profiles": [
     "jill"
   ],
+  "ReadOnly": false,
   "Runnable": true,
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
@@ -238,12 +250,14 @@ var machineAddProfileJillString string = `{
     "Available": false,
     "Errors": null,
     "Name": "",
+    "ReadOnly": false,
     "Tasks": null,
     "Validated": false
   },
   "Profiles": [
     "jill"
   ],
+  "ReadOnly": false,
   "Runnable": true,
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
@@ -262,6 +276,7 @@ var machineAddProfileJillJeanString string = `{
     "Available": false,
     "Errors": null,
     "Name": "",
+    "ReadOnly": false,
     "Tasks": null,
     "Validated": false
   },
@@ -269,6 +284,7 @@ var machineAddProfileJillJeanString string = `{
     "jill",
     "jean"
   ],
+  "ReadOnly": false,
   "Runnable": true,
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
@@ -288,12 +304,14 @@ var machineRemoveProfileJeanString string = `{
     "Available": false,
     "Errors": null,
     "Name": "",
+    "ReadOnly": false,
     "Tasks": null,
     "Validated": false
   },
   "Profiles": [
     "jean"
   ],
+  "ReadOnly": false,
   "Runnable": true,
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
@@ -312,10 +330,12 @@ var machineRemoveProfileAllGoneString string = `{
     "Available": false,
     "Errors": null,
     "Name": "",
+    "ReadOnly": false,
     "Tasks": null,
     "Validated": false
   },
   "Profiles": null,
+  "ReadOnly": false,
   "Runnable": true,
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
@@ -335,10 +355,12 @@ var machineRemoveProfileAllGone2String string = `{
     "Available": false,
     "Errors": null,
     "Name": "",
+    "ReadOnly": false,
     "Tasks": null,
     "Validated": false
   },
   "Profiles": null,
+  "ReadOnly": false,
   "Runnable": true,
   "Tasks": [
     "justine"
@@ -369,10 +391,12 @@ var machineBootEnvErrorBootEnvString string = `{
     "Available": false,
     "Errors": null,
     "Name": "",
+    "ReadOnly": false,
     "Tasks": null,
     "Validated": false
   },
   "Profiles": null,
+  "ReadOnly": false,
   "Runnable": false,
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
@@ -419,10 +443,12 @@ var machineUpdateJohnWithParamsString string = `{
     "Params": {
       "jj": 3
     },
+    "ReadOnly": false,
     "Tasks": null,
     "Validated": false
   },
   "Profiles": null,
+  "ReadOnly": false,
   "Runnable": true,
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
@@ -434,6 +460,7 @@ var machineJillCreate string = `{
   "Available": true,
   "Errors": [],
   "Name": "jill",
+  "ReadOnly": false,
   "Tasks": null,
   "Validated": true
 }
@@ -442,6 +469,7 @@ var machineJeanCreate string = `{
   "Available": true,
   "Errors": [],
   "Name": "jean",
+  "ReadOnly": false,
   "Tasks": null,
   "Validated": true
 }
@@ -450,6 +478,7 @@ var machineProfileJamieUpdate string = `{
   "Available": true,
   "Errors": [],
   "Name": "jill",
+  "ReadOnly": false,
   "Tasks": [
     "justine"
   ],
@@ -522,6 +551,7 @@ var machinePluginCreateString string = `{
   "Errors": [],
   "Name": "incr",
   "Provider": "incrementer",
+  "ReadOnly": false,
   "Validated": true
 }
 `
@@ -546,6 +576,7 @@ var machineJamieCreate string = `{
   "Errors": [],
   "Name": "jamie",
   "OptionalParams": null,
+  "ReadOnly": false,
   "RequiredParams": null,
   "Templates": null,
   "Validated": true
@@ -556,6 +587,7 @@ var machineJustineCreate string = `{
   "Errors": [],
   "Name": "justine",
   "OptionalParams": null,
+  "ReadOnly": false,
   "RequiredParams": null,
   "Templates": null,
   "Validated": true
@@ -573,6 +605,7 @@ var machineBootEnvNoJamieUpdate string = `{
   },
   "OnlyUnknown": false,
   "OptionalParams": null,
+  "ReadOnly": false,
   "RequiredParams": null,
   "Tasks": [],
   "Templates": [
@@ -607,6 +640,7 @@ var machineBootEnvJamieUpdate string = `{
   },
   "OnlyUnknown": false,
   "OptionalParams": null,
+  "ReadOnly": false,
   "RequiredParams": null,
   "Tasks": [
     "jamie"
@@ -644,6 +678,7 @@ var machineLocal2Create string = `{
   },
   "OnlyUnknown": false,
   "OptionalParams": null,
+  "ReadOnly": false,
   "RequiredParams": null,
   "Tasks": [],
   "Templates": [
@@ -678,6 +713,7 @@ var machineLocal2CreateInput string = `{
   },
   "OnlyUnknown": false,
   "OptionalParams": null,
+  "ReadOnly": false,
   "RequiredParams": null,
   "Tasks": [],
   "Templates": [
@@ -713,10 +749,12 @@ var machineUpdateLocalWithoutRunnable2String = `{
     "Available": false,
     "Errors": null,
     "Name": "",
+    "ReadOnly": false,
     "Tasks": null,
     "Validated": false
   },
   "Profiles": null,
+  "ReadOnly": false,
   "Runnable": false,
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
@@ -736,10 +774,12 @@ var machineUpdateLocal2String string = `{
     "Available": false,
     "Errors": null,
     "Name": "",
+    "ReadOnly": false,
     "Tasks": null,
     "Validated": false
   },
   "Profiles": null,
+  "ReadOnly": false,
   "Runnable": true,
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
@@ -759,12 +799,14 @@ var machineUpdateLocal3String string = `{
     "Available": false,
     "Errors": null,
     "Name": "",
+    "ReadOnly": false,
     "Tasks": null,
     "Validated": false
   },
   "Profiles": [
     "jill"
   ],
+  "ReadOnly": false,
   "Runnable": true,
   "Tasks": [
     "justine"
@@ -786,12 +828,14 @@ var machineUpdateLocalJamieString string = `{
     "Available": false,
     "Errors": null,
     "Name": "",
+    "ReadOnly": false,
     "Tasks": null,
     "Validated": false
   },
   "Profiles": [
     "jill"
   ],
+  "ReadOnly": false,
   "Runnable": true,
   "Tasks": [
     "jamie",

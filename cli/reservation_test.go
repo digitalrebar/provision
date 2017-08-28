@@ -19,6 +19,7 @@ var reservationShowJohnString string = `{
   "Errors": [],
   "NextServer": "2.2.2.2",
   "Options": null,
+  "ReadOnly": false,
   "Strategy": "MAC",
   "Token": "john",
   "Validated": true
@@ -47,6 +48,7 @@ var reservationCreateJohnString string = `{
   "Errors": [],
   "NextServer": "2.2.2.2",
   "Options": null,
+  "ReadOnly": false,
   "Strategy": "MAC",
   "Token": "john",
   "Validated": true
@@ -61,6 +63,7 @@ var reservationListReservationsString = `[
     "Errors": [],
     "NextServer": "2.2.2.2",
     "Options": null,
+    "ReadOnly": false,
     "Strategy": "MAC",
     "Token": "john",
     "Validated": true
@@ -74,6 +77,7 @@ var reservationListBothEnvsString = `[
     "Errors": [],
     "NextServer": "2.2.2.2",
     "Options": null,
+    "ReadOnly": false,
     "Strategy": "MAC",
     "Token": "john",
     "Validated": true
@@ -100,6 +104,7 @@ var reservationUpdateJohnString string = `{
       "Value": "1.1.1.1"
     }
   ],
+  "ReadOnly": false,
   "Strategy": "MAC",
   "Token": "john",
   "Validated": true
@@ -134,6 +139,7 @@ var reservationPatchJohnString string = `{
       "Value": "1.1.3.1"
     }
   ],
+  "ReadOnly": false,
   "Strategy": "MAC",
   "Token": "john",
   "Validated": true

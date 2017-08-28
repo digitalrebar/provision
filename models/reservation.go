@@ -7,6 +7,7 @@ import "net"
 // swagger:model
 type Reservation struct {
 	Validation
+	Access
 	// Addr is the IP address permanently assigned to the strategy/token combination.
 	//
 	// required: true

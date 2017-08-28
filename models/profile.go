@@ -10,6 +10,7 @@ package models
 // swagger:model
 type Profile struct {
 	Validation
+	Access
 	// The name of the profile.  This must be unique across all
 	// profiles.
 	//

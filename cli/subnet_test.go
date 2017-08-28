@@ -38,6 +38,7 @@ var subnetShowJohnString string = `{
     "nextFree",
     "mostExpired"
   ],
+  "ReadOnly": false,
   "ReservedLeaseTime": 7200,
   "Strategy": "MAC",
   "Subnet": "192.168.100.0/24",
@@ -91,6 +92,7 @@ var subnetCreateJohnString string = `{
     "nextFree",
     "mostExpired"
   ],
+  "ReadOnly": false,
   "ReservedLeaseTime": 7200,
   "Strategy": "MAC",
   "Subnet": "192.168.100.0/24",
@@ -125,6 +127,7 @@ var subnetListBothEnvsString = `[
       "nextFree",
       "mostExpired"
     ],
+    "ReadOnly": false,
     "ReservedLeaseTime": 7200,
     "Strategy": "MAC",
     "Subnet": "192.168.100.0/24",
@@ -166,6 +169,7 @@ var subnetUpdateJohnString string = `{
     "nextFree",
     "mostExpired"
   ],
+  "ReadOnly": false,
   "ReservedLeaseTime": 7200,
   "Strategy": "NewStrat",
   "Subnet": "192.168.100.0/24",
@@ -205,6 +209,7 @@ var subnetPatchBaseString string = `{
     "nextFree",
     "mostExpired"
   ],
+  "ReadOnly": false,
   "ReservedLeaseTime": 7200,
   "Strategy": "NewStrat",
   "Subnet": "192.168.100.0/24",
@@ -240,6 +245,7 @@ var subnetPatchJohnString string = `{
     "nextFree",
     "mostExpired"
   ],
+  "ReadOnly": false,
   "ReservedLeaseTime": 7200,
   "Strategy": "bootx64.efi",
   "Subnet": "192.168.100.0/24",

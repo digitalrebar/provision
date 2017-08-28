@@ -7,6 +7,7 @@ import "net"
 // swagger:model
 type Subnet struct {
 	Validation
+	Access
 	// Name is the name of the subnet.
 	// Subnet names must be unique
 	//

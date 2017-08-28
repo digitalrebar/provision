@@ -27,6 +27,7 @@ var bootEnvIgnoreOnlyListString string = `[
     },
     "OnlyUnknown": true,
     "OptionalParams": null,
+    "ReadOnly": false,
     "RequiredParams": null,
     "Tasks": null,
     "Templates": [
@@ -64,6 +65,7 @@ var bootEnvLocalOnlyListString string = `[
     },
     "OnlyUnknown": false,
     "OptionalParams": null,
+    "ReadOnly": false,
     "RequiredParams": null,
     "Tasks": null,
     "Templates": [
@@ -101,6 +103,7 @@ var bootEnvDefaultListString string = `[
     },
     "OnlyUnknown": true,
     "OptionalParams": null,
+    "ReadOnly": false,
     "RequiredParams": null,
     "Tasks": null,
     "Templates": [
@@ -135,6 +138,7 @@ var bootEnvDefaultListString string = `[
     },
     "OnlyUnknown": false,
     "OptionalParams": null,
+    "ReadOnly": false,
     "RequiredParams": null,
     "Tasks": null,
     "Templates": [
@@ -175,6 +179,7 @@ var bootEnvShowIgnoreString string = `{
   },
   "OnlyUnknown": true,
   "OptionalParams": null,
+  "ReadOnly": false,
   "RequiredParams": null,
   "Tasks": null,
   "Templates": [
@@ -225,6 +230,7 @@ var bootEnvCreateJohnString string = `{
   },
   "OnlyUnknown": false,
   "OptionalParams": null,
+  "ReadOnly": false,
   "RequiredParams": null,
   "Tasks": null,
   "Templates": null,
@@ -246,6 +252,7 @@ var bootEnvCreateFredString string = `{
   },
   "OnlyUnknown": false,
   "OptionalParams": null,
+  "ReadOnly": false,
   "RequiredParams": null,
   "Tasks": null,
   "Templates": null,
@@ -269,6 +276,7 @@ var bootEnvListBothEnvsString = `[
     },
     "OnlyUnknown": true,
     "OptionalParams": null,
+    "ReadOnly": false,
     "RequiredParams": null,
     "Tasks": null,
     "Templates": [
@@ -304,6 +312,7 @@ var bootEnvListBothEnvsString = `[
     },
     "OnlyUnknown": false,
     "OptionalParams": null,
+    "ReadOnly": false,
     "RequiredParams": null,
     "Tasks": null,
     "Templates": null,
@@ -322,6 +331,7 @@ var bootEnvListBothEnvsString = `[
     },
     "OnlyUnknown": false,
     "OptionalParams": null,
+    "ReadOnly": false,
     "RequiredParams": null,
     "Tasks": null,
     "Templates": [
@@ -368,6 +378,7 @@ var bootEnvUpdateJohnString string = `{
   },
   "OnlyUnknown": false,
   "OptionalParams": null,
+  "ReadOnly": false,
   "RequiredParams": null,
   "Tasks": null,
   "Templates": null,
@@ -396,6 +407,7 @@ var bootEnvPatchBaseString string = `{
   },
   "OnlyUnknown": false,
   "OptionalParams": null,
+  "ReadOnly": false,
   "RequiredParams": null,
   "Tasks": null,
   "Templates": null,
@@ -420,6 +432,7 @@ var bootEnvPatchJohnString string = `{
   },
   "OnlyUnknown": false,
   "OptionalParams": null,
+  "ReadOnly": false,
   "RequiredParams": null,
   "Tasks": null,
   "Templates": null,
@@ -494,6 +507,7 @@ var bootEnvInstallSledgehammerSuccessString string = `RE:
     "ntp_servers",
     "access_keys"
   \],
+  "ReadOnly": false,
   "RequiredParams": null,
   "Tasks": null,
   "Templates": \[
@@ -517,6 +531,7 @@ var bootEnvInstallLocalSuccessString string = `{
   },
   "OnlyUnknown": false,
   "OptionalParams": null,
+  "ReadOnly": false,
   "RequiredParams": null,
   "Tasks": null,
   "Templates": [

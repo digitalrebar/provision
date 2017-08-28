@@ -16,6 +16,7 @@ var templateDefaultListString string = `[
     "Description": "A test template for LocalStore testing",
     "Errors": null,
     "ID": "etc",
+    "ReadOnly": true,
     "Validated": true
   },
   {
@@ -24,6 +25,7 @@ var templateDefaultListString string = `[
     "Description": "A test template for DefaultStore testing",
     "Errors": null,
     "ID": "usrshare",
+    "ReadOnly": true,
     "Validated": true
   }
 ]
@@ -37,6 +39,7 @@ var templateShowJohnString string = `{
   "Contents": "John Rules",
   "Errors": [],
   "ID": "john",
+  "ReadOnly": false,
   "Validated": true
 }
 `
@@ -60,6 +63,7 @@ var templateCreateJohnString string = `{
   "Contents": "John Rules",
   "Errors": [],
   "ID": "john",
+  "ReadOnly": false,
   "Validated": true
 }
 `
@@ -71,6 +75,7 @@ var templateListJohnOnlyString = `[
     "Contents": "John Rules",
     "Errors": [],
     "ID": "john",
+    "ReadOnly": false,
     "Validated": true
   }
 ]
@@ -82,6 +87,7 @@ var templateListBothEnvsString = `[
     "Description": "A test template for LocalStore testing",
     "Errors": null,
     "ID": "etc",
+    "ReadOnly": true,
     "Validated": true
   },
   {
@@ -89,6 +95,7 @@ var templateListBothEnvsString = `[
     "Contents": "John Rules",
     "Errors": [],
     "ID": "john",
+    "ReadOnly": false,
     "Validated": true
   },
   {
@@ -97,6 +104,7 @@ var templateListBothEnvsString = `[
     "Description": "A test template for DefaultStore testing",
     "Errors": null,
     "ID": "usrshare",
+    "ReadOnly": true,
     "Validated": true
   }
 ]
@@ -116,6 +124,7 @@ var templateUpdateJohnString string = `{
   "Description": "NewStrat",
   "Errors": [],
   "ID": "john",
+  "ReadOnly": false,
   "Validated": true
 }
 `
@@ -146,6 +155,7 @@ var templatePatchJohnString string = `{
   "Description": "bootx64.efi",
   "Errors": [],
   "ID": "john",
+  "ReadOnly": false,
   "Validated": true
 }
 `
@@ -171,6 +181,7 @@ var templatesUploadSuccessString string = `{
   "Contents": *REPLACE_WITH_TEMPLATE_GO_CONTENT*,
   "Errors": [],
   "ID": "greg",
+  "ReadOnly": false,
   "Validated": true
 }
 `
@@ -179,6 +190,7 @@ var templatesUploadReplaceSuccessString string = `{
   "Contents": *REPLACE_WITH_LEASE_GO_CONTENT*,
   "Errors": [],
   "ID": "greg",
+  "ReadOnly": false,
   "Validated": true
 }
 `

@@ -8,6 +8,7 @@ import (
 // swagger:model
 type User struct {
 	Validation
+	Access
 	// Name is the name of the user
 	//
 	// required: true
