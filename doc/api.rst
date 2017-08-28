@@ -29,5 +29,5 @@ This section is intended to provide general information about and functional of 
   top of the Profiles stack.  All the other fields in the Machines.Profile are ignored.
 
 
-.. swaggerv2doc:: https://github.com/digitalrebar/provision/releases/download/tip/swagger.json
+.. swaggerv2doc:: ../embedded/assets/swagger.json 
 
