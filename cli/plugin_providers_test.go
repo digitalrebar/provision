@@ -44,6 +44,7 @@ var plugin_providerListString string = `[
         "Available": true,
         "Errors": [],
         "Name": "incrementer.parameter",
+        "ReadOnly": false,
         "Schema": {
           "type": "string"
         },
@@ -53,6 +54,7 @@ var plugin_providerListString string = `[
         "Available": true,
         "Errors": [],
         "Name": "incrementer.step",
+        "ReadOnly": false,
         "Schema": {
           "type": "integer"
         },
@@ -62,6 +64,7 @@ var plugin_providerListString string = `[
         "Available": true,
         "Errors": [],
         "Name": "incrementer.touched",
+        "ReadOnly": false,
         "Schema": {
           "type": "integer"
         },
@@ -101,6 +104,7 @@ var plugin_providerShowIncrementerString string = `{
       "Available": true,
       "Errors": [],
       "Name": "incrementer.parameter",
+      "ReadOnly": false,
       "Schema": {
         "type": "string"
       },
@@ -110,6 +114,7 @@ var plugin_providerShowIncrementerString string = `{
       "Available": true,
       "Errors": [],
       "Name": "incrementer.step",
+      "ReadOnly": false,
       "Schema": {
         "type": "integer"
       },
@@ -119,6 +124,7 @@ var plugin_providerShowIncrementerString string = `{
       "Available": true,
       "Errors": [],
       "Name": "incrementer.touched",
+      "ReadOnly": false,
       "Schema": {
         "type": "integer"
       },

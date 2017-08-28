@@ -12,6 +12,7 @@ var contentMyLocalBootEnvString = `{
     "Name": "mylocal"
   },
   "OnlyUnknown": false,
+  "ReadOnly": false,
   "Templates": [
     {
       "Contents": "local-pxelinux.tmpl",
@@ -100,6 +101,7 @@ var contentPack1ProfileListString = `[
     "Available": true,
     "Errors": [],
     "Name": "global",
+    "ReadOnly": false,
     "Tasks": [],
     "Validated": true
   },
@@ -108,6 +110,7 @@ var contentPack1ProfileListString = `[
     "Description": "pack1",
     "Errors": null,
     "Name": "p1-prof",
+    "ReadOnly": true,
     "Tasks": [],
     "Validated": true
   }
@@ -119,6 +122,7 @@ var contentPack1UpdateProfileListString = `[
     "Available": true,
     "Errors": [],
     "Name": "global",
+    "ReadOnly": false,
     "Tasks": [],
     "Validated": true
   },
@@ -127,6 +131,7 @@ var contentPack1UpdateProfileListString = `[
     "Description": "pack1-2",
     "Errors": null,
     "Name": "p1-prof",
+    "ReadOnly": true,
     "Tasks": [],
     "Validated": true
   }
@@ -138,6 +143,7 @@ var contentNoPackProfileListString = `[
     "Available": true,
     "Errors": [],
     "Name": "global",
+    "ReadOnly": false,
     "Tasks": [],
     "Validated": true
   }
@@ -160,10 +166,12 @@ var contentMachineCreateSuccessString = `{
     "Available": false,
     "Errors": null,
     "Name": "",
+    "ReadOnly": false,
     "Tasks": null,
     "Validated": false
   },
   "Profiles": null,
+  "ReadOnly": false,
   "Runnable": true,
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
@@ -181,12 +189,14 @@ var contentMachineAddProfileString = `{
     "Available": false,
     "Errors": null,
     "Name": "",
+    "ReadOnly": false,
     "Tasks": null,
     "Validated": false
   },
   "Profiles": [
     "p1-prof"
   ],
+  "ReadOnly": false,
   "Runnable": true,
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
@@ -206,6 +216,7 @@ var contentBootenvGregCreateSuccessString = `{
   },
   "OnlyUnknown": false,
   "OptionalParams": null,
+  "ReadOnly": false,
   "RequiredParams": null,
   "Tasks": null,
   "Templates": [

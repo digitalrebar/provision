@@ -32,6 +32,7 @@ var processJobsJustineCreateOutputString string = `{
   "Errors": [],
   "Name": "justine",
   "OptionalParams": null,
+  "ReadOnly": false,
   "RequiredParams": null,
   "Templates": [
     {
@@ -57,6 +58,7 @@ var processJobsJillCreateOutputString string = `{
   "Available": true,
   "Errors": [],
   "Name": "jill",
+  "ReadOnly": false,
   "Tasks": null,
   "Validated": true
 }
@@ -73,12 +75,14 @@ var processJobsAddProfileJillOutputString = `{
     "Available": false,
     "Errors": null,
     "Name": "",
+    "ReadOnly": false,
     "Tasks": null,
     "Validated": false
   },
   "Profiles": [
     "jill"
   ],
+  "ReadOnly": false,
   "Runnable": true,
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
@@ -98,6 +102,7 @@ var processJobsLocal2UpdateOutputString = `{
   },
   "OnlyUnknown": false,
   "OptionalParams": null,
+  "ReadOnly": false,
   "RequiredParams": null,
   "Tasks": [
     "jamie"
@@ -134,12 +139,14 @@ var processJobsSetMachineToLocalOutputString = `{
     "Available": false,
     "Errors": null,
     "Name": "",
+    "ReadOnly": false,
     "Tasks": null,
     "Validated": false
   },
   "Profiles": [
     "jill"
   ],
+  "ReadOnly": false,
   "Runnable": true,
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
@@ -157,12 +164,14 @@ var processJobsSetMachineToLocal2OutputString = `{
     "Available": false,
     "Errors": null,
     "Name": "",
+    "ReadOnly": false,
     "Tasks": null,
     "Validated": false
   },
   "Profiles": [
     "jill"
   ],
+  "ReadOnly": false,
   "Runnable": true,
   "Tasks": [
     "jamie",
@@ -221,10 +230,12 @@ var processJobsRemoveProfileSuccessString = `RE:
     "Available": false,
     "Errors": null,
     "Name": "",
+    "ReadOnly": false,
     "Tasks": null,
     "Validated": false
   },
   "Profiles": null,
+  "ReadOnly": false,
   "Runnable": true,
   "Tasks": \[
     "jamie",
@@ -248,10 +259,12 @@ var processJobsResetToLocalSuccessString = `RE:
     "Available": false,
     "Errors": null,
     "Name": "",
+    "ReadOnly": false,
     "Tasks": null,
     "Validated": false
   },
   "Profiles": null,
+  "ReadOnly": false,
   "Runnable": true,
   "Tasks": \[\],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
@@ -272,12 +285,14 @@ var processJobsShowFailedMachineString string = `RE:
     "Available": false,
     "Errors": null,
     "Name": "",
+    "ReadOnly": false,
     "Tasks": null,
     "Validated": false
   },
   "Profiles": \[
     "jill"
   \],
+  "ReadOnly": false,
   "Runnable": false,
   "Tasks": \[
     "jamie",
@@ -302,12 +317,14 @@ var processJobsShowRunnableMachineString = `RE:
     "Available": false,
     "Errors": null,
     "Name": "",
+    "ReadOnly": false,
     "Tasks": null,
     "Validated": false
   },
   "Profiles": \[
     "jill"
   \],
+  "ReadOnly": false,
   "Runnable": true,
   "Tasks": \[
     "jamie",

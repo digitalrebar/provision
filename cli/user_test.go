@@ -11,6 +11,7 @@ var userDefaultListString string = `[
     "Errors": null,
     "Name": "rocketskates",
     "PasswordHash": null,
+    "ReadOnly": false,
     "Validated": true
   }
 ]
@@ -24,6 +25,7 @@ var userShowJohnString string = `{
   "Errors": null,
   "Name": "john",
   "PasswordHash": null,
+  "ReadOnly": false,
   "Validated": true
 }
 `
@@ -49,6 +51,7 @@ var userCreateJohnString string = `{
   "Errors": null,
   "Name": "john",
   "PasswordHash": null,
+  "ReadOnly": false,
   "Validated": true
 }
 `
@@ -58,6 +61,7 @@ var userCreateFredString string = `{
   "Errors": null,
   "Name": "fred",
   "PasswordHash": null,
+  "ReadOnly": false,
   "Validated": true
 }
 `
@@ -70,6 +74,7 @@ var userListJohnOnlyString = `[
     "Errors": null,
     "Name": "john",
     "PasswordHash": null,
+    "ReadOnly": false,
     "Validated": true
   }
 ]
@@ -80,6 +85,7 @@ var userListBothEnvsString = `[
     "Errors": null,
     "Name": "john",
     "PasswordHash": null,
+    "ReadOnly": false,
     "Validated": true
   },
   {
@@ -87,6 +93,7 @@ var userListBothEnvsString = `[
     "Errors": null,
     "Name": "rocketskates",
     "PasswordHash": null,
+    "ReadOnly": false,
     "Validated": true
   }
 ]
@@ -105,6 +112,7 @@ var userUpdateJohnString string = `{
   "Errors": null,
   "Name": "john",
   "PasswordHash": null,
+  "ReadOnly": false,
   "Validated": true
 }
 `
@@ -129,6 +137,7 @@ var userPatchJohnString string = `{
   "Errors": null,
   "Name": "john",
   "PasswordHash": null,
+  "ReadOnly": false,
   "Validated": true
 }
 `

@@ -15,6 +15,7 @@ var pluginShowPluginString string = `{
   "Errors": [],
   "Name": "i-woman",
   "Provider": "incrementer",
+  "ReadOnly": false,
   "Validated": true
 }
 `
@@ -50,6 +51,7 @@ var pluginCreateJohnString string = `{
   "Errors": [],
   "Name": "i-woman",
   "Provider": "incrementer",
+  "ReadOnly": false,
   "Validated": true
 }
 `
@@ -62,6 +64,7 @@ var pluginListPluginsString = `[
     "Errors": [],
     "Name": "i-woman",
     "Provider": "incrementer",
+    "ReadOnly": false,
     "Validated": true
   }
 ]
@@ -81,6 +84,7 @@ var pluginUpdateJohnString string = `{
   "Errors": [],
   "Name": "i-woman",
   "Provider": "incrementer",
+  "ReadOnly": false,
   "Validated": true
 }
 `
@@ -111,6 +115,7 @@ var pluginPatchJohnString string = `{
   "Errors": [],
   "Name": "i-woman",
   "Provider": "incrementer",
+  "ReadOnly": false,
   "Validated": true
 }
 `
@@ -159,6 +164,7 @@ var pluginUpdateJohnWithParamsString string = `{
     "jj": 3
   },
   "Provider": "incrementer",
+  "ReadOnly": false,
   "Validated": true
 }
 `

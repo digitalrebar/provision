@@ -30,6 +30,7 @@ type OsInfo struct {
 // swagger:model
 type BootEnv struct {
 	Validation
+	Access
 	// The name of the boot environment.  Boot environments that install
 	// an operating system must end in '-install'.
 	//

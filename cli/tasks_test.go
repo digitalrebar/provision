@@ -20,6 +20,7 @@ var taskShowJohnString string = `{
   "Errors": [],
   "Name": "john",
   "OptionalParams": null,
+  "ReadOnly": false,
   "RequiredParams": null,
   "Templates": null,
   "Validated": true
@@ -47,6 +48,7 @@ var taskCreateJohnString string = `{
   "Errors": [],
   "Name": "john",
   "OptionalParams": null,
+  "ReadOnly": false,
   "RequiredParams": null,
   "Templates": null,
   "Validated": true
@@ -60,6 +62,7 @@ var taskListTasksString = `[
     "Errors": [],
     "Name": "john",
     "OptionalParams": null,
+    "ReadOnly": false,
     "RequiredParams": null,
     "Templates": null,
     "Validated": true
@@ -72,6 +75,7 @@ var taskListBothEnvsString = `[
     "Errors": [],
     "Name": "john",
     "OptionalParams": null,
+    "ReadOnly": false,
     "RequiredParams": null,
     "Templates": null,
     "Validated": true
@@ -94,6 +98,7 @@ var taskUpdateJohnString string = `{
   "OptionalParams": [
     "jillparam"
   ],
+  "ReadOnly": false,
   "RequiredParams": null,
   "Templates": null,
   "Validated": true
@@ -133,6 +138,7 @@ var taskPatchJohnString string = `{
   "OptionalParams": [
     "joan"
   ],
+  "ReadOnly": false,
   "RequiredParams": null,
   "Templates": null,
   "Validated": true

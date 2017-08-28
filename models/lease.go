@@ -19,6 +19,7 @@ func Hexaddr(addr net.IP) string {
 // swagger:model
 type Lease struct {
 	Validation
+	Access
 	// Addr is the IP address that the lease handed out.
 	//
 	// required: true

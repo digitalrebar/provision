@@ -5,6 +5,7 @@ package models
 // swagger:model
 type Plugin struct {
 	Validation
+	Access
 	// The name of the plugin instance.  THis must be unique across all
 	// plugins.
 	//

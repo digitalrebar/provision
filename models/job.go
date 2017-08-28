@@ -22,6 +22,7 @@ type JobAction struct {
 // swagger:model
 type Job struct {
 	Validation
+	Access
 	// The UUID of the job.  The primary key.
 	// required: true
 	// swagger:strfmt uuid
