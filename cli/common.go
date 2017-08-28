@@ -458,7 +458,7 @@ func commonOps(pobj interface{}) (commands []*cobra.Command) {
 				idxstr += fmt.Sprintf("*  %s = %s\n", k, idxs[k])
 			}
 			bigidxstr = fmt.Sprintf(`
-You may specify:
+It is possible to specify:
 
 *  Offset = integer, 0-based inclusive starting point in filter data.
 *  Limit = integer, number of items to return
@@ -537,7 +537,8 @@ Example:
 				idxstr += fmt.Sprintf("*  %s = %s\n", k, idxs[k])
 			}
 			bigidxstr = fmt.Sprintf(`
-You may specify the id in the request by the using normal key or by index.
+It is possible to specify the id in the request by the using normal key or by
+index.
 
 Functional Indexs:
 
@@ -590,7 +591,8 @@ Example:
 				Use:   "create [json]",
 				Short: fmt.Sprintf("Create a new %v with the passed-in JSON or string key", ptrs.GetSingularName()),
 				Long: `
-As a useful shortcut, you can pass '-' to indicate that the JSON should be read from stdin.
+As a useful shortcut, '-' can be passed to indicate that the JSON should
+be read from stdin.
 
 In either case, for the Machine, BootEnv, User, and Profile objects, a string may be provided to create a new
 empty object of that type.  For User, BootEnv, Machine, and Profile, it will be the object's name.
@@ -615,7 +617,7 @@ empty object of that type.  For User, BootEnv, Machine, and Profile, it will be 
 			commands = append(commands, &cobra.Command{
 				Use:   "update [id] [json]",
 				Short: fmt.Sprintf("Unsafely update %v by id with the passed-in JSON", ptrs.GetSingularName()),
-				Long:  `As a useful shortcut, you can pass '-' to indicate that the JSON should be read from stdin`,
+				Long:  `As a useful shortcut, '-' can be passed to indicate that the JSON should be read from stdin`,
 				RunE: func(c *cobra.Command, args []string) error {
 					if len(args) != 2 {
 						return fmt.Errorf("%v requires 2 arguments", c.UseLine())
@@ -675,7 +677,7 @@ empty object of that type.  For User, BootEnv, Machine, and Profile, it will be 
 				commands = append(commands, &cobra.Command{
 					Use:   "update [id] [json]",
 					Short: fmt.Sprintf("Unsafely update %v by id with the passed-in JSON", ptrs.GetSingularName()),
-					Long:  `As a useful shortcut, you can pass '-' to indicate that the JSON should be read from stdin`,
+					Long:  `As a useful shortcut, '-' can be passed to indicate that the JSON should be read from stdin`,
 					RunE: func(c *cobra.Command, args []string) error {
 						if len(args) != 2 {
 							return fmt.Errorf("%v requires 2 arguments", c.UseLine())

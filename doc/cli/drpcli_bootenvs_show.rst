@@ -8,8 +8,8 @@ Synopsis
 
 This will show a bootenvs.
 
-It is possible to specify the id in the request by the using normal key or by
-index.
+It is possible to specify the id in the request by the using normal key
+or by index.
 
 Functional Indexs:
 

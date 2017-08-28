@@ -8,11 +8,13 @@ Synopsis
 
 This will detect if a subnets exists.
 
-It is possible to specify the id in the request by the using normal key or by
-index.
+It is possible to specify the id in the request by the using normal key
+or by index.
 
 Functional Indexs:
 
+-  ActiveAddress = IP Address
+-  Address = IP Address
 -  Enabled = boolean
 -  Name = string
 -  NextServer = IP Address
