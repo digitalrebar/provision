@@ -6,7 +6,7 @@ Unsafely update profile by id with the passed-in JSON
 Synopsis
 --------
 
-As a useful shortcut, pass '-' to indicate that the JSON should
+As a useful shortcut, '-' can be passed to indicate that the JSON should
 be read from stdin
 
 ::

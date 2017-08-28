@@ -6,7 +6,7 @@ Unsafely update content by id with the passed-in JSON
 Synopsis
 --------
 
-As a useful shortcut, you can pass '-' to indicate that the JSON should
+As a useful shortcut, '-' can be passed to indicate that the JSON should
 be read from stdin
 
 ::

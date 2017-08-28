@@ -15,6 +15,8 @@ It is possible to specify:
 
 Functional Indexs:
 
+-  ActiveAddress = IP Address
+-  Address = IP Address
 -  Enabled = boolean
 -  Name = string
 -  NextServer = IP Address

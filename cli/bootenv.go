@@ -171,7 +171,7 @@ func addBootEnvCommands() (res *cobra.Command) {
 	installCmd := &cobra.Command{
 		Use:   "install [bootenvFile] [isoPath]",
 		Short: "Install a bootenv along with everything it requires",
-		Long: `bootenvs install assumes you are in a directory with two subdirectories:
+		Long: `bootenvs install assumes a directory with two subdirectories:
    bootenvs/
    templates/
 

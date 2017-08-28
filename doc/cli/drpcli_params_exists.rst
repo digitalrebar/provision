@@ -8,8 +8,8 @@ Synopsis
 
 This will detect if a params exists.
 
-You may specify the id in the request by the using normal key or by
-index.
+It is possible to specify the id in the request by the using normal key
+or by index.
 
 Functional Indexs:
 
