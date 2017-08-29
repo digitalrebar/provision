@@ -42,6 +42,12 @@ type Lease struct {
 	//
 	// required: true
 	Strategy string
+	// State is the current state of the lease.  This field is for informational
+	// purposes only.
+	//
+	// read only: true
+	// required: true
+	State string
 }
 
 func (l *Lease) Prefix() string {
