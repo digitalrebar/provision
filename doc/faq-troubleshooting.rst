@@ -82,14 +82,10 @@ Turn Up the Debug
 
 To get additional debug from dr-provision, set debug preferences to increase the logging.  See :ref:`rs_model_prefs`.
 
-Rocket Skates?
---------------
+Missing VBoxNet Network
+-----------------------
 
-Rocket Skates was the working name for Digital Rebar Provision during initial development.  Since they are fast and powerful boots, it seemed like a natural name for a Cobbler replacement.
+Virtual Box does not add host only networks until a VM is attempting to use them.  If you are using the interfaces API (or UX wizard) to find available networks and ``vboxnet0`` does not appear then start your VM and recreate the address.
 
-.. figure::  images/rocket.jpg
-   :align:   right
-   :width: 320 px
-   :alt: Code name Rocket Skates
-   :target: https://www.pexels.com/photo/aerospace-engineering-exploration-launch-34521/
+Virtual Box may also fail to allocate an IP to the host network due to incomplete configuration.  In this case, ``ip addr`` will show the network but no IPv4 address has been allocated; consequently, Digital Rebar will not report this as a working interface. 
 
