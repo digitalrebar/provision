@@ -24,6 +24,19 @@ type Validation struct {
 	forceChange bool
 }
 
+//
+// model object may define a Validate method that can
+// be used to return errors about if the model is valid
+// in the current datatracker.
+//
+type Validator interface {
+	Validate()
+	ClearValidation()
+	Useable() bool
+	IsAvailable() bool
+	HasError() error
+}
+
 func (v *Validation) ClearValidation() {
 	v.Validated = false
 	v.Available = false
@@ -64,6 +77,10 @@ func (v *Validation) HasError() error {
 
 func (v *Validation) Useable() bool {
 	return v.Validated
+}
+
+func (v *Validation) IsAvailable() bool {
+	return v.Available
 }
 
 func (v *Validation) SetInvalid() bool {
