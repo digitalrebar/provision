@@ -12,6 +12,8 @@ FAQ / Troubleshooting
 
 The following section is designed to answer frequently asked questions and help troubleshoot Digital Rebar Provision installs.
 
+Want ligher reading?  Checkout our :ref:`rs_fun`.
+
 .. _rs_bind_error:
 
 Bind Error
@@ -41,6 +43,8 @@ Sometimes the cert/key pair in the github tree is corrupt or not sufficient for 
 
 It may be necessary to install the openssl tools.
 
+.. _rs_add_ssh:
+
 Add SSH Keys to Authorized Keys
 -------------------------------
 
@@ -62,6 +66,8 @@ If you want this parameter applied to all machines by default, then you should c
     vi assets/profiles/global.yaml
     ./drpcli profiles update global - < assets/profiles/global.yaml
 
+.. _rs_autocomplete:
+
 Turn on autocomplete for the CLI
 --------------------------------
 
@@ -77,19 +83,19 @@ Log out and log back in to take effect or run:
   * ``. /etc/profile.d/bash_completion.sh`` # On Centos
   * ``. /usr/local/etc/bash_completion`` # On OS X with bash 4 installed.
     
+.. _rs_more_debug:
+
 Turn Up the Debug
 -----------------
 
 To get additional debug from dr-provision, set debug preferences to increase the logging.  See :ref:`rs_model_prefs`.
 
-Rocket Skates?
---------------
+.. _rs_vboxnet:
 
-Rocket Skates was the working name for Digital Rebar Provision during initial development.  Since they are fast and powerful boots, it seemed like a natural name for a Cobbler replacement.
+Missing VBoxNet Network
+-----------------------
 
-.. figure::  images/rocket.jpg
-   :align:   right
-   :width: 320 px
-   :alt: Code name Rocket Skates
-   :target: https://www.pexels.com/photo/aerospace-engineering-exploration-launch-34521/
+Virtual Box does not add host only networks until a VM is attempting to use them.  If you are using the interfaces API (or UX wizard) to find available networks and ``vboxnet0`` does not appear then start your VM and recreate the address.
+
+Virtual Box may also fail to allocate an IP to the host network due to incomplete configuration.  In this case, ``ip addr`` will show the network but no IPv4 address has been allocated; consequently, Digital Rebar will not report this as a working interface. 
 
