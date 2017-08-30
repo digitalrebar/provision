@@ -12,6 +12,8 @@ FAQ / Troubleshooting
 
 The following section is designed to answer frequently asked questions and help troubleshoot Digital Rebar Provision installs.
 
+Want ligher reading?  Checkout our :ref:`rs_fun`.
+
 .. _rs_bind_error:
 
 Bind Error
@@ -41,6 +43,8 @@ Sometimes the cert/key pair in the github tree is corrupt or not sufficient for 
 
 It may be necessary to install the openssl tools.
 
+.. _rs_add_ssh:
+
 Add SSH Keys to Authorized Keys
 -------------------------------
 
@@ -62,6 +66,8 @@ If you want this parameter applied to all machines by default, then you should c
     vi assets/profiles/global.yaml
     ./drpcli profiles update global - < assets/profiles/global.yaml
 
+.. _rs_autocomplete:
+
 Turn on autocomplete for the CLI
 --------------------------------
 
@@ -77,10 +83,14 @@ Log out and log back in to take effect or run:
   * ``. /etc/profile.d/bash_completion.sh`` # On Centos
   * ``. /usr/local/etc/bash_completion`` # On OS X with bash 4 installed.
     
+.. _rs_more_debug:
+
 Turn Up the Debug
 -----------------
 
 To get additional debug from dr-provision, set debug preferences to increase the logging.  See :ref:`rs_model_prefs`.
+
+.. _rs_vboxnet:
 
 Missing VBoxNet Network
 -----------------------
