@@ -42,14 +42,14 @@ var contentPackBadString = `{
     "profiles": {
       "p1-bad": {
 	"Description": "packbad",
-	"Tasks": 12
+	"Params": 12
       }
     }
   }
 }
 `
 
-var contentPackBadCreateErrorString = "Error: Unable to load profiles: error unmarshaling JSON: json: cannot unmarshal number into Go struct field Profile.Tasks of type []string\n\n"
+var contentPackBadCreateErrorString = "Error: Unable to load profiles: error unmarshaling JSON: json: cannot unmarshal number into Go struct field Profile.Params of type map[string]interface {}\n\n"
 
 var contentPack1String = `{
   "meta": {
@@ -102,7 +102,6 @@ var contentPack1ProfileListString = `[
     "Errors": [],
     "Name": "global",
     "ReadOnly": false,
-    "Tasks": [],
     "Validated": true
   },
   {
@@ -111,7 +110,6 @@ var contentPack1ProfileListString = `[
     "Errors": null,
     "Name": "p1-prof",
     "ReadOnly": true,
-    "Tasks": [],
     "Validated": true
   }
 ]
@@ -123,7 +121,6 @@ var contentPack1UpdateProfileListString = `[
     "Errors": [],
     "Name": "global",
     "ReadOnly": false,
-    "Tasks": [],
     "Validated": true
   },
   {
@@ -132,7 +129,6 @@ var contentPack1UpdateProfileListString = `[
     "Errors": null,
     "Name": "p1-prof",
     "ReadOnly": true,
-    "Tasks": [],
     "Validated": true
   }
 ]
@@ -144,7 +140,6 @@ var contentNoPackProfileListString = `[
     "Errors": [],
     "Name": "global",
     "ReadOnly": false,
-    "Tasks": [],
     "Validated": true
   }
 ]
@@ -167,7 +162,6 @@ var contentMachineCreateSuccessString = `{
     "Errors": null,
     "Name": "",
     "ReadOnly": false,
-    "Tasks": null,
     "Validated": false
   },
   "Profiles": null,
@@ -190,7 +184,6 @@ var contentMachineAddProfileString = `{
     "Errors": null,
     "Name": "",
     "ReadOnly": false,
-    "Tasks": null,
     "Validated": false
   },
   "Profiles": [
@@ -218,7 +211,6 @@ var contentBootenvGregCreateSuccessString = `{
   "OptionalParams": null,
   "ReadOnly": false,
   "RequiredParams": null,
-  "Tasks": null,
   "Templates": [
     {
       "Contents": "local-pxelinux.tmpl",
@@ -269,13 +261,13 @@ var contentPack1BadSyntaxUpdateString = `{
       "p2-prof": {
 	"Description": "pack1-2",
         "Name": "p2-prof",
-	"Tasks": 12
+	"Params": 12
       }
     }
   }
 }
 `
-var contentPack1BadSyntaxUpdateErrorString = "Error: Unable to load profiles: error unmarshaling JSON: json: cannot unmarshal number into Go struct field Profile.Tasks of type []string\n\n"
+var contentPack1BadSyntaxUpdateErrorString = "Error: Unable to load profiles: error unmarshaling JSON: json: cannot unmarshal number into Go struct field Profile.Params of type map[string]interface {}\n\n"
 
 var contentPack1UpdateString = `{
   "meta": {

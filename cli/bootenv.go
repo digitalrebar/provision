@@ -57,6 +57,8 @@ func (be BootEnvOps) List(parms map[string]string) (interface{}, error) {
 		switch k {
 		case "Available":
 			params = params.WithAvailable(&v)
+		case "Valid":
+			params = params.WithValid(&v)
 		case "OnlyUnknown":
 			params = params.WithOnlyUnknown(&v)
 		case "Name":

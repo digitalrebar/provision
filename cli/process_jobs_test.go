@@ -54,109 +54,11 @@ var processJobsJustineCreateOutputString string = `{
   "Validated": true
 }
 `
-var processJobsJillCreateOutputString string = `{
-  "Available": true,
-  "Errors": [],
-  "Name": "jill",
-  "ReadOnly": false,
-  "Tasks": null,
-  "Validated": true
-}
-`
-
-var processJobsAddProfileJillOutputString = `{
-  "Address": "192.168.100.110",
-  "Available": true,
-  "BootEnv": "local3",
-  "CurrentTask": 0,
-  "Errors": [],
-  "Name": "john",
-  "Profile": {
-    "Available": false,
-    "Errors": null,
-    "Name": "",
-    "ReadOnly": false,
-    "Tasks": null,
-    "Validated": false
-  },
-  "Profiles": [
-    "jill"
-  ],
-  "ReadOnly": false,
-  "Runnable": true,
-  "Tasks": [],
-  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
-  "Validated": true
-}
-`
-
-var processJobsLocal2UpdateOutputString = `{
-  "Available": true,
-  "BootParams": "",
-  "Errors": [],
-  "Initrds": null,
-  "Kernel": "",
-  "Name": "local2",
-  "OS": {
-    "Name": "local2"
-  },
-  "OnlyUnknown": false,
-  "OptionalParams": null,
-  "ReadOnly": false,
-  "RequiredParams": null,
-  "Tasks": [
-    "jamie"
-  ],
-  "Templates": [
-    {
-      "ID": "local3-pxelinux.tmpl",
-      "Name": "pxelinux",
-      "Path": "pxelinux.cfg/{{.Machine.HexAddress}}"
-    },
-    {
-      "ID": "local3-elilo.tmpl",
-      "Name": "elilo",
-      "Path": "{{.Machine.HexAddress}}.conf"
-    },
-    {
-      "ID": "local3-ipxe.tmpl",
-      "Name": "ipxe",
-      "Path": "{{.Machine.Address}}.ipxe"
-    }
-  ],
-  "Validated": true
-}
-`
 
 var processJobsSetMachineToLocalOutputString = `{
   "Address": "192.168.100.110",
   "Available": true,
-  "BootEnv": "local3",
-  "CurrentTask": 0,
-  "Errors": [],
-  "Name": "john",
-  "Profile": {
-    "Available": false,
-    "Errors": null,
-    "Name": "",
-    "ReadOnly": false,
-    "Tasks": null,
-    "Validated": false
-  },
-  "Profiles": [
-    "jill"
-  ],
-  "ReadOnly": false,
-  "Runnable": true,
-  "Tasks": [],
-  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
-  "Validated": true
-}
-`
-var processJobsSetMachineToLocal2OutputString = `{
-  "Address": "192.168.100.110",
-  "Available": true,
-  "BootEnv": "local2",
+  "BootEnv": "local",
   "CurrentTask": -1,
   "Errors": [],
   "Name": "john",
@@ -165,14 +67,12 @@ var processJobsSetMachineToLocal2OutputString = `{
     "Errors": null,
     "Name": "",
     "ReadOnly": false,
-    "Tasks": null,
     "Validated": false
   },
-  "Profiles": [
-    "jill"
-  ],
+  "Profiles": null,
   "ReadOnly": false,
   "Runnable": true,
+  "Stage": "stage1",
   "Tasks": [
     "jamie",
     "justine"
@@ -181,7 +81,6 @@ var processJobsSetMachineToLocal2OutputString = `{
   "Validated": true
 }
 `
-
 var processJobsNoArgsString = "Error: drpcli machines processjobs [id] [wait] [flags] requires at least 1 argument\n"
 var processJobsTooManyArgsString = "Error: drpcli machines processjobs [id] [wait] [flags] requires at most 2 arguments\n"
 var processJobsMissingMachineString = "Error: machines GET: p1: Not Found\n\n"
@@ -221,7 +120,7 @@ var processJobsRemoveProfileSuccessString = `RE:
 {
   "Address": "192.168.100.110",
   "Available": true,
-  "BootEnv": "local2",
+  "BootEnv": "local",
   "CurrentJob": "[\S\s]*",
   "CurrentTask": 2,
   "Errors": \[\],
@@ -231,12 +130,12 @@ var processJobsRemoveProfileSuccessString = `RE:
     "Errors": null,
     "Name": "",
     "ReadOnly": false,
-    "Tasks": null,
     "Validated": false
   },
   "Profiles": null,
   "ReadOnly": false,
-  "Runnable": true,
+  "Runnable": false,
+  "Stage": "stage1",
   "Tasks": \[
     "jamie",
     "justine"
@@ -250,7 +149,7 @@ var processJobsResetToLocalSuccessString = `RE:
 {
   "Address": "192.168.100.110",
   "Available": true,
-  "BootEnv": "local3",
+  "BootEnv": "local",
   "CurrentJob": "[\S\s]*",
   "CurrentTask": 0,
   "Errors": \[\],
@@ -260,12 +159,11 @@ var processJobsResetToLocalSuccessString = `RE:
     "Errors": null,
     "Name": "",
     "ReadOnly": false,
-    "Tasks": null,
     "Validated": false
   },
   "Profiles": null,
   "ReadOnly": false,
-  "Runnable": true,
+  "Runnable": false,
   "Tasks": \[\],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Validated": true
@@ -276,7 +174,7 @@ var processJobsShowFailedMachineString string = `RE:
 {
   "Address": "192.168.100.110",
   "Available": true,
-  "BootEnv": "local2",
+  "BootEnv": "local",
   "CurrentJob": "[\S\s]*",
   "CurrentTask": 1,
   "Errors": \[\],
@@ -286,14 +184,12 @@ var processJobsShowFailedMachineString string = `RE:
     "Errors": null,
     "Name": "",
     "ReadOnly": false,
-    "Tasks": null,
     "Validated": false
   },
-  "Profiles": \[
-    "jill"
-  \],
+  "Profiles": null,
   "ReadOnly": false,
   "Runnable": false,
+  "Stage": "stage1",
   "Tasks": \[
     "jamie",
     "justine"
@@ -308,7 +204,7 @@ var processJobsShowRunnableMachineString = `RE:
 {
   "Address": "192.168.100.110",
   "Available": true,
-  "BootEnv": "local2",
+  "BootEnv": "local",
   "CurrentJob": "[\S\s]*",
   "CurrentTask": 1,
   "Errors": \[\],
@@ -318,14 +214,12 @@ var processJobsShowRunnableMachineString = `RE:
     "Errors": null,
     "Name": "",
     "ReadOnly": false,
-    "Tasks": null,
     "Validated": false
   },
-  "Profiles": \[
-    "jill"
-  \],
+  "Profiles": null,
   "ReadOnly": false,
   "Runnable": true,
+  "Stage": "stage1",
   "Tasks": \[
     "jamie",
     "justine"
@@ -351,34 +245,67 @@ Task: justine finished
 Jobs finished
 `
 
-func TestProcessJobsCli(t *testing.T) {
-	if err := os.MkdirAll("bootenvs", 0755); err != nil {
-		t.Errorf("Failed to create bootenvs dir: %v\n", err)
-	}
-	if err := os.Symlink("../test-data/local3.yml", "bootenvs/local3.yml"); err != nil {
-		t.Errorf("Failed to create link to local3.yml: %v\n", err)
-	}
+var processJobsCreateStage1InputString = `{
+  "Name": "stage1",
+  "BootEnv": "local",
+  "Tasks": [ "jamie", "justine" ]
+}`
+var processJobsCreateStage1SuccessString = `{
+  "Available": true,
+  "BootEnv": "local",
+  "Errors": [],
+  "Name": "stage1",
+  "OptionalParams": null,
+  "Profiles": [],
+  "ReadOnly": false,
+  "RequiredParams": null,
+  "Tasks": [
+    "jamie",
+    "justine"
+  ],
+  "Templates": [],
+  "Validated": true
+}
+`
 
-	if err := os.MkdirAll("templates", 0755); err != nil {
-		t.Errorf("Failed to create templates dir: %v\n", err)
-	}
-	tmpls := []string{"local3-pxelinux.tmpl", "local3-elilo.tmpl", "local3-ipxe.tmpl"}
-	for _, tmpl := range tmpls {
-		if err := os.Symlink("../test-data/"+tmpl, "templates/"+tmpl); err != nil {
-			t.Errorf("Failed to create link to %s: %v\n", tmpl, err)
-		}
-	}
+var processJobsStageMissingString = `RE:
+{
+  "Address": "192.168.100.110",
+  "Available": false,
+  "BootEnv": "local",
+  "CurrentJob": "[\S\s]*",
+  "CurrentTask": 0,
+  "Errors": \[
+    "Stage fred does not exist"
+  \],
+  "Name": "john",
+  "Profile": {
+    "Available": false,
+    "Errors": null,
+    "Name": "",
+    "ReadOnly": false,
+    "Validated": false
+  },
+  "Profiles": null,
+  "ReadOnly": false,
+  "Runnable": false,
+  "Stage": "fred",
+  "Tasks": \[\],
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
+}
+`
+
+func TestProcessJobsCli(t *testing.T) {
 
 	tests := []CliTest{
-		CliTest{false, false, []string{"bootenvs", "install", "bootenvs/local3.yml"}, noStdinString, bootEnvInstallLocalSuccessString, bootEnvInstallLocal3ErrorString},
-
-		CliTest{false, false, []string{"profiles", "create", "jill"}, noStdinString, processJobsJillCreateOutputString, noErrorString},
-		CliTest{false, false, []string{"profiles", "create", "jean"}, noStdinString, machineJeanCreate, noErrorString},
+		// Setup
 		CliTest{false, false, []string{"tasks", "create", "jamie"}, noStdinString, machineJamieCreate, noErrorString},
 		CliTest{false, false, []string{"tasks", "create", "-"}, processJobsJustineCreateTaskString, processJobsJustineCreateOutputString, noErrorString},
-		CliTest{false, false, []string{"bootenvs", "create", machineLocal2CreateInput}, noStdinString, machineLocal2Create, noErrorString},
 		CliTest{false, false, []string{"machines", "create", machineCreateInputString}, noStdinString, machineCreateJohnString, noErrorString},
+		CliTest{false, false, []string{"stages", "create", processJobsCreateStage1InputString}, noStdinString, processJobsCreateStage1SuccessString, noErrorString},
 
+		// Test basic process jobs cli
 		CliTest{true, true, []string{"machines", "processjobs"}, noStdinString, noContentString, processJobsNoArgsString},
 		CliTest{true, true, []string{"machines", "processjobs", "p1", "p2", "p3"}, noStdinString, noContentString, processJobsTooManyArgsString},
 		CliTest{false, true, []string{"machines", "processjobs", "p1"}, noStdinString, noContentString, processJobsMissingMachineString},
@@ -386,29 +313,22 @@ func TestProcessJobsCli(t *testing.T) {
 		CliTest{false, false, []string{"machines", "processjobs", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "false"}, noStdinString, processJobsNoJobsNoWait, noErrorString},
 		CliTest{false, false, []string{"machines", "processjobs", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, processJobsNoJobsNoWait, noErrorString},
 
-		CliTest{false, false, []string{"machines", "addprofile", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "jill"}, noStdinString, processJobsAddProfileJillOutputString, noErrorString},
-		CliTest{false, false, []string{"profiles", "update", "jill", "{ \"Tasks\": [ \"justine\" ] }"}, noStdinString, machineProfileJamieUpdate, noErrorString},
-		CliTest{false, false, []string{"bootenvs", "update", "local2", "{ \"Tasks\": [ \"jamie\" ] }"}, noStdinString, processJobsLocal2UpdateOutputString, noErrorString},
-		CliTest{false, false, []string{"machines", "bootenv", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "local3"}, noStdinString, processJobsSetMachineToLocalOutputString, noErrorString},
-		CliTest{false, false, []string{"machines", "bootenv", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "local2"}, noStdinString, processJobsSetMachineToLocal2OutputString, noErrorString},
+		// Run a stage
+		CliTest{false, false, []string{"machines", "stage", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "stage1"}, noStdinString, processJobsSetMachineToLocalOutputString, noErrorString},
 		CliTest{false, true, []string{"machines", "processjobs", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "--exit-on-failure"}, noStdinString, processJobsOutputSuccessString, processJobsErrorSuccessString},
 		CliTest{false, false, []string{"machines", "show", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, processJobsShowFailedMachineString, noErrorString},
 		CliTest{false, false, []string{"machines", "update", "3e7031fe-3062-45f1-835c-92541bc9cbd3", processJobsRunnableString}, noStdinString, processJobsShowRunnableMachineString, noErrorString},
 		CliTest{false, false, []string{"machines", "processjobs", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, processJobsOutputSecondPassSuccessString, noErrorString},
 
-		CliTest{false, false, []string{"machines", "removeprofile", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "jill"}, noStdinString, processJobsRemoveProfileSuccessString, noErrorString},
-		CliTest{false, false, []string{"machines", "bootenv", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "local3"}, noStdinString, processJobsResetToLocalSuccessString, noErrorString},
+		// Test some other clean up actions
+		CliTest{false, false, []string{"machines", "stage", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "fred"}, noStdinString, processJobsStageMissingString, noErrorString},
 
+		// Clean Up
+		CliTest{false, false, []string{"machines", "stage", "3e7031fe-3062-45f1-835c-92541bc9cbd3", ""}, noStdinString, processJobsResetToLocalSuccessString, noErrorString},
 		CliTest{false, false, []string{"machines", "destroy", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, machineDestroyJohnString, noErrorString},
-		CliTest{false, false, []string{"profiles", "destroy", "jill"}, noStdinString, "Deleted profile jill\n", noErrorString},
-		CliTest{false, false, []string{"profiles", "destroy", "jean"}, noStdinString, "Deleted profile jean\n", noErrorString},
-		CliTest{false, false, []string{"bootenvs", "destroy", "local3"}, noStdinString, "Deleted bootenv local3\n", noErrorString},
-		CliTest{false, false, []string{"bootenvs", "destroy", "local2"}, noStdinString, "Deleted bootenv local2\n", noErrorString},
+		CliTest{false, false, []string{"stages", "destroy", "stage1"}, noStdinString, "Deleted stage stage1\n", noErrorString},
 		CliTest{false, false, []string{"tasks", "destroy", "jamie"}, noStdinString, "Deleted task jamie\n", noErrorString},
 		CliTest{false, false, []string{"tasks", "destroy", "justine"}, noStdinString, "Deleted task justine\n", noErrorString},
-		CliTest{false, false, []string{"templates", "destroy", "local3-pxelinux.tmpl"}, noStdinString, "Deleted template local3-pxelinux.tmpl\n", noErrorString},
-		CliTest{false, false, []string{"templates", "destroy", "local3-elilo.tmpl"}, noStdinString, "Deleted template local3-elilo.tmpl\n", noErrorString},
-		CliTest{false, false, []string{"templates", "destroy", "local3-ipxe.tmpl"}, noStdinString, "Deleted template local3-ipxe.tmpl\n", noErrorString},
 	}
 
 	for _, test := range tests {
@@ -428,10 +348,4 @@ func TestProcessJobsCli(t *testing.T) {
 	os.Remove("test.txt")
 	os.Remove("failed.txt")
 	os.Remove("incomplete.txt")
-
-	os.RemoveAll("bootenvs")
-	os.RemoveAll("templates")
-	os.RemoveAll("isos")
-	os.RemoveAll("ic")
-
 }

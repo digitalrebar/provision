@@ -29,7 +29,6 @@ var bootEnvIgnoreOnlyListString string = `[
     "OptionalParams": null,
     "ReadOnly": false,
     "RequiredParams": null,
-    "Tasks": null,
     "Templates": [
       {
         "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
@@ -67,7 +66,6 @@ var bootEnvLocalOnlyListString string = `[
     "OptionalParams": null,
     "ReadOnly": false,
     "RequiredParams": null,
-    "Tasks": null,
     "Templates": [
       {
         "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
@@ -105,7 +103,6 @@ var bootEnvDefaultListString string = `[
     "OptionalParams": null,
     "ReadOnly": false,
     "RequiredParams": null,
-    "Tasks": null,
     "Templates": [
       {
         "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
@@ -140,7 +137,6 @@ var bootEnvDefaultListString string = `[
     "OptionalParams": null,
     "ReadOnly": false,
     "RequiredParams": null,
-    "Tasks": null,
     "Templates": [
       {
         "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
@@ -181,7 +177,6 @@ var bootEnvShowIgnoreString string = `{
   "OptionalParams": null,
   "ReadOnly": false,
   "RequiredParams": null,
-  "Tasks": null,
   "Templates": [
     {
       "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
@@ -232,7 +227,6 @@ var bootEnvCreateJohnString string = `{
   "OptionalParams": null,
   "ReadOnly": false,
   "RequiredParams": null,
-  "Tasks": null,
   "Templates": null,
   "Validated": true
 }
@@ -254,7 +248,6 @@ var bootEnvCreateFredString string = `{
   "OptionalParams": null,
   "ReadOnly": false,
   "RequiredParams": null,
-  "Tasks": null,
   "Templates": null,
   "Validated": true
 }
@@ -278,7 +271,6 @@ var bootEnvListBothEnvsString = `[
     "OptionalParams": null,
     "ReadOnly": false,
     "RequiredParams": null,
-    "Tasks": null,
     "Templates": [
       {
         "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
@@ -314,7 +306,6 @@ var bootEnvListBothEnvsString = `[
     "OptionalParams": null,
     "ReadOnly": false,
     "RequiredParams": null,
-    "Tasks": null,
     "Templates": null,
     "Validated": true
   },
@@ -333,7 +324,6 @@ var bootEnvListBothEnvsString = `[
     "OptionalParams": null,
     "ReadOnly": false,
     "RequiredParams": null,
-    "Tasks": null,
     "Templates": [
       {
         "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
@@ -380,7 +370,6 @@ var bootEnvUpdateJohnString string = `{
   "OptionalParams": null,
   "ReadOnly": false,
   "RequiredParams": null,
-  "Tasks": null,
   "Templates": null,
   "Validated": true
 }
@@ -409,7 +398,6 @@ var bootEnvPatchBaseString string = `{
   "OptionalParams": null,
   "ReadOnly": false,
   "RequiredParams": null,
-  "Tasks": null,
   "Templates": null,
   "Validated": true
 }
@@ -434,7 +422,6 @@ var bootEnvPatchJohnString string = `{
   "OptionalParams": null,
   "ReadOnly": false,
   "RequiredParams": null,
-  "Tasks": null,
   "Templates": null,
   "Validated": true
 }
@@ -454,7 +441,6 @@ var bootEnvPatchMissingBaseString string = `{
   "OnlyUnknown": false,
   "OptionalParams": null,
   "RequiredParams": null,
-  "Tasks": null,
   "Templates": null,
   "Validated": true
 }
@@ -509,7 +495,6 @@ var bootEnvInstallSledgehammerSuccessString string = `RE:
   \],
   "ReadOnly": false,
   "RequiredParams": null,
-  "Tasks": null,
   "Templates": \[
 [\s\S]*
   \],
@@ -533,7 +518,6 @@ var bootEnvInstallLocalSuccessString string = `{
   "OptionalParams": null,
   "ReadOnly": false,
   "RequiredParams": null,
-  "Tasks": null,
   "Templates": [
     {
       "ID": "local3-pxelinux.tmpl",

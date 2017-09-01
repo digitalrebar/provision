@@ -1,7 +1,8 @@
 package cli
 
 import (
-	"os"
+	"io/ioutil"
+	"net/http"
 	"testing"
 )
 
@@ -20,7 +21,7 @@ var machineShowMissingArgErrorString string = "Error: machines GET: john: Not Fo
 var machineShowMachineString string = `{
   "Address": "192.168.100.110",
   "Available": true,
-  "BootEnv": "local3",
+  "BootEnv": "local",
   "CurrentTask": 0,
   "Errors": [],
   "Name": "john",
@@ -29,7 +30,6 @@ var machineShowMachineString string = `{
     "Errors": null,
     "Name": "",
     "ReadOnly": false,
-    "Tasks": null,
     "Validated": false
   },
   "Profiles": null,
@@ -56,13 +56,13 @@ var machineCreateInputString string = `{
   "Address": "192.168.100.110",
   "name": "john",
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
-  "bootenv": "local3"
+  "bootenv": "local"
 }
 `
 var machineCreateJohnString string = `{
   "Address": "192.168.100.110",
   "Available": true,
-  "BootEnv": "local3",
+  "BootEnv": "local",
   "CurrentTask": 0,
   "Errors": [],
   "Name": "john",
@@ -71,7 +71,6 @@ var machineCreateJohnString string = `{
     "Errors": null,
     "Name": "",
     "ReadOnly": false,
-    "Tasks": null,
     "Validated": false
   },
   "Profiles": null,
@@ -89,7 +88,7 @@ var machineListMachinesString = `[
   {
     "Address": "192.168.100.110",
     "Available": true,
-    "BootEnv": "local3",
+    "BootEnv": "local",
     "CurrentTask": 0,
     "Errors": [],
     "Name": "john",
@@ -98,7 +97,6 @@ var machineListMachinesString = `[
       "Errors": null,
       "Name": "",
       "ReadOnly": false,
-      "Tasks": null,
       "Validated": false
     },
     "Profiles": null,
@@ -122,7 +120,7 @@ var machineUpdateInputString string = `{
 var machineUpdateJohnString string = `{
   "Address": "192.168.100.110",
   "Available": true,
-  "BootEnv": "local3",
+  "BootEnv": "local",
   "CurrentTask": 0,
   "Description": "lpxelinux.0",
   "Errors": [],
@@ -132,7 +130,6 @@ var machineUpdateJohnString string = `{
     "Errors": null,
     "Name": "",
     "ReadOnly": false,
-    "Tasks": null,
     "Validated": false
   },
   "Profiles": null,
@@ -153,7 +150,7 @@ var machinePatchBadBaseJSONString = "asdgasdg"
 var machinePatchBadBaseJSONErrorString = "Error: Unable to parse drpcli machines patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Machine\n\n"
 var machinePatchBaseString string = `{
   "Address": "192.168.100.110",
-  "BootEnv": "local3",
+  "BootEnv": "local",
   "CurrentTask": 0,
   "Description": "lpxelinux.0",
   "Errors": null,
@@ -174,7 +171,7 @@ var machinePatchInputString string = `{
 var machinePatchJohnString string = `{
   "Address": "192.168.100.110",
   "Available": true,
-  "BootEnv": "local3",
+  "BootEnv": "local",
   "CurrentTask": 0,
   "Description": "bootx64.efi",
   "Errors": [],
@@ -184,7 +181,6 @@ var machinePatchJohnString string = `{
     "Errors": null,
     "Name": "",
     "ReadOnly": false,
-    "Tasks": null,
     "Validated": false
   },
   "Profiles": null,
@@ -197,7 +193,7 @@ var machinePatchJohnString string = `{
 `
 var machinePatchMissingBaseString string = `{
   "Address": "192.168.100.110",
-  "BootEnv": "local3",
+  "BootEnv": "local",
   "Description": "lpxelinux.0",
   "Errors": null,
   "Name": "john",
@@ -225,7 +221,6 @@ var machineAddProfileJill2String string = `{
     "Errors": null,
     "Name": "",
     "ReadOnly": false,
-    "Tasks": null,
     "Validated": false
   },
   "Profiles": [
@@ -241,7 +236,7 @@ var machineAddProfileJill2String string = `{
 var machineAddProfileJillString string = `{
   "Address": "192.168.100.110",
   "Available": true,
-  "BootEnv": "local3",
+  "BootEnv": "local",
   "CurrentTask": 0,
   "Description": "lpxelinux.0",
   "Errors": [],
@@ -251,7 +246,6 @@ var machineAddProfileJillString string = `{
     "Errors": null,
     "Name": "",
     "ReadOnly": false,
-    "Tasks": null,
     "Validated": false
   },
   "Profiles": [
@@ -267,7 +261,7 @@ var machineAddProfileJillString string = `{
 var machineAddProfileJillJeanString string = `{
   "Address": "192.168.100.110",
   "Available": true,
-  "BootEnv": "local3",
+  "BootEnv": "local",
   "CurrentTask": 0,
   "Description": "lpxelinux.0",
   "Errors": [],
@@ -277,7 +271,6 @@ var machineAddProfileJillJeanString string = `{
     "Errors": null,
     "Name": "",
     "ReadOnly": false,
-    "Tasks": null,
     "Validated": false
   },
   "Profiles": [
@@ -295,7 +288,7 @@ var machineAddProfileJillJeanJillErrorString string = "Error: Duplicate profile 
 var machineRemoveProfileJeanString string = `{
   "Address": "192.168.100.110",
   "Available": true,
-  "BootEnv": "local3",
+  "BootEnv": "local",
   "CurrentTask": 0,
   "Description": "lpxelinux.0",
   "Errors": [],
@@ -305,7 +298,6 @@ var machineRemoveProfileJeanString string = `{
     "Errors": null,
     "Name": "",
     "ReadOnly": false,
-    "Tasks": null,
     "Validated": false
   },
   "Profiles": [
@@ -321,7 +313,7 @@ var machineRemoveProfileJeanString string = `{
 var machineRemoveProfileAllGoneString string = `{
   "Address": "192.168.100.110",
   "Available": true,
-  "BootEnv": "local3",
+  "BootEnv": "local",
   "CurrentTask": 0,
   "Description": "lpxelinux.0",
   "Errors": [],
@@ -331,7 +323,6 @@ var machineRemoveProfileAllGoneString string = `{
     "Errors": null,
     "Name": "",
     "ReadOnly": false,
-    "Tasks": null,
     "Validated": false
   },
   "Profiles": null,
@@ -356,7 +347,6 @@ var machineRemoveProfileAllGone2String string = `{
     "Errors": null,
     "Name": "",
     "ReadOnly": false,
-    "Tasks": null,
     "Validated": false
   },
   "Profiles": null,
@@ -392,12 +382,39 @@ var machineBootEnvErrorBootEnvString string = `{
     "Errors": null,
     "Name": "",
     "ReadOnly": false,
-    "Tasks": null,
     "Validated": false
   },
   "Profiles": null,
   "ReadOnly": false,
   "Runnable": false,
+  "Tasks": [],
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
+}
+`
+var machineStageNoArgErrorString string = "Error: drpcli machines stage [id] [stage] [flags] requires 2 arguments"
+var machineStageMissingMachineErrorString string = "Error: machines GET: john: Not Found\n\n"
+var machineStageErrorStageString string = `{
+  "Address": "192.168.100.110",
+  "Available": false,
+  "BootEnv": "local",
+  "CurrentTask": 0,
+  "Description": "lpxelinux.0",
+  "Errors": [
+    "Stage john2 does not exist"
+  ],
+  "Name": "john",
+  "Profile": {
+    "Available": false,
+    "Errors": null,
+    "Name": "",
+    "ReadOnly": false,
+    "Validated": false
+  },
+  "Profiles": null,
+  "ReadOnly": false,
+  "Runnable": false,
+  "Stage": "john2",
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Validated": true
@@ -431,7 +448,7 @@ var machinesParamsNextString string = `{
 var machineUpdateJohnWithParamsString string = `{
   "Address": "192.168.100.110",
   "Available": true,
-  "BootEnv": "local3",
+  "BootEnv": "local",
   "CurrentTask": 0,
   "Description": "lpxelinux.0",
   "Errors": [],
@@ -444,7 +461,6 @@ var machineUpdateJohnWithParamsString string = `{
       "jj": 3
     },
     "ReadOnly": false,
-    "Tasks": null,
     "Validated": false
   },
   "Profiles": null,
@@ -456,12 +472,20 @@ var machineUpdateJohnWithParamsString string = `{
 }
 `
 
+var machineStageProfCreate string = `{
+  "Available": true,
+  "Errors": [],
+  "Name": "stage-prof",
+  "ReadOnly": false,
+  "Validated": true
+}
+`
+
 var machineJillCreate string = `{
   "Available": true,
   "Errors": [],
   "Name": "jill",
   "ReadOnly": false,
-  "Tasks": null,
   "Validated": true
 }
 `
@@ -470,7 +494,6 @@ var machineJeanCreate string = `{
   "Errors": [],
   "Name": "jean",
   "ReadOnly": false,
-  "Tasks": null,
   "Validated": true
 }
 `
@@ -593,154 +616,11 @@ var machineJustineCreate string = `{
   "Validated": true
 }
 `
-var machineBootEnvNoJamieUpdate string = `{
-  "Available": true,
-  "BootParams": "",
-  "Errors": [],
-  "Initrds": null,
-  "Kernel": "",
-  "Name": "local3",
-  "OS": {
-    "Name": "local3"
-  },
-  "OnlyUnknown": false,
-  "OptionalParams": null,
-  "ReadOnly": false,
-  "RequiredParams": null,
-  "Tasks": [],
-  "Templates": [
-    {
-      "ID": "local3-pxelinux.tmpl",
-      "Name": "pxelinux",
-      "Path": "pxelinux.cfg/{{.Machine.HexAddress}}"
-    },
-    {
-      "ID": "local3-elilo.tmpl",
-      "Name": "elilo",
-      "Path": "{{.Machine.HexAddress}}.conf"
-    },
-    {
-      "ID": "local3-ipxe.tmpl",
-      "Name": "ipxe",
-      "Path": "{{.Machine.Address}}.ipxe"
-    }
-  ],
-  "Validated": true
-}
-`
-var machineBootEnvJamieUpdate string = `{
-  "Available": true,
-  "BootParams": "",
-  "Errors": [],
-  "Initrds": null,
-  "Kernel": "",
-  "Name": "local3",
-  "OS": {
-    "Name": "local3"
-  },
-  "OnlyUnknown": false,
-  "OptionalParams": null,
-  "ReadOnly": false,
-  "RequiredParams": null,
-  "Tasks": [
-    "jamie"
-  ],
-  "Templates": [
-    {
-      "ID": "local3-pxelinux.tmpl",
-      "Name": "pxelinux",
-      "Path": "pxelinux.cfg/{{.Machine.HexAddress}}"
-    },
-    {
-      "ID": "local3-elilo.tmpl",
-      "Name": "elilo",
-      "Path": "{{.Machine.HexAddress}}.conf"
-    },
-    {
-      "ID": "local3-ipxe.tmpl",
-      "Name": "ipxe",
-      "Path": "{{.Machine.Address}}.ipxe"
-    }
-  ],
-  "Validated": true
-}
-`
-var machineUpdateBootEnvMissingForceErrorString string = "Error: Can not change bootenvs with pending tasks unless forced\n\n"
-var machineLocal2Create string = `{
-  "Available": true,
-  "BootParams": "",
-  "Errors": [],
-  "Initrds": null,
-  "Kernel": "",
-  "Name": "local2",
-  "OS": {
-    "Name": "local2"
-  },
-  "OnlyUnknown": false,
-  "OptionalParams": null,
-  "ReadOnly": false,
-  "RequiredParams": null,
-  "Tasks": [],
-  "Templates": [
-    {
-      "ID": "local3-pxelinux.tmpl",
-      "Name": "pxelinux",
-      "Path": "pxelinux.cfg/{{.Machine.HexAddress}}"
-    },
-    {
-      "ID": "local3-elilo.tmpl",
-      "Name": "elilo",
-      "Path": "{{.Machine.HexAddress}}.conf"
-    },
-    {
-      "ID": "local3-ipxe.tmpl",
-      "Name": "ipxe",
-      "Path": "{{.Machine.Address}}.ipxe"
-    }
-  ],
-  "Validated": true
-}
-`
-var machineLocal2CreateInput string = `{
-  "Available": true,
-  "BootParams": "",
-  "Errors": [],
-  "Initrds": null,
-  "Kernel": "",
-  "Name": "local2",
-  "OS": {
-    "Name": "local2"
-  },
-  "OnlyUnknown": false,
-  "OptionalParams": null,
-  "ReadOnly": false,
-  "RequiredParams": null,
-  "Tasks": [],
-  "Templates": [
-    {
-      "ID": "local3-pxelinux.tmpl",
-      "Name": "pxelinux",
-      "Path": "pxelinux.cfg/{{.Machine.HexAddress}}"
-    },
-    {
-      "ID": "local3-elilo.tmpl",
-      "Name": "elilo",
-      "Path": "{{.Machine.HexAddress}}.conf"
-    },
-    {
-      "ID": "local3-ipxe.tmpl",
-      "Name": "ipxe",
-      "Path": "{{.Machine.Address}}.ipxe"
-    }
-  ],
-  "Validated": true
-}
-`
 
-var machineUpdateLocalWithoutRunnable2String = `{
+var machineUpdateLocalWithoutRunnableString = `{
   "Address": "192.168.100.110",
   "Available": true,
-  "BootEnv": "local2",
+  "BootEnv": "local",
   "CurrentTask": 0,
   "Description": "lpxelinux.0",
   "Errors": [],
@@ -750,7 +630,6 @@ var machineUpdateLocalWithoutRunnable2String = `{
     "Errors": null,
     "Name": "",
     "ReadOnly": false,
-    "Tasks": null,
     "Validated": false
   },
   "Profiles": null,
@@ -762,10 +641,10 @@ var machineUpdateLocalWithoutRunnable2String = `{
 }
 `
 
-var machineUpdateLocal2String string = `{
+var machineUpdateLocalString string = `{
   "Address": "192.168.100.110",
   "Available": true,
-  "BootEnv": "local2",
+  "BootEnv": "local",
   "CurrentTask": 0,
   "Description": "lpxelinux.0",
   "Errors": [],
@@ -775,7 +654,6 @@ var machineUpdateLocal2String string = `{
     "Errors": null,
     "Name": "",
     "ReadOnly": false,
-    "Tasks": null,
     "Validated": false
   },
   "Profiles": null,
@@ -786,12 +664,11 @@ var machineUpdateLocal2String string = `{
   "Validated": true
 }
 `
-
 var machineUpdateLocal3String string = `{
   "Address": "192.168.100.110",
   "Available": true,
-  "BootEnv": "local2",
-  "CurrentTask": -1,
+  "BootEnv": "local",
+  "CurrentTask": 0,
   "Description": "lpxelinux.0",
   "Errors": [],
   "Name": "john",
@@ -800,51 +677,20 @@ var machineUpdateLocal3String string = `{
     "Errors": null,
     "Name": "",
     "ReadOnly": false,
-    "Tasks": null,
     "Validated": false
   },
   "Profiles": [
-    "jill"
+    "jill",
+    "jean"
   ],
   "ReadOnly": false,
   "Runnable": true,
-  "Tasks": [
-    "justine"
-  ],
+  "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Validated": true
 }
 `
 
-var machineUpdateLocalJamieString string = `{
-  "Address": "192.168.100.110",
-  "Available": true,
-  "BootEnv": "local3",
-  "CurrentTask": -1,
-  "Description": "lpxelinux.0",
-  "Errors": [],
-  "Name": "john",
-  "Profile": {
-    "Available": false,
-    "Errors": null,
-    "Name": "",
-    "ReadOnly": false,
-    "Tasks": null,
-    "Validated": false
-  },
-  "Profiles": [
-    "jill"
-  ],
-  "ReadOnly": false,
-  "Runnable": true,
-  "Tasks": [
-    "jamie",
-    "justine"
-  ],
-  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
-  "Validated": true
-}
-`
 var machineBadBoolString string = "Error: Runnable must be true or false\n\n"
 
 var machineWaitNoArgErrorString = "Error: drpcli machines wait [id] [field] [value] [timeout] [flags] requires at least 3 arguments\n"
@@ -853,31 +699,212 @@ var machineWaitBadTimeoutErrorString = "Error: strconv.ParseInt: parsing \"jk\":
 var machineWaitMissingMachineErrorString = "Error: machines GET: jk: Not Found\n\n"
 var machineWaitBadBoolErrorString = "Error: strconv.ParseBool: parsing \"fred\": invalid syntax\n\n"
 
-func TestMachineCli(t *testing.T) {
-	if err := os.MkdirAll("bootenvs", 0755); err != nil {
-		t.Errorf("Failed to create bootenvs dir: %v\n", err)
-	}
-	if err := os.Symlink("../test-data/local3.yml", "bootenvs/local3.yml"); err != nil {
-		t.Errorf("Failed to create link to local3.yml: %v\n", err)
-	}
+var machineUpdateStage1WithoutRunnableString = `{
+  "Address": "192.168.100.110",
+  "Available": true,
+  "BootEnv": "local",
+  "CurrentTask": -1,
+  "Description": "lpxelinux.0",
+  "Errors": [],
+  "Name": "john",
+  "Profile": {
+    "Available": false,
+    "Errors": null,
+    "Name": "",
+    "ReadOnly": false,
+    "Validated": false
+  },
+  "Profiles": null,
+  "ReadOnly": false,
+  "Runnable": false,
+  "Stage": "stage1",
+  "Tasks": [
+    "jamie",
+    "justine"
+  ],
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
+}
+`
 
-	if err := os.MkdirAll("templates", 0755); err != nil {
-		t.Errorf("Failed to create templates dir: %v\n", err)
-	}
-	tmpls := []string{"local3-pxelinux.tmpl", "local3-elilo.tmpl", "local3-ipxe.tmpl"}
-	for _, tmpl := range tmpls {
-		if err := os.Symlink("../test-data/"+tmpl, "templates/"+tmpl); err != nil {
-			t.Errorf("Failed to create link to %s: %v\n", tmpl, err)
-		}
-	}
+var machineUpdateStage1LocalString = `{
+  "Address": "192.168.100.110",
+  "Available": true,
+  "BootEnv": "local",
+  "CurrentTask": -1,
+  "Description": "lpxelinux.0",
+  "Errors": [],
+  "Name": "john",
+  "Profile": {
+    "Available": false,
+    "Errors": null,
+    "Name": "",
+    "ReadOnly": false,
+    "Validated": false
+  },
+  "Profiles": null,
+  "ReadOnly": false,
+  "Runnable": true,
+  "Stage": "stage1",
+  "Tasks": [
+    "jamie",
+    "justine"
+  ],
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
+}
+`
+var machineUpdateStagePendingErrorString = "Error: Can not change stages with pending tasks unless forced\n\n"
+var machineUpdateLocal2String = `{
+  "Address": "192.168.100.110",
+  "Available": true,
+  "BootEnv": "local",
+  "CurrentTask": 0,
+  "Description": "lpxelinux.0",
+  "Errors": [],
+  "Name": "john",
+  "Profile": {
+    "Available": false,
+    "Errors": null,
+    "Name": "",
+    "ReadOnly": false,
+    "Validated": false
+  },
+  "Profiles": null,
+  "ReadOnly": false,
+  "Runnable": true,
+  "Stage": "stage2",
+  "Tasks": [],
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
+}
+`
+
+var machineStage1CreateString = `{
+	"Name": "stage1",
+	"BootEnv": "local",
+	"Tasks": [ "jamie", "justine" ]
+}
+`
+var machineStage1CreateSuccessString = `{
+  "Available": true,
+  "BootEnv": "local",
+  "Errors": [],
+  "Name": "stage1",
+  "OptionalParams": null,
+  "Profiles": [],
+  "ReadOnly": false,
+  "RequiredParams": null,
+  "Tasks": [
+    "jamie",
+    "justine"
+  ],
+  "Templates": [],
+  "Validated": true
+}
+`
+
+var machineStage2CreateString = `{
+  "Name": "stage2",
+  "BootEnv": "local",
+  "Templates": [
+    {
+      "Contents": "{{.Param \"sp-param\"}}",
+      "Name": "test",
+      "Path": "{{.Machine.Path}}/file"
+    }
+  ]
+}
+`
+var machineStage2CreateSuccessString = `{
+  "Available": true,
+  "BootEnv": "local",
+  "Errors": [],
+  "Name": "stage2",
+  "OptionalParams": null,
+  "Profiles": [],
+  "ReadOnly": false,
+  "RequiredParams": null,
+  "Tasks": [],
+  "Templates": [
+    {
+      "Contents": "{{.Param \"sp-param\"}}",
+      "Name": "test",
+      "Path": "{{.Machine.Path}}/file"
+    }
+  ],
+  "Validated": true
+}
+`
+
+var machineStage2AgainSuccessString string = `{
+  "Address": "192.168.100.110",
+  "Available": true,
+  "BootEnv": "local",
+  "CurrentTask": 0,
+  "Description": "lpxelinux.0",
+  "Errors": [],
+  "Name": "john",
+  "Profile": {
+    "Available": false,
+    "Errors": null,
+    "Name": "",
+    "ReadOnly": false,
+    "Validated": false
+  },
+  "Profiles": [
+    "jill",
+    "jean"
+  ],
+  "ReadOnly": false,
+  "Runnable": true,
+  "Stage": "stage2",
+  "Tasks": [],
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
+}
+`
+
+var machinesUpdateStageSuccessString string = `{
+  "Available": true,
+  "BootEnv": "local",
+  "Errors": [],
+  "Name": "stage2",
+  "OptionalParams": null,
+  "Profiles": [
+    "stage-prof"
+  ],
+  "ReadOnly": false,
+  "RequiredParams": null,
+  "Tasks": [],
+  "Templates": [
+    {
+      "Contents": "{{.Param \"sp-param\"}}",
+      "Name": "test",
+      "Path": "{{.Machine.Path}}/file"
+    }
+  ],
+  "Validated": true
+}
+`
+
+var machineAggregateParamString = `{
+  "jill-param": "janga",
+  "sp-param": "val"
+}
+`
+
+func TestMachineCli(t *testing.T) {
 
 	tests := []CliTest{
-		CliTest{false, false, []string{"bootenvs", "install", "bootenvs/local3.yml"}, noStdinString, bootEnvInstallLocalSuccessString, bootEnvInstallLocal3ErrorString},
 		CliTest{false, false, []string{"profiles", "create", "jill"}, noStdinString, machineJillCreate, noErrorString},
 		CliTest{false, false, []string{"profiles", "create", "jean"}, noStdinString, machineJeanCreate, noErrorString},
+		CliTest{false, false, []string{"profiles", "create", "stage-prof"}, noStdinString, machineStageProfCreate, noErrorString},
 		CliTest{false, false, []string{"tasks", "create", "jamie"}, noStdinString, machineJamieCreate, noErrorString},
 		CliTest{false, false, []string{"tasks", "create", "justine"}, noStdinString, machineJustineCreate, noErrorString},
-		CliTest{false, false, []string{"bootenvs", "create", machineLocal2CreateInput}, noStdinString, machineLocal2Create, noErrorString},
+		CliTest{false, false, []string{"stages", "create", machineStage1CreateString}, noStdinString, machineStage1CreateSuccessString, noErrorString},
+		CliTest{false, false, []string{"stages", "create", machineStage2CreateString}, noStdinString, machineStage2CreateSuccessString, noErrorString},
+
 		CliTest{false, false, []string{"plugins", "create", machinePluginCreateString}, noStdinString, machinePluginCreateString, noErrorString},
 
 		CliTest{true, false, []string{"machines"}, noStdinString, "Access CLI commands relating to machines\n", ""},
@@ -898,7 +925,7 @@ func TestMachineCli(t *testing.T) {
 		CliTest{false, false, []string{"machines", "list", "--limit=-1", "--offset=-1"}, noStdinString, machineListMachinesString, noErrorString},
 		CliTest{false, false, []string{"machines", "list", "Name=fred"}, noStdinString, machineEmptyListString, noErrorString},
 		CliTest{false, false, []string{"machines", "list", "Name=john"}, noStdinString, machineListMachinesString, noErrorString},
-		CliTest{false, false, []string{"machines", "list", "BootEnv=local3"}, noStdinString, machineListMachinesString, noErrorString},
+		CliTest{false, false, []string{"machines", "list", "BootEnv=local"}, noStdinString, machineListMachinesString, noErrorString},
 		CliTest{false, false, []string{"machines", "list", "BootEnv=false"}, noStdinString, machineEmptyListString, noErrorString},
 		CliTest{false, false, []string{"machines", "list", "Address=192.168.100.110"}, noStdinString, machineListMachinesString, noErrorString},
 		CliTest{false, false, []string{"machines", "list", "Address=1.1.1.1"}, noStdinString, machineEmptyListString, noErrorString},
@@ -950,26 +977,60 @@ func TestMachineCli(t *testing.T) {
 		CliTest{false, false, []string{"machines", "update", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "-"}, machineUpdateInputString + "\n", machineUpdateJohnString, noErrorString},
 		CliTest{false, false, []string{"machines", "show", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, machineUpdateJohnString, noErrorString},
 
+		// bootenv tests
 		CliTest{true, true, []string{"machines", "bootenv"}, noStdinString, noContentString, machineBootEnvNoArgErrorString},
 		CliTest{false, true, []string{"machines", "bootenv", "john", "john2"}, noStdinString, noContentString, machineBootEnvMissingMachineErrorString},
 		CliTest{false, false, []string{"machines", "bootenv", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "john2"}, noStdinString, machineBootEnvErrorBootEnvString, noErrorString},
-		CliTest{false, false, []string{"machines", "bootenv", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "local2"}, noStdinString, machineUpdateLocalWithoutRunnable2String, noErrorString},
-		CliTest{false, false, []string{"machines", "update", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "{ \"Runnable\": true }"}, noStdinString, machineUpdateLocal2String, noErrorString},
-		CliTest{false, false, []string{"machines", "addprofile", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "jill"}, noStdinString, machineAddProfileJill2String, noErrorString},
-		CliTest{false, false, []string{"profiles", "update", "jill", "{ \"Tasks\": [ \"justine\" ] }"}, noStdinString, machineProfileJamieUpdate, noErrorString},
-		CliTest{false, false, []string{"bootenvs", "update", "local3", "{ \"Tasks\": [ \"jamie\" ] }"}, noStdinString, machineBootEnvJamieUpdate, noErrorString},
-		CliTest{false, false, []string{"machines", "bootenv", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "local3"}, noStdinString, machineUpdateLocalJamieString, noErrorString},
-		CliTest{false, true, []string{"machines", "bootenv", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "local2"}, noStdinString, noContentString, machineUpdateBootEnvMissingForceErrorString},
-		CliTest{false, false, []string{"machines", "bootenv", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "local2", "--force"}, noStdinString, machineUpdateLocal3String, noErrorString},
-		CliTest{false, false, []string{"bootenvs", "update", "local3", "{ \"Tasks\": [ ] }"}, noStdinString, machineBootEnvNoJamieUpdate, noErrorString},
-		CliTest{false, false, []string{"machines", "removeprofile", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "jill"}, noStdinString, machineRemoveProfileAllGone2String, noErrorString},
+		CliTest{false, false, []string{"machines", "bootenv", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "local"}, noStdinString, machineUpdateLocalWithoutRunnableString, noErrorString},
+		CliTest{false, false, []string{"machines", "update", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "{ \"Runnable\": true }"}, noStdinString, machineUpdateLocalString, noErrorString},
 
-		CliTest{false, false, []string{"machines", "bootenv", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "local3"}, noStdinString, machineUpdateJohnString, noErrorString},
+		// stage tests
+		CliTest{true, true, []string{"machines", "stage"}, noStdinString, noContentString, machineStageNoArgErrorString},
+		CliTest{false, true, []string{"machines", "stage", "john", "john2"}, noStdinString, noContentString, machineStageMissingMachineErrorString},
+		CliTest{false, false, []string{"machines", "stage", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "john2"}, noStdinString, machineStageErrorStageString, noErrorString},
+		CliTest{false, false, []string{"machines", "stage", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "stage1"}, noStdinString, machineUpdateStage1WithoutRunnableString, noErrorString},
+		CliTest{false, false, []string{"machines", "update", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "{ \"Runnable\": true }"}, noStdinString, machineUpdateStage1LocalString, noErrorString},
+		CliTest{false, true, []string{"machines", "stage", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "stage2"}, noStdinString, noContentString, machineUpdateStagePendingErrorString},
+		CliTest{false, false, []string{"machines", "stage", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "stage2", "--force"}, noStdinString, machineUpdateLocal2String, noErrorString},
+		CliTest{false, false, []string{"machines", "stage", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "", "--force"}, noStdinString, machineUpdateLocalString, noErrorString},
 
+		// Add/Remove Profile tests
 		CliTest{true, true, []string{"machines", "addprofile"}, noStdinString, noContentString, machineAddProfileNoArgErrorString},
 		CliTest{false, false, []string{"machines", "addprofile", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "jill"}, noStdinString, machineAddProfileJillString, noErrorString},
 		CliTest{false, false, []string{"machines", "addprofile", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "jean"}, noStdinString, machineAddProfileJillJeanString, noErrorString},
 		CliTest{false, true, []string{"machines", "addprofile", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "jill"}, noStdinString, noContentString, machineAddProfileJillJeanJillErrorString},
+
+		CliTest{false, false, []string{"profiles", "set", "jill", "param", "jill-param", "to", "janga"}, noStdinString, "\"janga\"\n", noErrorString},
+		CliTest{false, false, []string{"profiles", "set", "stage-prof", "param", "sp-param", "to", "val"}, noStdinString, "\"val\"\n", noErrorString},
+		CliTest{false, false, []string{"machines", "stage", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "stage2", "--force"}, noStdinString, machineStage2AgainSuccessString, noErrorString},
+		CliTest{false, false, []string{"stages", "addprofile", "stage2", "stage-prof"}, noStdinString, machinesUpdateStageSuccessString, noErrorString},
+
+		CliTest{false, false, []string{"machines", "params", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, "{}\n", noErrorString},
+		CliTest{false, false, []string{"machines", "params", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "--aggregate"}, noStdinString, machineAggregateParamString, noErrorString},
+	}
+	for _, test := range tests {
+		testCli(t, test)
+	}
+
+	tr := &http.Transport{}
+	client := &http.Client{Transport: tr}
+	req, _ := http.NewRequest("GET", "http://127.0.0.1:10002/machines/3e7031fe-3062-45f1-835c-92541bc9cbd3/file", nil)
+	req.SetBasicAuth("rocketskates", "r0cketsk8ts")
+	rsp, apierr := client.Do(req)
+	if apierr != nil {
+		t.Errorf("Failed to query machine file: %s", apierr)
+	}
+	defer rsp.Body.Close()
+	body, err := ioutil.ReadAll(rsp.Body)
+	if err != nil {
+		t.Errorf("Failed to read all: %s", err)
+	}
+	if string(body) != "val" {
+		t.Errorf("Body was: AA%sAA expected %s", string(body), "val")
+	}
+
+	tests2 := []CliTest{
+		CliTest{false, false, []string{"machines", "stage", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "", "--force"}, noStdinString, machineUpdateLocal3String, noErrorString},
 		CliTest{true, true, []string{"machines", "removeprofile"}, noStdinString, noContentString, machineRemoveProfileNoArgErrorString},
 		CliTest{false, false, []string{"machines", "removeprofile", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "justine"}, noStdinString, machineAddProfileJillJeanString, noErrorString},
 		CliTest{false, false, []string{"machines", "removeprofile", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "jill"}, noStdinString, machineRemoveProfileJeanString, noErrorString},
@@ -1037,7 +1098,7 @@ func TestMachineCli(t *testing.T) {
 		CliTest{false, true, []string{"machines", "wait", "jk", "jk", "jk", "jk"}, noStdinString, noContentString, machineWaitBadTimeoutErrorString},
 		CliTest{false, true, []string{"machines", "wait", "jk", "jk", "jk"}, noStdinString, noContentString, machineWaitMissingMachineErrorString},
 		CliTest{false, false, []string{"machines", "wait", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "jk", "jk", "1"}, noStdinString, "timeout\n", noErrorString},
-		CliTest{false, false, []string{"machines", "wait", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "BootEnv", "local3", "1"}, noStdinString, "complete\n", noErrorString},
+		CliTest{false, false, []string{"machines", "wait", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "BootEnv", "local", "1"}, noStdinString, "complete\n", noErrorString},
 		CliTest{false, true, []string{"machines", "wait", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "Runnable", "fred", "1"}, noStdinString, noContentString, machineWaitBadBoolErrorString},
 
 		CliTest{true, true, []string{"machines", "params"}, noStdinString, noContentString, machineParamsNoArgErrorString},
@@ -1053,23 +1114,15 @@ func TestMachineCli(t *testing.T) {
 		CliTest{false, false, []string{"machines", "list"}, noStdinString, machineDefaultListString, noErrorString},
 
 		CliTest{false, false, []string{"plugins", "destroy", "incr"}, noStdinString, "Deleted plugin incr\n", noErrorString},
+		CliTest{false, false, []string{"stages", "destroy", "stage1"}, noStdinString, "Deleted stage stage1\n", noErrorString},
+		CliTest{false, false, []string{"stages", "destroy", "stage2"}, noStdinString, "Deleted stage stage2\n", noErrorString},
 		CliTest{false, false, []string{"profiles", "destroy", "jill"}, noStdinString, "Deleted profile jill\n", noErrorString},
 		CliTest{false, false, []string{"profiles", "destroy", "jean"}, noStdinString, "Deleted profile jean\n", noErrorString},
-		CliTest{false, false, []string{"bootenvs", "destroy", "local3"}, noStdinString, "Deleted bootenv local3\n", noErrorString},
-		CliTest{false, false, []string{"bootenvs", "destroy", "local2"}, noStdinString, "Deleted bootenv local2\n", noErrorString},
+		CliTest{false, false, []string{"profiles", "destroy", "stage-prof"}, noStdinString, "Deleted profile stage-prof\n", noErrorString},
 		CliTest{false, false, []string{"tasks", "destroy", "jamie"}, noStdinString, "Deleted task jamie\n", noErrorString},
 		CliTest{false, false, []string{"tasks", "destroy", "justine"}, noStdinString, "Deleted task justine\n", noErrorString},
-		CliTest{false, false, []string{"templates", "destroy", "local3-pxelinux.tmpl"}, noStdinString, "Deleted template local3-pxelinux.tmpl\n", noErrorString},
-		CliTest{false, false, []string{"templates", "destroy", "local3-elilo.tmpl"}, noStdinString, "Deleted template local3-elilo.tmpl\n", noErrorString},
-		CliTest{false, false, []string{"templates", "destroy", "local3-ipxe.tmpl"}, noStdinString, "Deleted template local3-ipxe.tmpl\n", noErrorString},
 	}
-
-	for _, test := range tests {
+	for _, test := range tests2 {
 		testCli(t, test)
 	}
-
-	os.RemoveAll("bootenvs")
-	os.RemoveAll("templates")
-	os.RemoveAll("isos")
-	os.RemoveAll("ic")
 }

@@ -14,8 +14,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/VictorLowther/jsonpatch2"
-	"github.com/VictorLowther/jsonpatch2/utils"
 	"github.com/digitalrebar/provision/backend"
 	"github.com/digitalrebar/provision/client/machines"
 	models "github.com/digitalrebar/provision/genmodels"
@@ -60,6 +58,10 @@ func (be MachineOps) List(parms map[string]string) (interface{}, error) {
 	}
 	for k, v := range parms {
 		switch k {
+		case "Available":
+			params = params.WithAvailable(&v)
+		case "Valid":
+			params = params.WithValid(&v)
 		case "Name":
 			params = params.WithName(&v)
 		case "BootEnv":
@@ -342,6 +344,20 @@ Returns the following strings:
 	})
 
 	commands = append(commands, &cobra.Command{
+		Use:   "stage [id] [stage]",
+		Short: fmt.Sprintf("Set the machine's stage"),
+		Long:  `Helper function to update the machine's stage.`,
+		RunE: func(c *cobra.Command, args []string) error {
+			if len(args) != 2 {
+				return fmt.Errorf("%v requires 2 arguments", c.UseLine())
+			}
+			dumpUsage = false
+
+			return PatchWithString(args[0], "{ \"Stage\": \""+args[1]+"\" }", mo)
+		},
+	})
+
+	commands = append(commands, &cobra.Command{
 		Use:   "bootenv [id] [bootenv]",
 		Short: fmt.Sprintf("Set the machine's bootenv"),
 		Long:  `Helper function to update the machine's bootenv.`,
@@ -350,44 +366,7 @@ Returns the following strings:
 				return fmt.Errorf("%v requires 2 arguments", c.UseLine())
 			}
 			dumpUsage = false
-			data, err := mo.Get(args[0])
-			if err != nil {
-				return generateError(err, "Failed to fetch %v: %v", singularName, args[0])
-			}
-			var buf []byte
-
-			baseObj, err := json.Marshal(data)
-			if err != nil {
-				return fmt.Errorf("Unable to marshal object: %v\n", err)
-			}
-			buf = []byte("{ \"BootEnv\": \"" + args[1] + "\" }")
-			var intermediate interface{}
-			err = yaml.Unmarshal(buf, &intermediate)
-			if err != nil {
-				return fmt.Errorf("Unable to unmarshal input stream: %v\n", err)
-			}
-			updateObj, err := json.Marshal(intermediate)
-			if err != nil {
-				return fmt.Errorf("Unable to marshal input stream: %v\n", err)
-			}
-			merged, err := safeMergeJSON(data, updateObj)
-			if err != nil {
-				return fmt.Errorf("Unable to merge objects: %v\n", err)
-			}
-			patch, err := jsonpatch2.Generate(baseObj, merged, true)
-			if err != nil {
-				return fmt.Errorf("Error generating patch: %v", err)
-			}
-			p := models.Patch{}
-			if err := utils.Remarshal(&patch, &p); err != nil {
-				return fmt.Errorf("Error translating patch for bootenv: %v", err)
-			}
-
-			if data, err := mo.Patch(args[0], p); err != nil {
-				return generateError(err, "Unable to update bootenv %v", args[0])
-			} else {
-				return prettyPrint(data)
-			}
+			return PatchWithString(args[0], "{ \"BootEnv\": \""+args[1]+"\" }", mo)
 		},
 	})
 
@@ -400,99 +379,46 @@ Returns the following strings:
 				return fmt.Errorf("%v requires 2 arguments", c.UseLine())
 			}
 			dumpUsage = false
-			data, err := mo.Get(args[0])
-			if err != nil {
-				return generateError(err, "Failed to fetch %v: %v", singularName, args[0])
-			}
-
-			baseObj, err := json.Marshal(data)
-			if err != nil {
-				return fmt.Errorf("Unable to marshal object: %v\n", err)
-			}
-
-			machine, _ := data.(*models.Machine)
-			machine.Profiles = append(machine.Profiles, args[1])
-			merged, err := json.Marshal(machine)
-			if err != nil {
-				return fmt.Errorf("Unable to marshal input stream: %v\n", err)
-			}
-			patch, err := jsonpatch2.Generate(baseObj, merged, true)
-			if err != nil {
-				return fmt.Errorf("Error generating patch: %v", err)
-			}
-			p := models.Patch{}
-			if err := utils.Remarshal(&patch, &p); err != nil {
-				return fmt.Errorf("Error translating patch for bootenv: %v", err)
-			}
-
-			if data, err := mo.Patch(args[0], p); err != nil {
-				return generateError(err, "Unable to update bootenv %v", args[0])
-			} else {
-				return prettyPrint(data)
-			}
+			return PatchWithFunction(args[0], mo, func(data interface{}) (interface{}, bool) {
+				machine, _ := data.(*models.Machine)
+				machine.Profiles = append(machine.Profiles, args[1])
+				return machine, true
+			})
 		},
 	})
 
 	commands = append(commands, &cobra.Command{
 		Use:   "removeprofile [id] [profile]",
-		Short: fmt.Sprintf("Set the machine's bootenv"),
-		Long:  `Helper function to update the machine's bootenv.`,
+		Short: fmt.Sprintf("Remove a profile from the machine's list"),
+		Long:  `Helper function to update the machine's profile list by removing one.`,
 		RunE: func(c *cobra.Command, args []string) error {
 			if len(args) != 2 {
 				return fmt.Errorf("%v requires 2 arguments", c.UseLine())
 			}
 			dumpUsage = false
-			data, err := mo.Get(args[0])
-			if err != nil {
-				return generateError(err, "Failed to fetch %v: %v", singularName, args[0])
-			}
-
-			baseObj, err := json.Marshal(data)
-			if err != nil {
-				return fmt.Errorf("Unable to marshal object: %v\n", err)
-			}
-
-			changed := false
-			machine, _ := data.(*models.Machine)
-			newProfiles := []string{}
-			for _, s := range machine.Profiles {
-				if s == args[1] {
-					changed = true
-					continue
+			return PatchWithFunction(args[0], mo, func(data interface{}) (interface{}, bool) {
+				changed := false
+				machine, _ := data.(*models.Machine)
+				newProfiles := []string{}
+				for _, s := range machine.Profiles {
+					if s == args[1] {
+						changed = true
+						continue
+					}
+					newProfiles = append(newProfiles, s)
 				}
-				newProfiles = append(newProfiles, s)
-			}
-			machine.Profiles = newProfiles
-			if len(newProfiles) == 0 {
-				machine.Profiles = nil
-			}
+				machine.Profiles = newProfiles
+				if len(newProfiles) == 0 {
+					machine.Profiles = nil
+				}
+				return machine, changed
+			})
 
-			if !changed {
-				return prettyPrint(data)
-			}
-
-			merged, err := json.Marshal(data)
-			if err != nil {
-				return fmt.Errorf("Unable to marshal input stream: %v\n", err)
-			}
-			patch, err := jsonpatch2.Generate(baseObj, merged, true)
-			if err != nil {
-				return fmt.Errorf("Error generating patch: %v", err)
-			}
-			p := models.Patch{}
-			if err := utils.Remarshal(&patch, &p); err != nil {
-				return fmt.Errorf("Error translating patch for bootenv: %v", err)
-			}
-
-			if data, err := mo.Patch(args[0], p); err != nil {
-				return generateError(err, "Unable to update bootenv %v", args[0])
-			} else {
-				return prettyPrint(data)
-			}
 		},
 	})
 
-	commands = append(commands, &cobra.Command{
+	aggregate := false
+	getParams := &cobra.Command{
 		Use:   "params [id] [json]",
 		Short: fmt.Sprintf("Gets/sets all parameters for the machine"),
 		Long:  `A helper function to return all or set all the parameters on the machine`,
@@ -503,7 +429,11 @@ Returns the following strings:
 			dumpUsage = false
 			uuid := args[0]
 			if len(args) == 1 {
-				d, err := session.Machines.GetMachineParams(machines.NewGetMachineParamsParams().WithUUID(strfmt.UUID(uuid)), basicAuth)
+				as := "false"
+				if aggregate {
+					as = "true"
+				}
+				d, err := session.Machines.GetMachineParams(machines.NewGetMachineParamsParams().WithAggregate(&as).WithUUID(strfmt.UUID(uuid)), basicAuth)
 				if err != nil {
 					return generateError(err, "Failed to fetch params %v: %v", singularName, uuid)
 				}
@@ -522,7 +452,9 @@ Returns the following strings:
 				return prettyPrint(d.Payload)
 			}
 		},
-	})
+	}
+	commands = append(commands, getParams)
+	getParams.Flags().BoolVar(&aggregate, "aggregate", false, "Should machine return aggregated view")
 
 	commands = append(commands, &cobra.Command{
 		Use:   "get [id] param [key]",

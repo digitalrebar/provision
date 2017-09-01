@@ -279,6 +279,12 @@ type PatchOps interface {
 	Patch(string, interface{}) (interface{}, error)
 }
 
+type PatchWithOps interface {
+	ModOps
+	Get(string) (interface{}, error)
+	Patch(string, interface{}) (interface{}, error)
+}
+
 type UpdateOps interface {
 	ModOps
 	Update(string, interface{}) (interface{}, error)
@@ -433,6 +439,83 @@ func Update(id, input string, ptrs ModOps, replace bool) (interface{}, error) {
 
 func Delete(id string, ptrs DeleteOps) (interface{}, error) {
 	return ptrs.Delete(id)
+}
+
+func PatchWithString(key, js string, ptrs PatchWithOps) error {
+	data, err := ptrs.Get(key)
+	if err != nil {
+		return generateError(err, "Failed to fetch %v: %v", ptrs.GetSingularName(), key)
+	}
+	var buf []byte
+
+	baseObj, err := json.Marshal(data)
+	if err != nil {
+		return fmt.Errorf("Unable to marshal object: %v\n", err)
+	}
+	buf = []byte(js)
+	var intermediate interface{}
+	err = yaml.Unmarshal(buf, &intermediate)
+	if err != nil {
+		return fmt.Errorf("Unable to unmarshal input stream: %v\n", err)
+	}
+	updateObj, err := json.Marshal(intermediate)
+	if err != nil {
+		return fmt.Errorf("Unable to marshal input stream: %v\n", err)
+	}
+	merged, err := safeMergeJSON(data, updateObj)
+	if err != nil {
+		return fmt.Errorf("Unable to merge objects: %v\n", err)
+	}
+	patch, err := jsonpatch2.Generate(baseObj, merged, true)
+	if err != nil {
+		return fmt.Errorf("Error generating patch: %v", err)
+	}
+	p := models.Patch{}
+	if err := utils.Remarshal(&patch, &p); err != nil {
+		return fmt.Errorf("Error translating patch for %s: %v", ptrs.GetSingularName(), err)
+	}
+
+	if data, err := ptrs.Patch(key, p); err != nil {
+		return generateError(err, "Unable to update %s: %v", ptrs.GetSingularName(), key)
+	} else {
+		return prettyPrint(data)
+	}
+}
+
+// The input function takes the object and returns the modified object and if the object changed.
+func PatchWithFunction(key string, ptrs PatchWithOps, fn func(interface{}) (interface{}, bool)) error {
+	data, err := ptrs.Get(key)
+	if err != nil {
+		return generateError(err, "Failed to fetch %v: %v", ptrs.GetSingularName(), key)
+	}
+
+	baseObj, err := json.Marshal(data)
+	if err != nil {
+		return fmt.Errorf("Unable to marshal object: %v\n", err)
+	}
+
+	newobj, changed := fn(data)
+	if !changed {
+		return prettyPrint(data)
+	}
+	merged, err := json.Marshal(newobj)
+	if err != nil {
+		return fmt.Errorf("Unable to marshal input stream: %v\n", err)
+	}
+	patch, err := jsonpatch2.Generate(baseObj, merged, true)
+	if err != nil {
+		return fmt.Errorf("Error generating patch: %v", err)
+	}
+	p := models.Patch{}
+	if err := utils.Remarshal(&patch, &p); err != nil {
+		return fmt.Errorf("Error translating patch for %s: %v", ptrs.GetSingularName(), err)
+	}
+
+	if data, err := ptrs.Patch(key, p); err != nil {
+		return generateError(err, "Unable to update %s: %v", ptrs.GetSingularName(), key)
+	} else {
+		return prettyPrint(data)
+	}
 }
 
 func commonOps(pobj interface{}) (commands []*cobra.Command) {

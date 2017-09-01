@@ -10,7 +10,6 @@ var profileDefaultListString string = `[
     "Errors": [],
     "Name": "global",
     "ReadOnly": false,
-    "Tasks": [],
     "Validated": true
   }
 ]
@@ -29,7 +28,6 @@ var profileShowProfileString string = `{
     "FRED": "GREG"
   },
   "ReadOnly": false,
-  "Tasks": null,
   "Validated": true
 }
 `
@@ -60,7 +58,6 @@ var profileCreateJohnString string = `{
     "FRED": "GREG"
   },
   "ReadOnly": false,
-  "Tasks": null,
   "Validated": true
 }
 `
@@ -72,7 +69,6 @@ var profileListProfilesString = `[
     "Errors": [],
     "Name": "global",
     "ReadOnly": false,
-    "Tasks": [],
     "Validated": true
   },
   {
@@ -83,7 +79,6 @@ var profileListProfilesString = `[
       "FRED": "GREG"
     },
     "ReadOnly": false,
-    "Tasks": null,
     "Validated": true
   }
 ]
@@ -97,7 +92,6 @@ var profileListJohnOnlyString = `[
       "FRED": "GREG"
     },
     "ReadOnly": false,
-    "Tasks": null,
     "Validated": true
   }
 ]
@@ -122,7 +116,6 @@ var profileUpdateJohnString string = `{
     "JESSIE": "JAMES"
   },
   "ReadOnly": false,
-  "Tasks": null,
   "Validated": true
 }
 `
@@ -160,7 +153,6 @@ var profilePatchJohnString string = `{
     "JOHN": "StClaire"
   },
   "ReadOnly": false,
-  "Tasks": null,
   "Validated": true
 }
 `
@@ -209,7 +201,6 @@ var profileUpdateJohnWithParamsString string = `{
     "jj": 3
   },
   "ReadOnly": false,
-  "Tasks": null,
   "Validated": true
 }
 `

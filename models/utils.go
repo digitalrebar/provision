@@ -26,6 +26,8 @@ func All() []Model {
 
 func New(kind string) (Model, error) {
 	switch kind {
+	case "stages", "stage":
+		return &Stage{}, nil
 	case "bootenvs", "bootenv":
 		return &BootEnv{}, nil
 	case "jobs", "job":

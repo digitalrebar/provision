@@ -228,7 +228,6 @@ var yamlTestString = `- Available: true
   OptionalParams: null
   ReadOnly: false
   RequiredParams: null
-  Tasks: null
   Templates:
   - Contents: |
       DEFAULT local
@@ -261,7 +260,6 @@ var yamlTestString = `- Available: true
   OptionalParams: null
   ReadOnly: false
   RequiredParams: null
-  Tasks: null
   Templates:
   - Contents: |
       DEFAULT local
@@ -299,7 +297,6 @@ var jsonTestString = `[
     "OptionalParams": null,
     "ReadOnly": false,
     "RequiredParams": null,
-    "Tasks": null,
     "Templates": [
       {
         "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
@@ -334,7 +331,6 @@ var jsonTestString = `[
     "OptionalParams": null,
     "ReadOnly": false,
     "RequiredParams": null,
-    "Tasks": null,
     "Templates": [
       {
         "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",

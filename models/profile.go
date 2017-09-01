@@ -23,8 +23,6 @@ type Profile struct {
 	// for BootEnv, as documented by that boot environment's
 	// RequiredParams and OptionalParams.
 	Params map[string]interface{}
-	// Profiles can also have an associated list of Tasks
-	Tasks []string
 }
 
 func (p *Profile) Prefix() string {

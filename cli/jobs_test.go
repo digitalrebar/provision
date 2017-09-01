@@ -1,7 +1,6 @@
 package cli
 
 import (
-	"os"
 	"testing"
 )
 
@@ -50,16 +49,11 @@ var jobTask3Create string = `{
 
 var jobLocal2Create string = `{
   "Available": true,
-  "BootParams": "",
+  "BootEnv": "local",
   "Errors": [],
-  "Initrds": null,
-  "Kernel": "",
-  "Name": "local2",
-  "OS": {
-    "Name": "local2"
-  },
-  "OnlyUnknown": false,
+  "Name": "stage3",
   "OptionalParams": null,
+  "Profiles": [],
   "ReadOnly": false,
   "RequiredParams": null,
   "Tasks": [
@@ -67,74 +61,32 @@ var jobLocal2Create string = `{
     "task2",
     "task1"
   ],
-  "Templates": [
-    {
-      "ID": "local3-pxelinux.tmpl",
-      "Name": "pxelinux",
-      "Path": "pxelinux.cfg/{{.Machine.HexAddress}}"
-    },
-    {
-      "ID": "local3-elilo.tmpl",
-      "Name": "elilo",
-      "Path": "{{.Machine.HexAddress}}.conf"
-    },
-    {
-      "ID": "local3-ipxe.tmpl",
-      "Name": "ipxe",
-      "Path": "{{.Machine.Address}}.ipxe"
-    }
-  ],
+  "Templates": [],
   "Validated": true
 }
 `
 var jobLocal2CreateInput string = `{
-  "BootParams": "",
-  "Errors": [],
-  "Initrds": null,
-  "Kernel": "",
-  "Name": "local2",
-  "OS": {
-    "Name": "local2"
-  },
-  "OnlyUnknown": false,
-  "OptionalParams": null,
-  "RequiredParams": null,
+  "Name": "stage3",
   "Tasks": [
     "task3",
     "task2",
     "task1"
   ],
-  "Templates": [
-    {
-      "ID": "local3-pxelinux.tmpl",
-      "Name": "pxelinux",
-      "Path": "pxelinux.cfg/{{.Machine.HexAddress}}"
-    },
-    {
-      "ID": "local3-elilo.tmpl",
-      "Name": "elilo",
-      "Path": "{{.Machine.HexAddress}}.conf"
-    },
-    {
-      "ID": "local3-ipxe.tmpl",
-      "Name": "ipxe",
-      "Path": "{{.Machine.Address}}.ipxe"
-    }
-  ]
+  "BootEnv": "local"
 }
 `
 
 var jobCreateMachineInputString string = `{
   "Address": "192.168.100.110",
-  "name": "john",
+  "Name": "john",
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
-  "bootenv": "local3"
+  "Stage": "stage3"
 }
 `
 var jobCreateMachineJohnString string = `{
   "Address": "192.168.100.110",
   "Available": true,
-  "BootEnv": "local3",
+  "BootEnv": "local",
   "CurrentTask": -1,
   "Errors": [],
   "Name": "john",
@@ -143,12 +95,12 @@ var jobCreateMachineJohnString string = `{
     "Errors": null,
     "Name": "",
     "ReadOnly": false,
-    "Tasks": null,
     "Validated": false
   },
   "Profiles": null,
   "ReadOnly": false,
   "Runnable": true,
+  "Stage": "stage3",
   "Tasks": [
     "task1",
     "task2",
@@ -165,16 +117,11 @@ var jobLocalUpdateInput string = `{
 `
 var jobLocalUpdateString string = `{
   "Available": true,
-  "BootParams": "",
+  "BootEnv": "local",
   "Errors": [],
-  "Initrds": null,
-  "Kernel": "",
-  "Name": "local3",
-  "OS": {
-    "Name": "local3"
-  },
-  "OnlyUnknown": false,
+  "Name": "stage3",
   "OptionalParams": null,
+  "Profiles": [],
   "ReadOnly": false,
   "RequiredParams": null,
   "Tasks": [
@@ -182,23 +129,7 @@ var jobLocalUpdateString string = `{
     "task2",
     "task3"
   ],
-  "Templates": [
-    {
-      "ID": "local3-pxelinux.tmpl",
-      "Name": "pxelinux",
-      "Path": "pxelinux.cfg/{{.Machine.HexAddress}}"
-    },
-    {
-      "ID": "local3-elilo.tmpl",
-      "Name": "elilo",
-      "Path": "{{.Machine.HexAddress}}.conf"
-    },
-    {
-      "ID": "local3-ipxe.tmpl",
-      "Name": "ipxe",
-      "Path": "{{.Machine.Address}}.ipxe"
-    }
-  ],
+  "Templates": [],
   "Validated": true
 }
 `
@@ -239,13 +170,13 @@ var jobCreateJohnString string = `RE:
 {
   "Archived": false,
   "Available": true,
-  "BootEnv": "local3",
   "EndTime": "0001-01-01T00:00:00Z",
   "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000001",
   "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Previous": "00000000-0000-0000-0000-000000000000",
   "ReadOnly": false,
+  "Stage": "stage3",
   "StartTime": "0001-01-01T00:00:00Z",
   "State": "created",
   "Task": "task1",
@@ -258,13 +189,13 @@ var jobListJobsString string = `RE:
   {
     "Archived": false,
     "Available": true,
-    "BootEnv": "local3",
     "EndTime": "0001-01-01T00:00:00Z",
     "Errors": [],
     "LogPath": "[\S\s]*/job-logs/00000000-0000-0000-0000-000000000001",
     "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
     "Previous": "00000000-0000-0000-0000-000000000000",
     "ReadOnly": false,
+    "Stage": "stage3",
     "StartTime": "0001-01-01T00:00:00Z",
     "State": "created",
     "Task": "task1",
@@ -283,13 +214,13 @@ var jobShowJobString string = `RE:
 {
   "Archived": false,
   "Available": true,
-  "BootEnv": "local3",
   "EndTime": "0001-01-01T00:00:00Z",
   "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000001",
   "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Previous": "00000000-0000-0000-0000-000000000000",
   "ReadOnly": false,
+  "Stage": "stage3",
   "StartTime": "0001-01-01T00:00:00Z",
   "State": "created",
   "Task": "task1",
@@ -313,7 +244,7 @@ var jobUpdateTooManyArgErrorString string = "Error: drpcli jobs update [id] [jso
 var jobShowMachineJohnString string = `{
   "Address": "192.168.100.110",
   "Available": true,
-  "BootEnv": "local3",
+  "BootEnv": "local",
   "CurrentJob": "00000000-0000-0000-0000-000000000001",
   "CurrentTask": 0,
   "Errors": [],
@@ -323,12 +254,12 @@ var jobShowMachineJohnString string = `{
     "Errors": null,
     "Name": "",
     "ReadOnly": false,
-    "Tasks": null,
     "Validated": false
   },
   "Profiles": null,
   "ReadOnly": false,
   "Runnable": true,
+  "Stage": "stage3",
   "Tasks": [
     "task1",
     "task2",
@@ -350,13 +281,13 @@ var jobUpdateJohnString string = `RE:
 {
   "Archived": false,
   "Available": true,
-  "BootEnv": "local3",
   "EndTime": "0001-01-01T00:00:00Z",
   "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000001",
   "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Previous": "00000000-0000-0000-0000-000000000000",
   "ReadOnly": false,
+  "Stage": "stage3",
   "StartTime": "0001-01-01T00:00:00Z",
   "State": "incomplete",
   "Task": "task1",
@@ -372,10 +303,10 @@ var jobPatchTooManyArgErrorString = "Error: drpcli jobs patch [objectJson] [chan
 var jobPatchBaseString = `{
   "Archived": false,
   "Available": true,
-  "BootEnv": "local3",
   "Errors": [],
   "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Previous": "00000000-0000-0000-0000-000000000000",
+  "Stage": "stage3",
   "State": "incomplete",
   "Task": "task1",
   "Uuid": "00000000-0000-0000-0000-000000000001",
@@ -385,10 +316,10 @@ var jobPatchBaseString = `{
 var jobPatchBase2String = `{
   "Archived": false,
   "Available": true,
-  "BootEnv": "local3",
   "Errors": [],
   "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Previous": "00000000-0000-0000-0000-000000000000",
+  "Stage": "stage3",
   "State": "running",
   "Task": "task1",
   "Uuid": "00000000-0000-0000-0000-000000000001",
@@ -411,13 +342,13 @@ var jobPatchInputReplyString = `RE:
 {
   "Archived": false,
   "Available": true,
-  "BootEnv": "local3",
   "EndTime": "0001-01-01T00:00:00Z",
   "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000001",
   "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Previous": "00000000-0000-0000-0000-000000000000",
   "ReadOnly": false,
+  "Stage": "stage3",
   "StartTime": "20[\s\S]*",
   "State": "running",
   "Task": "task1",
@@ -430,13 +361,13 @@ var jobPatchJohnString = `RE:
 {
   "Archived": false,
   "Available": true,
-  "BootEnv": "local3",
   "EndTime": "0001-01-01T00:00:00Z",
   "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000001",
   "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Previous": "00000000-0000-0000-0000-000000000000",
   "ReadOnly": false,
+  "Stage": "stage3",
   "StartTime": "20[\s\S]*",
   "State": "incomplete",
   "Task": "task1",
@@ -447,10 +378,10 @@ var jobPatchJohnString = `RE:
 var jobPatchMissingBaseString = `{
   "Archived": false,
   "Available": true,
-  "BootEnv": "local3",
   "Errors": [],
   "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Previous": "00000000-0000-0000-0000-000000000000",
+  "Stage": "stage3",
   "State": "incomplete",
   "Task": "task1",
   "Uuid": "10000000-0000-0000-0000-000000000001",
@@ -464,13 +395,13 @@ var jobUpdateFailedJobUpdateString = `RE:
 {
   "Archived": false,
   "Available": true,
-  "BootEnv": "local3",
   "EndTime": "20[\s\S]*",
   "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000001",
   "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Previous": "00000000-0000-0000-0000-000000000000",
   "ReadOnly": false,
+  "Stage": "stage3",
   "StartTime": "20[\s\S]*",
   "State": "failed",
   "Task": "task1",
@@ -482,7 +413,7 @@ var jobCreateMachineNotRunningErrorString = "Error: Machine 3e7031fe-3062-45f1-8
 var jobUpdateMachineRunnableString = `{
   "Address": "192.168.100.110",
   "Available": true,
-  "BootEnv": "local3",
+  "BootEnv": "local",
   "CurrentJob": "00000000-0000-0000-0000-000000000001",
   "CurrentTask": 0,
   "Errors": [],
@@ -492,12 +423,12 @@ var jobUpdateMachineRunnableString = `{
     "Errors": null,
     "Name": "",
     "ReadOnly": false,
-    "Tasks": null,
     "Validated": false
   },
   "Profiles": null,
   "ReadOnly": false,
   "Runnable": true,
+  "Stage": "stage3",
   "Tasks": [
     "task1",
     "task2",
@@ -511,13 +442,13 @@ var jobCreateNextString = `RE:
 {
   "Archived": false,
   "Available": true,
-  "BootEnv": "local3",
   "EndTime": "0001-01-01T00:00:00Z",
   "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000002",
   "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Previous": "00000000-0000-0000-0000-000000000001",
   "ReadOnly": false,
+  "Stage": "stage3",
   "StartTime": "0001-01-01T00:00:00Z",
   "State": "created",
   "Task": "task1",
@@ -530,13 +461,13 @@ var jobUpdateFinishedJob2UpdateString = `RE:
 {
   "Archived": false,
   "Available": true,
-  "BootEnv": "local3",
   "EndTime": "20[\s\S]*",
   "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000002",
   "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Previous": "00000000-0000-0000-0000-000000000001",
   "ReadOnly": false,
+  "Stage": "stage3",
   "StartTime": "0001-01-01T00:00:00Z",
   "State": "finished",
   "Task": "task1",
@@ -548,13 +479,13 @@ var jobCreateNext3String = `RE:
 {
   "Archived": false,
   "Available": true,
-  "BootEnv": "local3",
   "EndTime": "0001-01-01T00:00:00Z",
   "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000003",
   "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Previous": "00000000-0000-0000-0000-000000000002",
   "ReadOnly": false,
+  "Stage": "stage3",
   "StartTime": "0001-01-01T00:00:00Z",
   "State": "created",
   "Task": "task2",
@@ -566,13 +497,13 @@ var jobUpdateFinishedJob3UpdateString = `RE:
 {
   "Archived": false,
   "Available": true,
-  "BootEnv": "local3",
   "EndTime": "20[\s\S]*",
   "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000003",
   "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Previous": "00000000-0000-0000-0000-000000000002",
   "ReadOnly": false,
+  "Stage": "stage3",
   "StartTime": "0001-01-01T00:00:00Z",
   "State": "finished",
   "Task": "task2",
@@ -584,13 +515,13 @@ var jobCreateNext4String = `RE:
 {
   "Archived": false,
   "Available": true,
-  "BootEnv": "local3",
   "EndTime": "0001-01-01T00:00:00Z",
   "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000004",
   "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Previous": "00000000-0000-0000-0000-000000000003",
   "ReadOnly": false,
+  "Stage": "stage3",
   "StartTime": "0001-01-01T00:00:00Z",
   "State": "created",
   "Task": "task3",
@@ -602,13 +533,13 @@ var jobUpdateFinishedJob4UpdateString = `RE:
 {
   "Archived": false,
   "Available": true,
-  "BootEnv": "local3",
   "EndTime": "20[\s\S]*",
   "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000004",
   "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Previous": "00000000-0000-0000-0000-000000000003",
   "ReadOnly": false,
+  "Stage": "stage3",
   "StartTime": "0001-01-01T00:00:00Z",
   "State": "finished",
   "Task": "task3",
@@ -621,13 +552,13 @@ var jobFullListString = `RE:
   {
     "Archived": false,
     "Available": true,
-    "BootEnv": "local3",
     "EndTime": "20[\s\S]*",
     "Errors": [],
     "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000001",
     "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
     "Previous": "00000000-0000-0000-0000-000000000000",
     "ReadOnly": false,
+    "Stage": "stage3",
     "StartTime": "20[\s\S]*",
     "State": "failed",
     "Task": "task1",
@@ -637,13 +568,13 @@ var jobFullListString = `RE:
   {
     "Archived": false,
     "Available": true,
-    "BootEnv": "local3",
     "EndTime": "20[\s\S]*",
     "Errors": [],
     "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000002",
     "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
     "Previous": "00000000-0000-0000-0000-000000000001",
     "ReadOnly": false,
+    "Stage": "stage3",
     "StartTime": "0001-01-01T00:00:00Z",
     "State": "finished",
     "Task": "task1",
@@ -653,13 +584,13 @@ var jobFullListString = `RE:
   {
     "Archived": false,
     "Available": true,
-    "BootEnv": "local3",
     "EndTime": "20[\s\S]*",
     "Errors": [],
     "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000003",
     "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
     "Previous": "00000000-0000-0000-0000-000000000002",
     "ReadOnly": false,
+    "Stage": "stage3",
     "StartTime": "0001-01-01T00:00:00Z",
     "State": "finished",
     "Task": "task2",
@@ -669,13 +600,13 @@ var jobFullListString = `RE:
   {
     "Archived": false,
     "Available": true,
-    "BootEnv": "local3",
     "EndTime": "20[\s\S]*",
     "Errors": [],
     "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000004",
     "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
     "Previous": "00000000-0000-0000-0000-000000000003",
     "ReadOnly": false,
+    "Stage": "stage3",
     "StartTime": "0001-01-01T00:00:00Z",
     "State": "finished",
     "Task": "task3",
@@ -712,30 +643,13 @@ var jobLogTooManyArgsErrorString = "Error: drpcli jobs log [id] [- or string] [f
 var jobLogUnknownJobErrorString = "Error: Job john does not exist\n\n"
 
 func TestJobCli(t *testing.T) {
-	if err := os.MkdirAll("bootenvs", 0755); err != nil {
-		t.Errorf("Failed to create bootenvs dir: %v\n", err)
-	}
-	if err := os.Symlink("../test-data/local3.yml", "bootenvs/local3.yml"); err != nil {
-		t.Errorf("Failed to create link to local.yml: %v\n", err)
-	}
-
-	if err := os.MkdirAll("templates", 0755); err != nil {
-		t.Errorf("Failed to create templates dir: %v\n", err)
-	}
-	tmpls := []string{"local3-pxelinux.tmpl", "local3-elilo.tmpl", "local3-ipxe.tmpl"}
-	for _, tmpl := range tmpls {
-		if err := os.Symlink("../test-data/"+tmpl, "templates/"+tmpl); err != nil {
-			t.Errorf("Failed to create link to %s: %v\n", tmpl, err)
-		}
-	}
-
 	tests := []CliTest{
-		CliTest{false, false, []string{"bootenvs", "install", "bootenvs/local3.yml"}, noStdinString, bootEnvInstallLocalSuccessString, bootEnvInstallLocal3ErrorString},
 		CliTest{false, false, []string{"tasks", "create", "task1"}, noStdinString, jobTask1Create, noErrorString},
 		CliTest{false, false, []string{"tasks", "create", "-"}, jobTask2Create, jobTask2Create, noErrorString},
 		CliTest{false, false, []string{"tasks", "create", "task3"}, noStdinString, jobTask3Create, noErrorString},
-		CliTest{false, false, []string{"bootenvs", "create", jobLocal2CreateInput}, noStdinString, jobLocal2Create, noErrorString},
-		CliTest{false, false, []string{"bootenvs", "update", "local3", jobLocalUpdateInput}, noStdinString, jobLocalUpdateString, noErrorString},
+
+		CliTest{false, false, []string{"stages", "create", jobLocal2CreateInput}, noStdinString, jobLocal2Create, noErrorString},
+		CliTest{false, false, []string{"stages", "update", "stage3", jobLocalUpdateInput}, noStdinString, jobLocalUpdateString, noErrorString},
 
 		CliTest{false, false, []string{"machines", "create", jobCreateMachineInputString}, noStdinString, jobCreateMachineJohnString, noErrorString},
 
@@ -774,8 +688,8 @@ func TestJobCli(t *testing.T) {
 		CliTest{false, true, []string{"jobs", "list", "--limit=-10", "--offset=0"}, noStdinString, noContentString, limitNegativeError},
 		CliTest{false, true, []string{"jobs", "list", "--limit=10", "--offset=-10"}, noStdinString, noContentString, offsetNegativeError},
 		CliTest{false, false, []string{"jobs", "list", "--limit=-1", "--offset=-1"}, noStdinString, jobListJobsString, noErrorString},
-		CliTest{false, false, []string{"jobs", "list", "BootEnv=local3"}, noStdinString, jobListJobsString, noErrorString},
-		CliTest{false, false, []string{"jobs", "list", "BootEnv=false"}, noStdinString, jobEmptyListString, noErrorString},
+		CliTest{false, false, []string{"jobs", "list", "Stage=stage3"}, noStdinString, jobListJobsString, noErrorString},
+		CliTest{false, false, []string{"jobs", "list", "Stage=false"}, noStdinString, jobEmptyListString, noErrorString},
 		CliTest{false, false, []string{"jobs", "list", "Task=task1"}, noStdinString, jobListJobsString, noErrorString},
 		CliTest{false, false, []string{"jobs", "list", "Task=false"}, noStdinString, jobEmptyListString, noErrorString},
 		CliTest{false, false, []string{"jobs", "list", "State=created"}, noStdinString, jobListJobsString, noErrorString},
@@ -850,8 +764,7 @@ func TestJobCli(t *testing.T) {
 		CliTest{false, false, []string{"jobs", "actions", "00000000-0000-0000-0000-000000000003"}, noStdinString, jobActionsRenderedTask2String, noErrorString},
 		CliTest{false, false, []string{"machines", "destroy", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, machineDestroyJohnString, noErrorString},
 		CliTest{false, true, []string{"jobs", "actions", "00000000-0000-0000-0000-000000000003"}, noStdinString, noContentString, jobActionsMissingMachineRenderErrorString},
-		CliTest{false, false, []string{"bootenvs", "destroy", "local3"}, noStdinString, "Deleted bootenv local3\n", noErrorString},
-		CliTest{false, false, []string{"bootenvs", "destroy", "local2"}, noStdinString, "Deleted bootenv local2\n", noErrorString},
+		CliTest{false, false, []string{"stages", "destroy", "stage3"}, noStdinString, "Deleted stage stage3\n", noErrorString},
 		CliTest{false, false, []string{"tasks", "destroy", "task1"}, noStdinString, "Deleted task task1\n", noErrorString},
 		CliTest{false, false, []string{"tasks", "destroy", "task2"}, noStdinString, "Deleted task task2\n", noErrorString},
 		CliTest{false, false, []string{"tasks", "destroy", "task3"}, noStdinString, "Deleted task task3\n", noErrorString},
@@ -865,18 +778,9 @@ func TestJobCli(t *testing.T) {
 		CliTest{false, false, []string{"jobs", "destroy", "00000000-0000-0000-0000-000000000003"}, noStdinString, jobDestroy003String, noErrorString},
 		CliTest{false, false, []string{"jobs", "destroy", "00000000-0000-0000-0000-000000000004"}, noStdinString, jobDestroy004String, noErrorString},
 		CliTest{false, false, []string{"jobs", "list"}, noStdinString, jobDefaultListString, noErrorString},
-
-		CliTest{false, false, []string{"templates", "destroy", "local3-pxelinux.tmpl"}, noStdinString, "Deleted template local3-pxelinux.tmpl\n", noErrorString},
-		CliTest{false, false, []string{"templates", "destroy", "local3-elilo.tmpl"}, noStdinString, "Deleted template local3-elilo.tmpl\n", noErrorString},
-		CliTest{false, false, []string{"templates", "destroy", "local3-ipxe.tmpl"}, noStdinString, "Deleted template local3-ipxe.tmpl\n", noErrorString},
 	}
 
 	for _, test := range tests {
 		testCli(t, test)
 	}
-
-	os.RemoveAll("bootenvs")
-	os.RemoveAll("templates")
-	os.RemoveAll("isos")
-	os.RemoveAll("ic")
 }

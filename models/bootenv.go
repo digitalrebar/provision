@@ -84,8 +84,6 @@ type BootEnv struct {
 	//
 	// required: true
 	OnlyUnknown bool
-	// The list of initial machine tasks that the boot environment should get
-	Tasks []string
 }
 
 func (b *BootEnv) Prefix() string {
