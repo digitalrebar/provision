@@ -39,11 +39,14 @@ type Machine struct {
 	//
 	// swagger:strfmt ipv4
 	Address net.IP
+	// An optional value to indicate tasks and profiles to apply.
+	Stage string
 	// The boot environment that the machine should boot into.  This
 	// must be the name of a boot environment present in the backend.
 	// If this field is not present or blank, the global default bootenv
 	// will be used instead.
-	BootEnv string // An array of profiles to apply to this machine in order when looking
+	BootEnv string
+	// An array of profiles to apply to this machine in order when looking
 	// for a parameter during rendering.
 	Profiles []string
 	//

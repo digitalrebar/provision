@@ -54,6 +54,10 @@ func (be LeaseOps) List(parms map[string]string) (interface{}, error) {
 	}
 	for k, v := range parms {
 		switch k {
+		case "Available":
+			params = params.WithAvailable(&v)
+		case "Valid":
+			params = params.WithValid(&v)
 		case "Addr":
 			params = params.WithAddr(&v)
 		case "Token":

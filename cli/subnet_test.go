@@ -291,44 +291,293 @@ var subnetInvalidEnabledBooleanListString = "Error: Enabled must be true or fals
 
 var subnetRangeNoArgErrorString string = "Error: drpcli subnets range [subnetName] [startIP] [endIP] [flags] requires 3 arguments\n"
 var subnetRangeTooManyArgErrorString string = "Error: drpcli subnets range [subnetName] [startIP] [endIP] [flags] requires 3 arguments\n"
-var subnetRangeIPSuccessString string = "startIP: 192.168.100.10\nendIP: 192.168.100.200\n"
-
+var subnetRangeIPSuccessString string = `{
+  "ActiveEnd": "192.168.100.200",
+  "ActiveLeaseTime": 60,
+  "ActiveStart": "192.168.100.10",
+  "Available": true,
+  "Enabled": false,
+  "Errors": [],
+  "Name": "john",
+  "NextServer": "3.3.3.3",
+  "OnlyReservations": false,
+  "Options": [
+    {
+      "Code": 1,
+      "Value": "255.255.255.0"
+    },
+    {
+      "Code": 28,
+      "Value": "192.168.100.255"
+    }
+  ],
+  "Pickers": [
+    "hint",
+    "nextFree",
+    "mostExpired"
+  ],
+  "ReadOnly": false,
+  "ReservedLeaseTime": 7200,
+  "Strategy": "NewStrat",
+  "Subnet": "192.168.100.0/24",
+  "Validated": true
+}
+`
 var subnetRangeIPFailureString string = "Error: invalid IP address: cq.98.42.1234\n\n"
 var subnetRangeIPBadIpString string = "Error: invalid IP address: 192.168.100.500\n\n"
 
 var subnetSubnetNoArgErrorString string = "Error: drpcli subnets subnet [subnetName] [subnet CIDR] [flags] requires 2 arguments\n"
 var subnetSubnetTooManyArgErrorString string = "Error: drpcli subnets subnet [subnetName] [subnet CIDR] [flags] requires 2 arguments\n"
-var subnetSubnetCIDRSuccessString = "192.168.100.0/10\n"
+var subnetSubnetCIDRSuccessString = `{
+  "ActiveEnd": "192.168.100.200",
+  "ActiveLeaseTime": 60,
+  "ActiveStart": "192.168.100.10",
+  "Available": true,
+  "Enabled": false,
+  "Errors": [],
+  "Name": "john",
+  "NextServer": "3.3.3.3",
+  "OnlyReservations": false,
+  "Options": [
+    {
+      "Code": 1,
+      "Value": "255.255.255.0"
+    },
+    {
+      "Code": 28,
+      "Value": "192.168.100.255"
+    }
+  ],
+  "Pickers": [
+    "hint",
+    "nextFree",
+    "mostExpired"
+  ],
+  "ReadOnly": false,
+  "ReservedLeaseTime": 7200,
+  "Strategy": "NewStrat",
+  "Subnet": "192.168.100.0/10",
+  "Validated": true
+}
+`
 var subnetSubnetCIDRFailureString = "Error: 1111.11.2223.544/66666 is not a valid subnet CIDR\n\n"
 
 var subnetStrategyNoArgErrorString string = "Error: drpcli subnets strategy [subnetName] [MAC] [flags] requires 2 arguments\n"
 var subnetStrategyTooManyArgErrorString string = "Error: drpcli subnets strategy [subnetName] [MAC] [flags] requires 2 arguments\n"
-var subnetStrategyMacSuccessString string = "a3:b3:51:66:7e:11\n"
+var subnetStrategyMacSuccessString string = `{
+  "ActiveEnd": "192.168.100.200",
+  "ActiveLeaseTime": 60,
+  "ActiveStart": "192.168.100.10",
+  "Available": true,
+  "Enabled": false,
+  "Errors": [],
+  "Name": "john",
+  "NextServer": "3.3.3.3",
+  "OnlyReservations": false,
+  "Options": [
+    {
+      "Code": 1,
+      "Value": "255.255.255.0"
+    },
+    {
+      "Code": 28,
+      "Value": "192.168.100.255"
+    }
+  ],
+  "Pickers": [
+    "hint",
+    "nextFree",
+    "mostExpired"
+  ],
+  "ReadOnly": false,
+  "ReservedLeaseTime": 7200,
+  "Strategy": "a3:b3:51:66:7e:11",
+  "Subnet": "192.168.100.0/10",
+  "Validated": true
+}
+`
 var subnetStrategyMacFailureErrorString string = "Error: t5:44:llll:b is not a valid MAC address\n\n"
 
 var subnetPickersNoArgErrorString string = "Error: drpcli subnets pickers [subnetName] [list] [flags] requires 2 arguments\n"
 var subnetPickersTooManyArgErrorString string = "Error: drpcli subnets pickers [subnetName] [list] [flags] requires 2 arguments\n"
-var subnetPickersSuccessString string = "none, nextFree, mostExpired"
+var subnetPickersSuccessString string = `{
+  "ActiveEnd": "192.168.100.200",
+  "ActiveLeaseTime": 60,
+  "ActiveStart": "192.168.100.10",
+  "Available": true,
+  "Enabled": false,
+  "Errors": [],
+  "Name": "john",
+  "NextServer": "3.3.3.3",
+  "OnlyReservations": false,
+  "Options": [
+    {
+      "Code": 1,
+      "Value": "255.255.255.0"
+    },
+    {
+      "Code": 28,
+      "Value": "192.168.100.255"
+    }
+  ],
+  "Pickers": [
+    "none",
+    "nextFree",
+    "mostExpired"
+  ],
+  "ReadOnly": false,
+  "ReservedLeaseTime": 7200,
+  "Strategy": "a3:b3:51:66:7e:11",
+  "Subnet": "192.168.100.0/10",
+  "Validated": true
+}
+`
 
 var subnetNextserverNoArgErrorString string = "Error: drpcli subnets nextserver [subnetName] [IP] [flags] requires 2 arguments\n"
 var subnetNextserverTooManyArgErrorString string = "Error: drpcli subnets nextserver [subnetName] [IP] [flags] requires 2 arguments\n"
-var subnetNextserverIPSuccess string = "1.24.36.16\n"
-
+var subnetNextserverIPSuccess string = `{
+  "ActiveEnd": "192.168.100.200",
+  "ActiveLeaseTime": 60,
+  "ActiveStart": "192.168.100.10",
+  "Available": true,
+  "Enabled": false,
+  "Errors": [],
+  "Name": "john",
+  "NextServer": "1.24.36.16",
+  "OnlyReservations": false,
+  "Options": [
+    {
+      "Code": 1,
+      "Value": "255.255.255.0"
+    },
+    {
+      "Code": 28,
+      "Value": "192.168.100.255"
+    }
+  ],
+  "Pickers": [
+    "none",
+    "nextFree",
+    "mostExpired"
+  ],
+  "ReadOnly": false,
+  "ReservedLeaseTime": 7200,
+  "Strategy": "a3:b3:51:66:7e:11",
+  "Subnet": "192.168.100.0/10",
+  "Validated": true
+}
+`
 var subnetLeasetimesNoArgErrorString string = "Error: drpcli subnets leasetimes [subnetName] [active] [reserved] [flags] requires 3 arguments\n"
 var subnetLeasetimesTooManyArgErrorString string = "Error: drpcli subnets leasetimes [subnetName] [active] [reserved] [flags] requires 3 arguments\n"
-var subnetLeasetimesSuccessString string = "Active Lease Times=65\nReserved Lease Times=7300\n"
+var subnetLeasetimesSuccessString string = `{
+  "ActiveEnd": "192.168.100.200",
+  "ActiveLeaseTime": 65,
+  "ActiveStart": "192.168.100.10",
+  "Available": true,
+  "Enabled": false,
+  "Errors": [],
+  "Name": "john",
+  "NextServer": "1.24.36.16",
+  "OnlyReservations": false,
+  "Options": [
+    {
+      "Code": 1,
+      "Value": "255.255.255.0"
+    },
+    {
+      "Code": 28,
+      "Value": "192.168.100.255"
+    }
+  ],
+  "Pickers": [
+    "none",
+    "nextFree",
+    "mostExpired"
+  ],
+  "ReadOnly": false,
+  "ReservedLeaseTime": 7300,
+  "Strategy": "a3:b3:51:66:7e:11",
+  "Subnet": "192.168.100.0/10",
+  "Validated": true
+}
+`
 var subnetLeasetimesIntFailureString string = "Error: 4x5 could not be read as a number\n\n"
 
 var subnetSetNoArgErrorString string = "Error: drpcli subnets set [subnetName] option [number] to [value] [flags] requires 5 arguments\n"
 var subnetSetTooManyArgErrorString string = "Error: drpcli subnets set [subnetName] option [number] to [value] [flags] requires 5 arguments\n"
 var subnetSetIntFailureErrorString string = "Error: 6tl could not be read as a number\n\n"
-var subnetSetTo66 string = "6 to 66\n"
-var subnetSetToNull string = "2 to null\n"
-
+var subnetSetTo66 string = `{
+  "ActiveEnd": "192.168.100.200",
+  "ActiveLeaseTime": 65,
+  "ActiveStart": "192.168.100.10",
+  "Available": true,
+  "Enabled": false,
+  "Errors": [],
+  "Name": "john",
+  "NextServer": "1.24.36.16",
+  "OnlyReservations": false,
+  "Options": [
+    {
+      "Code": 1,
+      "Value": "255.255.255.0"
+    },
+    {
+      "Code": 28,
+      "Value": "192.168.100.255"
+    },
+    {
+      "Code": 6,
+      "Value": "66"
+    }
+  ],
+  "Pickers": [
+    "none",
+    "nextFree",
+    "mostExpired"
+  ],
+  "ReadOnly": false,
+  "ReservedLeaseTime": 7300,
+  "Strategy": "a3:b3:51:66:7e:11",
+  "Subnet": "192.168.100.0/10",
+  "Validated": true
+}
+`
+var subnetSetToNull string = `{
+  "ActiveEnd": "192.168.100.200",
+  "ActiveLeaseTime": 65,
+  "ActiveStart": "192.168.100.10",
+  "Available": true,
+  "Enabled": false,
+  "Errors": [],
+  "Name": "john",
+  "NextServer": "1.24.36.16",
+  "OnlyReservations": false,
+  "Options": [
+    {
+      "Code": 1,
+      "Value": "255.255.255.0"
+    },
+    {
+      "Code": 28,
+      "Value": "192.168.100.255"
+    }
+  ],
+  "Pickers": [
+    "none",
+    "nextFree",
+    "mostExpired"
+  ],
+  "ReadOnly": false,
+  "ReservedLeaseTime": 7300,
+  "Strategy": "a3:b3:51:66:7e:11",
+  "Subnet": "192.168.100.0/10",
+  "Validated": true
+}
+`
 var subnetGetNoArgErrorString string = "Error: drpcli subnets get [subnetName] option [number] [flags] requires 3 arguments\n"
 var subnetGetTooManyArgErrorString string = "Error: drpcli subnets get [subnetName] option [number] [flags] requires 3 arguments\n"
 var subnetGetTo66 string = "Option 6: 66\n"
-var subnetGetToNull string = "Option 2: null\n"
+var subnetGetToNull string = "Error: option 6 does not exist\n\n"
 
 func TestSubnetCli(t *testing.T) {
 	tests := []CliTest{
@@ -434,8 +683,8 @@ func TestSubnetCli(t *testing.T) {
 		CliTest{false, true, []string{"subnets", "set", "john", "option", "6tl", "to", "66"}, noStdinString, noContentString, subnetSetIntFailureErrorString},
 		CliTest{false, false, []string{"subnets", "set", "john", "option", "6", "to", "66"}, noStdinString, subnetSetTo66, noErrorString},
 		CliTest{false, false, []string{"subnets", "get", "john", "option", "6"}, noStdinString, subnetGetTo66, noErrorString},
-		CliTest{false, false, []string{"subnets", "set", "john", "option", "2", "to", "null"}, noStdinString, subnetSetToNull, noErrorString},
-		CliTest{false, false, []string{"subnets", "get", "john", "option", "2"}, noStdinString, subnetGetToNull, noErrorString},
+		CliTest{false, false, []string{"subnets", "set", "john", "option", "6", "to", "null"}, noStdinString, subnetSetToNull, noErrorString},
+		CliTest{false, true, []string{"subnets", "get", "john", "option", "6"}, noStdinString, noContentString, subnetGetToNull},
 
 		//End of Helpers
 

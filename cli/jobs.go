@@ -49,10 +49,14 @@ func (be JobOps) List(parms map[string]string) (interface{}, error) {
 	}
 	for k, v := range parms {
 		switch k {
+		case "Available":
+			params = params.WithAvailable(&v)
+		case "Valid":
+			params = params.WithValid(&v)
 		case "UUID":
 			params = params.WithUUID(&v)
-		case "BootEnv":
-			params = params.WithBootEnv(&v)
+		case "Stage":
+			params = params.WithStage(&v)
 		case "Task":
 			params = params.WithTask(&v)
 		case "State":

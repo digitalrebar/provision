@@ -21,6 +21,7 @@ type Content struct {
 		These are the sections:
 		tasks        map[string]*models.Task
 		bootenvs     map[string]*models.BootEnv
+		stages       map[string]*models.Stage
 		templates    map[string]*models.Template
 		profiles     map[string]*models.Profile
 		params       map[string]*models.Param

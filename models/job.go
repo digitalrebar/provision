@@ -37,9 +37,9 @@ type Job struct {
 	// The task the job was created for.  This will be the name of the task.
 	// read only: true
 	Task string
-	// The boot environment that the task was created in.
+	// The stage that the task was created in.
 	// read only: true
-	BootEnv string
+	Stage string
 	// The state the job is in.  Must be one of "created", "running", "failed", "finished", "incomplete"
 	// required: true
 	State string
