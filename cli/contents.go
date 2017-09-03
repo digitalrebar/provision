@@ -272,7 +272,8 @@ func addContentCommands() (res *cobra.Command) {
 				}
 
 				for name, obj := range data {
-					fname := fmt.Sprintf("%s/%s%s", prefix, name, ext)
+					// Convert / in names to .
+					fname := fmt.Sprintf("%s/%s%s", prefix, strings.Replace(name, "/", ".", -1), ext)
 					if prefix == "templates" {
 						mobj := obj.(map[string]interface{})
 						name := mobj["ID"].(string)
