@@ -8,7 +8,7 @@ var paramDefaultListString string = `[
   {
     "Available": true,
     "Errors": [],
-    "Name": "incrementer.parameter",
+    "Name": "incrementer/parameter",
     "ReadOnly": false,
     "Schema": {
       "type": "string"
@@ -18,7 +18,7 @@ var paramDefaultListString string = `[
   {
     "Available": true,
     "Errors": [],
-    "Name": "incrementer.step",
+    "Name": "incrementer/step",
     "ReadOnly": false,
     "Schema": {
       "type": "integer"
@@ -28,7 +28,7 @@ var paramDefaultListString string = `[
   {
     "Available": true,
     "Errors": [],
-    "Name": "incrementer.touched",
+    "Name": "incrementer/touched",
     "ReadOnly": false,
     "Schema": {
       "type": "integer"
@@ -90,7 +90,7 @@ var paramListParamsString = `[
   {
     "Available": true,
     "Errors": [],
-    "Name": "incrementer.parameter",
+    "Name": "incrementer/parameter",
     "ReadOnly": false,
     "Schema": {
       "type": "string"
@@ -100,7 +100,7 @@ var paramListParamsString = `[
   {
     "Available": true,
     "Errors": [],
-    "Name": "incrementer.step",
+    "Name": "incrementer/step",
     "ReadOnly": false,
     "Schema": {
       "type": "integer"
@@ -110,7 +110,7 @@ var paramListParamsString = `[
   {
     "Available": true,
     "Errors": [],
-    "Name": "incrementer.touched",
+    "Name": "incrementer/touched",
     "ReadOnly": false,
     "Schema": {
       "type": "integer"
