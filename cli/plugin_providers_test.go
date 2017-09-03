@@ -21,8 +21,8 @@ var plugin_providerListString string = `[
       {
         "Command": "increment",
         "OptionalParams": [
-          "incrementer.step",
-          "incrementer.parameter"
+          "incrementer/step",
+          "incrementer/parameter"
         ],
         "Provider": "incrementer",
         "RequiredParams": null
@@ -32,7 +32,7 @@ var plugin_providerListString string = `[
         "OptionalParams": null,
         "Provider": "incrementer",
         "RequiredParams": [
-          "incrementer.touched"
+          "incrementer/touched"
         ]
       }
     ],
@@ -43,7 +43,7 @@ var plugin_providerListString string = `[
       {
         "Available": true,
         "Errors": [],
-        "Name": "incrementer.parameter",
+        "Name": "incrementer/parameter",
         "ReadOnly": false,
         "Schema": {
           "type": "string"
@@ -53,7 +53,7 @@ var plugin_providerListString string = `[
       {
         "Available": true,
         "Errors": [],
-        "Name": "incrementer.step",
+        "Name": "incrementer/step",
         "ReadOnly": false,
         "Schema": {
           "type": "integer"
@@ -63,7 +63,7 @@ var plugin_providerListString string = `[
       {
         "Available": true,
         "Errors": [],
-        "Name": "incrementer.touched",
+        "Name": "incrementer/touched",
         "ReadOnly": false,
         "Schema": {
           "type": "integer"
@@ -81,8 +81,8 @@ var plugin_providerShowIncrementerString string = `{
     {
       "Command": "increment",
       "OptionalParams": [
-        "incrementer.step",
-        "incrementer.parameter"
+        "incrementer/step",
+        "incrementer/parameter"
       ],
       "Provider": "incrementer",
       "RequiredParams": null
@@ -92,7 +92,7 @@ var plugin_providerShowIncrementerString string = `{
       "OptionalParams": null,
       "Provider": "incrementer",
       "RequiredParams": [
-        "incrementer.touched"
+        "incrementer/touched"
       ]
     }
   ],
@@ -103,7 +103,7 @@ var plugin_providerShowIncrementerString string = `{
     {
       "Available": true,
       "Errors": [],
-      "Name": "incrementer.parameter",
+      "Name": "incrementer/parameter",
       "ReadOnly": false,
       "Schema": {
         "type": "string"
@@ -113,7 +113,7 @@ var plugin_providerShowIncrementerString string = `{
     {
       "Available": true,
       "Errors": [],
-      "Name": "incrementer.step",
+      "Name": "incrementer/step",
       "ReadOnly": false,
       "Schema": {
         "type": "integer"
@@ -123,7 +123,7 @@ var plugin_providerShowIncrementerString string = `{
     {
       "Available": true,
       "Errors": [],
-      "Name": "incrementer.touched",
+      "Name": "incrementer/touched",
       "ReadOnly": false,
       "Schema": {
         "type": "integer"

@@ -23,16 +23,16 @@ var (
 		HasPublish: true,
 		AvailableActions: []*models.AvailableAction{
 			&models.AvailableAction{Command: "increment",
-				OptionalParams: []string{"incrementer.step", "incrementer.parameter"},
+				OptionalParams: []string{"incrementer/step", "incrementer/parameter"},
 			},
 			&models.AvailableAction{Command: "reset_count",
-				RequiredParams: []string{"incrementer.touched"},
+				RequiredParams: []string{"incrementer/touched"},
 			},
 		},
 		Parameters: []*models.Param{
-			&models.Param{Name: "incrementer.parameter", Schema: map[string]interface{}{"type": "string"}},
-			&models.Param{Name: "incrementer.step", Schema: map[string]interface{}{"type": "integer"}},
-			&models.Param{Name: "incrementer.touched", Schema: map[string]interface{}{"type": "integer"}},
+			&models.Param{Name: "incrementer/parameter", Schema: map[string]interface{}{"type": "string"}},
+			&models.Param{Name: "incrementer/step", Schema: map[string]interface{}{"type": "integer"}},
+			&models.Param{Name: "incrementer/touched", Schema: map[string]interface{}{"type": "integer"}},
 		},
 	}
 	lock sync.Mutex
@@ -140,13 +140,13 @@ func removeParameter(uuid, parameter string) *models.Error {
 func (p *Plugin) Action(ma *models.MachineAction) *models.Error {
 	plugin.Log("Action: %v\n", ma)
 	if ma.Command == "increment" {
-		parameter, ok := ma.Params["incrementer.parameter"].(string)
+		parameter, ok := ma.Params["incrementer/parameter"].(string)
 		if !ok {
-			parameter = "incrementer.default"
+			parameter = "incrementer/default"
 		}
 
 		step := 1
-		if pstep, ok := ma.Params["incrementer.step"]; ok {
+		if pstep, ok := ma.Params["incrementer/step"]; ok {
 			if fstep, ok := pstep.(float64); ok {
 				step = int(fstep)
 			}
@@ -160,11 +160,11 @@ func (p *Plugin) Action(ma *models.MachineAction) *models.Error {
 
 		err := updateOrCreateParameter(ma.Uuid.String(), parameter, step)
 		if err.Code == 0 {
-			updateOrCreateParameter(ma.Uuid.String(), "incrementer.touched", 1)
+			updateOrCreateParameter(ma.Uuid.String(), "incrementer/touched", 1)
 		}
 		return err
 	} else if ma.Command == "reset_count" {
-		return removeParameter(ma.Uuid.String(), "incrementer.touched")
+		return removeParameter(ma.Uuid.String(), "incrementer/touched")
 	}
 
 	return &models.Error{Code: 404,
