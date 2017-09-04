@@ -330,7 +330,9 @@ the boolean wait flag.
 				// Get the job data
 				var list []*models.JobAction
 				if resp, err := session.Jobs.GetJobActions(jobs.NewGetJobActionsParams().WithUUID(*job.UUID), basicAuth); err != nil {
-					fmt.Printf("Error loading task content: %v, continuing", err)
+					s := fmt.Sprintf("Error loading task content: %v, continuing", err)
+					fmt.Printf(s)
+					Log(job.UUID, s)
 					markJob(job.UUID.String(), "failed", jo)
 					continue
 				} else {
@@ -339,7 +341,9 @@ the boolean wait flag.
 
 				// Mark job as running
 				if _, err := Update(job.UUID.String(), `{"State": "running"}`, jo, false); err != nil {
-					fmt.Printf("Error marking job as running: %v, continue\n", err)
+					s := fmt.Sprintf("Error marking job as running: %v, continue\n", err)
+					fmt.Printf(s)
+					Log(job.UUID, s)
 					markJob(job.UUID.String(), "failed", jo)
 					continue
 				}
