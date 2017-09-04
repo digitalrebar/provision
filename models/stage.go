@@ -49,6 +49,9 @@ type Stage struct {
 	// transition into this Stage.  The nextbootpxe and reboot
 	// machine actions will be called if present and Reboot is true
 	Reboot bool
+	// Flag to indicate if the runner should wait for more tasks
+	// while in this stage.
+	RunnerWait bool
 }
 
 func (s *Stage) Prefix() string {

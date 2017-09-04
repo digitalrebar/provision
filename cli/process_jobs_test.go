@@ -81,15 +81,14 @@ var processJobsSetMachineToLocalOutputString = `{
   "Validated": true
 }
 `
-var processJobsNoArgsString = "Error: drpcli machines processjobs [id] [wait] [flags] requires at least 1 argument\n"
-var processJobsTooManyArgsString = "Error: drpcli machines processjobs [id] [wait] [flags] requires at most 2 arguments\n"
+var processJobsNoArgsString = "Error: drpcli machines processjobs [id] [flags] requires at least 1 argument\n"
+var processJobsTooManyArgsString = "Error: drpcli machines processjobs [id] [flags] requires at most 1 arguments\n"
 var processJobsMissingMachineString = "Error: machines GET: p1: Not Found\n\n"
-var processJobsBadBooleanString = "Error: Error reading wait argument: strconv.ParseBool: parsing \"asga\": invalid syntax\n\n"
-var processJobsNoJobsNoWait = "Processing jobs for 3e7031fe-3062-45f1-835c-92541bc9cbd3 (will not wait for new jobs)\n"
+var processJobsNoJobsNoWait = "Processing jobs for 3e7031fe-3062-45f1-835c-92541bc9cbd3\n"
 
 var processJobsErrorSuccessString = "Error: Task failed, exiting ...\n\n\n"
 var processJobsOutputSuccessString = `RE:
-Processing jobs for 3e7031fe-3062-45f1-835c-92541bc9cbd3 \(will not wait for new jobs\)
+Processing jobs for 3e7031fe-3062-45f1-835c-92541bc9cbd3
 Starting Task: jamie \([\S\s]*\)
 Task: jamie finished
 Starting Task: justine \([\S\s]*\)
@@ -230,7 +229,7 @@ var processJobsShowRunnableMachineString = `RE:
 `
 
 var processJobsOutputSecondPassSuccessString = `RE:
-Processing jobs for 3e7031fe-3062-45f1-835c-92541bc9cbd3 \(will not wait for new jobs\)
+Processing jobs for 3e7031fe-3062-45f1-835c-92541bc9cbd3
 Starting Task: justine \([\S\s]*\)
 Putting Content in place for Task Template: part 1 - copy file
 Task Template: part 1 - copy file - Copied contents to test.txt successfully
@@ -309,8 +308,6 @@ func TestProcessJobsCli(t *testing.T) {
 		CliTest{true, true, []string{"machines", "processjobs"}, noStdinString, noContentString, processJobsNoArgsString},
 		CliTest{true, true, []string{"machines", "processjobs", "p1", "p2", "p3"}, noStdinString, noContentString, processJobsTooManyArgsString},
 		CliTest{false, true, []string{"machines", "processjobs", "p1"}, noStdinString, noContentString, processJobsMissingMachineString},
-		CliTest{false, true, []string{"machines", "processjobs", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "asga"}, noStdinString, noContentString, processJobsBadBooleanString},
-		CliTest{false, false, []string{"machines", "processjobs", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "false"}, noStdinString, processJobsNoJobsNoWait, noErrorString},
 		CliTest{false, false, []string{"machines", "processjobs", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, processJobsNoJobsNoWait, noErrorString},
 
 		// Run a stage

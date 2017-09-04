@@ -8,7 +8,6 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
-	"strconv"
 	"strings"
 	"syscall"
 	"time"
@@ -231,40 +230,27 @@ func runContent(uuid *strfmt.UUID, action *models.JobAction) (failed, incomplete
 func processJobsCommand() *cobra.Command {
 	mo := &MachineOps{CommonOps{Name: "machines", SingularName: "machine"}}
 	jo := &JobOps{CommonOps{Name: "jobs", SingularName: "job"}}
+	so := &StageOps{CommonOps{Name: "stages", SingularName: "stage"}}
 
 	command := &cobra.Command{
-		Use:   "processjobs [id] [wait]",
+		Use:   "processjobs [id]",
 		Short: "For the given machine, process pending jobs until done.",
 		Long: `
 For the provided machine, identified by UUID, process the task list on
 that machine until an error occurs or all jobs are complete.  Upon 
 completion, optionally wait for additional jobs as specified by
-the boolean wait flag.
+the stage runner wait flag.
 `,
 		RunE: func(c *cobra.Command, args []string) error {
-			var err error
 			if len(args) < 1 {
 				return fmt.Errorf("%v requires at least 1 argument", c.UseLine())
-
 			}
-			if len(args) > 2 {
-				return fmt.Errorf("%v requires at most 2 arguments", c.UseLine())
+			if len(args) > 1 {
+				return fmt.Errorf("%v requires at most 1 arguments", c.UseLine())
 			}
 			dumpUsage = false
 
 			uuid := args[0]
-			wait := false
-			if len(args) == 2 {
-				wait, err = strconv.ParseBool(args[1])
-				if err != nil {
-					return fmt.Errorf("Error reading wait argument: %v", err)
-				}
-			}
-
-			waitStr := "will not wait for new jobs"
-			if wait {
-				waitStr = "will wait for new jobs"
-			}
 
 			var machine *models.Machine
 			if obj, err := Get(uuid, mo); err != nil {
@@ -273,7 +259,7 @@ the boolean wait flag.
 				machine = obj.(*models.Machine)
 			}
 
-			fmt.Printf("Processing jobs for %s (%s)\n", uuid, waitStr)
+			fmt.Printf("Processing jobs for %s\n", uuid)
 
 			// Get Current Job and mark it failed if it is running.
 			if obj, err := Get(machine.CurrentJob.String(), jo); err == nil {
@@ -314,6 +300,17 @@ the boolean wait flag.
 							fmt.Println("Jobs finished")
 							did_job = false
 						}
+
+						wait := false
+						if obj, err := Get(uuid, mo); err == nil {
+							machine = obj.(*models.Machine)
+
+							if sobj, err := Get(machine.Stage, so); err == nil {
+								stage := sobj.(*models.Stage)
+								wait = stage.RunnerWait
+							}
+						}
+
 						if wait {
 							// Wait for new jobs - XXX: Web socket one day.
 							// Create a not equal waiter
