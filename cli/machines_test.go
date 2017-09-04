@@ -82,6 +82,33 @@ var machineCreateJohnString string = `{
 }
 `
 
+var machineCreateJohnString2 string = `{
+  "Address": "192.168.100.110",
+  "Available": true,
+  "BootEnv": "local",
+  "CurrentTask": -1,
+  "Errors": [],
+  "Name": "john",
+  "Profile": {
+    "Available": false,
+    "Errors": null,
+    "Name": "",
+    "ReadOnly": false,
+    "Validated": false
+  },
+  "Profiles": null,
+  "ReadOnly": false,
+  "Runnable": true,
+  "Stage": "stage1",
+  "Tasks": [
+    "jamie",
+    "justine"
+  ],
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
+}
+`
+
 var machineCreateDuplicateErrorString = "Error: dataTracker create machines: 3e7031fe-3062-45f1-835c-92541bc9cbd3 already exists\n\n"
 
 var machineListMachinesString = `[
@@ -894,6 +921,34 @@ var machineAggregateParamString = `{
 }
 `
 
+var machinesSetDefaultStageString = `{
+  "debugBootEnv": "0",
+  "debugDhcp": "0",
+  "debugFrontend": "0",
+  "debugPlugins": "0",
+  "debugRenderer": "0",
+  "defaultBootEnv": "local",
+  "defaultStage": "stage1",
+  "knownTokenTimeout": "3600",
+  "unknownBootEnv": "ignore",
+  "unknownTokenTimeout": "600"
+}
+`
+
+var machinesSetDefaultStageBackString = `{
+  "debugBootEnv": "0",
+  "debugDhcp": "0",
+  "debugFrontend": "0",
+  "debugPlugins": "0",
+  "debugRenderer": "0",
+  "defaultBootEnv": "local",
+  "defaultStage": "",
+  "knownTokenTimeout": "3600",
+  "unknownBootEnv": "ignore",
+  "unknownTokenTimeout": "600"
+}
+`
+
 func TestMachineCli(t *testing.T) {
 
 	tests := []CliTest{
@@ -1112,6 +1167,12 @@ func TestMachineCli(t *testing.T) {
 
 		CliTest{false, false, []string{"machines", "destroy", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, machineDestroyJohnString, noErrorString},
 		CliTest{false, false, []string{"machines", "list"}, noStdinString, machineDefaultListString, noErrorString},
+
+		CliTest{false, false, []string{"prefs", "set", "defaultStage", "stage1"}, noStdinString, machinesSetDefaultStageString, noErrorString},
+		CliTest{false, false, []string{"machines", "create", machineCreateInputString}, noStdinString, machineCreateJohnString2, noErrorString},
+		CliTest{false, false, []string{"machines", "destroy", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, machineDestroyJohnString, noErrorString},
+		CliTest{false, false, []string{"machines", "list"}, noStdinString, machineDefaultListString, noErrorString},
+		CliTest{false, false, []string{"prefs", "set", "defaultStage", ""}, noStdinString, machinesSetDefaultStageBackString, noErrorString},
 
 		CliTest{false, false, []string{"plugins", "destroy", "incr"}, noStdinString, "Deleted plugin incr\n", noErrorString},
 		CliTest{false, false, []string{"stages", "destroy", "stage1"}, noStdinString, "Deleted stage stage1\n", noErrorString},
