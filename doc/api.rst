@@ -14,6 +14,36 @@ In general, the Digital Rebar Provision API is documented via the Swagger spec a
 
 All API calls are available under `/api/v3` based on the Digital Rebar API convention.
 
+.. _rs_api_filters:
+
+API Filters
+-----------
+
+The API includes index driven filters for large deployments that can be used to pre-filter requests from the API.
+
+The list of available indexes is provided by the ``/api/v3/indexes`` and ``/api/v3/indexes/[model]`` calls.  These hashs provide a list of all keys that can be used for filters with some additional metadata.
+
+To use the index, simply include one or more indexs and values on the request URI.  For example:
+
+  ::
+
+    /api/v3/machines?Runnable=true&Available=true
+
+The filter specification allows more complex filters using functions:
+
+  * Key=Eq(Value) (that is the same as Key=Value)
+  * Lt(Value)
+  * Lte(Value)
+  * Gt(Value)
+  * Gte(Value)
+  * Ne(Value)
+  * Ranges:
+    * Between(Value1,Value2) (edited)
+    * Except(Value1,Value2)
+
+The query string applies ALL parameters are to be applied (as implied by the & separator).  All must match to be returned.
+
+
 .. _rs_api_notes:
 
 API Exception Notes
