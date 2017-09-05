@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"path"
 	"strings"
 	"syscall"
 	"time"
@@ -30,8 +31,12 @@ func Log(uuid *strfmt.UUID, s string) error {
 	return err
 }
 
-func writeStringToFile(path, content string) error {
-	fo, err := os.Create(path)
+func writeStringToFile(filename, content string) error {
+	dir := path.Dir(filename)
+	if err := os.MkdirAll(dir, 0755); err != nil {
+		return err
+	}
+	fo, err := os.Create(filename)
 	if err != nil {
 		return err
 	}
