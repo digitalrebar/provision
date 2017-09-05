@@ -89,18 +89,6 @@ func (be StageOps) Create(obj interface{}) (interface{}, error) {
 	return d.Payload, nil
 }
 
-func (be StageOps) Update(id string, obj interface{}) (interface{}, error) {
-	stage, ok := obj.(*models.Stage)
-	if !ok {
-		return nil, fmt.Errorf("Invalid type passed to stage update")
-	}
-	d, e := session.Stages.PutStage(stages.NewPutStageParams().WithName(id).WithBody(stage), basicAuth)
-	if e != nil {
-		return nil, e
-	}
-	return d.Payload, nil
-}
-
 func (be StageOps) Patch(id string, obj interface{}) (interface{}, error) {
 	data, ok := obj.(models.Patch)
 	if !ok {
