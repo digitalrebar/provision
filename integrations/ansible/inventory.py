@@ -93,7 +93,9 @@ def main():
             for machine in profiles[profile]:
                 section["hosts"].extend([machine])
 
-        if u'ansible-children' in profiles_vars[profile].keys():
+        if profiles_vars[profile] is None:
+            pass # so nothing
+        elif u'ansible-children' in profiles_vars[profile].keys():
             section["children"] = []
             for child in profiles_vars[profile][u'ansible-children']:
                 section["children"].extend([child])
