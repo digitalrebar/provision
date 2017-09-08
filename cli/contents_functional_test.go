@@ -71,8 +71,10 @@ var contentPack1CreateSuccessString = `{
   "Counts": {
     "profiles": 1
   },
+  "Warnings": null,
   "meta": {
     "Name": "Pack1",
+    "Type": "dynamic",
     "Version": "0.1"
   }
 }
@@ -114,7 +116,24 @@ var contentPack1ProfileListString = `[
   }
 ]
 `
-
+var contentPack1ProfileList2String = `[
+  {
+    "Available": true,
+    "Errors": [],
+    "Name": "global",
+    "ReadOnly": false,
+    "Validated": true
+  },
+  {
+    "Available": true,
+    "Description": "pack1-2",
+    "Errors": null,
+    "Name": "p2-prof",
+    "ReadOnly": true,
+    "Validated": true
+  }
+]
+`
 var contentPack1UpdateProfileListString = `[
   {
     "Available": true,
@@ -249,7 +268,20 @@ var contentPack1BadUpdateString = `{
   }
 }
 `
-var contentPack1BadUpdateErrorString = "Error: Profile p1-prof (at 0) does not exist\n\n"
+var contentPack1BadUpdateSuccessString = `{
+  "Counts": {
+    "profiles": 1
+  },
+  "Warnings": [
+    "Profile p1-prof (at 0) does not exist"
+  ],
+  "meta": {
+    "Name": "Pack1",
+    "Type": "dynamic",
+    "Version": "0.2"
+  }
+}
+`
 
 var contentPack1BadSyntaxUpdateString = `{
   "meta": {
@@ -272,7 +304,7 @@ var contentPack1BadSyntaxUpdateErrorString = "Error: Unable to load profiles: er
 var contentPack1UpdateString = `{
   "meta": {
     "Name": "Pack1",
-    "Version": "0.2",
+    "Version": "0.3",
   },
   "sections": {
     "profiles": {
@@ -288,9 +320,11 @@ var contentPack1UpdateSuccessString = `{
   "Counts": {
     "profiles": 1
   },
+  "Warnings": null,
   "meta": {
     "Name": "Pack1",
-    "Version": "0.2"
+    "Type": "dynamic",
+    "Version": "0.3"
   }
 }
 `
@@ -310,12 +344,9 @@ func TestContentsFunctionalCli(t *testing.T) {
 		CliTest{false, false, []string{"machines", "create", contentMachineCreateString}, noStdinString, contentMachineCreateSuccessString, noErrorString},
 		CliTest{false, false, []string{"machines", "addprofile", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "p1-prof"}, noStdinString, contentMachineAddProfileString, noErrorString},
 
-		CliTest{false, true, []string{"contents", "destroy", "Pack1"}, noStdinString, noContentString, contentPack1DestroyErrorString},
-		CliTest{false, false, []string{"profiles", "list"}, noStdinString, contentPack1ProfileListString, noErrorString},
-
 		CliTest{false, true, []string{"contents", "update", "Pack1", contentPack1BadSyntaxUpdateString}, noStdinString, noContentString, contentPack1BadSyntaxUpdateErrorString},
-		CliTest{false, true, []string{"contents", "update", "Pack1", contentPack1BadUpdateString}, noStdinString, noContentString, contentPack1BadUpdateErrorString},
-		CliTest{false, false, []string{"profiles", "list"}, noStdinString, contentPack1ProfileListString, noErrorString},
+		CliTest{false, false, []string{"contents", "update", "Pack1", contentPack1BadUpdateString}, noStdinString, contentPack1BadUpdateSuccessString, noErrorString},
+		CliTest{false, false, []string{"profiles", "list"}, noStdinString, contentPack1ProfileList2String, noErrorString},
 		CliTest{false, false, []string{"contents", "update", "Pack1", contentPack1UpdateString}, noStdinString, contentPack1UpdateSuccessString, noErrorString},
 		CliTest{false, false, []string{"profiles", "list"}, noStdinString, contentPack1UpdateProfileListString, noErrorString},
 
