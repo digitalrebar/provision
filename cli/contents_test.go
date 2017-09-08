@@ -22,19 +22,24 @@ var contentDefaultListString string = `[
       "templates": 0,
       "users": 1
     },
+    "Warnings": null,
     "meta": {
       "Description": "Writable backing store",
       "Name": "BackingStore",
-      "Version": "user"
+      "Type": "writable",
+      "Version": "user",
+      "Writable": true
     }
   },
   {
     "Counts": {
       "templates": 1
     },
+    "Warnings": null,
     "meta": {
       "Description": "Local Override Store",
       "Name": "LocalStore",
+      "Type": "local",
       "Version": "user"
     }
   },
@@ -42,10 +47,13 @@ var contentDefaultListString string = `[
     "Counts": {
       "templates": 1
     },
+    "Warnings": null,
     "meta": {
       "Description": "Initial Default Content",
       "Name": "DefaultStore",
+      "Overwritable": true,
       "Source": "Unspecified",
+      "Type": "default",
       "Version": "user"
     }
   }
@@ -62,7 +70,8 @@ var contentShowTooManyArgErrorString string = "Error: drpcli contents show [id] 
 var contentShowMissingArgErrorString string = "Error: content get: not found: john2\n\n"
 var contentShowContentString string = `{
   "meta": {
-    "Name": "john"
+    "Name": "john",
+    "Type": "dynamic"
   }
 }
 `
@@ -85,8 +94,10 @@ var contentCreateInputString string = `{
 }
 `
 var contentCreateJohnString string = `{
+  "Warnings": null,
   "meta": {
-    "Name": "john"
+    "Name": "john",
+    "Type": "dynamic"
   }
 }
 `
@@ -110,35 +121,45 @@ var contentListContentsString = `[
       "templates": 0,
       "users": 1
     },
+    "Warnings": null,
     "meta": {
       "Description": "Writable backing store",
       "Name": "BackingStore",
-      "Version": "user"
+      "Type": "writable",
+      "Version": "user",
+      "Writable": true
     }
   },
   {
     "Counts": {
       "templates": 1
     },
+    "Warnings": null,
     "meta": {
       "Description": "Local Override Store",
       "Name": "LocalStore",
+      "Type": "local",
       "Version": "user"
     }
   },
   {
+    "Warnings": null,
     "meta": {
-      "Name": "john"
+      "Name": "john",
+      "Type": "dynamic"
     }
   },
   {
     "Counts": {
       "templates": 1
     },
+    "Warnings": null,
     "meta": {
       "Description": "Initial Default Content",
       "Name": "DefaultStore",
+      "Overwritable": true,
       "Source": "Unspecified",
+      "Type": "default",
       "Version": "user"
     }
   }
@@ -164,9 +185,19 @@ var contentUpdateInputString string = `{
 }
 `
 var contentUpdateJohnString string = `{
+  "Warnings": null,
   "meta": {
     "Description": "Fred Rules",
-    "Name": "john"
+    "Name": "john",
+    "Type": "dynamic"
+  }
+}
+`
+var contentShowJohnString string = `{
+  "meta": {
+    "Description": "Fred Rules",
+    "Name": "john",
+    "Type": "dynamic"
   }
 }
 `
@@ -211,7 +242,7 @@ func TestContentCli(t *testing.T) {
 		CliTest{false, true, []string{"contents", "update", "john", contentUpdateBadInputString}, noStdinString, noContentString, contentUpdateBadInputErrorString},
 		CliTest{false, false, []string{"contents", "update", "john", contentUpdateInputString}, noStdinString, contentUpdateJohnString, noErrorString},
 		CliTest{false, true, []string{"contents", "update", "john2", contentUpdateInputString}, noStdinString, noContentString, contentUpdateJohnMissingErrorString},
-		CliTest{false, false, []string{"contents", "show", "john"}, noStdinString, contentUpdateJohnString, noErrorString},
+		CliTest{false, false, []string{"contents", "show", "john"}, noStdinString, contentShowJohnString, noErrorString},
 
 		CliTest{true, true, []string{"contents", "destroy"}, noStdinString, noContentString, contentDestroyNoArgErrorString},
 		CliTest{true, true, []string{"contents", "destroy", "john", "june"}, noStdinString, noContentString, contentDestroyTooManyArgErrorString},
@@ -222,7 +253,7 @@ func TestContentCli(t *testing.T) {
 		CliTest{false, false, []string{"contents", "create", "-"}, contentCreateInputString + "\n", contentCreateJohnString, noErrorString},
 		CliTest{false, false, []string{"contents", "list"}, noStdinString, contentListContentsString, noErrorString},
 		CliTest{false, false, []string{"contents", "update", "john", "-"}, contentUpdateInputString + "\n", contentUpdateJohnString, noErrorString},
-		CliTest{false, false, []string{"contents", "show", "john"}, noStdinString, contentUpdateJohnString, noErrorString},
+		CliTest{false, false, []string{"contents", "show", "john"}, noStdinString, contentShowJohnString, noErrorString},
 
 		CliTest{false, false, []string{"contents", "destroy", "john"}, noStdinString, contentDestroyJohnString, noErrorString},
 		CliTest{false, false, []string{"contents", "list"}, noStdinString, contentDefaultListString, noErrorString},

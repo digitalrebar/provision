@@ -6,6 +6,11 @@ type ContentMetaData struct {
 	Source      string
 	Description string
 	Version     string
+
+	// Informational Fields
+	Writable     bool
+	Type         string
+	Overwritable bool
 }
 
 //
@@ -41,8 +46,9 @@ type Section map[string]interface{}
 
 // swagger:model
 type ContentSummary struct {
-	Meta   ContentMetaData `json:"meta"`
-	Counts map[string]int
+	Meta     ContentMetaData `json:"meta"`
+	Counts   map[string]int
+	Warnings []string
 }
 
 func (c *Content) Prefix() string {
