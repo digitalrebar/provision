@@ -43,14 +43,19 @@ Ansible Dynamic Inventory from Digital Rebar Provision
 
 Be certain to export the `RS_ENDPOINT` and `RS_KEY` to match the DRP endpoint information because the DRP dynamic Ansible inventory script relies on these values being set.
 
+Please insure that *jq* is installed.
+
 Download the inventory script to the local system to a convenient location and make it executable.  You can test the script by simply running it.  The script will output JSON in the required Ansible format.
 
   ::
-    curl -o https://raw.githubusercontent.com/digitalrebar/provision/master/integrations/ansible/inventory.py -o inventory.py
+
+    curl -s https://raw.githubusercontent.com/digitalrebar/provision/master/integrations/ansible/inventory.py -o inventory.py
     chmod +x inventory.py
     ./inventory.py | jq
 
 In order to test the Ansible integration, use the ping command.  If everything is working, all the machines in the system should receive and respond to the ping command. 
+
+  ::
 
     ansible all -i inventory.py -m ping
 
