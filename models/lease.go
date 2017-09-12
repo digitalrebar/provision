@@ -20,6 +20,7 @@ func Hexaddr(addr net.IP) string {
 type Lease struct {
 	Validation
 	Access
+	MetaData
 	// Addr is the IP address that the lease handed out.
 	//
 	// required: true

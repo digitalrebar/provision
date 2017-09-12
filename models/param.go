@@ -10,6 +10,7 @@ import "github.com/xeipuuv/gojsonschema"
 type Param struct {
 	Validation
 	Access
+	MetaData
 	// Name is the name of the param.  Params must be uniquely named.
 	//
 	// required: true

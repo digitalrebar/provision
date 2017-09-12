@@ -6,6 +6,7 @@ package models
 type Plugin struct {
 	Validation
 	Access
+	MetaData
 	// The name of the plugin instance.  THis must be unique across all
 	// plugins.
 	//

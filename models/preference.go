@@ -5,6 +5,7 @@ package models
 // default bootenv for known systems, etc.
 //
 type Pref struct {
+	MetaData
 	Name string
 	Val  string
 }

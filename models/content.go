@@ -1,6 +1,8 @@
 package models
 
 type ContentMetaData struct {
+	MetaData
+
 	// required: true
 	Name        string
 	Source      string
