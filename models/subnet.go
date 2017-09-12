@@ -8,6 +8,7 @@ import "net"
 type Subnet struct {
 	Validation
 	Access
+	MetaData
 	// Name is the name of the subnet.
 	// Subnet names must be unique
 	//

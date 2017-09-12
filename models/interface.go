@@ -3,6 +3,7 @@ package models
 // swagger:model
 type Interface struct {
 	Access
+	MetaData
 	// Name of the interface
 	//
 	// required: true

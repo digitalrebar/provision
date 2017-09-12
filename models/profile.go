@@ -11,6 +11,7 @@ package models
 type Profile struct {
 	Validation
 	Access
+	MetaData
 	// The name of the profile.  This must be unique across all
 	// profiles.
 	//

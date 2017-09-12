@@ -11,6 +11,8 @@ import (
 // instantiated by a plugin.
 // swagger:model
 type PluginProvider struct {
+	MetaData
+
 	Name    string
 	Version string
 

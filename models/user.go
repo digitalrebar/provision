@@ -9,6 +9,7 @@ import (
 type User struct {
 	Validation
 	Access
+	MetaData
 	// Name is the name of the user
 	//
 	// required: true

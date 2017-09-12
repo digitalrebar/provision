@@ -8,6 +8,7 @@ import "net"
 type Reservation struct {
 	Validation
 	Access
+	MetaData
 	// Addr is the IP address permanently assigned to the strategy/token combination.
 	//
 	// required: true

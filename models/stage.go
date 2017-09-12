@@ -7,6 +7,7 @@ package models
 type Stage struct {
 	Validation
 	Access
+	MetaData
 	// The name of the boot environment.  Boot environments that install
 	// an operating system must end in '-install'.
 	//

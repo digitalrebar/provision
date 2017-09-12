@@ -6,6 +6,7 @@ package models
 type Task struct {
 	Validation
 	Access
+	MetaData
 	// Name is the name of this Task.  Task names must be globally unique
 	//
 	// required: true
