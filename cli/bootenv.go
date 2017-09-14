@@ -304,9 +304,10 @@ using isos upload.git `,
 				return fmt.Errorf("Unable to open %s for upload: %v", isoPath, err)
 			}
 			defer isoTarget.Close()
-			params := isos.NewUploadIsoParams()
-			params.Path = bootEnv.OS.IsoFile
-			params.Body = isoTarget
+			params := isos.NewUploadIsoParams().
+				WithTimeout(30 * time.Minute).
+				WithPath(bootEnv.OS.IsoFile).
+				WithBody(isoTarget)
 			if _, err := session.Isos.UploadIso(params, basicAuth); err != nil {
 				return generateError(err, "Error uploading %s", isoPath)
 			}
