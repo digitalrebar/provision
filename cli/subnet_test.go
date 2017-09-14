@@ -341,11 +341,11 @@ var subnetSubnetCIDRSuccessString = `{
   "Options": [
     {
       "Code": 1,
-      "Value": "255.255.255.0"
+      "Value": "255.192.0.0"
     },
     {
       "Code": 28,
-      "Value": "192.168.100.255"
+      "Value": "192.191.255.255"
     }
   ],
   "Pickers": [
@@ -377,11 +377,11 @@ var subnetStrategyMacSuccessString string = `{
   "Options": [
     {
       "Code": 1,
-      "Value": "255.255.255.0"
+      "Value": "255.192.0.0"
     },
     {
       "Code": 28,
-      "Value": "192.168.100.255"
+      "Value": "192.191.255.255"
     }
   ],
   "Pickers": [
@@ -413,11 +413,11 @@ var subnetPickersSuccessString string = `{
   "Options": [
     {
       "Code": 1,
-      "Value": "255.255.255.0"
+      "Value": "255.192.0.0"
     },
     {
       "Code": 28,
-      "Value": "192.168.100.255"
+      "Value": "192.191.255.255"
     }
   ],
   "Pickers": [
@@ -448,11 +448,11 @@ var subnetNextserverIPSuccess string = `{
   "Options": [
     {
       "Code": 1,
-      "Value": "255.255.255.0"
+      "Value": "255.192.0.0"
     },
     {
       "Code": 28,
-      "Value": "192.168.100.255"
+      "Value": "192.191.255.255"
     }
   ],
   "Pickers": [
@@ -482,11 +482,11 @@ var subnetLeasetimesSuccessString string = `{
   "Options": [
     {
       "Code": 1,
-      "Value": "255.255.255.0"
+      "Value": "255.192.0.0"
     },
     {
       "Code": 28,
-      "Value": "192.168.100.255"
+      "Value": "192.191.255.255"
     }
   ],
   "Pickers": [
@@ -519,11 +519,11 @@ var subnetSetTo66 string = `{
   "Options": [
     {
       "Code": 1,
-      "Value": "255.255.255.0"
+      "Value": "255.192.0.0"
     },
     {
       "Code": 28,
-      "Value": "192.168.100.255"
+      "Value": "192.191.255.255"
     },
     {
       "Code": 6,
@@ -555,11 +555,11 @@ var subnetSetToNull string = `{
   "Options": [
     {
       "Code": 1,
-      "Value": "255.255.255.0"
+      "Value": "255.192.0.0"
     },
     {
       "Code": 28,
-      "Value": "192.168.100.255"
+      "Value": "192.191.255.255"
     }
   ],
   "Pickers": [

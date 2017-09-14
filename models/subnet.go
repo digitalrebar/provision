@@ -58,7 +58,7 @@ type Subnet struct {
 	//
 	// required: true
 	OnlyReservations bool
-	Options          []DhcpOption
+	Options          []*DhcpOption
 	// Strategy is the leasing strategy that will be used determine what to use from
 	// the DHCP packet to handle lease management.
 	//
