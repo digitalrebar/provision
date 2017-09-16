@@ -1,27 +1,22 @@
-drpcli jobs exists
-==================
+drpcli stages exists
+====================
 
-See if a job exists by id
+See if a stage exists by id
 
 Synopsis
 --------
 
-This will detect if a jobs exists.
+This will detect if a stages exists.
 
 It is possible to specify the id in the request by the using normal key
 or by index.
 
 Functional Indexs:
 
--  Archived = boolean
 -  Available = boolean
--  EndTime = dateTime
--  Machine = UUID string
--  Stage = string
--  StartTime = dateTime
--  State = string
--  Task = string
--  Uuid = UUID string
+-  BootEnv = string
+-  Name = string
+-  Reboot = boolean
 -  Valid = boolean
 
 When using the index name, use the following form:
@@ -34,7 +29,7 @@ Example:
 
 ::
 
-    drpcli jobs exists [id] [flags]
+    drpcli stages exists [id] [flags]
 
 Options
 -------
@@ -59,5 +54,5 @@ Options inherited from parent commands
 SEE ALSO
 --------
 
--  `drpcli jobs <drpcli_jobs.html>`__ - Access CLI commands relating to
-   jobs
+-  `drpcli stages <drpcli_stages.html>`__ - Access CLI commands relating
+   to stages

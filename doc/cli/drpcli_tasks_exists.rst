@@ -13,7 +13,9 @@ or by index.
 
 Functional Indexs:
 
+-  Available = boolean
 -  Name = string
+-  Valid = boolean
 
 When using the index name, use the following form:
 
@@ -21,7 +23,7 @@ When using the index name, use the following form:
 
 Example:
 
--  e.g: Name:fred
+-  e.g: Valid:fred
 
 ::
 

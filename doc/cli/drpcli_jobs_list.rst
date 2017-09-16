@@ -16,13 +16,15 @@ It is possible to specify:
 Functional Indexs:
 
 -  Archived = boolean
--  BootEnv = string
+-  Available = boolean
 -  EndTime = dateTime
 -  Machine = UUID string
+-  Stage = string
 -  StartTime = dateTime
 -  State = string
 -  Task = string
 -  Uuid = UUID string
+-  Valid = boolean
 
 Functions:
 
@@ -38,10 +40,10 @@ Functions:
 
 Example:
 
--  Uuid=fred - returns items named fred
--  Uuid=Lt(fred) - returns items that alphabetically less than fred.
--  Uuid=Lt(fred)&Available=true - returns items with Name less than fred
-   and Available is true
+-  Valid=fred - returns items named fred
+-  Valid=Lt(fred) - returns items that alphabetically less than fred.
+-  Valid=Lt(fred)&Available=true - returns items with Name less than
+   fred and Available is true
 
 ::
 

@@ -59,6 +59,8 @@ SEE ALSO
    relating to profiles
 -  `drpcli reservations <drpcli_reservations.html>`__ - Access CLI
    commands relating to reservations
+-  `drpcli stages <drpcli_stages.html>`__ - Access CLI commands relating
+   to stages
 -  `drpcli subnets <drpcli_subnets.html>`__ - Access CLI commands
    relating to subnets
 -  `drpcli tasks <drpcli_tasks.html>`__ - Access CLI commands relating

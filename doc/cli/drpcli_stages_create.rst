@@ -1,47 +1,28 @@
-drpcli jobs exists
-==================
+drpcli stages create
+====================
 
-See if a job exists by id
+Create a new stage with the passed-in JSON or string key
 
 Synopsis
 --------
 
-This will detect if a jobs exists.
+As a useful shortcut, '-' can be passed to indicate that the JSON should
+be read from stdin.
 
-It is possible to specify the id in the request by the using normal key
-or by index.
-
-Functional Indexs:
-
--  Archived = boolean
--  Available = boolean
--  EndTime = dateTime
--  Machine = UUID string
--  Stage = string
--  StartTime = dateTime
--  State = string
--  Task = string
--  Uuid = UUID string
--  Valid = boolean
-
-When using the index name, use the following form:
-
--  Index:Value
-
-Example:
-
--  e.g: Valid:fred
+In either case, for the Machine, BootEnv, User, and Profile objects, a
+string may be provided to create a new empty object of that type. For
+User, BootEnv, Machine, and Profile, it will be the object's name.
 
 ::
 
-    drpcli jobs exists [id] [flags]
+    drpcli stages create [json] [flags]
 
 Options
 -------
 
 ::
 
-      -h, --help   help for exists
+      -h, --help   help for create
 
 Options inherited from parent commands
 --------------------------------------
@@ -59,5 +40,5 @@ Options inherited from parent commands
 SEE ALSO
 --------
 
--  `drpcli jobs <drpcli_jobs.html>`__ - Access CLI commands relating to
-   jobs
+-  `drpcli stages <drpcli_stages.html>`__ - Access CLI commands relating
+   to stages

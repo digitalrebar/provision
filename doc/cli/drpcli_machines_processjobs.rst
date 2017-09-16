@@ -9,11 +9,11 @@ Synopsis
 For the provided machine, identified by UUID, process the task list on
 that machine until an error occurs or all jobs are complete. Upon
 completion, optionally wait for additional jobs as specified by the
-boolean wait flag.
+stage runner wait flag.
 
 ::
 
-    drpcli machines processjobs [id] [wait] [flags]
+    drpcli machines processjobs [id] [flags]
 
 Options
 -------

@@ -16,6 +16,7 @@ Functional Indexs:
 -  Available = boolean
 -  Name = string
 -  OnlyUnknown = boolean
+-  Valid = boolean
 
 When using the index name, use the following form:
 
@@ -23,7 +24,7 @@ When using the index name, use the following form:
 
 Example:
 
--  e.g: OnlyUnknown:fred
+-  e.g: Valid:fred
 
 ::
 

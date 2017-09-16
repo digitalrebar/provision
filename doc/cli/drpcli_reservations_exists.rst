@@ -14,9 +14,11 @@ or by index.
 Functional Indexs:
 
 -  Addr = IP Address
+-  Available = boolean
 -  NextServer = IP Address
 -  Strategy = string
 -  Token = string
+-  Valid = boolean
 
 When using the index name, use the following form:
 
@@ -24,7 +26,7 @@ When using the index name, use the following form:
 
 Example:
 
--  e.g: Token:fred
+-  e.g: Valid:fred
 
 ::
 

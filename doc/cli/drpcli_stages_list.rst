@@ -1,12 +1,12 @@
-drpcli machines list
-====================
+drpcli stages list
+==================
 
-List all machines
+List all stages
 
 Synopsis
 --------
 
-This will list all machines by default.
+This will list all stages by default.
 
 It is possible to specify:
 
@@ -15,12 +15,10 @@ It is possible to specify:
 
 Functional Indexs:
 
--  Address = IP Address
 -  Available = boolean
 -  BootEnv = string
 -  Name = string
--  Runnable = boolean
--  Uuid = UUID string
+-  Reboot = boolean
 -  Valid = boolean
 
 Functions:
@@ -44,7 +42,7 @@ Example:
 
 ::
 
-    drpcli machines list [key=value] ... [flags]
+    drpcli stages list [key=value] ... [flags]
 
 Options
 -------
@@ -71,5 +69,5 @@ Options inherited from parent commands
 SEE ALSO
 --------
 
--  `drpcli machines <drpcli_machines.html>`__ - Access CLI commands
-   relating to machines
+-  `drpcli stages <drpcli_stages.html>`__ - Access CLI commands relating
+   to stages

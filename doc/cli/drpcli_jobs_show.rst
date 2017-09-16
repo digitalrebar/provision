@@ -14,13 +14,15 @@ or by index.
 Functional Indexs:
 
 -  Archived = boolean
--  BootEnv = string
+-  Available = boolean
 -  EndTime = dateTime
 -  Machine = UUID string
+-  Stage = string
 -  StartTime = dateTime
 -  State = string
 -  Task = string
 -  Uuid = UUID string
+-  Valid = boolean
 
 When using the index name, use the following form:
 
@@ -28,7 +30,7 @@ When using the index name, use the following form:
 
 Example:
 
--  e.g: Uuid:fred
+-  e.g: Valid:fred
 
 ::
 

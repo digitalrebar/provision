@@ -1,47 +1,23 @@
-drpcli jobs exists
-==================
+drpcli machines stage
+=====================
 
-See if a job exists by id
+Set the machine's stage
 
 Synopsis
 --------
 
-This will detect if a jobs exists.
-
-It is possible to specify the id in the request by the using normal key
-or by index.
-
-Functional Indexs:
-
--  Archived = boolean
--  Available = boolean
--  EndTime = dateTime
--  Machine = UUID string
--  Stage = string
--  StartTime = dateTime
--  State = string
--  Task = string
--  Uuid = UUID string
--  Valid = boolean
-
-When using the index name, use the following form:
-
--  Index:Value
-
-Example:
-
--  e.g: Valid:fred
+Helper function to update the machine's stage.
 
 ::
 
-    drpcli jobs exists [id] [flags]
+    drpcli machines stage [id] [stage] [flags]
 
 Options
 -------
 
 ::
 
-      -h, --help   help for exists
+      -h, --help   help for stage
 
 Options inherited from parent commands
 --------------------------------------
@@ -59,5 +35,5 @@ Options inherited from parent commands
 SEE ALSO
 --------
 
--  `drpcli jobs <drpcli_jobs.html>`__ - Access CLI commands relating to
-   jobs
+-  `drpcli machines <drpcli_machines.html>`__ - Access CLI commands
+   relating to machines
