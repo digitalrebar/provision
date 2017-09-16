@@ -15,11 +15,13 @@ Functional Indexs:
 
 -  ActiveAddress = IP Address
 -  Address = IP Address
+-  Available = boolean
 -  Enabled = boolean
 -  Name = string
 -  NextServer = IP Address
 -  Strategy = string
 -  Subnet = CIDR Address
+-  Valid = boolean
 
 When using the index name, use the following form:
 
@@ -27,7 +29,7 @@ When using the index name, use the following form:
 
 Example:
 
--  e.g: Subnet:fred
+-  e.g: Valid:fred
 
 ::
 

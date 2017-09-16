@@ -17,11 +17,13 @@ Functional Indexs:
 
 -  ActiveAddress = IP Address
 -  Address = IP Address
+-  Available = boolean
 -  Enabled = boolean
 -  Name = string
 -  NextServer = IP Address
 -  Strategy = string
 -  Subnet = CIDR Address
+-  Valid = boolean
 
 Functions:
 
@@ -37,9 +39,9 @@ Functions:
 
 Example:
 
--  Subnet=fred - returns items named fred
--  Subnet=Lt(fred) - returns items that alphabetically less than fred.
--  Subnet=Lt(fred)&Available=true - returns items with Name less than
+-  Valid=fred - returns items named fred
+-  Valid=Lt(fred) - returns items that alphabetically less than fred.
+-  Valid=Lt(fred)&Available=true - returns items with Name less than
    fred and Available is true
 
 ::

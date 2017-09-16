@@ -1,47 +1,23 @@
-drpcli jobs exists
-==================
+drpcli stages removetask
+========================
 
-See if a job exists by id
+Remove a task from the stage's list
 
 Synopsis
 --------
 
-This will detect if a jobs exists.
-
-It is possible to specify the id in the request by the using normal key
-or by index.
-
-Functional Indexs:
-
--  Archived = boolean
--  Available = boolean
--  EndTime = dateTime
--  Machine = UUID string
--  Stage = string
--  StartTime = dateTime
--  State = string
--  Task = string
--  Uuid = UUID string
--  Valid = boolean
-
-When using the index name, use the following form:
-
--  Index:Value
-
-Example:
-
--  e.g: Valid:fred
+Helper function to update the stage's task list by removing one.
 
 ::
 
-    drpcli jobs exists [id] [flags]
+    drpcli stages removetask [id] [task] [flags]
 
 Options
 -------
 
 ::
 
-      -h, --help   help for exists
+      -h, --help   help for removetask
 
 Options inherited from parent commands
 --------------------------------------
@@ -59,5 +35,5 @@ Options inherited from parent commands
 SEE ALSO
 --------
 
--  `drpcli jobs <drpcli_jobs.html>`__ - Access CLI commands relating to
-   jobs
+-  `drpcli stages <drpcli_stages.html>`__ - Access CLI commands relating
+   to stages

@@ -58,14 +58,16 @@ SEE ALSO
 -  `drpcli machines processjobs <drpcli_machines_processjobs.html>`__ -
    For the given machine, process pending jobs until done.
 -  `drpcli machines
-   removeprofile <drpcli_machines_removeprofile.html>`__ - Set the
-   machine's bootenv
+   removeprofile <drpcli_machines_removeprofile.html>`__ - Remove a
+   profile from the machine's list
 -  `drpcli machines runaction <drpcli_machines_runaction.html>`__ - Set
    preferences
 -  `drpcli machines set <drpcli_machines_set.html>`__ - Set the
    machine's param to
 -  `drpcli machines show <drpcli_machines_show.html>`__ - Show a single
    machine by id
+-  `drpcli machines stage <drpcli_machines_stage.html>`__ - Set the
+   machine's stage
 -  `drpcli machines update <drpcli_machines_update.html>`__ - Unsafely
    update machine by id with the passed-in JSON
 -  `drpcli machines wait <drpcli_machines_wait.html>`__ - Wait for a

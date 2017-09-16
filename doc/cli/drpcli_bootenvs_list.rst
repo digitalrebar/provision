@@ -18,6 +18,7 @@ Functional Indexs:
 -  Available = boolean
 -  Name = string
 -  OnlyUnknown = boolean
+-  Valid = boolean
 
 Functions:
 
@@ -33,11 +34,10 @@ Functions:
 
 Example:
 
--  OnlyUnknown=fred - returns items named fred
--  OnlyUnknown=Lt(fred) - returns items that alphabetically less than
-   fred.
--  OnlyUnknown=Lt(fred)&Available=true - returns items with Name less
-   than fred and Available is true
+-  Valid=fred - returns items named fred
+-  Valid=Lt(fred) - returns items that alphabetically less than fred.
+-  Valid=Lt(fred)&Available=true - returns items with Name less than
+   fred and Available is true
 
 ::
 

@@ -17,7 +17,8 @@ Options
 
 ::
 
-      -h, --help   help for params
+          --aggregate   Should machine return aggregated view
+      -h, --help        help for params
 
 Options inherited from parent commands
 --------------------------------------

@@ -16,9 +16,11 @@ It is possible to specify:
 Functional Indexs:
 
 -  Addr = IP Address
+-  Available = boolean
 -  NextServer = IP Address
 -  Strategy = string
 -  Token = string
+-  Valid = boolean
 
 Functions:
 
@@ -34,9 +36,9 @@ Functions:
 
 Example:
 
--  Token=fred - returns items named fred
--  Token=Lt(fred) - returns items that alphabetically less than fred.
--  Token=Lt(fred)&Available=true - returns items with Name less than
+-  Valid=fred - returns items named fred
+-  Valid=Lt(fred) - returns items that alphabetically less than fred.
+-  Valid=Lt(fred)&Available=true - returns items with Name less than
    fred and Available is true
 
 ::

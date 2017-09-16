@@ -15,7 +15,9 @@ It is possible to specify:
 
 Functional Indexs:
 
+-  Available = boolean
 -  Name = string
+-  Valid = boolean
 
 Functions:
 
@@ -31,10 +33,10 @@ Functions:
 
 Example:
 
--  Name=fred - returns items named fred
--  Name=Lt(fred) - returns items that alphabetically less than fred.
--  Name=Lt(fred)&Available=true - returns items with Name less than fred
-   and Available is true
+-  Valid=fred - returns items named fred
+-  Valid=Lt(fred) - returns items that alphabetically less than fred.
+-  Valid=Lt(fred)&Available=true - returns items with Name less than
+   fred and Available is true
 
 ::
 

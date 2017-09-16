@@ -1,12 +1,12 @@
 drpcli machines removeprofile
 =============================
 
-Set the machine's bootenv
+Remove a profile from the machine's list
 
 Synopsis
 --------
 
-Helper function to update the machine's bootenv.
+Helper function to update the machine's profile list by removing one.
 
 ::
 

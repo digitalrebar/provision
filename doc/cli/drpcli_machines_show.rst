@@ -14,10 +14,12 @@ or by index.
 Functional Indexs:
 
 -  Address = IP Address
+-  Available = boolean
 -  BootEnv = string
 -  Name = string
 -  Runnable = boolean
 -  Uuid = UUID string
+-  Valid = boolean
 
 When using the index name, use the following form:
 
@@ -25,7 +27,7 @@ When using the index name, use the following form:
 
 Example:
 
--  e.g: Uuid:fred
+-  e.g: Valid:fred
 
 ::
 

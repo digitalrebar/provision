@@ -102,8 +102,12 @@ v3.0.4 to v3.0.5
 ----------------
 Nothing needs to be done.
 
-v3.0.5 to NEXT
---------------
+v3.0.5 to v3.1.0
+----------------
+
+Subnet Enabled
+~~~~~~~~~~~~~~
+
 The subnet objects have an enabled flag that allows for subnets to be turned off without deleting them.  This value
 defaults to false (off).  To enable existing subnets, you will need to do the following for each subnet in your system:
 
@@ -113,7 +117,18 @@ defaults to false (off).  To enable existing subnets, you will need to do the fo
 
 Replace *subnet1* with the name of your subnet.
 
+Local UI Removed
+~~~~~~~~~~~~~~~~
 
+The old UI has been removed and a redirect to the cloud-based UI is present instead.  The UI loads into the browswer
+and then uses the API to access the Endpoint.  The DRP endpoint does not talk to the internet.  The browser acts as
+a bridge for content transfers.  The only requirement is that the browser has access to the Endpoint and HTTPS-based
+access to the internet.  The HTTPS-based access can be through a web proxy.
 
+Install Script Changed
+~~~~~~~~~~~~~~~~~~~~~~
 
+There are minor changes to the install script for isolated mode.  Production mode installs are still done and updated
+the same way.  For isolated, there are some new flags and options.  Please see the commands output for more details or 
+check the updated :ref:`rs_quickstart`.
 
