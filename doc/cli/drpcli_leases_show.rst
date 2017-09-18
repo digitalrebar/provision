@@ -16,6 +16,7 @@ Functional Indexs:
 -  Addr = IP Address
 -  Available = boolean
 -  ExpireTime = Date/Time string
+-  ReadOnly = boolean
 -  State = string
 -  Strategy = string
 -  Token = string

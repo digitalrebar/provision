@@ -168,6 +168,8 @@ var userTokenSuccessString string = `RE:
     "id": "Fred",
     "os": "[\s\S]*",
     "prov_enabled": true,
+    "tftp_enabled": true,
+    "version": "[\s\S]*",
     "stats": \[
       {
         "count": 0,
@@ -177,9 +179,7 @@ var userTokenSuccessString string = `RE:
         "count": 0,
         "name": "subnets.count"
       }
-    \],
-    "tftp_enabled": true,
-    "version": "[\s\S]*"
+    \]
   },
   "Token": "[\s\S]*"
 }
@@ -212,6 +212,15 @@ func TestUserCli(t *testing.T) {
 		CliTest{false, false, []string{"users", "list", "--limit=-1", "--offset=-1"}, noStdinString, userListBothEnvsString, noErrorString},
 		CliTest{false, false, []string{"users", "list", "Name=fred"}, noStdinString, userEmptyListString, noErrorString},
 		CliTest{false, false, []string{"users", "list", "Name=john"}, noStdinString, userListJohnOnlyString, noErrorString},
+		CliTest{false, false, []string{"users", "list", "Available=true"}, noStdinString, userListBothEnvsString, noErrorString},
+		CliTest{false, false, []string{"users", "list", "Available=false"}, noStdinString, userEmptyListString, noErrorString},
+		CliTest{false, true, []string{"users", "list", "Available=fred"}, noStdinString, noContentString, bootEnvBadAvailableString},
+		CliTest{false, false, []string{"users", "list", "Valid=true"}, noStdinString, userListBothEnvsString, noErrorString},
+		CliTest{false, false, []string{"users", "list", "Valid=false"}, noStdinString, userEmptyListString, noErrorString},
+		CliTest{false, true, []string{"users", "list", "Valid=fred"}, noStdinString, noContentString, bootEnvBadValidString},
+		CliTest{false, false, []string{"users", "list", "ReadOnly=true"}, noStdinString, userEmptyListString, noErrorString},
+		CliTest{false, false, []string{"users", "list", "ReadOnly=false"}, noStdinString, userListBothEnvsString, noErrorString},
+		CliTest{false, true, []string{"users", "list", "ReadOnly=fred"}, noStdinString, noContentString, bootEnvBadReadOnlyString},
 
 		CliTest{true, true, []string{"users", "show"}, noStdinString, noContentString, userShowNoArgErrorString},
 		CliTest{true, true, []string{"users", "show", "john", "john2"}, noStdinString, noContentString, userShowTooManyArgErrorString},

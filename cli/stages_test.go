@@ -194,6 +194,9 @@ func TestStageCli(t *testing.T) {
 		CliTest{false, false, []string{"stages", "list", "Valid=true"}, noStdinString, stageListJohnOnlyString, noErrorString},
 		CliTest{false, false, []string{"stages", "list", "Valid=false"}, noStdinString, stageEmptyListString, noErrorString},
 		CliTest{false, true, []string{"stages", "list", "Valid=fred"}, noStdinString, noContentString, "Error: Valid must be true or false\n\n"},
+		CliTest{false, false, []string{"stages", "list", "ReadOnly=true"}, noStdinString, stageEmptyListString, noErrorString},
+		CliTest{false, false, []string{"stages", "list", "ReadOnly=false"}, noStdinString, stageListJohnOnlyString, noErrorString},
+		CliTest{false, true, []string{"stages", "list", "ReadOnly=fred"}, noStdinString, noContentString, bootEnvBadReadOnlyString},
 
 		CliTest{true, true, []string{"stages", "show"}, noStdinString, noContentString, stageShowNoArgErrorString},
 		CliTest{true, true, []string{"stages", "show", "john", "john2"}, noStdinString, noContentString, stageShowTooManyArgErrorString},

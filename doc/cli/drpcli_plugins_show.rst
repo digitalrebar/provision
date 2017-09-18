@@ -13,8 +13,11 @@ or by index.
 
 Functional Indexs:
 
+-  Available = boolean
 -  Name = string
 -  Provider = string
+-  ReadOnly = boolean
+-  Valid = boolean
 
 When using the index name, use the following form:
 
@@ -22,7 +25,7 @@ When using the index name, use the following form:
 
 Example:
 
--  e.g: Provider:fred
+-  e.g: Valid:fred
 
 ::
 

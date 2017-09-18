@@ -15,8 +15,11 @@ It is possible to specify:
 
 Functional Indexs:
 
+-  Available = boolean
 -  Name = string
 -  Provider = string
+-  ReadOnly = boolean
+-  Valid = boolean
 
 Functions:
 
@@ -32,9 +35,9 @@ Functions:
 
 Example:
 
--  Provider=fred - returns items named fred
--  Provider=Lt(fred) - returns items that alphabetically less than fred.
--  Provider=Lt(fred)&Available=true - returns items with Name less than
+-  Valid=fred - returns items named fred
+-  Valid=Lt(fred) - returns items that alphabetically less than fred.
+-  Valid=Lt(fred)&Available=true - returns items with Name less than
    fred and Available is true
 
 ::

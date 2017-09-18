@@ -16,6 +16,7 @@ Functional Indexs:
 -  Addr = IP Address
 -  Available = boolean
 -  NextServer = IP Address
+-  ReadOnly = boolean
 -  Strategy = string
 -  Token = string
 -  Valid = boolean

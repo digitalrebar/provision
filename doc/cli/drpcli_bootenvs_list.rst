@@ -18,6 +18,7 @@ Functional Indexs:
 -  Available = boolean
 -  Name = string
 -  OnlyUnknown = boolean
+-  ReadOnly = boolean
 -  Valid = boolean
 
 Functions:

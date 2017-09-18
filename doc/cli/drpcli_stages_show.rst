@@ -16,6 +16,7 @@ Functional Indexs:
 -  Available = boolean
 -  BootEnv = string
 -  Name = string
+-  ReadOnly = boolean
 -  Reboot = boolean
 -  Valid = boolean
 

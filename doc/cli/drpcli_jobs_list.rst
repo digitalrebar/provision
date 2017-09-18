@@ -19,6 +19,7 @@ Functional Indexs:
 -  Available = boolean
 -  EndTime = dateTime
 -  Machine = UUID string
+-  ReadOnly = boolean
 -  Stage = string
 -  StartTime = dateTime
 -  State = string

@@ -48,6 +48,8 @@ func (be SubnetOps) List(parms map[string]string) (interface{}, error) {
 	}
 	for k, v := range parms {
 		switch k {
+		case "ReadOnly":
+			params = params.WithReadOnly(&v)
 		case "Available":
 			params = params.WithAvailable(&v)
 		case "Valid":

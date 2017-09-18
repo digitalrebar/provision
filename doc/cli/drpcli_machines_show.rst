@@ -17,6 +17,7 @@ Functional Indexs:
 -  Available = boolean
 -  BootEnv = string
 -  Name = string
+-  ReadOnly = boolean
 -  Runnable = boolean
 -  Uuid = UUID string
 -  Valid = boolean
