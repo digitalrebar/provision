@@ -545,6 +545,10 @@ var bootEnvDownloadErrorString = "Installing bootenv fredhammer\nDownloading htt
 
 var bootEnvInstallLocal3ErrorString = "Installing template local3-pxelinux.tmpl\nInstalling template local3-elilo.tmpl\nInstalling template local3-ipxe.tmpl\nInstalling bootenv local3\n"
 
+var bootEnvBadReadOnlyString = "Error: ReadOnly must be true or false\n\n"
+var bootEnvBadAvailableString = "Error: Available must be true or false\n\n"
+var bootEnvBadValidString = "Error: Valid must be true or false\n\n"
+
 func TestBootEnvCli(t *testing.T) {
 	tests := []CliTest{
 		CliTest{true, false, []string{"bootenvs"}, noStdinString, "Access CLI commands relating to bootenvs\n", ""},
@@ -557,10 +561,17 @@ func TestBootEnvCli(t *testing.T) {
 		CliTest{false, false, []string{"bootenvs", "list", "--limit=-1", "--offset=-1"}, noStdinString, bootEnvDefaultListString, noErrorString},
 		CliTest{false, false, []string{"bootenvs", "list", "Name=fred"}, noStdinString, bootEnvEmptyListString, noErrorString},
 		CliTest{false, false, []string{"bootenvs", "list", "Name=ignore"}, noStdinString, bootEnvIgnoreOnlyListString, noErrorString},
-		CliTest{false, false, []string{"bootenvs", "list", "Available=true"}, noStdinString, bootEnvDefaultListString, noErrorString},
-		CliTest{false, false, []string{"bootenvs", "list", "Available=false"}, noStdinString, bootEnvEmptyListString, noErrorString},
 		CliTest{false, false, []string{"bootenvs", "list", "OnlyUnknown=true"}, noStdinString, bootEnvIgnoreOnlyListString, noErrorString},
 		CliTest{false, false, []string{"bootenvs", "list", "OnlyUnknown=false"}, noStdinString, bootEnvLocalOnlyListString, noErrorString},
+		CliTest{false, false, []string{"bootenvs", "list", "Available=true"}, noStdinString, bootEnvDefaultListString, noErrorString},
+		CliTest{false, false, []string{"bootenvs", "list", "Available=false"}, noStdinString, bootEnvEmptyListString, noErrorString},
+		CliTest{false, true, []string{"bootenvs", "list", "Available=fred"}, noStdinString, noContentString, bootEnvBadAvailableString},
+		CliTest{false, false, []string{"bootenvs", "list", "Valid=true"}, noStdinString, bootEnvDefaultListString, noErrorString},
+		CliTest{false, false, []string{"bootenvs", "list", "Valid=false"}, noStdinString, bootEnvEmptyListString, noErrorString},
+		CliTest{false, true, []string{"bootenvs", "list", "Valid=fred"}, noStdinString, noContentString, bootEnvBadValidString},
+		CliTest{false, false, []string{"bootenvs", "list", "ReadOnly=true"}, noStdinString, bootEnvEmptyListString, noErrorString},
+		CliTest{false, false, []string{"bootenvs", "list", "ReadOnly=false"}, noStdinString, bootEnvDefaultListString, noErrorString},
+		CliTest{false, true, []string{"bootenvs", "list", "ReadOnly=fred"}, noStdinString, noContentString, bootEnvBadReadOnlyString},
 
 		CliTest{true, true, []string{"bootenvs", "show"}, noStdinString, noContentString, bootEnvShowNoArgErrorString},
 		CliTest{true, true, []string{"bootenvs", "show", "john", "john2"}, noStdinString, noContentString, bootEnvShowTooManyArgErrorString},

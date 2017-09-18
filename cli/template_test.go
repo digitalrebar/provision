@@ -196,6 +196,40 @@ var templatesUploadReplaceSuccessString string = `{
 `
 var templateDestroyGregString string = "Deleted template greg\n"
 
+var templateReadOnlyTrueString string = `[
+  {
+    "Available": true,
+    "Contents": "etc\n",
+    "Description": "A test template for LocalStore testing",
+    "Errors": null,
+    "ID": "etc",
+    "ReadOnly": true,
+    "Validated": true
+  },
+  {
+    "Available": true,
+    "Contents": "usrshare\n",
+    "Description": "A test template for DefaultStore testing",
+    "Errors": null,
+    "ID": "usrshare",
+    "ReadOnly": true,
+    "Validated": true
+  }
+]
+`
+
+var templateReadOnlyFalseString string = `[
+  {
+    "Available": true,
+    "Contents": "John Rules",
+    "Errors": [],
+    "ID": "john",
+    "ReadOnly": false,
+    "Validated": true
+  }
+]
+`
+
 func TestTemplateCli(t *testing.T) {
 	templateContent, _ := ioutil.ReadFile("template.go")
 	sb, _ := json.Marshal(string(templateContent))
@@ -223,6 +257,15 @@ func TestTemplateCli(t *testing.T) {
 		CliTest{false, false, []string{"templates", "list", "--limit=-1", "--offset=-1"}, noStdinString, templateListBothEnvsString, noErrorString},
 		CliTest{false, false, []string{"templates", "list", "ID=fred"}, noStdinString, templateEmptyListString, noErrorString},
 		CliTest{false, false, []string{"templates", "list", "ID=john"}, noStdinString, templateListJohnOnlyString, noErrorString},
+		CliTest{false, false, []string{"templates", "list", "Available=true"}, noStdinString, templateListBothEnvsString, noErrorString},
+		CliTest{false, false, []string{"templates", "list", "Available=false"}, noStdinString, templateEmptyListString, noErrorString},
+		CliTest{false, true, []string{"templates", "list", "Available=fred"}, noStdinString, noContentString, bootEnvBadAvailableString},
+		CliTest{false, false, []string{"templates", "list", "Valid=true"}, noStdinString, templateListBothEnvsString, noErrorString},
+		CliTest{false, false, []string{"templates", "list", "Valid=false"}, noStdinString, templateEmptyListString, noErrorString},
+		CliTest{false, true, []string{"templates", "list", "Valid=fred"}, noStdinString, noContentString, bootEnvBadValidString},
+		CliTest{false, false, []string{"templates", "list", "ReadOnly=true"}, noStdinString, templateReadOnlyTrueString, noErrorString},
+		CliTest{false, false, []string{"templates", "list", "ReadOnly=false"}, noStdinString, templateReadOnlyFalseString, noErrorString},
+		CliTest{false, true, []string{"templates", "list", "ReadOnly=fred"}, noStdinString, noContentString, bootEnvBadReadOnlyString},
 
 		CliTest{true, true, []string{"templates", "show"}, noStdinString, noContentString, templateShowNoArgErrorString},
 		CliTest{true, true, []string{"templates", "show", "john", "john2"}, noStdinString, noContentString, templateShowTooManyArgErrorString},

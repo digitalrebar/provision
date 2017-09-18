@@ -49,6 +49,8 @@ func (be JobOps) List(parms map[string]string) (interface{}, error) {
 	}
 	for k, v := range parms {
 		switch k {
+		case "ReadOnly":
+			params = params.WithReadOnly(&v)
 		case "Available":
 			params = params.WithAvailable(&v)
 		case "Valid":
@@ -96,7 +98,7 @@ func (be JobOps) Create(obj interface{}) (interface{}, error) {
 				if answer, err := mo.List(map[string]string{"Name": s}); err != nil {
 					return nil, fmt.Errorf("List machine failed: %s", err)
 				} else {
-					list := answer.([]*models.Machine)
+					list := answer.(models.ListMachinesOKBody)
 					if len(list) != 1 {
 						return nil, fmt.Errorf("Invalid machine name passed to job create: %s", s)
 					}

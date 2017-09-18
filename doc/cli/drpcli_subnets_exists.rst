@@ -19,6 +19,7 @@ Functional Indexs:
 -  Enabled = boolean
 -  Name = string
 -  NextServer = IP Address
+-  ReadOnly = boolean
 -  Strategy = string
 -  Subnet = CIDR Address
 -  Valid = boolean

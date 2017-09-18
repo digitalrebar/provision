@@ -708,6 +708,15 @@ func TestJobCli(t *testing.T) {
 		CliTest{false, false, []string{"jobs", "list", "UUID=4e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, jobEmptyListString, noErrorString},
 		CliTest{false, false, []string{"jobs", "list", "UUID=00000000-0000-0000-0000-000000000001"}, noStdinString, jobListJobsString, noErrorString},
 		CliTest{false, true, []string{"jobs", "list", "UUID=false"}, noStdinString, noContentString, jobExpireTimeErrorString},
+		CliTest{false, false, []string{"jobs", "list", "Available=true"}, noStdinString, jobListJobsString, noErrorString},
+		CliTest{false, false, []string{"jobs", "list", "Available=false"}, noStdinString, jobEmptyListString, noErrorString},
+		CliTest{false, true, []string{"jobs", "list", "Available=fred"}, noStdinString, noContentString, bootEnvBadAvailableString},
+		CliTest{false, false, []string{"jobs", "list", "Valid=true"}, noStdinString, jobListJobsString, noErrorString},
+		CliTest{false, false, []string{"jobs", "list", "Valid=false"}, noStdinString, jobEmptyListString, noErrorString},
+		CliTest{false, true, []string{"jobs", "list", "Valid=fred"}, noStdinString, noContentString, bootEnvBadValidString},
+		CliTest{false, false, []string{"jobs", "list", "ReadOnly=true"}, noStdinString, jobEmptyListString, noErrorString},
+		CliTest{false, false, []string{"jobs", "list", "ReadOnly=false"}, noStdinString, jobListJobsString, noErrorString},
+		CliTest{false, true, []string{"jobs", "list", "ReadOnly=fred"}, noStdinString, noContentString, bootEnvBadReadOnlyString},
 
 		CliTest{false, true, []string{"jobs", "destroy", "00000000-0000-0000-0000-000000000001"}, noStdinString, noContentString, jobDestroyBadString},
 
