@@ -168,8 +168,6 @@ var userTokenSuccessString string = `RE:
     "id": "Fred",
     "os": "[\s\S]*",
     "prov_enabled": true,
-    "tftp_enabled": true,
-    "version": "[\s\S]*",
     "stats": \[
       {
         "count": 0,
@@ -179,7 +177,9 @@ var userTokenSuccessString string = `RE:
         "count": 0,
         "name": "subnets.count"
       }
-    \]
+    \],
+    "tftp_enabled": true,
+    "version": "[\s\S]*"
   },
   "Token": "[\s\S]*"
 }
