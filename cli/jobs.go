@@ -98,7 +98,7 @@ func (be JobOps) Create(obj interface{}) (interface{}, error) {
 				if answer, err := mo.List(map[string]string{"Name": s}); err != nil {
 					return nil, fmt.Errorf("List machine failed: %s", err)
 				} else {
-					list := answer.(models.ListMachinesOKBody)
+					list := answer.([]*models.Machine)
 					if len(list) != 1 {
 						return nil, fmt.Errorf("Invalid machine name passed to job create: %s", s)
 					}
