@@ -6,6 +6,17 @@ import (
 	"fmt"
 )
 
+type Model interface {
+	Prefix() string
+	Key() string
+}
+
+type Models interface {
+	Elem() Model
+	Items() []Model
+	Fill([]Model)
+}
+
 func All() []Model {
 	return []Model{
 		&BootEnv{},

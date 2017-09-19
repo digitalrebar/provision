@@ -44,44 +44,29 @@ func (u *User) AuthKey() string {
 	return u.Key()
 }
 
-type Stat struct {
-	// required: true
-	Name string `json:"name"`
-	// required: true
-	Count int `json:"count"`
-}
-
-// swagger:model
-type Info struct {
-	// required: true
-	Arch string `json:"arch"`
-	// required: true
-	Os string `json:"os"`
-	// required: true
-	Version string `json:"version"`
-	// required: true
-	Id string `json:"id"`
-	// required: true
-	ApiPort int `json:"api_port"`
-	// required: true
-	FilePort int `json:"file_port"`
-	// required: true
-	TftpEnabled bool `json:"tftp_enabled"`
-	// required: true
-	DhcpEnabled bool `json:"dhcp_enabled"`
-	// required: true
-	ProvisionerEnabled bool `json:"prov_enabled"`
-	// required: true
-	Stats []*Stat `json:"stats"`
-}
-
-// swagger:model
-type UserToken struct {
-	Token string
-	Info  Info
-}
-
 // swagger:model
 type UserPassword struct {
 	Password string
+}
+
+type Users []*User
+
+func (s Users) Elem() Model {
+	return &User{}
+}
+
+func (s Users) Items() []Model {
+	res := make([]Model, len(s))
+	for i, m := range s {
+		res[i] = m
+	}
+	return res
+}
+
+func (s Users) Fill(m []Model) {
+	q := make([]*User, len(m))
+	for i, obj := range m {
+		q[i] = obj.(*User)
+	}
+	s = q[:]
 }

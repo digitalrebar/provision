@@ -109,3 +109,25 @@ func (s *Subnet) Key() string {
 func (s *Subnet) AuthKey() string {
 	return s.Key()
 }
+
+type Subnets []*Subnet
+
+func (s Subnets) Elem() Model {
+	return &Subnet{}
+}
+
+func (s Subnets) Items() []Model {
+	res := make([]Model, len(s))
+	for i, m := range s {
+		res[i] = m
+	}
+	return res
+}
+
+func (s Subnets) Fill(m []Model) {
+	q := make([]*Subnet, len(m))
+	for i, obj := range m {
+		q[i] = obj.(*Subnet)
+	}
+	s = q[:]
+}

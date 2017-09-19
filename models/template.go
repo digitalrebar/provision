@@ -32,3 +32,25 @@ func (t *Template) Key() string {
 func (t *Template) AuthKey() string {
 	return t.Key()
 }
+
+type Templates []*Template
+
+func (s Templates) Elem() Model {
+	return &Template{}
+}
+
+func (s Templates) Items() []Model {
+	res := make([]Model, len(s))
+	for i, m := range s {
+		res[i] = m
+	}
+	return res
+}
+
+func (s Templates) Fill(m []Model) {
+	q := make([]*Template, len(m))
+	for i, obj := range m {
+		q[i] = obj.(*Template)
+	}
+	s = q[:]
+}

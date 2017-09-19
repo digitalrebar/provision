@@ -21,3 +21,25 @@ func (p *Pref) Key() string {
 func (p *Pref) AuthKey() string {
 	return p.Key()
 }
+
+type Prefs []*Pref
+
+func (s Prefs) Elem() Model {
+	return &Pref{}
+}
+
+func (s Prefs) Items() []Model {
+	res := make([]Model, len(s))
+	for i, m := range s {
+		res[i] = m
+	}
+	return res
+}
+
+func (s Prefs) Fill(m []Model) {
+	q := make([]*Pref, len(m))
+	for i, obj := range m {
+		q[i] = obj.(*Pref)
+	}
+	s = q[:]
+}

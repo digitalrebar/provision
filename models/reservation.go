@@ -43,3 +43,25 @@ func (r *Reservation) Key() string {
 func (r *Reservation) AuthKey() string {
 	return r.Key()
 }
+
+type Reservations []*Reservation
+
+func (s Reservations) Elem() Model {
+	return &Reservation{}
+}
+
+func (s Reservations) Items() []Model {
+	res := make([]Model, len(s))
+	for i, m := range s {
+		res[i] = m
+	}
+	return res
+}
+
+func (s Reservations) Fill(m []Model) {
+	q := make([]*Reservation, len(m))
+	for i, obj := range m {
+		q[i] = obj.(*Reservation)
+	}
+	s = q[:]
+}
