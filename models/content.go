@@ -64,3 +64,24 @@ func (c *Content) Key() string {
 func (c *Content) AuthKey() string {
 	return c.Key()
 }
+
+type Contents []*Content
+
+func (s Contents) Elem() Model {
+	return &Content{}
+}
+
+func (s Contents) Items() []Model {
+	res := make([]Model, len(s))
+	for i, m := range s {
+		res[i] = m
+	}
+	return res
+}
+func (s Contents) Fill(m []Model) {
+	q := make([]*Content, len(m))
+	for i, obj := range m {
+		q[i] = obj.(*Content)
+	}
+	s = q[:]
+}
