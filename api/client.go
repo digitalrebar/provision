@@ -35,9 +35,8 @@ func DecodeYaml(buf []byte, ref interface{}) error {
 }
 
 func Unmarshal(resp *http.Response, ref interface{}) error {
-	defer resp.Body.Close()
 	var dec Decoder
-	if resp.Body != nil {
+	if resp != nil {
 		defer resp.Body.Close()
 	}
 	ct := resp.Header.Get("Content-Type")
@@ -132,7 +131,69 @@ func (c *Client) DoJSON(method string, uri *url.URL, body io.Reader, val interfa
 	if err != nil {
 		return err
 	}
-	return Unmarshal(resp, val)
+	if val != nil {
+		return Unmarshal(resp, val)
+	}
+	return nil
+}
+
+func (c *Client) ListBlobs(at ...string, params map[string]string) ([]string, error) {
+	reqURI := c.UrlFor(path.Join("/", path.Join(at...)))
+	vals := url.Values{}
+	for k, v := range params {
+		vals.Add(k, v)
+	}
+	reqURI.RawQuery = vals.Encode()
+	res := []string{}
+	return res, c.DoJSON("GET", reqURI, nil, res)
+}
+
+func (c *Client) GetBlob(at ...string) (io.ReadCloser, error) {
+	reqURI := c.UrlFor(path.Join("/", path.Join(at...)))
+	req, err := c.Request("GET", reqURI, nil)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Accept", "application/octet-stream")
+	req.Header.Add("Accept", "application/json")
+	resp, err := c.Do(req)
+	if err != nil {
+		if resp != nil {
+			resp.Body.Close()
+		}
+		return nil, err
+	}
+	return resp.Body, nil
+}
+
+func (c *Client) PostBlob(blob io.Reader, at ...string) error {
+	reqURI := c.UrlFor(path.Join("/", path.Join(at...)))
+	req, err := c.Request("POST", reqURI, blob)
+	if err != nil {
+		return err
+	}
+	req.Header.Set("Content-Type", "application/octet-stream")
+	req.Header.Set("Accept", "application/json")
+	resp, err := c.Do(req)
+	if err != nil {
+		return err
+	}
+	resp.Body.Close()
+	return nil
+}
+
+func (c *Client) DeleteBlob(at ...string) error {
+	reqURI := c.UrlFor(path.Join("/", path.Join(at...)))
+	req, err := c.RequestJSON("DELETE", reqURI, nil)
+	if err != nil {
+		return err
+	}
+	resp, err := c.Do(req)
+	if err != nil {
+		return err
+	}
+	resp.Body.Close()
+	return nil
 }
 
 func (c *Client) AllIndexes() (map[string]map[string]models.Index, error) {
