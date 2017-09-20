@@ -233,6 +233,28 @@ func (c *Client) GetModel(prefix, key string) (models.Model, error) {
 	return res, c.DoJSON("GET", reqURI, nil, res)
 }
 
+func (c *Client) ExistsModel(prefix, key string) (bool, error) {
+	reqURI := c.UrlFor(prefix, key)
+	req, err := c.Request("HEAD", reqURI, nil)
+	if err != nil {
+		return false, err
+	}
+	resp, err := c.Do(req)
+	if err != nil {
+		return false, err
+	}
+	switch resp.StatusCode {
+	case http.StatusOK:
+		return true, nil
+	case http.StatusNotFound:
+		return false, nil
+	default:
+		res := &models.Error{Code: resp.StatusCode, Type: prefix, Key: key}
+		res.Errorf("Unable to determine existence")
+		return false, res
+	}
+}
+
 func (c *Client) FillModel(ref models.Model, key string) error {
 	reqURI := c.UrlFor(ref.Prefix(), key)
 	return c.DoJSON("GET", reqURI, nil, ref)
