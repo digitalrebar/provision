@@ -137,8 +137,8 @@ func (c *Client) DoJSON(method string, uri *url.URL, body io.Reader, val interfa
 	return nil
 }
 
-func (c *Client) ListBlobs(at ...string, params map[string]string) ([]string, error) {
-	reqURI := c.UrlFor(path.Join("/", path.Join(at...)))
+func (c *Client) ListBlobs(at string, params map[string]string) ([]string, error) {
+	reqURI := c.UrlFor(path.Join("/", at))
 	vals := url.Values{}
 	for k, v := range params {
 		vals.Add(k, v)
