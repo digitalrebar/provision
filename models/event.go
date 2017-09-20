@@ -1,6 +1,7 @@
 package models
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -36,4 +37,19 @@ func (e *Event) Text() string {
 	}
 
 	return fmt.Sprintf("%d: %s %s %s\n%s\n", e.Time.Unix(), e.Type, e.Action, e.Key, string(jsonString))
+}
+
+func (e *Event) Model() (Model, error) {
+	res, err := New(e.Type)
+	if err != nil {
+		return nil, err
+	}
+	buf := bytes.Buffer{}
+	enc, dec := json.NewEncoder(&buf), json.NewDecoder(&buf)
+	err = enc.Encode(e.Object)
+	if err != nil {
+		return nil, err
+	}
+	err = dec.Decode(res)
+	return res, err
 }
