@@ -287,25 +287,14 @@ func (c *Client) reauth(tok *models.UserToken) error {
 	return c.DoJSON("GET", reqURI, nil, tok)
 }
 
-func (c *Client) PatchModel(old, new models.Model) error {
-	if old.Prefix() != new.Prefix() {
-		log.Panicf("Cannot patch %s into a %s", old.Prefix(), new.Prefix())
-	}
-	oldBuf, err := json.Marshal(old)
+func (c *Client) PatchModel(prefix, key string, patch *jsonpatch2.Patch) (models.Model, error) {
+	new, err := models.New(prefix)
 	if err != nil {
-		return err
-	}
-	newBuf, err := json.Marshal(new)
-	if err != nil {
-		return err
-	}
-	patch, err := jsonpatch2.Generate(oldBuf, newBuf, true)
-	if err != nil {
-		return err
+		return nil, err
 	}
 	buf, err := json.Marshal(patch)
-	reqURI := c.UrlFor(old.Prefix(), old.Key())
-	return c.DoJSON("PATCH", reqURI, bytes.NewBuffer(buf), new)
+	reqURI := c.UrlFor(prefix, key)
+	return new, c.DoJSON("PATCH", reqURI, bytes.NewBuffer(buf), new)
 }
 
 func (c *Client) PutModel(obj models.Model) error {
