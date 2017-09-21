@@ -191,11 +191,13 @@ func (c *Client) DoJSON(method string, uri *url.URL, body io.Reader, val interfa
 // the indexing parameters suppied by params.
 func (c *Client) ListBlobs(at string, params map[string]string) ([]string, error) {
 	reqURI := c.UrlFor(path.Join("/", at))
-	vals := url.Values{}
-	for k, v := range params {
-		vals.Add(k, v)
+	if params != nil {
+		vals := url.Values{}
+		for k, v := range params {
+			vals.Add(k, v)
+		}
+		reqURI.RawQuery = vals.Encode()
 	}
-	reqURI.RawQuery = vals.Encode()
 	res := []string{}
 	return res, c.DoJSON("GET", reqURI, nil, res)
 }
@@ -287,11 +289,13 @@ func (c *Client) OneIndex(prefix, param string) (models.Index, error) {
 // returned.
 func (c *Client) ListModels(ref models.Models, params map[string]string) error {
 	reqURI := c.UrlFor(ref.Elem().Prefix())
-	vals := url.Values{}
-	for k, v := range params {
-		vals.Add(k, v)
+	if params != nil {
+		vals := url.Values{}
+		for k, v := range params {
+			vals.Add(k, v)
+		}
+		reqURI.RawQuery = vals.Encode()
 	}
-	reqURI.RawQuery = vals.Encode()
 	return c.DoJSON("GET", reqURI, nil, ref)
 }
 
