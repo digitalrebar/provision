@@ -421,32 +421,7 @@ var machineBootEnvErrorBootEnvString string = `{
 `
 var machineStageNoArgErrorString string = "Error: drpcli machines stage [id] [stage] [flags] requires 2 arguments"
 var machineStageMissingMachineErrorString string = "Error: machines GET: john: Not Found\n\n"
-var machineStageErrorStageString string = `{
-  "Address": "192.168.100.110",
-  "Available": false,
-  "BootEnv": "local",
-  "CurrentTask": 0,
-  "Description": "lpxelinux.0",
-  "Errors": [
-    "Stage john2 does not exist"
-  ],
-  "Name": "john",
-  "Profile": {
-    "Available": false,
-    "Errors": null,
-    "Name": "",
-    "ReadOnly": false,
-    "Validated": false
-  },
-  "Profiles": null,
-  "ReadOnly": false,
-  "Runnable": false,
-  "Stage": "john2",
-  "Tasks": [],
-  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
-  "Validated": true
-}
-`
+var machineStageErrorStageString string = "Error: Stage john2 does not exist\n\n"
 
 var machineGetNoArgErrorString string = "Error: drpcli machines get [id] param [key] [flags] requires 3 arguments"
 var machineGetMissingMachineErrorString string = "Error: machines GET Params: john: Not Found\n\n"
@@ -743,7 +718,7 @@ var machineUpdateStage1WithoutRunnableString = `{
   },
   "Profiles": null,
   "ReadOnly": false,
-  "Runnable": false,
+  "Runnable": true,
   "Stage": "stage1",
   "Tasks": [
     "jamie",
@@ -1051,7 +1026,7 @@ func TestMachineCli(t *testing.T) {
 		// stage tests
 		CliTest{true, true, []string{"machines", "stage"}, noStdinString, noContentString, machineStageNoArgErrorString},
 		CliTest{false, true, []string{"machines", "stage", "john", "john2"}, noStdinString, noContentString, machineStageMissingMachineErrorString},
-		CliTest{false, false, []string{"machines", "stage", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "john2"}, noStdinString, machineStageErrorStageString, noErrorString},
+		CliTest{false, true, []string{"machines", "stage", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "john2"}, noStdinString, noContentString, machineStageErrorStageString},
 		CliTest{false, false, []string{"machines", "stage", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "stage1"}, noStdinString, machineUpdateStage1WithoutRunnableString, noErrorString},
 		CliTest{false, false, []string{"machines", "update", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "{ \"Runnable\": true }"}, noStdinString, machineUpdateStage1LocalString, noErrorString},
 		CliTest{false, true, []string{"machines", "stage", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "stage2"}, noStdinString, noContentString, machineUpdateStagePendingErrorString},
