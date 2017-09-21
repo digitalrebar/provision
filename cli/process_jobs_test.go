@@ -162,7 +162,7 @@ var processJobsResetToLocalSuccessString = `RE:
   },
   "Profiles": null,
   "ReadOnly": false,
-  "Runnable": false,
+  "Runnable": true,
   "Tasks": \[\],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Validated": true
@@ -267,33 +267,7 @@ var processJobsCreateStage1SuccessString = `{
 }
 `
 
-var processJobsStageMissingString = `RE:
-{
-  "Address": "192.168.100.110",
-  "Available": false,
-  "BootEnv": "local",
-  "CurrentJob": "[\S\s]*",
-  "CurrentTask": 0,
-  "Errors": \[
-    "Stage fred does not exist"
-  \],
-  "Name": "john",
-  "Profile": {
-    "Available": false,
-    "Errors": null,
-    "Name": "",
-    "ReadOnly": false,
-    "Validated": false
-  },
-  "Profiles": null,
-  "ReadOnly": false,
-  "Runnable": false,
-  "Stage": "fred",
-  "Tasks": \[\],
-  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
-  "Validated": true
-}
-`
+var processJobsStageMissingString = "Error: Stage fred does not exist\n\n"
 
 func TestProcessJobsCli(t *testing.T) {
 
@@ -318,7 +292,7 @@ func TestProcessJobsCli(t *testing.T) {
 		CliTest{false, false, []string{"machines", "processjobs", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, processJobsOutputSecondPassSuccessString, noErrorString},
 
 		// Test some other clean up actions
-		CliTest{false, false, []string{"machines", "stage", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "fred"}, noStdinString, processJobsStageMissingString, noErrorString},
+		CliTest{false, true, []string{"machines", "stage", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "fred"}, noStdinString, noContentString, processJobsStageMissingString},
 
 		// Clean Up
 		CliTest{false, false, []string{"machines", "stage", "3e7031fe-3062-45f1-835c-92541bc9cbd3", ""}, noStdinString, processJobsResetToLocalSuccessString, noErrorString},
