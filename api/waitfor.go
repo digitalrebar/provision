@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/VictorLowther/jsonpatch/utils"
+	"github.com/VictorLowther/jsonpatch2/utils"
 	"github.com/digitalrebar/provision/models"
 )
 
