@@ -80,3 +80,11 @@ func (s Stages) Items() []Model {
 	}
 	return res
 }
+
+func (s Stages) Fill(m []Model) {
+	q := make([]*Stage, len(m))
+	for i, obj := range m {
+		q[i] = obj.(*Stage)
+	}
+	s = q[:]
+}
