@@ -42,3 +42,25 @@ func (p *Param) ValidateSchema() error {
 	_, err := gojsonschema.NewSchema(gojsonschema.NewGoLoader(p.Schema))
 	return err
 }
+
+type Params []*Param
+
+func (s Params) Elem() Model {
+	return &Param{}
+}
+
+func (s Params) Items() []Model {
+	res := make([]Model, len(s))
+	for i, m := range s {
+		res[i] = m
+	}
+	return res
+}
+
+func (s Params) Fill(m []Model) {
+	q := make([]*Param, len(m))
+	for i, obj := range m {
+		q[i] = obj.(*Param)
+	}
+	s = q[:]
+}

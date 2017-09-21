@@ -62,3 +62,24 @@ func (l *Lease) Key() string {
 func (l *Lease) AuthKey() string {
 	return l.Key()
 }
+
+type Leases []*Lease
+
+func (s Leases) Elem() Model {
+	return &Lease{}
+}
+
+func (s Leases) Items() []Model {
+	res := make([]Model, len(s))
+	for i, m := range s {
+		res[i] = m
+	}
+	return res
+}
+func (s Leases) Fill(m []Model) {
+	q := make([]*Lease, len(m))
+	for i, obj := range m {
+		q[i] = obj.(*Lease)
+	}
+	s = q[:]
+}

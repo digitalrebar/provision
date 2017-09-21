@@ -5,11 +5,6 @@ import (
 	"strings"
 )
 
-type Model interface {
-	Prefix() string
-	Key() string
-}
-
 type ErrorAdder interface {
 	Errorf(string, ...interface{})
 	AddError(error)

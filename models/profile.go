@@ -37,3 +37,25 @@ func (p *Profile) Key() string {
 func (p *Profile) AuthKey() string {
 	return p.Key()
 }
+
+type Profiles []*Profile
+
+func (s Profiles) Elem() Model {
+	return &Profile{}
+}
+
+func (s Profiles) Items() []Model {
+	res := make([]Model, len(s))
+	for i, m := range s {
+		res[i] = m
+	}
+	return res
+}
+
+func (s Profiles) Fill(m []Model) {
+	q := make([]*Profile, len(m))
+	for i, obj := range m {
+		q[i] = obj.(*Profile)
+	}
+	s = q[:]
+}

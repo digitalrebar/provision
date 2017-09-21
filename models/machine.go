@@ -80,3 +80,25 @@ func (n *Machine) Key() string {
 func (n *Machine) AuthKey() string {
 	return n.Key()
 }
+
+type Machines []*Machine
+
+func (s Machines) Elem() Model {
+	return &Machine{}
+}
+
+func (s Machines) Items() []Model {
+	res := make([]Model, len(s))
+	for i, m := range s {
+		res[i] = m
+	}
+	return res
+}
+
+func (s Machines) Fill(m []Model) {
+	q := make([]*Machine, len(m))
+	for i, obj := range m {
+		q[i] = obj.(*Machine)
+	}
+	s = q[:]
+}

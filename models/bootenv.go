@@ -98,3 +98,24 @@ func (b *BootEnv) Key() string {
 func (b *BootEnv) AuthKey() string {
 	return b.Key()
 }
+
+type BootEnvs []*BootEnv
+
+func (s BootEnvs) Elem() Model {
+	return &BootEnv{}
+}
+
+func (s BootEnvs) Items() []Model {
+	res := make([]Model, len(s))
+	for i, m := range s {
+		res[i] = m
+	}
+	return res
+}
+func (s BootEnvs) Fill(m []Model) {
+	q := make([]*BootEnv, len(m))
+	for i, obj := range m {
+		q[i] = obj.(*BootEnv)
+	}
+	s = q[:]
+}

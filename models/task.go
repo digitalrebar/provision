@@ -42,3 +42,25 @@ func (t *Task) Key() string {
 func (t *Task) AuthKey() string {
 	return t.Key()
 }
+
+type Tasks []*Task
+
+func (s Tasks) Elem() Model {
+	return &Task{}
+}
+
+func (s Tasks) Items() []Model {
+	res := make([]Model, len(s))
+	for i, m := range s {
+		res[i] = m
+	}
+	return res
+}
+
+func (s Tasks) Fill(m []Model) {
+	q := make([]*Task, len(m))
+	for i, obj := range m {
+		q[i] = obj.(*Task)
+	}
+	s = q[:]
+}

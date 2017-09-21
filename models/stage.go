@@ -66,3 +66,25 @@ func (s *Stage) Key() string {
 func (s *Stage) AuthKey() string {
 	return s.Key()
 }
+
+type Stages []*Stage
+
+func (s Stages) Elem() Model {
+	return &Stage{}
+}
+
+func (s Stages) Items() []Model {
+	res := make([]Model, len(s))
+	for i, m := range s {
+		res[i] = m
+	}
+	return res
+}
+
+func (s Stages) Fill(m []Model) {
+	q := make([]*Stage, len(m))
+	for i, obj := range m {
+		q[i] = obj.(*Stage)
+	}
+	s = q[:]
+}
