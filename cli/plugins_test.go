@@ -14,6 +14,7 @@ var pluginShowPluginString string = `{
   "Available": true,
   "Errors": [],
   "Name": "i-woman",
+  "PluginErrors": [],
   "Provider": "incrementer",
   "ReadOnly": false,
   "Validated": true
@@ -50,6 +51,7 @@ var pluginCreateJohnString string = `{
   "Available": true,
   "Errors": [],
   "Name": "i-woman",
+  "PluginErrors": null,
   "Provider": "incrementer",
   "ReadOnly": false,
   "Validated": true
@@ -63,6 +65,7 @@ var pluginListPluginsString = `[
     "Available": true,
     "Errors": [],
     "Name": "i-woman",
+    "PluginErrors": [],
     "Provider": "incrementer",
     "ReadOnly": false,
     "Validated": true
@@ -83,6 +86,7 @@ var pluginUpdateJohnString string = `{
   "Description": "lpxelinux.0",
   "Errors": [],
   "Name": "i-woman",
+  "PluginErrors": [],
   "Provider": "incrementer",
   "ReadOnly": false,
   "Validated": true
@@ -101,6 +105,7 @@ var pluginPatchBaseString string = `{
   "Description": "lpxelinux.0",
   "Errors": [],
   "Name": "i-woman",
+  "PluginErrors": [],
   "Provider": "incrementer",
   "Validated": true
 }
@@ -114,6 +119,7 @@ var pluginPatchJohnString string = `{
   "Description": "bootx64.efi",
   "Errors": [],
   "Name": "i-woman",
+  "PluginErrors": [],
   "Provider": "incrementer",
   "ReadOnly": false,
   "Validated": true
@@ -123,6 +129,7 @@ var pluginPatchMissingBaseString string = `{
   "Description": "bootx64.efi",
   "Errors": [],
   "Name": "spider-woman",
+  "PluginErrors": [],
   "Provider": "incrementer"
 }
 `
@@ -163,6 +170,7 @@ var pluginUpdateJohnWithParamsString string = `{
   "Params": {
     "jj": 3
   },
+  "PluginErrors": [],
   "Provider": "incrementer",
   "ReadOnly": false,
   "Validated": true
