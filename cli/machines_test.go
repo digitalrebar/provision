@@ -575,6 +575,7 @@ var machinePluginCreateString string = `{
   "Available": true,
   "Errors": [],
   "Name": "incr",
+  "PluginErrors": null,
   "Provider": "incrementer",
   "ReadOnly": false,
   "Validated": true

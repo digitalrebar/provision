@@ -22,6 +22,9 @@ type Plugin struct {
 	//
 	// required: true
 	Provider string
+	// Error unrelated to the object validity, but the execution
+	// of the plugin.
+	PluginErrors []string
 }
 
 func (n *Plugin) Prefix() string {
