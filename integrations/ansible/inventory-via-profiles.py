@@ -34,7 +34,6 @@ def main():
     # change these values to match your DigitalRebar installation
     addr = os.getenv('RS_ENDPOINT', "https://127.0.0.1:8092")
     ups = os.getenv('RS_KEY', "rocketskates:r0cketsk8ts")
-    profile = os.getenv('RS_PROFILE', "mycluster")
     arr = ups.split(":")
     user = arr[0]
     password = arr[1]
@@ -55,37 +54,16 @@ def main():
     urllib3.disable_warnings()
     inventory["_meta"]["rebar_url"] = addr
     inventory["_meta"]["rebar_user"] = user
-    inventory["_meta"]["rebar_profile"] = profile
 
-    groups = []
     profiles = {}
     profiles_vars = {}
-
-    profile_raw = requests.get(addr + "/api/v3/profiles/" + profile + "/params",headers=Headers,auth=(user,password),verify=False)
-    if profile_raw.status_code == 200: 
-        params = profile_raw.json()
-        if u"ansible/groups" in params:
-            groups = params[u"ansible/groups"]
-        else:
-            raise IOError("cannot parse profile " + profile + ": missing ansible/groups param.")
-        if u"ansible/groups-members" in params:
-            members = params[u"ansible/groups-members"]
-        else:
-            raise IOError("cannot parse profile " + profile + ": missing ansible/groups-members")
-        if u"ansible/groupvars" in params:    
-            groupvars = params[u"ansible/groupvars"]
-        else:
-            groupvars = {}
-        if u"ansible/hostvars" in params:
-            hostvars = params[u"ansible/hostvars"]
-        else:
-            hostvars = {}
-        if u"ansible/parent-groups" in params:
-            parentgroups = params[u"ansible/parent-groups"]
-        else:
-            parentgroups = []
+    profiles_raw = requests.get(addr + "/api/v3/profiles",headers=Headers,auth=(user,password),verify=False)
+    if profiles_raw.status_code == 200: 
+        for profile in profiles_raw.json():
+            profiles[profile[u"Name"]] = []
+            profiles_vars[profile[u"Name"]] = profile[u"Params"] 
     else:
-        raise IOError(profile_raw.text)
+        raise IOError(profiles_raw.text)
 
     if list_inventory:
         URL = addr + "/api/v3/machines"
@@ -95,37 +73,41 @@ def main():
         URL = addr + "/api/v3/machines"
 
     raw = requests.get(URL,headers=Headers,auth=(user,password),verify=False)
+
     if raw.status_code == 200: 
         for machine in raw.json():
             name = machine[u'Name']
-            myvars = hostvars.copy()
-            if u"Params" in machine[u'Profile']:
-                for k in machine[u'Profile'][u'Params']:
-                    myvars[k] = machine[u'Profile'][u'Params'][k]
-            myvars["ansible_host"] = machine[u"Address"]
-            myvars["rebar_uuid"] = machine[u"Uuid"]
-            inventory["_meta"]["hostvars"][name] = myvars
+            # TODO, should we only show machines that are in local bootenv?  others could be transistioning
+            # if the machine has profiles, collect them
+            if machine[u"Profiles"]:
+                for profile in machine[u"Profiles"]:
+                    profiles[profile].append(name)
+            inventory["_meta"]["hostvars"][name] = {"ansible_ssh_user": "root", "ansible_host": machine[u"Address"]} 
     else:
         raise IOError(raw.text)
 
-    # collect group information
-    for group in groups:
-        inventory[group] = {}
-        inventory[group]['hosts'] = members[group]
-        if group in groupvars:
-            inventory[group]['vars'] = {}
-            URL = addr + "/api/v3/profiles/" + groupvars[group] + "/params"
-            raw = requests.get(URL,headers=Headers,auth=(user,password),verify=False)
-            if raw.status_code == 200: 
-                inventory[group]['vars'] = raw.json() 
+    for profile in profiles:
+        section = {}
+        if len(profiles[profile]) > 0:
+            section["hosts"] = []
+            for machine in profiles[profile]:
+                section["hosts"].extend([machine])
 
-    # add child groups
-    for group in parentgroups:
-        if not group in inventory:
-            inventory[group] = { 'children': [] }
-        else:
-            inventory[group]['children'] = []
-        inventory[group]['children'] = parentgroups[group] 
+        if profiles_vars[profile] is None:
+            pass # so nothing
+        elif u'ansible-children' in profiles_vars[profile].keys():
+            section["children"] = []
+            for child in profiles_vars[profile][u'ansible-children']:
+                section["children"].extend([child])
+        elif len(profiles_vars[profile]) > 0:
+            section["vars"] = {}
+            for param in profiles_vars[profile]:
+                value = profiles_vars[profile][param]
+                section["vars"][param] = value
+
+        if len(section.keys()) > 0:
+            inventory[profile] = section
+
 
     print json.dumps(inventory)
 
