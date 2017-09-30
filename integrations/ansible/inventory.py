@@ -22,11 +22,6 @@ Usage: https://github.com/digitalrebar/provision/tree/master/integration/ansible
 example: ansible -i inventory.py all -a "uname -a"
 '''
 
-# Children Group Support
-#   1. Create a "ansible-children" parameter
-#   2. Add that parameter to the parent profile
-#   3. Set the "ansible-children" parameter in the parent profile to the list of children's profiles
-    
 def main():
 
     inventory = { "_meta": { "hostvars": {} } }
@@ -99,7 +94,7 @@ def main():
         for machine in raw.json():
             name = machine[u'Name']
             myvars = hostvars.copy()
-            if u"Params" in machine[u'Profile']:
+            if u"Params" in machine[u'Profile'] and machine[u'Profile'][u'Params']:
                 for k in machine[u'Profile'][u'Params']:
                     myvars[k] = machine[u'Profile'][u'Params'][k]
             myvars["ansible_host"] = machine[u"Address"]
