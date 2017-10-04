@@ -8,6 +8,8 @@ adapted to run on any Ansible run.
 To make the documentation more specific, they use the installation
 of Kubernetes on network provisioned servers using Digital Rebar Provision (https://github.com/digitalrebar/provision) and the Kubernetes Kubespray Ansible playbooks (https://github.com/kubernetes-incubator/kubespray).
 
+Video Demo: https://youtu.be/b5himGQ1Zew.
+
 Prereqs
 -------
 
