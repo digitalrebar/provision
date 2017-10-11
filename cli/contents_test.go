@@ -7,7 +7,7 @@ import (
 var contentDefaultListString string = `[
   {
     "Counts": {
-      "bootenvs": 2,
+      "bootenvs": 0,
       "jobs": 0,
       "leases": 0,
       "machines": 0,
@@ -55,6 +55,19 @@ var contentDefaultListString string = `[
       "Source": "Unspecified",
       "Type": "default",
       "Version": "user"
+    }
+  },
+  {
+    "Counts": {
+      "bootenvs": 2,
+      "stages": 1
+    },
+    "Warnings": null,
+    "meta": {
+      "Description": "Default objects that must be present",
+      "Name": "BasicStore",
+      "Type": "dynamic",
+      "Version": "Unversioned"
     }
   }
 ]
@@ -106,7 +119,7 @@ var contentCreateDuplicateErrorString = "Error: content post: already exists: jo
 var contentListContentsString = `[
   {
     "Counts": {
-      "bootenvs": 2,
+      "bootenvs": 0,
       "jobs": 0,
       "leases": 0,
       "machines": 0,
@@ -161,6 +174,19 @@ var contentListContentsString = `[
       "Source": "Unspecified",
       "Type": "default",
       "Version": "user"
+    }
+  },
+  {
+    "Counts": {
+      "bootenvs": 2,
+      "stages": 1
+    },
+    "Warnings": null,
+    "meta": {
+      "Description": "Default objects that must be present",
+      "Name": "BasicStore",
+      "Type": "dynamic",
+      "Version": "Unversioned"
     }
   }
 ]

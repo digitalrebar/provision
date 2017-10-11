@@ -12,7 +12,7 @@ var prefsDefaultListString = `{
   "debugPlugins": "0",
   "debugRenderer": "0",
   "defaultBootEnv": "local",
-  "defaultStage": "",
+  "defaultStage": "none",
   "knownTokenTimeout": "3600",
   "unknownBootEnv": "ignore",
   "unknownTokenTimeout": "600"
@@ -31,7 +31,7 @@ var prefsSetJSONResponseString string = `{
   "debugPlugins": "0",
   "debugRenderer": "0",
   "defaultBootEnv": "local3",
-  "defaultStage": "",
+  "defaultStage": "none",
   "knownTokenTimeout": "3600",
   "unknownBootEnv": "ignore",
   "unknownTokenTimeout": "600"
@@ -47,7 +47,7 @@ var prefsChangedListString = `{
   "debugPlugins": "0",
   "debugRenderer": "0",
   "defaultBootEnv": "local3",
-  "defaultStage": "",
+  "defaultStage": "none",
   "knownTokenTimeout": "3600",
   "unknownBootEnv": "ignore",
   "unknownTokenTimeout": "600"
@@ -72,7 +72,7 @@ var prefsKnownChangedListString = `{
   "debugPlugins": "0",
   "debugRenderer": "0",
   "defaultBootEnv": "local3",
-  "defaultStage": "",
+  "defaultStage": "none",
   "knownTokenTimeout": "5000",
   "unknownBootEnv": "ignore",
   "unknownTokenTimeout": "600"
@@ -85,7 +85,7 @@ var prefsBothPreDebugChangedListString = `{
   "debugPlugins": "0",
   "debugRenderer": "0",
   "defaultBootEnv": "local3",
-  "defaultStage": "",
+  "defaultStage": "none",
   "knownTokenTimeout": "5000",
   "unknownBootEnv": "ignore",
   "unknownTokenTimeout": "7000"
@@ -98,7 +98,7 @@ var prefsBothChangedListString = `{
   "debugPlugins": "0",
   "debugRenderer": "1",
   "defaultBootEnv": "local3",
-  "defaultStage": "",
+  "defaultStage": "none",
   "knownTokenTimeout": "5000",
   "unknownBootEnv": "ignore",
   "unknownTokenTimeout": "7000"
@@ -112,7 +112,7 @@ var prefsFinalListString = `{
   "debugPlugins": "0",
   "debugRenderer": "0",
   "defaultBootEnv": "local",
-  "defaultStage": "",
+  "defaultStage": "none",
   "knownTokenTimeout": "5000",
   "unknownBootEnv": "ignore",
   "unknownTokenTimeout": "7000"
