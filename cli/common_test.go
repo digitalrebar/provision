@@ -31,6 +31,7 @@ var noStdinString string = ``
 
 // Runs the args against a server and return stdout and stderr.
 func runCliCommand(t *testing.T, args []string, stdin string) (string, string, error) {
+	t.Helper()
 	oldOut := os.Stdout
 	oldErr := os.Stderr
 	oldIn := os.Stdin
@@ -117,6 +118,7 @@ func diff(a, b string) (string, error) {
 }
 
 func testCli(t *testing.T, test CliTest) {
+	t.Helper()
 	t.Logf("Testing: %v (stdin: %s)\n", test.args, test.stdin)
 
 	hasE := false
@@ -226,7 +228,7 @@ var yamlTestString = `- Available: true
     Name: ignore
   OnlyUnknown: true
   OptionalParams: null
-  ReadOnly: false
+  ReadOnly: true
   RequiredParams: null
   Templates:
   - Contents: |
@@ -258,7 +260,7 @@ var yamlTestString = `- Available: true
     Name: local
   OnlyUnknown: false
   OptionalParams: null
-  ReadOnly: false
+  ReadOnly: true
   RequiredParams: null
   Templates:
   - Contents: |
@@ -295,7 +297,7 @@ var jsonTestString = `[
     },
     "OnlyUnknown": true,
     "OptionalParams": null,
-    "ReadOnly": false,
+    "ReadOnly": true,
     "RequiredParams": null,
     "Templates": [
       {
@@ -329,7 +331,7 @@ var jsonTestString = `[
     },
     "OnlyUnknown": false,
     "OptionalParams": null,
-    "ReadOnly": false,
+    "ReadOnly": true,
     "RequiredParams": null,
     "Templates": [
       {

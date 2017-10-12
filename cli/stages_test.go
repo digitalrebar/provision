@@ -4,7 +4,22 @@ import (
 	"testing"
 )
 
-var stageDefaultListString string = "[]\n"
+var stageDefaultListString string = `[
+  {
+    "Available": true,
+    "BootEnv": "",
+    "Errors": [],
+    "Name": "none",
+    "OptionalParams": null,
+    "Profiles": [],
+    "ReadOnly": true,
+    "RequiredParams": null,
+    "Tasks": [],
+    "Templates": [],
+    "Validated": true
+  }
+]
+`
 var stageEmptyListString string = "[]\n"
 
 var stageShowNoArgErrorString string = "Error: drpcli stages show [id] [flags] requires 1 argument\n"
@@ -66,6 +81,19 @@ var stageListStagesString = `[
     "OptionalParams": null,
     "Profiles": [],
     "ReadOnly": false,
+    "RequiredParams": null,
+    "Tasks": [],
+    "Templates": [],
+    "Validated": true
+  },
+  {
+    "Available": true,
+    "BootEnv": "",
+    "Errors": [],
+    "Name": "none",
+    "OptionalParams": null,
+    "Profiles": [],
+    "ReadOnly": true,
     "RequiredParams": null,
     "Tasks": [],
     "Templates": [],
@@ -186,15 +214,15 @@ func TestStageCli(t *testing.T) {
 		CliTest{false, false, []string{"stages", "list", "BootEnv=fred"}, noStdinString, stageEmptyListString, noErrorString},
 		CliTest{false, false, []string{"stages", "list", "BootEnv=local"}, noStdinString, stageListJohnOnlyString, noErrorString},
 		CliTest{false, false, []string{"stages", "list", "Reboot=true"}, noStdinString, stageEmptyListString, noErrorString},
-		CliTest{false, false, []string{"stages", "list", "Reboot=false"}, noStdinString, stageListJohnOnlyString, noErrorString},
+		CliTest{false, false, []string{"stages", "list", "Reboot=false"}, noStdinString, stageListStagesString, noErrorString},
 		CliTest{false, true, []string{"stages", "list", "Reboot=fred"}, noStdinString, noContentString, "Error: Reboot must be true or false\n\n"},
-		CliTest{false, false, []string{"stages", "list", "Available=true"}, noStdinString, stageListJohnOnlyString, noErrorString},
+		CliTest{false, false, []string{"stages", "list", "Available=true"}, noStdinString, stageListStagesString, noErrorString},
 		CliTest{false, false, []string{"stages", "list", "Available=false"}, noStdinString, stageEmptyListString, noErrorString},
 		CliTest{false, true, []string{"stages", "list", "Available=fred"}, noStdinString, noContentString, "Error: Available must be true or false\n\n"},
-		CliTest{false, false, []string{"stages", "list", "Valid=true"}, noStdinString, stageListJohnOnlyString, noErrorString},
+		CliTest{false, false, []string{"stages", "list", "Valid=true"}, noStdinString, stageListStagesString, noErrorString},
 		CliTest{false, false, []string{"stages", "list", "Valid=false"}, noStdinString, stageEmptyListString, noErrorString},
 		CliTest{false, true, []string{"stages", "list", "Valid=fred"}, noStdinString, noContentString, "Error: Valid must be true or false\n\n"},
-		CliTest{false, false, []string{"stages", "list", "ReadOnly=true"}, noStdinString, stageEmptyListString, noErrorString},
+		CliTest{false, false, []string{"stages", "list", "ReadOnly=true"}, noStdinString, stageDefaultListString, noErrorString},
 		CliTest{false, false, []string{"stages", "list", "ReadOnly=false"}, noStdinString, stageListJohnOnlyString, noErrorString},
 		CliTest{false, true, []string{"stages", "list", "ReadOnly=fred"}, noStdinString, noContentString, bootEnvBadReadOnlyString},
 

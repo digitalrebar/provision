@@ -35,6 +35,7 @@ var machineShowMachineString string = `{
   "Profiles": null,
   "ReadOnly": false,
   "Runnable": true,
+  "Stage": "none",
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Validated": true
@@ -76,6 +77,7 @@ var machineCreateJohnString string = `{
   "Profiles": null,
   "ReadOnly": false,
   "Runnable": true,
+  "Stage": "none",
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Validated": true
@@ -129,6 +131,7 @@ var machineListMachinesString = `[
     "Profiles": null,
     "ReadOnly": false,
     "Runnable": true,
+    "Stage": "none",
     "Tasks": [],
     "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
     "Validated": true
@@ -162,6 +165,7 @@ var machineUpdateJohnString string = `{
   "Profiles": null,
   "ReadOnly": false,
   "Runnable": true,
+  "Stage": "none",
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Validated": true
@@ -213,6 +217,7 @@ var machinePatchJohnString string = `{
   "Profiles": null,
   "ReadOnly": false,
   "Runnable": true,
+  "Stage": "none",
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Validated": true
@@ -255,6 +260,7 @@ var machineAddProfileJill2String string = `{
   ],
   "ReadOnly": false,
   "Runnable": true,
+  "Stage": "none",
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Validated": true
@@ -280,6 +286,7 @@ var machineAddProfileJillString string = `{
   ],
   "ReadOnly": false,
   "Runnable": true,
+  "Stage": "none",
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Validated": true
@@ -306,6 +313,7 @@ var machineAddProfileJillJeanString string = `{
   ],
   "ReadOnly": false,
   "Runnable": true,
+  "Stage": "none",
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Validated": true
@@ -332,6 +340,7 @@ var machineRemoveProfileJeanString string = `{
   ],
   "ReadOnly": false,
   "Runnable": true,
+  "Stage": "none",
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Validated": true
@@ -355,6 +364,7 @@ var machineRemoveProfileAllGoneString string = `{
   "Profiles": null,
   "ReadOnly": false,
   "Runnable": true,
+  "Stage": "none",
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Validated": true
@@ -379,6 +389,7 @@ var machineRemoveProfileAllGone2String string = `{
   "Profiles": null,
   "ReadOnly": false,
   "Runnable": true,
+  "Stage": "none",
   "Tasks": [
     "justine"
   ],
@@ -414,6 +425,7 @@ var machineBootEnvErrorBootEnvString string = `{
   "Profiles": null,
   "ReadOnly": false,
   "Runnable": false,
+  "Stage": "none",
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Validated": true
@@ -468,6 +480,7 @@ var machineUpdateJohnWithParamsString string = `{
   "Profiles": null,
   "ReadOnly": false,
   "Runnable": true,
+  "Stage": "none",
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Validated": true
@@ -638,6 +651,7 @@ var machineUpdateLocalWithoutRunnableString = `{
   "Profiles": null,
   "ReadOnly": false,
   "Runnable": false,
+  "Stage": "none",
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Validated": true
@@ -662,6 +676,7 @@ var machineUpdateLocalString string = `{
   "Profiles": null,
   "ReadOnly": false,
   "Runnable": true,
+  "Stage": "none",
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Validated": true
@@ -688,6 +703,7 @@ var machineUpdateLocal3String string = `{
   ],
   "ReadOnly": false,
   "Runnable": true,
+  "Stage": "none",
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Validated": true
@@ -918,7 +934,7 @@ var machinesSetDefaultStageBackString = `{
   "debugPlugins": "0",
   "debugRenderer": "0",
   "defaultBootEnv": "local",
-  "defaultStage": "",
+  "defaultStage": "none",
   "knownTokenTimeout": "3600",
   "unknownBootEnv": "ignore",
   "unknownTokenTimeout": "600"
@@ -1157,7 +1173,7 @@ func TestMachineCli(t *testing.T) {
 		CliTest{false, false, []string{"machines", "create", machineCreateInputString}, noStdinString, machineCreateJohnString2, noErrorString},
 		CliTest{false, false, []string{"machines", "destroy", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, machineDestroyJohnString, noErrorString},
 		CliTest{false, false, []string{"machines", "list"}, noStdinString, machineDefaultListString, noErrorString},
-		CliTest{false, false, []string{"prefs", "set", "defaultStage", ""}, noStdinString, machinesSetDefaultStageBackString, noErrorString},
+		CliTest{false, false, []string{"prefs", "set", "defaultStage", "none"}, noStdinString, machinesSetDefaultStageBackString, noErrorString},
 
 		CliTest{false, false, []string{"plugins", "destroy", "incr"}, noStdinString, "Deleted plugin incr\n", noErrorString},
 		CliTest{false, false, []string{"stages", "destroy", "stage1"}, noStdinString, "Deleted stage stage1\n", noErrorString},

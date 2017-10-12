@@ -186,6 +186,7 @@ var contentMachineCreateSuccessString = `{
   "Profiles": null,
   "ReadOnly": false,
   "Runnable": true,
+  "Stage": "none",
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Validated": true
@@ -210,6 +211,7 @@ var contentMachineAddProfileString = `{
   ],
   "ReadOnly": false,
   "Runnable": true,
+  "Stage": "none",
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Validated": true

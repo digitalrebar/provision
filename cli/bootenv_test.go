@@ -27,7 +27,7 @@ var bootEnvIgnoreOnlyListString string = `[
     },
     "OnlyUnknown": true,
     "OptionalParams": null,
-    "ReadOnly": false,
+    "ReadOnly": true,
     "RequiredParams": null,
     "Templates": [
       {
@@ -64,7 +64,7 @@ var bootEnvLocalOnlyListString string = `[
     },
     "OnlyUnknown": false,
     "OptionalParams": null,
-    "ReadOnly": false,
+    "ReadOnly": true,
     "RequiredParams": null,
     "Templates": [
       {
@@ -101,7 +101,7 @@ var bootEnvDefaultListString string = `[
     },
     "OnlyUnknown": true,
     "OptionalParams": null,
-    "ReadOnly": false,
+    "ReadOnly": true,
     "RequiredParams": null,
     "Templates": [
       {
@@ -135,7 +135,7 @@ var bootEnvDefaultListString string = `[
     },
     "OnlyUnknown": false,
     "OptionalParams": null,
-    "ReadOnly": false,
+    "ReadOnly": true,
     "RequiredParams": null,
     "Templates": [
       {
@@ -175,7 +175,7 @@ var bootEnvShowIgnoreString string = `{
   },
   "OnlyUnknown": true,
   "OptionalParams": null,
-  "ReadOnly": false,
+  "ReadOnly": true,
   "RequiredParams": null,
   "Templates": [
     {
@@ -269,7 +269,7 @@ var bootEnvListBothEnvsString = `[
     },
     "OnlyUnknown": true,
     "OptionalParams": null,
-    "ReadOnly": false,
+    "ReadOnly": true,
     "RequiredParams": null,
     "Templates": [
       {
@@ -322,7 +322,7 @@ var bootEnvListBothEnvsString = `[
     },
     "OnlyUnknown": false,
     "OptionalParams": null,
-    "ReadOnly": false,
+    "ReadOnly": true,
     "RequiredParams": null,
     "Templates": [
       {
@@ -569,8 +569,8 @@ func TestBootEnvCli(t *testing.T) {
 		CliTest{false, false, []string{"bootenvs", "list", "Valid=true"}, noStdinString, bootEnvDefaultListString, noErrorString},
 		CliTest{false, false, []string{"bootenvs", "list", "Valid=false"}, noStdinString, bootEnvEmptyListString, noErrorString},
 		CliTest{false, true, []string{"bootenvs", "list", "Valid=fred"}, noStdinString, noContentString, bootEnvBadValidString},
-		CliTest{false, false, []string{"bootenvs", "list", "ReadOnly=true"}, noStdinString, bootEnvEmptyListString, noErrorString},
-		CliTest{false, false, []string{"bootenvs", "list", "ReadOnly=false"}, noStdinString, bootEnvDefaultListString, noErrorString},
+		CliTest{false, false, []string{"bootenvs", "list", "ReadOnly=true"}, noStdinString, bootEnvDefaultListString, noErrorString},
+		CliTest{false, false, []string{"bootenvs", "list", "ReadOnly=false"}, noStdinString, bootEnvEmptyListString, noErrorString},
 		CliTest{false, true, []string{"bootenvs", "list", "ReadOnly=fred"}, noStdinString, noContentString, bootEnvBadReadOnlyString},
 
 		CliTest{true, true, []string{"bootenvs", "show"}, noStdinString, noContentString, bootEnvShowNoArgErrorString},
