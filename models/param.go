@@ -39,6 +39,9 @@ func (p *Param) AuthKey() string {
 }
 
 func (p *Param) ValidateSchema() error {
+	if p.Schema == nil {
+		return nil
+	}
 	_, err := gojsonschema.NewSchema(gojsonschema.NewGoLoader(p.Schema))
 	return err
 }
