@@ -18,6 +18,9 @@ var taskShowMissingArgErrorString string = "Error: tasks GET: jill: Not Found\n\
 var taskShowJohnString string = `{
   "Available": true,
   "Errors": [],
+  "Meta": {
+    "feature-flags": "original-exit-codes"
+  },
   "Name": "john",
   "OptionalParams": null,
   "ReadOnly": false,
@@ -46,6 +49,9 @@ var taskCreateInputString string = `{
 var taskCreateJohnString string = `{
   "Available": true,
   "Errors": [],
+  "Meta": {
+    "feature-flags": "original-exit-codes"
+  },
   "Name": "john",
   "OptionalParams": null,
   "ReadOnly": false,
@@ -60,6 +66,9 @@ var taskListTasksString = `[
   {
     "Available": true,
     "Errors": [],
+    "Meta": {
+      "feature-flags": "original-exit-codes"
+    },
     "Name": "john",
     "OptionalParams": null,
     "ReadOnly": false,
@@ -73,6 +82,9 @@ var taskListBothEnvsString = `[
   {
     "Available": true,
     "Errors": [],
+    "Meta": {
+      "feature-flags": "original-exit-codes"
+    },
     "Name": "john",
     "OptionalParams": null,
     "ReadOnly": false,
@@ -94,6 +106,9 @@ var taskUpdateInputString string = `{
 var taskUpdateJohnString string = `{
   "Available": true,
   "Errors": [],
+  "Meta": {
+    "feature-flags": "original-exit-codes"
+  },
   "Name": "john",
   "OptionalParams": [
     "jillparam"
@@ -134,6 +149,9 @@ var taskPatchInputString string = `{
 var taskPatchJohnString string = `{
   "Available": true,
   "Errors": [],
+  "Meta": {
+    "feature-flags": "original-exit-codes"
+  },
   "Name": "john",
   "OptionalParams": [
     "joan"

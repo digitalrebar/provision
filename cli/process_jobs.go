@@ -74,6 +74,7 @@ type CommandRunner struct {
 	stderr   io.ReadCloser
 	stdout   io.ReadCloser
 	stdin    io.WriteCloser
+	task     *models.Task
 	finished chan bool
 }
 
@@ -95,7 +96,7 @@ func (cr *CommandRunner) ReadReply() {
 	cr.finished <- true
 }
 
-func (cr *CommandRunner) Run() (failed, incomplete, reboot bool) {
+func (cr *CommandRunner) Run() (failed, incomplete, reboot, poweroff bool) {
 	// Start command running
 	err := cr.cmd.Start()
 	if err != nil {
@@ -119,57 +120,72 @@ func (cr *CommandRunner) Run() (failed, incomplete, reboot bool) {
 		// syscall is generally platform dependent, WaitStatus is
 		// defined for both Unix and Windows and in both cases has
 		// an ExitStatus() method with the same signature.
-		if status, ok := exiterr.Sys().(syscall.WaitStatus); ok {
-			code := status.ExitStatus()
-			switch code {
-			case 0:
-				failed = false
-				reboot = false
-				s := fmt.Sprintf("Command %s succeeded\n", cr.name)
-				fmt.Printf(s)
-				Log(cr.uuid, s)
-			case 1:
-				failed = false
-				reboot = true
-				s := fmt.Sprintf("Command %s succeeded (wants reboot)\n", cr.name)
-				fmt.Printf(s)
-				Log(cr.uuid, s)
-			case 2:
-				incomplete = true
-				reboot = false
-				s := fmt.Sprintf("Command %s incomplete\n", cr.name)
-				fmt.Printf(s)
-				Log(cr.uuid, s)
-			case 3:
-				incomplete = true
-				reboot = true
-				s := fmt.Sprintf("Command %s incomplete (wants reboot)\n", cr.name)
-				fmt.Printf(s)
-				Log(cr.uuid, s)
-			default:
+		status, statusOK := exiterr.Sys().(syscall.WaitStatus)
+		if !statusOK {
+			if err != nil {
 				failed = true
 				reboot = false
-				s := fmt.Sprintf("Command %s failed\n", cr.name)
-				fmt.Printf(s)
-				Log(cr.uuid, s)
+			} else {
+				failed = false
+				reboot = false
+			}
+		} else {
+			sane := false
+			if cr.task.Meta != nil {
+				flagStr, ok := cr.task.Meta["feature-flags"]
+				if ok {
+					for _, testFlag := range strings.Split(flagStr, ",") {
+						if "sane-exit-codes" == strings.TrimSpace(testFlag) {
+							sane = true
+							break
+						}
+					}
+				}
+			}
+			code := uint(status.ExitStatus())
+			if sane {
+				// codes can be between 0 and 255
+				// if the low bits are not 0, the command failed.
+				failed = code&^224 > uint(0)
+				// If the high bit is set, the command was incomplete and the
+				// the current task pointer should not be advanced.
+				incomplete = code&128 > uint(0)
+				// If we need a reboot, set bit 6
+				reboot = code&64 > uint(0)
+				// If we need to poweroff, set bit 5.  Reboot wins if it is set.
+				poweroff = code&32 > uint(0)
+			} else {
+				switch code {
+				case 0:
+				case 1:
+					reboot = true
+				case 2:
+					incomplete = true
+				case 3:
+					incomplete = true
+					reboot = true
+				default:
+					failed = true
+				}
 			}
 		}
 	} else {
 		if err != nil {
 			failed = true
 			reboot = false
-			s := fmt.Sprintf("Command %s failed: %v\n", cr.name, err)
-			fmt.Printf(s)
-			Log(cr.uuid, s)
 		} else {
 			failed = false
 			reboot = false
-			s := fmt.Sprintf("Command %s succeeded\n", cr.name)
-			fmt.Printf(s)
-			Log(cr.uuid, s)
 		}
 	}
-
+	s := fmt.Sprintf("Command %s: failed: %v, incomplete: %v, reboot: %v, poweroff: %v\n",
+		cr.name,
+		failed,
+		incomplete,
+		reboot,
+		poweroff)
+	fmt.Printf(s)
+	Log(cr.uuid, s)
 	// Remove script
 	os.Remove(cr.cmd.Path)
 
@@ -216,7 +232,7 @@ func NewCommandRunner(uuid *strfmt.UUID, name, content string) (*CommandRunner, 
 	return answer, nil
 }
 
-func runContent(uuid *strfmt.UUID, action *models.JobAction) (failed, incomplete, reboot bool) {
+func runContent(uuid *strfmt.UUID, action *models.JobAction, task *models.Task) (failed, incomplete, reboot, poweroff bool) {
 
 	Log(uuid, fmt.Sprintf("Starting Content Execution for: %s\n", *action.Name))
 
@@ -226,23 +242,24 @@ func runContent(uuid *strfmt.UUID, action *models.JobAction) (failed, incomplete
 		s := fmt.Sprintf("Creating command %s failed: %v\n", *action.Name, err)
 		fmt.Printf(s)
 		Log(uuid, s)
-	} else {
-		failed, incomplete, reboot = runner.Run()
+		return
 	}
-	return
+	runner.task = task
+	return runner.Run()
 }
 
 func processJobsCommand() *cobra.Command {
 	mo := &MachineOps{CommonOps{Name: "machines", SingularName: "machine"}}
 	jo := &JobOps{CommonOps{Name: "jobs", SingularName: "job"}}
 	so := &StageOps{CommonOps{Name: "stages", SingularName: "stage"}}
+	to := &TaskOps{CommonOps{Name: "tasks", SingularName: "task"}}
 
 	command := &cobra.Command{
 		Use:   "processjobs [id]",
 		Short: "For the given machine, process pending jobs until done.",
 		Long: `
 For the provided machine, identified by UUID, process the task list on
-that machine until an error occurs or all jobs are complete.  Upon 
+that machine until an error occurs or all jobs are complete.  Upon
 completion, optionally wait for additional jobs as specified by
 the stage runner wait flag.
 `,
@@ -328,6 +345,16 @@ the stage runner wait flag.
 					job = obj.(*models.Job)
 				}
 				did_job = true
+				var task *models.Task
+
+				if obj, err := Get(job.Task, to); err != nil {
+					s := fmt.Sprintf("Error loading task content: %v, continuing", err)
+					fmt.Printf(s)
+					Log(job.UUID, s)
+					markJob(job.UUID.String(), "failed", jo)
+				} else {
+					task = obj.(*models.Task)
+				}
 
 				// Get the job data
 				var list []*models.JobAction
@@ -354,6 +381,7 @@ the stage runner wait flag.
 				failed := false
 				incomplete := false
 				reboot := false
+				poweroff := false
 				state := "finished"
 
 				for _, action := range list {
@@ -366,7 +394,7 @@ the stage runner wait flag.
 					// Excute task
 					if *action.Path == "" {
 						fmt.Printf("Running Task Template: %s\n", *action.Name)
-						failed, incomplete, reboot = runContent(job.UUID, action)
+						failed, incomplete, reboot, poweroff = runContent(job.UUID, action, task)
 					} else {
 						fmt.Printf("Putting Content in place for Task Template: %s\n", *action.Name)
 						var s string
@@ -393,7 +421,7 @@ the stage runner wait flag.
 						fmt.Printf("Error posting event: %v\n", err)
 					}
 
-					if failed || incomplete || reboot {
+					if failed || incomplete || reboot || poweroff {
 						break
 					}
 				}
@@ -406,6 +434,12 @@ the stage runner wait flag.
 					_, err := exec.Command("reboot").Output()
 					if err != nil {
 						Log(job.UUID, "Failed to issue reboot\n")
+					}
+				}
+				if poweroff {
+					_, err := exec.Command("poweroff").Output()
+					if err != nil {
+						Log(job.UUID, "Failed to issue poweroff\n")
 					}
 				}
 

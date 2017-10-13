@@ -10,6 +10,9 @@ var jobDefaultListString string = "[]\n"
 var jobTask1Create string = `{
   "Available": true,
   "Errors": [],
+  "Meta": {
+    "feature-flags": "original-exit-codes"
+  },
   "Name": "task1",
   "OptionalParams": null,
   "ReadOnly": false,
@@ -21,6 +24,9 @@ var jobTask1Create string = `{
 var jobTask2Create string = `{
   "Available": true,
   "Errors": [],
+  "Meta": {
+    "feature-flags": "original-exit-codes"
+  },
   "Name": "task2",
   "OptionalParams": null,
   "ReadOnly": false,
@@ -38,6 +44,9 @@ var jobTask2Create string = `{
 var jobTask3Create string = `{
   "Available": true,
   "Errors": [],
+  "Meta": {
+    "feature-flags": "original-exit-codes"
+  },
   "Name": "task3",
   "OptionalParams": null,
   "ReadOnly": false,

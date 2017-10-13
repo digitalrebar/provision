@@ -613,6 +613,9 @@ var machineRunActionGoodStdinString string = `{
 var machineJamieCreate string = `{
   "Available": true,
   "Errors": [],
+  "Meta": {
+    "feature-flags": "original-exit-codes"
+  },
   "Name": "jamie",
   "OptionalParams": null,
   "ReadOnly": false,
@@ -624,6 +627,9 @@ var machineJamieCreate string = `{
 var machineJustineCreate string = `{
   "Available": true,
   "Errors": [],
+  "Meta": {
+    "feature-flags": "original-exit-codes"
+  },
   "Name": "justine",
   "OptionalParams": null,
   "ReadOnly": false,
