@@ -66,12 +66,6 @@ When the *tools/discovery-load.sh* script finishes Digital Rebar Provision will 
 
 Videos
 ------
-
 We constantly update and add videos to the
-`DR Provision Playlist <https://www.youtube.com/playlist?list=PLXPBeIrpXjfilUi7Qj1Sl0UhjxNRSC7nx>`_
-so please check.
-
-Here are quick start specific videos:
-
-  * Mac OSX https://youtu.be/uUWU-4ObGIY
-  * Linux https://youtu.be/MPkGCiakXPs
+`DR Provision 3.1 Playlist <https://www.youtube.com/playlist?list=PLXPBeIrpXjfj5_8Joyehwq1nnaYSPCnmw>`_
+so please check to make sure you have the right version!
