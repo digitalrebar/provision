@@ -5,27 +5,31 @@ import (
 )
 
 var userEmptyListString string = "[]\n"
-var userDefaultListString string = `[
+var userDefaultListString string = `RE:
+\[
   {
     "Available": true,
     "Errors": null,
     "Name": "rocketskates",
     "PasswordHash": null,
     "ReadOnly": false,
+    "Secret": "[\s\S]*",
     "Validated": true
   }
-]
+\]
 `
 
 var userShowNoArgErrorString string = "Error: drpcli users show [id] [flags] requires 1 argument\n"
 var userShowTooManyArgErrorString string = "Error: drpcli users show [id] [flags] requires 1 argument\n"
 var userShowMissingArgErrorString string = "Error: users GET: ignore: Not Found\n\n"
-var userShowJohnString string = `{
+var userShowJohnString string = `RE:
+{
   "Available": true,
   "Errors": null,
   "Name": "john",
   "PasswordHash": null,
   "ReadOnly": false,
+  "Secret": "[\s\S]*",
   "Validated": true
 }
 `
@@ -46,46 +50,54 @@ var userCreateInputString string = `{
   "PasswordHash": null
 }
 `
-var userCreateJohnString string = `{
+var userCreateJohnString string = `RE:
+{
   "Available": true,
   "Errors": null,
   "Name": "john",
   "PasswordHash": null,
   "ReadOnly": false,
+  "Secret": "[\s\S]*",
   "Validated": true
 }
 `
 var userCreateFredInputString string = `fred`
-var userCreateFredString string = `{
+var userCreateFredString string = `RE:
+{
   "Available": true,
   "Errors": null,
   "Name": "fred",
   "PasswordHash": null,
   "ReadOnly": false,
+  "Secret": "[\s\S]*",
   "Validated": true
 }
 `
 var userDestroyFredString string = "Deleted user fred\n"
 var userCreateDuplicateErrorString = "Error: dataTracker create users: john already exists\n\n"
 
-var userListJohnOnlyString = `[
+var userListJohnOnlyString = `RE:
+\[
   {
     "Available": true,
     "Errors": null,
     "Name": "john",
     "PasswordHash": null,
     "ReadOnly": false,
+    "Secret": "[\s\S]*",
     "Validated": true
   }
-]
+\]
 `
-var userListBothEnvsString = `[
+var userListBothEnvsString = `RE:
+\[
   {
     "Available": true,
     "Errors": null,
     "Name": "john",
     "PasswordHash": null,
     "ReadOnly": false,
+    "Secret": "[\s\S]*",
     "Validated": true
   },
   {
@@ -94,9 +106,10 @@ var userListBothEnvsString = `[
     "Name": "rocketskates",
     "PasswordHash": null,
     "ReadOnly": false,
+    "Secret": "[\s\S]*",
     "Validated": true
   }
-]
+\]
 `
 
 var userUpdateNoArgErrorString string = "Error: drpcli users update [id] [json] [flags] requires 2 arguments"
@@ -107,12 +120,14 @@ var userUpdateInputString string = `{
   "PasswordHash": "NewStrat"
 }
 `
-var userUpdateJohnString string = `{
+var userUpdateJohnString string = `RE:
+{
   "Available": true,
   "Errors": null,
   "Name": "john",
   "PasswordHash": null,
   "ReadOnly": false,
+  "Secret": "[\s\S]*",
   "Validated": true
 }
 `
@@ -132,12 +147,14 @@ var userPatchInputString string = `{
   "PasswordHash": "Strat2n1"
 }
 `
-var userPatchJohnString string = `{
+var userPatchJohnString string = `RE:
+{
   "Available": true,
   "Errors": null,
   "Name": "john",
   "PasswordHash": null,
   "ReadOnly": false,
+  "Secret": "[\s\S]*",
   "Validated": true
 }
 `

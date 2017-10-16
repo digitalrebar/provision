@@ -167,6 +167,7 @@ var contentNoPackProfileListString = `[
 var contentMachineCreateString = `{
   "Name": "greg",
   "BootEnv": "mylocal",
+  "Secret": "secret1",
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
 }
 `
@@ -186,6 +187,7 @@ var contentMachineCreateSuccessString = `{
   "Profiles": null,
   "ReadOnly": false,
   "Runnable": true,
+  "Secret": "secret1",
   "Stage": "none",
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
@@ -211,6 +213,7 @@ var contentMachineAddProfileString = `{
   ],
   "ReadOnly": false,
   "Runnable": true,
+  "Secret": "secret1",
   "Stage": "none",
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",

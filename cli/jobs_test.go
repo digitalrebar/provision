@@ -79,6 +79,7 @@ var jobLocal2CreateInput string = `{
 var jobCreateMachineInputString string = `{
   "Address": "192.168.100.110",
   "Name": "john",
+  "Secret": "secret1",
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Stage": "stage3"
 }
@@ -100,6 +101,7 @@ var jobCreateMachineJohnString string = `{
   "Profiles": null,
   "ReadOnly": false,
   "Runnable": true,
+  "Secret": "secret1",
   "Stage": "stage3",
   "Tasks": [
     "task1",
@@ -259,6 +261,7 @@ var jobShowMachineJohnString string = `{
   "Profiles": null,
   "ReadOnly": false,
   "Runnable": true,
+  "Secret": "secret1",
   "Stage": "stage3",
   "Tasks": [
     "task1",
@@ -428,6 +431,7 @@ var jobUpdateMachineRunnableString = `{
   "Profiles": null,
   "ReadOnly": false,
   "Runnable": true,
+  "Secret": "secret1",
   "Stage": "stage3",
   "Tasks": [
     "task1",
