@@ -6,29 +6,40 @@ import (
 	"testing"
 )
 
-var processJobsJustineCreateTaskString = `{
-  "Meta": {
-    "feature-flags": "sane-exit-codes"
-  },
-  "Name": "justine",
-  "Templates": [
-    {
-      "Contents": "test.txt Content\n\nHere\n",
-      "Name": "part 1 - copy file",
-      "Path": "test.txt"
-    },
-    {
-      "Contents": "#!/bin/bash\n\ndata\necho\nexit 0\n",
-      "Name": "part 2 - Print Date - success",
-      "Path": ""
-    },
-    {
-      "Contents": "#!/bin/bash\n\nif [ -e incomplete.txt ] ; then\ntouch failed.txt\nrm incomplete.txt\necho \"Return failed\"\nexit 1\nelif [ -e failed.txt ] ; then\necho \"Return success\"\nexit 0\nfi\n\ntouch incomplete.txt\necho \"Return incomplete\"\nexit 128\n\n",
-      "Name": "part 3 - Test Return Codes",
-      "Path": ""
-    }
-  ]
-}
+var processJobsJustineCreateTaskString = `
+---
+Meta:
+  feature-flags: sane-exit-codes
+Name: justine
+Templates:
+  - Contents: |
+      test.txt Content
+
+      Here
+    Name: "part 1 - copy file"
+    Path: test.txt
+  - Contents: |
+      #!/bin/bash
+      date
+      echo
+      exit 0
+    Name: "part 2 - Print Date - success"
+  - Contents: |
+      #!/bin/bash
+      . helper
+      if [ -e /tmp/incomplete.txt ]; then
+         touch /tmp/failed.txt
+         rm /tmp/incomplete.txt
+         echo "Return failed"
+         exit 1
+      elif [ -e /tmp/failed.txt ]; then
+         echo "Return success"
+         exit 0
+      fi
+      touch /tmp/incomplete.txt
+      echo "Return incomplete"
+      exit_incomplete
+    Name: "part 3 - Test Return Codes"
 `
 var processJobsJustineCreateOutputString string = `{
   "Available": true,
@@ -47,12 +58,12 @@ var processJobsJustineCreateOutputString string = `{
       "Path": "test.txt"
     },
     {
-      "Contents": "#!/bin/bash\n\ndata\necho\nexit 0\n",
+      "Contents": "#!/bin/bash\ndate\necho\nexit 0\n",
       "Name": "part 2 - Print Date - success",
       "Path": ""
     },
     {
-      "Contents": "#!/bin/bash\n\nif [ -e incomplete.txt ] ; then\ntouch failed.txt\nrm incomplete.txt\necho \"Return failed\"\nexit 1\nelif [ -e failed.txt ] ; then\necho \"Return success\"\nexit 0\nfi\n\ntouch incomplete.txt\necho \"Return incomplete\"\nexit 128\n\n",
+      "Contents": "#!/bin/bash\n. helper\nif [ -e /tmp/incomplete.txt ]; then\n   touch /tmp/failed.txt\n   rm /tmp/incomplete.txt\n   echo \"Return failed\"\n   exit 1\nelif [ -e /tmp/failed.txt ]; then\n   echo \"Return success\"\n   exit 0\nfi\ntouch /tmp/incomplete.txt\necho \"Return incomplete\"\nexit_incomplete\n",
       "Name": "part 3 - Test Return Codes",
       "Path": ""
     }
@@ -78,7 +89,7 @@ var processJobsYakovCreateTaskString = `{
       "Path": ""
     },
     {
-      "Contents": "#!/bin/bash\n\nif [ -e incomplete.txt ] ; then\ntouch failed.txt\nrm incomplete.txt\necho \"Return failed\"\nexit 4\nelif [ -e failed.txt ] ; then\necho \"Return success\"\nexit 0\nfi\n\ntouch incomplete.txt\necho \"Return incomplete\"\nexit 2\n\n",
+      "Contents": "#!/bin/bash\n\nif [ -e /tmp/incomplete.txt ] ; then\ntouch /tmp/failed.txt\nrm /tmp/incomplete.txt\necho \"Return failed\"\nexit 4\nelif [ -e /tmp/failed.txt ] ; then\necho \"Return success\"\nexit 0\nfi\n\ntouch /tmp/incomplete.txt\necho \"Return incomplete\"\nexit 2\n\n",
       "Name": "part 3 - Test Return Codes",
       "Path": ""
     }
@@ -107,7 +118,7 @@ var processJobsYakovCreateOutputString string = `{
       "Path": ""
     },
     {
-      "Contents": "#!/bin/bash\n\nif [ -e incomplete.txt ] ; then\ntouch failed.txt\nrm incomplete.txt\necho \"Return failed\"\nexit 4\nelif [ -e failed.txt ] ; then\necho \"Return success\"\nexit 0\nfi\n\ntouch incomplete.txt\necho \"Return incomplete\"\nexit 2\n\n",
+      "Contents": "#!/bin/bash\n\nif [ -e /tmp/incomplete.txt ] ; then\ntouch /tmp/failed.txt\nrm /tmp/incomplete.txt\necho \"Return failed\"\nexit 4\nelif [ -e /tmp/failed.txt ] ; then\necho \"Return success\"\nexit 0\nfi\n\ntouch /tmp/incomplete.txt\necho \"Return incomplete\"\nexit 2\n\n",
       "Name": "part 3 - Test Return Codes",
       "Path": ""
     }
@@ -469,6 +480,7 @@ var processJobsCreateStage1SuccessString = `{
 var processJobsStageMissingString = "Error: Stage fred does not exist\n\n"
 
 func TestProcessJobsCli(t *testing.T) {
+	actuallyPowerThings = false
 
 	tests := []CliTest{
 		// Setup
@@ -498,9 +510,9 @@ func TestProcessJobsCli(t *testing.T) {
 	}
 	// Run tasks on yakov
 
-	os.Remove("test.txt")
-	os.Remove("failed.txt")
-	os.Remove("incomplete.txt")
+	os.Remove("/tmp/test.txt")
+	os.Remove("/tmp/failed.txt")
+	os.Remove("/tmp/incomplete.txt")
 	tests = []CliTest{
 		CliTest{false, true, []string{"machines", "processjobs", "3e7031fe-3062-45f1-835c-92541bc9cbd4", "--exit-on-failure"}, noStdinString, processYakovOutputSuccessString, processYakovErrorSuccessString},
 		CliTest{false, false, []string{"machines", "show", "3e7031fe-3062-45f1-835c-92541bc9cbd4"}, noStdinString, processYakovShowFailedMachineString, noErrorString},
@@ -534,7 +546,7 @@ func TestProcessJobsCli(t *testing.T) {
 		}
 	}
 
-	os.Remove("test.txt")
-	os.Remove("failed.txt")
-	os.Remove("incomplete.txt")
+	os.Remove("/tmp/test.txt")
+	os.Remove("/tmp/failed.txt")
+	os.Remove("/tmp/incomplete.txt")
 }
