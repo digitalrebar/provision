@@ -195,6 +195,10 @@ exit_shutdown() {
     __exit 32
 }
 
+exit_stop() {
+    __exit 16
+}
+
 exit_incomplete_reboot() {
     __exit 192
 }
@@ -210,11 +214,6 @@ addr_port() {
         printf '%s:%d' "$1" "$2"
     fi
 }
-
-if ! (which jq &>/dev/null || install jq); then
-    echo "JQ not installed and not installable.  The script jig requires it to function"
-    exit 1
-fi
 `)
 
 func putLog(uuid *strfmt.UUID, buf *bytes.Buffer) error {
@@ -299,7 +298,7 @@ func (cr *CommandRunner) ReadReply() {
 	cr.finished <- true
 }
 
-func (cr *CommandRunner) Run() (failed, incomplete, reboot, poweroff bool) {
+func (cr *CommandRunner) Run() (failed, incomplete, reboot, poweroff, stop bool) {
 	// Start command running
 	err := cr.cmd.Start()
 	if err != nil {
@@ -352,7 +351,7 @@ func (cr *CommandRunner) Run() (failed, incomplete, reboot, poweroff bool) {
 			if sane {
 				// codes can be between 0 and 255
 				// if the low bits are not 0, the command failed.
-				failed = code&^224 > uint(0)
+				failed = code&^240 > uint(0)
 				// If the high bit is set, the command was incomplete and the
 				// the current task pointer should not be advanced.
 				incomplete = code&128 > uint(0)
@@ -360,6 +359,8 @@ func (cr *CommandRunner) Run() (failed, incomplete, reboot, poweroff bool) {
 				reboot = code&64 > uint(0)
 				// If we need to poweroff, set bit 5.  Reboot wins if it is set.
 				poweroff = code&32 > uint(0)
+				// If we need to stop, set bit 4
+				stop = code&16 > uint(0)
 			} else {
 				switch code {
 				case 0:
@@ -384,12 +385,13 @@ func (cr *CommandRunner) Run() (failed, incomplete, reboot, poweroff bool) {
 			reboot = false
 		}
 	}
-	Log(cr.uuid, true, "Command %s: failed: %v, incomplete: %v, reboot: %v, poweroff: %v\n",
+	Log(cr.uuid, true, "Command %s: failed: %v, incomplete: %v, reboot: %v, poweroff: %v, stop: %v\n",
 		cr.name,
 		failed,
 		incomplete,
 		reboot,
-		poweroff)
+		poweroff,
+		stop)
 	// Remove script
 	os.Remove(cr.cmd.Path)
 
@@ -428,7 +430,7 @@ func NewCommandRunner(uuid *strfmt.UUID, name, content, loc string) (*CommandRun
 	return answer, nil
 }
 
-func runContent(uuid *strfmt.UUID, action *models.JobAction, task *models.Task) (failed, incomplete, reboot, poweroff bool) {
+func runContent(uuid *strfmt.UUID, action *models.JobAction, task *models.Task) (failed, incomplete, reboot, poweroff, stop bool) {
 	tmpDir, err := ioutil.TempDir(runnerDir, *task.Name+"-")
 	if err != nil {
 		Log(uuid, true, "Could not create temp dir: %v", err)
@@ -581,9 +583,15 @@ the stage runner wait flag.
 				incomplete := false
 				reboot := false
 				poweroff := false
+				stop := false
 				state := "finished"
+				done := true
 
 				for _, action := range list {
+					if stop || failed || incomplete || reboot || poweroff {
+						done = false
+						break
+					}
 					event := &models.Event{Time: strfmt.DateTime(time.Now()), Type: "jobs", Action: "action_start", Key: job.UUID.String(), Object: fmt.Sprintf("Starting task: %s, template: %s", job.Task, *action.Name)}
 
 					if _, err := session.Events.PostEvent(events.NewPostEventParams().WithBody(event), basicAuth); err != nil {
@@ -593,7 +601,7 @@ the stage runner wait flag.
 					// Excute task
 					if *action.Path == "" {
 						fmt.Printf("Running Task Template: %s\n", *action.Name)
-						failed, incomplete, reboot, poweroff = runContent(job.UUID, action, task)
+						failed, incomplete, reboot, poweroff, stop = runContent(job.UUID, action, task)
 					} else {
 						fmt.Printf("Putting Content in place for Task Template: %s\n", *action.Name)
 						if err := writeStringToFile(*action.Path, *action.Content); err != nil {
@@ -616,14 +624,12 @@ the stage runner wait flag.
 					if _, err := session.Events.PostEvent(events.NewPostEventParams().WithBody(event), basicAuth); err != nil {
 						fmt.Printf("Error posting event: %v\n", err)
 					}
-
-					if failed || incomplete || reboot || poweroff {
-						break
-					}
 				}
 
-				fmt.Printf("Task: %s %s\n", job.Task, state)
-				markJob(job.UUID.String(), state, jo)
+				if done || incomplete || failed {
+					fmt.Printf("Task: %s %s\n", job.Task, state)
+					markJob(job.UUID.String(), state, jo)
+				}
 				// Loop back and wait for the machine to get marked runnable again
 
 				if reboot {
@@ -635,6 +641,7 @@ the stage runner wait flag.
 					} else {
 						Log(job.UUID, true, "Would have rebooted")
 					}
+					break
 				}
 				if poweroff {
 					if actuallyPowerThings {
@@ -645,11 +652,17 @@ the stage runner wait flag.
 					} else {
 						Log(job.UUID, true, "Would have powered down")
 					}
+					break
 				}
 
 				// If we failed, should we exit
 				if exitOnFailure && failed {
 					return fmt.Errorf("Task failed, exiting ...\n")
+				}
+
+				// Task asked to stop
+				if stop {
+					break
 				}
 			}
 
