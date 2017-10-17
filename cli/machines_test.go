@@ -943,6 +943,7 @@ var machineAggregateParamString = `{
 `
 
 var machinesSetDefaultStageString = `{
+  "baseTokenSecret": "token-secret-token-secret-token1",
   "debugBootEnv": "0",
   "debugDhcp": "0",
   "debugFrontend": "0",
@@ -951,13 +952,14 @@ var machinesSetDefaultStageString = `{
   "defaultBootEnv": "local",
   "defaultStage": "stage1",
   "knownTokenTimeout": "3600",
-  "systemGrantorSecret": "initial-secret",
+  "systemGrantorSecret": "system-grantor-secret",
   "unknownBootEnv": "ignore",
   "unknownTokenTimeout": "600"
 }
 `
 
 var machinesSetDefaultStageBackString = `{
+  "baseTokenSecret": "token-secret-token-secret-token1",
   "debugBootEnv": "0",
   "debugDhcp": "0",
   "debugFrontend": "0",
@@ -966,7 +968,7 @@ var machinesSetDefaultStageBackString = `{
   "defaultBootEnv": "local",
   "defaultStage": "none",
   "knownTokenTimeout": "3600",
-  "systemGrantorSecret": "initial-secret",
+  "systemGrantorSecret": "system-grantor-secret",
   "unknownBootEnv": "ignore",
   "unknownTokenTimeout": "600"
 }

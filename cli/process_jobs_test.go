@@ -19,13 +19,13 @@ Templates:
     Name: "part 1 - copy file"
     Path: test.txt
   - Contents: |
-      #!/bin/bash
+      #!/usr/bin/env bash
       date
       echo
       exit 0
     Name: "part 2 - Print Date - success"
   - Contents: |
-      #!/bin/bash
+      #!/usr/bin/env bash
       . helper
       if [ -e /tmp/incomplete.txt ]; then
          touch /tmp/failed.txt
@@ -58,12 +58,12 @@ var processJobsJustineCreateOutputString string = `{
       "Path": "test.txt"
     },
     {
-      "Contents": "#!/bin/bash\ndate\necho\nexit 0\n",
+      "Contents": "#!/usr/bin/env bash\ndate\necho\nexit 0\n",
       "Name": "part 2 - Print Date - success",
       "Path": ""
     },
     {
-      "Contents": "#!/bin/bash\n. helper\nif [ -e /tmp/incomplete.txt ]; then\n   touch /tmp/failed.txt\n   rm /tmp/incomplete.txt\n   echo \"Return failed\"\n   exit 1\nelif [ -e /tmp/failed.txt ]; then\n   echo \"Return success\"\n   exit 0\nfi\ntouch /tmp/incomplete.txt\necho \"Return incomplete\"\nexit_incomplete\n",
+      "Contents": "#!/usr/bin/env bash\n. helper\nif [ -e /tmp/incomplete.txt ]; then\n   touch /tmp/failed.txt\n   rm /tmp/incomplete.txt\n   echo \"Return failed\"\n   exit 1\nelif [ -e /tmp/failed.txt ]; then\n   echo \"Return success\"\n   exit 0\nfi\ntouch /tmp/incomplete.txt\necho \"Return incomplete\"\nexit_incomplete\n",
       "Name": "part 3 - Test Return Codes",
       "Path": ""
     }
@@ -84,12 +84,12 @@ var processJobsYakovCreateTaskString = `{
       "Path": "test.txt"
     },
     {
-      "Contents": "#!/bin/bash\n\ndata\necho\nexit 0\n",
+      "Contents": "#!/usr/bin/env bash\n\ndata\necho\nexit 0\n",
       "Name": "part 2 - Print Date - success",
       "Path": ""
     },
     {
-      "Contents": "#!/bin/bash\n\nif [ -e /tmp/incomplete.txt ] ; then\ntouch /tmp/failed.txt\nrm /tmp/incomplete.txt\necho \"Return failed\"\nexit 4\nelif [ -e /tmp/failed.txt ] ; then\necho \"Return success\"\nexit 0\nfi\n\ntouch /tmp/incomplete.txt\necho \"Return incomplete\"\nexit 2\n\n",
+      "Contents": "#!/usr/bin/env bash\n\nif [ -e /tmp/incomplete.txt ] ; then\ntouch /tmp/failed.txt\nrm /tmp/incomplete.txt\necho \"Return failed\"\nexit 4\nelif [ -e /tmp/failed.txt ] ; then\necho \"Return success\"\nexit 0\nfi\n\ntouch /tmp/incomplete.txt\necho \"Return incomplete\"\nexit 2\n\n",
       "Name": "part 3 - Test Return Codes",
       "Path": ""
     }
@@ -113,12 +113,12 @@ var processJobsYakovCreateOutputString string = `{
       "Path": "test.txt"
     },
     {
-      "Contents": "#!/bin/bash\n\ndata\necho\nexit 0\n",
+      "Contents": "#!/usr/bin/env bash\n\ndata\necho\nexit 0\n",
       "Name": "part 2 - Print Date - success",
       "Path": ""
     },
     {
-      "Contents": "#!/bin/bash\n\nif [ -e /tmp/incomplete.txt ] ; then\ntouch /tmp/failed.txt\nrm /tmp/incomplete.txt\necho \"Return failed\"\nexit 4\nelif [ -e /tmp/failed.txt ] ; then\necho \"Return success\"\nexit 0\nfi\n\ntouch /tmp/incomplete.txt\necho \"Return incomplete\"\nexit 2\n\n",
+      "Contents": "#!/usr/bin/env bash\n\nif [ -e /tmp/incomplete.txt ] ; then\ntouch /tmp/failed.txt\nrm /tmp/incomplete.txt\necho \"Return failed\"\nexit 4\nelif [ -e /tmp/failed.txt ] ; then\necho \"Return success\"\nexit 0\nfi\n\ntouch /tmp/incomplete.txt\necho \"Return incomplete\"\nexit 2\n\n",
       "Name": "part 3 - Test Return Codes",
       "Path": ""
     }
@@ -160,6 +160,7 @@ var yakovCreateInputString string = `{
   "name": "yakov",
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd4",
   "Bootenv": "local",
+  "Secret": "secret2",
   "Tasks": [
     "yakov"
   ],
@@ -183,6 +184,7 @@ var processYakovSetMachineToLocalOutputString = `{
   "Profiles": null,
   "ReadOnly": false,
   "Runnable": true,
+  "Secret": "secret2",
   "Stage": "none",
   "Tasks": [
     "yakov"
@@ -238,6 +240,7 @@ Task: yakov failed
   "Profiles": null,
   "ReadOnly": false,
   "Runnable": false,
+  "Secret": "secret2",
   "Stage": "none",
   "Tasks": \[
     "yakov"
@@ -266,6 +269,7 @@ Task: yakov failed
   "Profiles": null,
   "ReadOnly": false,
   "Runnable": true,
+  "Secret": "secret2",
   "Stage": "none",
   "Tasks": \[
     "yakov"
