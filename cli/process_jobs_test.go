@@ -17,7 +17,7 @@ Templates:
 
       Here
     Name: "part 1 - copy file"
-    Path: test.txt
+    Path: /tmp/test.txt
   - Contents: |
       #!/usr/bin/env bash
       date
@@ -32,14 +32,25 @@ Templates:
          rm /tmp/incomplete.txt
          echo "Return failed"
          exit 1
-      elif [ -e /tmp/failed.txt ]; then
-         echo "Return success"
+      elif [ -e /tmp/stop.txt ]; then
+         echo "Final success"
          exit 0
+      elif [ -e /tmp/failed.txt ]; then
+         touch /tmp/stop.txt
+         rm /tmp/failed.txt
+         echo "Return stop"
+         exit_stop
       fi
       touch /tmp/incomplete.txt
       echo "Return incomplete"
       exit_incomplete
     Name: "part 3 - Test Return Codes"
+  - Contents: |
+      #!/usr/bin/env bash
+      date
+      echo
+      exit 0
+    Name: "part 4 - Final - success"
 `
 var processJobsJustineCreateOutputString string = `{
   "Available": true,
@@ -55,7 +66,7 @@ var processJobsJustineCreateOutputString string = `{
     {
       "Contents": "test.txt Content\n\nHere\n",
       "Name": "part 1 - copy file",
-      "Path": "test.txt"
+      "Path": "/tmp/test.txt"
     },
     {
       "Contents": "#!/usr/bin/env bash\ndate\necho\nexit 0\n",
@@ -63,8 +74,13 @@ var processJobsJustineCreateOutputString string = `{
       "Path": ""
     },
     {
-      "Contents": "#!/usr/bin/env bash\n. helper\nif [ -e /tmp/incomplete.txt ]; then\n   touch /tmp/failed.txt\n   rm /tmp/incomplete.txt\n   echo \"Return failed\"\n   exit 1\nelif [ -e /tmp/failed.txt ]; then\n   echo \"Return success\"\n   exit 0\nfi\ntouch /tmp/incomplete.txt\necho \"Return incomplete\"\nexit_incomplete\n",
+      "Contents": "#!/usr/bin/env bash\n. helper\nif [ -e /tmp/incomplete.txt ]; then\n   touch /tmp/failed.txt\n   rm /tmp/incomplete.txt\n   echo \"Return failed\"\n   exit 1\nelif [ -e /tmp/stop.txt ]; then\n   echo \"Final success\"\n   exit 0\nelif [ -e /tmp/failed.txt ]; then\n   touch /tmp/stop.txt\n   rm /tmp/failed.txt\n   echo \"Return stop\"\n   exit_stop\nfi\ntouch /tmp/incomplete.txt\necho \"Return incomplete\"\nexit_incomplete\n",
       "Name": "part 3 - Test Return Codes",
+      "Path": ""
+    },
+    {
+      "Contents": "#!/usr/bin/env bash\ndate\necho\nexit 0\n",
+      "Name": "part 4 - Final - success",
       "Path": ""
     }
   ],
@@ -81,7 +97,7 @@ var processJobsYakovCreateTaskString = `{
     {
       "Contents": "test.txt Content\n\nHere\n",
       "Name": "part 1 - copy file",
-      "Path": "test.txt"
+      "Path": "/tmp/test.txt"
     },
     {
       "Contents": "#!/usr/bin/env bash\n\ndata\necho\nexit 0\n",
@@ -110,7 +126,7 @@ var processJobsYakovCreateOutputString string = `{
     {
       "Contents": "test.txt Content\n\nHere\n",
       "Name": "part 1 - copy file",
-      "Path": "test.txt"
+      "Path": "/tmp/test.txt"
     },
     {
       "Contents": "#!/usr/bin/env bash\n\ndata\necho\nexit 0\n",
@@ -199,24 +215,24 @@ var (
 Processing jobs for 3e7031fe-3062-45f1-835c-92541bc9cbd4
 Starting Task: yakov \([\S\s]*\)
 Putting Content in place for Task Template: part 1 - copy file
-Task Template: part 1 - copy file - Copied contents to test.txt successfully
+Task Template: part 1 - copy file - Copied contents to /tmp/test.txt successfully
 Task Template , part 1 - copy file, finished
 Running Task Template: part 2 - Print Date - success
-Command part 2 - Print Date - success: failed: false, incomplete: false, reboot: false, poweroff: false
+Command part 2 - Print Date - success: failed: false, incomplete: false, reboot: false, poweroff: false, stop: false
 Task Template , part 2 - Print Date - success, finished
 Running Task Template: part 3 - Test Return Codes
-Command part 3 - Test Return Codes: failed: false, incomplete: true, reboot: false, poweroff: false
+Command part 3 - Test Return Codes: failed: false, incomplete: true, reboot: false, poweroff: false, stop: false
 Task Template , part 3 - Test Return Codes, incomplete
 Task: yakov incomplete
 Starting Task: yakov \([\S\s]*\)
 Putting Content in place for Task Template: part 1 - copy file
-Task Template: part 1 - copy file - Copied contents to test.txt successfully
+Task Template: part 1 - copy file - Copied contents to /tmp/test.txt successfully
 Task Template , part 1 - copy file, finished
 Running Task Template: part 2 - Print Date - success
-Command part 2 - Print Date - success: failed: false, incomplete: false, reboot: false, poweroff: false
+Command part 2 - Print Date - success: failed: false, incomplete: false, reboot: false, poweroff: false, stop: false
 Task Template , part 2 - Print Date - success, finished
 Running Task Template: part 3 - Test Return Codes
-Command part 3 - Test Return Codes: failed: true, incomplete: false, reboot: false, poweroff: false
+Command part 3 - Test Return Codes: failed: true, incomplete: false, reboot: false, poweroff: false, stop: false
 Task Template , part 3 - Test Return Codes, failed
 Task: yakov failed
 `
@@ -282,13 +298,13 @@ Task: yakov failed
 Processing jobs for 3e7031fe-3062-45f1-835c-92541bc9cbd4
 Starting Task: yakov \([\S\s]*\)
 Putting Content in place for Task Template: part 1 - copy file
-Task Template: part 1 - copy file - Copied contents to test.txt successfully
+Task Template: part 1 - copy file - Copied contents to /tmp/test.txt successfully
 Task Template , part 1 - copy file, finished
 Running Task Template: part 2 - Print Date - success
-Command part 2 - Print Date - success: failed: false, incomplete: false, reboot: false, poweroff: false
+Command part 2 - Print Date - success: failed: false, incomplete: false, reboot: false, poweroff: false, stop: false
 Task Template , part 2 - Print Date - success, finished
 Running Task Template: part 3 - Test Return Codes
-Command part 3 - Test Return Codes: failed: false, incomplete: false, reboot: false, poweroff: false
+Command part 3 - Test Return Codes: failed: false, incomplete: false, reboot: false, poweroff: false, stop: false
 Task Template , part 3 - Test Return Codes, finished
 Task: yakov finished
 Jobs finished
@@ -307,24 +323,24 @@ Starting Task: jamie \([\S\s]*\)
 Task: jamie finished
 Starting Task: justine \([\S\s]*\)
 Putting Content in place for Task Template: part 1 - copy file
-Task Template: part 1 - copy file - Copied contents to test.txt successfully
+Task Template: part 1 - copy file - Copied contents to /tmp/test.txt successfully
 Task Template , part 1 - copy file, finished
 Running Task Template: part 2 - Print Date - success
-Command part 2 - Print Date - success: failed: false, incomplete: false, reboot: false, poweroff: false
+Command part 2 - Print Date - success: failed: false, incomplete: false, reboot: false, poweroff: false, stop: false
 Task Template , part 2 - Print Date - success, finished
 Running Task Template: part 3 - Test Return Codes
-Command part 3 - Test Return Codes: failed: false, incomplete: true, reboot: false, poweroff: false
+Command part 3 - Test Return Codes: failed: false, incomplete: true, reboot: false, poweroff: false, stop: false
 Task Template , part 3 - Test Return Codes, incomplete
 Task: justine incomplete
 Starting Task: justine \([\S\s]*\)
 Putting Content in place for Task Template: part 1 - copy file
-Task Template: part 1 - copy file - Copied contents to test.txt successfully
+Task Template: part 1 - copy file - Copied contents to /tmp/test.txt successfully
 Task Template , part 1 - copy file, finished
 Running Task Template: part 2 - Print Date - success
-Command part 2 - Print Date - success: failed: false, incomplete: false, reboot: false, poweroff: false
+Command part 2 - Print Date - success: failed: false, incomplete: false, reboot: false, poweroff: false, stop: false
 Task Template , part 2 - Print Date - success, finished
 Running Task Template: part 3 - Test Return Codes
-Command part 3 - Test Return Codes: failed: true, incomplete: false, reboot: false, poweroff: false
+Command part 3 - Test Return Codes: failed: true, incomplete: false, reboot: false, poweroff: false, stop: false
 Task Template , part 3 - Test Return Codes, failed
 Task: justine failed
 `
@@ -333,14 +349,30 @@ var processJobsOutputSecondPassSuccessString = `RE:
 Processing jobs for 3e7031fe-3062-45f1-835c-92541bc9cbd3
 Starting Task: justine \([\S\s]*\)
 Putting Content in place for Task Template: part 1 - copy file
-Task Template: part 1 - copy file - Copied contents to test.txt successfully
+Task Template: part 1 - copy file - Copied contents to /tmp/test.txt successfully
 Task Template , part 1 - copy file, finished
 Running Task Template: part 2 - Print Date - success
-Command part 2 - Print Date - success: failed: false, incomplete: false, reboot: false, poweroff: false
+Command part 2 - Print Date - success: failed: false, incomplete: false, reboot: false, poweroff: false, stop: false
 Task Template , part 2 - Print Date - success, finished
 Running Task Template: part 3 - Test Return Codes
-Command part 3 - Test Return Codes: failed: false, incomplete: false, reboot: false, poweroff: false
+Command part 3 - Test Return Codes: failed: false, incomplete: false, reboot: false, poweroff: false, stop: true
 Task Template , part 3 - Test Return Codes, finished
+`
+var processJobsOutputThirdPassSuccessString = `RE:
+Processing jobs for 3e7031fe-3062-45f1-835c-92541bc9cbd3
+Starting Task: justine \([\S\s]*\)
+Putting Content in place for Task Template: part 1 - copy file
+Task Template: part 1 - copy file - Copied contents to /tmp/test.txt successfully
+Task Template , part 1 - copy file, finished
+Running Task Template: part 2 - Print Date - success
+Command part 2 - Print Date - success: failed: false, incomplete: false, reboot: false, poweroff: false, stop: false
+Task Template , part 2 - Print Date - success, finished
+Running Task Template: part 3 - Test Return Codes
+Command part 3 - Test Return Codes: failed: false, incomplete: false, reboot: false, poweroff: false, stop: false
+Task Template , part 3 - Test Return Codes, finished
+Running Task Template: part 4 - Final - success
+Command part 4 - Final - success: failed: false, incomplete: false, reboot: false, poweroff: false, stop: false
+Task Template , part 4 - Final - success, finished
 Task: justine finished
 Jobs finished
 `
@@ -512,6 +544,7 @@ func TestProcessJobsCli(t *testing.T) {
 		CliTest{false, false, []string{"machines", "show", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, processJobsShowFailedMachineString, noErrorString},
 		CliTest{false, false, []string{"machines", "update", "3e7031fe-3062-45f1-835c-92541bc9cbd3", processJobsRunnableString}, noStdinString, processJobsShowRunnableMachineString, noErrorString},
 		CliTest{false, false, []string{"machines", "processjobs", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, processJobsOutputSecondPassSuccessString, noErrorString},
+		CliTest{false, false, []string{"machines", "processjobs", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, processJobsOutputThirdPassSuccessString, noErrorString},
 	}
 
 	for _, test := range tests {
@@ -519,6 +552,7 @@ func TestProcessJobsCli(t *testing.T) {
 	}
 	// Run tasks on yakov
 
+	os.Remove("/tmp/stop.txt")
 	os.Remove("/tmp/test.txt")
 	os.Remove("/tmp/failed.txt")
 	os.Remove("/tmp/incomplete.txt")
@@ -545,8 +579,8 @@ func TestProcessJobsCli(t *testing.T) {
 		testCli(t, test)
 	}
 
-	if bs, err := ioutil.ReadFile("test.txt"); err != nil {
-		t.Errorf("Failed to read test.txt: %v\n", err)
+	if bs, err := ioutil.ReadFile("/tmp/test.txt"); err != nil {
+		t.Errorf("Failed to read /tmp/test.txt: %v\n", err)
 	} else {
 		s := string(bs)
 
@@ -555,6 +589,7 @@ func TestProcessJobsCli(t *testing.T) {
 		}
 	}
 
+	os.Remove("/tmp/stop.txt")
 	os.Remove("/tmp/test.txt")
 	os.Remove("/tmp/failed.txt")
 	os.Remove("/tmp/incomplete.txt")
