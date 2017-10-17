@@ -210,11 +210,6 @@ addr_port() {
         printf '%s:%d' "$1" "$2"
     fi
 }
-
-if ! (which jq &>/dev/null || install jq); then
-    echo "JQ not installed and not installable.  The script jig requires it to function"
-    exit 1
-fi
 `)
 
 func putLog(uuid *strfmt.UUID, buf *bytes.Buffer) error {
