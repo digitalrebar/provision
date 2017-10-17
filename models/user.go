@@ -17,6 +17,11 @@ type User struct {
 	// PasswordHash is the scrypt-hashed version of the user's Password.
 	//
 	PasswordHash []byte `json:",omitempty"`
+	// Token secret - this is used when generating user token's to
+	// allow for revocation by the grantor or the grantee.  Changing this
+	// will invalidate all existing tokens that have this user as a user
+	// or a grantor.
+	Secret string
 }
 
 func (u *User) Prefix() string {

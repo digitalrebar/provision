@@ -63,6 +63,10 @@ type Machine struct {
 	//
 	// required: true
 	Runnable bool
+
+	// Secret for machine token revocation.  Changing the secret will invalidate
+	// all existing tokens for this machine
+	Secret string
 }
 
 func (n *Machine) UUID() string {

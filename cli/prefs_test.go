@@ -14,6 +14,7 @@ var prefsDefaultListString = `{
   "defaultBootEnv": "local",
   "defaultStage": "none",
   "knownTokenTimeout": "3600",
+  "systemGrantorSecret": "initial-secret",
   "unknownBootEnv": "ignore",
   "unknownTokenTimeout": "600"
 }
@@ -33,6 +34,7 @@ var prefsSetJSONResponseString string = `{
   "defaultBootEnv": "local3",
   "defaultStage": "none",
   "knownTokenTimeout": "3600",
+  "systemGrantorSecret": "initial-secret",
   "unknownBootEnv": "ignore",
   "unknownTokenTimeout": "600"
 }
@@ -49,6 +51,7 @@ var prefsChangedListString = `{
   "defaultBootEnv": "local3",
   "defaultStage": "none",
   "knownTokenTimeout": "3600",
+  "systemGrantorSecret": "initial-secret",
   "unknownBootEnv": "ignore",
   "unknownTokenTimeout": "600"
 }
@@ -74,6 +77,7 @@ var prefsKnownChangedListString = `{
   "defaultBootEnv": "local3",
   "defaultStage": "none",
   "knownTokenTimeout": "5000",
+  "systemGrantorSecret": "initial-secret",
   "unknownBootEnv": "ignore",
   "unknownTokenTimeout": "600"
 }
@@ -87,6 +91,7 @@ var prefsBothPreDebugChangedListString = `{
   "defaultBootEnv": "local3",
   "defaultStage": "none",
   "knownTokenTimeout": "5000",
+  "systemGrantorSecret": "initial-secret",
   "unknownBootEnv": "ignore",
   "unknownTokenTimeout": "7000"
 }
@@ -100,6 +105,7 @@ var prefsBothChangedListString = `{
   "defaultBootEnv": "local3",
   "defaultStage": "none",
   "knownTokenTimeout": "5000",
+  "systemGrantorSecret": "initial-secret",
   "unknownBootEnv": "ignore",
   "unknownTokenTimeout": "7000"
 }
@@ -114,6 +120,7 @@ var prefsFinalListString = `{
   "defaultBootEnv": "local",
   "defaultStage": "none",
   "knownTokenTimeout": "5000",
+  "systemGrantorSecret": "initial-secret",
   "unknownBootEnv": "ignore",
   "unknownTokenTimeout": "7000"
 }
