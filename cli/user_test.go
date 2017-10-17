@@ -181,6 +181,9 @@ var userTokenSuccessString string = `RE:
     "api_port": 10001,
     "arch": "[\s\S]*",
     "dhcp_enabled": false,
+    "Features": \[
+      "api-v3"
+    \],
     "file_port": 10002,
     "id": "Fred",
     "os": "[\s\S]*",
