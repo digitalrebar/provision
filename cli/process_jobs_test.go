@@ -160,6 +160,7 @@ var yakovCreateInputString string = `{
   "name": "yakov",
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd4",
   "Bootenv": "local",
+  "Secret": "secret2",
   "Tasks": [
     "yakov"
   ],
@@ -183,6 +184,7 @@ var processYakovSetMachineToLocalOutputString = `{
   "Profiles": null,
   "ReadOnly": false,
   "Runnable": true,
+  "Secret": "secret2",
   "Stage": "none",
   "Tasks": [
     "yakov"
@@ -238,6 +240,7 @@ Task: yakov failed
   "Profiles": null,
   "ReadOnly": false,
   "Runnable": false,
+  "Secret": "secret2",
   "Stage": "none",
   "Tasks": \[
     "yakov"
@@ -266,6 +269,7 @@ Task: yakov failed
   "Profiles": null,
   "ReadOnly": false,
   "Runnable": true,
+  "Secret": "secret2",
   "Stage": "none",
   "Tasks": \[
     "yakov"
