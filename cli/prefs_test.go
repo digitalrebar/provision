@@ -6,6 +6,7 @@ import (
 )
 
 var prefsDefaultListString = `{
+  "baseTokenSecret": "token-secret-token-secret-token1",
   "debugBootEnv": "0",
   "debugDhcp": "0",
   "debugFrontend": "0",
@@ -14,7 +15,7 @@ var prefsDefaultListString = `{
   "defaultBootEnv": "local",
   "defaultStage": "none",
   "knownTokenTimeout": "3600",
-  "systemGrantorSecret": "initial-secret",
+  "systemGrantorSecret": "system-grantor-secret",
   "unknownBootEnv": "ignore",
   "unknownTokenTimeout": "600"
 }
@@ -26,6 +27,7 @@ var prefsSetBadJSONErrorString string = "Error: Invalid prefs: error unmarshalin
 
 var prefsSetEmptyJSONString string = "{}"
 var prefsSetJSONResponseString string = `{
+  "baseTokenSecret": "token-secret-token-secret-token1",
   "debugBootEnv": "0",
   "debugDhcp": "0",
   "debugFrontend": "0",
@@ -34,7 +36,7 @@ var prefsSetJSONResponseString string = `{
   "defaultBootEnv": "local3",
   "defaultStage": "none",
   "knownTokenTimeout": "3600",
-  "systemGrantorSecret": "initial-secret",
+  "systemGrantorSecret": "system-grantor-secret",
   "unknownBootEnv": "ignore",
   "unknownTokenTimeout": "600"
 }
@@ -43,6 +45,7 @@ var prefsSetIllegalJSONResponseString string = "Error: defaultBootEnv: Bootenv i
 var prefsSetInvalidPrefResponseString string = "Error: Unknown Preference greg\n\n"
 
 var prefsChangedListString = `{
+  "baseTokenSecret": "token-secret-token-secret-token1",
   "debugBootEnv": "0",
   "debugDhcp": "0",
   "debugFrontend": "0",
@@ -51,7 +54,7 @@ var prefsChangedListString = `{
   "defaultBootEnv": "local3",
   "defaultStage": "none",
   "knownTokenTimeout": "3600",
-  "systemGrantorSecret": "initial-secret",
+  "systemGrantorSecret": "system-grantor-secret",
   "unknownBootEnv": "ignore",
   "unknownTokenTimeout": "600"
 }
@@ -69,6 +72,7 @@ var prefsSetBadKnownTokenTimeoutErrorString = "Error: Preference knownTokenTimeo
 var prefsSetBadUnknownTokenTimeoutErrorString = "Error: Preference unknownTokenTimeout: strconv.Atoi: parsing \"illegal\": invalid syntax\n\n"
 
 var prefsKnownChangedListString = `{
+  "baseTokenSecret": "token-secret-token-secret-token1",
   "debugBootEnv": "0",
   "debugDhcp": "0",
   "debugFrontend": "0",
@@ -77,12 +81,13 @@ var prefsKnownChangedListString = `{
   "defaultBootEnv": "local3",
   "defaultStage": "none",
   "knownTokenTimeout": "5000",
-  "systemGrantorSecret": "initial-secret",
+  "systemGrantorSecret": "system-grantor-secret",
   "unknownBootEnv": "ignore",
   "unknownTokenTimeout": "600"
 }
 `
 var prefsBothPreDebugChangedListString = `{
+  "baseTokenSecret": "token-secret-token-secret-token1",
   "debugBootEnv": "0",
   "debugDhcp": "0",
   "debugFrontend": "0",
@@ -91,12 +96,13 @@ var prefsBothPreDebugChangedListString = `{
   "defaultBootEnv": "local3",
   "defaultStage": "none",
   "knownTokenTimeout": "5000",
-  "systemGrantorSecret": "initial-secret",
+  "systemGrantorSecret": "system-grantor-secret",
   "unknownBootEnv": "ignore",
   "unknownTokenTimeout": "7000"
 }
 `
 var prefsBothChangedListString = `{
+  "baseTokenSecret": "token-secret-token-secret-token1",
   "debugBootEnv": "1",
   "debugDhcp": "2",
   "debugFrontend": "0",
@@ -105,13 +111,14 @@ var prefsBothChangedListString = `{
   "defaultBootEnv": "local3",
   "defaultStage": "none",
   "knownTokenTimeout": "5000",
-  "systemGrantorSecret": "initial-secret",
+  "systemGrantorSecret": "system-grantor-secret",
   "unknownBootEnv": "ignore",
   "unknownTokenTimeout": "7000"
 }
 `
 
 var prefsFinalListString = `{
+  "baseTokenSecret": "token-secret-token-secret-token1",
   "debugBootEnv": "0",
   "debugDhcp": "0",
   "debugFrontend": "0",
@@ -120,12 +127,13 @@ var prefsFinalListString = `{
   "defaultBootEnv": "local",
   "defaultStage": "none",
   "knownTokenTimeout": "5000",
-  "systemGrantorSecret": "initial-secret",
+  "systemGrantorSecret": "system-grantor-secret",
   "unknownBootEnv": "ignore",
   "unknownTokenTimeout": "7000"
 }
 `
 var prefsFailedToDeleteBootenvErrorString = "Error: BootEnv local3 is the active defaultBootEnv, cannot remove it\n\n"
+var prefSetBadBaseTokenSecretBadLengthErrorString = "Error: Preference baseTokenSecret: Must be 32 bytes long\n\n"
 
 func TestPrefsCli(t *testing.T) {
 	if err := os.MkdirAll("bootenvs", 0755); err != nil {
@@ -164,6 +172,9 @@ func TestPrefsCli(t *testing.T) {
 
 		CliTest{false, true, []string{"prefs", "set", "defaultBootEnv", "illegal"}, noStdinString, noContentString, prefsSetIllegalJSONResponseString},
 		CliTest{false, false, []string{"prefs", "list"}, noStdinString, prefsChangedListString, noErrorString},
+
+		CliTest{false, true, []string{"prefs", "set", "baseTokenSecret", "illegal"}, noStdinString, noContentString, prefSetBadBaseTokenSecretBadLengthErrorString},
+		CliTest{false, true, []string{"prefs", "set", "baseTokenSecret", "illegalillegalillegalillegalillegal"}, noStdinString, noContentString, prefSetBadBaseTokenSecretBadLengthErrorString},
 
 		CliTest{false, true, []string{"prefs", "set", "knownTokenTimeout", "illegal"}, noStdinString, noContentString, prefsSetBadKnownTokenTimeoutErrorString},
 		CliTest{false, true, []string{"prefs", "set", "unknownTokenTimeout", "illegal"}, noStdinString, noContentString, prefsSetBadUnknownTokenTimeoutErrorString},
