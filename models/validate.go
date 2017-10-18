@@ -37,6 +37,16 @@ type Validator interface {
 	HasError() error
 }
 
+func (v *Validation) SaveValidation() *Validation {
+	return &Validation{Validated: v.Validated, Available: v.Available, Errors: v.Errors}
+}
+
+func (v *Validation) RestoreValidation(ov *Validation) {
+	v.Validated = ov.Validated
+	v.Available = ov.Available
+	v.Errors = ov.Errors
+}
+
 func (v *Validation) ClearValidation() {
 	v.Validated = false
 	v.Available = false
