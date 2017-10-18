@@ -59,27 +59,25 @@ func (l *Lease) Key() string {
 	return Hexaddr(l.Addr)
 }
 
+func (l *Lease) Fill() {
+	l.MetaData.fill()
+	l.Validation.fill()
+}
+
 func (l *Lease) AuthKey() string {
 	return l.Key()
 }
 
-type Leases []*Lease
-
-func (s Leases) Elem() Model {
-	return &Lease{}
+func (b *Lease) SliceOf() interface{} {
+	s := []*Lease{}
+	return &s
 }
 
-func (s Leases) Items() []Model {
-	res := make([]Model, len(s))
-	for i, m := range s {
-		res[i] = m
+func (b *Lease) ToModels(obj interface{}) []Model {
+	items := obj.(*[]*Lease)
+	res := make([]Model, len(*items))
+	for i, item := range *items {
+		res[i] = Model(item)
 	}
 	return res
-}
-func (s Leases) Fill(m []Model) {
-	q := make([]*Lease, len(m))
-	for i, obj := range m {
-		q[i] = obj.(*Lease)
-	}
-	s = q[:]
 }

@@ -22,10 +22,10 @@ var taskShowJohnString string = `{
     "feature-flags": "original-exit-codes"
   },
   "Name": "john",
-  "OptionalParams": null,
+  "OptionalParams": [],
   "ReadOnly": false,
-  "RequiredParams": null,
-  "Templates": null,
+  "RequiredParams": [],
+  "Templates": [],
   "Validated": true
 }
 `
@@ -41,9 +41,9 @@ var taskCreateBadJSONString = "{asdgasdg}"
 var taskCreateBadJSONErrorString = "Error: dataTracker create tasks: Empty key not allowed\n\n"
 var taskCreateInputString string = `{
   "Name": "john",
-  "OptionalParams": null,
-  "RequiredParams": null,
-  "Templates": null
+  "OptionalParams": [],
+  "RequiredParams": [],
+  "Templates": []
 }
 `
 var taskCreateJohnString string = `{
@@ -53,10 +53,10 @@ var taskCreateJohnString string = `{
     "feature-flags": "original-exit-codes"
   },
   "Name": "john",
-  "OptionalParams": null,
+  "OptionalParams": [],
   "ReadOnly": false,
-  "RequiredParams": null,
-  "Templates": null,
+  "RequiredParams": [],
+  "Templates": [],
   "Validated": true
 }
 `
@@ -70,10 +70,10 @@ var taskListTasksString = `[
       "feature-flags": "original-exit-codes"
     },
     "Name": "john",
-    "OptionalParams": null,
+    "OptionalParams": [],
     "ReadOnly": false,
-    "RequiredParams": null,
-    "Templates": null,
+    "RequiredParams": [],
+    "Templates": [],
     "Validated": true
   }
 ]
@@ -86,10 +86,10 @@ var taskListBothEnvsString = `[
       "feature-flags": "original-exit-codes"
     },
     "Name": "john",
-    "OptionalParams": null,
+    "OptionalParams": [],
     "ReadOnly": false,
-    "RequiredParams": null,
-    "Templates": null,
+    "RequiredParams": [],
+    "Templates": [],
     "Validated": true
   }
 ]
@@ -114,8 +114,8 @@ var taskUpdateJohnString string = `{
     "jillparam"
   ],
   "ReadOnly": false,
-  "RequiredParams": null,
-  "Templates": null,
+  "RequiredParams": [],
+  "Templates": [],
   "Validated": true
 }
 `
@@ -129,17 +129,17 @@ var taskPatchBadBaseJSONString = "asdgasdg"
 var taskPatchBadBaseJSONErrorString = "Error: Unable to parse drpcli tasks patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Task\n\n"
 var taskPatchOldBaseString string = `{
   "Name": "john",
-  "OptionalParams": null,
-  "RequiredParams": null,
-  "Templates": null
+  "OptionalParams": [],
+  "RequiredParams": [],
+  "Templates": []
 }
 `
 var taskPatchOldBaseErrorString = "Error: Patch error at line 0: Test op failed.\n\n"
 var taskPatchBaseString string = `{
   "Name": "john",
   "OptionalParams": [ "jillparam" ],
-  "RequiredParams": null,
-  "Templates": null
+  "RequiredParams": [],
+  "Templates": []
 }
 `
 var taskPatchInputString string = `{
@@ -157,16 +157,16 @@ var taskPatchJohnString string = `{
     "joan"
   ],
   "ReadOnly": false,
-  "RequiredParams": null,
-  "Templates": null,
+  "RequiredParams": [],
+  "Templates": [],
   "Validated": true
 }
 `
 var taskPatchMissingBaseString string = `{
   "Name": "jill",
-  "OptionalParams": null,
-  "RequiredParams": null,
-  "Templates": null
+  "OptionalParams": [],
+  "RequiredParams": [],
+  "Templates": []
 }
 `
 var taskPatchJohnMissingErrorString string = "Error: tasks: PATCH jill: Not Found\n\n"

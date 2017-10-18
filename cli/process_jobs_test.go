@@ -59,9 +59,9 @@ var processJobsJustineCreateOutputString string = `{
     "feature-flags": "sane-exit-codes"
   },
   "Name": "justine",
-  "OptionalParams": null,
+  "OptionalParams": [],
   "ReadOnly": false,
-  "RequiredParams": null,
+  "RequiredParams": [],
   "Templates": [
     {
       "Contents": "test.txt Content\n\nHere\n",
@@ -119,9 +119,9 @@ var processJobsYakovCreateOutputString string = `{
     "feature-flags": "original-exit-codes"
   },
   "Name": "yakov",
-  "OptionalParams": null,
+  "OptionalParams": [],
   "ReadOnly": false,
-  "RequiredParams": null,
+  "RequiredParams": [],
   "Templates": [
     {
       "Contents": "test.txt Content\n\nHere\n",
@@ -152,12 +152,12 @@ var processJobsSetMachineToLocalOutputString = `{
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": null,
+  "Profiles": [],
   "ReadOnly": false,
   "Runnable": true,
   "Secret": "secret1",
@@ -192,12 +192,12 @@ var processYakovSetMachineToLocalOutputString = `{
   "Name": "yakov",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": null,
+  "Profiles": [],
   "ReadOnly": false,
   "Runnable": true,
   "Secret": "secret2",
@@ -248,12 +248,12 @@ Task: yakov failed
   "Name": "yakov",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": null,
+  "Profiles": [],
   "ReadOnly": false,
   "Runnable": false,
   "Secret": "secret2",
@@ -277,12 +277,12 @@ Task: yakov failed
   "Name": "yakov",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": null,
+  "Profiles": [],
   "ReadOnly": false,
   "Runnable": true,
   "Secret": "secret2",
@@ -388,12 +388,12 @@ var processJobsRemoveProfileSuccessString = `RE:
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": null,
+  "Profiles": [],
   "ReadOnly": false,
   "Runnable": false,
   "Secret": "secret1",
@@ -418,12 +418,12 @@ var processJobsResetToLocalSuccessString = `RE:
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": null,
+  "Profiles": [],
   "ReadOnly": false,
   "Runnable": true,
   "Secret": "secret1",
@@ -445,12 +445,12 @@ var processJobsShowFailedMachineString string = `RE:
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": null,
+  "Profiles": [],
   "ReadOnly": false,
   "Runnable": false,
   "Secret": "secret1",
@@ -476,12 +476,12 @@ var processJobsShowRunnableMachineString = `RE:
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": null,
+  "Profiles": [],
   "ReadOnly": false,
   "Runnable": true,
   "Secret": "secret1",
@@ -505,10 +505,10 @@ var processJobsCreateStage1SuccessString = `{
   "BootEnv": "local",
   "Errors": [],
   "Name": "stage1",
-  "OptionalParams": null,
+  "OptionalParams": [],
   "Profiles": [],
   "ReadOnly": false,
-  "RequiredParams": null,
+  "RequiredParams": [],
   "Tasks": [
     "jamie",
     "justine"

@@ -39,28 +39,34 @@ func (t *Task) Key() string {
 	return t.Name
 }
 
+func (t *Task) Fill() {
+	t.Validation.fill()
+	t.MetaData.fill()
+	if t.Templates == nil {
+		t.Templates = []TemplateInfo{}
+	}
+	if t.RequiredParams == nil {
+		t.RequiredParams = []string{}
+	}
+	if t.OptionalParams == nil {
+		t.OptionalParams = []string{}
+	}
+}
+
 func (t *Task) AuthKey() string {
 	return t.Key()
 }
 
-type Tasks []*Task
-
-func (s Tasks) Elem() Model {
-	return &Task{}
+func (b *Task) SliceOf() interface{} {
+	s := []*Task{}
+	return &s
 }
 
-func (s Tasks) Items() []Model {
-	res := make([]Model, len(s))
-	for i, m := range s {
-		res[i] = m
+func (b *Task) ToModels(obj interface{}) []Model {
+	items := obj.(*[]*Task)
+	res := make([]Model, len(*items))
+	for i, item := range *items {
+		res[i] = Model(item)
 	}
 	return res
-}
-
-func (s Tasks) Fill(m []Model) {
-	q := make([]*Task, len(m))
-	for i, obj := range m {
-		q[i] = obj.(*Task)
-	}
-	s = q[:]
 }

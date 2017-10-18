@@ -14,7 +14,7 @@ var templateDefaultListString string = `[
     "Available": true,
     "Contents": "etc\n",
     "Description": "A test template for LocalStore testing",
-    "Errors": null,
+    "Errors": [],
     "ID": "etc",
     "ReadOnly": true,
     "Validated": true
@@ -23,7 +23,7 @@ var templateDefaultListString string = `[
     "Available": true,
     "Contents": "usrshare\n",
     "Description": "A test template for DefaultStore testing",
-    "Errors": null,
+    "Errors": [],
     "ID": "usrshare",
     "ReadOnly": true,
     "Validated": true
@@ -85,7 +85,7 @@ var templateListBothEnvsString = `[
     "Available": true,
     "Contents": "etc\n",
     "Description": "A test template for LocalStore testing",
-    "Errors": null,
+    "Errors": [],
     "ID": "etc",
     "ReadOnly": true,
     "Validated": true
@@ -102,7 +102,7 @@ var templateListBothEnvsString = `[
     "Available": true,
     "Contents": "usrshare\n",
     "Description": "A test template for DefaultStore testing",
-    "Errors": null,
+    "Errors": [],
     "ID": "usrshare",
     "ReadOnly": true,
     "Validated": true
@@ -201,7 +201,7 @@ var templateReadOnlyTrueString string = `[
     "Available": true,
     "Contents": "etc\n",
     "Description": "A test template for LocalStore testing",
-    "Errors": null,
+    "Errors": [],
     "ID": "etc",
     "ReadOnly": true,
     "Validated": true
@@ -210,7 +210,7 @@ var templateReadOnlyTrueString string = `[
     "Available": true,
     "Contents": "usrshare\n",
     "Description": "A test template for DefaultStore testing",
-    "Errors": null,
+    "Errors": [],
     "ID": "usrshare",
     "ReadOnly": true,
     "Validated": true

@@ -10,7 +10,6 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"mime"
 	"net"
 	"net/http"
 	"net/url"
@@ -18,7 +17,6 @@ import (
 	"time"
 
 	"github.com/VictorLowther/jsonpatch2"
-	"github.com/ghodss/yaml"
 
 	"github.com/digitalrebar/provision/models"
 )
@@ -26,73 +24,6 @@ import (
 // APIPATH is the base path for all API endpoints that digitalrebar
 // provision provides.
 const APIPATH = "/api/v3"
-
-type Decoder interface {
-	Decode(interface{}) error
-}
-
-type Encoder interface {
-	Encode(interface{}) error
-}
-
-// DecodeYaml is a helper function for dealing with user input -- when
-// accepting input from the user, we want to treat both YAML and JSON
-// as first-class citizens.  The YAML library we use makes that easier
-// by using the json struct tags for all marshalling and unmarshalling
-// purposes.
-//
-// Note that the REST API does not use YAML as a wire protocol, so
-// this function should never be used to decode data coming from the
-// provision service.
-func DecodeYaml(buf []byte, ref interface{}) error {
-	return yaml.Unmarshal(buf, ref)
-}
-
-// Unmarshal is a helper for decoding the body of a response from the server.
-// It should be called in one of two ways:
-//
-// The first is when you expect the response body to contain a blob
-// of data that needs to be streamed somewhere.  In that case, ref
-// should be an io.Writer, and the Content-Type header will be ignored.
-//
-// The second is when you expect the response body to contain a
-// serialized object to be unmarshalled.  In that case, the response's
-// Content-Type will be used as a hint to decide how to unmarshall the
-// recieved data into ref.
-//
-// In either case, if there are any errors in the unmarshalling
-// process or the response StatusCode indicates non-success, an error
-// will be returned and you should not expect ref to contain vaild
-// data.
-func Unmarshal(resp *http.Response, ref interface{}) error {
-	if resp != nil {
-		defer resp.Body.Close()
-	}
-	if wr, ok := ref.(io.Writer); ok && resp.StatusCode < 300 {
-		_, err := io.Copy(wr, resp.Body)
-		return err
-	}
-	var dec Decoder
-	ct := resp.Header.Get("Content-Type")
-	mt, _, _ := mime.ParseMediaType(ct)
-	switch mt {
-	case "application/json":
-		dec = json.NewDecoder(resp.Body)
-	default:
-		return fmt.Errorf("Cannot handle content-type %s", ct)
-	}
-	if dec == nil {
-		return fmt.Errorf("No decoder for content-type %s", ct)
-	}
-	if resp.StatusCode >= 400 {
-		res := &models.Error{}
-		if err := dec.Decode(res); err != nil {
-			return err
-		}
-		return res
-	}
-	return dec.Decode(ref)
-}
 
 // Client wraps *http.Client to include our authentication routines
 // and routines for handling some of the biolerplate CRUD operations
@@ -118,13 +49,17 @@ func (c *Client) Close() {
 // Token returns the current authentication token associated with the
 // Client.
 func (c *Client) Token() string {
+	if c.token == nil {
+		return ""
+	}
 	return c.token.Token
 }
 
 // Info returns some basic system information that was retrieved as
 // part of the initial authentication.
-func (c *Client) Info() *models.Info {
-	return &c.token.Info
+func (c *Client) Info() (*models.Info, error) {
+	res := &models.Info{}
+	return res, c.DoJSON("GET", c.UrlFor("info"), nil, res)
 }
 
 // UrlFor is a helper function used to build URLs for the other client
@@ -135,6 +70,16 @@ func (c *Client) UrlFor(args ...string) *url.URL {
 		log.Panicf("Unable to form URL for %v\n    %v", args, err)
 	}
 	return res
+}
+
+func (c *Client) WithParams(uri *url.URL, params map[string]string) {
+	if params != nil && len(params) > 0 {
+		values := url.Values{}
+		for k, v := range params {
+			values.Set(k, v)
+		}
+		uri.RawQuery = values.Encode()
+	}
 }
 
 // Authorize sets the Authorization header in the Request with the
@@ -169,10 +114,7 @@ func (c *Client) RequestJSON(method string, uri *url.URL, body io.Reader) (*http
 	return req, nil
 }
 
-// DoJSON does a complete round-trip, unmarshalling the body returned
-// from the server into val.  It calls RequestJSON to build the
-// request.
-func (c *Client) DoJSON(method string, uri *url.URL, body io.Reader, val interface{}) error {
+func (c *Client) doJSON(method string, uri *url.URL, body io.Reader, val interface{}) error {
 	req, err := c.RequestJSON(method, uri, body)
 	if err != nil {
 		return err
@@ -181,66 +123,78 @@ func (c *Client) DoJSON(method string, uri *url.URL, body io.Reader, val interfa
 	if err != nil {
 		return err
 	}
-	if val != nil {
-		return Unmarshal(resp, val)
+	return Unmarshal(resp, val)
+}
+
+// DoJSON does a complete round-trip, unmarshalling the body returned
+// from the server into val.  It calls RequestJSON to build the
+// request.
+func (c *Client) DoJSON(method string, uri *url.URL, body interface{}, val interface{}) error {
+	switch obj := body.(type) {
+	case nil:
+		return c.doJSON(method, uri, nil, val)
+	case io.Reader:
+		return c.doJSON(method, uri, obj, val)
+	case []byte:
+		return c.doJSON(method, uri, bytes.NewBuffer(obj), val)
+	default:
+		buf, err := json.Marshal(&body)
+		if err != nil {
+			return err
+		}
+		return c.doJSON(method, uri, bytes.NewBuffer(buf), val)
 	}
-	return nil
 }
 
 // ListBlobs lists the names of all the binary objects at 'at', using
 // the indexing parameters suppied by params.
 func (c *Client) ListBlobs(at string, params map[string]string) ([]string, error) {
 	reqURI := c.UrlFor(path.Join("/", at))
-	if params != nil {
-		vals := url.Values{}
-		for k, v := range params {
-			vals.Add(k, v)
-		}
-		reqURI.RawQuery = vals.Encode()
-	}
+	c.WithParams(reqURI, params)
 	res := []string{}
-	return res, c.DoJSON("GET", reqURI, nil, res)
+	return res, c.DoJSON("GET", reqURI, nil, &res)
 }
 
 // GetBlob fetches a binary blob from the server.  You are responsible
 // for copying the returned io.ReadCloser to a suitable location and
 // closing it afterwards if it is not nil, otherwise the client will
 // leak open HTTP connections.
-func (c *Client) GetBlob(at ...string) (io.ReadCloser, error) {
+func (c *Client) GetBlob(dest io.Writer, at ...string) error {
 	reqURI := c.UrlFor(path.Join("/", path.Join(at...)))
 	req, err := c.Request("GET", reqURI, nil)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	req.Header.Set("Accept", "application/octet-stream")
 	req.Header.Add("Accept", "application/json")
 	resp, err := c.Do(req)
-	if err != nil {
-		if resp != nil {
-			resp.Body.Close()
-		}
-		return nil, err
+	if resp != nil && resp.Body != nil {
+		defer resp.Body.Close()
 	}
-	return resp.Body, nil
+	if err != nil {
+		return err
+	}
+	return Unmarshal(resp, dest)
 }
 
 // PostBlob uploads the binary blob contained in the passed io.Reader
 // to the location specified by at on the server.  You are responsible
 // for closing the passed io.Reader.
-func (c *Client) PostBlob(blob io.Reader, at ...string) error {
+func (c *Client) PostBlob(blob io.Reader, at ...string) (models.BlobInfo, error) {
 	reqURI := c.UrlFor(path.Join("/", path.Join(at...)))
+	res := models.BlobInfo{}
 	req, err := c.Request("POST", reqURI, blob)
 	if err != nil {
-		return err
+		return res, err
 	}
 	req.Header.Set("Content-Type", "application/octet-stream")
 	req.Header.Set("Accept", "application/json")
 	resp, err := c.Do(req)
 	if err != nil {
-		return err
+		return res, err
 	}
-	resp.Body.Close()
-	return nil
+	defer resp.Body.Close()
+	return res, Unmarshal(resp, &res)
 }
 
 // DeleteBlob deletes a blob on the server at the location indicated
@@ -255,8 +209,8 @@ func (c *Client) DeleteBlob(at ...string) error {
 	if err != nil {
 		return err
 	}
-	resp.Body.Close()
-	return nil
+	defer resp.Body.Close()
+	return Unmarshal(resp, nil)
 }
 
 // AllIndexes returns all the static indexes available for all object
@@ -284,19 +238,18 @@ func (c *Client) OneIndex(prefix, param string) (models.Index, error) {
 	return res, c.DoJSON("GET", reqURI, nil, &res)
 }
 
-// ListModels returns all of the objects matching the passed params.
-// If no params are passed, all objects of the specified type are
-// returned.
-func (c *Client) ListModels(ref models.Models, params map[string]string) error {
-	reqURI := c.UrlFor(ref.Elem().Prefix())
-	if params != nil {
-		vals := url.Values{}
-		for k, v := range params {
-			vals.Add(k, v)
-		}
-		reqURI.RawQuery = vals.Encode()
+func (c *Client) ListModel(prefix string, params map[string]string) ([]models.Model, error) {
+	ref, err := models.New(prefix)
+	if err != nil {
+		return nil, err
 	}
-	return c.DoJSON("GET", reqURI, nil, ref)
+	reqURI := c.UrlFor(ref.Prefix())
+	c.WithParams(reqURI, params)
+	res := ref.SliceOf()
+	if err := c.DoJSON("GET", reqURI, nil, res); err != nil {
+		return nil, err
+	}
+	return ref.ToModels(res), nil
 }
 
 // GetModel returns an object if type prefix with the unique
@@ -308,8 +261,8 @@ func (c *Client) GetModel(prefix, key string) (models.Model, error) {
 	if err != nil {
 		return nil, err
 	}
-	reqURI := c.UrlFor(prefix, key)
-	return res, c.DoJSON("GET", reqURI, nil, res)
+	reqURI := c.UrlFor(res.Prefix(), key)
+	return res, c.DoJSON("GET", reqURI, nil, &res)
 }
 
 // ExistsModel tests to see if an object exists on the server
@@ -340,20 +293,22 @@ func (c *Client) ExistsModel(prefix, key string) (bool, error) {
 // from the server.
 func (c *Client) FillModel(ref models.Model, key string) error {
 	reqURI := c.UrlFor(ref.Prefix(), key)
-	return c.DoJSON("GET", reqURI, nil, ref)
+	err := c.DoJSON("GET", reqURI, nil, &ref)
+	if f, ok := ref.(models.Filler); err == nil && ok {
+		f.Fill()
+	}
+	return err
 }
 
 // CreateModel takes the passed-in model and creates an instance of it
 // on the server.  It will return an error if the passed-in model does
 // not validate or if it already exists on the server.
 func (c *Client) CreateModel(ref models.Model) error {
-	buf := &bytes.Buffer{}
-	enc := json.NewEncoder(buf)
-	if err := enc.Encode(ref); err != nil {
-		return err
-	}
 	reqURI := c.UrlFor(ref.Prefix())
-	return c.DoJSON("POST", reqURI, buf, ref)
+	if f, ok := ref.(models.Filler); ok {
+		f.Fill()
+	}
+	return c.DoJSON("POST", reqURI, ref, &ref)
 }
 
 // DeleteModel deletes the model matching the passed-in prefix and
@@ -364,7 +319,7 @@ func (c *Client) DeleteModel(prefix, key string) (models.Model, error) {
 		return nil, err
 	}
 	reqURI := c.UrlFor(prefix, key)
-	return res, c.DoJSON("POST", reqURI, nil, res)
+	return res, c.DoJSON("DELETE", reqURI, nil, &res)
 }
 
 func (c *Client) reauth(tok *models.UserToken) error {
@@ -381,14 +336,17 @@ func (c *Client) reauth(tok *models.UserToken) error {
 // conflicting changes are rejected, your patch should contain the
 // appropriate test stanzas, which will allow the server to detect and
 // reject conflicting changes from different sources.
-func (c *Client) PatchModel(prefix, key string, patch *jsonpatch2.Patch) (models.Model, error) {
+func (c *Client) PatchModel(prefix, key string, patch jsonpatch2.Patch) (models.Model, error) {
 	new, err := models.New(prefix)
 	if err != nil {
 		return nil, err
 	}
-	buf, err := json.Marshal(patch)
 	reqURI := c.UrlFor(prefix, key)
-	return new, c.DoJSON("PATCH", reqURI, bytes.NewBuffer(buf), new)
+	err = c.DoJSON("PATCH", reqURI, patch, &new)
+	if err == nil {
+		new.Fill()
+	}
+	return new, err
 }
 
 // PutModel replaces the server-side object matching the passed-in
@@ -397,12 +355,7 @@ func (c *Client) PatchModel(prefix, key string, patch *jsonpatch2.Patch) (models
 // multiple sources.
 func (c *Client) PutModel(obj models.Model) error {
 	reqURI := c.UrlFor(obj.Prefix(), obj.Key())
-	buf := &bytes.Buffer{}
-	enc := json.NewEncoder(buf)
-	if err := enc.Encode(obj); err != nil {
-		return err
-	}
-	return c.DoJSON("PUT", reqURI, buf, obj)
+	return c.DoJSON("PUT", reqURI, obj, &obj)
 }
 
 // TokenSession creates a new api.Client that will use the passed-in Token for authentication.

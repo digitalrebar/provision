@@ -18,28 +18,24 @@ func (p *Pref) Key() string {
 	return p.Name
 }
 
+func (p *Pref) Fill() {
+	p.MetaData.fill()
+}
+
 func (p *Pref) AuthKey() string {
 	return p.Key()
 }
 
-type Prefs []*Pref
-
-func (s Prefs) Elem() Model {
-	return &Pref{}
+func (b *Pref) SliceOf() interface{} {
+	s := []*Pref{}
+	return &s
 }
 
-func (s Prefs) Items() []Model {
-	res := make([]Model, len(s))
-	for i, m := range s {
-		res[i] = m
+func (b *Pref) ToModels(obj interface{}) []Model {
+	items := obj.(*[]*Pref)
+	res := make([]Model, len(*items))
+	for i, item := range *items {
+		res[i] = Model(item)
 	}
 	return res
-}
-
-func (s Prefs) Fill(m []Model) {
-	q := make([]*Pref, len(m))
-	for i, obj := range m {
-		q[i] = obj.(*Pref)
-	}
-	s = q[:]
 }

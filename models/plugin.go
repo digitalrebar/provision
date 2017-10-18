@@ -35,6 +35,31 @@ func (n *Plugin) Key() string {
 	return n.Name
 }
 
+func (n *Plugin) Fill() {
+	n.MetaData.fill()
+	n.Validation.fill()
+	if n.Params == nil {
+		n.Params = map[string]interface{}{}
+	}
+	if n.PluginErrors == nil {
+		n.PluginErrors = []string{}
+	}
+}
+
 func (n *Plugin) AuthKey() string {
 	return n.Key()
+}
+
+func (b *Plugin) SliceOf() interface{} {
+	s := []*Plugin{}
+	return &s
+}
+
+func (b *Plugin) ToModels(obj interface{}) []Model {
+	items := obj.(*[]*Plugin)
+	res := make([]Model, len(*items))
+	for i, item := range *items {
+		res[i] = Model(item)
+	}
+	return res
 }

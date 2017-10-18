@@ -47,10 +47,21 @@ func (v *Validation) RestoreValidation(ov *Validation) {
 	v.Errors = ov.Errors
 }
 
+type ValidateSetter interface {
+	SetValid() bool
+	SetAvailable() bool
+}
+
 func (v *Validation) ClearValidation() {
 	v.Validated = false
 	v.Available = false
 	v.Errors = []string{}
+}
+
+func (v *Validation) fill() {
+	if v.Errors == nil {
+		v.Errors = []string{}
+	}
 }
 
 func (v *Validation) ForceChange() {
@@ -117,10 +128,9 @@ func (v *Validation) MakeError(code int, errType string, obj Model) error {
 		return nil
 	}
 	return &Error{
-		Object:        obj,
-		Code:          code,
-		Type:          errType,
-		Messages:      v.Errors,
-		containsError: true,
+		Object:   obj,
+		Code:     code,
+		Type:     errType,
+		Messages: v.Errors,
 	}
 }

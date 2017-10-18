@@ -25,11 +25,11 @@ var plugin_providerListString string = `[
           "incrementer/parameter"
         ],
         "Provider": "incrementer",
-        "RequiredParams": null
+        "RequiredParams": []
       },
       {
         "Command": "reset_count",
-        "OptionalParams": null,
+        "OptionalParams": [],
         "Provider": "incrementer",
         "RequiredParams": [
           "incrementer/touched"
@@ -38,7 +38,7 @@ var plugin_providerListString string = `[
     ],
     "HasPublish": true,
     "Name": "incrementer",
-    "OptionalParams": null,
+    "OptionalParams": [],
     "Parameters": [
       {
         "Available": true,
@@ -71,7 +71,7 @@ var plugin_providerListString string = `[
         "Validated": true
       }
     ],
-    "RequiredParams": null,
+    "RequiredParams": [],
     "Version": "v3.0.2-pre-alpha-NotSet"
   }
 ]
@@ -85,11 +85,11 @@ var plugin_providerShowIncrementerString string = `{
         "incrementer/parameter"
       ],
       "Provider": "incrementer",
-      "RequiredParams": null
+      "RequiredParams": []
     },
     {
       "Command": "reset_count",
-      "OptionalParams": null,
+      "OptionalParams": [],
       "Provider": "incrementer",
       "RequiredParams": [
         "incrementer/touched"
@@ -98,7 +98,7 @@ var plugin_providerShowIncrementerString string = `{
   ],
   "HasPublish": true,
   "Name": "incrementer",
-  "OptionalParams": null,
+  "OptionalParams": [],
   "Parameters": [
     {
       "Available": true,
@@ -131,7 +131,7 @@ var plugin_providerShowIncrementerString string = `{
       "Validated": true
     }
   ],
-  "RequiredParams": null,
+  "RequiredParams": [],
   "Version": "v3.0.2-pre-alpha-NotSet"
 }
 `

@@ -14,10 +14,10 @@ var jobTask1Create string = `{
     "feature-flags": "original-exit-codes"
   },
   "Name": "task1",
-  "OptionalParams": null,
+  "OptionalParams": [],
   "ReadOnly": false,
-  "RequiredParams": null,
-  "Templates": null,
+  "RequiredParams": [],
+  "Templates": [],
   "Validated": true
 }
 `
@@ -28,9 +28,9 @@ var jobTask2Create string = `{
     "feature-flags": "original-exit-codes"
   },
   "Name": "task2",
-  "OptionalParams": null,
+  "OptionalParams": [],
   "ReadOnly": false,
-  "RequiredParams": null,
+  "RequiredParams": [],
   "Templates": [
     {
       "Contents": "Fred rules",
@@ -48,10 +48,10 @@ var jobTask3Create string = `{
     "feature-flags": "original-exit-codes"
   },
   "Name": "task3",
-  "OptionalParams": null,
+  "OptionalParams": [],
   "ReadOnly": false,
-  "RequiredParams": null,
-  "Templates": null,
+  "RequiredParams": [],
+  "Templates": [],
   "Validated": true
 }
 `
@@ -61,10 +61,10 @@ var jobLocal2Create string = `{
   "BootEnv": "local",
   "Errors": [],
   "Name": "stage3",
-  "OptionalParams": null,
+  "OptionalParams": [],
   "Profiles": [],
   "ReadOnly": false,
-  "RequiredParams": null,
+  "RequiredParams": [],
   "Tasks": [
     "task3",
     "task2",
@@ -102,12 +102,12 @@ var jobCreateMachineJohnString string = `{
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": null,
+  "Profiles": [],
   "ReadOnly": false,
   "Runnable": true,
   "Secret": "secret1",
@@ -131,10 +131,10 @@ var jobLocalUpdateString string = `{
   "BootEnv": "local",
   "Errors": [],
   "Name": "stage3",
-  "OptionalParams": null,
+  "OptionalParams": [],
   "Profiles": [],
   "ReadOnly": false,
-  "RequiredParams": null,
+  "RequiredParams": [],
   "Tasks": [
     "task1",
     "task2",
@@ -262,12 +262,12 @@ var jobShowMachineJohnString string = `{
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": null,
+  "Profiles": [],
   "ReadOnly": false,
   "Runnable": true,
   "Secret": "secret1",
@@ -432,12 +432,12 @@ var jobUpdateMachineRunnableString = `{
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": null,
+  "Profiles": [],
   "ReadOnly": false,
   "Runnable": true,
   "Secret": "secret1",

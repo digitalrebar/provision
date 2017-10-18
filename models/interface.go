@@ -23,25 +23,23 @@ type Interface struct {
 
 func (i *Interface) Prefix() string { return "interfaces" }
 func (i *Interface) Key() string    { return i.Name }
-
-type Interfaces []*Interface
-
-func (s Interfaces) Elem() Model {
-	return &Interface{}
+func (i *Interface) Fill() {
+	i.MetaData.fill()
+	if i.Addresses == nil {
+		i.Addresses = []string{}
+	}
 }
 
-func (s Interfaces) Items() []Model {
-	res := make([]Model, len(s))
-	for i, m := range s {
-		res[i] = m
+func (b *Interface) SliceOf() interface{} {
+	s := []*Interface{}
+	return &s
+}
+
+func (b *Interface) ToModels(obj interface{}) []Model {
+	items := obj.(*[]*Interface)
+	res := make([]Model, len(*items))
+	for i, item := range *items {
+		res[i] = Model(item)
 	}
 	return res
-}
-
-func (s Interfaces) Fill(m []Model) {
-	q := make([]*Interface, len(m))
-	for i, obj := range m {
-		q[i] = obj.(*Interface)
-	}
-	s = q[:]
 }

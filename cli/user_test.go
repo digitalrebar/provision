@@ -9,7 +9,7 @@ var userDefaultListString string = `RE:
 \[
   {
     "Available": true,
-    "Errors": null,
+    "Errors": [],
     "Name": "rocketskates",
     "PasswordHash": null,
     "ReadOnly": false,
@@ -25,7 +25,7 @@ var userShowMissingArgErrorString string = "Error: users GET: ignore: Not Found\
 var userShowJohnString string = `RE:
 {
   "Available": true,
-  "Errors": null,
+  "Errors": [],
   "Name": "john",
   "PasswordHash": null,
   "ReadOnly": false,
@@ -53,7 +53,7 @@ var userCreateInputString string = `{
 var userCreateJohnString string = `RE:
 {
   "Available": true,
-  "Errors": null,
+  "Errors": [],
   "Name": "john",
   "PasswordHash": null,
   "ReadOnly": false,
@@ -65,7 +65,7 @@ var userCreateFredInputString string = `fred`
 var userCreateFredString string = `RE:
 {
   "Available": true,
-  "Errors": null,
+  "Errors": [],
   "Name": "fred",
   "PasswordHash": null,
   "ReadOnly": false,
@@ -80,7 +80,7 @@ var userListJohnOnlyString = `RE:
 \[
   {
     "Available": true,
-    "Errors": null,
+    "Errors": [],
     "Name": "john",
     "PasswordHash": null,
     "ReadOnly": false,
@@ -93,7 +93,7 @@ var userListBothEnvsString = `RE:
 \[
   {
     "Available": true,
-    "Errors": null,
+    "Errors": [],
     "Name": "john",
     "PasswordHash": null,
     "ReadOnly": false,
@@ -102,7 +102,7 @@ var userListBothEnvsString = `RE:
   },
   {
     "Available": true,
-    "Errors": null,
+    "Errors": [],
     "Name": "rocketskates",
     "PasswordHash": null,
     "ReadOnly": false,
@@ -123,7 +123,7 @@ var userUpdateInputString string = `{
 var userUpdateJohnString string = `RE:
 {
   "Available": true,
-  "Errors": null,
+  "Errors": [],
   "Name": "john",
   "PasswordHash": null,
   "ReadOnly": false,
@@ -150,7 +150,7 @@ var userPatchInputString string = `{
 var userPatchJohnString string = `RE:
 {
   "Available": true,
-  "Errors": null,
+  "Errors": [],
   "Name": "john",
   "PasswordHash": null,
   "ReadOnly": false,

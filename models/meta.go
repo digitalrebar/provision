@@ -13,10 +13,14 @@ type MetaData struct {
 	Meta map[string]string
 }
 
-func (m *MetaData) Features() []string {
+func (m *MetaData) fill() {
 	if m.Meta == nil {
 		m.Meta = map[string]string{}
 	}
+}
+
+func (m *MetaData) Features() []string {
+	m.fill()
 	if flags, ok := m.Meta["feature-flags"]; ok && len(flags) > 0 {
 		return strings.Split(flags, ",")
 	}

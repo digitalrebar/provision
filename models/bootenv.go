@@ -99,23 +99,33 @@ func (b *BootEnv) AuthKey() string {
 	return b.Key()
 }
 
-type BootEnvs []*BootEnv
-
-func (s BootEnvs) Elem() Model {
-	return &BootEnv{}
+func (b *BootEnv) SliceOf() interface{} {
+	s := []*BootEnv{}
+	return &s
 }
 
-func (s BootEnvs) Items() []Model {
-	res := make([]Model, len(s))
-	for i, m := range s {
-		res[i] = m
+func (b *BootEnv) ToModels(obj interface{}) []Model {
+	items := obj.(*[]*BootEnv)
+	res := make([]Model, len(*items))
+	for i, item := range *items {
+		res[i] = Model(item)
 	}
 	return res
 }
-func (s BootEnvs) Fill(m []Model) {
-	q := make([]*BootEnv, len(m))
-	for i, obj := range m {
-		q[i] = obj.(*BootEnv)
+
+func (b *BootEnv) Fill() {
+	b.MetaData.fill()
+	b.Validation.fill()
+	if b.Initrds == nil {
+		b.Initrds = []string{}
 	}
-	s = q[:]
+	if b.OptionalParams == nil {
+		b.OptionalParams = []string{}
+	}
+	if b.RequiredParams == nil {
+		b.RequiredParams = []string{}
+	}
+	if b.Templates == nil {
+		b.Templates = []TemplateInfo{}
+	}
 }

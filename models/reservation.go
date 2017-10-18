@@ -40,28 +40,28 @@ func (r *Reservation) Key() string {
 	return Hexaddr(r.Addr)
 }
 
+func (r *Reservation) Fill() {
+	r.Validation.fill()
+	r.MetaData.fill()
+	if r.Options == nil {
+		r.Options = []DhcpOption{}
+	}
+}
+
 func (r *Reservation) AuthKey() string {
 	return r.Key()
 }
 
-type Reservations []*Reservation
-
-func (s Reservations) Elem() Model {
-	return &Reservation{}
+func (b *Reservation) SliceOf() interface{} {
+	s := []*Reservation{}
+	return &s
 }
 
-func (s Reservations) Items() []Model {
-	res := make([]Model, len(s))
-	for i, m := range s {
-		res[i] = m
+func (b *Reservation) ToModels(obj interface{}) []Model {
+	items := obj.(*[]*Reservation)
+	res := make([]Model, len(*items))
+	for i, item := range *items {
+		res[i] = Model(item)
 	}
 	return res
-}
-
-func (s Reservations) Fill(m []Model) {
-	q := make([]*Reservation, len(m))
-	for i, obj := range m {
-		q[i] = obj.(*Reservation)
-	}
-	s = q[:]
 }

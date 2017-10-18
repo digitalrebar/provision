@@ -221,15 +221,15 @@ var yamlTestString = `- Available: true
   Description: The boot environment you should use to have unknown machines boot off
     their local hard drive
   Errors: []
-  Initrds: null
+  Initrds: []
   Kernel: ""
   Name: ignore
   OS:
     Name: ignore
   OnlyUnknown: true
-  OptionalParams: null
+  OptionalParams: []
   ReadOnly: true
-  RequiredParams: null
+  RequiredParams: []
   Templates:
   - Contents: |
       DEFAULT local
@@ -253,15 +253,15 @@ var yamlTestString = `- Available: true
   Description: The boot environment you should use to have known machines boot off
     their local hard drive
   Errors: []
-  Initrds: null
+  Initrds: []
   Kernel: ""
   Name: local
   OS:
     Name: local
   OnlyUnknown: false
-  OptionalParams: null
+  OptionalParams: []
   ReadOnly: true
-  RequiredParams: null
+  RequiredParams: []
   Templates:
   - Contents: |
       DEFAULT local
@@ -289,16 +289,16 @@ var jsonTestString = `[
     "BootParams": "",
     "Description": "The boot environment you should use to have unknown machines boot off their local hard drive",
     "Errors": [],
-    "Initrds": null,
+    "Initrds": [],
     "Kernel": "",
     "Name": "ignore",
     "OS": {
       "Name": "ignore"
     },
     "OnlyUnknown": true,
-    "OptionalParams": null,
+    "OptionalParams": [],
     "ReadOnly": true,
-    "RequiredParams": null,
+    "RequiredParams": [],
     "Templates": [
       {
         "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
@@ -323,16 +323,16 @@ var jsonTestString = `[
     "BootParams": "",
     "Description": "The boot environment you should use to have known machines boot off their local hard drive",
     "Errors": [],
-    "Initrds": null,
+    "Initrds": [],
     "Kernel": "",
     "Name": "local",
     "OS": {
       "Name": "local"
     },
     "OnlyUnknown": false,
-    "OptionalParams": null,
+    "OptionalParams": [],
     "ReadOnly": true,
-    "RequiredParams": null,
+    "RequiredParams": [],
     "Templates": [
       {
         "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",

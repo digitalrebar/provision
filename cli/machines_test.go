@@ -27,12 +27,12 @@ var machineShowMachineString string = `{
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": null,
+  "Profiles": [],
   "ReadOnly": false,
   "Runnable": true,
   "Secret": "secret1",
@@ -71,12 +71,12 @@ var machineCreateJohnString string = `{
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": null,
+  "Profiles": [],
   "ReadOnly": false,
   "Runnable": true,
   "Secret": "secret1",
@@ -96,12 +96,12 @@ var machineCreateJohnString2 string = `{
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": null,
+  "Profiles": [],
   "ReadOnly": false,
   "Runnable": true,
   "Secret": "secret1",
@@ -127,12 +127,12 @@ var machineListMachinesString = `[
     "Name": "john",
     "Profile": {
       "Available": false,
-      "Errors": null,
+      "Errors": [],
       "Name": "",
       "ReadOnly": false,
       "Validated": false
     },
-    "Profiles": null,
+    "Profiles": [],
     "ReadOnly": false,
     "Runnable": true,
     "Secret": "secret1",
@@ -162,12 +162,12 @@ var machineUpdateJohnString string = `{
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": null,
+  "Profiles": [],
   "ReadOnly": false,
   "Runnable": true,
   "Secret": "secret1",
@@ -190,12 +190,12 @@ var machinePatchBaseString string = `{
   "BootEnv": "local",
   "CurrentTask": 0,
   "Description": "lpxelinux.0",
-  "Errors": null,
+  "Errors": [],
   "Name": "john",
   "Profile": {
     "Name": ""
   },
-  "Profiles": null,
+  "Profiles": [],
   "Runnable": true,
   "Secret": "secret1",
   "Tasks": [],
@@ -216,12 +216,12 @@ var machinePatchJohnString string = `{
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": null,
+  "Profiles": [],
   "ReadOnly": false,
   "Runnable": true,
   "Secret": "secret1",
@@ -235,12 +235,12 @@ var machinePatchMissingBaseString string = `{
   "Address": "192.168.100.110",
   "BootEnv": "local",
   "Description": "lpxelinux.0",
-  "Errors": null,
+  "Errors": [],
   "Name": "john",
   "Profile": {
     "Name": ""
   },
-  "Profiles": null,
+  "Profiles": [],
   "Runnable": true,
   "Tasks": [],
   "Uuid": "3e7031fe-5555-45f1-835c-92541bc9cbd3"
@@ -258,7 +258,7 @@ var machineAddProfileJill2String string = `{
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
@@ -285,7 +285,7 @@ var machineAddProfileJillString string = `{
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
@@ -312,7 +312,7 @@ var machineAddProfileJillJeanString string = `{
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
@@ -341,7 +341,7 @@ var machineRemoveProfileJeanString string = `{
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
@@ -368,12 +368,12 @@ var machineRemoveProfileAllGoneString string = `{
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": null,
+  "Profiles": [],
   "ReadOnly": false,
   "Runnable": true,
   "Secret": "secret1",
@@ -394,12 +394,12 @@ var machineRemoveProfileAllGone2String string = `{
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": null,
+  "Profiles": [],
   "ReadOnly": false,
   "Runnable": true,
   "Secret": "secret1",
@@ -431,12 +431,12 @@ var machineBootEnvErrorBootEnvString string = `{
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": null,
+  "Profiles": [],
   "ReadOnly": false,
   "Runnable": false,
   "Secret": "secret1",
@@ -484,7 +484,7 @@ var machineUpdateJohnWithParamsString string = `{
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "Params": {
       "jj": 3
@@ -492,7 +492,7 @@ var machineUpdateJohnWithParamsString string = `{
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": null,
+  "Profiles": [],
   "ReadOnly": false,
   "Runnable": true,
   "Secret": "secret1",
@@ -555,7 +555,7 @@ var machineActionsListString string = `[
       "incrementer/parameter"
     ],
     "Provider": "incrementer",
-    "RequiredParams": null
+    "RequiredParams": []
   }
 ]
 `
@@ -566,7 +566,7 @@ var machineActionShowString string = `{
     "incrementer/parameter"
   ],
   "Provider": "incrementer",
-  "RequiredParams": null
+  "RequiredParams": []
 }
 `
 
@@ -578,11 +578,11 @@ var machineActionsListWithResetString string = `[
       "incrementer/parameter"
     ],
     "Provider": "incrementer",
-    "RequiredParams": null
+    "RequiredParams": []
   },
   {
     "Command": "reset_count",
-    "OptionalParams": null,
+    "OptionalParams": [],
     "Provider": "incrementer",
     "RequiredParams": [
       "incrementer/touched"
@@ -592,7 +592,7 @@ var machineActionsListWithResetString string = `[
 `
 var machineActionShowResetString string = `{
   "Command": "reset_count",
-  "OptionalParams": null,
+  "OptionalParams": [],
   "Provider": "incrementer",
   "RequiredParams": [
     "incrementer/touched"
@@ -604,7 +604,7 @@ var machinePluginCreateString string = `{
   "Available": true,
   "Errors": [],
   "Name": "incr",
-  "PluginErrors": null,
+  "PluginErrors": [],
   "Provider": "incrementer",
   "ReadOnly": false,
   "Validated": true
@@ -633,10 +633,10 @@ var machineJamieCreate string = `{
     "feature-flags": "original-exit-codes"
   },
   "Name": "jamie",
-  "OptionalParams": null,
+  "OptionalParams": [],
   "ReadOnly": false,
-  "RequiredParams": null,
-  "Templates": null,
+  "RequiredParams": [],
+  "Templates": [],
   "Validated": true
 }
 `
@@ -647,10 +647,10 @@ var machineJustineCreate string = `{
     "feature-flags": "original-exit-codes"
   },
   "Name": "justine",
-  "OptionalParams": null,
+  "OptionalParams": [],
   "ReadOnly": false,
-  "RequiredParams": null,
-  "Templates": null,
+  "RequiredParams": [],
+  "Templates": [],
   "Validated": true
 }
 `
@@ -665,12 +665,12 @@ var machineUpdateLocalWithoutRunnableString = `{
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": null,
+  "Profiles": [],
   "ReadOnly": false,
   "Runnable": false,
   "Secret": "secret1",
@@ -691,12 +691,12 @@ var machineUpdateLocalString string = `{
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": null,
+  "Profiles": [],
   "ReadOnly": false,
   "Runnable": true,
   "Secret": "secret1",
@@ -716,7 +716,7 @@ var machineUpdateLocal3String string = `{
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
@@ -753,12 +753,12 @@ var machineUpdateStage1WithoutRunnableString = `{
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": null,
+  "Profiles": [],
   "ReadOnly": false,
   "Runnable": true,
   "Secret": "secret1",
@@ -782,12 +782,12 @@ var machineUpdateStage1LocalString = `{
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": null,
+  "Profiles": [],
   "ReadOnly": false,
   "Runnable": true,
   "Secret": "secret1",
@@ -811,12 +811,12 @@ var machineUpdateLocal2String = `{
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": null,
+  "Profiles": [],
   "ReadOnly": false,
   "Runnable": true,
   "Secret": "secret1",
@@ -838,10 +838,10 @@ var machineStage1CreateSuccessString = `{
   "BootEnv": "local",
   "Errors": [],
   "Name": "stage1",
-  "OptionalParams": null,
+  "OptionalParams": [],
   "Profiles": [],
   "ReadOnly": false,
-  "RequiredParams": null,
+  "RequiredParams": [],
   "Tasks": [
     "jamie",
     "justine"
@@ -868,10 +868,10 @@ var machineStage2CreateSuccessString = `{
   "BootEnv": "local",
   "Errors": [],
   "Name": "stage2",
-  "OptionalParams": null,
+  "OptionalParams": [],
   "Profiles": [],
   "ReadOnly": false,
-  "RequiredParams": null,
+  "RequiredParams": [],
   "Tasks": [],
   "Templates": [
     {
@@ -894,7 +894,7 @@ var machineStage2AgainSuccessString string = `{
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
@@ -918,12 +918,12 @@ var machinesUpdateStageSuccessString string = `{
   "BootEnv": "local",
   "Errors": [],
   "Name": "stage2",
-  "OptionalParams": null,
+  "OptionalParams": [],
   "Profiles": [
     "stage-prof"
   ],
   "ReadOnly": false,
-  "RequiredParams": null,
+  "RequiredParams": [],
   "Tasks": [],
   "Templates": [
     {

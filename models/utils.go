@@ -6,15 +6,26 @@ import (
 	"fmt"
 )
 
+// swagger:model
+type BlobInfo struct {
+	Path string
+	Size int64
+}
+
 type Model interface {
 	Prefix() string
 	Key() string
 }
 
-type Models interface {
-	Elem() Model
-	Items() []Model
-	Fill([]Model)
+type Filler interface {
+	Model
+	Fill()
+}
+
+type Slicer interface {
+	Filler
+	SliceOf() interface{}
+	ToModels(interface{}) []Model
 }
 
 func All() []Model {
@@ -35,39 +46,44 @@ func All() []Model {
 	}
 }
 
-func New(kind string) (Model, error) {
+func New(kind string) (Slicer, error) {
+	var res Slicer
 	switch kind {
-	case "stages", "stage":
-		return &Stage{}, nil
 	case "bootenvs", "bootenv":
-		return &BootEnv{}, nil
+		res = &BootEnv{}
+	case "interfaces":
+		res = &Interface{}
 	case "jobs", "job":
-		return &Job{}, nil
+		res = &Job{}
 	case "leases", "lease":
-		return &Lease{}, nil
+		res = &Lease{}
 	case "machines", "machine":
-		return &Machine{}, nil
+		res = &Machine{}
 	case "params", "param":
-		return &Param{}, nil
+		res = &Param{}
 	case "plugins", "plugin":
-		return &Plugin{}, nil
-	case "prefs", "pref":
-		return &Pref{}, nil
+		res = &Plugin{}
+	case "preferences", "preference":
+		res = &Pref{}
 	case "profiles", "profile":
-		return &Profile{}, nil
+		res = &Profile{}
 	case "reservations", "reservation":
-		return &Reservation{}, nil
+		res = &Reservation{}
+	case "stages", "stage":
+		res = &Stage{}
 	case "subnets", "subnet":
-		return &Subnet{}, nil
+		res = &Subnet{}
 	case "tasks", "task":
-		return &Task{}, nil
+		res = &Task{}
 	case "templates", "template":
-		return &Template{}, nil
+		res = &Template{}
 	case "users", "user":
-		return &User{}, nil
+		res = &User{}
 	default:
 		return nil, fmt.Errorf("No such Model: %s", kind)
 	}
+	res.Fill()
+	return res, nil
 }
 
 func Clone(m Model) (Model, error) {

@@ -26,6 +26,25 @@ type PluginProvider struct {
 	Parameters []*Param
 }
 
+func (p *PluginProvider) Prefix() string { return "plugin_providers" }
+func (p *PluginProvider) Key() string    { return p.Name }
+
+func (p *PluginProvider) Fill() {
+	p.MetaData.fill()
+	if p.RequiredParams == nil {
+		p.RequiredParams = []string{}
+	}
+	if p.OptionalParams == nil {
+		p.OptionalParams = []string{}
+	}
+	if p.AvailableActions == nil {
+		p.AvailableActions = []*AvailableAction{}
+	}
+	if p.Parameters == nil {
+		p.Parameters = []*Param{}
+	}
+}
+
 // swagger:model
 type PluginProviderUploadInfo struct {
 	Path string `json:"path"`

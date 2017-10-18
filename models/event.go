@@ -53,3 +53,20 @@ func (e *Event) Model() (Model, error) {
 	err = dec.Decode(res)
 	return res, err
 }
+
+func (e *Event) Message() string {
+	if s, ok := e.Object.(string); ok {
+		return s
+	}
+	return ""
+}
+
+func EventFor(obj Model, action string) *Event {
+	return &Event{
+		Time:   time.Now(),
+		Type:   obj.Prefix(),
+		Action: action,
+		Key:    obj.Key(),
+		Object: obj,
+	}
+}

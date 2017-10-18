@@ -51,7 +51,7 @@ var pluginCreateJohnString string = `{
   "Available": true,
   "Errors": [],
   "Name": "i-woman",
-  "PluginErrors": null,
+  "PluginErrors": [],
   "Provider": "incrementer",
   "ReadOnly": false,
   "Validated": true

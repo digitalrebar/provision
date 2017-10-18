@@ -22,7 +22,7 @@ var contentDefaultListString string = `[
       "templates": 0,
       "users": 1
     },
-    "Warnings": null,
+    "Warnings": [],
     "meta": {
       "Description": "Writable backing store",
       "Name": "BackingStore",
@@ -35,7 +35,7 @@ var contentDefaultListString string = `[
     "Counts": {
       "templates": 1
     },
-    "Warnings": null,
+    "Warnings": [],
     "meta": {
       "Description": "Local Override Store",
       "Name": "LocalStore",
@@ -47,7 +47,7 @@ var contentDefaultListString string = `[
     "Counts": {
       "templates": 1
     },
-    "Warnings": null,
+    "Warnings": [],
     "meta": {
       "Description": "Initial Default Content",
       "Name": "DefaultStore",
@@ -75,7 +75,7 @@ var contentDefaultListString string = `[
       "bootenvs": 2,
       "stages": 1
     },
-    "Warnings": null,
+    "Warnings": [],
     "meta": {
       "Description": "Default objects that must be present",
       "Name": "BasicStore",
@@ -120,7 +120,7 @@ var contentCreateInputString string = `{
 }
 `
 var contentCreateJohnString string = `{
-  "Warnings": null,
+  "Warnings": [],
   "meta": {
     "Name": "john",
     "Type": "dynamic"
@@ -147,7 +147,7 @@ var contentListContentsString = `[
       "templates": 0,
       "users": 1
     },
-    "Warnings": null,
+    "Warnings": [],
     "meta": {
       "Description": "Writable backing store",
       "Name": "BackingStore",
@@ -160,7 +160,7 @@ var contentListContentsString = `[
     "Counts": {
       "templates": 1
     },
-    "Warnings": null,
+    "Warnings": [],
     "meta": {
       "Description": "Local Override Store",
       "Name": "LocalStore",
@@ -169,7 +169,7 @@ var contentListContentsString = `[
     }
   },
   {
-    "Warnings": null,
+    "Warnings": [],
     "meta": {
       "Name": "john",
       "Type": "dynamic"
@@ -179,7 +179,7 @@ var contentListContentsString = `[
     "Counts": {
       "templates": 1
     },
-    "Warnings": null,
+    "Warnings": [],
     "meta": {
       "Description": "Initial Default Content",
       "Name": "DefaultStore",
@@ -207,7 +207,7 @@ var contentListContentsString = `[
       "bootenvs": 2,
       "stages": 1
     },
-    "Warnings": null,
+    "Warnings": [],
     "meta": {
       "Description": "Default objects that must be present",
       "Name": "BasicStore",
@@ -237,7 +237,7 @@ var contentUpdateInputString string = `{
 }
 `
 var contentUpdateJohnString string = `{
-  "Warnings": null,
+  "Warnings": [],
   "meta": {
     "Description": "Fred Rules",
     "Name": "john",
