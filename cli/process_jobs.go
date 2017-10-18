@@ -557,6 +557,7 @@ the stage runner wait flag.
 				if obj, err := Get(job.Task, to); err != nil {
 					Log(job.UUID, true, "Error loading task content: %v, continuing", err)
 					markJob(job.UUID.String(), "failed", jo)
+					continue
 				} else {
 					task = obj.(*models.Task)
 				}
