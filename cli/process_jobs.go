@@ -294,7 +294,7 @@ func (cr *CommandRunner) ReadReply() {
 	// read command's stdout line by line - for replies
 	in := bufio.NewScanner(cr.stdout)
 	for in.Scan() {
-		putLog(cr.uuid, bytes.NewBuffer(in.Bytes()))
+		putLog(cr.uuid, bytes.NewBuffer([]byte(string(in.Bytes())+"\n")))
 	}
 	cr.finished <- true
 }
