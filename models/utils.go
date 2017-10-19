@@ -9,8 +9,8 @@ import (
 
 // swagger:model
 type BlobInfo struct {
-	Path string `json:"path"`
-	Size int64  `json:"size"`
+	Path string
+	Size int64
 }
 
 type Model interface {

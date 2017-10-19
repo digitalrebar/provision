@@ -29,7 +29,7 @@ var filesUploadCommonSuccessString = `{
 }
 `
 
-var filesUploadMkdirErrorString = "Error: upload: unable to create directory /greg\n\n"
+var filesUploadMkdirErrorString = "Error: POST: files/greg/greg: Cannot create directory /greg\n\n"
 
 var filesGregListString string = `[
   "drpcli.amd64.linux",
@@ -40,7 +40,7 @@ var filesGregListString string = `[
 var filesDestroyNoArgsErrorString = "Error: drpcli files destroy [id] [flags] requires 1 argument\n"
 var filesDestroyTwoArgsErrorString = "Error: drpcli files destroy [id] [flags] requires 1 argument\n"
 var filesDestroyGregSuccessString = "Deleted file greg\n"
-var filesDestroyFredErrorString = "Error: delete: unable to delete /fred\n\n"
+var filesDestroyFredErrorString = "Error: DELETE: files/fred: Unable to delete\n\n"
 
 func TestFilesCli(t *testing.T) {
 	fi, _ := os.Stat("common.go")

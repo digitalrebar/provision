@@ -93,7 +93,7 @@ var contentListFilterNotSupportedErrorString string = "Error: listing contents: 
 
 var contentShowNoArgErrorString string = "Error: drpcli contents show [id] [flags] requires 1 argument\n"
 var contentShowTooManyArgErrorString string = "Error: drpcli contents show [id] [flags] requires 1 argument\n"
-var contentShowMissingArgErrorString string = "Error: content get: not found: john2\n\n"
+var contentShowMissingArgErrorString string = "Error: GET: contents/john2: No such content store\n\n"
 var contentShowContentString string = `{
   "meta": {
     "Name": "john",
@@ -105,7 +105,7 @@ var contentShowContentString string = `{
 var contentExistsNoArgErrorString string = "Error: drpcli contents exists [id] [flags] requires 1 argument"
 var contentExistsTooManyArgErrorString string = "Error: drpcli contents exists [id] [flags] requires 1 argument"
 var contentExistsContentString string = ""
-var contentExistsMissingJohnString string = "Error: content get: not found: john2\n\n"
+var contentExistsMissingJohnString string = "Error: GET: contents/john2: No such content store\n\n"
 
 var contentCreateNoArgErrorString string = "Error: drpcli contents create [json] [flags] requires 1 argument\n"
 var contentCreateTooManyArgErrorString string = "Error: drpcli contents create [json] [flags] requires 1 argument\n"
@@ -127,7 +127,7 @@ var contentCreateJohnString string = `{
   }
 }
 `
-var contentCreateDuplicateErrorString = "Error: content post: already exists: john\n\n"
+var contentCreateDuplicateErrorString = "Error: POST: contents/john: Content john already exists\n\n"
 
 var contentListContentsString = `[
   {
@@ -228,7 +228,7 @@ var contentUpdateBadInputString string = `{
   }
 }
 `
-var contentUpdateBadInputErrorString string = "Error: Name must match: john2 != john\n\n\n"
+var contentUpdateBadInputErrorString string = "Error: PUT: contents/john: Cannot change name from john to john2\n\n"
 var contentUpdateInputString string = `{
   "meta": {
     "Description": "Fred Rules",
@@ -253,12 +253,12 @@ var contentShowJohnString string = `{
   }
 }
 `
-var contentUpdateJohnMissingErrorString string = "Error: content get: not found: john2\n\n"
+var contentUpdateJohnMissingErrorString string = "Error: GET: contents/john2: No such content store\n\n"
 
 var contentDestroyNoArgErrorString string = "Error: drpcli contents destroy [id] [flags] requires 1 argument"
 var contentDestroyTooManyArgErrorString string = "Error: drpcli contents destroy [id] [flags] requires 1 argument"
 var contentDestroyJohnString string = "Deleted content john\n"
-var contentDestroyMissingJohnString string = "Error: content get: not found: john\n\n"
+var contentDestroyMissingJohnString string = "Error: DELETE: contents/john: No such content store\n\n"
 
 func TestContentCli(t *testing.T) {
 

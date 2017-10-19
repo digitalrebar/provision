@@ -2,6 +2,7 @@ package models
 
 import (
 	"fmt"
+	"path"
 	"strings"
 )
 
@@ -38,7 +39,7 @@ func (e *Error) Errorf(s string, args ...interface{}) {
 func (e *Error) Error() string {
 	var res string
 	if e.Key != "" {
-		res = fmt.Sprintf("%s: %s/%s", e.Type, e.Model, e.Key)
+		res = fmt.Sprintf("%s: %s", e.Type, path.Join(e.Model, e.Key))
 	} else if e.Model != "" {
 		res = fmt.Sprintf("%s: %s", e.Type, e.Model)
 	} else {

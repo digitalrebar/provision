@@ -324,7 +324,11 @@ var contentPack1BadSyntaxUpdateString = `{
   }
 }
 `
-var contentPack1BadSyntaxUpdateErrorString = "Error: Unable to load profiles: error unmarshaling JSON: json: cannot unmarshal number into Go struct field Profile.Params of type map[string]interface {}\n\n"
+var contentPack1BadSyntaxUpdateErrorString = `Error: PUT: contents/Pack1
+  Unable to load profiles: error unmarshaling JSON: json: cannot unmarshal number into Go struct field Profile.Params of type map[string]interface {}
+  Profile p1-prof (at 0) does not exist
+
+`
 
 var contentPack1UpdateString = `{
   "meta": {
