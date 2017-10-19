@@ -9,6 +9,7 @@ import (
 	"os"
 	"os/exec"
 	"path"
+	"path/filepath"
 	"strings"
 	"syscall"
 	"time"
@@ -284,7 +285,7 @@ func (cr *CommandRunner) ReadLog() {
 	// read command's stderr line by line - for logging
 	in := bufio.NewScanner(cr.stderr)
 	for in.Scan() {
-		putLog(cr.uuid, bytes.NewBuffer(in.Bytes()))
+		putLog(cr.uuid, bytes.NewBuffer([]byte(string(in.Bytes())+"\n")))
 	}
 	cr.finished <- true
 }
@@ -394,16 +395,12 @@ func (cr *CommandRunner) Run() (failed, incomplete, reboot, poweroff, stop bool)
 		stop)
 	// Remove script
 	os.Remove(cr.cmd.Path)
-
 	return
 }
 
 func NewCommandRunner(uuid *strfmt.UUID, name, content, loc string) (*CommandRunner, error) {
 	answer := &CommandRunner{name: name, uuid: uuid}
 	if err := ioutil.WriteFile(path.Join(loc, "script"), []byte(content), 0700); err != nil {
-		return nil, err
-	}
-	if err := ioutil.WriteFile(path.Join(loc, "helper"), cmdHelper, 0400); err != nil {
 		return nil, err
 	}
 	answer.cmd = exec.Command("./script")
@@ -430,13 +427,7 @@ func NewCommandRunner(uuid *strfmt.UUID, name, content, loc string) (*CommandRun
 	return answer, nil
 }
 
-func runContent(uuid *strfmt.UUID, action *models.JobAction, task *models.Task) (failed, incomplete, reboot, poweroff, stop bool) {
-	tmpDir, err := ioutil.TempDir(runnerDir, *task.Name+"-")
-	if err != nil {
-		Log(uuid, true, "Could not create temp dir: %v", err)
-	}
-	defer os.RemoveAll(tmpDir)
-
+func runContent(uuid *strfmt.UUID, action *models.JobAction, task *models.Task, tmpDir string) (failed, incomplete, reboot, poweroff, stop bool) {
 	Log(uuid, false, "Starting Content Execution for: %s\n", *action.Name)
 
 	runner, err := NewCommandRunner(uuid, *action.Name, *action.Content, tmpDir)
@@ -588,45 +579,65 @@ the stage runner wait flag.
 				state := "finished"
 				done := true
 
-				for _, action := range list {
-					if stop || failed || incomplete || reboot || poweroff {
-						done = false
-						break
+				// Block to make sure that taskDir is cleaned up
+				{
+					taskDir, err := ioutil.TempDir(runnerDir, *task.Name+"-")
+					if err != nil {
+						Log(job.UUID, true, "Could not create temp dir: %v", err)
+						markJob(job.UUID.String(), "failed", jo)
+						continue
 					}
-					event := &models.Event{Time: strfmt.DateTime(time.Now()), Type: "jobs", Action: "action_start", Key: job.UUID.String(), Object: fmt.Sprintf("Starting task: %s, template: %s", job.Task, *action.Name)}
+					defer os.RemoveAll(taskDir)
 
-					if _, err := session.Events.PostEvent(events.NewPostEventParams().WithBody(event), basicAuth); err != nil {
-						fmt.Printf("Error posting event: %v\n", err)
+					if err := ioutil.WriteFile(path.Join(runnerDir, "helper"), cmdHelper, 0400); err != nil {
+						Log(job.UUID, true, "Failed to inject helper: %v, continue\n", err)
+						markJob(job.UUID.String(), "failed", jo)
+						continue
 					}
 
-					// Excute task
-					if *action.Path == "" {
-						fmt.Printf("Running Task Template: %s\n", *action.Name)
-						failed, incomplete, reboot, poweroff, stop = runContent(job.UUID, action, task)
-					} else {
-						fmt.Printf("Putting Content in place for Task Template: %s\n", *action.Name)
-						if err := writeStringToFile(*action.Path, *action.Content); err != nil {
-							failed = true
-							Log(job.UUID, true, "Task Template: %s - Copying contents to %s failed\n%v", *action.Name, *action.Path, err)
+					for _, action := range list {
+						if stop || failed || incomplete || reboot || poweroff {
+							done = false
+							break
+						}
+						event := &models.Event{Time: strfmt.DateTime(time.Now()), Type: "jobs", Action: "action_start", Key: job.UUID.String(), Object: fmt.Sprintf("Starting task: %s, template: %s", job.Task, *action.Name)}
+
+						if _, err := session.Events.PostEvent(events.NewPostEventParams().WithBody(event), basicAuth); err != nil {
+							fmt.Printf("Error posting event: %v\n", err)
+						}
+
+						// Excute task
+						if *action.Path == "" {
+							fmt.Printf("Running Task Template: %s\n", *action.Name)
+							failed, incomplete, reboot, poweroff, stop = runContent(job.UUID, action, task, taskDir)
 						} else {
-							Log(job.UUID, true, "Task Template: %s - Copied contents to %s successfully\n", *action.Name, *action.Path)
+							fmt.Printf("Putting Content in place for Task Template: %s\n", *action.Name)
+							fpath := *action.Path
+							if !filepath.IsAbs(fpath) {
+								fpath = path.Join(taskDir, fpath)
+							}
+							if err := writeStringToFile(fpath, *action.Content); err != nil {
+								failed = true
+								Log(job.UUID, true, "Task Template: %s - Copying contents to %s failed\n%v", *action.Name, fpath, err)
+							} else {
+								Log(job.UUID, true, "Task Template: %s - Copied contents to %s successfully\n", *action.Name, fpath)
+							}
+						}
+
+						if failed {
+							state = "failed"
+						} else if incomplete {
+							state = "incomplete"
+						}
+
+						fmt.Printf("Task Template , %s, %s\n", *action.Name, state)
+						event = &models.Event{Time: strfmt.DateTime(time.Now()), Type: "jobs", Action: "action_stop", Key: job.UUID.String(), Object: fmt.Sprintf("Finished task: %s, template: %s, state: %s", job.Task, *action.Name, state)}
+
+						if _, err := session.Events.PostEvent(events.NewPostEventParams().WithBody(event), basicAuth); err != nil {
+							fmt.Printf("Error posting event: %v\n", err)
 						}
 					}
-
-					if failed {
-						state = "failed"
-					} else if incomplete {
-						state = "incomplete"
-					}
-
-					fmt.Printf("Task Template , %s, %s\n", *action.Name, state)
-					event = &models.Event{Time: strfmt.DateTime(time.Now()), Type: "jobs", Action: "action_stop", Key: job.UUID.String(), Object: fmt.Sprintf("Finished task: %s, template: %s, state: %s", job.Task, *action.Name, state)}
-
-					if _, err := session.Events.PostEvent(events.NewPostEventParams().WithBody(event), basicAuth); err != nil {
-						fmt.Printf("Error posting event: %v\n", err)
-					}
 				}
-
 				if done || incomplete || failed {
 					fmt.Printf("Task: %s %s\n", job.Task, state)
 					markJob(job.UUID.String(), state, jo)
