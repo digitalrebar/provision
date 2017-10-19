@@ -8,6 +8,11 @@ var profileDefaultListString string = `[
   {
     "Available": true,
     "Errors": [],
+    "Meta": {
+      "color": "blue",
+      "icon": "world",
+      "title": "Digital Rebar Provision"
+    },
     "Name": "global",
     "ReadOnly": false,
     "Validated": true
@@ -67,6 +72,11 @@ var profileListProfilesString = `[
   {
     "Available": true,
     "Errors": [],
+    "Meta": {
+      "color": "blue",
+      "icon": "world",
+      "title": "Digital Rebar Provision"
+    },
     "Name": "global",
     "ReadOnly": false,
     "Validated": true

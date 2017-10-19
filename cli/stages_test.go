@@ -9,6 +9,11 @@ var stageDefaultListString string = `[
     "Available": true,
     "BootEnv": "",
     "Errors": [],
+    "Meta": {
+      "color": "green",
+      "icon": "circle thin",
+      "title": "Digital Rebar Provision"
+    },
     "Name": "none",
     "OptionalParams": null,
     "Profiles": [],
@@ -90,6 +95,11 @@ var stageListStagesString = `[
     "Available": true,
     "BootEnv": "",
     "Errors": [],
+    "Meta": {
+      "color": "green",
+      "icon": "circle thin",
+      "title": "Digital Rebar Provision"
+    },
     "Name": "none",
     "OptionalParams": null,
     "Profiles": [],
