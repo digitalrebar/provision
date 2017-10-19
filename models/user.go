@@ -45,7 +45,7 @@ func (u *User) CheckPassword(pass string) bool {
 }
 
 func (u *User) Sanitize() Model {
-	res, _ := Clone(u)
+	res := Clone(u)
 	res.(*User).PasswordHash = []byte{}
 	return res
 }

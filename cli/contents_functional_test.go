@@ -199,7 +199,7 @@ var contentMachineCreateSuccessString = `{
   "Name": "greg",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
@@ -223,7 +223,7 @@ var contentMachineAddProfileString = `{
   "Name": "greg",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false

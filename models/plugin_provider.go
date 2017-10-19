@@ -43,6 +43,12 @@ func (p *PluginProvider) Fill() {
 	if p.Parameters == nil {
 		p.Parameters = []*Param{}
 	}
+	for _, a := range p.AvailableActions {
+		a.Fill()
+	}
+	for _, param := range p.Parameters {
+		param.Fill()
+	}
 }
 
 // swagger:model
@@ -63,6 +69,15 @@ type AvailableAction struct {
 	OptionalParams []string
 }
 
+func (a *AvailableAction) Fill() {
+	if a.RequiredParams == nil {
+		a.RequiredParams = []string{}
+	}
+	if a.OptionalParams == nil {
+		a.OptionalParams = []string{}
+	}
+}
+
 //
 // Params is built from the caller, plus
 // the machine, plus profiles, plus global.
@@ -77,6 +92,12 @@ type MachineAction struct {
 	BootEnv string
 	Command string
 	Params  map[string]interface{}
+}
+
+func (m *MachineAction) Fill() {
+	if m.Params == nil {
+		m.Params = map[string]interface{}{}
+	}
 }
 
 // Id of request, and JSON blob

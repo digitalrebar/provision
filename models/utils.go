@@ -2,14 +2,15 @@ package models
 
 import (
 	"bytes"
-	"encoding/gob"
+	"encoding/json"
 	"fmt"
+	"log"
 )
 
 // swagger:model
 type BlobInfo struct {
-	Path string
-	Size int64
+	Path string `json:"path"`
+	Size int64  `json:"size"`
 }
 
 type Model interface {
@@ -86,17 +87,21 @@ func New(kind string) (Slicer, error) {
 	return res, nil
 }
 
-func Clone(m Model) (Model, error) {
+func Clone(m Model) Model {
+	if m == nil {
+		return nil
+	}
 	res, err := New(m.Prefix())
 	if err != nil {
-		return nil, err
+		log.Panicf("Failed to make a new %s: %v", m.Prefix(), err)
 	}
 	buf := bytes.Buffer{}
-	enc, dec := gob.NewEncoder(&buf), gob.NewDecoder(&buf)
-	err = enc.Encode(m)
-	if err != nil {
-		return nil, err
+	enc, dec := json.NewEncoder(&buf), json.NewDecoder(&buf)
+	if err := enc.Encode(m); err != nil {
+		log.Panicf("Failed to encode %s:%s: %v", m.Prefix(), m.Key(), err)
 	}
-	err = dec.Decode(res)
-	return res, err
+	if err := dec.Decode(res); err != nil {
+		log.Panicf("Failed to decode %s:%s: %v", m.Prefix(), m.Key(), err)
+	}
+	return res
 }
