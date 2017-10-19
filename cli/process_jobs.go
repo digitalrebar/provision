@@ -589,7 +589,7 @@ the stage runner wait flag.
 					}
 					defer os.RemoveAll(taskDir)
 
-					if err := ioutil.WriteFile(path.Join(runnerDir, "helper"), cmdHelper, 0400); err != nil {
+					if err := ioutil.WriteFile(path.Join(taskDir, "helper"), cmdHelper, 0400); err != nil {
 						Log(job.UUID, true, "Failed to inject helper: %v, continue\n", err)
 						markJob(job.UUID.String(), "failed", jo)
 						continue
