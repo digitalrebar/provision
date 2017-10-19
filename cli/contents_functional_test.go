@@ -102,6 +102,11 @@ var contentPack1ProfileListString = `[
   {
     "Available": true,
     "Errors": [],
+    "Meta": {
+      "color": "blue",
+      "icon": "world",
+      "title": "Digital Rebar Provision"
+    },
     "Name": "global",
     "ReadOnly": false,
     "Validated": true
@@ -120,6 +125,11 @@ var contentPack1ProfileList2String = `[
   {
     "Available": true,
     "Errors": [],
+    "Meta": {
+      "color": "blue",
+      "icon": "world",
+      "title": "Digital Rebar Provision"
+    },
     "Name": "global",
     "ReadOnly": false,
     "Validated": true
@@ -138,6 +148,11 @@ var contentPack1UpdateProfileListString = `[
   {
     "Available": true,
     "Errors": [],
+    "Meta": {
+      "color": "blue",
+      "icon": "world",
+      "title": "Digital Rebar Provision"
+    },
     "Name": "global",
     "ReadOnly": false,
     "Validated": true
@@ -157,6 +172,11 @@ var contentNoPackProfileListString = `[
   {
     "Available": true,
     "Errors": [],
+    "Meta": {
+      "color": "blue",
+      "icon": "world",
+      "title": "Digital Rebar Provision"
+    },
     "Name": "global",
     "ReadOnly": false,
     "Validated": true
