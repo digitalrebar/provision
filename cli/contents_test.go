@@ -64,7 +64,7 @@ var contentDefaultListString string = `[
     "Warnings": null,
     "meta": {
       "Description": "Content layer for incrementer plugin provider",
-      "Name": "incrementer",
+      "Name": "plugin-provider-incrementer",
       "Source": "FromPluginProvider",
       "Type": "dynamic",
       "Version": "v3.0.2-pre-alpha-NotSet"
@@ -196,7 +196,7 @@ var contentListContentsString = `[
     "Warnings": null,
     "meta": {
       "Description": "Content layer for incrementer plugin provider",
-      "Name": "incrementer",
+      "Name": "plugin-provider-incrementer",
       "Source": "FromPluginProvider",
       "Type": "dynamic",
       "Version": "v3.0.2-pre-alpha-NotSet"
