@@ -41,8 +41,8 @@ var prefsSetJSONResponseString string = `{
   "unknownTokenTimeout": "600"
 }
 `
-var prefsSetIllegalJSONResponseString string = "Error: defaultBootEnv: Bootenv illegal does not exist\n\n"
-var prefsSetInvalidPrefResponseString string = "Error: Unknown Preference greg\n\n"
+var prefsSetIllegalJSONResponseString string = "Error: POST: prefs: defaultBootEnv: Bootenv illegal does not exist\n\n"
+var prefsSetInvalidPrefResponseString string = "Error: POST: prefs: Unknown Preference greg\n\n"
 
 var prefsChangedListString = `{
   "baseTokenSecret": "token-secret-token-secret-token1",
@@ -68,8 +68,8 @@ var prefsSetStdinJSONString = `{
 }
 `
 
-var prefsSetBadKnownTokenTimeoutErrorString = "Error: Preference knownTokenTimeout: strconv.Atoi: parsing \"illegal\": invalid syntax\n\n"
-var prefsSetBadUnknownTokenTimeoutErrorString = "Error: Preference unknownTokenTimeout: strconv.Atoi: parsing \"illegal\": invalid syntax\n\n"
+var prefsSetBadKnownTokenTimeoutErrorString = "Error: POST: prefs: knownTokenTimeout: strconv.Atoi: parsing \"illegal\": invalid syntax\n\n"
+var prefsSetBadUnknownTokenTimeoutErrorString = "Error: POST: prefs: unknownTokenTimeout: strconv.Atoi: parsing \"illegal\": invalid syntax\n\n"
 
 var prefsKnownChangedListString = `{
   "baseTokenSecret": "token-secret-token-secret-token1",
@@ -132,8 +132,8 @@ var prefsFinalListString = `{
   "unknownTokenTimeout": "7000"
 }
 `
-var prefsFailedToDeleteBootenvErrorString = "Error: BootEnv local3 is the active defaultBootEnv, cannot remove it\n\n"
-var prefSetBadBaseTokenSecretBadLengthErrorString = "Error: Preference baseTokenSecret: Must be 32 bytes long\n\n"
+var prefsFailedToDeleteBootenvErrorString = "Error: StillInUseError: bootenvs/local3: BootEnv local3 is the active defaultBootEnv, cannot remove it\n\n"
+var prefSetBadBaseTokenSecretBadLengthErrorString = "Error: POST: prefs: baseTokenSecret: Must be 32 bytes long\n\n"
 
 func TestPrefsCli(t *testing.T) {
 	if err := os.MkdirAll("bootenvs", 0755); err != nil {

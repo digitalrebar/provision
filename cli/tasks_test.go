@@ -8,13 +8,26 @@ import (
 
 var taskAddrErrorString string = "Error: Invalid Address: fred\n\n"
 var taskExpireTimeErrorString string = "Error: Invalid Address: false\n\n"
+var taskShowMissingArgErrorString string = "Error: GET: tasks/jill: Not Found\n\n"
+var taskExistsMissingString string = "Error: GET: tasks/jill: Not Found\n\n"
+var taskCreateBadJSONErrorString = "Error: CREATE: tasks: Empty key not allowed\n\n"
+var taskCreateDuplicateErrorString = "Error: CREATE: tasks/john: already exists\n\n"
+var taskUpdateJohnMissingErrorString string = "Error: GET: tasks/jill: Not Found\n\n"
+var taskPatchOldBaseErrorString = `Error: PATCH: tasks/john
+  Patch error at line 0: Test op failed.
+  Patch line: {"op":"test","path":"/OptionalParams","from":"","value":[]}
+
+`
+var taskPatchJohnMissingErrorString string = "Error: PATCH: tasks/jill: Not Found\n\n"
+var taskPatchBadBaseErrorString string = "Error: Cannot get key for obj: Invalid type passed to task create\n\n"
+var taskDestroyMissingJohnString string = "Error: DELETE: tasks/jill: Not Found\n\n"
 
 var taskDefaultListString string = "[]\n"
 var taskEmptyListString string = "[]\n"
 
 var taskShowNoArgErrorString string = "Error: drpcli tasks show [id] [flags] requires 1 argument\n"
 var taskShowTooManyArgErrorString string = "Error: drpcli tasks show [id] [flags] requires 1 argument\n"
-var taskShowMissingArgErrorString string = "Error: tasks GET: jill: Not Found\n\n"
+
 var taskShowJohnString string = `{
   "Available": true,
   "Errors": [],
@@ -33,12 +46,11 @@ var taskShowJohnString string = `{
 var taskExistsNoArgErrorString string = "Error: drpcli tasks exists [id] [flags] requires 1 argument"
 var taskExistsTooManyArgErrorString string = "Error: drpcli tasks exists [id] [flags] requires 1 argument"
 var taskExistsIgnoreString string = ""
-var taskExistsMissingString string = "Error: tasks GET: jill: Not Found\n\n"
 
 var taskCreateNoArgErrorString string = "Error: drpcli tasks create [json] [flags] requires 1 argument\n"
 var taskCreateTooManyArgErrorString string = "Error: drpcli tasks create [json] [flags] requires 1 argument\n"
 var taskCreateBadJSONString = "{asdgasdg}"
-var taskCreateBadJSONErrorString = "Error: dataTracker create tasks: Empty key not allowed\n\n"
+
 var taskCreateInputString string = `{
   "Name": "john",
   "OptionalParams": [],
@@ -60,7 +72,6 @@ var taskCreateJohnString string = `{
   "Validated": true
 }
 `
-var taskCreateDuplicateErrorString = "Error: dataTracker create tasks: john already exists\n\n"
 
 var taskListTasksString = `[
   {
@@ -119,7 +130,6 @@ var taskUpdateJohnString string = `{
   "Validated": true
 }
 `
-var taskUpdateJohnMissingErrorString string = "Error: tasks GET: jill: Not Found\n\n"
 
 var taskPatchNoArgErrorString string = "Error: drpcli tasks patch [objectJson] [changesJson] [flags] requires 2 arguments"
 var taskPatchTooManyArgErrorString string = "Error: drpcli tasks patch [objectJson] [changesJson] [flags] requires 2 arguments"
@@ -134,7 +144,7 @@ var taskPatchOldBaseString string = `{
   "Templates": []
 }
 `
-var taskPatchOldBaseErrorString = "Error: Patch error at line 0: Test op failed.\n\n"
+
 var taskPatchBaseString string = `{
   "Name": "john",
   "OptionalParams": [ "jillparam" ],
@@ -169,7 +179,7 @@ var taskPatchMissingBaseString string = `{
   "Templates": []
 }
 `
-var taskPatchJohnMissingErrorString string = "Error: tasks: PATCH jill: Not Found\n\n"
+
 var taskPatchBadBaseString string = `{
   "Addr": "jill",
   "NextServer": "2.2.2.2",
@@ -177,12 +187,10 @@ var taskPatchBadBaseString string = `{
   "Token": "john"
 }
 `
-var taskPatchBadBaseErrorString string = "Error: Cannot get key for obj: Invalid type passed to task create\n\n"
 
 var taskDestroyNoArgErrorString string = "Error: drpcli tasks destroy [id] [flags] requires 1 argument"
 var taskDestroyTooManyArgErrorString string = "Error: drpcli tasks destroy [id] [flags] requires 1 argument"
 var taskDestroyJohnString string = "Deleted task john\n"
-var taskDestroyMissingJohnString string = "Error: tasks: DELETE jill: Not Found\n\n"
 
 func TestTaskCli(t *testing.T) {
 	tests := []CliTest{
@@ -195,25 +203,8 @@ func TestTaskCli(t *testing.T) {
 		CliTest{false, false, []string{"tasks", "create", taskCreateInputString}, noStdinString, taskCreateJohnString, noErrorString},
 		CliTest{false, true, []string{"tasks", "create", taskCreateInputString}, noStdinString, noContentString, taskCreateDuplicateErrorString},
 		CliTest{false, false, []string{"tasks", "list"}, noStdinString, taskListBothEnvsString, noErrorString},
-
-		CliTest{false, false, []string{"tasks", "list", "--limit=0"}, noStdinString, taskEmptyListString, noErrorString},
-		CliTest{false, false, []string{"tasks", "list", "--limit=10", "--offset=0"}, noStdinString, taskListTasksString, noErrorString},
-		CliTest{false, false, []string{"tasks", "list", "--limit=10", "--offset=10"}, noStdinString, taskEmptyListString, noErrorString},
-		CliTest{false, true, []string{"tasks", "list", "--limit=-10", "--offset=0"}, noStdinString, noContentString, limitNegativeError},
-		CliTest{false, true, []string{"tasks", "list", "--limit=10", "--offset=-10"}, noStdinString, noContentString, offsetNegativeError},
-		CliTest{false, false, []string{"tasks", "list", "--limit=-1", "--offset=-1"}, noStdinString, taskListTasksString, noErrorString},
 		CliTest{false, false, []string{"tasks", "list", "Name=fred"}, noStdinString, taskEmptyListString, noErrorString},
 		CliTest{false, false, []string{"tasks", "list", "Name=john"}, noStdinString, taskListTasksString, noErrorString},
-		CliTest{false, false, []string{"tasks", "list", "Available=true"}, noStdinString, taskListTasksString, noErrorString},
-		CliTest{false, false, []string{"tasks", "list", "Available=false"}, noStdinString, taskEmptyListString, noErrorString},
-		CliTest{false, true, []string{"tasks", "list", "Available=fred"}, noStdinString, noContentString, bootEnvBadAvailableString},
-		CliTest{false, false, []string{"tasks", "list", "Valid=true"}, noStdinString, taskListTasksString, noErrorString},
-		CliTest{false, false, []string{"tasks", "list", "Valid=false"}, noStdinString, taskEmptyListString, noErrorString},
-		CliTest{false, true, []string{"tasks", "list", "Valid=fred"}, noStdinString, noContentString, bootEnvBadValidString},
-		CliTest{false, false, []string{"tasks", "list", "ReadOnly=true"}, noStdinString, taskEmptyListString, noErrorString},
-		CliTest{false, false, []string{"tasks", "list", "ReadOnly=false"}, noStdinString, taskListTasksString, noErrorString},
-		CliTest{false, true, []string{"tasks", "list", "ReadOnly=fred"}, noStdinString, noContentString, bootEnvBadReadOnlyString},
-
 		CliTest{true, true, []string{"tasks", "show"}, noStdinString, noContentString, taskShowNoArgErrorString},
 		CliTest{true, true, []string{"tasks", "show", "john", "john2"}, noStdinString, noContentString, taskShowTooManyArgErrorString},
 		CliTest{false, true, []string{"tasks", "show", "jill"}, noStdinString, noContentString, taskShowMissingArgErrorString},

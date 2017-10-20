@@ -4,12 +4,21 @@ import (
 	"testing"
 )
 
+var userShowMissingArgErrorString string = "Error: GET: users/ignore: Not Found\n\n"
+var userExistsMissingIgnoreString string = "Error: GET: users/ignore: Not Found\n\n"
+var userCreateDuplicateErrorString = "Error: CREATE: users/john: already exists\n\n"
+var userUpdateJohnMissingErrorString string = "Error: GET: users/john2: Not Found\n\n"
+var userPatchJohnMissingErrorString string = "Error: PATCH: users/john2: Not Found\n\n"
+var userDestroyMissingJohnString string = "Error: DELETE: users/john: Not Found\n\n"
+var userTokenUserNotFoundErrorString string = "Error: GET: users/greg: Not Found\n\n"
+var userPasswordNotFoundErrorString string = "Error: PUT: users/jill: Not Found\n\n"
+
 var userEmptyListString string = "[]\n"
 var userDefaultListString string = `RE:
 \[
   {
     "Available": true,
-    "Errors": [],
+    "Errors": \[\],
     "Name": "rocketskates",
     "PasswordHash": null,
     "ReadOnly": false,
@@ -21,11 +30,11 @@ var userDefaultListString string = `RE:
 
 var userShowNoArgErrorString string = "Error: drpcli users show [id] [flags] requires 1 argument\n"
 var userShowTooManyArgErrorString string = "Error: drpcli users show [id] [flags] requires 1 argument\n"
-var userShowMissingArgErrorString string = "Error: users GET: ignore: Not Found\n\n"
+
 var userShowJohnString string = `RE:
 {
   "Available": true,
-  "Errors": [],
+  "Errors": \[\],
   "Name": "john",
   "PasswordHash": null,
   "ReadOnly": false,
@@ -37,7 +46,6 @@ var userShowJohnString string = `RE:
 var userExistsNoArgErrorString string = "Error: drpcli users exists [id] [flags] requires 1 argument"
 var userExistsTooManyArgErrorString string = "Error: drpcli users exists [id] [flags] requires 1 argument"
 var userExistsIgnoreString string = ""
-var userExistsMissingIgnoreString string = "Error: users GET: ignore: Not Found\n\n"
 
 var userCreateNoArgErrorString string = "Error: drpcli users create [json] [flags] requires 1 argument\n"
 var userCreateTooManyArgErrorString string = "Error: drpcli users create [json] [flags] requires 1 argument\n"
@@ -53,7 +61,7 @@ var userCreateInputString string = `{
 var userCreateJohnString string = `RE:
 {
   "Available": true,
-  "Errors": [],
+  "Errors": \[\],
   "Name": "john",
   "PasswordHash": null,
   "ReadOnly": false,
@@ -65,7 +73,7 @@ var userCreateFredInputString string = `fred`
 var userCreateFredString string = `RE:
 {
   "Available": true,
-  "Errors": [],
+  "Errors": \[\],
   "Name": "fred",
   "PasswordHash": null,
   "ReadOnly": false,
@@ -74,13 +82,12 @@ var userCreateFredString string = `RE:
 }
 `
 var userDestroyFredString string = "Deleted user fred\n"
-var userCreateDuplicateErrorString = "Error: dataTracker create users: john already exists\n\n"
 
 var userListJohnOnlyString = `RE:
 \[
   {
     "Available": true,
-    "Errors": [],
+    "Errors": \[\],
     "Name": "john",
     "PasswordHash": null,
     "ReadOnly": false,
@@ -93,7 +100,7 @@ var userListBothEnvsString = `RE:
 \[
   {
     "Available": true,
-    "Errors": [],
+    "Errors": \[\],
     "Name": "john",
     "PasswordHash": null,
     "ReadOnly": false,
@@ -123,7 +130,7 @@ var userUpdateInputString string = `{
 var userUpdateJohnString string = `RE:
 {
   "Available": true,
-  "Errors": [],
+  "Errors": \[\],
   "Name": "john",
   "PasswordHash": null,
   "ReadOnly": false,
@@ -131,7 +138,6 @@ var userUpdateJohnString string = `RE:
   "Validated": true
 }
 `
-var userUpdateJohnMissingErrorString string = "Error: users GET: john2: Not Found\n\n"
 
 var userPatchNoArgErrorString string = "Error: drpcli users patch [objectJson] [changesJson] [flags] requires 2 arguments"
 var userPatchTooManyArgErrorString string = "Error: drpcli users patch [objectJson] [changesJson] [flags] requires 2 arguments"
@@ -150,7 +156,7 @@ var userPatchInputString string = `{
 var userPatchJohnString string = `RE:
 {
   "Available": true,
-  "Errors": [],
+  "Errors": \[\],
   "Name": "john",
   "PasswordHash": null,
   "ReadOnly": false,
@@ -163,17 +169,15 @@ var userPatchMissingBaseString string = `{
   "PasswordHash": null
 }
 `
-var userPatchJohnMissingErrorString string = "Error: users: PATCH john2: Not Found\n\n"
 
 var userDestroyNoArgErrorString string = "Error: drpcli users destroy [id] [flags] requires 1 argument"
 var userDestroyTooManyArgErrorString string = "Error: drpcli users destroy [id] [flags] requires 1 argument"
 var userDestroyJohnString string = "Deleted user john\n"
-var userDestroyMissingJohnString string = "Error: users: DELETE john: Not Found\n\n"
 
 var userTokenNoArgErrorString string = "Error: drpcli users token [id] [ttl [ttl]] [scope [scope]] [action [action]] [specific [specific]] [flags] needs at least 1 arg\n"
 var userTokenTooManyArgErrorString string = "Error: drpcli users token [id] [ttl [ttl]] [scope [scope]] [action [action]] [specific [specific]] [flags] needs at least 1 and pairs arg\n"
 var userTokenUnknownPairErrorString string = "Error: drpcli users token [id] [ttl [ttl]] [scope [scope]] [action [action]] [specific [specific]] [flags] does not support greg2\n"
-var userTokenUserNotFoundErrorString string = "Error: User GET: greg: Not Found\n\n"
+
 var userTokenTTLNotNumberErrorString string = "Error: ttl should be a number: strconv.ParseInt: parsing \"cow\": invalid syntax\n\n"
 var userTokenSuccessString string = `RE:
 {
@@ -183,7 +187,8 @@ var userTokenSuccessString string = `RE:
     "dhcp_enabled": false,
     "Features": \[
       "api-v3",
-      "sane-exit-codes"
+      "sane-exit-codes",
+      "common-blob-size"
     \],
     "file_port": 10002,
     "id": "Fred",
@@ -207,7 +212,6 @@ var userTokenSuccessString string = `RE:
 `
 
 var userPasswordNoArgsErrorString string = "Error: drpcli users password [id] [password] [flags] needs 2 args\n"
-var userPasswordNotFoundErrorString string = "Error: User GET: jill: Not Found\n\n"
 
 func TestUserCli(t *testing.T) {
 
@@ -224,25 +228,8 @@ func TestUserCli(t *testing.T) {
 		CliTest{false, false, []string{"users", "destroy", userCreateFredInputString}, noStdinString, userDestroyFredString, noErrorString},
 		CliTest{false, true, []string{"users", "create", userCreateInputString}, noStdinString, noContentString, userCreateDuplicateErrorString},
 		CliTest{false, false, []string{"users", "list"}, noStdinString, userListBothEnvsString, noErrorString},
-
-		CliTest{false, false, []string{"users", "list", "--limit=0"}, noStdinString, userEmptyListString, noErrorString},
-		CliTest{false, false, []string{"users", "list", "--limit=10", "--offset=0"}, noStdinString, userListBothEnvsString, noErrorString},
-		CliTest{false, false, []string{"users", "list", "--limit=10", "--offset=10"}, noStdinString, userEmptyListString, noErrorString},
-		CliTest{false, true, []string{"users", "list", "--limit=-10", "--offset=0"}, noStdinString, noContentString, limitNegativeError},
-		CliTest{false, true, []string{"users", "list", "--limit=10", "--offset=-10"}, noStdinString, noContentString, offsetNegativeError},
-		CliTest{false, false, []string{"users", "list", "--limit=-1", "--offset=-1"}, noStdinString, userListBothEnvsString, noErrorString},
 		CliTest{false, false, []string{"users", "list", "Name=fred"}, noStdinString, userEmptyListString, noErrorString},
 		CliTest{false, false, []string{"users", "list", "Name=john"}, noStdinString, userListJohnOnlyString, noErrorString},
-		CliTest{false, false, []string{"users", "list", "Available=true"}, noStdinString, userListBothEnvsString, noErrorString},
-		CliTest{false, false, []string{"users", "list", "Available=false"}, noStdinString, userEmptyListString, noErrorString},
-		CliTest{false, true, []string{"users", "list", "Available=fred"}, noStdinString, noContentString, bootEnvBadAvailableString},
-		CliTest{false, false, []string{"users", "list", "Valid=true"}, noStdinString, userListBothEnvsString, noErrorString},
-		CliTest{false, false, []string{"users", "list", "Valid=false"}, noStdinString, userEmptyListString, noErrorString},
-		CliTest{false, true, []string{"users", "list", "Valid=fred"}, noStdinString, noContentString, bootEnvBadValidString},
-		CliTest{false, false, []string{"users", "list", "ReadOnly=true"}, noStdinString, userEmptyListString, noErrorString},
-		CliTest{false, false, []string{"users", "list", "ReadOnly=false"}, noStdinString, userListBothEnvsString, noErrorString},
-		CliTest{false, true, []string{"users", "list", "ReadOnly=fred"}, noStdinString, noContentString, bootEnvBadReadOnlyString},
-
 		CliTest{true, true, []string{"users", "show"}, noStdinString, noContentString, userShowNoArgErrorString},
 		CliTest{true, true, []string{"users", "show", "john", "john2"}, noStdinString, noContentString, userShowTooManyArgErrorString},
 		CliTest{false, true, []string{"users", "show", "ignore"}, noStdinString, noContentString, userShowMissingArgErrorString},

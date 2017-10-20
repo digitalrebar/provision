@@ -4,15 +4,31 @@ import (
 	"testing"
 )
 
-var subnetAddrErrorString string = "Error: Invalid Address: fred\n\n"
-var subnetExpireTimeErrorString string = "Error: Invalid subnet CIDR: false\n\n"
+var subnetAddrErrorString string = "Error: GET: subnets: Invalid Address: fred\n\n"
+var subnetExpireTimeErrorString string = "Error: GET: subnets: Invalid subnet CIDR: false\n\n"
+var subnetShowMissingArgErrorString string = "Error: GET: subnets/ignore: Not Found\n\n"
+var subnetExistsMissingIgnoreString string = "Error: GET: subnets/ignore: Not Found\n\n"
+var subnetCreateBadJSONErrorString = "Error: Unable to create new subnet: Invalid type passed to subnet create\n\n"
+var subnetCreateDuplicateErrorString = "Error: CREATE: subnets/john: already exists\n\n"
+var subnetUpdateJohnMissingErrorString string = "Error: GET: subnets/john2: Not Found\n\n"
+var subnetPatchJohnMissingErrorString string = "Error: PATCH: subnets/john2: Not Found\n\n"
+var subnetDestroyMissingJohnString string = "Error: DELETE: subnets/john: Not Found\n\n"
+
+var subnetInvalidEnabledBooleanListString = "Error: GET: subnets: Enabled must be true or false\n\n"
+var subnetRangeIPFailureString string = "Error: PATCH: subnets/john: invalid IP address: cq.98.42.1234\n\n"
+var subnetRangeIPBadIpString string = "Error: PATCH: subnets/john: invalid IP address: 192.168.100.500\n\n"
+var subnetSubnetCIDRFailureString = "Error: 1111.11.2223.544/66666 is not a valid subnet CIDR\n\n"
+var subnetStrategyMacFailureErrorString string = "Error: t5:44:llll:b is not a valid MAC address\n\n"
+var subnetLeasetimesIntFailureString string = "Error: 4x5 could not be read as a number\n\n"
+var subnetSetIntFailureErrorString string = "Error: 6tl could not be read as a number\n\n"
+var subnetGetToNull string = "Error: option 6 does not exist\n\n"
 
 var subnetDefaultListString string = "[]\n"
 var subnetEmptyListString string = "[]\n"
 
 var subnetShowNoArgErrorString string = "Error: drpcli subnets show [id] [flags] requires 1 argument\n"
 var subnetShowTooManyArgErrorString string = "Error: drpcli subnets show [id] [flags] requires 1 argument\n"
-var subnetShowMissingArgErrorString string = "Error: subnets GET: ignore: Not Found\n\n"
+
 var subnetShowJohnString string = `{
   "ActiveEnd": "192.168.100.100",
   "ActiveLeaseTime": 60,
@@ -49,12 +65,11 @@ var subnetShowJohnString string = `{
 var subnetExistsNoArgErrorString string = "Error: drpcli subnets exists [id] [flags] requires 1 argument"
 var subnetExistsTooManyArgErrorString string = "Error: drpcli subnets exists [id] [flags] requires 1 argument"
 var subnetExistsIgnoreString string = ""
-var subnetExistsMissingIgnoreString string = "Error: subnets GET: ignore: Not Found\n\n"
 
 var subnetCreateNoArgErrorString string = "Error: drpcli subnets create [json] [flags] requires 1 argument\n"
 var subnetCreateTooManyArgErrorString string = "Error: drpcli subnets create [json] [flags] requires 1 argument\n"
 var subnetCreateBadJSONString = "asdgasdg"
-var subnetCreateBadJSONErrorString = "Error: Unable to create new subnet: Invalid type passed to subnet create\n\n"
+
 var subnetCreateInputString string = `{
   "Name": "john",
   "ActiveEnd": "192.168.100.100",
@@ -99,7 +114,6 @@ var subnetCreateJohnString string = `{
   "Validated": true
 }
 `
-var subnetCreateDuplicateErrorString = "Error: dataTracker create subnets: john already exists\n\n"
 
 var subnetListBothEnvsString = `[
   {
@@ -176,7 +190,6 @@ var subnetUpdateJohnString string = `{
   "Validated": true
 }
 `
-var subnetUpdateJohnMissingErrorString string = "Error: subnets GET: john2: Not Found\n\n"
 
 var subnetPatchNoArgErrorString string = "Error: drpcli subnets patch [objectJson] [changesJson] [flags] requires 2 arguments"
 var subnetPatchTooManyArgErrorString string = "Error: drpcli subnets patch [objectJson] [changesJson] [flags] requires 2 arguments"
@@ -280,14 +293,10 @@ var subnetPatchMissingBaseString string = `{
   "Subnet": "192.168.100.0/24"
 }
 `
-var subnetPatchJohnMissingErrorString string = "Error: subnets: PATCH john2: Not Found\n\n"
 
 var subnetDestroyNoArgErrorString string = "Error: drpcli subnets destroy [id] [flags] requires 1 argument"
 var subnetDestroyTooManyArgErrorString string = "Error: drpcli subnets destroy [id] [flags] requires 1 argument"
 var subnetDestroyJohnString string = "Deleted subnet john\n"
-var subnetDestroyMissingJohnString string = "Error: subnets: DELETE john: Not Found\n\n"
-
-var subnetInvalidEnabledBooleanListString = "Error: Enabled must be true or false\n\n"
 
 var subnetRangeNoArgErrorString string = "Error: drpcli subnets range [subnetName] [startIP] [endIP] [flags] requires 3 arguments\n"
 var subnetRangeTooManyArgErrorString string = "Error: drpcli subnets range [subnetName] [startIP] [endIP] [flags] requires 3 arguments\n"
@@ -323,8 +332,6 @@ var subnetRangeIPSuccessString string = `{
   "Validated": true
 }
 `
-var subnetRangeIPFailureString string = "Error: invalid IP address: cq.98.42.1234\n\n"
-var subnetRangeIPBadIpString string = "Error: invalid IP address: 192.168.100.500\n\n"
 
 var subnetSubnetNoArgErrorString string = "Error: drpcli subnets subnet [subnetName] [subnet CIDR] [flags] requires 2 arguments\n"
 var subnetSubnetTooManyArgErrorString string = "Error: drpcli subnets subnet [subnetName] [subnet CIDR] [flags] requires 2 arguments\n"
@@ -360,7 +367,6 @@ var subnetSubnetCIDRSuccessString = `{
   "Validated": true
 }
 `
-var subnetSubnetCIDRFailureString = "Error: 1111.11.2223.544/66666 is not a valid subnet CIDR\n\n"
 
 var subnetStrategyNoArgErrorString string = "Error: drpcli subnets strategy [subnetName] [MAC] [flags] requires 2 arguments\n"
 var subnetStrategyTooManyArgErrorString string = "Error: drpcli subnets strategy [subnetName] [MAC] [flags] requires 2 arguments\n"
@@ -396,7 +402,6 @@ var subnetStrategyMacSuccessString string = `{
   "Validated": true
 }
 `
-var subnetStrategyMacFailureErrorString string = "Error: t5:44:llll:b is not a valid MAC address\n\n"
 
 var subnetPickersNoArgErrorString string = "Error: drpcli subnets pickers [subnetName] [list] [flags] requires 2 arguments\n"
 var subnetPickersTooManyArgErrorString string = "Error: drpcli subnets pickers [subnetName] [list] [flags] requires 2 arguments\n"
@@ -501,11 +506,10 @@ var subnetLeasetimesSuccessString string = `{
   "Validated": true
 }
 `
-var subnetLeasetimesIntFailureString string = "Error: 4x5 could not be read as a number\n\n"
 
 var subnetSetNoArgErrorString string = "Error: drpcli subnets set [subnetName] option [number] to [value] [flags] requires 5 arguments\n"
 var subnetSetTooManyArgErrorString string = "Error: drpcli subnets set [subnetName] option [number] to [value] [flags] requires 5 arguments\n"
-var subnetSetIntFailureErrorString string = "Error: 6tl could not be read as a number\n\n"
+
 var subnetSetTo66 string = `{
   "ActiveEnd": "192.168.100.200",
   "ActiveLeaseTime": 65,
@@ -577,7 +581,6 @@ var subnetSetToNull string = `{
 var subnetGetNoArgErrorString string = "Error: drpcli subnets get [subnetName] option [number] [flags] requires 3 arguments\n"
 var subnetGetTooManyArgErrorString string = "Error: drpcli subnets get [subnetName] option [number] [flags] requires 3 arguments\n"
 var subnetGetTo66 string = "Option 6: 66\n"
-var subnetGetToNull string = "Error: option 6 does not exist\n\n"
 
 func TestSubnetCli(t *testing.T) {
 	tests := []CliTest{
@@ -590,12 +593,6 @@ func TestSubnetCli(t *testing.T) {
 		CliTest{false, false, []string{"subnets", "create", subnetCreateInputString}, noStdinString, subnetCreateJohnString, noErrorString},
 		CliTest{false, true, []string{"subnets", "create", subnetCreateInputString}, noStdinString, noContentString, subnetCreateDuplicateErrorString},
 		CliTest{false, false, []string{"subnets", "list"}, noStdinString, subnetListBothEnvsString, noErrorString},
-		CliTest{false, false, []string{"subnets", "list", "--limit=0"}, noStdinString, subnetEmptyListString, noErrorString},
-		CliTest{false, false, []string{"subnets", "list", "--limit=10", "--offset=0"}, noStdinString, subnetListBothEnvsString, noErrorString},
-		CliTest{false, false, []string{"subnets", "list", "--limit=10", "--offset=10"}, noStdinString, subnetEmptyListString, noErrorString},
-		CliTest{false, true, []string{"subnets", "list", "--limit=-10", "--offset=0"}, noStdinString, noContentString, limitNegativeError},
-		CliTest{false, true, []string{"subnets", "list", "--limit=10", "--offset=-10"}, noStdinString, noContentString, offsetNegativeError},
-		CliTest{false, false, []string{"subnets", "list", "--limit=-1", "--offset=-1"}, noStdinString, subnetListBothEnvsString, noErrorString},
 		CliTest{false, false, []string{"subnets", "list", "Name=fred"}, noStdinString, subnetEmptyListString, noErrorString},
 		CliTest{false, false, []string{"subnets", "list", "Name=john"}, noStdinString, subnetListBothEnvsString, noErrorString},
 		CliTest{false, false, []string{"subnets", "list", "Strategy=MAC"}, noStdinString, subnetListBothEnvsString, noErrorString},
@@ -609,16 +606,6 @@ func TestSubnetCli(t *testing.T) {
 		CliTest{false, false, []string{"subnets", "list", "Subnet=192.168.103.0/24"}, noStdinString, subnetEmptyListString, noErrorString},
 		CliTest{false, false, []string{"subnets", "list", "Subnet=192.168.100.0/24"}, noStdinString, subnetListBothEnvsString, noErrorString},
 		CliTest{false, true, []string{"subnets", "list", "Subnet=false"}, noStdinString, noContentString, subnetExpireTimeErrorString},
-		CliTest{false, false, []string{"subnets", "list", "Available=true"}, noStdinString, subnetListBothEnvsString, noErrorString},
-		CliTest{false, false, []string{"subnets", "list", "Available=false"}, noStdinString, subnetEmptyListString, noErrorString},
-		CliTest{false, true, []string{"subnets", "list", "Available=fred"}, noStdinString, noContentString, bootEnvBadAvailableString},
-		CliTest{false, false, []string{"subnets", "list", "Valid=true"}, noStdinString, subnetListBothEnvsString, noErrorString},
-		CliTest{false, false, []string{"subnets", "list", "Valid=false"}, noStdinString, subnetEmptyListString, noErrorString},
-		CliTest{false, true, []string{"subnets", "list", "Valid=fred"}, noStdinString, noContentString, bootEnvBadValidString},
-		CliTest{false, false, []string{"subnets", "list", "ReadOnly=true"}, noStdinString, subnetEmptyListString, noErrorString},
-		CliTest{false, false, []string{"subnets", "list", "ReadOnly=false"}, noStdinString, subnetListBothEnvsString, noErrorString},
-		CliTest{false, true, []string{"subnets", "list", "ReadOnly=fred"}, noStdinString, noContentString, bootEnvBadReadOnlyString},
-
 		CliTest{true, true, []string{"subnets", "show"}, noStdinString, noContentString, subnetShowNoArgErrorString},
 		CliTest{true, true, []string{"subnets", "show", "john", "john2"}, noStdinString, noContentString, subnetShowTooManyArgErrorString},
 		CliTest{false, true, []string{"subnets", "show", "ignore"}, noStdinString, noContentString, subnetShowMissingArgErrorString},

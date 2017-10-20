@@ -7,6 +7,13 @@ import (
 	"testing"
 )
 
+var templateShowMissingArgErrorString string = "Error: GET: templates/ignore: Not Found\n\n"
+var templateExistsMissingIgnoreString string = "Error: GET: templates/ignore: Not Found\n\n"
+var templateCreateDuplicateErrorString = "Error: CREATE: templates/john: already exists\n\n"
+var templateUpdateJohnMissingErrorString string = "Error: GET: templates/john2: Not Found\n\n"
+var templatePatchJohnMissingErrorString string = "Error: PATCH: templates/john2: Not Found\n\n"
+var templateDestroyMissingJohnString string = "Error: DELETE: templates/john: Not Found\n\n"
+
 var templateEmptyListString string = "[]\n"
 
 var templateDefaultListString string = `[
@@ -33,7 +40,7 @@ var templateDefaultListString string = `[
 
 var templateShowNoArgErrorString string = "Error: drpcli templates show [id] [flags] requires 1 argument\n"
 var templateShowTooManyArgErrorString string = "Error: drpcli templates show [id] [flags] requires 1 argument\n"
-var templateShowMissingArgErrorString string = "Error: templates GET: ignore: Not Found\n\n"
+
 var templateShowJohnString string = `{
   "Available": true,
   "Contents": "John Rules",
@@ -47,7 +54,6 @@ var templateShowJohnString string = `{
 var templateExistsNoArgErrorString string = "Error: drpcli templates exists [id] [flags] requires 1 argument"
 var templateExistsTooManyArgErrorString string = "Error: drpcli templates exists [id] [flags] requires 1 argument"
 var templateExistsIgnoreString string = ""
-var templateExistsMissingIgnoreString string = "Error: templates GET: ignore: Not Found\n\n"
 
 var templateCreateNoArgErrorString string = "Error: drpcli templates create [json] [flags] requires 1 argument\n"
 var templateCreateTooManyArgErrorString string = "Error: drpcli templates create [json] [flags] requires 1 argument\n"
@@ -67,7 +73,6 @@ var templateCreateJohnString string = `{
   "Validated": true
 }
 `
-var templateCreateDuplicateErrorString = "Error: dataTracker create templates: john already exists\n\n"
 
 var templateListJohnOnlyString = `[
   {
@@ -128,7 +133,6 @@ var templateUpdateJohnString string = `{
   "Validated": true
 }
 `
-var templateUpdateJohnMissingErrorString string = "Error: templates GET: john2: Not Found\n\n"
 
 var templatePatchNoArgErrorString string = "Error: drpcli templates patch [objectJson] [changesJson] [flags] requires 2 arguments"
 var templatePatchTooManyArgErrorString string = "Error: drpcli templates patch [objectJson] [changesJson] [flags] requires 2 arguments"
@@ -165,12 +169,10 @@ var templatePatchMissingBaseString string = `{
   "ID": "john2"
 }
 `
-var templatePatchJohnMissingErrorString string = "Error: templates: PATCH john2: Not Found\n\n"
 
 var templateDestroyNoArgErrorString string = "Error: drpcli templates destroy [id] [flags] requires 1 argument"
 var templateDestroyTooManyArgErrorString string = "Error: drpcli templates destroy [id] [flags] requires 1 argument"
 var templateDestroyJohnString string = "Deleted template john\n"
-var templateDestroyMissingJohnString string = "Error: templates: DELETE john: Not Found\n\n"
 
 var templatesUploadNoArgsErrorString string = "Error: Wrong number of args: expected 3, got 0\n"
 var templatesUploadOneArgsErrorString string = "Error: Wrong number of args: expected 3, got 1\n"
@@ -249,24 +251,8 @@ func TestTemplateCli(t *testing.T) {
 		CliTest{false, false, []string{"templates", "create", templateCreateInputString}, noStdinString, templateCreateJohnString, noErrorString},
 		CliTest{false, true, []string{"templates", "create", templateCreateInputString}, noStdinString, noContentString, templateCreateDuplicateErrorString},
 		CliTest{false, false, []string{"templates", "list"}, noStdinString, templateListBothEnvsString, noErrorString},
-		CliTest{false, false, []string{"templates", "list", "--limit=0"}, noStdinString, templateEmptyListString, noErrorString},
-		CliTest{false, false, []string{"templates", "list", "--limit=10", "--offset=0"}, noStdinString, templateListBothEnvsString, noErrorString},
-		CliTest{false, false, []string{"templates", "list", "--limit=10", "--offset=10"}, noStdinString, templateEmptyListString, noErrorString},
-		CliTest{false, true, []string{"templates", "list", "--limit=-10", "--offset=0"}, noStdinString, noContentString, limitNegativeError},
-		CliTest{false, true, []string{"templates", "list", "--limit=10", "--offset=-10"}, noStdinString, noContentString, offsetNegativeError},
-		CliTest{false, false, []string{"templates", "list", "--limit=-1", "--offset=-1"}, noStdinString, templateListBothEnvsString, noErrorString},
 		CliTest{false, false, []string{"templates", "list", "ID=fred"}, noStdinString, templateEmptyListString, noErrorString},
 		CliTest{false, false, []string{"templates", "list", "ID=john"}, noStdinString, templateListJohnOnlyString, noErrorString},
-		CliTest{false, false, []string{"templates", "list", "Available=true"}, noStdinString, templateListBothEnvsString, noErrorString},
-		CliTest{false, false, []string{"templates", "list", "Available=false"}, noStdinString, templateEmptyListString, noErrorString},
-		CliTest{false, true, []string{"templates", "list", "Available=fred"}, noStdinString, noContentString, bootEnvBadAvailableString},
-		CliTest{false, false, []string{"templates", "list", "Valid=true"}, noStdinString, templateListBothEnvsString, noErrorString},
-		CliTest{false, false, []string{"templates", "list", "Valid=false"}, noStdinString, templateEmptyListString, noErrorString},
-		CliTest{false, true, []string{"templates", "list", "Valid=fred"}, noStdinString, noContentString, bootEnvBadValidString},
-		CliTest{false, false, []string{"templates", "list", "ReadOnly=true"}, noStdinString, templateReadOnlyTrueString, noErrorString},
-		CliTest{false, false, []string{"templates", "list", "ReadOnly=false"}, noStdinString, templateReadOnlyFalseString, noErrorString},
-		CliTest{false, true, []string{"templates", "list", "ReadOnly=fred"}, noStdinString, noContentString, bootEnvBadReadOnlyString},
-
 		CliTest{true, true, []string{"templates", "show"}, noStdinString, noContentString, templateShowNoArgErrorString},
 		CliTest{true, true, []string{"templates", "show", "john", "john2"}, noStdinString, noContentString, templateShowTooManyArgErrorString},
 		CliTest{false, true, []string{"templates", "show", "ignore"}, noStdinString, noContentString, templateShowMissingArgErrorString},
@@ -317,8 +303,8 @@ func TestTemplateCli(t *testing.T) {
 		CliTest{false, false, []string{"templates", "destroy", "greg"}, noStdinString, templateDestroyGregString, noErrorString},
 		CliTest{false, false, []string{"templates", "exists", "etc"}, noStdinString, noContentString, noErrorString},
 		CliTest{false, false, []string{"templates", "exists", "usrshare"}, noStdinString, noContentString, noErrorString},
-		CliTest{false, true, []string{"templates", "destroy", "etc"}, noStdinString, noContentString, "Error: readonly: etc\n\n"},
-		CliTest{false, true, []string{"templates", "destroy", "usrshare"}, noStdinString, noContentString, "Error: readonly: usrshare\n\n"},
+		CliTest{false, true, []string{"templates", "destroy", "etc"}, noStdinString, noContentString, "Error: DELETE: readonly: etc\n\n"},
+		CliTest{false, true, []string{"templates", "destroy", "usrshare"}, noStdinString, noContentString, "Error: DELETE: readonly: usrshare\n\n"},
 	}
 
 	for _, test := range tests {

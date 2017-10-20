@@ -4,6 +4,34 @@ import (
 	"testing"
 )
 
+var paramShowNoArgErrorString string = "Error: drpcli params show [id] [flags] requires 1 argument\n"
+var paramShowTooManyArgErrorString string = "Error: drpcli params show [id] [flags] requires 1 argument\n"
+var paramShowMissingArgErrorString string = "Error: GET: params/john2: Not Found\n\n"
+var paramExistsNoArgErrorString string = "Error: drpcli params exists [id] [flags] requires 1 argument"
+var paramExistsTooManyArgErrorString string = "Error: drpcli params exists [id] [flags] requires 1 argument"
+var paramExistsMissingJohnString string = "Error: GET: params/john2: Not Found\n\n"
+var paramCreateNoArgErrorString string = "Error: drpcli params create [json] [flags] requires 1 argument\n"
+var paramCreateTooManyArgErrorString string = "Error: drpcli params create [json] [flags] requires 1 argument\n"
+var paramCreateBadJSONErrorString = "Error: Invalid param object: error converting YAML to JSON: yaml: line 1: did not find expected ',' or '}' and error converting YAML to JSON: yaml: line 1: did not find expected ',' or '}'\n\n"
+var paramCreateBadJSON2ErrorString = "Error: Unable to create new param: Invalid type passed to param create\n\n"
+var paramCreateDuplicateErrorString = "Error: CREATE: params/john: already exists\n\n"
+var paramUpdateNoArgErrorString string = "Error: drpcli params update [id] [json] [flags] requires 2 arguments"
+var paramUpdateTooManyArgErrorString string = "Error: drpcli params update [id] [json] [flags] requires 2 arguments"
+var paramUpdateBadJSONErrorString = "Error: Unable to merge objects: json: cannot unmarshal string into Go value of type map[string]interface {}\n\n\n"
+var paramUpdateJohnMissingErrorString string = "Error: GET: params/john2: Not Found\n\n"
+var paramPatchNoArgErrorString string = "Error: drpcli params patch [objectJson] [changesJson] [flags] requires 2 arguments"
+var paramPatchTooManyArgErrorString string = "Error: drpcli params patch [objectJson] [changesJson] [flags] requires 2 arguments"
+var paramPatchBadPatchJSONErrorString = "Error: Unable to parse drpcli params patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Param\n\n"
+var paramPatchBadBaseJSONErrorString = "Error: Unable to parse drpcli params patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Param\n\n"
+var paramPatchJohnMissingErrorString string = "Error: PATCH: params/john2: Not Found\n\n"
+var paramDestroyNoArgErrorString string = "Error: drpcli params destroy [id] [flags] requires 1 argument"
+var paramDestroyTooManyArgErrorString string = "Error: drpcli params destroy [id] [flags] requires 1 argument"
+var paramDestroyMissingJohnString string = "Error: DELETE: params/john: Not Found\n\n"
+var paramBootEnvNoArgErrorString string = "Error: drpcli params bootenv [id] [bootenv] [flags] requires 2 arguments"
+var paramBootEnvMissingParamErrorString string = "Error: params GET: john: Not Found\n\n"
+var paramGetNoArgErrorString string = "Error: drpcli params get [id] param [key] [flags] requires 3 arguments"
+var paramGetMissingParamErrorString string = "Error: params GET Params: john2: Not Found\n\n"
+
 var paramDefaultListString string = `[
   {
     "Available": true,
@@ -40,9 +68,6 @@ var paramDefaultListString string = `[
 
 var paramEmptyListString string = "[]\n"
 
-var paramShowNoArgErrorString string = "Error: drpcli params show [id] [flags] requires 1 argument\n"
-var paramShowTooManyArgErrorString string = "Error: drpcli params show [id] [flags] requires 1 argument\n"
-var paramShowMissingArgErrorString string = "Error: params GET: john2: Not Found\n\n"
 var paramShowParamString string = `{
   "Available": true,
   "Errors": [],
@@ -55,17 +80,9 @@ var paramShowParamString string = `{
 }
 `
 
-var paramExistsNoArgErrorString string = "Error: drpcli params exists [id] [flags] requires 1 argument"
-var paramExistsTooManyArgErrorString string = "Error: drpcli params exists [id] [flags] requires 1 argument"
 var paramExistsParamString string = ""
-var paramExistsMissingJohnString string = "Error: params GET: john2: Not Found\n\n"
-
-var paramCreateNoArgErrorString string = "Error: drpcli params create [json] [flags] requires 1 argument\n"
-var paramCreateTooManyArgErrorString string = "Error: drpcli params create [json] [flags] requires 1 argument\n"
 var paramCreateBadJSONString = "{asdgasdg"
-var paramCreateBadJSONErrorString = "Error: Invalid param object: error converting YAML to JSON: yaml: line 1: did not find expected ',' or '}' and error converting YAML to JSON: yaml: line 1: did not find expected ',' or '}'\n\n"
 var paramCreateBadJSON2String = "[asdgasdg]"
-var paramCreateBadJSON2ErrorString = "Error: Unable to create new param: Invalid type passed to param create\n\n"
 var paramCreateInputString string = `{
   "Name": "john",
   "Schema": {
@@ -84,7 +101,6 @@ var paramCreateJohnString string = `{
   "Validated": true
 }
 `
-var paramCreateDuplicateErrorString = "Error: dataTracker create params: john already exists\n\n"
 
 var paramListParamsString = `[
   {
@@ -143,10 +159,8 @@ var paramListJohnOnlyString = `[
 ]
 `
 
-var paramUpdateNoArgErrorString string = "Error: drpcli params update [id] [json] [flags] requires 2 arguments"
-var paramUpdateTooManyArgErrorString string = "Error: drpcli params update [id] [json] [flags] requires 2 arguments"
 var paramUpdateBadJSONString = "asdgasdg"
-var paramUpdateBadJSONErrorString = "Error: Unable to merge objects: json: cannot unmarshal string into Go value of type map[string]interface {}\n\n\n"
+
 var paramUpdateInputString string = `{
   "Schema": {
     "type": "string"
@@ -164,14 +178,11 @@ var paramUpdateJohnString string = `{
   "Validated": true
 }
 `
-var paramUpdateJohnMissingErrorString string = "Error: params GET: john2: Not Found\n\n"
 
-var paramPatchNoArgErrorString string = "Error: drpcli params patch [objectJson] [changesJson] [flags] requires 2 arguments"
-var paramPatchTooManyArgErrorString string = "Error: drpcli params patch [objectJson] [changesJson] [flags] requires 2 arguments"
 var paramPatchBadPatchJSONString = "asdgasdg"
-var paramPatchBadPatchJSONErrorString = "Error: Unable to parse drpcli params patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Param\n\n"
+
 var paramPatchBadBaseJSONString = "asdgasdg"
-var paramPatchBadBaseJSONErrorString = "Error: Unable to parse drpcli params patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Param\n\n"
+
 var paramPatchBaseString string = `{
   "Available": true,
   "Errors": [],
@@ -203,18 +214,8 @@ var paramPatchMissingBaseString string = `{
   "Schema": {}
 }
 `
-var paramPatchJohnMissingErrorString string = "Error: params: PATCH john2: Not Found\n\n"
 
-var paramDestroyNoArgErrorString string = "Error: drpcli params destroy [id] [flags] requires 1 argument"
-var paramDestroyTooManyArgErrorString string = "Error: drpcli params destroy [id] [flags] requires 1 argument"
 var paramDestroyJohnString string = "Deleted param john\n"
-var paramDestroyMissingJohnString string = "Error: params: DELETE john: Not Found\n\n"
-
-var paramBootEnvNoArgErrorString string = "Error: drpcli params bootenv [id] [bootenv] [flags] requires 2 arguments"
-var paramBootEnvMissingParamErrorString string = "Error: params GET: john: Not Found\n\n"
-
-var paramGetNoArgErrorString string = "Error: drpcli params get [id] param [key] [flags] requires 3 arguments"
-var paramGetMissingParamErrorString string = "Error: params GET Params: john2: Not Found\n\n"
 
 func TestParamCli(t *testing.T) {
 
@@ -229,24 +230,8 @@ func TestParamCli(t *testing.T) {
 		CliTest{false, false, []string{"params", "create", paramCreateInputString}, noStdinString, paramCreateJohnString, noErrorString},
 		CliTest{false, true, []string{"params", "create", paramCreateInputString}, noStdinString, noContentString, paramCreateDuplicateErrorString},
 		CliTest{false, false, []string{"params", "list"}, noStdinString, paramListParamsString, noErrorString},
-		CliTest{false, false, []string{"params", "list", "--limit=0"}, noStdinString, paramEmptyListString, noErrorString},
-		CliTest{false, false, []string{"params", "list", "--limit=10", "--offset=0"}, noStdinString, paramListParamsString, noErrorString},
-		CliTest{false, false, []string{"params", "list", "--limit=10", "--offset=10"}, noStdinString, paramEmptyListString, noErrorString},
-		CliTest{false, true, []string{"params", "list", "--limit=-10", "--offset=0"}, noStdinString, noContentString, limitNegativeError},
-		CliTest{false, true, []string{"params", "list", "--limit=10", "--offset=-10"}, noStdinString, noContentString, offsetNegativeError},
-		CliTest{false, false, []string{"params", "list", "--limit=-1", "--offset=-1"}, noStdinString, paramListParamsString, noErrorString},
 		CliTest{false, false, []string{"params", "list", "Name=fred"}, noStdinString, paramEmptyListString, noErrorString},
 		CliTest{false, false, []string{"params", "list", "Name=john"}, noStdinString, paramListJohnOnlyString, noErrorString},
-		CliTest{false, false, []string{"params", "list", "Available=true"}, noStdinString, paramListParamsString, noErrorString},
-		CliTest{false, false, []string{"params", "list", "Available=false"}, noStdinString, paramEmptyListString, noErrorString},
-		CliTest{false, true, []string{"params", "list", "Available=fred"}, noStdinString, noContentString, bootEnvBadAvailableString},
-		CliTest{false, false, []string{"params", "list", "Valid=true"}, noStdinString, paramListParamsString, noErrorString},
-		CliTest{false, false, []string{"params", "list", "Valid=false"}, noStdinString, paramEmptyListString, noErrorString},
-		CliTest{false, true, []string{"params", "list", "Valid=fred"}, noStdinString, noContentString, bootEnvBadValidString},
-		CliTest{false, false, []string{"params", "list", "ReadOnly=true"}, noStdinString, paramDefaultListString, noErrorString},
-		CliTest{false, false, []string{"params", "list", "ReadOnly=false"}, noStdinString, paramListJohnOnlyString, noErrorString},
-		CliTest{false, true, []string{"params", "list", "ReadOnly=fred"}, noStdinString, noContentString, bootEnvBadReadOnlyString},
-
 		CliTest{true, true, []string{"params", "show"}, noStdinString, noContentString, paramShowNoArgErrorString},
 		CliTest{true, true, []string{"params", "show", "john", "john2"}, noStdinString, noContentString, paramShowTooManyArgErrorString},
 		CliTest{false, true, []string{"params", "show", "john2"}, noStdinString, noContentString, paramShowMissingArgErrorString},

@@ -4,15 +4,32 @@ import (
 	"testing"
 )
 
-var reservationAddrErrorString string = "Error: Invalid Address: fred\n\n"
-var reservationExpireTimeErrorString string = "Error: Invalid Address: false\n\n"
+var reservationAddrErrorString string = "Error: GET: reservations: Invalid Address: fred\n\n"
+var reservationExpireTimeErrorString string = "Error: GET: reservations: Invalid Address: false\n\n"
+var reservationShowNoArgErrorString string = "Error: drpcli reservations show [id] [flags] requires 1 argument\n"
+var reservationShowTooManyArgErrorString string = "Error: drpcli reservations show [id] [flags] requires 1 argument\n"
+var reservationShowMissingArgErrorString string = "Error: GET: reservations/C0A86467: Not Found\n\n"
+var reservationExistsNoArgErrorString string = "Error: drpcli reservations exists [id] [flags] requires 1 argument"
+var reservationExistsTooManyArgErrorString string = "Error: drpcli reservations exists [id] [flags] requires 1 argument"
+var reservationExistsMissingIgnoreString string = "Error: GET: reservation get: address not valid: ignore\n\n"
+var reservationCreateNoArgErrorString string = "Error: drpcli reservations create [json] [flags] requires 1 argument\n"
+var reservationCreateTooManyArgErrorString string = "Error: drpcli reservations create [json] [flags] requires 1 argument\n"
+var reservationCreateBadJSONErrorString = "Error: Unable to create new reservation: Invalid type passed to reservation create\n\n"
+var reservationCreateDuplicateErrorString = "Error: CREATE: reservations/C0A86464: already exists\n\n"
+var reservationUpdateNoArgErrorString string = "Error: drpcli reservations update [id] [json] [flags] requires 2 arguments"
+var reservationUpdateTooManyArgErrorString string = "Error: drpcli reservations update [id] [json] [flags] requires 2 arguments"
+var reservationUpdateBadJSONErrorString = "Error: Unable to merge objects: json: cannot unmarshal string into Go value of type map[string]interface {}\n\n\n"
+var reservationUpdateJohnMissingErrorString string = "Error: GET: reservations/C0A86467: Not Found\n\n"
+var reservationPatchNoArgErrorString string = "Error: drpcli reservations patch [objectJson] [changesJson] [flags] requires 2 arguments"
+var reservationPatchTooManyArgErrorString string = "Error: drpcli reservations patch [objectJson] [changesJson] [flags] requires 2 arguments"
+var reservationPatchJohnMissingErrorString string = "Error: PATCH: reservations/C1A86464: Not Found\n\n"
+var reservationDestroyNoArgErrorString string = "Error: drpcli reservations destroy [id] [flags] requires 1 argument"
+var reservationDestroyTooManyArgErrorString string = "Error: drpcli reservations destroy [id] [flags] requires 1 argument"
+var reservationDestroyMissingJohnString string = "Error: DELETE: reservations/C0A86464: Not Found\n\n"
 
 var reservationDefaultListString string = "[]\n"
 var reservationEmptyListString string = "[]\n"
 
-var reservationShowNoArgErrorString string = "Error: drpcli reservations show [id] [flags] requires 1 argument\n"
-var reservationShowTooManyArgErrorString string = "Error: drpcli reservations show [id] [flags] requires 1 argument\n"
-var reservationShowMissingArgErrorString string = "Error: reservations GET: C0A86467: Not Found\n\n"
 var reservationShowJohnString string = `{
   "Addr": "192.168.100.100",
   "Available": true,
@@ -26,15 +43,10 @@ var reservationShowJohnString string = `{
 }
 `
 
-var reservationExistsNoArgErrorString string = "Error: drpcli reservations exists [id] [flags] requires 1 argument"
-var reservationExistsTooManyArgErrorString string = "Error: drpcli reservations exists [id] [flags] requires 1 argument"
 var reservationExistsIgnoreString string = ""
-var reservationExistsMissingIgnoreString string = "Error: reservation get: address not valid: ignore\n\n"
 
-var reservationCreateNoArgErrorString string = "Error: drpcli reservations create [json] [flags] requires 1 argument\n"
-var reservationCreateTooManyArgErrorString string = "Error: drpcli reservations create [json] [flags] requires 1 argument\n"
 var reservationCreateBadJSONString = "asdgasdg"
-var reservationCreateBadJSONErrorString = "Error: Unable to create new reservation: Invalid type passed to reservation create\n\n"
+
 var reservationCreateInputString string = `{
   "Addr": "192.168.100.100",
   "NextServer": "2.2.2.2",
@@ -54,7 +66,6 @@ var reservationCreateJohnString string = `{
   "Validated": true
 }
 `
-var reservationCreateDuplicateErrorString = "Error: dataTracker create reservations: C0A86464 already exists\n\n"
 
 var reservationListReservationsString = `[
   {
@@ -85,10 +96,8 @@ var reservationListBothEnvsString = `[
 ]
 `
 
-var reservationUpdateNoArgErrorString string = "Error: drpcli reservations update [id] [json] [flags] requires 2 arguments"
-var reservationUpdateTooManyArgErrorString string = "Error: drpcli reservations update [id] [json] [flags] requires 2 arguments"
 var reservationUpdateBadJSONString = "asdgasdg"
-var reservationUpdateBadJSONErrorString = "Error: Unable to merge objects: json: cannot unmarshal string into Go value of type map[string]interface {}\n\n\n"
+
 var reservationUpdateInputString string = `{
   "Options": [ { "Code": 3, "Value": "1.1.1.1" } ]
 }
@@ -110,10 +119,7 @@ var reservationUpdateJohnString string = `{
   "Validated": true
 }
 `
-var reservationUpdateJohnMissingErrorString string = "Error: reservations GET: C0A86467: Not Found\n\n"
 
-var reservationPatchNoArgErrorString string = "Error: drpcli reservations patch [objectJson] [changesJson] [flags] requires 2 arguments"
-var reservationPatchTooManyArgErrorString string = "Error: drpcli reservations patch [objectJson] [changesJson] [flags] requires 2 arguments"
 var reservationPatchBadPatchJSONString = "asdgasdg"
 var reservationPatchBadPatchJSONErrorString = "Error: Unable to parse drpcli reservations patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Reservation\n\n"
 var reservationPatchBadBaseJSONString = "asdgasdg"
@@ -152,12 +158,8 @@ var reservationPatchMissingBaseString string = `{
   "Token": "john"
 }
 `
-var reservationPatchJohnMissingErrorString string = "Error: reservations: PATCH C1A86464: Not Found\n\n"
 
-var reservationDestroyNoArgErrorString string = "Error: drpcli reservations destroy [id] [flags] requires 1 argument"
-var reservationDestroyTooManyArgErrorString string = "Error: drpcli reservations destroy [id] [flags] requires 1 argument"
 var reservationDestroyJohnString string = "Deleted reservation 192.168.100.100\n"
-var reservationDestroyMissingJohnString string = "Error: reservations: DELETE C0A86464: Not Found\n\n"
 
 func TestReservationCli(t *testing.T) {
 	tests := []CliTest{
@@ -170,13 +172,6 @@ func TestReservationCli(t *testing.T) {
 		CliTest{false, false, []string{"reservations", "create", reservationCreateInputString}, noStdinString, reservationCreateJohnString, noErrorString},
 		CliTest{false, true, []string{"reservations", "create", reservationCreateInputString}, noStdinString, noContentString, reservationCreateDuplicateErrorString},
 		CliTest{false, false, []string{"reservations", "list"}, noStdinString, reservationListBothEnvsString, noErrorString},
-
-		CliTest{false, false, []string{"reservations", "list", "--limit=0"}, noStdinString, reservationEmptyListString, noErrorString},
-		CliTest{false, false, []string{"reservations", "list", "--limit=10", "--offset=0"}, noStdinString, reservationListReservationsString, noErrorString},
-		CliTest{false, false, []string{"reservations", "list", "--limit=10", "--offset=10"}, noStdinString, reservationEmptyListString, noErrorString},
-		CliTest{false, true, []string{"reservations", "list", "--limit=-10", "--offset=0"}, noStdinString, noContentString, limitNegativeError},
-		CliTest{false, true, []string{"reservations", "list", "--limit=10", "--offset=-10"}, noStdinString, noContentString, offsetNegativeError},
-		CliTest{false, false, []string{"reservations", "list", "--limit=-1", "--offset=-1"}, noStdinString, reservationListReservationsString, noErrorString},
 		CliTest{false, false, []string{"reservations", "list", "Strategy=fred"}, noStdinString, reservationEmptyListString, noErrorString},
 		CliTest{false, false, []string{"reservations", "list", "Strategy=MAC"}, noStdinString, reservationListReservationsString, noErrorString},
 		CliTest{false, false, []string{"reservations", "list", "Token=john"}, noStdinString, reservationListReservationsString, noErrorString},
@@ -187,16 +182,6 @@ func TestReservationCli(t *testing.T) {
 		CliTest{false, false, []string{"reservations", "list", "NextServer=3.3.3.3"}, noStdinString, reservationEmptyListString, noErrorString},
 		CliTest{false, false, []string{"reservations", "list", "NextServer=2.2.2.2"}, noStdinString, reservationListReservationsString, noErrorString},
 		CliTest{false, true, []string{"reservations", "list", "NextServer=false"}, noStdinString, noContentString, reservationExpireTimeErrorString},
-		CliTest{false, false, []string{"reservations", "list", "Available=true"}, noStdinString, reservationListReservationsString, noErrorString},
-		CliTest{false, false, []string{"reservations", "list", "Available=false"}, noStdinString, reservationEmptyListString, noErrorString},
-		CliTest{false, true, []string{"reservations", "list", "Available=fred"}, noStdinString, noContentString, bootEnvBadAvailableString},
-		CliTest{false, false, []string{"reservations", "list", "Valid=true"}, noStdinString, reservationListReservationsString, noErrorString},
-		CliTest{false, false, []string{"reservations", "list", "Valid=false"}, noStdinString, reservationEmptyListString, noErrorString},
-		CliTest{false, true, []string{"reservations", "list", "Valid=fred"}, noStdinString, noContentString, bootEnvBadValidString},
-		CliTest{false, false, []string{"reservations", "list", "ReadOnly=true"}, noStdinString, reservationEmptyListString, noErrorString},
-		CliTest{false, false, []string{"reservations", "list", "ReadOnly=false"}, noStdinString, reservationListReservationsString, noErrorString},
-		CliTest{false, true, []string{"reservations", "list", "ReadOnly=fred"}, noStdinString, noContentString, bootEnvBadReadOnlyString},
-
 		CliTest{true, true, []string{"reservations", "show"}, noStdinString, noContentString, reservationShowNoArgErrorString},
 		CliTest{true, true, []string{"reservations", "show", "john", "john2"}, noStdinString, noContentString, reservationShowTooManyArgErrorString},
 		CliTest{false, true, []string{"reservations", "show", "192.168.100.103"}, noStdinString, noContentString, reservationShowMissingArgErrorString},

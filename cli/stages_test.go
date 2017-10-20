@@ -4,6 +4,14 @@ import (
 	"testing"
 )
 
+var stageShowMissingArgErrorString string = "Error: GET: stages/john2: Not Found\n\n"
+var stageExistsMissingJohnString string = "Error: GET: stages/john2: Not Found\n\n"
+var stageCreateDuplicateErrorString = "Error: CREATE: stages/john: already exists\n\n"
+var stageUpdateJohnMissingErrorString string = "Error: GET: stages/john2: Not Found\n\n"
+var stagePatchJohnMissingErrorString string = "Error: PATCH: stages/john2: Not Found\n\n"
+var stageDestroyMissingJohnString string = "Error: DELETE: stages/john: Not Found\n\n"
+var stageBootEnvMissingStageErrorString string = "Error: stages GET: john: Not Found\n\n"
+
 var stageDefaultListString string = `[
   {
     "Available": true,
@@ -29,7 +37,7 @@ var stageEmptyListString string = "[]\n"
 
 var stageShowNoArgErrorString string = "Error: drpcli stages show [id] [flags] requires 1 argument\n"
 var stageShowTooManyArgErrorString string = "Error: drpcli stages show [id] [flags] requires 1 argument\n"
-var stageShowMissingArgErrorString string = "Error: stages GET: john2: Not Found\n\n"
+
 var stageShowStageString string = `{
   "Available": true,
   "BootEnv": "local",
@@ -48,7 +56,6 @@ var stageShowStageString string = `{
 var stageExistsNoArgErrorString string = "Error: drpcli stages exists [id] [flags] requires 1 argument"
 var stageExistsTooManyArgErrorString string = "Error: drpcli stages exists [id] [flags] requires 1 argument"
 var stageExistsStageString string = ""
-var stageExistsMissingJohnString string = "Error: stages GET: john2: Not Found\n\n"
 
 var stageCreateNoArgErrorString string = "Error: drpcli stages create [json] [flags] requires 1 argument\n"
 var stageCreateTooManyArgErrorString string = "Error: drpcli stages create [json] [flags] requires 1 argument\n"
@@ -75,7 +82,6 @@ var stageCreateJohnString string = `{
   "Validated": true
 }
 `
-var stageCreateDuplicateErrorString = "Error: dataTracker create stages: john already exists\n\n"
 
 var stageListStagesString = `[
   {
@@ -151,7 +157,6 @@ var stageUpdateJohnString string = `{
   "Validated": true
 }
 `
-var stageUpdateJohnMissingErrorString string = "Error: stages GET: john2: Not Found\n\n"
 
 var stagePatchNoArgErrorString string = "Error: drpcli stages patch [objectJson] [changesJson] [flags] requires 2 arguments"
 var stagePatchTooManyArgErrorString string = "Error: drpcli stages patch [objectJson] [changesJson] [flags] requires 2 arguments"
@@ -190,15 +195,12 @@ var stagePatchMissingBaseString string = `{
   }
 }
 `
-var stagePatchJohnMissingErrorString string = "Error: stages: PATCH john2: Not Found\n\n"
 
 var stageDestroyNoArgErrorString string = "Error: drpcli stages destroy [id] [flags] requires 1 argument"
 var stageDestroyTooManyArgErrorString string = "Error: drpcli stages destroy [id] [flags] requires 1 argument"
 var stageDestroyJohnString string = "Deleted stage john\n"
-var stageDestroyMissingJohnString string = "Error: stages: DELETE john: Not Found\n\n"
 
 var stageBootEnvNoArgErrorString string = "Error: drpcli stages bootenv [id] [bootenv] [flags] requires 2 arguments"
-var stageBootEnvMissingStageErrorString string = "Error: stages GET: john: Not Found\n\n"
 
 func TestStageCli(t *testing.T) {
 
@@ -213,29 +215,13 @@ func TestStageCli(t *testing.T) {
 		CliTest{false, false, []string{"stages", "create", stageCreateInputString}, noStdinString, stageCreateJohnString, noErrorString},
 		CliTest{false, true, []string{"stages", "create", stageCreateInputString}, noStdinString, noContentString, stageCreateDuplicateErrorString},
 		CliTest{false, false, []string{"stages", "list"}, noStdinString, stageListStagesString, noErrorString},
-		CliTest{false, false, []string{"stages", "list", "--limit=0"}, noStdinString, stageEmptyListString, noErrorString},
-		CliTest{false, false, []string{"stages", "list", "--limit=10", "--offset=0"}, noStdinString, stageListStagesString, noErrorString},
-		CliTest{false, false, []string{"stages", "list", "--limit=10", "--offset=10"}, noStdinString, stageEmptyListString, noErrorString},
-		CliTest{false, true, []string{"stages", "list", "--limit=-10", "--offset=0"}, noStdinString, noContentString, limitNegativeError},
-		CliTest{false, true, []string{"stages", "list", "--limit=10", "--offset=-10"}, noStdinString, noContentString, offsetNegativeError},
-		CliTest{false, false, []string{"stages", "list", "--limit=-1", "--offset=-1"}, noStdinString, stageListStagesString, noErrorString},
 		CliTest{false, false, []string{"stages", "list", "Name=fred"}, noStdinString, stageEmptyListString, noErrorString},
 		CliTest{false, false, []string{"stages", "list", "Name=john"}, noStdinString, stageListJohnOnlyString, noErrorString},
 		CliTest{false, false, []string{"stages", "list", "BootEnv=fred"}, noStdinString, stageEmptyListString, noErrorString},
 		CliTest{false, false, []string{"stages", "list", "BootEnv=local"}, noStdinString, stageListJohnOnlyString, noErrorString},
 		CliTest{false, false, []string{"stages", "list", "Reboot=true"}, noStdinString, stageEmptyListString, noErrorString},
 		CliTest{false, false, []string{"stages", "list", "Reboot=false"}, noStdinString, stageListStagesString, noErrorString},
-		CliTest{false, true, []string{"stages", "list", "Reboot=fred"}, noStdinString, noContentString, "Error: Reboot must be true or false\n\n"},
-		CliTest{false, false, []string{"stages", "list", "Available=true"}, noStdinString, stageListStagesString, noErrorString},
-		CliTest{false, false, []string{"stages", "list", "Available=false"}, noStdinString, stageEmptyListString, noErrorString},
-		CliTest{false, true, []string{"stages", "list", "Available=fred"}, noStdinString, noContentString, "Error: Available must be true or false\n\n"},
-		CliTest{false, false, []string{"stages", "list", "Valid=true"}, noStdinString, stageListStagesString, noErrorString},
-		CliTest{false, false, []string{"stages", "list", "Valid=false"}, noStdinString, stageEmptyListString, noErrorString},
-		CliTest{false, true, []string{"stages", "list", "Valid=fred"}, noStdinString, noContentString, "Error: Valid must be true or false\n\n"},
-		CliTest{false, false, []string{"stages", "list", "ReadOnly=true"}, noStdinString, stageDefaultListString, noErrorString},
-		CliTest{false, false, []string{"stages", "list", "ReadOnly=false"}, noStdinString, stageListJohnOnlyString, noErrorString},
-		CliTest{false, true, []string{"stages", "list", "ReadOnly=fred"}, noStdinString, noContentString, bootEnvBadReadOnlyString},
-
+		CliTest{false, true, []string{"stages", "list", "Reboot=fred"}, noStdinString, noContentString, "Error: GET: stages: Reboot must be true or false\n\n"},
 		CliTest{true, true, []string{"stages", "show"}, noStdinString, noContentString, stageShowNoArgErrorString},
 		CliTest{true, true, []string{"stages", "show", "john", "john2"}, noStdinString, noContentString, stageShowTooManyArgErrorString},
 		CliTest{false, true, []string{"stages", "show", "john2"}, noStdinString, noContentString, stageShowMissingArgErrorString},

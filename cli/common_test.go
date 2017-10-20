@@ -157,12 +157,11 @@ func testCli(t *testing.T, test CliTest) {
 	patchSE, _ := diff(test.expectedStdErr, se)
 	if !test.dumpUsage {
 		if strings.HasPrefix(test.expectedStdOut, "RE:\n") {
-			if matched, err := regexp.MatchString(test.expectedStdOut[4:], so); err != nil || !matched {
-				if err != nil {
-					t.Errorf("Expected StdOut: regexp fail: %v\n", err)
-				}
-				t.Errorf("Expected StdOut: %s", test.expectedStdOut[4:])
-				t.Errorf("Got: %s", so)
+			re := regexp.MustCompile(test.expectedStdOut[4:])
+			if !re.MatchString(so) {
+				patchSO, _ = diff(re.String(), so)
+				t.Errorf("Expected StdOut: %s", re.String())
+				t.Errorf("Got: %s", patchSO)
 			}
 		} else {
 			if so != test.expectedStdOut {

@@ -3,9 +3,9 @@ package models
 // swagger:model
 type Stat struct {
 	// required: true
-	Name string
+	Name string `json:"name"`
 	// required: true
-	Count int
+	Count int `json:"count"`
 }
 
 // swagger:model

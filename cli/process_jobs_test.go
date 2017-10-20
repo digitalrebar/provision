@@ -6,6 +6,12 @@ import (
 	"testing"
 )
 
+var processJobsNoArgsString = "Error: drpcli machines processjobs [id] [flags] requires at least 1 argument\n"
+var processJobsTooManyArgsString = "Error: drpcli machines processjobs [id] [flags] requires at most 1 arguments\n"
+var processJobsMissingMachineString = "Error: GET: machines/p1: Not Found\n\n"
+var processJobsStageMissingString = "Error: ValidationError: Stage fred does not exist\n\n"
+var processYakovErrorSuccessString = "Error: Task failed, exiting ...\n\n\n"
+
 var processJobsJustineCreateTaskString = `
 ---
 Meta:
@@ -236,7 +242,7 @@ Command part 3 - Test Return Codes: failed: true, incomplete: false, reboot: fal
 Task Template , part 3 - Test Return Codes, failed
 Task: yakov failed
 `
-	processYakovErrorSuccessString      = "Error: Task failed, exiting ...\n\n\n"
+
 	processYakovShowFailedMachineString = `RE:
 {
   "Address": "192.168.100.111",
@@ -248,12 +254,12 @@ Task: yakov failed
   "Name": "yakov",
   "Profile": {
     "Available": false,
-    "Errors": [],
+    "Errors": \[\],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": [],
+  "Profiles": \[\],
   "ReadOnly": false,
   "Runnable": false,
   "Secret": "secret2",
@@ -277,12 +283,12 @@ Task: yakov failed
   "Name": "yakov",
   "Profile": {
     "Available": false,
-    "Errors": [],
+    "Errors": \[\],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": [],
+  "Profiles": \[\],
   "ReadOnly": false,
   "Runnable": true,
   "Secret": "secret2",
@@ -311,9 +317,6 @@ Jobs finished
 `
 )
 
-var processJobsNoArgsString = "Error: drpcli machines processjobs [id] [flags] requires at least 1 argument\n"
-var processJobsTooManyArgsString = "Error: drpcli machines processjobs [id] [flags] requires at most 1 arguments\n"
-var processJobsMissingMachineString = "Error: machines GET: p1: Not Found\n\n"
 var processJobsNoJobsNoWait = "Processing jobs for 3e7031fe-3062-45f1-835c-92541bc9cbd3\n"
 
 var processJobsErrorSuccessString = "Error: Task failed, exiting ...\n\n\n"
@@ -388,12 +391,12 @@ var processJobsRemoveProfileSuccessString = `RE:
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": [],
+    "Errors": \[\],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": [],
+  "Profiles": \[\],
   "ReadOnly": false,
   "Runnable": false,
   "Secret": "secret1",
@@ -418,12 +421,12 @@ var processJobsResetToLocalSuccessString = `RE:
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": [],
+    "Errors": \[\],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": [],
+  "Profiles": \[\],
   "ReadOnly": false,
   "Runnable": true,
   "Secret": "secret1",
@@ -445,12 +448,12 @@ var processJobsShowFailedMachineString string = `RE:
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": [],
+    "Errors": \[\],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": [],
+  "Profiles": \[\],
   "ReadOnly": false,
   "Runnable": false,
   "Secret": "secret1",
@@ -476,12 +479,12 @@ var processJobsShowRunnableMachineString = `RE:
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": [],
+    "Errors": \[\],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": [],
+  "Profiles": \[\],
   "ReadOnly": false,
   "Runnable": true,
   "Secret": "secret1",
@@ -517,8 +520,6 @@ var processJobsCreateStage1SuccessString = `{
   "Validated": true
 }
 `
-
-var processJobsStageMissingString = "Error: Stage fred does not exist\n\n"
 
 func TestProcessJobsCli(t *testing.T) {
 	actuallyPowerThings = false
