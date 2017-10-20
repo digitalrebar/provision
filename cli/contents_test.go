@@ -66,7 +66,7 @@ var contentDefaultListString string = `[
       "Description": "Content layer for incrementer plugin provider",
       "Name": "plugin-provider-incrementer",
       "Source": "FromPluginProvider",
-      "Type": "dynamic",
+      "Type": "plugin",
       "Version": "v3.0.2-pre-alpha-NotSet"
     }
   },
@@ -79,7 +79,7 @@ var contentDefaultListString string = `[
     "meta": {
       "Description": "Default objects that must be present",
       "Name": "BasicStore",
-      "Type": "dynamic",
+      "Type": "basic",
       "Version": "Unversioned"
     }
   }
@@ -198,7 +198,7 @@ var contentListContentsString = `[
       "Description": "Content layer for incrementer plugin provider",
       "Name": "plugin-provider-incrementer",
       "Source": "FromPluginProvider",
-      "Type": "dynamic",
+      "Type": "plugin",
       "Version": "v3.0.2-pre-alpha-NotSet"
     }
   },
@@ -211,7 +211,7 @@ var contentListContentsString = `[
     "meta": {
       "Description": "Default objects that must be present",
       "Name": "BasicStore",
-      "Type": "dynamic",
+      "Type": "basic",
       "Version": "Unversioned"
     }
   }
