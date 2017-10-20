@@ -153,6 +153,19 @@ var plugin_providerUploadMissingArgErrorString = "Error: Failed to open john: op
 
 var plugin_providerDestroySuccesString = "Deleted plugin_provider incrementer\n"
 
+var plugin_providerParamString = `{
+  "Available": true,
+  "Errors": [],
+  "Name": "incrementer/parameter",
+  "ReadOnly": true,
+  "Schema": {
+    "type": "string"
+  },
+  "Validated": true
+}
+`
+var plugin_providerMissingParamString = "Error: params GET: incrementer/parameter: Not Found\n\n"
+
 func TestPluginProviderCli(t *testing.T) {
 
 	srcFolder := tmpDir + "/plugins/incrementer"
@@ -181,7 +194,9 @@ func TestPluginProviderCli(t *testing.T) {
 		CliTest{true, true, []string{"plugin_providers", "destroy"}, noStdinString, noContentString, plugin_providerDestroyNoArgErrorString},
 		CliTest{true, true, []string{"plugin_providers", "destroy", "john", "john2"}, noStdinString, noContentString, plugin_providerDestroyTooManyArgErrorString},
 		CliTest{false, true, []string{"plugin_providers", "destroy", "john"}, noStdinString, noContentString, plugin_providerDestroyMissingArgErrorString},
+		CliTest{false, false, []string{"params", "show", "incrementer/parameter"}, noStdinString, plugin_providerParamString, noErrorString},
 		CliTest{false, false, []string{"plugin_providers", "destroy", "incrementer"}, noStdinString, plugin_providerDestroySuccesString, noErrorString},
+		CliTest{false, true, []string{"params", "show", "incrementer/parameter"}, noStdinString, noContentString, plugin_providerMissingParamString},
 	}
 	for _, test := range tests {
 		testCli(t, test)

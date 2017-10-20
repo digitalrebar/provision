@@ -11,7 +11,7 @@ var contentDefaultListString string = `[
       "jobs": 0,
       "leases": 0,
       "machines": 0,
-      "params": 3,
+      "params": 0,
       "plugins": 0,
       "preferences": 0,
       "profiles": 1,
@@ -55,6 +55,19 @@ var contentDefaultListString string = `[
       "Source": "Unspecified",
       "Type": "default",
       "Version": "user"
+    }
+  },
+  {
+    "Counts": {
+      "params": 3
+    },
+    "Warnings": null,
+    "meta": {
+      "Description": "Content layer for incrementer plugin provider",
+      "Name": "incrementer",
+      "Source": "FromPluginProvider",
+      "Type": "dynamic",
+      "Version": "v3.0.2-pre-alpha-NotSet"
     }
   },
   {
@@ -123,7 +136,7 @@ var contentListContentsString = `[
       "jobs": 0,
       "leases": 0,
       "machines": 0,
-      "params": 3,
+      "params": 0,
       "plugins": 0,
       "preferences": 0,
       "profiles": 1,
@@ -174,6 +187,19 @@ var contentListContentsString = `[
       "Source": "Unspecified",
       "Type": "default",
       "Version": "user"
+    }
+  },
+  {
+    "Counts": {
+      "params": 3
+    },
+    "Warnings": null,
+    "meta": {
+      "Description": "Content layer for incrementer plugin provider",
+      "Name": "incrementer",
+      "Source": "FromPluginProvider",
+      "Type": "dynamic",
+      "Version": "v3.0.2-pre-alpha-NotSet"
     }
   },
   {

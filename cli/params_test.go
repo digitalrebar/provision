@@ -9,7 +9,7 @@ var paramDefaultListString string = `[
     "Available": true,
     "Errors": [],
     "Name": "incrementer/parameter",
-    "ReadOnly": false,
+    "ReadOnly": true,
     "Schema": {
       "type": "string"
     },
@@ -19,7 +19,7 @@ var paramDefaultListString string = `[
     "Available": true,
     "Errors": [],
     "Name": "incrementer/step",
-    "ReadOnly": false,
+    "ReadOnly": true,
     "Schema": {
       "type": "integer"
     },
@@ -29,7 +29,7 @@ var paramDefaultListString string = `[
     "Available": true,
     "Errors": [],
     "Name": "incrementer/touched",
-    "ReadOnly": false,
+    "ReadOnly": true,
     "Schema": {
       "type": "integer"
     },
@@ -91,7 +91,7 @@ var paramListParamsString = `[
     "Available": true,
     "Errors": [],
     "Name": "incrementer/parameter",
-    "ReadOnly": false,
+    "ReadOnly": true,
     "Schema": {
       "type": "string"
     },
@@ -101,7 +101,7 @@ var paramListParamsString = `[
     "Available": true,
     "Errors": [],
     "Name": "incrementer/step",
-    "ReadOnly": false,
+    "ReadOnly": true,
     "Schema": {
       "type": "integer"
     },
@@ -111,7 +111,7 @@ var paramListParamsString = `[
     "Available": true,
     "Errors": [],
     "Name": "incrementer/touched",
-    "ReadOnly": false,
+    "ReadOnly": true,
     "Schema": {
       "type": "integer"
     },
@@ -243,8 +243,8 @@ func TestParamCli(t *testing.T) {
 		CliTest{false, false, []string{"params", "list", "Valid=true"}, noStdinString, paramListParamsString, noErrorString},
 		CliTest{false, false, []string{"params", "list", "Valid=false"}, noStdinString, paramEmptyListString, noErrorString},
 		CliTest{false, true, []string{"params", "list", "Valid=fred"}, noStdinString, noContentString, bootEnvBadValidString},
-		CliTest{false, false, []string{"params", "list", "ReadOnly=true"}, noStdinString, paramEmptyListString, noErrorString},
-		CliTest{false, false, []string{"params", "list", "ReadOnly=false"}, noStdinString, paramListParamsString, noErrorString},
+		CliTest{false, false, []string{"params", "list", "ReadOnly=true"}, noStdinString, paramDefaultListString, noErrorString},
+		CliTest{false, false, []string{"params", "list", "ReadOnly=false"}, noStdinString, paramListJohnOnlyString, noErrorString},
 		CliTest{false, true, []string{"params", "list", "ReadOnly=fred"}, noStdinString, noContentString, bootEnvBadReadOnlyString},
 
 		CliTest{true, true, []string{"params", "show"}, noStdinString, noContentString, paramShowNoArgErrorString},
