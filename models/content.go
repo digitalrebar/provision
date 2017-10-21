@@ -98,6 +98,9 @@ func (c *Content) FromStore(src store.Store) error {
 		c.Sections[section] = map[string]interface{}{}
 		for _, key := range keys {
 			val, _ := New(section)
+			if f, ok := val.(Filler); ok {
+				f.Fill()
+			}
 			if err := subStore.Load(key, val); err != nil {
 				return err
 			}
@@ -134,4 +137,14 @@ type ContentSummary struct {
 	Meta     ContentMetaData `json:"meta"`
 	Counts   map[string]int
 	Warnings []string
+}
+
+func (c *ContentSummary) Fill() {
+	c.Meta.fill()
+	if c.Counts == nil {
+		c.Counts = map[string]int{}
+	}
+	if c.Warnings == nil {
+		c.Warnings = []string{}
+	}
 }

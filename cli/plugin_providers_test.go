@@ -166,7 +166,7 @@ var plugin_providerParamString = `{
   "Validated": true
 }
 `
-var plugin_providerMissingParamString = "Error: params GET: incrementer/parameter: Not Found\n\n"
+var plugin_providerMissingParamString = "Error: GET: params/incrementer/parameter: Not Found\n\n"
 
 func TestPluginProviderCli(t *testing.T) {
 

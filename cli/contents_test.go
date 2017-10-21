@@ -61,7 +61,7 @@ var contentDefaultListString string = `[
     "Counts": {
       "params": 3
     },
-    "Warnings": null,
+    "Warnings": [],
     "meta": {
       "Description": "Content layer for incrementer plugin provider",
       "Name": "plugin-provider-incrementer",
@@ -193,7 +193,7 @@ var contentListContentsString = `[
     "Counts": {
       "params": 3
     },
-    "Warnings": null,
+    "Warnings": [],
     "meta": {
       "Description": "Content layer for incrementer plugin provider",
       "Name": "plugin-provider-incrementer",
