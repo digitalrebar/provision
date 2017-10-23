@@ -18,6 +18,7 @@ Description: "The boot environment you should use to have known machines boot of
 Name: "local"
 OS:
   Name: "local"
+ReadOnly: true
 Templates:
 - Contents: |
     DEFAULT local
@@ -41,6 +42,7 @@ Name:        "ignore"
 OS:
   Name: "ignore"
 OnlyUnknown: true
+ReadOnly: true
 Templates:
 - Contents: |
     DEFAULT local
@@ -64,7 +66,7 @@ Templates:
 	fred.SetAvailable()
 	testFill(fred)
 
-	phred, _ := models.Clone(fred)
+	phred := models.Clone(fred)
 	phred.(*models.BootEnv).OS.Name = "phred"
 	tests := []crudTest{
 		{
@@ -140,7 +142,7 @@ Templates:
 			expectRes: nil,
 			expectErr: &models.Error{
 				Model:    "bootenvs",
-				Type:     "API_ERROR",
+				Type:     "GET",
 				Code:     406,
 				Messages: []string{"Limit cannot be negative"},
 			},
@@ -153,7 +155,7 @@ Templates:
 			expectRes: []models.Model{localBootEnv},
 			expectErr: &models.Error{
 				Model:    "bootenvs",
-				Type:     "API_ERROR",
+				Type:     "GET",
 				Code:     406,
 				Messages: []string{"Offset cannot be negative"},
 			},
@@ -207,9 +209,9 @@ Templates:
 			expectErr: &models.Error{
 				Model:    "bootenvs",
 				Key:      "frabjulous",
-				Type:     "API_ERROR",
+				Type:     "GET",
 				Code:     404,
-				Messages: []string{"bootenvs GET: frabjulous: Not Found"},
+				Messages: []string{"Not Found"},
 			},
 			op: func() (interface{}, error) {
 				return session.GetModel("bootenvs", "frabjulous")
@@ -237,8 +239,8 @@ Templates:
 			expectErr: &models.Error{
 				Model:    "bootenvs",
 				Key:      "OnlyUnknown:true",
-				Type:     "API_ERROR",
-				Messages: []string{"bootenvs GET: OnlyUnknown:true: Not Found"},
+				Type:     "GET",
+				Messages: []string{"Not Found"},
 				Code:     404,
 			},
 			op: func() (interface{}, error) {
@@ -294,7 +296,7 @@ Templates:
 			expectRes: phred,
 			expectErr: nil,
 			op: func() (interface{}, error) {
-				m, _ := models.Clone(fred)
+				m := models.Clone(fred)
 				m.(*models.BootEnv).OS.Name = "phred"
 				return m, session.PutModel(m)
 			},
@@ -304,7 +306,7 @@ Templates:
 			expectRes: phred,
 			expectErr: nil,
 			op: func() (interface{}, error) {
-				m, _ := models.Clone(phred)
+				m := models.Clone(phred)
 				m.(*models.BootEnv).OS.Name = "ffred"
 				patch, _ := GenPatch(phred, m)
 				phred.(*models.BootEnv).OS.Name = "ffred"
@@ -315,14 +317,17 @@ Templates:
 			name:      "PATCH Update bootenv phred OS name (conflict)",
 			expectRes: nil,
 			expectErr: &models.Error{
-				Model:    "bootenvs",
-				Key:      "fred",
-				Type:     "JsonPatchError",
-				Messages: []string{"Patch error at line 0: Test op failed."},
-				Code:     406,
+				Model: "bootenvs",
+				Key:   "fred",
+				Type:  "PATCH",
+				Messages: []string{
+					"Patch error at line 0: Test op failed.",
+					"Patch line: {\"op\":\"test\",\"path\":\"/OS/Name\",\"from\":\"\",\"value\":\"ffred\"}",
+				},
+				Code: 406,
 			},
 			op: func() (interface{}, error) {
-				m, _ := models.Clone(phred)
+				m := models.Clone(phred)
 				m.(*models.BootEnv).OS.Name = "zfred"
 				session.PutModel(m)
 				m.(*models.BootEnv).OS.Name = "qfred"
@@ -430,13 +435,16 @@ Validated: true
 			name:      "Test install from a valid path that contains invalid content",
 			expectRes: nil,
 			expectErr: &models.Error{
-				Model:    "bootenvs",
-				Key:      "",
-				Type:     "CLIENT_ERROR",
-				Messages: []string{"error converting YAML to JSON: yaml: line 1: found unexpected end of stream"},
+				Model: "bootenvs",
+				Key:   "",
+				Type:  "CLIENT_ERROR",
+				Messages: []string{
+					"error converting YAML to JSON: yaml: line 1: did not find expected node content",
+				},
+				Code: 0,
 			},
 			op: func() (interface{}, error) {
-				return session.InstallBootEnvFromFile("../cli/test-data/badhammer.yml")
+				return session.InstallBootEnvFromFile("test-data/badhammer.yml")
 			},
 		},
 		{
@@ -444,7 +452,7 @@ Validated: true
 			expectRes: fredhammer,
 			expectErr: nil,
 			op: func() (interface{}, error) {
-				res, err := session.InstallBootEnvFromFile("../cli/test-data/fredhammer.yml")
+				res, err := session.InstallBootEnvFromFile("test-data/fredhammer.yml")
 				if err != nil {
 					return res, err
 				}
