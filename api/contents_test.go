@@ -10,13 +10,13 @@ import (
 func TestContentCrud(t *testing.T) {
 	summary := `
 - Counts:
-    bootenvs: 2
+    bootenvs: 0
     jobs: 0
     leases: 0
     machines: 0
-    params: 3
+    params: 0
     plugins: 0
-    preferences: 0
+    preferences: 12
     profiles: 1
     reservations: 0
     stages: 0
@@ -58,6 +58,31 @@ func TestContentCrud(t *testing.T) {
     Type: default
     Version: user
     Writable: false
+- Counts:
+    params: 3
+  Warnings: []
+  meta:
+    Description: Content layer for incrementer plugin provider
+    Meta: {}
+    Name: plugin-provider-incrementer
+    Overwritable: false
+    Source: FromPluginProvider
+    Type: plugin
+    Version: v3.0.2-pre-alpha-NotSet
+    Writable: false
+- Counts:
+    bootenvs: 2
+    stages: 1
+  Warnings: []
+  meta:
+    Description: Default objects that must be present
+    Meta: {}
+    Name: BasicStore
+    Overwritable: false
+    Source: ""
+    Type: basic
+    Version: Unversioned
+    Writable: false
 `
 	cs := []models.ContentSummary{}
 	if err := DecodeYaml([]byte(summary), &cs); err != nil {
@@ -74,138 +99,70 @@ meta:
   Version: user
   Writable: true
 sections:
-  bootenvs:
-    ignore:
-      Available: false
-      BootParams: ""
-      Description: The boot environment you should use to have unknown machines boot
-        off their local hard drive
-      Errors: []
-      Initrds: []
-      Kernel: ""
-      Meta: {}
-      Name: ignore
-      OS:
-        Codename: ""
-        Family: ""
-        IsoFile: ""
-        IsoSha256: ""
-        IsoUrl: ""
-        Name: ignore
-        Version: ""
-      OnlyUnknown: true
-      OptionalParams: []
-      ReadOnly: false
-      RequiredParams: []
-      Templates:
-      - Contents: |
-          DEFAULT local
-          PROMPT 0
-          TIMEOUT 10
-          LABEL local
-          localboot 0
-        ID: ""
-        Name: pxelinux
-        Path: pxelinux.cfg/default
-      - Contents: exit
-        ID: ""
-        Name: elilo
-        Path: elilo.conf
-      - Contents: |
-          #!ipxe
-          chain tftp://{{.ProvisionerAddress}}/${netX/ip}.ipxe || exit
-        ID: ""
-        Name: ipxe
-        Path: default.ipxe
-      Validated: false
-    local:
-      Available: false
-      BootParams: ""
-      Description: The boot environment you should use to have known machines boot
-        off their local hard drive
-      Errors: []
-      Initrds: []
-      Kernel: ""
-      Meta: {}
-      Name: local
-      OS:
-        Codename: ""
-        Family: ""
-        IsoFile: ""
-        IsoSha256: ""
-        IsoUrl: ""
-        Name: local
-        Version: ""
-      OnlyUnknown: false
-      OptionalParams: []
-      ReadOnly: false
-      RequiredParams: []
-      Templates:
-      - Contents: |
-          DEFAULT local
-          PROMPT 0
-          TIMEOUT 10
-          LABEL local
-          localboot 0
-        ID: ""
-        Name: pxelinux
-        Path: pxelinux.cfg/{{.Machine.HexAddress}}
-      - Contents: exit
-        ID: ""
-        Name: elilo
-        Path: '{{.Machine.HexAddress}}.conf'
-      - Contents: |
-          #!ipxe
-          exit
-        ID: ""
-        Name: ipxe
-        Path: '{{.Machine.Address}}.ipxe'
-      Validated: false
+  bootenvs: {}
   jobs: {}
   leases: {}
   machines: {}
-  params:
-    incrementer/parameter:
-      Available: false
-      Description: ""
-      Documentation: ""
-      Errors: []
-      Meta: {}
-      Name: incrementer/parameter
-      ReadOnly: false
-      Schema:
-        type: string
-      Validated: false
-    incrementer/step:
-      Available: false
-      Description: ""
-      Documentation: ""
-      Errors: []
-      Meta: {}
-      Name: incrementer/step
-      ReadOnly: false
-      Schema:
-        type: integer
-      Validated: false
-    incrementer/touched:
-      Available: false
-      Description: ""
-      Documentation: ""
-      Errors: []
-      Meta: {}
-      Name: incrementer/touched
-      ReadOnly: false
-      Schema:
-        type: integer
-      Validated: false
+  params: {}
   plugins: {}
-  preferences: {}
+  preferences:
+    baseTokenSecret:
+      Meta: {}
+      Name: baseTokenSecret
+      Val: elided
+    debugBootEnv:
+      Meta: {}
+      Name: debugBootEnv
+      Val: "0"
+    debugDhcp:
+      Meta: {}
+      Name: debugDhcp
+      Val: "0"
+    debugFrontend:
+      Meta: {}
+      Name: debugFrontend
+      Val: "0"
+    debugPlugins:
+      Meta: {}
+      Name: debugPlugins
+      Val: "0"
+    debugRenderer:
+      Meta: {}
+      Name: debugRenderer
+      Val: "0"
+    defaultBootEnv:
+      Meta: {}
+      Name: defaultBootEnv
+      Val: local
+    defaultStage:
+      Meta: {}
+      Name: defaultStage
+      Val: none
+    knownTokenTimeout:
+      Meta: {}
+      Name: knownTokenTimeout
+      Val: "3600"
+    systemGrantorSecret:
+      Meta: {}
+      Name: systemGrantorSecret
+      Val: elided
+    unknownBootEnv:
+      Meta: {}
+      Name: unknownBootEnv
+      Val: ignore
+    unknownTokenTimeout:
+      Meta: {}
+      Name: unknownTokenTimeout
+      Val: "600"
   profiles:
     global:
       Available: false
       Description: ""
       Errors: []
-      Meta: {}
+      Meta:
+        color: blue
+        icon: world
+        title: Digital Rebar Provision
       Name: global
       Params: {}
       ReadOnly: false
@@ -221,15 +178,15 @@ sections:
       Errors: []
       Meta: {}
       Name: rocketskates
-      PasswordHash: MTYzODQkOCQxJDk0YTBlZDI3N2IxMzNmMGU2NmNjMDdhMzU2ZWNmMzkxJDQ5M2E4OGI0YTdhMTkxN2ZiMDBkNzg2ODk4NjJjYjg0OTgwOWVkODQ1YTc0OGI2YWMyOThjMzkwMjk3Njg4OTQ=
+      PasswordHash: elided
       ReadOnly: false
+      Secret: elided
       Validated: false
 `
 	bs := &models.Content{}
 	if err := DecodeYaml([]byte(backingStore), bs); err != nil {
 		log.Panicf("Unable to unmarshal backingStore: %v", err)
 	}
-	bs.Sections["users"]["rocketskates"].(map[string]interface{})["PasswordHash"] = "elided"
 	tests := []crudTest{
 		{
 			name:      "List all content",
@@ -249,6 +206,9 @@ sections:
 					return res, err
 				}
 				res.Sections["users"]["rocketskates"].(map[string]interface{})["PasswordHash"] = "elided"
+				res.Sections["users"]["rocketskates"].(map[string]interface{})["Secret"] = "elided"
+				res.Sections["preferences"]["systemGrantorSecret"].(map[string]interface{})["Val"] = "elided"
+				res.Sections["preferences"]["baseTokenSecret"].(map[string]interface{})["Val"] = "elided"
 				return res, err
 			},
 		},
@@ -258,7 +218,7 @@ sections:
 			expectErr: &models.Error{
 				Model:    "contents",
 				Key:      "BarkingStore",
-				Type:     "API_ERROR",
+				Type:     "GET",
 				Messages: []string{"No such content store"},
 				Code:     404,
 			},
@@ -272,7 +232,7 @@ sections:
 			expectErr: &models.Error{
 				Model:    "contents",
 				Key:      "BarkingStore",
-				Type:     "API_ERROR",
+				Type:     "DELETE",
 				Messages: []string{"No such content store"},
 				Code:     404,
 			},
@@ -287,7 +247,7 @@ sections:
 				Model:    "contents",
 				Key:      "",
 				Type:     "STORE_ERROR",
-				Messages: []string{"Content stores must have a name"},
+				Messages: []string{"Content Store must have a name"},
 				Code:     422,
 			},
 			op: func() (interface{}, error) {
@@ -325,7 +285,7 @@ meta:
 			expectErr: &models.Error{
 				Model:    "contents",
 				Key:      "BarkingStore",
-				Type:     "API_ERROR",
+				Type:     "POST",
 				Messages: []string{"Content BarkingStore already exists"},
 				Code:     409,
 			},
@@ -340,21 +300,22 @@ meta:
 			name:      "Update BarkingStore (that would break layers)",
 			expectRes: nil,
 			expectErr: &models.Error{
-				Model:    "contents",
-				Key:      "BarkingStore",
-				Type:     "API_ERROR",
-				Messages: []string{"New layer violates key restrictions: keysCannotBeOverridden: ignore is already in layer 0\n\tkeysCannotOverride: ignore would be overridden by layer 0"},
-				Code:     500,
+				Model: "contents",
+				Key:   "BarkingStore",
+				Type:  "PUT",
+				Messages: []string{
+					"New layer violates key restrictions: keysCannotBeOverridden: global is already in layer 0\n\tkeysCannotOverride: global would be overridden by layer 0"},
+				Code: 500,
 			},
 			op: func() (interface{}, error) {
 				barking := &models.Content{}
 				barking.Fill()
 				barking.Meta.Name = "BarkingStore"
-				env, err := session.GetModel("bootenvs", "ignore")
+				env, err := session.GetModel("profiles", "global")
 				if err != nil {
 					return nil, err
 				}
-				barking.Sections["bootenvs"] = map[string]interface{}{env.Key(): env}
+				barking.Sections["profiles"] = map[string]interface{}{env.Key(): env}
 				return session.ReplaceContent(barking)
 			},
 		},
@@ -437,8 +398,8 @@ Validated: true
 			expectErr: &models.Error{
 				Model:    "bootenvs",
 				Key:      "ignoble",
-				Type:     "API_ERROR",
-				Messages: []string{"bootenvs GET: ignoble: Not Found"},
+				Type:     "GET",
+				Messages: []string{"Not Found"},
 				Code:     404,
 			},
 			op: func() (interface{}, error) {
