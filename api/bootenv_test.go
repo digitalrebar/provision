@@ -546,9 +546,12 @@ Validated: true
 				if err != nil {
 					return env, err
 				}
-				/* if err := session.DeleteBlob("isos", env.(*models.BootEnv).OS.IsoFile); err != nil {
+				if err := session.DeleteBlob("isos", env.(*models.BootEnv).OS.IsoFile); err != nil {
 					return env, err
-				} */
+				}
+				if err := session.DeleteBlob("files", env.(*models.BootEnv).OS.IsoFile); err != nil {
+					return env, err
+				}
 				return nil, nil
 			},
 		},

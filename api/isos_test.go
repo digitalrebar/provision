@@ -24,7 +24,7 @@ func TestIsos(t *testing.T) {
 			expectErr: &models.Error{
 				Model:    "isos",
 				Key:      "foo",
-				Type:     "API_ERROR",
+				Type:     "GET",
 				Messages: []string{"Not a regular file"},
 				Code:     404,
 			},
@@ -65,7 +65,7 @@ func TestIsos(t *testing.T) {
 			expectErr: &models.Error{
 				Model:    "isos",
 				Key:      "foo",
-				Type:     "",
+				Type:     "DELETE",
 				Messages: []string{"no such iso"},
 				Code:     404,
 			},

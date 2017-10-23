@@ -23,7 +23,7 @@ func TestInterfaces(t *testing.T) {
 			expectErr: &models.Error{
 				Model:    "interfaces",
 				Key:      "missing",
-				Type:     "API_ERROR",
+				Type:     "GET",
 				Messages: []string{"No interface"},
 				Code:     404,
 			},

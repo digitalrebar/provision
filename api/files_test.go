@@ -24,7 +24,7 @@ func TestFiles(t *testing.T) {
 			expectErr: &models.Error{
 				Model:    "files",
 				Key:      "/foo",
-				Type:     "API_ERROR",
+				Type:     "GET",
 				Messages: []string{"Not a regular file"},
 				Code:     404,
 			},
@@ -47,9 +47,9 @@ func TestFiles(t *testing.T) {
 			expectErr: &models.Error{
 				Model: "files",
 				Key:   "/foo/bar",
-				Type:  "API_ERROR",
+				Type:  "POST",
 				Messages: []string{
-					"Cannot create directory /foo/bar",
+					"Cannot create directory /foo",
 				},
 				Code: 409,
 			},
@@ -98,7 +98,7 @@ func TestFiles(t *testing.T) {
 			expectErr: &models.Error{
 				Model:    "files",
 				Key:      "/bar",
-				Type:     "API_ERROR",
+				Type:     "DELETE",
 				Messages: []string{"Unable to delete"},
 				Code:     404,
 			},
