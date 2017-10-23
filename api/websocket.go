@@ -4,7 +4,6 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 	"os/signal"
@@ -61,12 +60,8 @@ type EventStream struct {
 func (es *EventStream) processEvents(running chan struct{}) {
 	close(running)
 	for {
-		log.Printf("waiting on eventstream msg")
 		_, msg, err := es.conn.ReadMessage()
-		log.Printf("Recieved msg: %s", string(msg))
 		if err != nil {
-			log.Printf("Recieved msg has error: %v", err)
-			log.Printf("Closing down channels")
 			es.conn.Close()
 			es.mux.Lock()
 			for _, reciever := range es.recievers {
@@ -79,14 +74,11 @@ func (es *EventStream) processEvents(running chan struct{}) {
 		evt := RecievedEvent{}
 		evt.Err = json.Unmarshal(msg, &evt.E)
 		toSend := map[int64]chan RecievedEvent{}
-		log.Printf("Locking es mux in process loop")
 		es.mux.Lock()
 		for reg, handles := range es.subscriptions {
 			if !evt.matches(reg) {
-				log.Printf("Evt %v does not match %s, skipping", evt.E, reg)
 				continue
 			}
-			log.Printf("Evt %v matches %s, queing it up to send", evt.E, reg)
 			for _, i := range handles {
 				if toSend[i] == nil {
 					toSend[i] = es.recievers[i]
@@ -94,10 +86,8 @@ func (es *EventStream) processEvents(running chan struct{}) {
 			}
 		}
 		es.mux.Unlock()
-		log.Printf("es mux in process loop unlocked")
 		go func(ts map[int64]chan RecievedEvent, evt RecievedEvent) {
 			for i := range ts {
-				log.Printf("Sending evt %v to handle %d", evt.E, i)
 				ts[i] <- evt
 			}
 		}(toSend, evt)
