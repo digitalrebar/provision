@@ -157,12 +157,11 @@ func testCli(t *testing.T, test CliTest) {
 	patchSE, _ := diff(test.expectedStdErr, se)
 	if !test.dumpUsage {
 		if strings.HasPrefix(test.expectedStdOut, "RE:\n") {
-			if matched, err := regexp.MatchString(test.expectedStdOut[4:], so); err != nil || !matched {
-				if err != nil {
-					t.Errorf("Expected StdOut: regexp fail: %v\n", err)
-				}
-				t.Errorf("Expected StdOut: %s", test.expectedStdOut[4:])
-				t.Errorf("Got: %s", so)
+			re := regexp.MustCompile(test.expectedStdOut[4:])
+			if !re.MatchString(so) {
+				patchSO, _ = diff(re.String(), so)
+				t.Errorf("Expected StdOut: %s", re.String())
+				t.Errorf("Got: %s", patchSO)
 			}
 		} else {
 			if so != test.expectedStdOut {
@@ -221,15 +220,15 @@ var yamlTestString = `- Available: true
   Description: The boot environment you should use to have unknown machines boot off
     their local hard drive
   Errors: []
-  Initrds: null
+  Initrds: []
   Kernel: ""
   Name: ignore
   OS:
     Name: ignore
   OnlyUnknown: true
-  OptionalParams: null
+  OptionalParams: []
   ReadOnly: true
-  RequiredParams: null
+  RequiredParams: []
   Templates:
   - Contents: |
       DEFAULT local
@@ -253,15 +252,15 @@ var yamlTestString = `- Available: true
   Description: The boot environment you should use to have known machines boot off
     their local hard drive
   Errors: []
-  Initrds: null
+  Initrds: []
   Kernel: ""
   Name: local
   OS:
     Name: local
   OnlyUnknown: false
-  OptionalParams: null
+  OptionalParams: []
   ReadOnly: true
-  RequiredParams: null
+  RequiredParams: []
   Templates:
   - Contents: |
       DEFAULT local
@@ -289,16 +288,16 @@ var jsonTestString = `[
     "BootParams": "",
     "Description": "The boot environment you should use to have unknown machines boot off their local hard drive",
     "Errors": [],
-    "Initrds": null,
+    "Initrds": [],
     "Kernel": "",
     "Name": "ignore",
     "OS": {
       "Name": "ignore"
     },
     "OnlyUnknown": true,
-    "OptionalParams": null,
+    "OptionalParams": [],
     "ReadOnly": true,
-    "RequiredParams": null,
+    "RequiredParams": [],
     "Templates": [
       {
         "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
@@ -323,16 +322,16 @@ var jsonTestString = `[
     "BootParams": "",
     "Description": "The boot environment you should use to have known machines boot off their local hard drive",
     "Errors": [],
-    "Initrds": null,
+    "Initrds": [],
     "Kernel": "",
     "Name": "local",
     "OS": {
       "Name": "local"
     },
     "OnlyUnknown": false,
-    "OptionalParams": null,
+    "OptionalParams": [],
     "ReadOnly": true,
-    "RequiredParams": null,
+    "RequiredParams": [],
     "Templates": [
       {
         "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",

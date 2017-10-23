@@ -9,8 +9,41 @@ import (
 	"github.com/digitalrebar/provision/midlayer"
 )
 
-var limitNegativeError string = "Error: Limit cannot be negative\n\n"
-var offsetNegativeError string = "Error: Offset cannot be negative\n\n"
+var (
+	limitNegativeError                           = "Error: GET: bootenvs: Limit cannot be negative\n\n"
+	offsetNegativeError                          = "Error: GET: bootenvs: Offset cannot be negative\n\n"
+	bootEnvShowNoArgErrorString                  = "Error: drpcli bootenvs show [id] [flags] requires 1 argument\n"
+	bootEnvShowTooManyArgErrorString             = "Error: drpcli bootenvs show [id] [flags] requires 1 argument\n"
+	bootEnvShowMissingArgErrorString             = "Error: GET: bootenvs/john: Not Found\n\n"
+	bootEnvCreateBadJSONErrorString              = "Error: CREATE: bootenvs: Empty key not allowed\n\n"
+	bootEnvExistsNoArgErrorString                = "Error: drpcli bootenvs exists [id] [flags] requires 1 argument"
+	bootEnvExistsTooManyArgErrorString           = "Error: drpcli bootenvs exists [id] [flags] requires 1 argument"
+	bootEnvExistsMissingJohnString               = "Error: GET: bootenvs/john: Not Found\n\n"
+	bootEnvCreateNoArgErrorString                = "Error: drpcli bootenvs create [json] [flags] requires 1 argument\n"
+	bootEnvCreateTooManyArgErrorString           = "Error: drpcli bootenvs create [json] [flags] requires 1 argument\n"
+	bootEnvCreateDuplicateErrorString            = "Error: CREATE: bootenvs/john: already exists\n\n"
+	bootEnvPatchJohnMissingErrorString           = "Error: PATCH: bootenvs/john2: Not Found\n\n"
+	bootEnvDestroyNoArgErrorString               = "Error: drpcli bootenvs destroy [id] [flags] requires 1 argument"
+	bootEnvDestroyTooManyArgErrorString          = "Error: drpcli bootenvs destroy [id] [flags] requires 1 argument"
+	bootEnvPatchBadBaseJSONErrorString           = "Error: Unable to parse drpcli bootenvs patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.BootEnv\n\n"
+	bootEnvPatchBadPatchJSONErrorString          = "Error: Unable to parse drpcli bootenvs patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.BootEnv\n\n"
+	bootEnvUpdateBadJSONErrorString              = "Error: Unable to merge objects: json: cannot unmarshal string into Go value of type map[string]interface {}\n\n\n"
+	bootEnvUpdateJohnMissingErrorString          = "Error: GET: bootenvs/john2: Not Found\n\n"
+	bootEnvPatchNoArgErrorString                 = "Error: drpcli bootenvs patch [objectJson] [changesJson] [flags] requires 2 arguments"
+	bootEnvPatchTooManyArgErrorString            = "Error: drpcli bootenvs patch [objectJson] [changesJson] [flags] requires 2 arguments"
+	bootEnvUpdateNoArgErrorString                = "Error: drpcli bootenvs update [id] [json] [flags] requires 2 arguments"
+	bootEnvUpdateTooManyArgErrorString           = "Error: drpcli bootenvs update [id] [json] [flags] requires 2 arguments"
+	bootEnvDestroyMissingJohnString              = "Error: DELETE: bootenvs/john: Not Found\n\n"
+	bootEnvInstallNoArgUsageString               = "Error: drpcli bootenvs install [bootenvFile] [isoPath] [flags] needs at least 1 arg\n"
+	bootEnvInstallTooManyArgUsageString          = "Error: drpcli bootenvs install [bootenvFile] [isoPath] [flags] has Too many args\n"
+	bootEnvInstallBadBootEnvDirErrorString       = "Error: Error determining whether bootenvs dir exists: stat bootenvs: no such file or directory\n\n"
+	bootEnvInstallBootEnvDirIsFileErrorString    = "Error: bootenvs is not a directory\n\n"
+	bootEnvInstallNoSledgehammerErrorString      = "Error: No bootenv bootenvs/fredhammer.yml\n\n"
+	bootEnvInstallSledgehammerBadJsonErrorString = "Error: Invalid bootenv object: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.BootEnv\n\n\n"
+	bootEnvBadReadOnlyString                     = "Error: GET: bootenvs: ReadOnly must be true or false\n\n"
+	bootEnvBadAvailableString                    = "Error: GET: bootenvs: Available must be true or false\n\n"
+	bootEnvBadValidString                        = "Error: GET: bootenvs: Valid must be true or false\n\n"
+)
 
 var bootEnvEmptyListString string = "[]\n"
 var bootEnvIgnoreOnlyListString string = `[
@@ -19,16 +52,16 @@ var bootEnvIgnoreOnlyListString string = `[
     "BootParams": "",
     "Description": "The boot environment you should use to have unknown machines boot off their local hard drive",
     "Errors": [],
-    "Initrds": null,
+    "Initrds": [],
     "Kernel": "",
     "Name": "ignore",
     "OS": {
       "Name": "ignore"
     },
     "OnlyUnknown": true,
-    "OptionalParams": null,
+    "OptionalParams": [],
     "ReadOnly": true,
-    "RequiredParams": null,
+    "RequiredParams": [],
     "Templates": [
       {
         "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
@@ -56,16 +89,16 @@ var bootEnvLocalOnlyListString string = `[
     "BootParams": "",
     "Description": "The boot environment you should use to have known machines boot off their local hard drive",
     "Errors": [],
-    "Initrds": null,
+    "Initrds": [],
     "Kernel": "",
     "Name": "local",
     "OS": {
       "Name": "local"
     },
     "OnlyUnknown": false,
-    "OptionalParams": null,
+    "OptionalParams": [],
     "ReadOnly": true,
-    "RequiredParams": null,
+    "RequiredParams": [],
     "Templates": [
       {
         "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
@@ -93,16 +126,16 @@ var bootEnvDefaultListString string = `[
     "BootParams": "",
     "Description": "The boot environment you should use to have unknown machines boot off their local hard drive",
     "Errors": [],
-    "Initrds": null,
+    "Initrds": [],
     "Kernel": "",
     "Name": "ignore",
     "OS": {
       "Name": "ignore"
     },
     "OnlyUnknown": true,
-    "OptionalParams": null,
+    "OptionalParams": [],
     "ReadOnly": true,
-    "RequiredParams": null,
+    "RequiredParams": [],
     "Templates": [
       {
         "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
@@ -127,16 +160,16 @@ var bootEnvDefaultListString string = `[
     "BootParams": "",
     "Description": "The boot environment you should use to have known machines boot off their local hard drive",
     "Errors": [],
-    "Initrds": null,
+    "Initrds": [],
     "Kernel": "",
     "Name": "local",
     "OS": {
       "Name": "local"
     },
     "OnlyUnknown": false,
-    "OptionalParams": null,
+    "OptionalParams": [],
     "ReadOnly": true,
-    "RequiredParams": null,
+    "RequiredParams": [],
     "Templates": [
       {
         "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
@@ -158,25 +191,21 @@ var bootEnvDefaultListString string = `[
   }
 ]
 `
-
-var bootEnvShowNoArgErrorString string = "Error: drpcli bootenvs show [id] [flags] requires 1 argument\n"
-var bootEnvShowTooManyArgErrorString string = "Error: drpcli bootenvs show [id] [flags] requires 1 argument\n"
-var bootEnvShowMissingArgErrorString string = "Error: bootenvs GET: john: Not Found\n\n"
 var bootEnvShowIgnoreString string = `{
   "Available": true,
   "BootParams": "",
   "Description": "The boot environment you should use to have unknown machines boot off their local hard drive",
   "Errors": [],
-  "Initrds": null,
+  "Initrds": [],
   "Kernel": "",
   "Name": "ignore",
   "OS": {
     "Name": "ignore"
   },
   "OnlyUnknown": true,
-  "OptionalParams": null,
+  "OptionalParams": [],
   "ReadOnly": true,
-  "RequiredParams": null,
+  "RequiredParams": [],
   "Templates": [
     {
       "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
@@ -198,15 +227,10 @@ var bootEnvShowIgnoreString string = `{
 }
 `
 
-var bootEnvExistsNoArgErrorString string = "Error: drpcli bootenvs exists [id] [flags] requires 1 argument"
-var bootEnvExistsTooManyArgErrorString string = "Error: drpcli bootenvs exists [id] [flags] requires 1 argument"
 var bootEnvExistsIgnoreString string = ""
-var bootEnvExistsMissingJohnString string = "Error: bootenvs GET: john: Not Found\n\n"
 
-var bootEnvCreateNoArgErrorString string = "Error: drpcli bootenvs create [json] [flags] requires 1 argument\n"
-var bootEnvCreateTooManyArgErrorString string = "Error: drpcli bootenvs create [json] [flags] requires 1 argument\n"
 var bootEnvCreateBadJSONString = "{asdgasdg}"
-var bootEnvCreateBadJSONErrorString = "Error: dataTracker create bootenvs: Empty key not allowed\n\n"
+
 var bootEnvCreateInputString string = `{
   "name": "john"
 }
@@ -217,17 +241,17 @@ var bootEnvCreateJohnString string = `{
   "Errors": [
     "bootenv: Missing elilo or pxelinux template"
   ],
-  "Initrds": null,
+  "Initrds": [],
   "Kernel": "",
   "Name": "john",
   "OS": {
     "Name": ""
   },
   "OnlyUnknown": false,
-  "OptionalParams": null,
+  "OptionalParams": [],
   "ReadOnly": false,
-  "RequiredParams": null,
-  "Templates": null,
+  "RequiredParams": [],
+  "Templates": [],
   "Validated": true
 }
 `
@@ -238,22 +262,21 @@ var bootEnvCreateFredString string = `{
   "Errors": [
     "bootenv: Missing elilo or pxelinux template"
   ],
-  "Initrds": null,
+  "Initrds": [],
   "Kernel": "",
   "Name": "fred",
   "OS": {
     "Name": ""
   },
   "OnlyUnknown": false,
-  "OptionalParams": null,
+  "OptionalParams": [],
   "ReadOnly": false,
-  "RequiredParams": null,
-  "Templates": null,
+  "RequiredParams": [],
+  "Templates": [],
   "Validated": true
 }
 `
 var bootEnvDeleteFredString string = "Deleted bootenv fred\n"
-var bootEnvCreateDuplicateErrorString = "Error: dataTracker create bootenvs: john already exists\n\n"
 
 var bootEnvListBothEnvsString = `[
   {
@@ -261,16 +284,16 @@ var bootEnvListBothEnvsString = `[
     "BootParams": "",
     "Description": "The boot environment you should use to have unknown machines boot off their local hard drive",
     "Errors": [],
-    "Initrds": null,
+    "Initrds": [],
     "Kernel": "",
     "Name": "ignore",
     "OS": {
       "Name": "ignore"
     },
     "OnlyUnknown": true,
-    "OptionalParams": null,
+    "OptionalParams": [],
     "ReadOnly": true,
-    "RequiredParams": null,
+    "RequiredParams": [],
     "Templates": [
       {
         "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
@@ -296,17 +319,17 @@ var bootEnvListBothEnvsString = `[
     "Errors": [
       "bootenv: Missing elilo or pxelinux template"
     ],
-    "Initrds": null,
+    "Initrds": [],
     "Kernel": "",
     "Name": "john",
     "OS": {
       "Name": ""
     },
     "OnlyUnknown": false,
-    "OptionalParams": null,
+    "OptionalParams": [],
     "ReadOnly": false,
-    "RequiredParams": null,
-    "Templates": null,
+    "RequiredParams": [],
+    "Templates": [],
     "Validated": true
   },
   {
@@ -314,16 +337,16 @@ var bootEnvListBothEnvsString = `[
     "BootParams": "",
     "Description": "The boot environment you should use to have known machines boot off their local hard drive",
     "Errors": [],
-    "Initrds": null,
+    "Initrds": [],
     "Kernel": "",
     "Name": "local",
     "OS": {
       "Name": "local"
     },
     "OnlyUnknown": false,
-    "OptionalParams": null,
+    "OptionalParams": [],
     "ReadOnly": true,
-    "RequiredParams": null,
+    "RequiredParams": [],
     "Templates": [
       {
         "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
@@ -346,10 +369,8 @@ var bootEnvListBothEnvsString = `[
 ]
 `
 
-var bootEnvUpdateNoArgErrorString string = "Error: drpcli bootenvs update [id] [json] [flags] requires 2 arguments"
-var bootEnvUpdateTooManyArgErrorString string = "Error: drpcli bootenvs update [id] [json] [flags] requires 2 arguments"
 var bootEnvUpdateBadJSONString = "asdgasdg"
-var bootEnvUpdateBadJSONErrorString = "Error: Unable to merge objects: json: cannot unmarshal string into Go value of type map[string]interface {}\n\n\n"
+
 var bootEnvUpdateInputString string = `{
   "Kernel": "lpxelinux.0"
 }
@@ -360,45 +381,42 @@ var bootEnvUpdateJohnString string = `{
   "Errors": [
     "bootenv: Missing elilo or pxelinux template"
   ],
-  "Initrds": null,
+  "Initrds": [],
   "Kernel": "lpxelinux.0",
   "Name": "john",
   "OS": {
     "Name": ""
   },
   "OnlyUnknown": false,
-  "OptionalParams": null,
+  "OptionalParams": [],
   "ReadOnly": false,
-  "RequiredParams": null,
-  "Templates": null,
+  "RequiredParams": [],
+  "Templates": [],
   "Validated": true
 }
 `
-var bootEnvUpdateJohnMissingErrorString string = "Error: bootenvs GET: john2: Not Found\n\n"
 
-var bootEnvPatchNoArgErrorString string = "Error: drpcli bootenvs patch [objectJson] [changesJson] [flags] requires 2 arguments"
-var bootEnvPatchTooManyArgErrorString string = "Error: drpcli bootenvs patch [objectJson] [changesJson] [flags] requires 2 arguments"
 var bootEnvPatchBadPatchJSONString = "asdgasdg"
-var bootEnvPatchBadPatchJSONErrorString = "Error: Unable to parse drpcli bootenvs patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.BootEnv\n\n"
+
 var bootEnvPatchBadBaseJSONString = "asdgasdg"
-var bootEnvPatchBadBaseJSONErrorString = "Error: Unable to parse drpcli bootenvs patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.BootEnv\n\n"
+
 var bootEnvPatchBaseString string = `{
   "Available": false,
   "BootParams": "",
   "Errors": [
     "bootenv: Missing elilo or pxelinux template"
   ],
-  "Initrds": null,
+  "Initrds": [],
   "Kernel": "lpxelinux.0",
   "Name": "john",
   "OS": {
     "Name": ""
   },
   "OnlyUnknown": false,
-  "OptionalParams": null,
+  "OptionalParams": [],
   "ReadOnly": false,
-  "RequiredParams": null,
-  "Templates": null,
+  "RequiredParams": [],
+  "Templates": [],
   "Validated": true
 }
 `
@@ -412,17 +430,17 @@ var bootEnvPatchJohnString string = `{
   "Errors": [
     "bootenv: Missing elilo or pxelinux template"
   ],
-  "Initrds": null,
+  "Initrds": [],
   "Kernel": "bootx64.efi",
   "Name": "john",
   "OS": {
     "Name": ""
   },
   "OnlyUnknown": false,
-  "OptionalParams": null,
+  "OptionalParams": [],
   "ReadOnly": false,
-  "RequiredParams": null,
-  "Templates": null,
+  "RequiredParams": [],
+  "Templates": [],
   "Validated": true
 }
 `
@@ -432,32 +450,21 @@ var bootEnvPatchMissingBaseString string = `{
   "Errors": [
     "bootenv: Missing elilo or pxelinux template"
   ],
-  "Initrds": null,
+  "Initrds": [],
   "Kernel": "bootx64.efi",
   "Name": "john2",
   "OS": {
     "Name": ""
   },
   "OnlyUnknown": false,
-  "OptionalParams": null,
-  "RequiredParams": null,
-  "Templates": null,
+  "OptionalParams": [],
+  "RequiredParams": [],
+  "Templates": [],
   "Validated": true
 }
 `
-var bootEnvPatchJohnMissingErrorString string = "Error: bootenvs: PATCH john2: Not Found\n\n"
 
-var bootEnvDestroyNoArgErrorString string = "Error: drpcli bootenvs destroy [id] [flags] requires 1 argument"
-var bootEnvDestroyTooManyArgErrorString string = "Error: drpcli bootenvs destroy [id] [flags] requires 1 argument"
 var bootEnvDestroyJohnString string = "Deleted bootenv john\n"
-var bootEnvDestroyMissingJohnString string = "Error: bootenvs: DELETE john: Not Found\n\n"
-
-var bootEnvInstallNoArgUsageString string = "Error: drpcli bootenvs install [bootenvFile] [isoPath] [flags] needs at least 1 arg\n"
-var bootEnvInstallTooManyArgUsageString string = "Error: drpcli bootenvs install [bootenvFile] [isoPath] [flags] has Too many args\n"
-var bootEnvInstallBadBootEnvDirErrorString string = "Error: Error determining whether bootenvs dir exists: stat bootenvs: no such file or directory\n\n"
-var bootEnvInstallBootEnvDirIsFileErrorString string = "Error: bootenvs is not a directory\n\n"
-var bootEnvInstallNoSledgehammerErrorString string = "Error: No bootenv bootenvs/fredhammer.yml\n\n"
-var bootEnvInstallSledgehammerBadJsonErrorString string = "Error: Invalid bootenv object: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.BootEnv\n\n\n"
 
 var bootEnvInstallSledgehammerSuccessWithErrorsString string = `RE:
 {
@@ -494,7 +501,7 @@ var bootEnvInstallSledgehammerSuccessString string = `RE:
     "access_keys"
   \],
   "ReadOnly": false,
-  "RequiredParams": null,
+  "RequiredParams": [],
   "Templates": \[
 [\s\S]*
   \],
@@ -508,16 +515,16 @@ var bootEnvInstallLocalSuccessString string = `{
   "Available": true,
   "BootParams": "",
   "Errors": [],
-  "Initrds": null,
+  "Initrds": [],
   "Kernel": "",
   "Name": "local3",
   "OS": {
     "Name": "local3"
   },
   "OnlyUnknown": false,
-  "OptionalParams": null,
+  "OptionalParams": [],
   "ReadOnly": false,
-  "RequiredParams": null,
+  "RequiredParams": [],
   "Templates": [
     {
       "ID": "local3-pxelinux.tmpl",
@@ -544,10 +551,6 @@ var bootEnvSkipDownloadErrorString = "Installing bootenv fredhammer\nSkipping IS
 var bootEnvDownloadErrorString = "Installing bootenv fredhammer\nDownloading http://127.0.0.1:10003/sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar to isos/sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar\nDownloaded 5120 bytes\nUploading isos/sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar to DigitalRebar Provision\n"
 
 var bootEnvInstallLocal3ErrorString = "Installing template local3-pxelinux.tmpl\nInstalling template local3-elilo.tmpl\nInstalling template local3-ipxe.tmpl\nInstalling bootenv local3\n"
-
-var bootEnvBadReadOnlyString = "Error: ReadOnly must be true or false\n\n"
-var bootEnvBadAvailableString = "Error: Available must be true or false\n\n"
-var bootEnvBadValidString = "Error: Valid must be true or false\n\n"
 
 func TestBootEnvCli(t *testing.T) {
 	tests := []CliTest{

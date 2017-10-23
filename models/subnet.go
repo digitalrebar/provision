@@ -106,28 +106,28 @@ func (s *Subnet) Key() string {
 	return s.Name
 }
 
+func (s *Subnet) Fill() {
+	s.Validation.fill()
+	s.MetaData.fill()
+	if s.Options == nil {
+		s.Options = []*DhcpOption{}
+	}
+}
+
 func (s *Subnet) AuthKey() string {
 	return s.Key()
 }
 
-type Subnets []*Subnet
-
-func (s Subnets) Elem() Model {
-	return &Subnet{}
+func (b *Subnet) SliceOf() interface{} {
+	s := []*Subnet{}
+	return &s
 }
 
-func (s Subnets) Items() []Model {
-	res := make([]Model, len(s))
-	for i, m := range s {
-		res[i] = m
+func (b *Subnet) ToModels(obj interface{}) []Model {
+	items := obj.(*[]*Subnet)
+	res := make([]Model, len(*items))
+	for i, item := range *items {
+		res[i] = Model(item)
 	}
 	return res
-}
-
-func (s Subnets) Fill(m []Model) {
-	q := make([]*Subnet, len(m))
-	for i, obj := range m {
-		q[i] = obj.(*Subnet)
-	}
-	s = q[:]
 }

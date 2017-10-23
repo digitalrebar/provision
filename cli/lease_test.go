@@ -7,12 +7,36 @@ import (
 var leaseDefaultListString string = "[]\n"
 var leaseEmptyListString string = "[]\n"
 
-var leaseAddrErrorString string = "Error: Addr must be an IP address\n\n"
-var leaseExpireTimeErrorString string = "Error: ExpireTime is not valid: parsing time \"false\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"false\" as \"2006\"\n\n"
+var leaseAddrErrorString string = "Error: GET: leases: Addr must be an IP address\n\n"
+var leaseExpireTimeErrorString string = `Error: GET: leases: ExpireTime is not valid: parsing time "false" as "2006-01-02T15:04:05Z07:00": cannot parse "false" as "2006"
 
+`
 var leaseShowNoArgErrorString string = "Error: drpcli leases show [id] [flags] requires 1 argument\n"
 var leaseShowTooManyArgErrorString string = "Error: drpcli leases show [id] [flags] requires 1 argument\n"
-var leaseShowMissingArgErrorString string = "Error: leases GET: C0A8646F: Not Found\n\n"
+var leaseShowMissingArgErrorString string = "Error: GET: leases/C0A8646F: Not Found\n\n"
+var leaseExistsNoArgErrorString string = "Error: drpcli leases exists [id] [flags] requires 1 argument"
+var leaseExistsTooManyArgErrorString string = "Error: drpcli leases exists [id] [flags] requires 1 argument"
+var leaseExistsMissingJohnString string = "Error: GET: leases/C0A8646F: Not Found\n\n"
+var leaseCreateNoArgErrorString string = "Error: drpcli leases create [json] [flags] requires 1 argument\n"
+var leaseCreateTooManyArgErrorString string = "Error: drpcli leases create [json] [flags] requires 1 argument\n"
+var leaseCreateBadJSONErrorString = "Error: Unable to create new lease: Invalid type passed to lease create\n\n"
+var leaseCreateDuplicateErrorString = "Error: CREATE: leases/C0A8646E: already exists\n\n"
+var leaseUpdateNoArgErrorString string = "Error: drpcli leases update [id] [json] [flags] requires 2 arguments"
+var leaseUpdateTooManyArgErrorString string = "Error: drpcli leases update [id] [json] [flags] requires 2 arguments"
+var leaseUpdateBadJSONErrorString = "Error: Unable to merge objects: json: cannot unmarshal string into Go value of type map[string]interface {}\n\n\n"
+var leaseUpdateJohnMissingErrorString string = "Error: GET: leases/C0A8646F: Not Found\n\n"
+var leasePatchNoArgErrorString string = "Error: drpcli leases patch [objectJson] [changesJson] [flags] requires 2 arguments"
+var leasePatchTooManyArgErrorString string = "Error: drpcli leases patch [objectJson] [changesJson] [flags] requires 2 arguments"
+var leasePatchBadPatchJSONErrorString = "Error: Unable to parse drpcli leases patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Lease\n\n"
+var leasePatchBadBaseJSONErrorString = "Error: Unable to parse drpcli leases patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Lease\n\n"
+var leasePatchJohnMissingErrorString string = "Error: PATCH: leases/C0A8646F: Not Found\n\n"
+var leaseDestroyNoArgErrorString string = "Error: drpcli leases destroy [id] [flags] requires 1 argument"
+var leaseDestroyTooManyArgErrorString string = "Error: drpcli leases destroy [id] [flags] requires 1 argument"
+var leaseDestroyMissingJohnString string = "Error: DELETE: leases/C0A8646E: Not Found\n\n"
+var leaseShowInvalidAddressErrorString string = "Error: GET: leases/k192.168.100.110: address not valid\n\n"
+var leaseUpdateInvalidAddressErrorString string = "Error: GET: leases/k192.168.100.111: address not valid\n\n"
+var leaseDestroyInvalidAddressErrorString string = "Error: DELETE: leases/k192.168.100.110: address not valid\n\n"
+
 var leaseShowLeaseString string = `{
   "Addr": "192.168.100.110",
   "Available": true,
@@ -26,15 +50,10 @@ var leaseShowLeaseString string = `{
 }
 `
 
-var leaseExistsNoArgErrorString string = "Error: drpcli leases exists [id] [flags] requires 1 argument"
-var leaseExistsTooManyArgErrorString string = "Error: drpcli leases exists [id] [flags] requires 1 argument"
 var leaseExistsLeaseString string = ""
-var leaseExistsMissingJohnString string = "Error: leases GET: C0A8646F: Not Found\n\n"
 
-var leaseCreateNoArgErrorString string = "Error: drpcli leases create [json] [flags] requires 1 argument\n"
-var leaseCreateTooManyArgErrorString string = "Error: drpcli leases create [json] [flags] requires 1 argument\n"
 var leaseCreateBadJSONString = "asdgasdg"
-var leaseCreateBadJSONErrorString = "Error: Unable to create new lease: Invalid type passed to lease create\n\n"
+
 var leaseCreateInputString string = `{
   "Addr": "192.168.100.110",
   "ExpireTime": "2017-03-31T00:11:21.028-05:00",
@@ -54,7 +73,6 @@ var leaseCreateJohnString string = `{
   "Validated": true
 }
 `
-var leaseCreateDuplicateErrorString = "Error: dataTracker create leases: C0A8646E already exists\n\n"
 
 var leaseListLeasesString = `[
   {
@@ -71,10 +89,8 @@ var leaseListLeasesString = `[
 ]
 `
 
-var leaseUpdateNoArgErrorString string = "Error: drpcli leases update [id] [json] [flags] requires 2 arguments"
-var leaseUpdateTooManyArgErrorString string = "Error: drpcli leases update [id] [json] [flags] requires 2 arguments"
 var leaseUpdateBadJSONString = "asdgasdg"
-var leaseUpdateBadJSONErrorString = "Error: Unable to merge objects: json: cannot unmarshal string into Go value of type map[string]interface {}\n\n\n"
+
 var leaseUpdateInputString string = `{
   "ExpireTime": "2019-03-31T00:11:21.028-05:00"
 }
@@ -91,14 +107,11 @@ var leaseUpdateJohnString string = `{
   "Validated": true
 }
 `
-var leaseUpdateJohnMissingErrorString string = "Error: leases GET: C0A8646F: Not Found\n\n"
 
-var leasePatchNoArgErrorString string = "Error: drpcli leases patch [objectJson] [changesJson] [flags] requires 2 arguments"
-var leasePatchTooManyArgErrorString string = "Error: drpcli leases patch [objectJson] [changesJson] [flags] requires 2 arguments"
 var leasePatchBadPatchJSONString = "asdgasdg"
-var leasePatchBadPatchJSONErrorString = "Error: Unable to parse drpcli leases patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Lease\n\n"
+
 var leasePatchBadBaseJSONString = "asdgasdg"
-var leasePatchBadBaseJSONErrorString = "Error: Unable to parse drpcli leases patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Lease\n\n"
+
 var leasePatchBaseString string = `{
   "Addr": "192.168.100.110",
   "Available": true,
@@ -136,16 +149,7 @@ var leasePatchMissingBaseString string = `{
   "Validated": true
 }
 `
-var leasePatchJohnMissingErrorString string = "Error: leases: PATCH C0A8646F: Not Found\n\n"
-
-var leaseDestroyNoArgErrorString string = "Error: drpcli leases destroy [id] [flags] requires 1 argument"
-var leaseDestroyTooManyArgErrorString string = "Error: drpcli leases destroy [id] [flags] requires 1 argument"
 var leaseDestroyJohnString string = "Deleted lease 192.168.100.110\n"
-var leaseDestroyMissingJohnString string = "Error: leases: DELETE C0A8646E: Not Found\n\n"
-
-var leaseShowInvalidAddressErrorString string = "Error: lease get: address not valid: k192.168.100.110\n\n"
-var leaseUpdateInvalidAddressErrorString string = "Error: lease get: address not valid: k192.168.100.111\n\n"
-var leaseDestroyInvalidAddressErrorString string = "Error: lease delete: address not valid: k192.168.100.110\n\n"
 
 func TestLeaseCli(t *testing.T) {
 	tests := []CliTest{
@@ -161,12 +165,6 @@ func TestLeaseCli(t *testing.T) {
 		CliTest{false, false, []string{"leases", "create", leaseCreateInputString}, noStdinString, leaseCreateJohnString, noErrorString},
 		CliTest{false, true, []string{"leases", "create", leaseCreateInputString}, noStdinString, noContentString, leaseCreateDuplicateErrorString},
 		CliTest{false, false, []string{"leases", "list"}, noStdinString, leaseListLeasesString, noErrorString},
-		CliTest{false, false, []string{"leases", "list", "--limit=0"}, noStdinString, leaseEmptyListString, noErrorString},
-		CliTest{false, false, []string{"leases", "list", "--limit=10", "--offset=0"}, noStdinString, leaseListLeasesString, noErrorString},
-		CliTest{false, false, []string{"leases", "list", "--limit=10", "--offset=10"}, noStdinString, leaseEmptyListString, noErrorString},
-		CliTest{false, true, []string{"leases", "list", "--limit=-10", "--offset=0"}, noStdinString, noContentString, limitNegativeError},
-		CliTest{false, true, []string{"leases", "list", "--limit=10", "--offset=-10"}, noStdinString, noContentString, offsetNegativeError},
-		CliTest{false, false, []string{"leases", "list", "--limit=-1", "--offset=-1"}, noStdinString, leaseListLeasesString, noErrorString},
 		CliTest{false, false, []string{"leases", "list", "Strategy=fred"}, noStdinString, leaseEmptyListString, noErrorString},
 		CliTest{false, false, []string{"leases", "list", "Strategy=MAC"}, noStdinString, leaseListLeasesString, noErrorString},
 		CliTest{false, false, []string{"leases", "list", "Token=08:00:27:33:77:de"}, noStdinString, leaseListLeasesString, noErrorString},
@@ -177,16 +175,6 @@ func TestLeaseCli(t *testing.T) {
 		CliTest{false, false, []string{"leases", "list", "ExpireTime=2016-03-31T00:11:21.028-05:00"}, noStdinString, leaseEmptyListString, noErrorString},
 		CliTest{false, false, []string{"leases", "list", "ExpireTime=2017-03-31T00:11:21.028-05:00"}, noStdinString, leaseListLeasesString, noErrorString},
 		CliTest{false, true, []string{"leases", "list", "ExpireTime=false"}, noStdinString, noContentString, leaseExpireTimeErrorString},
-		CliTest{false, false, []string{"leases", "list", "Available=true"}, noStdinString, leaseListLeasesString, noErrorString},
-		CliTest{false, false, []string{"leases", "list", "Available=false"}, noStdinString, leaseEmptyListString, noErrorString},
-		CliTest{false, true, []string{"leases", "list", "Available=fred"}, noStdinString, noContentString, bootEnvBadAvailableString},
-		CliTest{false, false, []string{"leases", "list", "Valid=true"}, noStdinString, leaseListLeasesString, noErrorString},
-		CliTest{false, false, []string{"leases", "list", "Valid=false"}, noStdinString, leaseEmptyListString, noErrorString},
-		CliTest{false, true, []string{"leases", "list", "Valid=fred"}, noStdinString, noContentString, bootEnvBadValidString},
-		CliTest{false, false, []string{"leases", "list", "ReadOnly=true"}, noStdinString, leaseEmptyListString, noErrorString},
-		CliTest{false, false, []string{"leases", "list", "ReadOnly=false"}, noStdinString, leaseListLeasesString, noErrorString},
-		CliTest{false, true, []string{"leases", "list", "ReadOnly=fred"}, noStdinString, noContentString, bootEnvBadReadOnlyString},
-
 		CliTest{true, true, []string{"leases", "show"}, noStdinString, noContentString, leaseShowNoArgErrorString},
 		CliTest{true, true, []string{"leases", "show", "john", "john2"}, noStdinString, noContentString, leaseShowTooManyArgErrorString},
 		CliTest{false, true, []string{"leases", "show", "192.168.100.111"}, noStdinString, noContentString, leaseShowMissingArgErrorString},

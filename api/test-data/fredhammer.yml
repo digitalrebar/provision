@@ -1,0 +1,29 @@
+---
+BootParams: Acounted for
+Errors:
+- Fake error
+Initrds:
+- stage1.img
+Kernel: vmlinuz0
+Name: fredhammer
+OS:
+  IsoFile: sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar
+  IsoUrl: http://127.0.0.1:10002/files/sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar
+  Name: sledgehammer/708de8b878e3818b1c1bb598a56de968939f9d4b
+OptionalParams:
+- ntp_servers
+- access_keys
+Templates:
+- Contents: 'Attention all '
+  Name: pxelinux
+  Path: pxelinux.cfg/{{.Machine.HexAddress}}
+- Contents: planets of the
+  Name: elilo
+  Path: '{{.Machine.HexAddress}}.conf'
+- Contents: Solar Federation
+  Name: ipxe
+  Path: '{{.Machine.Address}}.ipxe'
+- Contents: We have assumed control
+  Name: control.sh
+  Path: '{{.Machine.Path}}/control.sh'
+Validated: true

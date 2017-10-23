@@ -81,28 +81,32 @@ func (n *Machine) Key() string {
 	return n.UUID()
 }
 
+func (n *Machine) Fill() {
+	n.MetaData.fill()
+	n.Validation.fill()
+	if n.Profiles == nil {
+		n.Profiles = []string{}
+	}
+	if n.Tasks == nil {
+		n.Tasks = []string{}
+	}
+	n.Profile.Fill()
+}
+
 func (n *Machine) AuthKey() string {
 	return n.Key()
 }
 
-type Machines []*Machine
-
-func (s Machines) Elem() Model {
-	return &Machine{}
+func (b *Machine) SliceOf() interface{} {
+	s := []*Machine{}
+	return &s
 }
 
-func (s Machines) Items() []Model {
-	res := make([]Model, len(s))
-	for i, m := range s {
-		res[i] = m
+func (b *Machine) ToModels(obj interface{}) []Model {
+	items := obj.(*[]*Machine)
+	res := make([]Model, len(*items))
+	for i, item := range *items {
+		res[i] = Model(item)
 	}
 	return res
-}
-
-func (s Machines) Fill(m []Model) {
-	q := make([]*Machine, len(m))
-	for i, obj := range m {
-		q[i] = obj.(*Machine)
-	}
-	s = q[:]
 }

@@ -34,28 +34,28 @@ func (p *Profile) Key() string {
 	return p.Name
 }
 
+func (p *Profile) Fill() {
+	p.Validation.fill()
+	p.MetaData.fill()
+	if p.Params == nil {
+		p.Params = map[string]interface{}{}
+	}
+}
+
 func (p *Profile) AuthKey() string {
 	return p.Key()
 }
 
-type Profiles []*Profile
-
-func (s Profiles) Elem() Model {
-	return &Profile{}
+func (b *Profile) SliceOf() interface{} {
+	s := []*Profile{}
+	return &s
 }
 
-func (s Profiles) Items() []Model {
-	res := make([]Model, len(s))
-	for i, m := range s {
-		res[i] = m
+func (b *Profile) ToModels(obj interface{}) []Model {
+	items := obj.(*[]*Profile)
+	res := make([]Model, len(*items))
+	for i, item := range *items {
+		res[i] = Model(item)
 	}
 	return res
-}
-
-func (s Profiles) Fill(m []Model) {
-	q := make([]*Profile, len(m))
-	for i, obj := range m {
-		q[i] = obj.(*Profile)
-	}
-	s = q[:]
 }

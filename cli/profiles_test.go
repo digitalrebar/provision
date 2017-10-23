@@ -4,6 +4,39 @@ import (
 	"testing"
 )
 
+var profileShowNoArgErrorString string = "Error: drpcli profiles show [id] [flags] requires 1 argument\n"
+var profileShowTooManyArgErrorString string = "Error: drpcli profiles show [id] [flags] requires 1 argument\n"
+var profileShowMissingArgErrorString string = "Error: GET: profiles/john2: Not Found\n\n"
+var profileExistsNoArgErrorString string = "Error: drpcli profiles exists [id] [flags] requires 1 argument"
+var profileExistsTooManyArgErrorString string = "Error: drpcli profiles exists [id] [flags] requires 1 argument"
+var profileExistsMissingJohnString string = "Error: GET: profiles/john2: Not Found\n\n"
+var profileCreateNoArgErrorString string = "Error: drpcli profiles create [json] [flags] requires 1 argument\n"
+var profileCreateTooManyArgErrorString string = "Error: drpcli profiles create [json] [flags] requires 1 argument\n"
+var profileCreateBadJSONErrorString = "Error: Invalid profile object: error converting YAML to JSON: yaml: line 1: did not find expected ',' or '}' and error converting YAML to JSON: yaml: line 1: did not find expected ',' or '}'\n\n"
+var profileCreateBadJSON2ErrorString = "Error: Unable to create new profile: Invalid type passed to profile create\n\n"
+var profileCreateDuplicateErrorString = "Error: CREATE: profiles/john: already exists\n\n"
+var profileUpdateNoArgErrorString string = "Error: drpcli profiles update [id] [json] [flags] requires 2 arguments"
+var profileUpdateTooManyArgErrorString string = "Error: drpcli profiles update [id] [json] [flags] requires 2 arguments"
+var profileUpdateBadJSONErrorString = "Error: Unable to merge objects: json: cannot unmarshal string into Go value of type map[string]interface {}\n\n\n"
+var profileUpdateJohnMissingErrorString string = "Error: GET: profiles/john2: Not Found\n\n"
+var profilePatchNoArgErrorString string = "Error: drpcli profiles patch [objectJson] [changesJson] [flags] requires 2 arguments"
+var profilePatchTooManyArgErrorString string = "Error: drpcli profiles patch [objectJson] [changesJson] [flags] requires 2 arguments"
+var profilePatchBadPatchJSONErrorString = "Error: Unable to parse drpcli profiles patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Profile\n\n"
+var profilePatchBadBaseJSONErrorString = "Error: Unable to parse drpcli profiles patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Profile\n\n"
+var profilePatchJohnMissingErrorString string = "Error: PATCH: profiles/john2: Not Found\n\n"
+var profileDestroyNoArgErrorString string = "Error: drpcli profiles destroy [id] [flags] requires 1 argument"
+var profileDestroyTooManyArgErrorString string = "Error: drpcli profiles destroy [id] [flags] requires 1 argument"
+var profileDestroyMissingJohnString string = "Error: DELETE: profiles/john: Not Found\n\n"
+var profileBootEnvNoArgErrorString string = "Error: drpcli profiles bootenv [id] [bootenv] [flags] requires 2 arguments"
+var profileBootEnvMissingProfileErrorString string = "Error: profiles GET: john: Not Found\n\n"
+var profileGetNoArgErrorString string = "Error: drpcli profiles get [id] param [key] [flags] requires 3 arguments"
+var profileGetMissingProfileErrorString string = "Error: GET: profiles/john2: Not Found\n\n"
+var profileSetNoArgErrorString string = "Error: drpcli profiles set [id] param [key] to [json blob] [flags] requires 5 arguments"
+var profileSetMissingProfileErrorString string = "Error: GET: profiles/john2: Not Found\n\n"
+var profileParamsNoArgErrorString string = "Error: drpcli profiles params [id] [json] [flags] requires 1 or 2 arguments\n"
+var profileParamsMissingProfileErrorString string = "Error: GET: profiles/john2: Not Found\n\n"
+var profilesParamsSetMissingProfileString string = "Error: POST: profiles/john2: Not Found\n\n"
+
 var profileDefaultListString string = `[
   {
     "Available": true,
@@ -21,10 +54,6 @@ var profileDefaultListString string = `[
 `
 
 var profileEmptyListString string = "[]\n"
-
-var profileShowNoArgErrorString string = "Error: drpcli profiles show [id] [flags] requires 1 argument\n"
-var profileShowTooManyArgErrorString string = "Error: drpcli profiles show [id] [flags] requires 1 argument\n"
-var profileShowMissingArgErrorString string = "Error: profiles GET: john2: Not Found\n\n"
 var profileShowProfileString string = `{
   "Available": true,
   "Errors": [],
@@ -37,17 +66,11 @@ var profileShowProfileString string = `{
 }
 `
 
-var profileExistsNoArgErrorString string = "Error: drpcli profiles exists [id] [flags] requires 1 argument"
-var profileExistsTooManyArgErrorString string = "Error: drpcli profiles exists [id] [flags] requires 1 argument"
 var profileExistsProfileString string = ""
-var profileExistsMissingJohnString string = "Error: profiles GET: john2: Not Found\n\n"
 
-var profileCreateNoArgErrorString string = "Error: drpcli profiles create [json] [flags] requires 1 argument\n"
-var profileCreateTooManyArgErrorString string = "Error: drpcli profiles create [json] [flags] requires 1 argument\n"
 var profileCreateBadJSONString = "{asdgasdg"
-var profileCreateBadJSONErrorString = "Error: Invalid profile object: error converting YAML to JSON: yaml: line 1: did not find expected ',' or '}' and error converting YAML to JSON: yaml: line 1: did not find expected ',' or '}'\n\n"
+
 var profileCreateBadJSON2String = "[asdgasdg]"
-var profileCreateBadJSON2ErrorString = "Error: Unable to create new profile: Invalid type passed to profile create\n\n"
 var profileCreateInputString string = `{
   "Name": "john",
   "Params": {
@@ -66,7 +89,6 @@ var profileCreateJohnString string = `{
   "Validated": true
 }
 `
-var profileCreateDuplicateErrorString = "Error: dataTracker create profiles: john already exists\n\n"
 
 var profileListProfilesString = `[
   {
@@ -107,10 +129,8 @@ var profileListJohnOnlyString = `[
 ]
 `
 
-var profileUpdateNoArgErrorString string = "Error: drpcli profiles update [id] [json] [flags] requires 2 arguments"
-var profileUpdateTooManyArgErrorString string = "Error: drpcli profiles update [id] [json] [flags] requires 2 arguments"
 var profileUpdateBadJSONString = "asdgasdg"
-var profileUpdateBadJSONErrorString = "Error: Unable to merge objects: json: cannot unmarshal string into Go value of type map[string]interface {}\n\n\n"
+
 var profileUpdateInputString string = `{
   "Params": {
     "JESSIE": "JAMES"
@@ -129,14 +149,11 @@ var profileUpdateJohnString string = `{
   "Validated": true
 }
 `
-var profileUpdateJohnMissingErrorString string = "Error: profiles GET: john2: Not Found\n\n"
 
-var profilePatchNoArgErrorString string = "Error: drpcli profiles patch [objectJson] [changesJson] [flags] requires 2 arguments"
-var profilePatchTooManyArgErrorString string = "Error: drpcli profiles patch [objectJson] [changesJson] [flags] requires 2 arguments"
 var profilePatchBadPatchJSONString = "asdgasdg"
-var profilePatchBadPatchJSONErrorString = "Error: Unable to parse drpcli profiles patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Profile\n\n"
+
 var profilePatchBadBaseJSONString = "asdgasdg"
-var profilePatchBadBaseJSONErrorString = "Error: Unable to parse drpcli profiles patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Profile\n\n"
+
 var profilePatchBaseString string = `{
   "Name": "john",
   "Params": {
@@ -173,25 +190,8 @@ var profilePatchMissingBaseString string = `{
   }
 }
 `
-var profilePatchJohnMissingErrorString string = "Error: profiles: PATCH john2: Not Found\n\n"
 
-var profileDestroyNoArgErrorString string = "Error: drpcli profiles destroy [id] [flags] requires 1 argument"
-var profileDestroyTooManyArgErrorString string = "Error: drpcli profiles destroy [id] [flags] requires 1 argument"
 var profileDestroyJohnString string = "Deleted profile john\n"
-var profileDestroyMissingJohnString string = "Error: profiles: DELETE john: Not Found\n\n"
-
-var profileBootEnvNoArgErrorString string = "Error: drpcli profiles bootenv [id] [bootenv] [flags] requires 2 arguments"
-var profileBootEnvMissingProfileErrorString string = "Error: profiles GET: john: Not Found\n\n"
-
-var profileGetNoArgErrorString string = "Error: drpcli profiles get [id] param [key] [flags] requires 3 arguments"
-var profileGetMissingProfileErrorString string = "Error: profiles GET Params: john2: Not Found\n\n"
-
-var profileSetNoArgErrorString string = "Error: drpcli profiles set [id] param [key] to [json blob] [flags] requires 5 arguments"
-var profileSetMissingProfileErrorString string = "Error: profiles GET Params: john2: Not Found\n\n"
-
-var profileParamsNoArgErrorString string = "Error: drpcli profiles params [id] [json] [flags] requires 1 or 2 arguments\n"
-var profileParamsMissingProfileErrorString string = "Error: profiles GET Params: john2: Not Found\n\n"
-var profilesParamsSetMissingProfileString string = "Error: profiles SET Params: john2: Not Found\n\n"
 
 var profileParamsStartingString string = `{
   "FRED": "GREG",
@@ -228,24 +228,8 @@ func TestProfileCli(t *testing.T) {
 		CliTest{false, false, []string{"profiles", "create", profileCreateInputString}, noStdinString, profileCreateJohnString, noErrorString},
 		CliTest{false, true, []string{"profiles", "create", profileCreateInputString}, noStdinString, noContentString, profileCreateDuplicateErrorString},
 		CliTest{false, false, []string{"profiles", "list"}, noStdinString, profileListProfilesString, noErrorString},
-		CliTest{false, false, []string{"profiles", "list", "--limit=0"}, noStdinString, profileEmptyListString, noErrorString},
-		CliTest{false, false, []string{"profiles", "list", "--limit=10", "--offset=0"}, noStdinString, profileListProfilesString, noErrorString},
-		CliTest{false, false, []string{"profiles", "list", "--limit=10", "--offset=10"}, noStdinString, profileEmptyListString, noErrorString},
-		CliTest{false, true, []string{"profiles", "list", "--limit=-10", "--offset=0"}, noStdinString, noContentString, limitNegativeError},
-		CliTest{false, true, []string{"profiles", "list", "--limit=10", "--offset=-10"}, noStdinString, noContentString, offsetNegativeError},
-		CliTest{false, false, []string{"profiles", "list", "--limit=-1", "--offset=-1"}, noStdinString, profileListProfilesString, noErrorString},
 		CliTest{false, false, []string{"profiles", "list", "Name=fred"}, noStdinString, profileEmptyListString, noErrorString},
 		CliTest{false, false, []string{"profiles", "list", "Name=john"}, noStdinString, profileListJohnOnlyString, noErrorString},
-		CliTest{false, false, []string{"profiles", "list", "Available=true"}, noStdinString, profileListProfilesString, noErrorString},
-		CliTest{false, false, []string{"profiles", "list", "Available=false"}, noStdinString, profileEmptyListString, noErrorString},
-		CliTest{false, true, []string{"profiles", "list", "Available=fred"}, noStdinString, noContentString, bootEnvBadAvailableString},
-		CliTest{false, false, []string{"profiles", "list", "Valid=true"}, noStdinString, profileListProfilesString, noErrorString},
-		CliTest{false, false, []string{"profiles", "list", "Valid=false"}, noStdinString, profileEmptyListString, noErrorString},
-		CliTest{false, true, []string{"profiles", "list", "Valid=fred"}, noStdinString, noContentString, bootEnvBadValidString},
-		CliTest{false, false, []string{"profiles", "list", "ReadOnly=true"}, noStdinString, profileEmptyListString, noErrorString},
-		CliTest{false, false, []string{"profiles", "list", "ReadOnly=false"}, noStdinString, profileListProfilesString, noErrorString},
-		CliTest{false, true, []string{"profiles", "list", "ReadOnly=fred"}, noStdinString, noContentString, bootEnvBadReadOnlyString},
-
 		CliTest{true, true, []string{"profiles", "show"}, noStdinString, noContentString, profileShowNoArgErrorString},
 		CliTest{true, true, []string{"profiles", "show", "john", "john2"}, noStdinString, noContentString, profileShowTooManyArgErrorString},
 		CliTest{false, true, []string{"profiles", "show", "john2"}, noStdinString, noContentString, profileShowMissingArgErrorString},

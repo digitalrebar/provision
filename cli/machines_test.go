@@ -6,19 +6,73 @@ import (
 	"testing"
 )
 
-var machineAddProfileNoArgErrorString string = "Error: drpcli machines addprofile [id] [profile] [flags] requires 2 arguments\n"
-var machineRemoveProfileNoArgErrorString string = "Error: drpcli machines removeprofile [id] [profile] [flags] requires 2 arguments\n"
+var machineEmptyListString = "[]\n"
+var machineDefaultListString = "[]\n"
 
-var machineAddrErrorString string = "Error: Invalid address: fred\n\n"
-var machineExpireTimeErrorString string = "Error: Invalid UUID: false\n\n"
+var machineActionMissingActionErrorString = "Error: GET: machines/3e7031fe-3062-45f1-835c-92541bc9cbd3: Action command: Not Found\n\n"
+var machineActionMissingMachineErrorString = "Error: machines Action Get: john: Not Found\n\n"
+var machineActionMissingErrorString = "Error: GET: machines/john: Action Get: 'command': Not Found\n\n"
+var machineActionMissingParameterString = "Error: GET: machines/3e7031fe-3062-45f1-835c-92541bc9cbd3: Action reset_count Missing Parameter incrementer/touched\n\n"
+var machineActionNoArgErrorString = "Error: drpcli machines action [id] [action] [flags] requires 2 argument"
+var machineActionsMissingMachineErrorString = "Error: GET: machines/john: Not Found\n\n"
+var machineActionsNoArgErrorString = "Error: drpcli machines actions [id] [flags] requires 1 argument"
+var machineAddProfileJillJeanJillErrorString = "Error: ValidationError: Duplicate profile jill: at 0 and 2\n\n"
+var machineAddProfileNoArgErrorString = "Error: drpcli machines addprofile [id] [profile] [flags] requires 2 arguments\n"
+var machineAddrErrorString = "Error: GET: machines: Invalid address: fred\n\n"
+var machineBadBoolString = "Error: GET: machines: Runnable must be true or false\n\n"
+var machineBootEnvMissingMachineErrorString = "Error: GET: machines/john: Not Found\n\n"
+var machineBootEnvNoArgErrorString = "Error: drpcli machines bootenv [id] [bootenv] [flags] requires 2 arguments"
+var machineCreateBadJSON2ErrorString = "Error: Unable to create new machine: Invalid type passed to machine create\n\n"
+var machineCreateBadJSONErrorString = "Error: Invalid machine object: error converting YAML to JSON: yaml: line 1: did not find expected ',' or '}' and error converting YAML to JSON: yaml: line 1: did not find expected ',' or '}'\n\n"
+var machineCreateDuplicateErrorString = "Error: CREATE: machines/3e7031fe-3062-45f1-835c-92541bc9cbd3: already exists\n\n"
+var machineCreateNoArgErrorString = "Error: drpcli machines create [json] [flags] requires 1 argument\n"
+var machineCreateTooManyArgErrorString = "Error: drpcli machines create [json] [flags] requires 1 argument\n"
+var machineDestroyMissingJohnString = "Error: DELETE: machines/3e7031fe-3062-45f1-835c-92541bc9cbd3: Not Found\n\n"
+var machineDestroyNoArgErrorString = "Error: drpcli machines destroy [id] [flags] requires 1 argument"
+var machineDestroyTooManyArgErrorString = "Error: drpcli machines destroy [id] [flags] requires 1 argument"
+var machineExistsMachineString = ""
+var machineExistsMissingJohnString = "Error: GET: machines/john: Not Found\n\n"
+var machineExistsNoArgErrorString = "Error: drpcli machines exists [id] [flags] requires 1 argument"
+var machineExistsTooManyArgErrorString = "Error: drpcli machines exists [id] [flags] requires 1 argument"
+var machineExpireTimeErrorString = "Error: GET: machines: Invalid UUID: false\n\n"
+var machineGetMissingMachineErrorString = "Error: GET: machines/john: Not Found\n\n"
+var machineGetNoArgErrorString = "Error: drpcli machines get [id] param [key] [flags] requires 3 arguments"
+var machineParamsMissingMachineErrorString = "Error: GET: machines/john2: Not Found\n\n"
+var machineParamsNoArgErrorString = "Error: drpcli machines params [id] [json] [flags] requires 1 or 2 arguments\n"
+var machinePatchBadBaseJSONErrorString = "Error: Unable to parse drpcli machines patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Machine\n\n"
+var machinePatchBadPatchJSONErrorString = "Error: Unable to parse drpcli machines patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Machine\n\n"
+var machinePatchJohnMissingErrorString = "Error: PATCH: machines/3e7031fe-5555-45f1-835c-92541bc9cbd3: Not Found\n\n"
+var machinePatchNoArgErrorString = "Error: drpcli machines patch [objectJson] [changesJson] [flags] requires 2 arguments"
+var machinePatchTooManyArgErrorString = "Error: drpcli machines patch [objectJson] [changesJson] [flags] requires 2 arguments"
+var machineRemoveProfileNoArgErrorString = "Error: drpcli machines removeprofile [id] [profile] [flags] requires 2 arguments\n"
+var machineRunActionBadCommandErrorString = "Error: INVOKE: machines/3e7031fe-3062-45f1-835c-92541bc9cbd3: Action command: Not Found\n\n"
+var machineRunActionBadJSONThridArgErrorString = "Error: Invalid parameters: error unmarshaling JSON: json: cannot unmarshal string into Go value of type map[string]interface {}\n\n\n"
+var machineRunActionBadStepErrorString = "Error: INVOKE: machines/3e7031fe-3062-45f1-835c-92541bc9cbd3: Action increment: Invalid Parameter: incrementer/step: : (root): Invalid type. Expected: integer, given: string\n\n"
+var machineRunActionMissingCommandParametersErrorString = "Error: INVOKE: machines/3e7031fe-3062-45f1-835c-92541bc9cbd3: Action reset_count Missing Parameter incrementer/touched\n\n"
+var machineRunActionMissingFredErrorString = "Error: INVOKE: machines/fred: Not Found\n\n"
+var machineRunActionNoArgsErrorString = "Error: runaction either takes three arguments or a multiple of two, not 0"
+var machineRunActionOneArgErrorString = "Error: runaction either takes three arguments or a multiple of two, not 1"
+var machineSetMissingMachineErrorString = "Error: GET: machines/john: Not Found\n\n"
+var machineSetNoArgErrorString = "Error: drpcli machines set [id] param [key] to [json blob] [flags] requires 5 arguments"
+var machineShowMissingArgErrorString = "Error: GET: machines/john: Not Found\n\n"
+var machineShowNoArgErrorString = "Error: drpcli machines show [id] [flags] requires 1 argument\n"
+var machineShowTooManyArgErrorString = "Error: drpcli machines show [id] [flags] requires 1 argument\n"
+var machineStageErrorStageString = "Error: ValidationError: Stage john2 does not exist\n\n"
+var machineStageMissingMachineErrorString = "Error: GET: machines/john: Not Found\n\n"
+var machineStageNoArgErrorString = "Error: drpcli machines stage [id] [stage] [flags] requires 2 arguments"
+var machineUpdateBadJSONErrorString = "Error: Unable to merge objects: json: cannot unmarshal string into Go value of type map[string]interface {}\n\n\n"
+var machineUpdateJohnMissingErrorString = "Error: GET: machines/john2: Not Found\n\n"
+var machineUpdateNoArgErrorString = "Error: drpcli machines update [id] [json] [flags] requires 2 arguments"
+var machineUpdateStagePendingErrorString = "Error: ValidationError: Can not change stages with pending tasks unless forced\n\n"
+var machineUpdateTooManyArgErrorString = "Error: drpcli machines update [id] [json] [flags] requires 2 arguments"
+var machineWaitBadBoolErrorString = "Error: strconv.ParseBool: parsing \"fred\": invalid syntax\n\n"
+var machineWaitBadTimeoutErrorString = "Error: strconv.ParseInt: parsing \"jk\": invalid syntax\n\n"
+var machineWaitMissingMachineErrorString = "Error: GET: machines/jk: Not Found\n\n"
+var machineWaitNoArgErrorString = "Error: drpcli machines wait [id] [field] [value] [timeout] [flags] requires at least 3 arguments\n"
+var machineWaitTooManyArgErrorString = "Error: drpcli machines wait [id] [field] [value] [timeout] [flags] requires at most 4 arguments\n"
+var machinesParamsSetMissingMachineString = "Error: POST: machines/john2: Not Found\n\n"
 
-var machineEmptyListString string = "[]\n"
-var machineDefaultListString string = "[]\n"
-
-var machineShowNoArgErrorString string = "Error: drpcli machines show [id] [flags] requires 1 argument\n"
-var machineShowTooManyArgErrorString string = "Error: drpcli machines show [id] [flags] requires 1 argument\n"
-var machineShowMissingArgErrorString string = "Error: machines GET: john: Not Found\n\n"
-var machineShowMachineString string = `{
+var machineShowMachineString = `{
   "Address": "192.168.100.110",
   "Available": true,
   "BootEnv": "local",
@@ -27,12 +81,12 @@ var machineShowMachineString string = `{
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": null,
+  "Profiles": [],
   "ReadOnly": false,
   "Runnable": true,
   "Secret": "secret1",
@@ -43,18 +97,11 @@ var machineShowMachineString string = `{
 }
 `
 
-var machineExistsNoArgErrorString string = "Error: drpcli machines exists [id] [flags] requires 1 argument"
-var machineExistsTooManyArgErrorString string = "Error: drpcli machines exists [id] [flags] requires 1 argument"
-var machineExistsMachineString string = ""
-var machineExistsMissingJohnString string = "Error: machines GET: john: Not Found\n\n"
-
-var machineCreateNoArgErrorString string = "Error: drpcli machines create [json] [flags] requires 1 argument\n"
-var machineCreateTooManyArgErrorString string = "Error: drpcli machines create [json] [flags] requires 1 argument\n"
 var machineCreateBadJSONString = "{asdgasdg"
-var machineCreateBadJSONErrorString = "Error: Invalid machine object: error converting YAML to JSON: yaml: line 1: did not find expected ',' or '}' and error converting YAML to JSON: yaml: line 1: did not find expected ',' or '}'\n\n"
+
 var machineCreateBadJSON2String = "[asdgasdg]"
-var machineCreateBadJSON2ErrorString = "Error: Unable to create new machine: Invalid type passed to machine create\n\n"
-var machineCreateInputString string = `{
+
+var machineCreateInputString = `{
   "Address": "192.168.100.110",
   "name": "john",
   "Secret": "secret1",
@@ -62,7 +109,7 @@ var machineCreateInputString string = `{
   "bootenv": "local"
 }
 `
-var machineCreateJohnString string = `{
+var machineCreateJohnString = `{
   "Address": "192.168.100.110",
   "Available": true,
   "BootEnv": "local",
@@ -71,12 +118,12 @@ var machineCreateJohnString string = `{
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": null,
+  "Profiles": [],
   "ReadOnly": false,
   "Runnable": true,
   "Secret": "secret1",
@@ -87,7 +134,7 @@ var machineCreateJohnString string = `{
 }
 `
 
-var machineCreateJohnString2 string = `{
+var machineCreateJohnString2 = `{
   "Address": "192.168.100.110",
   "Available": true,
   "BootEnv": "local",
@@ -96,12 +143,12 @@ var machineCreateJohnString2 string = `{
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": null,
+  "Profiles": [],
   "ReadOnly": false,
   "Runnable": true,
   "Secret": "secret1",
@@ -115,8 +162,6 @@ var machineCreateJohnString2 string = `{
 }
 `
 
-var machineCreateDuplicateErrorString = "Error: dataTracker create machines: 3e7031fe-3062-45f1-835c-92541bc9cbd3 already exists\n\n"
-
 var machineListMachinesString = `[
   {
     "Address": "192.168.100.110",
@@ -127,12 +172,12 @@ var machineListMachinesString = `[
     "Name": "john",
     "Profile": {
       "Available": false,
-      "Errors": null,
+      "Errors": [],
       "Name": "",
       "ReadOnly": false,
       "Validated": false
     },
-    "Profiles": null,
+    "Profiles": [],
     "ReadOnly": false,
     "Runnable": true,
     "Secret": "secret1",
@@ -144,15 +189,13 @@ var machineListMachinesString = `[
 ]
 `
 
-var machineUpdateNoArgErrorString string = "Error: drpcli machines update [id] [json] [flags] requires 2 arguments"
-var machineUpdateTooManyArgErrorString string = "Error: drpcli machines update [id] [json] [flags] requires 2 arguments"
 var machineUpdateBadJSONString = "asdgasdg"
-var machineUpdateBadJSONErrorString = "Error: Unable to merge objects: json: cannot unmarshal string into Go value of type map[string]interface {}\n\n\n"
-var machineUpdateInputString string = `{
+
+var machineUpdateInputString = `{
   "Description": "lpxelinux.0"
 }
 `
-var machineUpdateJohnString string = `{
+var machineUpdateJohnString = `{
   "Address": "192.168.100.110",
   "Available": true,
   "BootEnv": "local",
@@ -162,12 +205,12 @@ var machineUpdateJohnString string = `{
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": null,
+  "Profiles": [],
   "ReadOnly": false,
   "Runnable": true,
   "Secret": "secret1",
@@ -177,36 +220,33 @@ var machineUpdateJohnString string = `{
   "Validated": true
 }
 `
-var machineUpdateJohnMissingErrorString string = "Error: machines GET: john2: Not Found\n\n"
 
-var machinePatchNoArgErrorString string = "Error: drpcli machines patch [objectJson] [changesJson] [flags] requires 2 arguments"
-var machinePatchTooManyArgErrorString string = "Error: drpcli machines patch [objectJson] [changesJson] [flags] requires 2 arguments"
 var machinePatchBadPatchJSONString = "asdgasdg"
-var machinePatchBadPatchJSONErrorString = "Error: Unable to parse drpcli machines patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Machine\n\n"
+
 var machinePatchBadBaseJSONString = "asdgasdg"
-var machinePatchBadBaseJSONErrorString = "Error: Unable to parse drpcli machines patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Machine\n\n"
-var machinePatchBaseString string = `{
+
+var machinePatchBaseString = `{
   "Address": "192.168.100.110",
   "BootEnv": "local",
   "CurrentTask": 0,
   "Description": "lpxelinux.0",
-  "Errors": null,
+  "Errors": [],
   "Name": "john",
   "Profile": {
     "Name": ""
   },
-  "Profiles": null,
+  "Profiles": [],
   "Runnable": true,
   "Secret": "secret1",
   "Tasks": [],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3"
 }
 `
-var machinePatchInputString string = `{
+var machinePatchInputString = `{
   "Description": "bootx64.efi"
 }
 `
-var machinePatchJohnString string = `{
+var machinePatchJohnString = `{
   "Address": "192.168.100.110",
   "Available": true,
   "BootEnv": "local",
@@ -216,12 +256,12 @@ var machinePatchJohnString string = `{
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": null,
+  "Profiles": [],
   "ReadOnly": false,
   "Runnable": true,
   "Secret": "secret1",
@@ -231,24 +271,23 @@ var machinePatchJohnString string = `{
   "Validated": true
 }
 `
-var machinePatchMissingBaseString string = `{
+var machinePatchMissingBaseString = `{
   "Address": "192.168.100.110",
   "BootEnv": "local",
   "Description": "lpxelinux.0",
-  "Errors": null,
+  "Errors": [],
   "Name": "john",
   "Profile": {
     "Name": ""
   },
-  "Profiles": null,
+  "Profiles": [],
   "Runnable": true,
   "Tasks": [],
   "Uuid": "3e7031fe-5555-45f1-835c-92541bc9cbd3"
 }
 `
-var machinePatchJohnMissingErrorString string = "Error: machines: PATCH 3e7031fe-5555-45f1-835c-92541bc9cbd3: Not Found\n\n"
 
-var machineAddProfileJill2String string = `{
+var machineAddProfileJill2String = `{
   "Address": "192.168.100.110",
   "Available": true,
   "BootEnv": "local2",
@@ -258,7 +297,7 @@ var machineAddProfileJill2String string = `{
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
@@ -275,7 +314,7 @@ var machineAddProfileJill2String string = `{
   "Validated": true
 }
 `
-var machineAddProfileJillString string = `{
+var machineAddProfileJillString = `{
   "Address": "192.168.100.110",
   "Available": true,
   "BootEnv": "local",
@@ -285,7 +324,7 @@ var machineAddProfileJillString string = `{
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
@@ -302,7 +341,7 @@ var machineAddProfileJillString string = `{
   "Validated": true
 }
 `
-var machineAddProfileJillJeanString string = `{
+var machineAddProfileJillJeanString = `{
   "Address": "192.168.100.110",
   "Available": true,
   "BootEnv": "local",
@@ -312,7 +351,7 @@ var machineAddProfileJillJeanString string = `{
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
@@ -330,8 +369,8 @@ var machineAddProfileJillJeanString string = `{
   "Validated": true
 }
 `
-var machineAddProfileJillJeanJillErrorString string = "Error: Duplicate profile jill: at 0 and 2\n\n"
-var machineRemoveProfileJeanString string = `{
+
+var machineRemoveProfileJeanString = `{
   "Address": "192.168.100.110",
   "Available": true,
   "BootEnv": "local",
@@ -341,7 +380,7 @@ var machineRemoveProfileJeanString string = `{
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
@@ -358,7 +397,7 @@ var machineRemoveProfileJeanString string = `{
   "Validated": true
 }
 `
-var machineRemoveProfileAllGoneString string = `{
+var machineRemoveProfileAllGoneString = `{
   "Address": "192.168.100.110",
   "Available": true,
   "BootEnv": "local",
@@ -368,12 +407,12 @@ var machineRemoveProfileAllGoneString string = `{
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": null,
+  "Profiles": [],
   "ReadOnly": false,
   "Runnable": true,
   "Secret": "secret1",
@@ -384,7 +423,7 @@ var machineRemoveProfileAllGoneString string = `{
 }
 `
 
-var machineRemoveProfileAllGone2String string = `{
+var machineRemoveProfileAllGone2String = `{
   "Address": "192.168.100.110",
   "Available": true,
   "BootEnv": "local2",
@@ -394,12 +433,12 @@ var machineRemoveProfileAllGone2String string = `{
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": null,
+  "Profiles": [],
   "ReadOnly": false,
   "Runnable": true,
   "Secret": "secret1",
@@ -412,14 +451,9 @@ var machineRemoveProfileAllGone2String string = `{
 }
 `
 
-var machineDestroyNoArgErrorString string = "Error: drpcli machines destroy [id] [flags] requires 1 argument"
-var machineDestroyTooManyArgErrorString string = "Error: drpcli machines destroy [id] [flags] requires 1 argument"
-var machineDestroyJohnString string = "Deleted machine 3e7031fe-3062-45f1-835c-92541bc9cbd3\n"
-var machineDestroyMissingJohnString string = "Error: machines: DELETE 3e7031fe-3062-45f1-835c-92541bc9cbd3: Not Found\n\n"
+var machineDestroyJohnString = "Deleted machine 3e7031fe-3062-45f1-835c-92541bc9cbd3\n"
 
-var machineBootEnvNoArgErrorString string = "Error: drpcli machines bootenv [id] [bootenv] [flags] requires 2 arguments"
-var machineBootEnvMissingMachineErrorString string = "Error: machines GET: john: Not Found\n\n"
-var machineBootEnvErrorBootEnvString string = `{
+var machineBootEnvErrorBootEnvString = `{
   "Address": "192.168.100.110",
   "Available": false,
   "BootEnv": "john2",
@@ -431,12 +465,12 @@ var machineBootEnvErrorBootEnvString string = `{
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": null,
+  "Profiles": [],
   "ReadOnly": false,
   "Runnable": false,
   "Secret": "secret1",
@@ -446,21 +480,8 @@ var machineBootEnvErrorBootEnvString string = `{
   "Validated": true
 }
 `
-var machineStageNoArgErrorString string = "Error: drpcli machines stage [id] [stage] [flags] requires 2 arguments"
-var machineStageMissingMachineErrorString string = "Error: machines GET: john: Not Found\n\n"
-var machineStageErrorStageString string = "Error: Stage john2 does not exist\n\n"
 
-var machineGetNoArgErrorString string = "Error: drpcli machines get [id] param [key] [flags] requires 3 arguments"
-var machineGetMissingMachineErrorString string = "Error: machines GET Params: john: Not Found\n\n"
-
-var machineSetNoArgErrorString string = "Error: drpcli machines set [id] param [key] to [json blob] [flags] requires 5 arguments"
-var machineSetMissingMachineErrorString string = "Error: machines GET Params: john: Not Found\n\n"
-
-var machineParamsNoArgErrorString string = "Error: drpcli machines params [id] [json] [flags] requires 1 or 2 arguments\n"
-var machineParamsMissingMachineErrorString string = "Error: machines GET Params: john2: Not Found\n\n"
-var machinesParamsSetMissingMachineString string = "Error: machines SET Params: john2: Not Found\n\n"
-
-var machineParamsStartingString string = `{
+var machineParamsStartingString = `{
   "asgdasdg": 1,
   "incrementer/default": 2,
   "incrementer/touched": 3,
@@ -470,11 +491,11 @@ var machineParamsStartingString string = `{
   "parm5": 20
 }
 `
-var machinesParamsNextString string = `{
+var machinesParamsNextString = `{
   "jj": 3
 }
 `
-var machineUpdateJohnWithParamsString string = `{
+var machineUpdateJohnWithParamsString = `{
   "Address": "192.168.100.110",
   "Available": true,
   "BootEnv": "local",
@@ -484,7 +505,7 @@ var machineUpdateJohnWithParamsString string = `{
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "Params": {
       "jj": 3
@@ -492,7 +513,7 @@ var machineUpdateJohnWithParamsString string = `{
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": null,
+  "Profiles": [],
   "ReadOnly": false,
   "Runnable": true,
   "Secret": "secret1",
@@ -503,7 +524,7 @@ var machineUpdateJohnWithParamsString string = `{
 }
 `
 
-var machineStageProfCreate string = `{
+var machineStageProfCreate = `{
   "Available": true,
   "Errors": [],
   "Name": "stage-prof",
@@ -512,7 +533,7 @@ var machineStageProfCreate string = `{
 }
 `
 
-var machineJillCreate string = `{
+var machineJillCreate = `{
   "Available": true,
   "Errors": [],
   "Name": "jill",
@@ -520,7 +541,7 @@ var machineJillCreate string = `{
   "Validated": true
 }
 `
-var machineJeanCreate string = `{
+var machineJeanCreate = `{
   "Available": true,
   "Errors": [],
   "Name": "jean",
@@ -528,7 +549,7 @@ var machineJeanCreate string = `{
   "Validated": true
 }
 `
-var machineProfileJamieUpdate string = `{
+var machineProfileJamieUpdate = `{
   "Available": true,
   "Errors": [],
   "Name": "jill",
@@ -540,14 +561,7 @@ var machineProfileJamieUpdate string = `{
 }
 `
 
-var machineActionsNoArgErrorString string = "Error: drpcli machines actions [id] [flags] requires 1 argument"
-var machineActionNoArgErrorString string = "Error: drpcli machines action [id] [action] [flags] requires 2 argument"
-var machineActionsMissingMachineErrorString string = "Error: machines Actions Get: john: Not Found\n\n"
-var machineActionMissingMachineErrorString string = "Error: machines Action Get: john: Not Found\n\n"
-var machineActionMissingActionErrorString string = "Error: machines Call Action: action command: Not Found\n\n"
-var machineActionMissingParameterString string = "Error: machines Call Action: machine 3e7031fe-3062-45f1-835c-92541bc9cbd3: Missing Parameter incrementer/touched\n\n"
-
-var machineActionsListString string = `[
+var machineActionsListString = `[
   {
     "Command": "increment",
     "OptionalParams": [
@@ -555,22 +569,22 @@ var machineActionsListString string = `[
       "incrementer/parameter"
     ],
     "Provider": "incrementer",
-    "RequiredParams": null
+    "RequiredParams": []
   }
 ]
 `
-var machineActionShowString string = `{
+var machineActionShowString = `{
   "Command": "increment",
   "OptionalParams": [
     "incrementer/step",
     "incrementer/parameter"
   ],
   "Provider": "incrementer",
-  "RequiredParams": null
+  "RequiredParams": []
 }
 `
 
-var machineActionsListWithResetString string = `[
+var machineActionsListWithResetString = `[
   {
     "Command": "increment",
     "OptionalParams": [
@@ -578,11 +592,11 @@ var machineActionsListWithResetString string = `[
       "incrementer/parameter"
     ],
     "Provider": "incrementer",
-    "RequiredParams": null
+    "RequiredParams": []
   },
   {
     "Command": "reset_count",
-    "OptionalParams": null,
+    "OptionalParams": [],
     "Provider": "incrementer",
     "RequiredParams": [
       "incrementer/touched"
@@ -590,9 +604,9 @@ var machineActionsListWithResetString string = `[
   }
 ]
 `
-var machineActionShowResetString string = `{
+var machineActionShowResetString = `{
   "Command": "reset_count",
-  "OptionalParams": null,
+  "OptionalParams": [],
   "Provider": "incrementer",
   "RequiredParams": [
     "incrementer/touched"
@@ -600,57 +614,49 @@ var machineActionShowResetString string = `{
 }
 `
 
-var machinePluginCreateString string = `{
+var machinePluginCreateString = `{
   "Available": true,
   "Errors": [],
   "Name": "incr",
-  "PluginErrors": null,
+  "PluginErrors": [],
   "Provider": "incrementer",
   "ReadOnly": false,
   "Validated": true
 }
 `
 
-var machineRunActionNoArgsErrorString string = "Error: runaction either takes three arguments or a multiple of two, not 0"
-var machineRunActionOneArgErrorString string = "Error: runaction either takes three arguments or a multiple of two, not 1"
-var machineRunActionMissingFredErrorString string = "Error: machines Call Action: machine fred: Not Found\n\n"
-var machineRunActionBadCommandErrorString string = "Error: machines Call Action: action command: Not Found\n\n"
-var machineRunActionMissingCommandParametersErrorString string = "Error: machines Call Action: machine 3e7031fe-3062-45f1-835c-92541bc9cbd3: Missing Parameter incrementer/touched\n\n"
-var machineRunActionBadJSONThridArgErrorString string = "Error: Invalid parameters: error unmarshaling JSON: json: cannot unmarshal string into Go value of type map[string]interface {}\n\n\n"
-var machineRunActionBadStepErrorString string = "Error: machines Call Action machine 3e7031fe-3062-45f1-835c-92541bc9cbd3: Invalid Parameter: incrementer/step: :\n(root): Invalid type. Expected: integer, given: string\n\n"
-
-var machineRunActionMissingParameterStdinString string = "{}"
-var machineRunActionGoodStdinString string = `{
+var machineRunActionMissingParameterStdinString = "{}"
+var machineRunActionGoodStdinString = `{
 	"incrementer/parameter": "parm5",
 	"incrementer/step": 10
 }
 `
 
-var machineJamieCreate string = `{
+var machineJamieCreate = `{
   "Available": true,
   "Errors": [],
   "Meta": {
     "feature-flags": "original-exit-codes"
   },
   "Name": "jamie",
-  "OptionalParams": null,
+  "OptionalParams": [],
   "ReadOnly": false,
-  "RequiredParams": null,
-  "Templates": null,
+  "RequiredParams": [],
+  "Templates": [],
   "Validated": true
 }
 `
-var machineJustineCreate string = `{
+var machineJustineCreate = `{
   "Available": true,
   "Errors": [],
   "Meta": {
     "feature-flags": "original-exit-codes"
   },
   "Name": "justine",
-  "OptionalParams": null,
+  "OptionalParams": [],
   "ReadOnly": false,
-  "RequiredParams": null,
-  "Templates": null,
+  "RequiredParams": [],
+  "Templates": [],
   "Validated": true
 }
 `
@@ -665,12 +671,12 @@ var machineUpdateLocalWithoutRunnableString = `{
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": null,
+  "Profiles": [],
   "ReadOnly": false,
   "Runnable": false,
   "Secret": "secret1",
@@ -681,7 +687,7 @@ var machineUpdateLocalWithoutRunnableString = `{
 }
 `
 
-var machineUpdateLocalString string = `{
+var machineUpdateLocalString = `{
   "Address": "192.168.100.110",
   "Available": true,
   "BootEnv": "local",
@@ -691,12 +697,12 @@ var machineUpdateLocalString string = `{
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": null,
+  "Profiles": [],
   "ReadOnly": false,
   "Runnable": true,
   "Secret": "secret1",
@@ -706,7 +712,7 @@ var machineUpdateLocalString string = `{
   "Validated": true
 }
 `
-var machineUpdateLocal3String string = `{
+var machineUpdateLocal3String = `{
   "Address": "192.168.100.110",
   "Available": true,
   "BootEnv": "local",
@@ -716,7 +722,7 @@ var machineUpdateLocal3String string = `{
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
@@ -735,14 +741,6 @@ var machineUpdateLocal3String string = `{
 }
 `
 
-var machineBadBoolString string = "Error: Runnable must be true or false\n\n"
-
-var machineWaitNoArgErrorString = "Error: drpcli machines wait [id] [field] [value] [timeout] [flags] requires at least 3 arguments\n"
-var machineWaitTooManyArgErrorString = "Error: drpcli machines wait [id] [field] [value] [timeout] [flags] requires at most 4 arguments\n"
-var machineWaitBadTimeoutErrorString = "Error: strconv.ParseInt: parsing \"jk\": invalid syntax\n\n"
-var machineWaitMissingMachineErrorString = "Error: machines GET: jk: Not Found\n\n"
-var machineWaitBadBoolErrorString = "Error: strconv.ParseBool: parsing \"fred\": invalid syntax\n\n"
-
 var machineUpdateStage1WithoutRunnableString = `{
   "Address": "192.168.100.110",
   "Available": true,
@@ -753,12 +751,12 @@ var machineUpdateStage1WithoutRunnableString = `{
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": null,
+  "Profiles": [],
   "ReadOnly": false,
   "Runnable": true,
   "Secret": "secret1",
@@ -782,12 +780,12 @@ var machineUpdateStage1LocalString = `{
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": null,
+  "Profiles": [],
   "ReadOnly": false,
   "Runnable": true,
   "Secret": "secret1",
@@ -800,7 +798,7 @@ var machineUpdateStage1LocalString = `{
   "Validated": true
 }
 `
-var machineUpdateStagePendingErrorString = "Error: Can not change stages with pending tasks unless forced\n\n"
+
 var machineUpdateLocal2String = `{
   "Address": "192.168.100.110",
   "Available": true,
@@ -811,12 +809,12 @@ var machineUpdateLocal2String = `{
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": null,
+  "Profiles": [],
   "ReadOnly": false,
   "Runnable": true,
   "Secret": "secret1",
@@ -838,10 +836,10 @@ var machineStage1CreateSuccessString = `{
   "BootEnv": "local",
   "Errors": [],
   "Name": "stage1",
-  "OptionalParams": null,
+  "OptionalParams": [],
   "Profiles": [],
   "ReadOnly": false,
-  "RequiredParams": null,
+  "RequiredParams": [],
   "Tasks": [
     "jamie",
     "justine"
@@ -868,10 +866,10 @@ var machineStage2CreateSuccessString = `{
   "BootEnv": "local",
   "Errors": [],
   "Name": "stage2",
-  "OptionalParams": null,
+  "OptionalParams": [],
   "Profiles": [],
   "ReadOnly": false,
-  "RequiredParams": null,
+  "RequiredParams": [],
   "Tasks": [],
   "Templates": [
     {
@@ -884,7 +882,7 @@ var machineStage2CreateSuccessString = `{
 }
 `
 
-var machineStage2AgainSuccessString string = `{
+var machineStage2AgainSuccessString = `{
   "Address": "192.168.100.110",
   "Available": true,
   "BootEnv": "local",
@@ -894,7 +892,7 @@ var machineStage2AgainSuccessString string = `{
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
@@ -913,17 +911,17 @@ var machineStage2AgainSuccessString string = `{
 }
 `
 
-var machinesUpdateStageSuccessString string = `{
+var machinesUpdateStageSuccessString = `{
   "Available": true,
   "BootEnv": "local",
   "Errors": [],
   "Name": "stage2",
-  "OptionalParams": null,
+  "OptionalParams": [],
   "Profiles": [
     "stage-prof"
   ],
   "ReadOnly": false,
-  "RequiredParams": null,
+  "RequiredParams": [],
   "Tasks": [],
   "Templates": [
     {
@@ -997,12 +995,6 @@ func TestMachineCli(t *testing.T) {
 		CliTest{false, false, []string{"machines", "create", machineCreateInputString}, noStdinString, machineCreateJohnString, noErrorString},
 		CliTest{false, true, []string{"machines", "create", machineCreateInputString}, noStdinString, noContentString, machineCreateDuplicateErrorString},
 		CliTest{false, false, []string{"machines", "list"}, noStdinString, machineListMachinesString, noErrorString},
-		CliTest{false, false, []string{"machines", "list", "--limit=0"}, noStdinString, machineEmptyListString, noErrorString},
-		CliTest{false, false, []string{"machines", "list", "--limit=10", "--offset=0"}, noStdinString, machineListMachinesString, noErrorString},
-		CliTest{false, false, []string{"machines", "list", "--limit=10", "--offset=10"}, noStdinString, machineEmptyListString, noErrorString},
-		CliTest{false, true, []string{"machines", "list", "--limit=-10", "--offset=0"}, noStdinString, noContentString, limitNegativeError},
-		CliTest{false, true, []string{"machines", "list", "--limit=10", "--offset=-10"}, noStdinString, noContentString, offsetNegativeError},
-		CliTest{false, false, []string{"machines", "list", "--limit=-1", "--offset=-1"}, noStdinString, machineListMachinesString, noErrorString},
 		CliTest{false, false, []string{"machines", "list", "Name=fred"}, noStdinString, machineEmptyListString, noErrorString},
 		CliTest{false, false, []string{"machines", "list", "Name=john"}, noStdinString, machineListMachinesString, noErrorString},
 		CliTest{false, false, []string{"machines", "list", "BootEnv=local"}, noStdinString, machineListMachinesString, noErrorString},
@@ -1016,15 +1008,6 @@ func TestMachineCli(t *testing.T) {
 		CliTest{false, false, []string{"machines", "list", "Runnable=true"}, noStdinString, machineListMachinesString, noErrorString},
 		CliTest{false, false, []string{"machines", "list", "Runnable=false"}, noStdinString, machineEmptyListString, noErrorString},
 		CliTest{false, true, []string{"machines", "list", "Runnable=fred"}, noStdinString, noContentString, machineBadBoolString},
-		CliTest{false, false, []string{"machines", "list", "Available=true"}, noStdinString, machineListMachinesString, noErrorString},
-		CliTest{false, false, []string{"machines", "list", "Available=false"}, noStdinString, machineEmptyListString, noErrorString},
-		CliTest{false, true, []string{"machines", "list", "Available=fred"}, noStdinString, noContentString, bootEnvBadAvailableString},
-		CliTest{false, false, []string{"machines", "list", "Valid=true"}, noStdinString, machineListMachinesString, noErrorString},
-		CliTest{false, false, []string{"machines", "list", "Valid=false"}, noStdinString, machineEmptyListString, noErrorString},
-		CliTest{false, true, []string{"machines", "list", "Valid=fred"}, noStdinString, noContentString, bootEnvBadValidString},
-		CliTest{false, false, []string{"machines", "list", "ReadOnly=true"}, noStdinString, machineEmptyListString, noErrorString},
-		CliTest{false, false, []string{"machines", "list", "ReadOnly=false"}, noStdinString, machineListMachinesString, noErrorString},
-		CliTest{false, true, []string{"machines", "list", "ReadOnly=fred"}, noStdinString, noContentString, bootEnvBadReadOnlyString},
 
 		CliTest{true, true, []string{"machines", "show"}, noStdinString, noContentString, machineShowNoArgErrorString},
 		CliTest{true, true, []string{"machines", "show", "john", "john2"}, noStdinString, noContentString, machineShowTooManyArgErrorString},
@@ -1146,7 +1129,7 @@ func TestMachineCli(t *testing.T) {
 		CliTest{false, false, []string{"machines", "actions", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, machineActionsListString, noErrorString},
 		CliTest{true, true, []string{"machines", "action"}, noStdinString, noContentString, machineActionNoArgErrorString},
 		CliTest{true, true, []string{"machines", "action", "john"}, noStdinString, noContentString, machineActionNoArgErrorString},
-		CliTest{false, true, []string{"machines", "action", "john", "command"}, noStdinString, noContentString, machineActionMissingMachineErrorString},
+		CliTest{false, true, []string{"machines", "action", "john", "command"}, noStdinString, noContentString, machineActionMissingErrorString},
 		CliTest{false, true, []string{"machines", "action", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "command"}, noStdinString, noContentString, machineActionMissingActionErrorString},
 		CliTest{false, false, []string{"machines", "action", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "increment"}, noStdinString, machineActionShowString, noErrorString},
 

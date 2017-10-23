@@ -63,28 +63,40 @@ func (s *Stage) Key() string {
 	return s.Name
 }
 
+func (s *Stage) Fill() {
+	s.Validation.fill()
+	s.MetaData.fill()
+	if s.Templates == nil {
+		s.Templates = []TemplateInfo{}
+	}
+	if s.RequiredParams == nil {
+		s.RequiredParams = []string{}
+	}
+	if s.OptionalParams == nil {
+		s.OptionalParams = []string{}
+	}
+	if s.Tasks == nil {
+		s.Tasks = []string{}
+	}
+	if s.Profiles == nil {
+		s.Profiles = []string{}
+	}
+}
+
 func (s *Stage) AuthKey() string {
 	return s.Key()
 }
 
-type Stages []*Stage
-
-func (s Stages) Elem() Model {
-	return &Stage{}
+func (b *Stage) SliceOf() interface{} {
+	s := []*Stage{}
+	return &s
 }
 
-func (s Stages) Items() []Model {
-	res := make([]Model, len(s))
-	for i, m := range s {
-		res[i] = m
+func (b *Stage) ToModels(obj interface{}) []Model {
+	items := obj.(*[]*Stage)
+	res := make([]Model, len(*items))
+	for i, item := range *items {
+		res[i] = Model(item)
 	}
 	return res
-}
-
-func (s Stages) Fill(m []Model) {
-	q := make([]*Stage, len(m))
-	for i, obj := range m {
-		q[i] = obj.(*Stage)
-	}
-	s = q[:]
 }

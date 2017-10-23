@@ -32,6 +32,11 @@ func (u *User) Key() string {
 	return u.Name
 }
 
+func (u *User) Fill() {
+	u.Validation.fill()
+	u.MetaData.fill()
+}
+
 func (u *User) CheckPassword(pass string) bool {
 	if err := sc.CompareHashAndPassword(u.PasswordHash, []byte(pass)); err == nil {
 		return true
@@ -40,7 +45,7 @@ func (u *User) CheckPassword(pass string) bool {
 }
 
 func (u *User) Sanitize() Model {
-	res, _ := Clone(u)
+	res := Clone(u)
 	res.(*User).PasswordHash = []byte{}
 	return res
 }
@@ -54,24 +59,16 @@ type UserPassword struct {
 	Password string
 }
 
-type Users []*User
-
-func (s Users) Elem() Model {
-	return &User{}
+func (b *User) SliceOf() interface{} {
+	s := []*User{}
+	return &s
 }
 
-func (s Users) Items() []Model {
-	res := make([]Model, len(s))
-	for i, m := range s {
-		res[i] = m
+func (b *User) ToModels(obj interface{}) []Model {
+	items := obj.(*[]*User)
+	res := make([]Model, len(*items))
+	for i, item := range *items {
+		res[i] = Model(item)
 	}
 	return res
-}
-
-func (s Users) Fill(m []Model) {
-	q := make([]*User, len(m))
-	for i, obj := range m {
-		q[i] = obj.(*User)
-	}
-	s = q[:]
 }

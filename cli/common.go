@@ -21,6 +21,7 @@ import (
 	"github.com/digitalrebar/provision"
 	apiclient "github.com/digitalrebar/provision/client"
 	models "github.com/digitalrebar/provision/genmodels"
+	realmodels "github.com/digitalrebar/provision/models"
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
 	strfmt "github.com/go-openapi/strfmt"
@@ -317,17 +318,10 @@ func generateError(err error, sfmt string, args ...interface{}) error {
 	if !ok {
 		return fmt.Errorf(s+": %v", err)
 	}
+	res := &realmodels.Error{}
+	utils.Remarshal(ee, res)
 
-	s = ""
-	first := true
-	for _, ns := range ee.Messages {
-		if !first {
-			s = s + "\n"
-		}
-		first = false
-		s = s + ns
-	}
-	return fmt.Errorf(s)
+	return res
 }
 
 var listLimit = -1

@@ -49,7 +49,7 @@ var contentPackBadString = `{
 }
 `
 
-var contentPackBadCreateErrorString = "Error: Unable to load profiles: error unmarshaling JSON: json: cannot unmarshal number into Go struct field Profile.Params of type map[string]interface {}\n\n"
+var contentPackBadCreateErrorString = "Error: Failed to load backing objects from cache: Unable to load profiles: error unmarshaling JSON: json: cannot unmarshal number into Go struct field Profile.Params of type map[string]interface {}\n\n"
 
 var contentPack1String = `{
   "meta": {
@@ -71,7 +71,7 @@ var contentPack1CreateSuccessString = `{
   "Counts": {
     "profiles": 1
   },
-  "Warnings": null,
+  "Warnings": [],
   "meta": {
     "Name": "Pack1",
     "Type": "dynamic",
@@ -96,7 +96,7 @@ var contentPack2String = `{
 }
 `
 
-var contentPack2CreateErrorString = "Error: New layer violates key restrictions: keysCannotBeOverridden: p1-prof is already in layer 1\n\n"
+var contentPack2CreateErrorString = "Error: ValidationError: New layer violates key restrictions: keysCannotBeOverridden: p1-prof is already in layer 1\n\n"
 
 var contentPack1ProfileListString = `[
   {
@@ -114,7 +114,7 @@ var contentPack1ProfileListString = `[
   {
     "Available": true,
     "Description": "pack1",
-    "Errors": null,
+    "Errors": [],
     "Name": "p1-prof",
     "ReadOnly": true,
     "Validated": true
@@ -137,7 +137,7 @@ var contentPack1ProfileList2String = `[
   {
     "Available": true,
     "Description": "pack1-2",
-    "Errors": null,
+    "Errors": [],
     "Name": "p2-prof",
     "ReadOnly": true,
     "Validated": true
@@ -160,7 +160,7 @@ var contentPack1UpdateProfileListString = `[
   {
     "Available": true,
     "Description": "pack1-2",
-    "Errors": null,
+    "Errors": [],
     "Name": "p1-prof",
     "ReadOnly": true,
     "Validated": true
@@ -199,12 +199,12 @@ var contentMachineCreateSuccessString = `{
   "Name": "greg",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": null,
+  "Profiles": [],
   "ReadOnly": false,
   "Runnable": true,
   "Secret": "secret1",
@@ -223,7 +223,7 @@ var contentMachineAddProfileString = `{
   "Name": "greg",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
@@ -245,16 +245,16 @@ var contentBootenvGregCreateSuccessString = `{
   "Available": true,
   "BootParams": "",
   "Errors": [],
-  "Initrds": null,
+  "Initrds": [],
   "Kernel": "",
   "Name": "mylocal",
   "OS": {
     "Name": "mylocal"
   },
   "OnlyUnknown": false,
-  "OptionalParams": null,
+  "OptionalParams": [],
   "ReadOnly": false,
-  "RequiredParams": null,
+  "RequiredParams": [],
   "Templates": [
     {
       "Contents": "local-pxelinux.tmpl",
@@ -324,7 +324,11 @@ var contentPack1BadSyntaxUpdateString = `{
   }
 }
 `
-var contentPack1BadSyntaxUpdateErrorString = "Error: Unable to load profiles: error unmarshaling JSON: json: cannot unmarshal number into Go struct field Profile.Params of type map[string]interface {}\n\n"
+var contentPack1BadSyntaxUpdateErrorString = `Error: PUT: contents/Pack1
+  Unable to load profiles: error unmarshaling JSON: json: cannot unmarshal number into Go struct field Profile.Params of type map[string]interface {}
+  Profile p1-prof (at 0) does not exist
+
+`
 
 var contentPack1UpdateString = `{
   "meta": {
@@ -345,7 +349,7 @@ var contentPack1UpdateSuccessString = `{
   "Counts": {
     "profiles": 1
   },
-  "Warnings": null,
+  "Warnings": [],
   "meta": {
     "Name": "Pack1",
     "Type": "dynamic",

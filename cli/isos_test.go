@@ -15,13 +15,13 @@ var isosUploadFourArgsErrorString = "Error: Wrong number of args: expected 3, go
 var isosUploadMissingIsoErrorString = "Error: Failed to open greg: open greg: no such file or directory\n\n"
 
 var isosUploadSuccessString = `{
-  "path": "greg",
-  "size": *REPLACE_WITH_SIZE*
+  "Path": "greg",
+  "Size": *REPLACE_WITH_SIZE*
 }
 `
 var isosUploadCommonSuccessString = `{
-  "path": "greg",
-  "size": *REPLACE_WITH_SIZE*
+  "Path": "greg",
+  "Size": *REPLACE_WITH_SIZE*
 }
 `
 var isosGregListString string = `[
@@ -31,7 +31,7 @@ var isosGregListString string = `[
 var isosDestroyNoArgsErrorString = "Error: drpcli isos destroy [id] [flags] requires 1 argument\n"
 var isosDestroyTwoArgsErrorString = "Error: drpcli isos destroy [id] [flags] requires 1 argument\n"
 var isosDestroyGregSuccessString = "Deleted iso greg\n"
-var isosDestroyFredErrorString = "Error: delete: unable to delete fred\n\n"
+var isosDestroyFredErrorString = "Error: DELETE: isos/fred: no such iso\n\n"
 
 func TestIsosCli(t *testing.T) {
 	fi, _ := os.Stat("common.go")

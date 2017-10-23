@@ -34,6 +34,11 @@ func (p *Param) Key() string {
 	return p.Name
 }
 
+func (p *Param) Fill() {
+	p.MetaData.fill()
+	p.Validation.fill()
+}
+
 func (p *Param) AuthKey() string {
 	return p.Key()
 }
@@ -46,24 +51,16 @@ func (p *Param) ValidateSchema() error {
 	return err
 }
 
-type Params []*Param
-
-func (s Params) Elem() Model {
-	return &Param{}
+func (b *Param) SliceOf() interface{} {
+	s := []*Param{}
+	return &s
 }
 
-func (s Params) Items() []Model {
-	res := make([]Model, len(s))
-	for i, m := range s {
-		res[i] = m
+func (b *Param) ToModels(obj interface{}) []Model {
+	items := obj.(*[]*Param)
+	res := make([]Model, len(*items))
+	for i, item := range *items {
+		res[i] = Model(item)
 	}
 	return res
-}
-
-func (s Params) Fill(m []Model) {
-	q := make([]*Param, len(m))
-	for i, obj := range m {
-		q[i] = obj.(*Param)
-	}
-	s = q[:]
 }

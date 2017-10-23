@@ -14,10 +14,10 @@ var jobTask1Create string = `{
     "feature-flags": "original-exit-codes"
   },
   "Name": "task1",
-  "OptionalParams": null,
+  "OptionalParams": [],
   "ReadOnly": false,
-  "RequiredParams": null,
-  "Templates": null,
+  "RequiredParams": [],
+  "Templates": [],
   "Validated": true
 }
 `
@@ -28,9 +28,9 @@ var jobTask2Create string = `{
     "feature-flags": "original-exit-codes"
   },
   "Name": "task2",
-  "OptionalParams": null,
+  "OptionalParams": [],
   "ReadOnly": false,
-  "RequiredParams": null,
+  "RequiredParams": [],
   "Templates": [
     {
       "Contents": "Fred rules",
@@ -48,10 +48,10 @@ var jobTask3Create string = `{
     "feature-flags": "original-exit-codes"
   },
   "Name": "task3",
-  "OptionalParams": null,
+  "OptionalParams": [],
   "ReadOnly": false,
-  "RequiredParams": null,
-  "Templates": null,
+  "RequiredParams": [],
+  "Templates": [],
   "Validated": true
 }
 `
@@ -61,10 +61,10 @@ var jobLocal2Create string = `{
   "BootEnv": "local",
   "Errors": [],
   "Name": "stage3",
-  "OptionalParams": null,
+  "OptionalParams": [],
   "Profiles": [],
   "ReadOnly": false,
-  "RequiredParams": null,
+  "RequiredParams": [],
   "Tasks": [
     "task3",
     "task2",
@@ -102,12 +102,12 @@ var jobCreateMachineJohnString string = `{
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": null,
+  "Profiles": [],
   "ReadOnly": false,
   "Runnable": true,
   "Secret": "secret1",
@@ -131,10 +131,10 @@ var jobLocalUpdateString string = `{
   "BootEnv": "local",
   "Errors": [],
   "Name": "stage3",
-  "OptionalParams": null,
+  "OptionalParams": [],
   "Profiles": [],
   "ReadOnly": false,
-  "RequiredParams": null,
+  "RequiredParams": [],
   "Tasks": [
     "task1",
     "task2",
@@ -216,11 +216,11 @@ var jobListJobsString string = `RE:
 \]
 `
 
-var jobCreateJobAlreadyRunningErrorString string = "Error: Machine 3e7031fe-3062-45f1-835c-92541bc9cbd3 already has running or created job\n\n"
+var jobCreateJobAlreadyRunningErrorString string = "Error: Conflict: Machine 3e7031fe-3062-45f1-835c-92541bc9cbd3 already has running or created job\n\n"
 
 var jobShowNoArgErrorString string = "Error: drpcli jobs show [id] [flags] requires 1 argument"
 var jobShowTooManyArgErrorString string = "Error: drpcli jobs show [id] [flags] requires 1 argument"
-var jobShowMissingArgErrorString string = "Error: jobs GET: john: Not Found\n\n"
+var jobShowMissingArgErrorString string = "Error: GET: jobs/john: Not Found\n\n"
 var jobShowJobString string = `RE:
 {
   "Archived": false,
@@ -242,11 +242,13 @@ var jobShowJobString string = `RE:
 var jobExistsNoArgErrorString string = "Error: drpcli jobs exists [id] [flags] requires 1 argument"
 var jobExistsTooManyArgErrorString string = "Error: drpcli jobs exists [id] [flags] requires 1 argument"
 var jobExistsJobString string = ""
-var jobExistsMissingJohnString string = "Error: jobs GET: john: Not Found\n\n"
+var jobExistsMissingJohnString string = "Error: GET: jobs/john: Not Found\n\n"
 
-var jobExpireTimeErrorString string = "Error: Invalid UUID: false\n\n"
-var jobDestroyBadString string = "Error: Jobs 00000000-0000-0000-0000-000000000001 is not in a deletable state: created\n\n"
-var jobBadTimeFormatString string = "Error: parsing time \"fred\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"fred\" as \"2006\"\n\n"
+var jobExpireTimeErrorString string = "Error: GET: jobs: Invalid UUID: false\n\n"
+var jobDestroyBadString string = "Error: ValidationError: jobs/00000000-0000-0000-0000-000000000001: Jobs 00000000-0000-0000-0000-000000000001 is not in a deletable state: created\n\n"
+var jobBadTimeFormatString string = `Error: GET: jobs: parsing time "fred" as "2006-01-02T15:04:05Z07:00": cannot parse "fred" as "2006"
+
+`
 var jobCreateJobInvalidMachineNameErrorString string = "Error: Unable to create new job: Invalid machine name passed to job create: james\n\n"
 
 var jobUpdateNoArgErrorString string = "Error: drpcli jobs update [id] [json] [flags] requires 2 arguments\n"
@@ -262,12 +264,12 @@ var jobShowMachineJohnString string = `{
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": null,
+  "Profiles": [],
   "ReadOnly": false,
   "Runnable": true,
   "Secret": "secret1",
@@ -288,7 +290,7 @@ var jobUpdateBadJSON2String string = "[ \"gadsg\" ]"
 var jobUpdateBadJSON2ErrorString string = "Error: Unable to merge objects: json: cannot unmarshal array into Go value of type map[string]interface {}\n\n\n"
 var jobUpdateInputString string = "{ \"State\": \"incomplete\" }"
 var jobUpdateBadInputString string = "{ \"State\": \"fred\" }"
-var jobUpdateBadInputErrorString string = "Error: Jobs 00000000-0000-0000-0000-000000000001 wants State fred, which is not valid\n\n"
+var jobUpdateBadInputErrorString string = "Error: ValidationError: Jobs 00000000-0000-0000-0000-000000000001 wants State fred, which is not valid\n\n"
 var jobUpdateJohnString string = `RE:
 {
   "Archived": false,
@@ -308,7 +310,7 @@ var jobUpdateJohnString string = `RE:
 }
 `
 
-var jobUpdateJohnMissingErrorString string = "Error: jobs GET: john2: Not Found\n\n"
+var jobUpdateJohnMissingErrorString string = "Error: GET: jobs/john2: Not Found\n\n"
 
 var jobPatchNoArgErrorString string = "Error: drpcli jobs patch [objectJson] [changesJson] [flags] requires 2 arguments\n"
 var jobPatchTooManyArgErrorString = "Error: drpcli jobs patch [objectJson] [changesJson] [flags] requires 2 arguments\n"
@@ -348,7 +350,7 @@ var jobPatchBadBaseJSONString = "{ badbase"
 var jobPatchBadBaseJSONErrorString = "Error: Unable to parse drpcli jobs patch [objectJson] [changesJson] [flags] JSON { badbase\nError: error converting YAML to JSON: yaml: line 1: did not find expected ',' or '}'\n\n"
 
 var jobPatchBadInputString = "{ \"State\": \"fred\"}"
-var jobPatchBadInputErrorString = "Error: Jobs 00000000-0000-0000-0000-000000000001 wants State fred, which is not valid\n\n"
+var jobPatchBadInputErrorString = "Error: ValidationError: Jobs 00000000-0000-0000-0000-000000000001 wants State fred, which is not valid\n\n"
 var jobPatchInputString = "{ \"State\": \"running\"}"
 var jobPatchInputReplyString = `RE:
 {
@@ -400,7 +402,7 @@ var jobPatchMissingBaseString = `{
   "Validated": true
 }
 `
-var jobPatchJohnMissingErrorString = "Error: jobs: PATCH 10000000-0000-0000-0000-000000000001: Not Found\n\n"
+var jobPatchJohnMissingErrorString = "Error: PATCH: jobs/10000000-0000-0000-0000-000000000001: Not Found\n\n"
 
 var jobUpdateFailedJobInputString = "{ \"State\": \"failed\" }"
 var jobUpdateFailedJobUpdateString = `RE:
@@ -421,7 +423,7 @@ var jobUpdateFailedJobUpdateString = `RE:
   "Validated": true
 }
 `
-var jobCreateMachineNotRunningErrorString = "Error: Machine 3e7031fe-3062-45f1-835c-92541bc9cbd3 is not runnable\n\n"
+var jobCreateMachineNotRunningErrorString = "Error: Conflict: Machine 3e7031fe-3062-45f1-835c-92541bc9cbd3 is not runnable\n\n"
 var jobUpdateMachineRunnableString = `{
   "Address": "192.168.100.110",
   "Available": true,
@@ -432,12 +434,12 @@ var jobUpdateMachineRunnableString = `{
   "Name": "john",
   "Profile": {
     "Available": false,
-    "Errors": null,
+    "Errors": [],
     "Name": "",
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": null,
+  "Profiles": [],
   "ReadOnly": false,
   "Runnable": true,
   "Secret": "secret1",
@@ -630,7 +632,7 @@ var jobFullListString = `RE:
 `
 var jobDestroyNoArgErrorString = "Error: drpcli jobs destroy [id] [flags] requires 1 argument\n"
 var jobDestroyTooManyArgErrorString = "Error: drpcli jobs destroy [id] [flags] requires 1 argument\n"
-var jobDestroyMissingJohnString = "Error: jobs: DELETE 3e7031fe-3062-45f1-835c-92541bc9cbd3: Not Found\n\n"
+var jobDestroyMissingJohnString = "Error: DELETE: jobs/3e7031fe-3062-45f1-835c-92541bc9cbd3: Not Found\n\n"
 var jobDestroy001String = "Deleted job 00000000-0000-0000-0000-000000000001\n"
 var jobDestroy002String = "Deleted job 00000000-0000-0000-0000-000000000002\n"
 var jobDestroy003String = "Deleted job 00000000-0000-0000-0000-000000000003\n"
@@ -638,7 +640,7 @@ var jobDestroy004String = "Deleted job 00000000-0000-0000-0000-000000000004\n"
 
 var jobActionsNoArgErrorString = "Error: drpcli jobs actions [id] [flags] requires 1 argument\n"
 var jobActionsTooManyArgErrorString = "Error: drpcli jobs actions [id] [flags] requires 1 argument\n"
-var jobActionsMissingJobErrorString = "Error: Job john does not exist\n\n"
+var jobActionsMissingJobErrorString = "Error: ValidationError: Job john does not exist\n\n"
 var jobActionsRenderedTask1String = "[]\n"
 var jobActionsRenderedTask2String = `[
   {
@@ -648,12 +650,12 @@ var jobActionsRenderedTask2String = `[
   }
 ]
 `
-var jobActionsMissingMachineRenderErrorString = "Error: Machine 3e7031fe-3062-45f1-835c-92541bc9cbd3 does not exist\n\n"
-var jobActionsMissingTaskRenderErrorString = "Error: Task task2 does not exist\n\n"
+var jobActionsMissingMachineRenderErrorString = "Error: ValidationError: Machine 3e7031fe-3062-45f1-835c-92541bc9cbd3 does not exist\n\n"
+var jobActionsMissingTaskRenderErrorString = "Error: ValidationError: Task task2 does not exist\n\n"
 
 var jobLogNoArgErrorString = "Error: drpcli jobs log [id] [- or string] [flags] requires at least 1 argument\n"
 var jobLogTooManyArgsErrorString = "Error: drpcli jobs log [id] [- or string] [flags] requires at most 2 arguments\n"
-var jobLogUnknownJobErrorString = "Error: Job john does not exist\n\n"
+var jobLogUnknownJobErrorString = "Error: ValidationError: Job john does not exist\n\n"
 
 func TestJobCli(t *testing.T) {
 	tests := []CliTest{
@@ -695,12 +697,6 @@ func TestJobCli(t *testing.T) {
 		CliTest{false, false, []string{"machines", "show", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, jobShowMachineJohnString, noErrorString},
 
 		CliTest{false, false, []string{"jobs", "list"}, noStdinString, jobListJobsString, noErrorString},
-		CliTest{false, false, []string{"jobs", "list", "--limit=0"}, noStdinString, jobEmptyListString, noErrorString},
-		CliTest{false, false, []string{"jobs", "list", "--limit=10", "--offset=0"}, noStdinString, jobListJobsString, noErrorString},
-		CliTest{false, false, []string{"jobs", "list", "--limit=10", "--offset=10"}, noStdinString, jobEmptyListString, noErrorString},
-		CliTest{false, true, []string{"jobs", "list", "--limit=-10", "--offset=0"}, noStdinString, noContentString, limitNegativeError},
-		CliTest{false, true, []string{"jobs", "list", "--limit=10", "--offset=-10"}, noStdinString, noContentString, offsetNegativeError},
-		CliTest{false, false, []string{"jobs", "list", "--limit=-1", "--offset=-1"}, noStdinString, jobListJobsString, noErrorString},
 		CliTest{false, false, []string{"jobs", "list", "Stage=stage3"}, noStdinString, jobListJobsString, noErrorString},
 		CliTest{false, false, []string{"jobs", "list", "Stage=false"}, noStdinString, jobEmptyListString, noErrorString},
 		CliTest{false, false, []string{"jobs", "list", "Task=task1"}, noStdinString, jobListJobsString, noErrorString},
@@ -721,16 +717,6 @@ func TestJobCli(t *testing.T) {
 		CliTest{false, false, []string{"jobs", "list", "UUID=4e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, jobEmptyListString, noErrorString},
 		CliTest{false, false, []string{"jobs", "list", "UUID=00000000-0000-0000-0000-000000000001"}, noStdinString, jobListJobsString, noErrorString},
 		CliTest{false, true, []string{"jobs", "list", "UUID=false"}, noStdinString, noContentString, jobExpireTimeErrorString},
-		CliTest{false, false, []string{"jobs", "list", "Available=true"}, noStdinString, jobListJobsString, noErrorString},
-		CliTest{false, false, []string{"jobs", "list", "Available=false"}, noStdinString, jobEmptyListString, noErrorString},
-		CliTest{false, true, []string{"jobs", "list", "Available=fred"}, noStdinString, noContentString, bootEnvBadAvailableString},
-		CliTest{false, false, []string{"jobs", "list", "Valid=true"}, noStdinString, jobListJobsString, noErrorString},
-		CliTest{false, false, []string{"jobs", "list", "Valid=false"}, noStdinString, jobEmptyListString, noErrorString},
-		CliTest{false, true, []string{"jobs", "list", "Valid=fred"}, noStdinString, noContentString, bootEnvBadValidString},
-		CliTest{false, false, []string{"jobs", "list", "ReadOnly=true"}, noStdinString, jobEmptyListString, noErrorString},
-		CliTest{false, false, []string{"jobs", "list", "ReadOnly=false"}, noStdinString, jobListJobsString, noErrorString},
-		CliTest{false, true, []string{"jobs", "list", "ReadOnly=fred"}, noStdinString, noContentString, bootEnvBadReadOnlyString},
-
 		CliTest{false, true, []string{"jobs", "destroy", "00000000-0000-0000-0000-000000000001"}, noStdinString, noContentString, jobDestroyBadString},
 
 		CliTest{true, true, []string{"jobs", "log"}, noStdinString, noContentString, jobLogNoArgErrorString},

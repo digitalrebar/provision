@@ -2,16 +2,14 @@ package api
 
 import (
 	"fmt"
-	"os"
-	"os/signal"
 	"strconv"
-	"time"
 
 	"github.com/VictorLowther/jsonpatch2/utils"
-	"github.com/digitalrebar/provision/models"
 )
 
-func testItem(field, value string) func(interface{}) (bool, error) {
+// TestItem creates a test function to see if a value in the
+// passed interface is true.
+func TestItem(field, value string) func(interface{}) (bool, error) {
 	return func(ref interface{}) (bool, error) {
 		var err error
 		fields := map[string]interface{}{}
@@ -46,60 +44,5 @@ func testItem(field, value string) func(interface{}) (bool, error) {
 			}
 		}
 		return matched, err
-	}
-}
-
-// WaitFor waits for an item to match test.  It subscribes to an
-// EventStream that watches all update and save envents for the object
-// in question, and returns a string indicating whether the match
-// succeeded, failed, or timed out.
-//
-// The API for this function is subject to refactoring and change, and
-// should not be considered to be stable yet.
-func (c *Client) WaitFor(item models.Model, test func(interface{}) (bool, error), timeout int64) (string, error) {
-	prefix := item.Prefix()
-	id := item.Key()
-	interrupt := make(chan os.Signal, 1)
-	evts := []string{prefix + ".update." + id, prefix + ".save." + id}
-	signal.Notify(interrupt, os.Interrupt)
-	defer signal.Reset(os.Interrupt)
-	es, err := c.Events()
-	if err != nil {
-		return "", err
-	}
-	if err := es.Register(evts...); err != nil {
-		es.Close()
-		return "", err
-	}
-	timer := time.NewTimer(time.Second * time.Duration(timeout))
-	defer func() {
-		if !timer.Stop() {
-			<-timer.C
-		}
-		es.Deregister(evts...)
-		es.Close()
-	}()
-	for {
-		found, err := test(item)
-		if found && err == nil {
-			return "complete", nil
-		}
-		if err != nil {
-			return fmt.Sprintf("test: %v", err), err
-		}
-		select {
-		case evt := <-es.Events:
-			if evt.Err != nil {
-				return fmt.Sprintf("read: %v", err), err
-			}
-			item, err = evt.E.Model()
-			if err != nil {
-				return fmt.Sprintf("read: %v", err), err
-			}
-		case <-interrupt:
-			return "interrupt", nil
-		case <-timer.C:
-			return "timeout", nil
-		}
 	}
 }

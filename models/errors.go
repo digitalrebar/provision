@@ -2,6 +2,7 @@ package models
 
 import (
 	"fmt"
+	"path"
 	"strings"
 )
 
@@ -21,8 +22,7 @@ type Error struct {
 	// Messages are any additional messages related to this Error
 	Messages []string
 	// code is the HTTP status code that should be used for this Error
-	Code          int `json:"-"`
-	containsError bool
+	Code int
 }
 
 func NewError(t string, code int, m string) *Error {
@@ -30,7 +30,6 @@ func NewError(t string, code int, m string) *Error {
 }
 
 func (e *Error) Errorf(s string, args ...interface{}) {
-	e.containsError = true
 	if e.Messages == nil {
 		e.Messages = []string{}
 	}
@@ -40,18 +39,25 @@ func (e *Error) Errorf(s string, args ...interface{}) {
 func (e *Error) Error() string {
 	var res string
 	if e.Key != "" {
-		res = fmt.Sprintf("%s/%s: %s\n", e.Model, e.Key, e.Type)
+		res = fmt.Sprintf("%s: %s", e.Type, path.Join(e.Model, e.Key))
 	} else if e.Model != "" {
-		res = fmt.Sprintf("%s: %s\n", e.Key, e.Type)
+		res = fmt.Sprintf("%s: %s", e.Type, e.Model)
 	} else {
-		res = fmt.Sprintf("%s:\n", e.Type)
+		res = fmt.Sprintf("%s", e.Type)
 	}
-	allMsgs := strings.Join(e.Messages, "\n")
-	return res + allMsgs
+	switch len(e.Messages) {
+	case 0:
+		return res
+	case 1:
+		return res + ": " + e.Messages[0]
+	default:
+		allMsgs := strings.Join(e.Messages, "\n  ")
+		return res + "\n  " + allMsgs
+	}
 }
 
 func (e *Error) ContainsError() bool {
-	return e.containsError
+	return len(e.Messages) != 0
 }
 
 func (e *Error) AddError(src error) {
@@ -64,16 +70,13 @@ func (e *Error) AddError(src error) {
 	switch other := src.(type) {
 	case *Error:
 		if other.Messages != nil {
-			e.containsError = true
 			e.Messages = append(e.Messages, other.Messages...)
 		}
 	case *Validation:
 		if other != nil && len(other.Errors) > 0 {
-			e.containsError = true
 			e.Messages = append(e.Messages, other.Errors...)
 		}
 	default:
-		e.containsError = true
 		e.Messages = append(e.Messages, src.Error())
 	}
 }
@@ -83,7 +86,7 @@ func (e *Error) HasError() error {
 		e.Model = e.Object.Prefix()
 		e.Key = e.Object.Key()
 	}
-	if e.containsError {
+	if e.ContainsError() {
 		return e
 	}
 	return nil

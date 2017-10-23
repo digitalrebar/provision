@@ -63,28 +63,25 @@ func (j *Job) Key() string {
 	return j.Uuid.String()
 }
 
+func (j *Job) Fill() {
+	j.MetaData.fill()
+	j.Validation.fill()
+}
+
 func (j *Job) AuthKey() string {
 	return j.Machine.String()
 }
 
-type Jobs []*Job
-
-func (s Jobs) Elem() Model {
-	return &Job{}
+func (b *Job) SliceOf() interface{} {
+	s := []*Job{}
+	return &s
 }
 
-func (s Jobs) Items() []Model {
-	res := make([]Model, len(s))
-	for i, m := range s {
-		res[i] = m
+func (b *Job) ToModels(obj interface{}) []Model {
+	items := obj.(*[]*Job)
+	res := make([]Model, len(*items))
+	for i, item := range *items {
+		res[i] = Model(item)
 	}
 	return res
-}
-
-func (s Jobs) Fill(m []Model) {
-	q := make([]*Job, len(m))
-	for i, obj := range m {
-		q[i] = obj.(*Job)
-	}
-	s = q[:]
 }
