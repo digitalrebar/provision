@@ -30,7 +30,7 @@ func TestInfo(t *testing.T) {
 			Os:       runtime.GOOS,
 			Version:  provision.RS_VERSION,
 			Id:       "Fred",
-			Features: []string{"api-v3", "sane-exit-codes", "common-blob-size"},
+			Features: []string{"api-v3", "sane-exit-codes", "common-blob-size", "change-stage-map"},
 		},
 		expectErr: nil,
 		op: func() (interface{}, error) {
