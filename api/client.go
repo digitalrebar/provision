@@ -349,6 +349,28 @@ func (c *Client) PatchModel(prefix, key string, patch jsonpatch2.Patch) (models.
 	return new, err
 }
 
+func (c *Client) PatchTo(old models.Model, new models.Model) (models.Model, error) {
+	ret := &models.Error{
+		Type:  "PATCH_ERROR",
+		Model: old.Prefix(),
+		Key:   old.Key(),
+	}
+	if old.Prefix() != new.Prefix() || old.Key() != new.Key() {
+		ret.Errorf("Cannot patch from %T to %T, or change keys from %s to %s", old, new, old.Key(), new.Key())
+		return old, ret
+	}
+	patch, err := GenPatch(old, new)
+	if err != nil {
+		ret.AddError(err)
+		return old, ret
+	}
+	ten, err := c.PatchModel(old.Prefix(), old.Key(), patch)
+	if err == nil {
+		return ten, nil
+	}
+	return old, err
+}
+
 // PutModel replaces the server-side object matching the passed-in
 // object with the passed-in object.  Note that PutModel does not
 // allow the server to detect and reject conflicting changes from
@@ -362,7 +384,11 @@ func (c *Client) PutModel(obj models.Model) error {
 // It should be used whenever the API is not acting on behalf of a user.
 func TokenSession(endpoint, token string) (*Client, error) {
 	tr := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		TLSClientConfig:       &tls.Config{InsecureSkipVerify: true},
+		MaxIdleConns:          100,
+		IdleConnTimeout:       90 * time.Second,
+		TLSHandshakeTimeout:   10 * time.Second,
+		ExpectContinueTimeout: 1 * time.Second,
 	}
 	c := &Client{
 		endpoint: endpoint,
