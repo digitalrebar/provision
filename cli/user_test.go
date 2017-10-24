@@ -188,7 +188,8 @@ var userTokenSuccessString string = `RE:
     "Features": \[
       "api-v3",
       "sane-exit-codes",
-      "common-blob-size"
+      "common-blob-size",
+      "change-stage-map"
     \],
     "file_port": 10002,
     "id": "Fred",
