@@ -29,6 +29,7 @@ dr-provision.zip
 dr-provision.sha256
 server.key
 server.crt
+cmds/incrementer/content.go
 # Pip stuff for docs
 src
 test-data/etc/dr-provision/._Description.meta

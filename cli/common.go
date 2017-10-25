@@ -202,6 +202,14 @@ func prettyPrintBuf(o interface{}) (buf []byte, err error) {
 		buf, err = json.MarshalIndent(o, "", "  ")
 	case "yaml":
 		buf, err = yaml.Marshal(o)
+	case "go":
+		if tbuf, terr := yaml.Marshal(o); terr == nil {
+			s := fmt.Sprintf("package main\n\nvar contentYamlString = `\n%s\n`\n", string(tbuf))
+			buf = []byte(s)
+		} else {
+			err = terr
+		}
+
 	default:
 		err = fmt.Errorf("Unknown pretty format %s", format)
 		return

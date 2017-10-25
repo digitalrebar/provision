@@ -36,39 +36,30 @@ var plugin_providerListString string = `[
         ]
       }
     ],
+    "Content": "meta:\n  Description: Test Plugin for DRP\n  Name: incrementer\n  Source: Digital Rebar\n  Type: plugin\n  Version: Internal\nsections:\n  params:\n    incrementer/touched:\n      Available: false\n      Description: \"\"\n      Documentation: \"\"\n      Errors: []\n      Meta: {}\n      Name: incrementer/touched\n      ReadOnly: false\n      Schema:\n        type: integer\n      Validated: false\n",
     "HasPublish": true,
     "Name": "incrementer",
     "OptionalParams": [],
     "Parameters": [
       {
-        "Available": true,
+        "Available": false,
         "Errors": [],
         "Name": "incrementer/parameter",
         "ReadOnly": false,
         "Schema": {
           "type": "string"
         },
-        "Validated": true
+        "Validated": false
       },
       {
-        "Available": true,
+        "Available": false,
         "Errors": [],
         "Name": "incrementer/step",
         "ReadOnly": false,
         "Schema": {
           "type": "integer"
         },
-        "Validated": true
-      },
-      {
-        "Available": true,
-        "Errors": [],
-        "Name": "incrementer/touched",
-        "ReadOnly": false,
-        "Schema": {
-          "type": "integer"
-        },
-        "Validated": true
+        "Validated": false
       }
     ],
     "RequiredParams": [],
@@ -96,39 +87,30 @@ var plugin_providerShowIncrementerString string = `{
       ]
     }
   ],
+  "Content": "meta:\n  Description: Test Plugin for DRP\n  Name: incrementer\n  Source: Digital Rebar\n  Type: plugin\n  Version: Internal\nsections:\n  params:\n    incrementer/touched:\n      Available: false\n      Description: \"\"\n      Documentation: \"\"\n      Errors: []\n      Meta: {}\n      Name: incrementer/touched\n      ReadOnly: false\n      Schema:\n        type: integer\n      Validated: false\n",
   "HasPublish": true,
   "Name": "incrementer",
   "OptionalParams": [],
   "Parameters": [
     {
-      "Available": true,
+      "Available": false,
       "Errors": [],
       "Name": "incrementer/parameter",
       "ReadOnly": false,
       "Schema": {
         "type": "string"
       },
-      "Validated": true
+      "Validated": false
     },
     {
-      "Available": true,
+      "Available": false,
       "Errors": [],
       "Name": "incrementer/step",
       "ReadOnly": false,
       "Schema": {
         "type": "integer"
       },
-      "Validated": true
-    },
-    {
-      "Available": true,
-      "Errors": [],
-      "Name": "incrementer/touched",
-      "ReadOnly": false,
-      "Schema": {
-        "type": "integer"
-      },
-      "Validated": true
+      "Validated": false
     }
   ],
   "RequiredParams": [],

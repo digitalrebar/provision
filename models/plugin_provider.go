@@ -23,7 +23,11 @@ type PluginProvider struct {
 	OptionalParams []string
 
 	// Ensure that these are in the system.
+	// This should be deprecated and should be converted to content.
 	Parameters []*Param
+
+	// Content Bundle Yaml string - can be optional or empty
+	Content string
 }
 
 func (p *PluginProvider) Prefix() string { return "plugin_providers" }

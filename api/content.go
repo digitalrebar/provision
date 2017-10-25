@@ -45,7 +45,11 @@ func findOrFake(src, field string, args map[string]string) string {
 		return string(buf)
 	}
 	if p, ok := args[field]; !ok {
-		return "Unspecified"
+		s := "Unspecified"
+		if field == "Type" {
+			s = "dynamic"
+		}
+		return s
 	} else {
 		return p
 	}
@@ -58,6 +62,7 @@ func (c *Client) BundleContent(src string, dst store.Store, params map[string]st
 			"Description": findOrFake(src, "Description", params),
 			"Version":     findOrFake(src, "Version", params),
 			"Source":      findOrFake(src, "Source", params),
+			"Type":        findOrFake(src, "Type", params),
 		}
 		dm.SetMetaData(meta)
 	}

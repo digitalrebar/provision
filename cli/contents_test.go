@@ -63,11 +63,11 @@ var contentDefaultListString string = `[
     },
     "Warnings": [],
     "meta": {
-      "Description": "Content layer for incrementer plugin provider",
-      "Name": "plugin-provider-incrementer",
-      "Source": "FromPluginProvider",
+      "Description": "Test Plugin for DRP",
+      "Name": "incrementer",
+      "Source": "Digital Rebar",
       "Type": "plugin",
-      "Version": "v3.0.2-pre-alpha-NotSet"
+      "Version": "Internal"
     }
   },
   {
@@ -195,11 +195,11 @@ var contentListContentsString = `[
     },
     "Warnings": [],
     "meta": {
-      "Description": "Content layer for incrementer plugin provider",
-      "Name": "plugin-provider-incrementer",
-      "Source": "FromPluginProvider",
+      "Description": "Test Plugin for DRP",
+      "Name": "incrementer",
+      "Source": "Digital Rebar",
       "Type": "plugin",
-      "Version": "v3.0.2-pre-alpha-NotSet"
+      "Version": "Internal"
     }
   },
   {

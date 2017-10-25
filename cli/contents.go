@@ -104,6 +104,9 @@ func findOrFake(field string, args map[string]string) *string {
 	}
 	if p, ok := args[field]; !ok {
 		s := "Unspecified"
+		if field == "Type" {
+			s = "dynamic"
+		}
 		return &s
 	} else {
 		return &p
@@ -156,6 +159,7 @@ func addContentCommands() (res *cobra.Command) {
 			content.Meta.Description = *findOrFake("Description", params)
 			content.Meta.Version = *findOrFake("Version", params)
 			content.Meta.Source = *findOrFake("Source", params)
+			content.Meta.Type = *findOrFake("Type", params)
 
 			content.Sections = models.Sections{}
 
@@ -194,6 +198,9 @@ func addContentCommands() (res *cobra.Command) {
 								} else {
 									return err
 								}
+							}
+							if f, ok := obj.(prmodels.Filler); ok {
+								f.Fill()
 							}
 						}
 
@@ -263,6 +270,12 @@ func addContentCommands() (res *cobra.Command) {
 			s = content.Meta.Version
 			if err := writeMetaFile("Version", &s); err != nil {
 				return err
+			}
+			s = content.Meta.Type
+			if s != "" {
+				if err := writeMetaFile("Type", &s); err != nil {
+					return err
+				}
 			}
 
 			// Write sections
