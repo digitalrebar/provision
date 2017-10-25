@@ -62,13 +62,13 @@ func TestContentCrud(t *testing.T) {
     params: 3
   Warnings: []
   meta:
-    Description: Content layer for incrementer plugin provider
+    Description: Test Plugin for DRP
     Meta: {}
-    Name: plugin-provider-incrementer
+    Name: incrementer
     Overwritable: false
-    Source: FromPluginProvider
+    Source: Digital Rebar
     Type: plugin
-    Version: v3.0.2-pre-alpha-NotSet
+    Version: Internal
     Writable: false
 - Counts:
     bootenvs: 2

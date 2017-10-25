@@ -29,6 +29,6 @@ type Info struct {
 	// required: true
 	ProvisionerEnabled bool `json:"prov_enabled"`
 	// required: true
-	Stats    []*Stat `json:"stats"`
-	Features []string
+	Stats    []*Stat  `json:"stats"`
+	Features []string `json:"features"`
 }

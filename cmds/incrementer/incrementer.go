@@ -1,5 +1,7 @@
 package main
 
+//go:generate ../../tools/build_plugin_content.sh .
+
 import (
 	"bytes"
 	"fmt"
@@ -32,8 +34,8 @@ var (
 		Parameters: []*models.Param{
 			&models.Param{Name: "incrementer/parameter", Schema: map[string]interface{}{"type": "string"}},
 			&models.Param{Name: "incrementer/step", Schema: map[string]interface{}{"type": "integer"}},
-			&models.Param{Name: "incrementer/touched", Schema: map[string]interface{}{"type": "integer"}},
 		},
+		Content: contentYamlString,
 	}
 	lock sync.Mutex
 )

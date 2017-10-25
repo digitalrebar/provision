@@ -401,7 +401,13 @@ func TestMain(m *testing.M) {
 		os.Exit(1)
 	}
 
-	out, err := exec.Command("go", "build", "-o", tmpDir+"/plugins/incrementer", "../cmds/incrementer/incrementer.go").CombinedOutput()
+	out, err := exec.Command("go", "generate", "../cmds/incrementer/incrementer.go").CombinedOutput()
+	if err != nil {
+		log.Printf("Failed to generate incrementer plugin: %v, %s", err, string(out))
+		os.Exit(1)
+	}
+
+	out, err = exec.Command("go", "build", "-o", tmpDir+"/plugins/incrementer", "../cmds/incrementer/incrementer.go", "../cmds/incrementer/content.go").CombinedOutput()
 	if err != nil {
 		log.Printf("Failed to build incrementer plugin: %v, %s", err, string(out))
 		os.Exit(1)
