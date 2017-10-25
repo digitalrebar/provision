@@ -1,6 +1,6 @@
 package main
 
-//go:generate ../../tools/build_plugin_content.sh .
+//go:generate drbundler content content.go
 
 import (
 	"bytes"
