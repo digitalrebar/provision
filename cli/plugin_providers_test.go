@@ -36,7 +36,7 @@ var plugin_providerListString string = `[
         ]
       }
     ],
-    "Content": "\nmeta:\n  Description: Test Plugin for DRP\n  Name: incrementer\n  Source: Digital Rebar\n  Type: plugin\n  Version: Internal\nsections:\n  params:\n    incrementer/touched:\n      Available: false\n      Description: \"\"\n      Documentation: \"\"\n      Errors: []\n      Meta: {}\n      Name: incrementer/touched\n      ReadOnly: false\n      Schema:\n        type: integer\n      Validated: false\n\n",
+    "Content": "meta:\n  Description: Test Plugin for DRP\n  Name: incrementer\n  Source: Digital Rebar\n  Type: plugin\n  Version: Internal\nsections:\n  params:\n    incrementer/touched:\n      Available: false\n      Description: \"\"\n      Documentation: \"\"\n      Errors: []\n      Meta: {}\n      Name: incrementer/touched\n      ReadOnly: false\n      Schema:\n        type: integer\n      Validated: false\n",
     "HasPublish": true,
     "Name": "incrementer",
     "OptionalParams": [],
@@ -87,7 +87,7 @@ var plugin_providerShowIncrementerString string = `{
       ]
     }
   ],
-  "Content": "\nmeta:\n  Description: Test Plugin for DRP\n  Name: incrementer\n  Source: Digital Rebar\n  Type: plugin\n  Version: Internal\nsections:\n  params:\n    incrementer/touched:\n      Available: false\n      Description: \"\"\n      Documentation: \"\"\n      Errors: []\n      Meta: {}\n      Name: incrementer/touched\n      ReadOnly: false\n      Schema:\n        type: integer\n      Validated: false\n\n",
+  "Content": "meta:\n  Description: Test Plugin for DRP\n  Name: incrementer\n  Source: Digital Rebar\n  Type: plugin\n  Version: Internal\nsections:\n  params:\n    incrementer/touched:\n      Available: false\n      Description: \"\"\n      Documentation: \"\"\n      Errors: []\n      Meta: {}\n      Name: incrementer/touched\n      ReadOnly: false\n      Schema:\n        type: integer\n      Validated: false\n",
   "HasPublish": true,
   "Name": "incrementer",
   "OptionalParams": [],
