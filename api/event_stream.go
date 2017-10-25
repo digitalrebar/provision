@@ -60,7 +60,10 @@ func TestItem(field, value string) func(interface{}) (bool, error) {
 }
 
 func (c *Client) ws() (*websocket.Conn, error) {
-	ep := c.UrlFor("ws")
+	ep, err := c.UrlFor("ws")
+	if err != nil {
+		return nil, err
+	}
 	ep.Scheme = "wss"
 	dialer := &websocket.Dialer{
 		Proxy:           http.ProxyFromEnvironment,

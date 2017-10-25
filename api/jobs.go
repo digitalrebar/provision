@@ -21,26 +21,14 @@ import (
 // JobLog gets the log for a specific Job and writes it to the passed
 // io.Writer
 func (c *Client) JobLog(j *models.Job, dst io.Writer) error {
-	uri := c.UrlFor("jobs", j.Key(), "log")
-	req, err := c.Request("GET", uri, nil)
-	if err != nil {
-		return err
-	}
-	req.Header.Set("Accept", "application/octet-stream")
-	resp, err := c.Do(req)
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
-	return Unmarshal(resp, dst)
+	return c.Req().UrlFor("jobs", j.Key(), "log").Do(dst)
 }
 
 // JobActions returns the expanded list of templates that should be
 // written or executed for a specific Job.
 func (c *Client) JobActions(j *models.Job) ([]*models.JobAction, error) {
-	uri := c.UrlFor("jobs", j.Key(), "actions")
 	res := []*models.JobAction{}
-	return res, c.DoJSON("GET", uri, nil, &res)
+	return res, c.Req().UrlFor("jobs", j.Key(), "actions").Do(&res)
 }
 
 // TaskRunner is responsible for expanding templates and running
@@ -205,22 +193,13 @@ func (r *TaskRunner) Run() error {
 	helperWritten := false
 	go func() {
 		defer reader.Close()
-		uri := r.c.UrlFor("jobs", r.j.Key(), "log")
 		buf := bytes.NewBuffer(make([]byte, 64*1024))
 		for {
 			count, err := io.CopyN(buf, reader, 64*1024)
 			if count > 0 {
-				req, err := r.c.Request("PUT", uri, buf)
-				if err != nil {
+				if r.c.Req().Put(buf).UrlFor("jobs", r.j.Key(), "log").Do(nil) != nil {
 					return
 				}
-				req.Header.Set("Content-Type", "application/octet-stream")
-				req.Header.Set("Accept", "application/json")
-				resp, err := r.c.Do(req)
-				if err != nil {
-					return
-				}
-				resp.Body.Close()
 				buf.Reset()
 			}
 			if err != nil {

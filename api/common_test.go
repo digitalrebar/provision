@@ -57,6 +57,23 @@ func (l crudTest) run(t *testing.T) {
 	}
 }
 
+func rt(t *testing.T,
+	name string,
+	res interface{},
+	err error,
+	op func() (interface{}, error),
+	clean func()) {
+	t.Helper()
+	ct := crudTest{
+		name:      name,
+		expectRes: res,
+		expectErr: err,
+		op:        op,
+		clean:     clean,
+	}
+	ct.run(t)
+}
+
 var session *Client
 var tmpDir string
 
@@ -195,7 +212,7 @@ func TestMain(m *testing.M) {
 		count++
 	}
 	if session == nil {
-		log.Printf("Failed to create UserSession")
+		log.Printf("Failed to create UserSession: %v", err)
 		os.RemoveAll(tmpDir)
 		os.Exit(1)
 	}
