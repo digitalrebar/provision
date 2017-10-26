@@ -15,7 +15,7 @@ func TestIsos(t *testing.T) {
 			expectRes: []string{},
 			expectErr: nil,
 			op: func() (interface{}, error) {
-				return session.ListBlobs("isos", nil)
+				return session.ListBlobs("isos")
 			},
 		},
 		{
@@ -48,7 +48,7 @@ func TestIsos(t *testing.T) {
 			},
 			expectErr: nil,
 			op: func() (interface{}, error) {
-				return session.ListBlobs("isos", nil)
+				return session.ListBlobs("isos")
 			},
 		},
 		{

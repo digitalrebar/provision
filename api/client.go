@@ -7,9 +7,9 @@ import (
 	"crypto/tls"
 	"encoding/base64"
 	"encoding/json"
-	"fmt"
 	"io"
 	"log"
+	"mime"
 	"net"
 	"net/http"
 	"net/url"
@@ -36,6 +36,257 @@ type Client struct {
 	closed                       bool
 }
 
+func (c *Client) UrlFor(args ...string) (*url.URL, error) {
+	return url.ParseRequestURI(c.endpoint + path.Join(APIPATH, path.Join(args...)))
+}
+
+// R encapsulates a single Request/Response round trip.  It has a slew
+// of helper methods that can be chained together to handle all common
+// operations with this API.  It handles capturing any errors that may
+// occur in building and executing the request.
+type R struct {
+	c      *Client
+	method string
+	uri    *url.URL
+	header http.Header
+	body   io.Reader
+	Req    *http.Request
+	Resp   *http.Response
+	err    *models.Error
+}
+
+// Req creates a new R for the current client.
+// It defaults to using the GET method.
+func (c *Client) Req() *R {
+	return &R{
+		c:      c,
+		method: "GET",
+		header: http.Header{},
+		err: &models.Error{
+			Type: "CLIENT_ERROR",
+		},
+	}
+}
+
+// Meth sets an arbitrary method for R
+func (r *R) Meth(v string) *R {
+	r.method = v
+	return r
+}
+
+// Get sets the R method to GET
+func (r *R) Get() *R {
+	return r.Meth("GET")
+}
+
+// Del sets the R method to DELETE
+func (r *R) Del() *R {
+	return r.Meth("DELETE")
+}
+
+// Head sets the R method to HEAD
+func (r *R) Head() *R {
+	return r.Meth("HEAD")
+}
+
+// Put sets the R method to PUT, and arranges for b to be used as the
+// body of the request by calling r.Body(). If no body is desired, b
+// can be nil
+func (r *R) Put(b interface{}) *R {
+	return r.Meth("PUT").Body(b)
+}
+
+// Patch sets the R method to PATCH, and arranges for b (which must be
+// a valid JSON patch) to be used as the body of the request by
+// calling r.Body().
+func (r *R) Patch(b jsonpatch2.Patch) *R {
+	return r.Meth("PATCH").Body(b)
+}
+
+// Post sets the R method to POST, and arranged for b to be the body
+// of the request by calling r.Body().
+func (r *R) Post(b interface{}) *R {
+	return r.Meth("POST").Body(b)
+}
+
+// UrlFor arranges for a sane request URL to be used for R.
+// The generated URL will be in the form of:
+//
+//    /api/v3/path.Join(args...)
+func (r *R) UrlFor(args ...string) *R {
+	res, err := r.c.UrlFor(args...)
+	if err != nil {
+		r.err.AddError(err)
+		return r
+	}
+	r.uri = res
+	return r
+}
+
+// UrlForM is similar to UrlFor, but the prefix and key of the
+// passed-in Model will be used as the first two path components in
+// the URL after /api/v3.  If m.Key() == "", it will be omitted.
+func (r *R) UrlForM(m models.Model, rest ...string) *R {
+	args := []string{m.Prefix(), m.Key()}
+	args = append(args, rest...)
+	return r.UrlFor(args...)
+}
+
+// Params appends query parameters to the URL R will use.  r.UrlFor()
+// or r.UrlForM() must have already been called.  You must pass an
+// even number of parameters to Params
+func (r *R) Params(args ...string) *R {
+	if r.uri == nil {
+		r.err.Errorf("Cannot call WithParams before UrlFor or UrlForM")
+		return r
+	}
+	if len(args)&1 == 1 {
+		r.err.Errorf("WithParams was not passed an even number of arguments")
+		return r
+	}
+	values := url.Values{}
+	for i := 1; i < len(args); i += 2 {
+		values.Add(args[i-1], args[i])
+	}
+	r.uri.RawQuery = values.Encode()
+	return r
+}
+
+// Headers arranges for its arguments to be added as HTTP headers.
+// You must pass an even number of arguments to Headers
+func (r *R) Headers(args ...string) *R {
+	if len(args)&1 == 1 {
+		r.err.Errorf("WithHeaders was not passed an even number of arguments")
+		return r
+	}
+	if r.header == nil {
+		r.header = http.Header{}
+	}
+	for i := 1; i < len(args); i += 2 {
+		r.header.Add(args[i-1], args[i])
+	}
+	return r
+}
+
+// Body arranges for b to be used as the body of the request.
+// It also sets the Content-Type of the request depending on what the body is:
+//
+// If b is an io.Reader or a raw byte array, Content-Type will be set to application/octet-stream,
+// otherwise Content-Type will be set to application/json.
+//
+// If b is something other than nil, an io.Reader, or a byte array,
+// Body will attempt to marshal the object as a JSON byte array and
+// use that.
+func (r *R) Body(b interface{}) *R {
+	switch obj := b.(type) {
+	case nil:
+		r.Headers("Content-Type", "application/json")
+	case io.Reader:
+		r.Headers("Content-Type", "application/octet-stream")
+		r.body = obj
+	case []byte:
+		r.Headers("Content-Type", "application/octet-stream")
+		r.body = bytes.NewBuffer(obj)
+	default:
+		r.Headers("Content-Type", "application/json")
+		buf, err := json.Marshal(&obj)
+		if err != nil {
+			r.err.AddError(err)
+		} else {
+			r.body = bytes.NewBuffer(buf)
+		}
+	}
+	return r
+}
+
+// Do attempts to execute the reqest built up by previous method calls
+// on R.  If any errors occurred while building up the request, they
+// will be returned and no API interaction will actually take place.
+// Otherwise, Do will generate am http.Request, perform it, and
+// marshal the results to val.  If any errors occur while processing
+// the request, they will be reported in the returned error.
+//
+// If val is an io.Writer, the body of the request will be copied
+// verbatim into val using io.Copy
+//
+// Otherwise, the response body will be unmarshalled into val as
+// directed by the Content-Type header of the response.
+func (r *R) Do(val interface{}) error {
+	if r.c.closed {
+		r.err.Errorf("Connection Closed")
+		return r.err
+	}
+	if r.err.ContainsError() {
+		return r.err
+	}
+	r.Headers("Accept", "application/json")
+	switch val.(type) {
+	case io.Writer:
+		r.Headers("Accept", "application/octet-stream")
+	}
+	req, err := http.NewRequest(r.method, r.uri.String(), r.body)
+	if err != nil {
+		r.err.AddError(err)
+		return r.err
+	}
+	req.Header = r.header
+	r.Req = req
+	r.c.Authorize(req)
+	resp, err := r.c.Do(req)
+	if err != nil {
+		r.err.AddError(err)
+		return r.err
+	}
+	r.Resp = resp
+	if resp != nil {
+		defer resp.Body.Close()
+	}
+	if wr, ok := val.(io.Writer); ok && resp.StatusCode < 300 {
+		_, err := io.Copy(wr, resp.Body)
+		r.err.AddError(err)
+		return r.err.HasError()
+	}
+	if r.method == "HEAD" {
+		if resp.StatusCode <= 300 {
+			return nil
+		}
+		r.err.Errorf(http.StatusText(resp.StatusCode))
+		r.err.Code = resp.StatusCode
+		return r.err
+	}
+	var dec Decoder
+	ct := resp.Header.Get("Content-Type")
+	mt, _, _ := mime.ParseMediaType(ct)
+	switch mt {
+	case "application/json":
+		dec = json.NewDecoder(resp.Body)
+	default:
+		buf := &bytes.Buffer{}
+		io.Copy(buf, resp.Body)
+		log.Printf("Got %v: %v", ct, buf.String())
+		log.Printf("%v", resp.Request.URL)
+		log.Printf("%v", resp)
+		r.err.Errorf("Cannot handle content-type %s", ct)
+	}
+	if dec == nil {
+		r.err.Errorf("No decoder for content-type %s", ct)
+		return r.err
+	}
+	if resp.StatusCode >= 400 {
+		res := &models.Error{}
+		if err := dec.Decode(res); err != nil {
+			r.err.Code = resp.StatusCode
+			r.err.AddError(err)
+			return r.err
+		}
+		return res
+	}
+	if val != nil {
+		r.err.AddError(dec.Decode(val))
+	}
+	return r.err.HasError()
+}
+
 // Close should be called whenever you no longer want to use this
 // client connection.  It will stop any token refresh routines running
 // in the background, and force any API calls made to this client that
@@ -59,194 +310,76 @@ func (c *Client) Token() string {
 // part of the initial authentication.
 func (c *Client) Info() (*models.Info, error) {
 	res := &models.Info{}
-	return res, c.DoJSON("GET", c.UrlFor("info"), nil, res)
-}
-
-// UrlFor is a helper function used to build URLs for the other client
-// helper functions.
-func (c *Client) UrlFor(args ...string) *url.URL {
-	res, err := url.ParseRequestURI(c.endpoint + path.Join(APIPATH, path.Join(args...)))
-	if err != nil {
-		log.Panicf("Unable to form URL for %v\n    %v", args, err)
-	}
-	return res
-}
-
-func (c *Client) WithParams(uri *url.URL, params map[string]string) {
-	if params != nil && len(params) > 0 {
-		values := url.Values{}
-		for k, v := range params {
-			values.Set(k, v)
-		}
-		uri.RawQuery = values.Encode()
-	}
+	return res, c.Req().UrlFor("info").Do(res)
 }
 
 // Authorize sets the Authorization header in the Request with the
 // current bearer token.  The rest of the helper methods call this, so
 // you don't have to unless you are building your own http.Requests.
 func (c *Client) Authorize(req *http.Request) error {
-	req.Header.Set("Authorization", "Bearer "+c.Token())
+	if req.Header.Get("Authorization") == "" {
+		req.Header.Set("Authorization", "Bearer "+c.Token())
+	}
 	return nil
-}
-
-// Request builds a preauthorized http.Request.
-func (c *Client) Request(method string, uri *url.URL, body io.Reader) (*http.Request, error) {
-	if c.closed {
-		return nil, fmt.Errorf("Connection closed")
-	}
-	req, err := http.NewRequest(method, uri.String(), body)
-	if err == nil {
-		err = c.Authorize(req)
-	}
-	return req, err
-}
-
-// RequestJSON builds an http.Request that has the Accept and
-// Content-Type headers set to application/json
-func (c *Client) RequestJSON(method string, uri *url.URL, body io.Reader) (*http.Request, error) {
-	req, err := c.Request(method, uri, body)
-	if err != nil {
-		return nil, err
-	}
-	req.Header.Set("Accept", "application/json")
-	req.Header.Set("Content-Type", "application/json")
-	return req, nil
-}
-
-func (c *Client) doJSON(method string, uri *url.URL, body io.Reader, val interface{}) error {
-	req, err := c.RequestJSON(method, uri, body)
-	if err != nil {
-		return err
-	}
-	resp, err := c.Do(req)
-	if err != nil {
-		return err
-	}
-	return Unmarshal(resp, val)
-}
-
-// DoJSON does a complete round-trip, unmarshalling the body returned
-// from the server into val.  It calls RequestJSON to build the
-// request.
-func (c *Client) DoJSON(method string, uri *url.URL, body interface{}, val interface{}) error {
-	switch obj := body.(type) {
-	case nil:
-		return c.doJSON(method, uri, nil, val)
-	case io.Reader:
-		return c.doJSON(method, uri, obj, val)
-	case []byte:
-		return c.doJSON(method, uri, bytes.NewBuffer(obj), val)
-	default:
-		buf, err := json.Marshal(&body)
-		if err != nil {
-			return err
-		}
-		return c.doJSON(method, uri, bytes.NewBuffer(buf), val)
-	}
 }
 
 // ListBlobs lists the names of all the binary objects at 'at', using
 // the indexing parameters suppied by params.
-func (c *Client) ListBlobs(at string, params map[string]string) ([]string, error) {
-	reqURI := c.UrlFor(path.Join("/", at))
-	c.WithParams(reqURI, params)
+func (c *Client) ListBlobs(at string, params ...string) ([]string, error) {
 	res := []string{}
-	return res, c.DoJSON("GET", reqURI, nil, &res)
+	return res, c.Req().UrlFor(path.Join("/", at)).Params(params...).Do(&res)
 }
 
-// GetBlob fetches a binary blob from the server.  You are responsible
-// for copying the returned io.ReadCloser to a suitable location and
-// closing it afterwards if it is not nil, otherwise the client will
-// leak open HTTP connections.
+// GetBlob fetches a binary blob from the server, writing it to the
+// passed io.Writer.
 func (c *Client) GetBlob(dest io.Writer, at ...string) error {
-	reqURI := c.UrlFor(path.Join("/", path.Join(at...)))
-	req, err := c.Request("GET", reqURI, nil)
-	if err != nil {
-		return err
-	}
-	req.Header.Set("Accept", "application/octet-stream")
-	req.Header.Add("Accept", "application/json")
-	resp, err := c.Do(req)
-	if resp != nil && resp.Body != nil {
-		defer resp.Body.Close()
-	}
-	if err != nil {
-		return err
-	}
-	return Unmarshal(resp, dest)
+	return c.Req().UrlFor(path.Join("/", path.Join(at...))).Do(dest)
 }
 
 // PostBlob uploads the binary blob contained in the passed io.Reader
 // to the location specified by at on the server.  You are responsible
 // for closing the passed io.Reader.
 func (c *Client) PostBlob(blob io.Reader, at ...string) (models.BlobInfo, error) {
-	reqURI := c.UrlFor(path.Join("/", path.Join(at...)))
 	res := models.BlobInfo{}
-	req, err := c.Request("POST", reqURI, blob)
-	if err != nil {
-		return res, err
-	}
-	req.Header.Set("Content-Type", "application/octet-stream")
-	req.Header.Set("Accept", "application/json")
-	resp, err := c.Do(req)
-	if err != nil {
-		return res, err
-	}
-	defer resp.Body.Close()
-	return res, Unmarshal(resp, &res)
+	return res, c.Req().Post(blob).UrlFor(path.Join("/", path.Join(at...))).Do(&res)
 }
 
 // DeleteBlob deletes a blob on the server at the location indicated
 // by 'at'
 func (c *Client) DeleteBlob(at ...string) error {
-	reqURI := c.UrlFor(path.Join("/", path.Join(at...)))
-	req, err := c.RequestJSON("DELETE", reqURI, nil)
-	if err != nil {
-		return err
-	}
-	resp, err := c.Do(req)
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
-	return Unmarshal(resp, nil)
+	return c.Req().Del().UrlFor(path.Join("/", path.Join(at...))).Do(nil)
 }
 
 // AllIndexes returns all the static indexes available for all object
 // types on the server.
 func (c *Client) AllIndexes() (map[string]map[string]models.Index, error) {
-	reqURI := c.UrlFor("indexes")
 	res := map[string]map[string]models.Index{}
-	return res, c.DoJSON("GET", reqURI, nil, &res)
+	return res, c.Req().UrlFor("indexes").Do(res)
 }
 
 // Indexes returns all the static indexes available for a given type
 // of object on the server.
 func (c *Client) Indexes(prefix string) (map[string]models.Index, error) {
-	reqURI := c.UrlFor("indexes", prefix)
 	res := map[string]models.Index{}
-	return res, c.DoJSON("GET", reqURI, nil, &res)
+	return res, c.Req().UrlFor("indexes", prefix).Do(res)
 }
 
 // OneIndex tests to see if there is an index on the object type
 // indicated by prefix for a specific parameter.  If the returned
 // Index is empty, there is no such Index.
 func (c *Client) OneIndex(prefix, param string) (models.Index, error) {
-	reqURI := c.UrlFor("indexes", prefix, param)
 	res := models.Index{}
-	return res, c.DoJSON("GET", reqURI, nil, &res)
+	return res, c.Req().UrlFor("indexes", prefix, param).Do(&res)
 }
 
-func (c *Client) ListModel(prefix string, params map[string]string) ([]models.Model, error) {
+func (c *Client) ListModel(prefix string, params ...string) ([]models.Model, error) {
 	ref, err := models.New(prefix)
 	if err != nil {
 		return nil, err
 	}
-	reqURI := c.UrlFor(ref.Prefix())
-	c.WithParams(reqURI, params)
 	res := ref.SliceOf()
-	if err := c.DoJSON("GET", reqURI, nil, res); err != nil {
+	err = c.Req().UrlForM(ref).Params(params...).Do(&res)
+	if err != nil {
 		return nil, err
 	}
 	return ref.ToModels(res), nil
@@ -254,46 +387,30 @@ func (c *Client) ListModel(prefix string, params map[string]string) ([]models.Mo
 
 // GetModel returns an object if type prefix with the unique
 // identifier key, if such an object exists.  Key can be either the
-// unique ket for an object, or any field on an object that has an
+// unique key for an object, or any field on an object that has an
 // index that enforces uniqueness.
-func (c *Client) GetModel(prefix, key string) (models.Model, error) {
+func (c *Client) GetModel(prefix, key string, params ...string) (models.Model, error) {
 	res, err := models.New(prefix)
 	if err != nil {
 		return nil, err
 	}
-	reqURI := c.UrlFor(res.Prefix(), key)
-	return res, c.DoJSON("GET", reqURI, nil, &res)
+	return res, c.Req().UrlFor(res.Prefix(), key).Do(res)
 }
 
 // ExistsModel tests to see if an object exists on the server
 // following the same rules as GetModel
 func (c *Client) ExistsModel(prefix, key string) (bool, error) {
-	reqURI := c.UrlFor(prefix, key)
-	req, err := c.Request("HEAD", reqURI, nil)
-	if err != nil {
-		return false, err
-	}
-	resp, err := c.Do(req)
-	if err != nil {
-		return false, err
-	}
-	switch resp.StatusCode {
-	case http.StatusOK:
-		return true, nil
-	case http.StatusNotFound:
+	err := c.Req().Head().UrlFor(prefix, key).Do(nil)
+	if e, ok := err.(*models.Error); ok && e.Code == http.StatusNotFound {
 		return false, nil
-	default:
-		res := &models.Error{Code: resp.StatusCode, Type: prefix, Key: key}
-		res.Errorf("Unable to determine existence")
-		return false, res
 	}
+	return err == nil, err
 }
 
 // FillModel fills the passed-in model with new information retrieved
 // from the server.
 func (c *Client) FillModel(ref models.Model, key string) error {
-	reqURI := c.UrlFor(ref.Prefix(), key)
-	err := c.DoJSON("GET", reqURI, nil, &ref)
+	err := c.Req().UrlFor(ref.Prefix(), key).Do(&ref)
 	if f, ok := ref.(models.Filler); err == nil && ok {
 		f.Fill()
 	}
@@ -304,11 +421,11 @@ func (c *Client) FillModel(ref models.Model, key string) error {
 // on the server.  It will return an error if the passed-in model does
 // not validate or if it already exists on the server.
 func (c *Client) CreateModel(ref models.Model) error {
-	reqURI := c.UrlFor(ref.Prefix())
-	if f, ok := ref.(models.Filler); ok {
+	err := c.Req().Post(ref).UrlFor(ref.Prefix()).Do(&ref)
+	if f, ok := ref.(models.Filler); err == nil && ok {
 		f.Fill()
 	}
-	return c.DoJSON("POST", reqURI, ref, &ref)
+	return err
 }
 
 // DeleteModel deletes the model matching the passed-in prefix and
@@ -318,16 +435,11 @@ func (c *Client) DeleteModel(prefix, key string) (models.Model, error) {
 	if err != nil {
 		return nil, err
 	}
-	reqURI := c.UrlFor(prefix, key)
-	return res, c.DoJSON("DELETE", reqURI, nil, &res)
+	return res, c.Req().Del().UrlFor(prefix, key).Do(&res)
 }
 
 func (c *Client) reauth(tok *models.UserToken) error {
-	reqURI := c.UrlFor("users", c.username, "token")
-	v := url.Values{}
-	v.Set("ttl", "600")
-	reqURI.RawQuery = v.Encode()
-	return c.DoJSON("GET", reqURI, nil, tok)
+	return c.Req().UrlFor("users", c.username, "token").Params("ttl", "600").Do(&tok)
 }
 
 // PatchModel attempts to update the object matching the passed prefix
@@ -341,12 +453,33 @@ func (c *Client) PatchModel(prefix, key string, patch jsonpatch2.Patch) (models.
 	if err != nil {
 		return nil, err
 	}
-	reqURI := c.UrlFor(prefix, key)
-	err = c.DoJSON("PATCH", reqURI, patch, &new)
+	err = c.Req().Patch(patch).UrlFor(prefix, key).Do(&new)
 	if err == nil {
 		new.Fill()
 	}
 	return new, err
+}
+
+func (c *Client) PatchTo(old models.Model, new models.Model) (models.Model, error) {
+	ret := &models.Error{
+		Type:  "PATCH_ERROR",
+		Model: old.Prefix(),
+		Key:   old.Key(),
+	}
+	if old.Prefix() != new.Prefix() || old.Key() != new.Key() {
+		ret.Errorf("Cannot patch from %T to %T, or change keys from %s to %s", old, new, old.Key(), new.Key())
+		return old, ret
+	}
+	patch, err := GenPatch(old, new)
+	if err != nil {
+		ret.AddError(err)
+		return old, ret
+	}
+	ten, err := c.PatchModel(old.Prefix(), old.Key(), patch)
+	if err == nil {
+		return ten, nil
+	}
+	return old, err
 }
 
 // PutModel replaces the server-side object matching the passed-in
@@ -354,15 +487,18 @@ func (c *Client) PatchModel(prefix, key string, patch jsonpatch2.Patch) (models.
 // allow the server to detect and reject conflicting changes from
 // multiple sources.
 func (c *Client) PutModel(obj models.Model) error {
-	reqURI := c.UrlFor(obj.Prefix(), obj.Key())
-	return c.DoJSON("PUT", reqURI, obj, &obj)
+	return c.Req().Put(obj).UrlForM(obj).Do(&obj)
 }
 
 // TokenSession creates a new api.Client that will use the passed-in Token for authentication.
 // It should be used whenever the API is not acting on behalf of a user.
 func TokenSession(endpoint, token string) (*Client, error) {
 	tr := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		TLSClientConfig:       &tls.Config{InsecureSkipVerify: true},
+		MaxIdleConns:          100,
+		IdleConnTimeout:       90 * time.Second,
+		TLSHandshakeTimeout:   10 * time.Second,
+		ExpectContinueTimeout: 1 * time.Second,
 	}
 	c := &Client{
 		endpoint: endpoint,
@@ -404,18 +540,12 @@ func UserSession(endpoint, username, password string) (*Client, error) {
 		Client:   &http.Client{Transport: tr},
 		closer:   make(chan struct{}, 0),
 	}
-	req, err := c.RequestJSON("GET", c.UrlFor("users", c.username, "token"), nil)
-	if err != nil {
-		return nil, err
-	}
 	basicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
-	req.Header.Set("Authorization", "Basic "+basicAuth)
-	resp, err := c.Do(req)
-	if err != nil {
-		return nil, err
-	}
 	token := &models.UserToken{}
-	if err := Unmarshal(resp, token); err != nil {
+	if err := c.Req().
+		UrlFor("users", c.username, "token").
+		Headers("Authorization", "Basic "+basicAuth).
+		Do(&token); err != nil {
 		return nil, err
 	}
 	go func() {

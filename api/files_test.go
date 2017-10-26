@@ -15,7 +15,7 @@ func TestFiles(t *testing.T) {
 			expectRes: []string{"drpcli.amd64.linux", "jq"},
 			expectErr: nil,
 			op: func() (interface{}, error) {
-				return session.ListBlobs("files", nil)
+				return session.ListBlobs("files")
 			},
 		},
 		{
@@ -77,7 +77,7 @@ func TestFiles(t *testing.T) {
 			},
 			expectErr: nil,
 			op: func() (interface{}, error) {
-				return session.ListBlobs("files", nil)
+				return session.ListBlobs("files")
 			},
 		},
 		{
@@ -87,7 +87,7 @@ func TestFiles(t *testing.T) {
 			},
 			expectErr: nil,
 			op: func() (interface{}, error) {
-				return session.ListBlobs("files", map[string]string{"path": "/bar"})
+				return session.ListBlobs("files", "path", "/bar")
 			},
 		},
 		{

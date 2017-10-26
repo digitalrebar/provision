@@ -12,9 +12,8 @@ import (
 )
 
 func (c *Client) GetContentSummary() ([]*models.ContentSummary, error) {
-	reqURI := c.UrlFor("contents")
 	res := []*models.ContentSummary{}
-	return res, c.DoJSON("GET", reqURI, nil, &res)
+	return res, c.Req().UrlFor("contents").Do(&res)
 }
 
 func (c *Client) GetContentItem(name string) (*models.Content, error) {
@@ -23,19 +22,17 @@ func (c *Client) GetContentItem(name string) (*models.Content, error) {
 }
 
 func (c *Client) CreateContent(content *models.Content) (*models.ContentSummary, error) {
-	reqURI := c.UrlFor("contents")
 	res := &models.ContentSummary{}
-	return res, c.DoJSON("POST", reqURI, content, res)
+	return res, c.Req().Post(content).UrlFor("contents").Do(res)
 }
 
 func (c *Client) ReplaceContent(content *models.Content) (*models.ContentSummary, error) {
-	reqURI := c.UrlFor("contents", content.Meta.Name)
 	res := &models.ContentSummary{}
-	return res, c.DoJSON("PUT", reqURI, content, res)
+	return res, c.Req().Put(content).UrlFor("contents", content.Meta.Name).Do(res)
 }
 
 func (c *Client) DeleteContent(name string) error {
-	return c.DoJSON("DELETE", c.UrlFor("contents", name), nil, nil)
+	return c.Req().Del().UrlFor("contents", name).Do(nil)
 }
 
 func findOrFake(src, field string, args map[string]string) string {

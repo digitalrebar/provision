@@ -13,7 +13,7 @@ func TestInterfaces(t *testing.T) {
 			expectRes: nil,
 			expectErr: nil,
 			op: func() (interface{}, error) {
-				_, err := session.ListModel("interfaces", nil)
+				_, err := session.ListModel("interfaces")
 				return nil, err
 			},
 		},

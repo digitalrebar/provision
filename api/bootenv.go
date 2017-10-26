@@ -40,7 +40,7 @@ func (c *Client) InstallISOForBootenv(env *models.BootEnv, src string, downloadO
 	if env.OS.IsoFile == "" {
 		return nil
 	}
-	isos, err := c.ListBlobs("isos", nil)
+	isos, err := c.ListBlobs("isos")
 	if err != nil {
 		return err
 	}

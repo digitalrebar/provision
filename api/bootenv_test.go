@@ -73,20 +73,20 @@ Templates:
 			name:      "List all feebles",
 			expectRes: nil,
 			expectErr: errors.New("No such Model: feebles"),
-			op:        func() (interface{}, error) { return session.ListModel("feebles", nil) },
+			op:        func() (interface{}, error) { return session.ListModel("feebles") },
 		},
 		{
 			name:      "List all bootenvs",
 			expectRes: []models.Model{ignoreBootEnv, localBootEnv},
 			expectErr: nil,
-			op:        func() (interface{}, error) { return session.ListModel("bootenvs", nil) },
+			op:        func() (interface{}, error) { return session.ListModel("bootenvs") },
 		},
 		{
 			name:      "List all bootenvs in reverse order",
 			expectRes: []models.Model{localBootEnv, ignoreBootEnv},
 			expectErr: nil,
 			op: func() (interface{}, error) {
-				return session.ListModel("bootenvs", makeParams("reverse", "true"))
+				return session.ListModel("bootenvs", "reverse", "true")
 			},
 		},
 		{
@@ -94,7 +94,7 @@ Templates:
 			expectRes: []models.Model{localBootEnv, ignoreBootEnv},
 			expectErr: nil,
 			op: func() (interface{}, error) {
-				return session.ListModel("bootenvs", makeParams("sort", "OnlyUnknown"))
+				return session.ListModel("bootenvs", "sort", "OnlyUnknown")
 			},
 		},
 		{
@@ -102,7 +102,7 @@ Templates:
 			expectRes: []models.Model{ignoreBootEnv, localBootEnv},
 			expectErr: nil,
 			op: func() (interface{}, error) {
-				return session.ListModel("bootenvs", makeParams("sort", "OnlyUnknown", "reverse", "true"))
+				return session.ListModel("bootenvs", "sort", "OnlyUnknown", "reverse", "true")
 			},
 		},
 		{
@@ -110,7 +110,7 @@ Templates:
 			expectRes: []models.Model{localBootEnv},
 			expectErr: nil,
 			op: func() (interface{}, error) {
-				return session.ListModel("bootenvs", makeParams("Name", "local"))
+				return session.ListModel("bootenvs", "Name", "local")
 			},
 		},
 		{
@@ -118,7 +118,7 @@ Templates:
 			expectRes: []models.Model{ignoreBootEnv},
 			expectErr: nil,
 			op: func() (interface{}, error) {
-				return session.ListModel("bootenvs", makeParams("limit", "1"))
+				return session.ListModel("bootenvs", "limit", "1")
 			},
 		},
 		{
@@ -126,7 +126,7 @@ Templates:
 			expectRes: []models.Model{localBootEnv},
 			expectErr: nil,
 			op: func() (interface{}, error) {
-				return session.ListModel("bootenvs", makeParams("limit", "1", "offset", "1"))
+				return session.ListModel("bootenvs", "limit", "1", "offset", "1")
 			},
 		},
 		{
@@ -134,7 +134,7 @@ Templates:
 			expectRes: []models.Model{},
 			expectErr: nil,
 			op: func() (interface{}, error) {
-				return session.ListModel("bootenvs", makeParams("limit", "0"))
+				return session.ListModel("bootenvs", "limit", "0")
 			},
 		},
 		{
@@ -147,7 +147,7 @@ Templates:
 				Messages: []string{"Limit cannot be negative"},
 			},
 			op: func() (interface{}, error) {
-				return session.ListModel("bootenvs", makeParams("limit", "-1"))
+				return session.ListModel("bootenvs", "limit", "-1")
 			},
 		},
 		{
@@ -160,7 +160,7 @@ Templates:
 				Messages: []string{"Offset cannot be negative"},
 			},
 			op: func() (interface{}, error) {
-				return session.ListModel("bootenvs", makeParams("offset", "-1"))
+				return session.ListModel("bootenvs", "offset", "-1")
 			},
 		},
 		{
@@ -289,7 +289,7 @@ Templates:
 			name:      "List all bootenvs (with fred)",
 			expectRes: []models.Model{fred, ignoreBootEnv, localBootEnv},
 			expectErr: nil,
-			op:        func() (interface{}, error) { return session.ListModel("bootenvs", nil) },
+			op:        func() (interface{}, error) { return session.ListModel("bootenvs") },
 		},
 		{
 			name:      "PUT Update bootenv fred OS name ->phred",
