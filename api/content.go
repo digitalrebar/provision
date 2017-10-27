@@ -101,7 +101,7 @@ func (c *Client) BundleContent(src string, dst store.Store, params map[string]st
 				err = store.JsonCodec.Decode(buf, item)
 			default:
 				if tmpl, ok := item.(*models.Template); ok && prefix == "templates" {
-					tmpl.ID = strings.TrimSuffix(itemName, path.Ext(itemName))
+					tmpl.ID = itemName
 					tmpl.Contents = string(buf)
 				} else {
 					return fmt.Errorf("No idea how to decode %s into %s", itemName, item.Prefix())
