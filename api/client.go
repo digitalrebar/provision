@@ -103,10 +103,46 @@ func (r *R) Patch(b jsonpatch2.Patch) *R {
 	return r.Meth("PATCH").Body(b)
 }
 
+func (r *R) PatchTo(old, new models.Model) *R {
+	if old.Prefix() != new.Prefix() || old.Key() != new.Key() {
+		r.err.Model = old.Prefix()
+		r.err.Model = old.Key()
+		r.err.Errorf("Cannot patch from %T to %T, or change keys from %s to %s", old, new, old.Key(), new.Key())
+		return r
+	}
+	patch, err := GenPatch(old, new)
+	if err != nil {
+		r.err.AddError(err)
+		return r
+	}
+	return r.Patch(patch).UrlForM(old)
+}
+
+func (r *R) Fill(m models.Model) error {
+	r.err.Model = m.Prefix()
+	r.err.Model = m.Key()
+	if m.Key() == "" {
+		r.err.Errorf("Cannot Fill %s with an empty key", m.Prefix())
+		return r.err
+	}
+	return r.Get().UrlForM(m).Do(&m)
+}
+
 // Post sets the R method to POST, and arranged for b to be the body
 // of the request by calling r.Body().
 func (r *R) Post(b interface{}) *R {
 	return r.Meth("POST").Body(b)
+}
+
+// Delete deletes a single object
+func (r *R) Delete(m models.Model) error {
+	r.err.Model = m.Prefix()
+	r.err.Model = m.Key()
+	if m.Key() == "" {
+		r.err.Errorf("Cannot Delete %s with an empty key", m.Prefix())
+		return r.err
+	}
+	return r.Del().UrlForM(m).Do(&m)
 }
 
 // UrlFor arranges for a sane request URL to be used for R.
@@ -127,6 +163,8 @@ func (r *R) UrlFor(args ...string) *R {
 // passed-in Model will be used as the first two path components in
 // the URL after /api/v3.  If m.Key() == "", it will be omitted.
 func (r *R) UrlForM(m models.Model, rest ...string) *R {
+	r.err.Model = m.Prefix()
+	r.err.Key = m.Key()
 	args := []string{m.Prefix(), m.Key()}
 	args = append(args, rest...)
 	return r.UrlFor(args...)
@@ -212,6 +250,10 @@ func (r *R) Body(b interface{}) *R {
 // Otherwise, the response body will be unmarshalled into val as
 // directed by the Content-Type header of the response.
 func (r *R) Do(val interface{}) error {
+	if r.uri == nil {
+		r.err.Errorf("No URL to talk to")
+		return r.err
+	}
 	if r.c.closed {
 		r.err.Errorf("Connection Closed")
 		return r.err
@@ -281,8 +323,11 @@ func (r *R) Do(val interface{}) error {
 		}
 		return res
 	}
-	if val != nil {
+	if val != nil && resp.Body != nil && resp.ContentLength != 0 {
 		r.err.AddError(dec.Decode(val))
+	}
+	if f, ok := val.(models.Filler); ok && err != nil {
+		f.Fill()
 	}
 	return r.err.HasError()
 }
@@ -411,9 +456,6 @@ func (c *Client) ExistsModel(prefix, key string) (bool, error) {
 // from the server.
 func (c *Client) FillModel(ref models.Model, key string) error {
 	err := c.Req().UrlFor(ref.Prefix(), key).Do(&ref)
-	if f, ok := ref.(models.Filler); err == nil && ok {
-		f.Fill()
-	}
 	return err
 }
 
@@ -422,9 +464,6 @@ func (c *Client) FillModel(ref models.Model, key string) error {
 // not validate or if it already exists on the server.
 func (c *Client) CreateModel(ref models.Model) error {
 	err := c.Req().Post(ref).UrlFor(ref.Prefix()).Do(&ref)
-	if f, ok := ref.(models.Filler); err == nil && ok {
-		f.Fill()
-	}
 	return err
 }
 
@@ -454,32 +493,16 @@ func (c *Client) PatchModel(prefix, key string, patch jsonpatch2.Patch) (models.
 		return nil, err
 	}
 	err = c.Req().Patch(patch).UrlFor(prefix, key).Do(&new)
-	if err == nil {
-		new.Fill()
-	}
 	return new, err
 }
 
 func (c *Client) PatchTo(old models.Model, new models.Model) (models.Model, error) {
-	ret := &models.Error{
-		Type:  "PATCH_ERROR",
-		Model: old.Prefix(),
-		Key:   old.Key(),
-	}
-	if old.Prefix() != new.Prefix() || old.Key() != new.Key() {
-		ret.Errorf("Cannot patch from %T to %T, or change keys from %s to %s", old, new, old.Key(), new.Key())
-		return old, ret
-	}
-	patch, err := GenPatch(old, new)
+	res := models.Clone(old)
+	err := c.Req().PatchTo(old, new).Do(&res)
 	if err != nil {
-		ret.AddError(err)
-		return old, ret
+		return old, err
 	}
-	ten, err := c.PatchModel(old.Prefix(), old.Key(), patch)
-	if err == nil {
-		return ten, nil
-	}
-	return old, err
+	return res, err
 }
 
 // PutModel replaces the server-side object matching the passed-in

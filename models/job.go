@@ -44,6 +44,10 @@ type Job struct {
 	// The state the job is in.  Must be one of "created", "running", "failed", "finished", "incomplete"
 	// required: true
 	State string
+	// The final disposition of the job.
+	// Can be one of "reboot","poweroff","stop", or "complete"
+	// Other substates may be added as time goes on
+	ExitState string
 	// The time the job entered running.
 	StartTime time.Time
 	// The time the job entered failed or finished.

@@ -15,7 +15,7 @@ import (
 func (c *Client) InstallRawTemplateFromFile(src string) (*models.Template, error) {
 	tid := path.Base(src)
 	tmpl := &models.Template{ID: tid}
-	if fillErr := c.FillModel(tmpl, tid); fillErr == nil {
+	if fillErr := c.Req().Fill(tmpl); fillErr == nil {
 		return tmpl, nil
 	}
 	err := &models.Error{
@@ -137,7 +137,7 @@ func (c *Client) InstallBootEnvFromFile(src string) (*models.BootEnv, error) {
 	}
 	err.Key = env.Key()
 	if found, _ := c.ExistsModel("bootenvs", env.Key()); found {
-		return env, c.FillModel(env, env.Key())
+		return env, c.Req().Fill(env)
 	}
 	tmplDir := "."
 	srcDir := path.Dir(src)

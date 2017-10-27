@@ -25,7 +25,7 @@ func TestItem(field, value string) func(interface{}) (bool, error) {
 	return func(ref interface{}) (bool, error) {
 		var err error
 		fields := map[string]interface{}{}
-		if err := utils.Remarshal(ref, fields); err != nil {
+		if err := utils.Remarshal(ref, &fields); err != nil {
 			return false, err
 		}
 		matched := false
@@ -95,6 +95,7 @@ func (r *RecievedEvent) matches(registration string) bool {
 
 // EventStream recieves events from the digitalrebar provider.  You can read recieved events by reading from its Events channel.
 type EventStream struct {
+	client        *Client
 	handleId      int64
 	conn          *websocket.Conn
 	subscriptions map[string][]int64
@@ -146,6 +147,7 @@ func (c *Client) Events() (*EventStream, error) {
 		return nil, err
 	}
 	res := &EventStream{
+		client:        c,
 		conn:          conn,
 		subscriptions: map[string][]int64{},
 		recievers:     map[int64]chan RecievedEvent{},
@@ -273,13 +275,16 @@ func (es *EventStream) WaitFor(
 	if err != nil {
 		return "", err
 	}
-	timer := time.NewTimer(time.Second * time.Duration(timeout))
+	timer := time.NewTimer(timeout)
 	defer func() {
 		if !timer.Stop() {
 			<-timer.C
 		}
 	}()
 	for {
+		if err := es.client.FillModel(item, id); err != nil {
+			return fmt.Sprintf("fill: %v", err), err
+		}
 		found, err := test(item)
 		if found && err == nil {
 			return "complete", nil
