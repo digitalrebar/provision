@@ -1,12 +1,50 @@
 package api
 
 import (
+	"bytes"
+	"io/ioutil"
+	"os"
 	"testing"
 
 	"github.com/digitalrebar/provision/models"
 )
 
+func runAgent(t *testing.T, m *models.Machine, lastTask, lastState, lastExitState string) {
+	t.Helper()
+	buf := &bytes.Buffer{}
+	err := session.Agent(m, true, true, false, buf)
+	if err != nil {
+		t.Errorf("Agent run failed: %v", err)
+		return
+	}
+	if err := session.FillModel(m, m.Key()); err != nil {
+		t.Errorf("Failed to fetch machine1: %v", err)
+		return
+	}
+	t.Logf("Machine current job: %v", m.CurrentJob)
+	job := &models.Job{Uuid: m.CurrentJob}
+	if err := session.FillModel(job, job.Key()); err != nil {
+		t.Errorf("Failed to fetch current job: %v", err)
+		return
+	}
+	t.Logf("Job log: \n---------------\n")
+	t.Logf("%s", buf.String())
+	t.Logf("\n---------------\nEnd log\n\n")
+	if job.Task == lastTask && job.State == lastState && job.ExitState == lastExitState {
+		t.Logf("Run for task %s finished with desired state %s:%s", job.Task, job.State, job.ExitState)
+	} else {
+		t.Errorf("Run for task %s finished with unknown state %s:%s", job.Task, job.State, job.ExitState)
+	}
+}
+
 func TestJobs(t *testing.T) {
+	tjd, err := ioutil.TempDir("", "jobTest-")
+	if err != nil {
+		t.Errorf("Failed to create tmpdir for job tester")
+		return
+	}
+	defer os.RemoveAll(tjd)
+	os.Setenv("JT", tjd)
 	machine1 := mustDecode(&models.Machine{}, `
 Address: 192.168.100.110
 BootEnv: local
@@ -19,36 +57,24 @@ Name: task1
 Meta:
   feature-flags: original-exit-codes
 Templates:
-  - Name: expando
-    Path: /tmp/expando.txt
-    Contents: "Hey I am a test content"
   - Name: reboot
     Contents: |
       #!/usr/bin/env bash
-      [[ -e /tmp/reboot.txt ]] && exit 0
-      touch /tmp/reboot.txt""
+      [[ -e "$JT"/reboot-orig.txt ]] && exit 0
+      touch "$JT"/reboot-orig.txt""
       exit 1
-  - Name: incomplete
-    Contents: |
-      #!/usr/bin/env bash
-      [[ -e /tmp/incomplete.txt ]] && exit 0
-      touch /tmp/incomplete.txt
-      exit 2
-  - Name: incomplete-reboot
-    Contents: |
-      #!/usr/bin/env bash
-      [[ -e /tmp/i-r.txt ]] && exit 0
-      touch /tmp/i-r.txt
-      exit 3
   - Name: fail
     Contents: |
       #!/usr/bin/env bash
-      [[ -e /tmp/fail.txt ]] && exit 0
-      touch /tmp/fail.txt
+      [[ -e "$JT"/fail-orig.txt ]] && exit 0
+      touch "$JT"/fail-orig.txt
       exit 4
-  - Name: success
+  - Name: incomplete
     Contents: |
-      #!/usr/bin/env true
+      #!/usr/bin/env bash
+      [[ -e "$JT"/incomplete-orig.txt ]] && exit 0
+      touch "$JT"/incomplete-orig.txt
+      exit 2
 `).(*models.Task)
 
 	task2 := mustDecode(&models.Task{}, `
@@ -56,48 +82,36 @@ Name: task2
 Meta:
   feature-flags: sane-exit-codes
 Templates:
-  - Name: expando
-    Path: /tmp/expando.txt
-    Contents: "Hey I am a test content"
   - Name: reboot
     Contents: |
       #!/usr/bin/env bash
-      [[ -e /tmp/reboot.txt ]] && exit 0
-      touch /tmp/reboot.txt""
+      [[ -e "$JT"/reboot.txt ]] && exit 0
+      touch "$JT"/reboot.txt
       exit 64
-  - Name: incomplete
-    Contents: |
-      #!/usr/bin/env bash
-      [[ -e /tmp/incomplete.txt ]] && exit 0
-      touch /tmp/incomplete.txt
-      exit 128
-  - Name: incomplete-reboot
-    Contents: |
-      #!/usr/bin/env bash
-      [[ -e /tmp/i-r.txt ]] && exit 0
-      touch /tmp/i-r.txt
-      exit 192
   - Name: poweroff
     Contents: |
       #!/usr/bin/env bash
-      [[ -e /tmp/poweroff.txt ]] && exit 0
-      touch /tmp/poweroff.txt
+      [[ -e "$JT"/poweroff.txt ]] && exit 0
+      touch "$JT"/poweroff.txt
       exit 32
   - Name: stop
     Contents: |
       #!/usr/bin/env bash
-      [[ -e /tmp/stop.txt ]] && exit 0
-      touch /tmp/stop.txt
+      [[ -e "$JT"/stop.txt ]] && exit 0
+      touch "$JT"/stop.txt
       exit 16
   - Name: fail
     Contents: |
       #!/usr/bin/env bash
-      [[ -e /tmp/fail.txt ]] && exit 0
-      touch /tmp/fail.txt
+      [[ -e "$JT"/fail.txt ]] && exit 0
+      touch "$JT"/fail.txt
       exit 1
-  - Name: success
+  - Name: incomplete
     Contents: |
-      #!/usr/bin/env true
+      #!/usr/bin/env bash
+      [[ -e "$JT"/incomplete.txt ]] && exit 0
+      touch "$JT"/incomplete.txt
+      exit 128
 `).(*models.Task)
 
 	stage1 := mustDecode(&models.Stage{}, `
@@ -242,4 +256,49 @@ Tasks:
 			}
 			return res, err
 		}, nil)
+	machineRes = models.Clone(machine1).(*models.Machine)
+	machineRes.Stage = "stage2"
+	machineRes.Tasks = []string{"task2", "task1"}
+	machineRes.CurrentTask = -1
+	rt(t, "Set machine 1 to stage2 (forced)", machineRes, nil,
+		func() (interface{}, error) {
+			mc := models.Clone(machine1).(*models.Machine)
+			mc.Stage = "stage2"
+			err := session.Req().PatchTo(machine1, mc).Params("force", "true").Do(&mc)
+			if err == nil {
+				machine1 = mc
+			}
+			return mc, err
+		}, nil)
+	runAgent(t, machine1, "task2", "incomplete", "reboot")
+	runAgent(t, machine1, "task2", "incomplete", "poweroff")
+	runAgent(t, machine1, "task2", "incomplete", "stop")
+	runAgent(t, machine1, "task2", "failed", "failed")
+	runAgent(t, machine1, "task2", "incomplete", "complete")
+	runAgent(t, machine1, "task1", "incomplete", "reboot")
+	runAgent(t, machine1, "task1", "failed", "failed")
+	runAgent(t, machine1, "task1", "incomplete", "complete")
+	runAgent(t, machine1, "task1", "finished", "complete")
+	if machine1.CurrentTask == len(machine1.Tasks) {
+		t.Logf("All tasks on machine1 finished")
+	} else {
+		t.Errorf("Machine1: currentTask %d, tasks %v:%d", machine1.CurrentTask, machine1.Tasks, len(machine1.Tasks))
+	}
+	session.Req().Delete(machine1)
+	session.Req().Delete(stage1)
+	session.Req().Delete(stage2)
+	session.Req().Delete(task1)
+	session.Req().Delete(task2)
+	j := []*models.Job{}
+	if err := session.Req().UrlFor("jobs").Do(&j); err != nil {
+		t.Errorf("Error getting jobs: %v", err)
+	} else if len(j) != 4 {
+		t.Errorf("Expected 4 jobs, not %d", len(j))
+	} else {
+		t.Logf("Got expected 4 jobs")
+		for _, job := range j {
+			session.Req().Delete(job)
+		}
+	}
+
 }

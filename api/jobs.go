@@ -51,20 +51,25 @@ type TaskRunner struct {
 	// Closing this will flush any data left in the pipe.
 	pipeWriter       *io.PipeWriter
 	agentDir, jobDir string
+	logger           io.Writer
 }
 
 // NewTaskRunner creates a new TaskRunner for the passed-in machine.
 // It creates the matching Job (or resumes the previous incomplete
 // one), and handles making sure that all relavent output is written
 // to the job log as well as local stderr
-func NewTaskRunner(c *Client, m *models.Machine, agentDir string) (*TaskRunner, error) {
+func NewTaskRunner(c *Client, m *models.Machine, agentDir string, logger io.Writer) (*TaskRunner, error) {
+	if logger == nil {
+		logger = ioutil.Discard
+	}
 	res := &TaskRunner{
 		c:        c,
 		m:        m,
 		agentDir: agentDir,
+		logger:   logger,
 	}
 	job := &models.Job{Machine: m.Uuid}
-	if err := c.CreateModel(job); err != nil {
+	if err := c.CreateModel(job); err != nil && err != io.EOF {
 		return nil, err
 	}
 	if job.State == "" {
@@ -81,7 +86,7 @@ func NewTaskRunner(c *Client, m *models.Machine, agentDir string) (*TaskRunner, 
 		return nil, err
 	}
 	t := &models.Task{Name: job.Task}
-	if err := c.FillModel(t, job.Task); err != nil {
+	if err := c.Req().Fill(t); err != nil {
 		return nil, err
 	}
 	res.j = job
@@ -95,7 +100,20 @@ func (r *TaskRunner) Close() {
 	if r.pipeWriter != nil {
 		r.pipeWriter.Close()
 	}
-	os.Stderr.Sync()
+	type flusher interface {
+		io.Writer
+		Flush() error
+	}
+	type syncer interface {
+		io.Writer
+		Sync() error
+	}
+	switch o := r.logger.(type) {
+	case flusher:
+		o.Flush()
+	case syncer:
+		o.Sync()
+	}
 }
 
 // Log writes the string (with a timestamp) to stderr and to the
@@ -130,13 +148,15 @@ func (r *TaskRunner) Perform(action *models.JobAction, taskDir string) error {
 	cmd.Env = append(os.Environ(), "RS_TASK_DIR="+taskDir, "RS_RUNNER_DIR="+r.agentDir)
 	cmd.Stdout = r.in
 	cmd.Stderr = r.in
-	r.Log("%s: Starting command %s\n\n", time.Now(), cmd.Path)
+	r.Log("Starting command %s\n\n", cmd.Path)
 	if err := cmd.Start(); err != nil {
-		r.Log("%s: Command failed to start")
+		r.Log("Command failed to start: %v", err)
+		return err
 	}
 	// Wait on the process, not the command to exit.
 	// We don't want to auto-close stdout and stderr,
 	// as we will continue to use them.
+	r.Log("Command running")
 	pState, _ := cmd.Process.Wait()
 	status := pState.Sys().(syscall.WaitStatus)
 	sane := r.t.HasFeature("sane-exit-codes")
@@ -145,6 +165,7 @@ func (r *TaskRunner) Perform(action *models.JobAction, taskDir string) error {
 		sane = err == nil && st.Mode().IsRegular()
 	}
 	code := uint(status.ExitStatus())
+	r.Log("Command exited with status %d", code)
 	if sane {
 		// codes can be between 0 and 255
 		// if the low bits are not 0, the command failed.
@@ -188,7 +209,7 @@ func (r *TaskRunner) Run() error {
 	// Arrange to log everything to the job log and stderr at the same time.
 	// Due to how io.Pipe works, this should wind up being fairly synchronous.
 	reader, writer := io.Pipe()
-	r.in = io.MultiWriter(writer, os.Stderr)
+	r.in = io.MultiWriter(writer, r.logger)
 	r.pipeWriter = writer
 	helperWritten := false
 	go func() {
@@ -210,10 +231,10 @@ func (r *TaskRunner) Run() error {
 	// We are responsible for going from created to running.
 	// If this patch fails, we cannot do it
 	patch := jsonpatch2.Patch{
-		{Op: "test", Path: "/State", Value: "created"},
+		{Op: "test", Path: "/State", Value: r.j.State},
 		{Op: "replace", Path: "/State", Value: "running"},
 	}
-	finalState := "failed"
+	finalState := "incomplete"
 	taskDir, err := ioutil.TempDir(r.agentDir, r.j.Task+"-")
 	if err != nil {
 		r.Log("Failed to create local tmpdir: %v", err)
@@ -224,13 +245,36 @@ func (r *TaskRunner) Run() error {
 	// to an appropriate final state.
 	defer os.RemoveAll(taskDir)
 	defer func() {
+		if r.failed || r.reboot || r.stop || r.poweroff || r.incomplete {
+			newM := models.Clone(r.m).(*models.Machine)
+			newM.Runnable = false
+			if err := r.c.Req().PatchTo(r.m, newM).Do(&newM); err == nil {
+				r.Log("Marked machine %s as not runnable", r.m.Key())
+				r.m = newM
+			} else {
+				r.Log("Failed to mark machine %s as not runnable: %v", r.m.Key(), err)
+			}
+		}
+		exitState := "complete"
+		if finalState == "failed" {
+			exitState = "failed"
+		}
+		if r.reboot {
+			exitState = "reboot"
+		} else if r.poweroff {
+			exitState = "poweroff"
+		} else if r.stop {
+			exitState = "stop"
+		}
 		finalPatch := jsonpatch2.Patch{
 			{Op: "test", Path: "/State", Value: "running"},
 			{Op: "replace", Path: "/State", Value: finalState},
+			{Op: "replace", Path: "/ExitState", Value: exitState},
 		}
-		obj, err := r.c.PatchModel(r.j.Prefix(), r.j.Key(), finalPatch)
-		if err != nil {
-			r.j = obj.(*models.Job)
+		if err := r.c.Req().Patch(finalPatch).UrlForM(r.j).Do(&r.j); err != nil {
+			r.Log("Failed to update job %s to its final state %s", r.j.Key(), finalState)
+		} else {
+			r.Log("Updated job %s to %s", r.j.Key(), finalState)
 		}
 	}()
 	obj, err := r.c.PatchModel(r.j.Prefix(), r.j.Key(), patch)
@@ -247,7 +291,8 @@ func (r *TaskRunner) Run() error {
 		finalErr.AddError(err)
 		return finalErr
 	}
-	for _, action := range actions {
+	for i, action := range actions {
+		final := len(actions)-1 == i
 		r.failed = false
 		r.incomplete = false
 		r.poweroff = false
@@ -258,7 +303,7 @@ func (r *TaskRunner) Run() error {
 			err = r.Expand(action)
 		} else {
 			if !helperWritten {
-				err := ioutil.WriteFile(path.Join(taskDir, "helper"), cmdHelper, 0600)
+				err = ioutil.WriteFile(path.Join(taskDir, "helper"), cmdHelper, 0600)
 				if err != nil {
 					finalErr.AddError(err)
 					return finalErr
@@ -272,34 +317,49 @@ func (r *TaskRunner) Run() error {
 			finalErr.AddError(err)
 			return finalErr
 		}
+		r.Log("Action %s finished", action.Name)
+		// If a non-final action sets the incomplete flag, it actually
+		// means early success and stop processing actions for this task.
+		// This allows actions to be structured in an "early exit"
+		// fashion.
+		//
+		// Only the final action can actually set things as incomplete.
+		if !final && r.incomplete {
+			r.incomplete = !r.incomplete
+			break
+		}
 		if r.failed {
 			finalState = "failed"
-		} else if r.incomplete {
-			finalState = "incomplete"
+			break
 		}
-		if r.failed || r.incomplete || r.reboot || r.poweroff || r.stop {
+		if r.reboot || r.poweroff || r.stop {
+			r.incomplete = !final
 			break
 		}
 	}
-	if finalState == "running" {
+	if !r.failed && !r.incomplete {
 		finalState = "finished"
 	}
+	r.Log("Task %s %s", r.j.Task, finalState)
 	return nil
 }
 
 // Agent runs the machine Agent on the current machine.
 // It assumes there is only one Agent, which is not actually a safe assumption.
 // We should make it safe someday.
-func (c *Client) Agent(m *models.Machine, exitOnFailure, actuallyPowerThings bool) error {
+func (c *Client) Agent(m *models.Machine, exitOnNotRunnable, exitOnFailure, actuallyPowerThings bool, logger io.Writer) error {
 	// Clear the current running job, if any
-	currentJob := &models.Job{}
-	if c.FillModel(currentJob, m.CurrentJob.String()) == nil {
+	currentJob := &models.Job{Uuid: m.CurrentJob}
+	if c.Req().Fill(currentJob) == nil {
 		if currentJob.State == "running" || currentJob.State == "created" {
 			currentJob.State = "failed"
 			if err := c.PutModel(currentJob); err != nil {
 				return err
 			}
 		}
+	}
+	if logger == nil {
+		logger = os.Stderr
 	}
 	runnerDir, err := ioutil.TempDir("", "runner-")
 	if err != nil {
@@ -324,6 +384,7 @@ func (c *Client) Agent(m *models.Machine, exitOnFailure, actuallyPowerThings boo
 			runner.Close()
 			runner = nil
 		}
+
 		found, err := events.WaitFor(m, TestItem("Runnable", "true"), 1*time.Hour)
 		if err != nil {
 			res := &models.Error{
@@ -350,9 +411,16 @@ func (c *Client) Agent(m *models.Machine, exitOnFailure, actuallyPowerThings boo
 			res.Errorf("Unexpected return from WaitFor: %s", found)
 			return res
 		}
-		runner, err = NewTaskRunner(c, m, runnerDir)
+		runner, err = NewTaskRunner(c, m, runnerDir, logger)
 		if err != nil {
 			return err
+		}
+		if runner == nil {
+			if exitOnNotRunnable {
+				return nil
+			}
+			// Should really wait here for the task list or the current task to change on the machine
+			continue
 		}
 		if err := runner.Run(); err != nil {
 			return err
