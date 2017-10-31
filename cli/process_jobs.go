@@ -553,6 +553,13 @@ the stage runner wait flag.
 					task = obj.(*models.Task)
 				}
 
+				// Mark job as running
+				if _, err := Update(job.UUID.String(), `{"State": "running"}`, jo, false); err != nil {
+					Log(job.UUID, true, "Error marking job as running: %v, continue\n", err)
+					markJob(job.UUID.String(), "failed", jo)
+					continue
+				}
+
 				// Get the job data
 				var list []*models.JobAction
 				if resp, err := session.Jobs.GetJobActions(jobs.NewGetJobActionsParams().WithUUID(*job.UUID), basicAuth); err != nil {
@@ -563,12 +570,6 @@ the stage runner wait flag.
 					list = resp.Payload
 				}
 
-				// Mark job as running
-				if _, err := Update(job.UUID.String(), `{"State": "running"}`, jo, false); err != nil {
-					Log(job.UUID, true, "Error marking job as running: %v, continue\n", err)
-					markJob(job.UUID.String(), "failed", jo)
-					continue
-				}
 				fmt.Printf("Starting Task: %s (%s)\n", job.Task, job.UUID.String())
 
 				failed := false
