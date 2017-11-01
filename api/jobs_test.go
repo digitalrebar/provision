@@ -174,6 +174,19 @@ Tasks:
 			}
 			return res, err
 		}, nil)
+	rt(t, "Increment machine1's CurrentTask pointer", nil,
+		&models.Error{
+			Model:    "machines",
+			Key:      "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+			Type:     "ValidationError",
+			Messages: []string{"Cannot change CurrentTask from -1 to 0"},
+			Code:     422,
+		},
+		func() (interface{}, error) {
+			mc := models.Clone(machine1).(*models.Machine)
+			mc.CurrentTask += 1
+			return session.PatchTo(machine1, mc)
+		}, nil)
 	rt(t, "Set machine 1 to stage2 (without force)", nil,
 		&models.Error{
 			Model:    "machines",
@@ -191,50 +204,21 @@ Tasks:
 			}
 			return res, err
 		}, nil)
-	rt(t, "Try to remove tasks from machine1", nil,
-		&models.Error{
-			Model: "machines",
-			Key:   machine1.UUID(),
-			Type:  "ValidationError",
-			Messages: []string{
-				"Cannot remove tasks from machines without changing stage",
-				"Can only append tasks to the task list on a machine."},
-			Code: 422,
-		},
+	machineRes = models.Clone(machine1).(*models.Machine)
+	machineRes.Tasks = []string{}
+	rt(t, "Try to remove tasks from machine1", machineRes, nil,
 		func() (interface{}, error) {
 			mc := models.Clone(machine1).(*models.Machine)
-			mc.Tasks = []string{"task2"}
+			mc.Tasks = []string{}
 			res, err := session.PatchTo(machine1, mc)
 			if err == nil {
 				machine1 = res.(*models.Machine)
 			}
 			return res, err
 		}, nil)
-	rt(t, "Try to change order of tasks on a machine", nil,
-		&models.Error{
-			Model:    "machines",
-			Key:      machine1.UUID(),
-			Type:     "ValidationError",
-			Messages: []string{"Can only append tasks to the task list on a machine."},
-			Code:     422,
-		},
-		func() (interface{}, error) {
-			mc := models.Clone(machine1).(*models.Machine)
-			mc.Tasks = []string{"task2", "task1"}
-			res, err := session.PatchTo(machine1, mc)
-			if err == nil {
-				machine1 = res.(*models.Machine)
-			}
-			return res, err
-		}, nil)
-	rt(t, "Try to change order of tasks on a machine", nil,
-		&models.Error{
-			Model:    "machines",
-			Key:      machine1.UUID(),
-			Type:     "ValidationError",
-			Messages: []string{"Can only append tasks to the task list on a machine."},
-			Code:     422,
-		},
+	machineRes = models.Clone(machine1).(*models.Machine)
+	machineRes.Tasks = []string{"task2", "task1"}
+	rt(t, "Try to change order of tasks on a machine", machineRes, nil,
 		func() (interface{}, error) {
 			mc := models.Clone(machine1).(*models.Machine)
 			mc.Tasks = []string{"task2", "task1"}
@@ -274,16 +258,128 @@ Tasks:
 	runAgent(t, machine1, "task2", "incomplete", "poweroff")
 	runAgent(t, machine1, "task2", "incomplete", "stop")
 	runAgent(t, machine1, "task2", "failed", "failed")
+	rt(t, "Try to remove tasks from machine1 (fail)", nil,
+		&models.Error{
+			Model:    "machines",
+			Key:      "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+			Type:     "ValidationError",
+			Messages: []string{"Cannot remove tasks that have already executed or are already executing"},
+			Code:     422,
+		},
+		func() (interface{}, error) {
+			mc := models.Clone(machine1).(*models.Machine)
+			mc.Tasks = []string{}
+			res, err := session.PatchTo(machine1, mc)
+			if err == nil {
+				machine1 = res.(*models.Machine)
+			}
+			return res, err
+		}, nil)
+	rt(t, "Try to change order of tasks on a machine (fail)", nil,
+		&models.Error{
+			Model:    "machines",
+			Key:      "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+			Type:     "ValidationError",
+			Messages: []string{"Cannot change tasks that have already executed or are executing"},
+			Code:     422,
+		},
+		func() (interface{}, error) {
+			mc := models.Clone(machine1).(*models.Machine)
+			mc.Tasks = []string{"task1", "task2"}
+			res, err := session.PatchTo(machine1, mc)
+			if err == nil {
+				machine1 = res.(*models.Machine)
+			}
+			return res, err
+		}, nil)
+	machineRes = models.Clone(machine1).(*models.Machine)
+	machineRes.Tasks = []string{"task2"}
+	rt(t, "Remove a to-be-executed task", machineRes, nil,
+		func() (interface{}, error) {
+			mc := models.Clone(machine1).(*models.Machine)
+			mc.Tasks = []string{"task2"}
+			res, err := session.PatchTo(machine1, mc)
+			if err == nil {
+				machine1 = res.(*models.Machine)
+			}
+			return res, err
+		}, nil)
+	machineRes = models.Clone(machine1).(*models.Machine)
+	machineRes.Tasks = []string{"task2", "task1", "task2"}
+	rt(t, "Append extra tasks in the middle of a run", machineRes, nil,
+		func() (interface{}, error) {
+			mc := models.Clone(machine1).(*models.Machine)
+			mc.Tasks = []string{"task2", "task1", "task2"}
+			res, err := session.PatchTo(machine1, mc)
+			if err == nil {
+				machine1 = res.(*models.Machine)
+			}
+			return res, err
+		}, nil)
 	runAgent(t, machine1, "task2", "incomplete", "complete")
 	runAgent(t, machine1, "task1", "incomplete", "reboot")
 	runAgent(t, machine1, "task1", "failed", "failed")
 	runAgent(t, machine1, "task1", "incomplete", "complete")
+	machineRes = models.Clone(machine1).(*models.Machine)
+	machineRes.Tasks = []string{"task2", "task1"}
+	rt(t, "Remove extra task in the middle of a run", machineRes, nil,
+		func() (interface{}, error) {
+			mc := models.Clone(machine1).(*models.Machine)
+			mc.Tasks = []string{"task2", "task1"}
+			res, err := session.PatchTo(machine1, mc)
+			if err == nil {
+				machine1 = res.(*models.Machine)
+			}
+			return res, err
+		}, nil)
+	rt(t, "Try to remove tasks from machine1 (fail again)", nil,
+		&models.Error{
+			Model:    "machines",
+			Key:      "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+			Type:     "ValidationError",
+			Messages: []string{"Cannot remove tasks that have already executed or are already executing"},
+			Code:     422,
+		},
+		func() (interface{}, error) {
+			mc := models.Clone(machine1).(*models.Machine)
+			mc.Tasks = []string{}
+			res, err := session.PatchTo(machine1, mc)
+			if err == nil {
+				machine1 = res.(*models.Machine)
+			}
+			return res, err
+		}, nil)
+	rt(t, "Try to change order of tasks on a machine (fail again)", nil,
+		&models.Error{
+			Model:    "machines",
+			Key:      "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+			Type:     "ValidationError",
+			Messages: []string{"Cannot change tasks that have already executed or are executing"},
+			Code:     422,
+		},
+		func() (interface{}, error) {
+			mc := models.Clone(machine1).(*models.Machine)
+			mc.Tasks = []string{"task1", "task2"}
+			res, err := session.PatchTo(machine1, mc)
+			if err == nil {
+				machine1 = res.(*models.Machine)
+			}
+			return res, err
+		}, nil)
 	runAgent(t, machine1, "task1", "finished", "complete")
 	if machine1.CurrentTask == len(machine1.Tasks) {
 		t.Logf("All tasks on machine1 finished")
 	} else {
 		t.Errorf("Machine1: currentTask %d, tasks %v:%d", machine1.CurrentTask, machine1.Tasks, len(machine1.Tasks))
 	}
+	machineRes = models.Clone(machine1).(*models.Machine)
+	machineRes.CurrentTask = -1
+	rt(t, "Increment machine1's CurrentTask pointer", machineRes, nil,
+		func() (interface{}, error) {
+			mc := models.Clone(machine1).(*models.Machine)
+			mc.CurrentTask = -1
+			return session.PatchTo(machine1, mc)
+		}, nil)
 	session.Req().Delete(machine1)
 	session.Req().Delete(stage1)
 	session.Req().Delete(stage2)
