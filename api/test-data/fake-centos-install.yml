@@ -1,0 +1,22 @@
+---
+BootParams: Acounted for
+Initrds:
+- fakeinitrd
+Kernel: fakelinuz
+Name: fake-centos-install
+OS:
+  Name: centos-6
+  IsoFile: fake-install.tgz
+  IsoSha256: "c82f6dd8270013d0a7dd47ed09563afe7c80a756fcefb885f74ef52d854711e1"
+Templates:
+- Contents: "{{.Env.InstallUrl}}"
+  Name: ipxe
+  Path: '{{.Machine.Path}}/url'
+- Path: '{{.Machine.Path}}/install'
+  Name: install
+  Contents: |
+    {{range $repo := .InstallRepos}}{{$repo.Install}}{{end}}
+- Path: "{{.Machine.Path}}/lines"
+  Name: lines
+  Contents: |
+    {{range $repo := .MachineRepos}}{{$repo.Lines}}{{end}}

@@ -98,6 +98,9 @@ func mustDecode(ref interface{}, obj string) interface{} {
 }
 
 func pretty(i interface{}) string {
+	if s, k := i.(string); k {
+		return s
+	}
 	buf, err := yaml.Marshal(i)
 	if err != nil {
 		log.Panicf("Error unmarshalling: %v", err)
