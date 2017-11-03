@@ -272,7 +272,7 @@ Make sure all the bootenvs are up to date and available.  This is a task you sho
 
 Then go to *Info & Preferences* and make sure your default stage and bootenvs are still valid.
 
-  - This is where `ce-sledgehammer` become `sledgehammer` and `ce-discovery` becomes `discovery`
+  - This is where `ce-sledgehammer` becomes `sledgehammer` and `ce-discovery` becomes `discovery`
   - The same with `ce-ubuntu-16.04-install` becomes `ubuntu-16.04-install`.
   - The same with `ce-centos-7.4.1708-install` becomes `centos-7-install`.
 
