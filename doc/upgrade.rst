@@ -215,7 +215,7 @@ Overiew of the update steps necessary, you should do in the following order.
 
 First step - updating DRP
 =========================
-If you are running isolated, do this (remove `--isolated`` if you are not using isolated mode):
+If you are running isolated, do this (remove `--isolated` if you are not using isolated mode):
 
   ::
 
