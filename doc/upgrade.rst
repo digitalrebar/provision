@@ -215,19 +215,19 @@ Overiew of the update steps necessary, you should do in the following order.
 
 First step - updating DRP
 =========================
-If you are running isolated, do this (remove `--isolated` if you are not using isolated mode):
+If you are running isolated, do this (remove ``--isolated`` if you are not using isolated mode):
 
   ::
 
     curl -fsSL get.rebar.digital/stable | bash -s -- install --isolated --upgrade=true
 
-This will force the update of the local binaries to v3.2.0 stable.  Make sure you stop DRP process (`sudo killall dr-provision`, or `sudo systemctl stop dr-provision.service`).
+This will force the update of the local binaries to v3.2.0 stable.  Make sure you stop DRP process (``sudo killall dr-provision``, or ``sudo systemctl stop dr-provision.service``).
 
-Verify that your `/etc/systemd/services/dr-provision` start up file is still correct for your environment, if running a production install type.
+Verify that your ``/etc/systemd/services/dr-provision`` start up file is still correct for your environment, if running a production install type.
 
-Restart DRP (follow `--isolated` mode start steps if in isolated mode; or `sudo systemctl start dr-provision.service`)
+Restart DRP (follow ``--isolated`` mode start steps if in isolated mode; or ``sudo systemctl start dr-provision.service``)
 
-If in `--isolated` mode, don’t forget to copy `drpcli` and/or `dr-provision` binaries to where you prefer to keep them (eg `$HOME/bin` or `/usr/local/bin`, etc... .
+If in ``--isolated`` mode, don’t forget to copy ``drpcli`` and/or ``dr-provision`` binaries to where you prefer to keep them (eg ``$HOME/bin`` or ``/usr/local/bin``, etc... .
 
 Second Step - Remove old content
 ================================
@@ -246,7 +246,7 @@ With the rework of content, you need to remove the following content packages if
 Third Step - Put the content back
 =================================
 
-Install the new v3.2.0 content packs.  Note that the names have changed, and the mix of "ce-" and non-Community Content names has gone away.  For example; what originally was `drp-community-content` which included things like `ce-sledgehammer` is now moved to just `sledgehammer`.  The RackN registered content of `os-linux` and `os-discovery` have now been folded in to the below content packs.
+Install the new v3.2.0 content packs.  Note that the names have changed, and the mix of "ce-" and non-Community Content names has gone away.  For example; what originally was ``drp-community-content`` which included things like ``ce-sledgehammer`` is now moved to just ``sledgehammer``.  The RackN registered content of ``os-linux`` and ``os-discovery`` have now been folded in to the below content packs.
 
   ::
 
@@ -261,20 +261,20 @@ If you have any plugins installed, update them now.
 
 To facilitate version tracking, plugins provide their own content as a injected content from the plugin.  When the plugin is added, it will also add a content layer that will show up in the content packages section.
 
-Previously, a `plugin-provider` was installed separately from a Content of the same name.  
+Previously, a ``plugin-provider`` was installed separately from a Content of the same name.  
 
 Step Five - fix things up
 =========================
 
-This is mainly if you were using the Community Content version of things (`drp-community-content`, and BootEnvs with a prefix of `ce-`).  The BootEnvs names change, by removing the prefix of "ce-" from the name.
+This is mainly if you were using the Community Content version of things (``drp-community-content``, and BootEnvs with a prefix of ``ce-``).  The BootEnvs names change, by removing the prefix of "ce-" from the name.
 
-Make sure all the bootenvs are up to date and available.  This is a task you should always do after updating content.  If the BootEnv is marked with an "X" in the UX, or `"Available": false` from the CLI/API, you'll need to reload the ISO for the BootEnv.
+Make sure all the bootenvs are up to date and available.  This is a task you should always do after updating content.  If the BootEnv is marked with an "X" in the UX, or ``"Available": false`` from the CLI/API, you'll need to reload the ISO for the BootEnv.
 
 Then go to *Info & Preferences* and make sure your default stage and bootenvs are still valid.
 
-  - This is where `ce-sledgehammer` becomes `sledgehammer` and `ce-discovery` becomes `discovery`
-  - The same with `ce-ubuntu-16.04-install` becomes `ubuntu-16.04-install`.
-  - The same with `ce-centos-7.4.1708-install` becomes `centos-7-install`.
+  - This is where ``ce-sledgehammer`` becomes ``sledgehammer`` and ``ce-discovery`` becomes ``discovery``
+  - The same with ``ce-ubuntu-16.04-install`` becomes ``ubuntu-16.04-install``.
+  - The same with ``ce-centos-7.4.1708-install`` becomes ``centos-7-install``.
 
 Example pseudo-script to make changes:
 ======================================
