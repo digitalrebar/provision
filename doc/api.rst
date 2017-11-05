@@ -60,4 +60,3 @@ This section is intended to provide general information about and functional of 
 
 
 .. swaggerv2doc:: https://github.com/digitalrebar/provision/releases/download/tip/swagger.json
-

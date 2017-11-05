@@ -46,7 +46,7 @@ continue following the steps in the next sections.  *tools/install.sh --help* wi
 Configuration Options
 ---------------------
 
-Using ``dr-provision --help`` will provide the most complete list of configuration options.  The following common items are provided for reference.
+Using ``dr-provision --help`` will provide the most complete list of configuration options.  The following common items are provided for reference.  Please note these may change from version to version, check the current scripts options with the ``--help`` flag to verify current options.
 
   ::
   
@@ -72,7 +72,7 @@ Prerequisites
 -------------
 
 **dr-provision** requires two applications to operate correctly, **bsdtar** and **7z**.  These are used to extract the contents
-of iso and tar images to be served by the file server component of **dr-provision**.
+of iso and tar images to be served by the file server component of **dr-provision**.  The ``intall.sh`` script will attempt to insure these packages are installed by default.  However, if you are installing via manual process or baking your own installer, you must insure these prerequisistes are met. 
 
 For Linux, the **bsdtar** and **p7zip** packages are required.
 
@@ -93,6 +93,8 @@ For Linux, the **bsdtar** and **p7zip** packages are required.
 
 At this point, the server can be started.
 
+.. note:: In a future release, the required packages may be removed, which will help insure cross-platform compatibility without relying on these external dependencies. 
+
 Running The Server
 ------------------
 
@@ -100,18 +102,21 @@ Additional support materials in :ref:`rs_faq`.
 
 The **install.sh** script provides two options for running **dr-provision**.  
 
-The default values install the server and cli in /usr/local/bin.  It will also put a service control file in place.  Once that finishes,
-the appropriate service start method will run the daemon.  The **install.sh** script prints out the command to run
+The default values install the server and cli in /usr/local/bin.  It will also put a service control file in place.  Once that finishes, the appropriate service start method will run the daemon.  The **install.sh** script prints out the command to run
 and enable the service.  The method described in the :ref:`rs_quickstart` can be used to deploy this way if the
 *--isolated* flag is removed from the command line.  Look at the internals of the **install.sh** script to see what
 is going on.
 
-Alternatively, the **install.sh** script can be provided the *--isolated* flag and it will setup the current directory
+Alternatively, the **install.sh** script can be passed the *--isolated* flag and it will setup the current directory
 as an isolated "test drive" environment.  This will create a symbolic link from the bin directory to the local top-level
 directory for the appropriate OS/platform, create a set of directories for data storage and file storage, and
 display a command to run.  This is what the :ref:`rs_quickstart` method describes.
 
-The default username & password is ``rocketskates:r0cketsk8ts``.
+The default username & password used for administering the *dr-provision* service is:
+  ::
+
+    username: rocketskates
+    password: r0cketsk8ts
 
 Please review `--help` for options like disabling services, logging or paths.
 
@@ -122,7 +127,7 @@ Once running, the following endpoints are available:
 * https://127.0.0.1:8092/swagger-ui - swagger-ui to explore the API
 * https://127.0.0.1:8092/swagger.json - API Swagger JSON file
 * https://127.0.0.1:8092/api/v3 - Raw api endpoint
-* https://127.0.0.1:8092/ui - User Configuration Pages (3.0 only, removed after 3.1)
+* https://127.0.0.1:8092/ui - User Configuration Pages (*3.0.x only, removed after 3.1.0*)
 * https://127.0.0.1:8092/ux - Redirects to Community Portal (maintained by RackN)
 * http://127.0.0.1:8091 - Static files served by http from the *test-data/tftpboot* directory
 * udp 69 - Static files served from the test-data/tftpboot directory through the tftp protocol
@@ -142,6 +147,28 @@ Production Deployments
 ----------------------
 
 The following items should be considered for production deployments.  Recommendations may be missing so operators should use their best judgement.
+
+Start DRP Without Root (or sudo)
+================================
+
+If you are using DHCPD and TFTPD services of DRP, you will need to be able to bind to port 67 and 69 (respectively).  Typically Unix/Linux systems require root privileges to do this.  DRP doesn't start as root, and then drop privileges with a ``fork()`` to another less privileged user by default.
+
+To enable DRP endpoint to run as a non-privileged user and insure a higher level of security, it's possible to use the Linux "*setcap*" (Capabilities) system to assign rights for the *dr-provision* binary to open low numbered (privileged) ports.  The process is relatively simple, but does (clearly/obviously) require root permissions initially to enable the capabilities for the binary.  Once the capabilities have been set, the *dr-provision* binary can be run as a standard user.
+
+To enable any non-privileged user to start up the dr-provision binary and bind to privileged ports 67 and 69, do the following:
+
+# in "isolated" mode, as the user you installed DRP as:
+  ::
+    sudo setcap "cap_net_raw,cap_net_bind_service=+ep" $HOME/bin/linux/amd64/dr-provision
+
+or, in "production" mode:
+  ::
+    sudo setcap "cap_net_raw,cap_net_bind_service=+ep" /usr/local/bin/dr-provision
+
+Start the "dr-provision" binary as an ordinary user, and now it will have permission to bind to privileged ports 67 and 69.
+
+.. note:: The *setcap* command must reference the actual binary itself, and can not be pointed at a symbolic link.  Additional refinement of the capabilities may be possible.  For extremely security conscious setups, you may want to refer to the StackOverflow discussion (eg setting capabilities on a per-user basis, etc.): 
+  https://stackoverflow.com/questions/1956732/is-it-possible-to-configure-linux-capabilities-per-user
 
 System Logs
 ===========
