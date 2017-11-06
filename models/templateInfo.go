@@ -41,6 +41,25 @@ func (ti *TemplateInfo) Id() string {
 	return ti.ID
 }
 
+func (ti *TemplateInfo) SanityCheck(idx int, e ErrorAdder, missingPathOK bool) {
+	if ti.Name == "" {
+		e.Errorf("Template[%d] is missing a Name", idx)
+	}
+	if !missingPathOK {
+		if ti.Path == "" {
+			e.Errorf("Template[%d] is missing a Path", idx)
+		} else if _, err := template.New(ti.Name).Parse(ti.Path); err != nil {
+			e.Errorf("Template[%d] Path is not a valid text/template: %v", idx, err)
+		}
+	}
+	if ti.Contents == "" && ti.ID == "" {
+		e.Errorf("Template[%d] must have either an ID or Contents set", idx)
+	}
+	if ti.Contents != "" && ti.ID != "" {
+		e.Errorf("Template[%d] has both an ID and Contents", idx)
+	}
+}
+
 func (ti *TemplateInfo) PathTemplate() *template.Template {
 	return ti.pathTmpl
 }
