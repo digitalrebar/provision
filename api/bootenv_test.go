@@ -374,6 +374,10 @@ Templates:
 }
 
 func TestBootEnvImport(t *testing.T) {
+	fredstage := mustDecode(&models.Stage{}, `
+Name: fred
+BootEnv: fredhammer
+`).(*models.Stage)
 	fredhammer := mustDecode(&models.BootEnv{}, `
 BootParams: Acounted for
 Errors:
@@ -405,6 +409,30 @@ Templates:
 Validated: true
 `).(*models.BootEnv)
 	tests := []crudTest{
+		{
+			name: "Create fred stage",
+			expectRes: mustDecode(&models.Stage{}, `
+Available: false
+BootEnv: fredhammer
+Description: ""
+Errors:
+- BootEnv fredhammer does not exist
+Meta: {}
+Name: fred
+OptionalParams: []
+Profiles: []
+ReadOnly: false
+Reboot: false
+RequiredParams: []
+RunnerWait: false
+Tasks: []
+Templates: []
+Validated: true`),
+			expectErr: nil,
+			op: func() (interface{}, error) {
+				return fredstage, session.CreateModel(fredstage)
+			},
+		},
 		{
 			name:      "Test bootenv install from nonsenical location",
 			expectRes: nil,
@@ -538,10 +566,37 @@ Validated: true
 			},
 		},
 		{
+			name: "Test to make sure fred stage is available",
+			expectRes: mustDecode(&models.Stage{}, `
+Available: true
+BootEnv: fredhammer
+Description: ""
+Errors: []
+Meta: {}
+Name: fred
+OptionalParams: []
+Profiles: []
+ReadOnly: false
+Reboot: false
+RequiredParams: []
+RunnerWait: false
+Tasks: []
+Templates: []
+Validated: true`),
+			expectErr: nil,
+			op: func() (interface{}, error) {
+				return fredstage, session.Req().Fill(fredstage)
+			},
+		},
+		{
 			name:      "Clean up after fredhammer (flat install)",
 			expectRes: nil,
 			expectErr: nil,
 			op: func() (interface{}, error) {
+				st, err := session.DeleteModel("stages", "fred")
+				if err != nil {
+					return st, err
+				}
 				env, err := session.DeleteModel("bootenvs", "fredhammer")
 				if err != nil {
 					return env, err
