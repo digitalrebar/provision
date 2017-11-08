@@ -67,6 +67,9 @@ type Machine struct {
 	// Secret for machine token revocation.  Changing the secret will invalidate
 	// all existing tokens for this machine
 	Secret string
+	// OS is the operating system that the node is running in
+	//
+	OS string
 }
 
 func (n *Machine) UUID() string {
