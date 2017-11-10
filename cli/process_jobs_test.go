@@ -9,7 +9,7 @@ import (
 var processJobsNoArgsString = "Error: drpcli machines processjobs [id] [flags] requires at least 1 argument\n"
 var processJobsTooManyArgsString = "Error: drpcli machines processjobs [id] [flags] requires at most 1 arguments\n"
 var processJobsMissingMachineString = "Error: GET: machines/p1: Not Found\n\n"
-var processJobsStageMissingString = "Error: ValidationError: Stage fred does not exist\n\n"
+var processJobsStageMissingString = "Error: ValidationError: machines/3e7031fe-3062-45f1-835c-92541bc9cbd3: Stage fred does not exist\n\n"
 var processYakovErrorSuccessString = "Error: Task failed, exiting ...\n\n\n"
 
 var processJobsJustineCreateTaskString = `

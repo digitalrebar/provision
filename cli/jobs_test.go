@@ -290,7 +290,7 @@ var jobUpdateBadJSON2String string = "[ \"gadsg\" ]"
 var jobUpdateBadJSON2ErrorString string = "Error: Unable to merge objects: json: cannot unmarshal array into Go value of type map[string]interface {}\n\n\n"
 var jobUpdateInputString string = "{ \"State\": \"incomplete\" }"
 var jobUpdateBadInputString string = "{ \"State\": \"fred\" }"
-var jobUpdateBadInputErrorString string = "Error: ValidationError: Jobs 00000000-0000-0000-0000-000000000001 wants State fred, which is not valid\n\n"
+var jobUpdateBadInputErrorString string = "Error: ValidationError: jobs/00000000-0000-0000-0000-000000000001: State fred is not valid\n\n"
 var jobUpdateJohnString string = `RE:
 {
   "Archived": false,
@@ -350,7 +350,7 @@ var jobPatchBadBaseJSONString = "{ badbase"
 var jobPatchBadBaseJSONErrorString = "Error: Unable to parse drpcli jobs patch [objectJson] [changesJson] [flags] JSON { badbase\nError: error converting YAML to JSON: yaml: line 1: did not find expected ',' or '}'\n\n"
 
 var jobPatchBadInputString = "{ \"State\": \"fred\"}"
-var jobPatchBadInputErrorString = "Error: ValidationError: Jobs 00000000-0000-0000-0000-000000000001 wants State fred, which is not valid\n\n"
+var jobPatchBadInputErrorString = "Error: ValidationError: jobs/00000000-0000-0000-0000-000000000001: State fred is not valid\n\n"
 var jobPatchInputString = "{ \"State\": \"running\"}"
 var jobPatchInputReplyString = `RE:
 {

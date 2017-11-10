@@ -128,7 +128,8 @@ func (v *Validation) MakeError(code int, errType string, obj Model) error {
 		return nil
 	}
 	return &Error{
-		Object:   obj,
+		Model:    obj.Prefix(),
+		Key:      obj.Key(),
 		Code:     code,
 		Type:     errType,
 		Messages: v.Errors,
