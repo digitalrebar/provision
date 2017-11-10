@@ -165,6 +165,9 @@ Expansion                      Description
 .ParseURL <segment> <url>      Parse the specified URL and return the segment requested.
 .ParamExists <key>             Returns true if the specified key is a valid parameter available for this rendering.
 .Param <key>                   Returns the structure for the specified key for this rendering.
+.Repos <tag>, <tag>,...        Returns Repos (as defined by the package-repositories param currently in scope) with the matching tags.
+.MachineRepos                  Returns all Repos that have the **OS** of the Machine defined in their os section.
+.InstallRepos                  Returns exactly one Repo from the list chosen by MachineRepos that has the installSource bit set, and at most one Repo from the MachineRepos that has the securitySource bit set.
 template <string> .            Includes the template specified by the string.  String can be a variable and note that template does NOT have a dot (.) in front.
 ============================== =================================================================================================================================================================================================
 
@@ -273,6 +276,8 @@ An example :ref:`rs_model_profile` that sets proxies would look like this yaml.
 Local Repos
 +++++++++++
 
+**This section is deprecated, it is being replaced by the more general package-repositories functionality**
+
 It is possible to use the exploded ISOs as repositories for post-installation work.  This can be helpful
 when missing internet connectivity.  To cause the local repos to replace the public repos, set the *local_repo*
 parameter to *true*.  This will force them to be changed.  There is one for ubuntu/debian-based systems,
@@ -291,7 +296,160 @@ An example :ref:`rs_model_profile` that sets proxies would look like this yaml.
 
     Name: local-repos
     Params:
-      local_repo: true
+      local-repo: true
+
+.. index::
+  pair: SubTemplate; Package Repositories
+
+Package Repositories
+++++++++++++++++++++
+
+As an alternative to rolling your own support for local annd remote
+package repositrory management, you can write your templates to use
+our package repository support.  This support consists of three parts:
+
+1. Support in the template rendering engine for a parameter named
+   "package-repositories", which contains a list of package
+   repositories that are available for the various Linux distros we
+   support.
+2. The .Repos, .MachineRepos, and .InstallRepos functions that are
+   available at template expansion time.  These return a list of Repo
+   objects, and re described in more detail in the Template section.
+3. The .Install and .Lines functions available on each Repo object.
+
+The package-repositories Param
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The special "package-repositories" parameter must be present in-scope
+of the current Machine in order for .Repos, .MachineRepos, and
+.InstallRepos to operate correctly -- that is, it must be present
+either in the global profile, a profile attached to the machine's
+current Stage,a profile attached to a machine, or directly on the
+machine as a machine parameter.
+
+An example of a "package-repositories" parameter in YAML format:
+
+  ::
+
+    - tag: "centos-7-install" # Every repository needs a unique tag.
+      # A repository can be used by multiple operating systems.
+      # The usual example of this is the EPEL repository, which
+      # can be used by all of the RHEL variants of a given generation.
+      os:
+        - "centos-7"
+      # If installSource is true, then the URL points directly
+      # to the location we should use for all OS install purposes
+      # save for fetching kernel/initrd pairs from (for now, we will
+      # still assume that they will live on the DRP server).
+      # When installSounrce is true, the os field must contain a single
+      # entry that is an exact match for the bootenv's OS.Name field.
+      installSource: true
+      # For redhat-ish distros when installSource is true,
+      # this URL must contain distro, component, and arch components,
+      # and as such they do not need to be further specified.
+      url: "http://mirrors.kernel.org/centos/7/os/x86_64"
+    - tag: "centos-7-everything"
+      # Since installSource is not true here,
+      # we can define several package sources at once by
+      # providing a distribution and a components section,
+      # and having the URL point at the top-level directory
+      # where everything is housed.
+      # DRP knows how to expand repo definitions for CentOS and
+      # ScientificLinux provided that they follow the standard
+      # mirror directory layout for each distro.
+      os:
+        - centos-7
+      url: "http://mirrors.kernel.org/centos"
+      distribution: "7"
+      components:
+        - atomic
+        - centosplus
+        - cloud
+        - configmanagement
+        - cr
+        - dotnet
+        - extras
+        - fasttrack
+        - opstools
+        - os
+        - paas
+        - rt
+        - sclo
+        - storage
+        - updates
+    - tag: "debian-9-install"
+      os:
+        - "debian-9"
+      installSource: true
+      # Debian URLs always follow the same rules, no matter
+      # whether the OS install flag is set.  As such,
+      # you must always also specify the distribution and
+      # at least the main component, although you can also
+      # specify other components.
+      url: "http://mirrors.kernel.org/debian"
+      distribution: stretch
+      components:
+        - main
+        - contrib
+        - non-free
+    - tag: "debian-9-backports"
+      os:
+        - "debian-9"
+      url: "http://mirrors.kernel.org/debian"
+      distribution: stretch-updates
+      components:
+        - main
+        - contrib
+        - non-free
+    - tag: "debian-9-security"
+      os:
+        - "debian-9"
+      url: "http://security.debian.org/debian-security/"
+      securitySource: true
+      distribution: stretch/updates
+      components:
+        - contrib
+        - main
+        - non-free
+
+
+Repo Object
+^^^^^^^^^^^
+
+As mentioned above, the template-level .Repos, .MachineRepos, and
+.InstallRepos return a list of Repo objects that can be used for
+further template expansion.  The Repo object contains its own fields and functions that can be used for template expansion:
+
+===================    ===========
+Expansion              Description
+===================    ===========
+.Tag                   The tag that uniquely identifies one repository definition.  The template-level .Repos function takes a list of tags and returns repos that exactly match them.
+.OS                    A list of operating systems (in distro-release format) that this repository supports. The template-level .MachineRepos function matches this field against the current Machine.OS field to determine which templates are applicable to a Machine.
+.URL                   The URL to the top of the repository in question.  For yum-style repos, it can either point directly to a specific repository (in which case .Distribution and .Components must not be present), or point to a location that contains an appropriately mirrored repo tree for the OS in question (in which case it cannot be used as an InstallSource or a SecuritySource, and .Distribution and .Components must be set)  For apt-style repos, it must point to the top level of the repository (the level that has "dists" and "pool" as subdirectories), and .Distribution and .Components must always be defined.
+.PackageType           An optional field that can be used to determine what kind of packages the repository returns.  It is normally autodetected based on the operating system the repo is being used in.
+.RepoType              The type repository this is.  It is optional, and is normally inferred based on the operating system the repo is being used in.
+.InstallSource         A boolean value that determines whether this repository should be used as a package source during OS installation. You should have at most one of these per OS install you wish to support.
+.SecuritySource        A boolean value that determines whether this repository should be used as a source of security updates that should be applied during an OS install.
+.Distribution          A string that corresponds to the OS release version or codename.  This must be present for apt-style repos.
+.Components            A list of strings that map to any sub-repositories available as part of this repository.  Examples are "main","contrib", and "non-free" for apt-based repos.
+.R                     A helper function that refers back to the top-level template rendering context.
+.JoinedComponents      A helper function that joins the .Components list into a space-seperated string.
+.UrlFor <component>    A helper function that returns an appropriately formatted URL for the passed Component.
+.Install               A helper function that returns the Repo in a format suitable for inclusion in an unattented OS installation file (kickstart, preseed, etc.)  The format returned is currently hardcoded depending on the OS type of the Machine.  That restriction will be lifted in future versions of dr-provision.
+.Lines                 A helper function that returns the Repo an a format suitable for direct inclusion into a repo definition file (sources.list, /etc/yum.repos.d/.repo, etc).  The format returned is currently hardcoded based on the OS type of the Machine.  That restriction will be lifted in future versions of dr-provision.
+===================    ===========
+
+Expanding Package Repositories
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+To expand the repos suitable for OS installation, use::
+
+    {{range $repo := .InstallRepos}}{{$repo.Install}}{{end}}
+
+To expand the repos suitable for post-install package management, use::
+
+    {{range $repo := .MachineRepos}}{{$repo.Lines}}{{end}}
+
 
 .. index::
   pair: SubTemplate; Set Hostname
