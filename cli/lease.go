@@ -90,31 +90,11 @@ func (be LeaseOps) Get(id string) (interface{}, error) {
 }
 
 func (be LeaseOps) Create(obj interface{}) (interface{}, error) {
-	lease, ok := obj.(*models.Lease)
-	if !ok {
-		return nil, fmt.Errorf("Invalid type passed to lease create")
-	}
-	d, e := session.Leases.CreateLease(leases.NewCreateLeaseParams().WithBody(lease), basicAuth)
-	if e != nil {
-		return nil, e
-	}
-	return d.Payload, nil
+	return nil, fmt.Errorf("Cannot create Lease via the API.  Create a Reservation instead.")
 }
 
 func (be LeaseOps) Patch(id string, obj interface{}) (interface{}, error) {
-	data, ok := obj.(models.Patch)
-	if !ok {
-		return nil, fmt.Errorf("Invalid type passed to lease patch")
-	}
-	s, e := convertStringToAddress(id)
-	if e != nil {
-		return nil, e
-	}
-	d, e := session.Leases.PatchLease(leases.NewPatchLeaseParams().WithAddress(s).WithBody(data), basicAuth)
-	if e != nil {
-		return nil, e
-	}
-	return d.Payload, nil
+	return nil, fmt.Errorf("Cannot patch a Lease via the API")
 }
 
 func (be LeaseOps) Delete(id string) (interface{}, error) {
