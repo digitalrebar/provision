@@ -67,7 +67,7 @@ On Mac OS X - you can install the ``fswatch`` package:
     
 An example use would be:
 
-  :;
+  ::
 
       # cd to the base Provision git directory
       fswatch -o -0 -r doc | xargs -0 -n 1 -I {} make html
