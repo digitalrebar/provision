@@ -107,7 +107,7 @@ Content configuration is the most complex topic with Digital Rebar Provision.  T
       
     ::
         
-      drpcli prefs set unknownBootEnv discovery defaultBootEnv sledgehammer defaultStage discovery
+      drpcli prefs set unknownBootEnv discovery defaultBootEnv sledgehammer defaultStage discover
 
   2. PXE Boot your Machine
     * insure your test Machine is on the same Layer 2 subnet as your DRP endpoint, or that you've configured your networks *IP Helper* to forward your DHCP requests to your DRP Endpoint
