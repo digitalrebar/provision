@@ -74,20 +74,20 @@ You may also use the RackN Portal UI by pointing your web browser to:
 
 Please note that your browser will be redirected to the RackN Portal, pointing at your newly installed Endpoint.  Use the above username/password pair to authenticate to the DRP Endpoint.
 
-Add Content
------------
+Add Boot Environments (bootenvs)
+--------------------------------
 
-With Digital Rebar Provision running it is now time to install the specialized Digital Rebar Provision content, and the required boot environments (BootEnvs).  We generally refer to this as "content".
+With Digital Rebar Provision running; it is now time to install the specialized Digital Rebar Provision content, and the required boot environments (BootEnvs).  We generally refer to this as "content".
 
 .. note:: This documentation assumes you have _not_ specified the ``--nocontent`` flag.  We will be installing the default Community Content below; which requires that content to be installed.  Installing other content besides Community Content is considered and advanced topic. 
 
 During the install step above, the installer output a message on how to install "content", we will follow these steps now, which will:
 
   1. install the *sledgehammer* Boot Environment, used for discovery and provisioning workflow
-  2. <optional> install the CentOS Boot Environment
-  3. <optional> install the Ubuntu Boot Environment
+  2. install the CentOS Boot Environment <optional>
+  3. install the Ubuntu Boot Environment <optional>
 
-These steps should be performed from the newly installed *dr-provision* endpoint:
+These steps should be performed from the newly installed *dr-provision* endpoint (or via remote *drpcli* binary with the use of the ``--endpoint`` flag):
 
   ::
 
@@ -96,6 +96,46 @@ These steps should be performed from the newly installed *dr-provision* endpoint
     ./drpcli bootenvs uploadiso centos-7.3.1611-install
 
 The ``uploadiso`` command will fetch the ISO image as specified in the BootEnv JSON spec, download it, and then "explode" it in to the ``tftpboot`` directory for installation use.  You may optionally choose one or both of the CentOS and Ubuntu BootEnvs to install; depending on which versions you wish to test or use.
+
+Install your first Machine
+--------------------------
+
+Content configuration is the most complex topic with Digital Rebar Provision.  The basic provisioning setup with the above "ISO" upoads will allow you t o install a CentOS or Ubuntu Machine with manual power cycle (power on / reboot / etc) transitions.  More advanced workflows and plugin_providers will allow for complete automation workflows with complex stages and state transitions.  To keep things "quick", the below are just bare basics, for more details and information, please see the Content documentation section.
+
+  1. Set BootEnvs 
+    BootEnvs are operating system installable definitions.  You need to specify **what** the DRP endpoint should do when it sees an unknown Machine, and what the default behavior is.  Define the Default Stage, Default BootEnv, and the Unknown BootEnv:
+      
+    ::
+        
+      drpcli prefs set unknownBootEnv discovery defaultBootEnv sledgehammer defaultStage discovery
+
+  2. PXE Boot your Machine
+    * insure your test Machine is on the same Layer 2 subnet as your DRP endpoint, or that you've configured your networks *IP Helper* to forward your DHCP requests to your DRP Endpoint
+    * set your test machine or VM instance to PXE boot
+    * power it on, or reboot it, and verify that the NIC begins the PXE boot process
+    * verify that the DRP Endpoint responds with a DHCP lease to the Machine
+
+  3. Set your BootEnv to install an Operating System
+    * once your machine has booted, and received DHCP from the DRP Endpoint, it will now be "registered" with the Endpoint for installation
+    * by default, DRP will NOT attempt an OS install unless you explicitly direct it to (for safety's sake!)
+    * obtain your Machine's ID, you'll use it to define your BootEnv
+
+    ::
+
+      drpcli machines list  
+      
+  4. Set the BootEnv to either ``centos-7.4.1708-install`` or ``ubuntu-16.04-install`` replace *[UUID]* with your machines ID:
+
+    ::
+
+      drpcli machines bootenv [UUID] ubuntu-16.04-install
+
+  5. Reboot your Machine - it should now kick off a BootEnv install as you specified above.  
+    * watch the console, and you should see the appropriate installer running
+    * the machine should reboot in to the Operating System you specified
+
+.. note:: Digital Rebar Provision is capable of automated workflow management of the boot process, power control, and much more.  This quickstart walks through the simplest process to get you up and running with a single test install.  Please review the rest of the documentation for futher configuration details and information on automation of your provisioning environment.
+
 
 Isoloated -vs- Production Install Mode
 --------------------------------------
