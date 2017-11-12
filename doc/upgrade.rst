@@ -203,133 +203,124 @@ There are fairly significant updates to the DRP Contents structure and layout in
 
 Please read the steps through carefully, and make note of the current contents/plugins you currently have installed.  You will have to re-add these elements again.  You absolutely should backup your existing install prior to this upgrade. 
 
-Overview
-========
-Overiew of the update steps necessary, you should do in the following order.
+  1. Overview
+    Overiew of the update steps necessary, you should do in the following order.
 
-1. Update DRP to "stable" (v3.2.0)
-#. Remove Old Content
-#. Add Content back that was removed
-#. Update plugins
-#. Fix up things
+    1. Update DRP to "stable" (v3.2.0)
+    #. Remove Old Content
+    #. Add Content back that was removed
+    #. Update plugins
+    #. Fix up things
 
-First step - updating DRP
-=========================
-If you are running isolated, do this (remove ``--isolated`` if you are not using isolated mode):
+  2. Updating DRP Endpoint
+    If you are running isolated, do this (remove ``--isolated`` if you are not using isolated mode):
 
-  ::
+    ::
 
-    curl -fsSL get.rebar.digital/stable | bash -s -- install --isolated --upgrade=true
+      curl -fsSL get.rebar.digital/stable | bash -s -- install --isolated --upgrade=true
 
-This will force the update of the local binaries to v3.2.0 stable.  Make sure you stop DRP process (``sudo killall dr-provision``, or ``sudo systemctl stop dr-provision.service``).
+    This will force the update of the local binaries to v3.2.0 stable.  Make sure you stop DRP process (``sudo killall dr-provision``, or ``sudo systemctl stop dr-provision.service``).
 
-Verify that your ``/etc/systemd/services/dr-provision`` start up file is still correct for your environment, if running a production install type.
+    Verify that your ``/etc/systemd/services/dr-provision`` start up file is still correct for your environment, if running a production install type.
 
-Restart DRP (follow ``--isolated`` mode start steps if in isolated mode; or ``sudo systemctl start dr-provision.service``)
+    Restart DRP (follow ``--isolated`` mode start steps if in isolated mode; or ``sudo systemctl start dr-provision.service``)
 
-If in ``--isolated`` mode, don’t forget to copy ``drpcli`` and/or ``dr-provision`` binaries to where you prefer to keep them (eg ``$HOME/bin`` or ``/usr/local/bin``, etc... .
+    If in ``--isolated`` mode, don’t forget to copy ``drpcli`` and/or ``dr-provision`` binaries to where you prefer to keep them (eg ``$HOME/bin`` or ``/usr/local/bin``, etc... .
 
-Second Step - Remove old content
-================================
+  3. Remove old content
+    With the rework of content, you need to remove the following content packages if they were previously installed.
 
-With the rework of content, you need to remove the following content packages if they were previously installed.
+    ::
 
-  ::
+      os-linux
+      os-discovery
+      drp-community-content (if you are really behind, Digital Rebar Community Content).
+      ipmi
+      packet
+      virtualbox
 
-    os-linux
-    os-discovery
-    drp-community-content (if you are really behind, Digital Rebar Community Content).
-    ipmi
-    packet
-    virtualbox
+  4. Put the content back
 
-Third Step - Put the content back
-=================================
+    Install the new v3.2.0 content packs.  Note that the names have changed, and the mix of "ce-" and non-Community Content names has gone away.  For example; what originally was ``drp-community-content`` which included things like ``ce-sledgehammer`` is now moved to just ``sledgehammer``.  The RackN registered content of ``os-linux`` and ``os-discovery`` have now been folded in to the below content packs.
 
-Install the new v3.2.0 content packs.  Note that the names have changed, and the mix of "ce-" and non-Community Content names has gone away.  For example; what originally was ``drp-community-content`` which included things like ``ce-sledgehammer`` is now moved to just ``sledgehammer``.  The RackN registered content of ``os-linux`` and ``os-discovery`` have now been folded in to the below content packs.
+    ::
 
-  ::
+      drp-community-content - it is a must just get it.
+      task-library - New RackN library of services for doing interesting things.
+      drp-community-contrib - this is old or experimental things like centos6 or SL6.
 
-    drp-community-content - it is a must just get it.
-    task-library - New RackN library of services for doing interesting things.
-    drp-community-contrib - this is old or experimental things like centos6 or SL6.
+  5. Update the plugins
 
-Step Four - update the plugins
-==============================
+    If you have any plugins installed, update them now.
 
-If you have any plugins installed, update them now.
+    To facilitate version tracking, plugins provide their own content as a injected content from the plugin.  When the plugin is added, it will also add a content layer that will show up in the content packages section.
 
-To facilitate version tracking, plugins provide their own content as a injected content from the plugin.  When the plugin is added, it will also add a content layer that will show up in the content packages section.
+    Previously, a ``plugin-provider`` was installed separately from a Content of the same name.  
 
-Previously, a ``plugin-provider`` was installed separately from a Content of the same name.  
+  6. Fix things up
+    This is mainly if you were using the Community Content version of things (``drp-community-content``, and BootEnvs with a prefix of ``ce-``).  The BootEnvs names change, by removing the prefix of "ce-" from the name.
 
-Step Five - fix things up
-=========================
+    Make sure all the bootenvs are up to date and available.  This is a task you should always do after updating content.  If the BootEnv is marked with an "X" in the UX, or ``"Available": false`` from the CLI/API, you'll need to reload the ISO for the BootEnv.
 
-This is mainly if you were using the Community Content version of things (``drp-community-content``, and BootEnvs with a prefix of ``ce-``).  The BootEnvs names change, by removing the prefix of "ce-" from the name.
+    Then go to *Info & Preferences* and make sure your default stage and bootenvs are still valid.
 
-Make sure all the bootenvs are up to date and available.  This is a task you should always do after updating content.  If the BootEnv is marked with an "X" in the UX, or ``"Available": false`` from the CLI/API, you'll need to reload the ISO for the BootEnv.
+    - This is where ``ce-sledgehammer`` becomes ``sledgehammer`` and ``ce-discovery`` becomes ``discovery``
+    - The same with ``ce-ubuntu-16.04-install`` becomes ``ubuntu-16.04-install``.
+    - The same with ``ce-centos-7.4.1708-install`` becomes ``centos-7-install``.
 
-Then go to *Info & Preferences* and make sure your default stage and bootenvs are still valid.
+  Example pseudo-script to make changes:
 
-  - This is where ``ce-sledgehammer`` becomes ``sledgehammer`` and ``ce-discovery`` becomes ``discovery``
-  - The same with ``ce-ubuntu-16.04-install`` becomes ``ubuntu-16.04-install``.
-  - The same with ``ce-centos-7.4.1708-install`` becomes ``centos-7-install``.
+    Please carefully read through this script and make sure it correlates to your installed content.  It is provided only as an example, and will absolutely require (possibly just minor) modifications for your environment.
 
-Example pseudo-script to make changes:
-======================================
+    YOU MUST MODIFY THE *RACK_AUTH* variable appropriately for the download authentication to work correctly.
 
-Please carefully read through this script and make sure it correlates to your installed content.  It is provided only as an example, and will absolutely require (possibly just minor) modifications for your environment.
+    ::
 
-YOU MUST MODIFY THE *RACK_AUTH* variable appropriately for the download authentication to work correctly.
+      # see all contents
+      drpcli contents list
 
-  ::
+      # list JUST the names of the contents - note what you have installed,
+      # you may need to re-install it below
+      drpcli contents list | jq -r '.[].meta.Name' | egrep -v "BackingStore|BasicStore"
 
-    # see all contents
-    drpcli contents list
+      # list which plugins you have installed - note it, you may need to install
+      # it below
+      drpcli plugin_providers list | jq '.[].Name'
 
-    # list JUST the names of the contents - note what you have installed,
-    # you may need to re-install it below
-    drpcli contents list | jq -r '.[].meta.Name' | egrep -v "BackingStore|BasicStore"
+      # go to RackN UX - log in, go to Hamburger menu (upper left, 3 horizontal lines)
+      # go to Organization - User Profile - copy your UUID for Unique User Identity
+      export RACKN_AUTH="?username=<UUID_Unique_User_Identity>"
+      export CATALOG="https://qww9e4paf1.execute-api.us-west-2.amazonaws.com/main/catalog"
 
-    # list which plugins you have installed - note it, you may need to install
-    # it below
-    drpcli plugin_providers list | jq '.[].Name'
+      # get raw output of just the content packs
+      for CONTENT in `drpcli contents list | jq -r '.[].meta.Name' | egrep -v "BackingStore|BasicStore"`
+      do
+        echo "remove content:   $CONTENT"
+        drpcli contents destroy $CONTENT
+      done
 
-    # go to RackN UX - log in, go to Hamburger menu (upper left, 3 horizontal lines)
-    # go to Organization - User Profile - copy your UUID for Unique User Identity
-    export RACKN_AUTH="?username=<UUID_Unique_User_Identity>"
-    export CATALOG="https://qww9e4paf1.execute-api.us-west-2.amazonaws.com/main/catalog"
+      # install content
+      for CONTENT in drp-community-content task-library drp-community-contrib
+      do
+        echo "install content:  $CONTENT"
+        curl -s $CATALOG/content/${CONTENT}${RACKN_AUTH} -o $CONTENT.json
+        drpcli contents create -< $CONTENT.json
+      done
 
-    # get raw output of just the content packs
-    for CONTENT in `drpcli contents list | jq -r '.[].meta.Name' | egrep -v "BackingStore|BasicStore"`
-    do
-      echo "remove content:   $CONTENT"
-      drpcli contents destroy $CONTENT
-    done
+      # change "plug1", "plug2", etc... to the plugin provider names you need
+      # examples:  "slack", "packet-ipmi", "ipmi"
+      for PLUGIN in plug1 plug2 plug3
+      do
+        echo "install plugin:  $PLUGIN"
+        curl -s $CATALOG/plugin/${PLUGIN}${RACKN_AUTH} -o $PLUGIN.json
+        drpcli contents create -< $PLUGIN.json
+      done
 
-    # install content
-    for CONTENT in drp-community-content task-library drp-community-contrib
-    do
-      echo "install content:  $CONTENT"
-      curl -s $CATALOG/content/${CONTENT}${RACKN_AUTH} -o $CONTENT.json
-      drpcli contents create -< $CONTENT.json
-    done
+      # insure the Stage, Default, and Unknown BootEnv are set to valid values
+      # adjust these as appropriate
+      drpcli prefs set defaultStage discover defaultBootEnv sledgehammer unknownBootEnv discovery
 
-    # change "plug1", "plug2", etc... to the plugin provider names you need
-    # examples:  "slack", "packet-ipmi", "ipmi"
-    for PLUGIN in plug1 plug2 plug3
-    do
-      echo "install plugin:  $PLUGIN"
-      curl -s $CATALOG/plugin/${PLUGIN}${RACKN_AUTH} -o $PLUGIN.json
-      drpcli contents create -< $PLUGIN.json
-    done
-
-    # insure the Stage, Default, and Unknown BootEnv are set to valid values
-    # adjust these as appropriate
-    drpcli prefs set defaultStage discover defaultBootEnv sledgehammer unknownBootEnv discovery
-
-Again - make sure you modify things appropriately in the above scriptlet. YOU MUST MODIFY THE *RACK_AUTH* variable appropriately for the download authentication to work correctly.
+    Again - make sure you modify things appropriately in the above scriptlet. YOU MUST MODIFY THE *RACK_AUTH* variable appropriately for the download authentication to work correctly.
 
 
 Subnet Enabled
