@@ -7,6 +7,7 @@ import (
 	"crypto/tls"
 	"encoding/base64"
 	"encoding/json"
+	"fmt"
 	"io"
 	"log"
 	"mime"
@@ -188,6 +189,73 @@ func (r *R) Params(args ...string) *R {
 	}
 	r.uri.RawQuery = values.Encode()
 	return r
+}
+
+// Filter is a helper for using freeform index operations.
+// The prefix arg is the type of object you want to filter, and filterArgs
+// describes how you want the results filtered.  Currently, filterArgs must be
+// in the following format:
+//
+//    "reverse"
+//        to reverse the order of the results
+//    "sort" "indexName"
+//        to sort the results according to indexName's native ordering
+//    "limit" "number"
+//        to limit the number of results returned
+//    "offset" "number"
+//        to skip <number> of results before returning
+//    "indexName" "Eq/Lt/Lte/Gt/Gte/Ne" "value"
+//        to return results Equal, Less Than, Less Than Or Equal, Greater Than, Greater Than Or Equal, or Not Equal to value according to IndexName
+//    "indexName" "Between/Except" "lowerBound" "upperBound"
+//        to return values Between(inclusive) lowerBound and Upperbound or its complement for Except.
+//
+// If formatArgs does not contain some valid combination of the above, the request will fail.
+func (r *R) Filter(prefix string, filterArgs ...string) *R {
+	r.Get().UrlFor(prefix)
+	finalParams := []string{}
+	i := 0
+	for i < len(filterArgs) {
+		filter := filterArgs[i]
+		switch filter {
+		case "reverse":
+			finalParams = append(finalParams, filter, "true")
+			i++
+		case "sort", "limit", "offset":
+			if len(filterArgs)-i < 2 {
+				r.err.Errorf("Invalid Filter: %s requires exactly one parameter", filter)
+				return r
+			}
+			finalParams = append(finalParams, filter, filterArgs[i+1])
+			i += 2
+		default:
+			if len(filterArgs)-i < 2 {
+				r.err.Errorf("Invalid Filter: %s requires an op and at least 1 parameter", filter)
+				return r
+			}
+			op := filterArgs[i+1]
+			i += 2
+			switch op {
+			case "Eq", "Lt", "Lte", "Gt", "Gte", "Ne":
+				if len(filterArgs)-i < 1 {
+					r.err.Errorf("Invalid Filter: %s op %s requires 1 parameter", filter, op)
+					return r
+				}
+				finalParams = append(finalParams, filter, fmt.Sprintf("%s(%s)", op, filterArgs[i]))
+				i++
+			case "Between", "Except":
+				if len(filterArgs)-i < 2 {
+					r.err.Errorf("Invalid Filter: %s op %s requires 2 parameters", filter, op)
+					return r
+				}
+				finalParams = append(finalParams, filter, fmt.Sprintf("%s(%s,%s)", op, filterArgs[i], filterArgs[i+1]))
+				i += 2
+			default:
+				r.err.Errorf("Invalid Filter %s: unknown op %s", filter, op)
+				return r
+			}
+		}
+	}
+	return r.Params(finalParams...)
 }
 
 // Headers arranges for its arguments to be added as HTTP headers.

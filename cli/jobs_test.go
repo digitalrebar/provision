@@ -181,6 +181,7 @@ var jobCreateJohnString string = `RE:
 {
   "Archived": false,
   "Available": true,
+  "Current": true,
   "EndTime": "0001-01-01T00:00:00Z",
   "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000001",
@@ -200,6 +201,7 @@ var jobListJobsString string = `RE:
   {
     "Archived": false,
     "Available": true,
+    "Current": true,
     "EndTime": "0001-01-01T00:00:00Z",
     "Errors": [],
     "LogPath": "[\S\s]*/job-logs/00000000-0000-0000-0000-000000000001",
@@ -225,6 +227,7 @@ var jobShowJobString string = `RE:
 {
   "Archived": false,
   "Available": true,
+  "Current": true,
   "EndTime": "0001-01-01T00:00:00Z",
   "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000001",
@@ -295,6 +298,7 @@ var jobUpdateJohnString string = `RE:
 {
   "Archived": false,
   "Available": true,
+  "Current": true,
   "EndTime": "0001-01-01T00:00:00Z",
   "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000001",
@@ -356,6 +360,7 @@ var jobPatchInputReplyString = `RE:
 {
   "Archived": false,
   "Available": true,
+  "Current": true,
   "EndTime": "0001-01-01T00:00:00Z",
   "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000001",
@@ -375,6 +380,7 @@ var jobPatchJohnString = `RE:
 {
   "Archived": false,
   "Available": true,
+  "Current": true,
   "EndTime": "0001-01-01T00:00:00Z",
   "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000001",
@@ -409,6 +415,7 @@ var jobUpdateFailedJobUpdateString = `RE:
 {
   "Archived": false,
   "Available": true,
+  "Current": true,
   "EndTime": "20[\s\S]*",
   "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000001",
@@ -457,6 +464,7 @@ var jobCreateNextString = `RE:
 {
   "Archived": false,
   "Available": true,
+  "Current": true,
   "EndTime": "0001-01-01T00:00:00Z",
   "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000002",
@@ -476,6 +484,7 @@ var jobUpdateFinishedJob2UpdateString = `RE:
 {
   "Archived": false,
   "Available": true,
+  "Current": true,
   "EndTime": "20[\s\S]*",
   "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000002",
@@ -494,6 +503,7 @@ var jobCreateNext3String = `RE:
 {
   "Archived": false,
   "Available": true,
+  "Current": true,
   "EndTime": "0001-01-01T00:00:00Z",
   "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000003",
@@ -512,6 +522,7 @@ var jobUpdateFinishedJob3UpdateString = `RE:
 {
   "Archived": false,
   "Available": true,
+  "Current": true,
   "EndTime": "20[\s\S]*",
   "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000003",
@@ -530,6 +541,7 @@ var jobCreateNext4String = `RE:
 {
   "Archived": false,
   "Available": true,
+  "Current": true,
   "EndTime": "0001-01-01T00:00:00Z",
   "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000004",
@@ -548,6 +560,7 @@ var jobUpdateFinishedJob4UpdateString = `RE:
 {
   "Archived": false,
   "Available": true,
+  "Current": true,
   "EndTime": "20[\s\S]*",
   "Errors": [],
   "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000004",
@@ -567,6 +580,7 @@ var jobFullListString = `RE:
   {
     "Archived": false,
     "Available": true,
+    "Current": false,
     "EndTime": "20[\s\S]*",
     "Errors": [],
     "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000001",
@@ -583,6 +597,7 @@ var jobFullListString = `RE:
   {
     "Archived": false,
     "Available": true,
+    "Current": false,
     "EndTime": "20[\s\S]*",
     "Errors": [],
     "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000002",
@@ -599,6 +614,7 @@ var jobFullListString = `RE:
   {
     "Archived": false,
     "Available": true,
+    "Current": false,
     "EndTime": "20[\s\S]*",
     "Errors": [],
     "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000003",
@@ -615,6 +631,7 @@ var jobFullListString = `RE:
   {
     "Archived": false,
     "Available": true,
+    "Current": true,
     "EndTime": "20[\s\S]*",
     "Errors": [],
     "LogPath": "[\S\s]+/job-logs/00000000-0000-0000-0000-000000000004",
