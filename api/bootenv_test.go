@@ -324,7 +324,7 @@ Templates:
 					"Patch error at line 0: Test op failed.",
 					"Patch line: {\"op\":\"test\",\"path\":\"/OS/Name\",\"from\":\"\",\"value\":\"ffred\"}",
 				},
-				Code: 406,
+				Code: 409,
 			},
 			op: func() (interface{}, error) {
 				m := models.Clone(phred)
