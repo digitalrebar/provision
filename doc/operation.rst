@@ -9,19 +9,56 @@
 Digital Rebar Provision Operations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This section will attempt to describe common operations and actions that can be done.  We will assume that 
-drpcli is already somewhere in the path and have setup the environment variables to access Digital Rebar Provision.  See, :ref:`rs_cli`.
+This section will attempt to describe common operations and actions that can be done.  We will assume that ``drpcli`` is already somewhere in the path and have setup the environment variables to access Digital Rebar Provision.  See, :ref:`rs_cli`.
 
-Some of these operations are in the :ref:`rs_ui`, but not all.  This will focus on CLI usage for now.  See the :ref:`rs_ui`
-section for UI usage.
+Some of these operations are in the :ref:`rs_ui`, but not all.  This will focus on CLI usage for now.  See the :ref:`rs_ui` section for UI usage.
 
-.. note:: **drpcli** normally spits out JSON formatted objects or an array of objects.  To help with some of the command line functions, we use the **jq** tool.  This is available for both Linux and Darwin.
+.. note:: **drpcli** normally spits out JSON formatted objects or an array of objects.  To help with some of the command line functions, we use the **jq** tool.  This is available for both Linux and Darwin.  You can specify output format to be YAML, with the ``--format=yaml`` flag. 
+
+Using the ``drpcli`` tool
++++++++++++++++++++++++++
+
+The ``drpcli`` tool is designed to provide a single, easy to use compiled stand alone binary.  It very closely mimics the API call parameters and usage, and allows for easy "transition" between the use of the CLI binary, and the use of the API calls. 
+
+We assume that you have the binary in your ``PATH`` somewhere (``/usr/local/bin/drpcli`` in "production" mode by default).  If you are using an "isolated" install mode, you will need to link the correct binary in to an apprpriate directory in your PATH.  For example:
+
+  ::
+
+    ln -s $HOME/bin/linux/amd64/dr-provision $HOME/bin/
+    ln -s $HOME/bin/linux/amd64/drpcli $HOME/bin/
+
+``drpcli`` is a self documenting binary file.  At any point you can can simply hit ``<Enter>`` to see the current contextual help output.  Some examples:
+
+  ``drpcli <Enter>``
+    Prints usage for the top-level resources that may be manipulated.
+
+  ``drpcli templates <Enter>``
+    Prints the resources that may be executed for the ``templates`` level.
+
+  ``drpcli templates create <Enter>``
+    Will display the commands associated with just ``templates/create/``
+
+Note that the CLI syntax closely follows the API calls.  For example:
+
+  ::
+
+    drpcli templates create -< some_file.json
+
+Would be equivalent to the HTTP REST API resource as follows:
+
+  ::
+    
+    https://127.0.0.1:8092/api/v3/templates/create
+
+..note:: See the :ref:`rs_autocomplete` for BASH shell auto completion.
 
 
 Preference Setting
 ++++++++++++++++++
 
-Usually, it is necessary to get or set the preferences for the system.
+By default Digital Rebar Provision (DRP) attempts to "do no harm".  This means that by default, any system that receives a DHCP lease from the DRP Endpoint, will by default, be set to ``local`` mode, which means boot from local disks.  You must explicitly change this behavior to enable provisioning activities of Machines. 
+
+It is necessary to get or set the preferences for the system, to enable OS Installs (BootEnvs). 
 
   ::
 
@@ -32,7 +69,7 @@ Usually, it is necessary to get or set the preferences for the system.
     drpcli prefs get unknownBootEnv
 
 
-Set a preference
+Set preference(s):
 
   ::
 
@@ -40,7 +77,7 @@ Set a preference
     drpcli prefs set unknownBootEnv discovery
 
     # or chain multiples as pairs
-    drpcli prefs set unknownBootEnv discovery defaultBootEnv sledgehammer
+    drpcli prefs set unknownBootEnv discovery defaultBootEnv sledgehammer defaultStage discover
 
 The system does validate values to make sure they are sane, so watch for errors.
 
@@ -48,19 +85,40 @@ The system does validate values to make sure they are sane, so watch for errors.
 BootEnv Operations
 ++++++++++++++++++
 
+A :ref:`rs_model_bootenv` is the primary component for an Operating System installation definition.  A :ref:`rs_model_bootenv` is comprised of two primary pieces:
+
+  #. A :ref:`rs_model_bootenv` JSON/YAML specification
+  #. (usually) an ISO Image that installs that :ref:`rs_model_bootenv` 
+
+The JSON/YAML specification will contain a set of definitions for the ISO image.  The default distributed :ref:`rs_model_bootenv` specs use the public mirror repos for the ISO images.  You can create a customer :ref:`rs_model_bootenv` with a pointer to your own hosted ISO images.  An example looks something like:
+
+  ::
+
+    root@demo:~$ drpcli bootenvs show ubuntu-16.04-install
+    {
+    "Available": true,
+    "Name": "ubuntu-16.04-install",
+    "OS": {
+      "Family": "ubuntu",
+      "IsoFile": "ubuntu-16.04.3-server-amd64.iso",
+      "IsoSha256": "a06cd926f5855d4f21fb4bc9978a35312f815fbda0d0ef7fdc846861f4fc4600",
+      "IsoUrl": "http://mirrors.kernel.org/ubuntu-releases/16.04/ubuntu-16.04.3-server-amd64.iso",
+      "Name": "ubuntu-16.04",
+    <...snip...>
+
+This stanza shows the Ubuntu 16.04 :ref:`rs_model_bootenv` along with the associated Mirror HTTP location the ISO will be installed from.
+
 
 Installing a "Canned" BootEnv
 -----------------------------
 
-Manipulating :ref:`rs_model_bootenv` and :ref:`rs_model_template` are handled by their own commands.  There are some
-additional helpers especially when following the layout of the initial :ref:`rs_install`.
+Manipulating :ref:`rs_model_bootenv` and :ref:`rs_model_template` are handled by their own commands.  There are some additional helpers especially when following the layout of the initial :ref:`rs_install`.
 
 To install a provided :ref:`rs_model_bootenv`, do the following from the install location.
 
   ::
 
-    cd assets
-    drpcli bootenvs install bootenvs/ubuntu-16.04.yml
+    drpcli bootenvs uploadiso ubuntu-16.04-install
 
 This is a CLI helper that is not in the API that will read the provided YAML :ref:`rs_model_bootenv` file,
 upload the included or referenced :ref:`rs_model_template` files (from the *templates* peer directory), upload
@@ -70,6 +128,25 @@ the already uploaded list, it will check a local isos directory for the file.  I
 directory and then uploaded into Digital Rebar Provision.  Once upload, the ISO is "exploded" for access by
 machines in the file server file system space.
 
+Listing Installed BootEnvs
+--------------------------
+
+A list of all existing :ref:`rs_model_bootenv` installed on the DRP Endpoint can be obtained with the *list* command.  However, you usually do not wish to see all of the JSON values, and a simple ``jq`` filter can help output just the keys you are interested in, as follows:
+
+  ::
+
+    drpcli bootenvs list | jq -r '.[].Name'
+
+    Outputs:
+    centos-7-install
+    centos-7.4.1708-install
+    debian-8-install
+    debian-9-install
+    discovery
+    ignore
+    local
+    sledgehammer
+    ubuntu-16.04-install
 
 Cloning a BootEnv
 -----------------
@@ -116,6 +193,8 @@ is optional, but I find YAML easier to edit.
 Template Operations
 +++++++++++++++++++
 
+Templates are reusable blocks of code, that are dynamically expanded when used.  This allows for very sophisticated and complex operations.  It also allows for carefully crafted Templates to be re-usable across a broad set of use cases.
+
 Cloning a Template
 ------------------
 
@@ -127,8 +206,7 @@ It might be necessary to create a new template from an existing one.  To do this
     # Edit the new.tmpl to be what is required
     drpcli templates upload new.tmpl as new_template
 
-In this case, we are using **jq** to help us out.  **jq** is a JSON processing command line filter.  JSON can be used to retrieve the required data.  In this case, we are wanting the Contents of the template.  We save that to file, edit it, and upload it as a
-new template, *new_template*.
+In this case, we are using ``jq`` to help us out.  ``jq`` is a JSON processing command line filter.  JSON can be used to retrieve the required data.  In this case, we are wanting the Contents of the template.  We save that to file, edit it, and upload it as a new template, *new_template*.
 
 It is possible to use the **create** subcommand of template, but often times **upload** is easier.
 
@@ -146,11 +224,62 @@ It might be necessary to edit an existing template.  To do this, do the followin
     # Edit the edit.tmpl to be what is desired
     drpcli templates upload edit.tmpl as net_seed.tmpl
 
-We use **jq** to get a copy of the current template, edit it, and use the upload command to replace the template.
+We use ``jq`` to get a copy of the current template, edit it, and use the upload command to replace the template.
 If there already is a template present, then it can be replaced with the upload command.
+
+Param Operations
+++++++++++++++++
+
+:ref:`rs_model_param` are simply key/value pairs.  However, DRP provides a strong typing model to enforce a specific type to a given Param.  This insures that Param values are valid elements as designed by the operator.
+
+Creating a Param
+----------------
+
+It might be necessary to create a new :ref:`rs_model_param`, an empty Param may be created by doing the following:
+
+  ::
+
+    drpcli params create '{ "Name": "fluffy" }'
+
+    or
+
+    drpcli params create fluffy
+
+
+The system will attempt to use any sent string as the Name of the Param.  To be complete, it is required to also speciy the Type that param must be:
+
+  ::
+
+    drpcli params create '{ "Description": "DNS domainname", "Name": "domainname", "Schema": { "type": "string" } }'
+
+In this example, the type ``string`` was defined for the param.
+
+Deleting a Param
+----------------
+
+It might be necessary to delete a :ref:`rs_model_param`. 
+
+  ::
+
+    drpcli params destroy fluffy
+
+
+.. note:: The destroy operation will fail if the param is in use.
+
+Editing a Param
+---------------
+
+It might be necessary to update a Param.  An example to add a ``type`` of ``string`` to our ``fluffy`` param above would be:
+
+  ::
+
+    drpcli params update fluffy '{ "Schema": { "type": "string" } }'
+
 
 Profile Operations
 ++++++++++++++++++
+
+:ref:`rs_model_profile` are simply collections of :ref:`rs_model_param` - they conveniently group multiple :ref:`rs_model_param` for easy consumption by other elements of the provisioning service.
 
 Creating a Profile
 ------------------
@@ -173,6 +302,13 @@ Additionally, JSON can be provided to fill in some default values.
 
     drpcli profiles create '{ "Name": "myprofile", "Params": { "string_param1": "string", "map_parm1": { "key1": "value", "key2": "value2" } } }'
 
+Alternatively, you can create profiles from an existing file containing JSON, as follows:
+
+  ::
+
+    echo '{ "Name": "myprofile", "Params": { "string_param1": "string", "map_parm1": { "key1": "value", "key2": "value2" } } }' > my_profile.json
+    drpcli profiles create -< my_profile.json
+
 
 Deleting a Profile
 ------------------
@@ -185,8 +321,8 @@ but the :ref:`rs_model_profile` must not be in use.  Use the following:
     drpcli profiles destroy myprofile
 
 
-Altering an Existing Profile (including global)
------------------------------------------------
+Altering an Existing Profile (including the ``global`` profile)
+---------------------------------------------------------------
 
 It might be necessary to update an existing :ref:`rs_model_profile`, including **global**.  parameter values can be *set* by doing the following:
 
@@ -211,19 +347,18 @@ the value of the key to be removed.
 Machine Operations
 ++++++++++++++++++
 
+A :ref:`rs_model_machine` is typically a physical bare metal server, as DRP is intended to operate on bare metal infrastructure.  However, it can represent a Virtual Machine instance and provision it equally.  DRP does not provide *control plane* activities for virtualized environments (eg *VM Create*, etc. operations).
+
 Creating a Machine
 ------------------
 
-It might be necessary to create a :ref:`rs_model_machine`.  Given the IP that the machine will boot as all that is required is to 
-create the machine and assign a :ref:`rs_model_bootenv`.  To do this, do the following:
+It might be necessary to create a :ref:`rs_model_machine`.  Given the IP that the machine will boot as all that is required is to create the machine and assign a :ref:`rs_model_bootenv`.  To do this, do the following:
 
   ::
 
     drpcli machine create '{ "Name": "greg.rackn.com", "Address": "1.1.1.1" }'
 
-This would create the :ref:`rs_model_machine` named *greg.rackn.com* with an expected IP Address of *1.1.1.1*.  *dr-provision*
-will create the machine, create a UUID for the node, and assign the :ref:`rs_model_bootenv` based upon the *defaultBootEnv*
-:ref:`rs_model_prefs`.
+This would create the :ref:`rs_model_machine` named *greg.rackn.com* with an expected IP Address of *1.1.1.1*.  *dr-provision* will create the machine, create a UUID for the node, and assign the :ref:`rs_model_bootenv` based upon the *defaultBootEnv* :ref:`rs_model_prefs`.
 
   ::
 

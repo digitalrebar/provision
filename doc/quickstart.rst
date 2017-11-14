@@ -13,6 +13,16 @@ This quick start guide provides a basic installation and start point for further
 
 For a full install, please see :ref:`rs_install`
 
+Preparation
+-----------
+
+Please make sure you're environment doesn't have any conflicts or issues that might cause PXE booting to fail.  Some things to note: 
+
+  * only one DHCP server on a local subnet
+  * if your DRP Endpoint is "straddling" multiple networks - make sure you have routing set up correctly, or specify the ``--static-ip=`` start up option correctly
+  * your Machines should be set to PXE boot the correct NIC (on the correct provisioning network interface)
+  * if you customize Reservations - you must also add all of the correct PXE boot options
+
 Install
 -------
 
