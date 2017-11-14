@@ -297,7 +297,6 @@ func (es *EventStream) WaitFor(
 			if evt.Err != nil {
 				return fmt.Sprintf("read: %v", err), err
 			}
-			item, err = evt.E.Model()
 			if err != nil {
 				return fmt.Sprintf("read: %v", err), err
 			}

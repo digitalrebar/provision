@@ -54,6 +54,10 @@ type Job struct {
 	EndTime time.Time
 	// required: true
 	Archived bool
+	// Whether the job is the "current one" for the machine or if it has been superceded.
+	//
+	// required: true
+	Current bool
 	// DRP Filesystem path to the log for this job
 	// read only: true
 	LogPath string

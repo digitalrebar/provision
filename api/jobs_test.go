@@ -11,6 +11,18 @@ import (
 
 func runAgent(t *testing.T, m *models.Machine, lastTask, lastState, lastExitState string) {
 	t.Helper()
+	if !m.Runnable {
+		t.Logf("Machine %s not runnable, patching it to a Runnable state", m.Name)
+		mc := models.Clone(m).(*models.Machine)
+		mc.Runnable = true
+		_, err := session.PatchTo(m, mc)
+		if err != nil {
+			t.Errorf("Failed to make machine runnable: %v", err)
+			return
+		}
+		t.Logf("Machine %s patched", m.Name)
+		m.Runnable = true
+	}
 	buf := &bytes.Buffer{}
 	err := session.Agent(m, true, true, false, buf)
 	if err != nil {
@@ -380,12 +392,24 @@ Tasks:
 			mc.CurrentTask = -1
 			return session.PatchTo(machine1, mc)
 		}, nil)
+	j := []*models.Job{}
+	if err := session.Req().Filter("jobs",
+		"Current", "Eq", "true").
+		Do(&j); err != nil {
+		t.Errorf("Error getting jobs: %v", err)
+	} else if len(j) != 1 {
+		t.Errorf("Expected 1 current job, not %d", len(j))
+	} else if j[0].Key() != machine1.CurrentJob.String() {
+		t.Errorf("Expected current job to match what was recorded on machine1, not %s", j[0].Key())
+	} else {
+		t.Logf("Got expected current job results")
+	}
 	session.Req().Delete(machine1)
 	session.Req().Delete(stage1)
 	session.Req().Delete(stage2)
 	session.Req().Delete(task1)
 	session.Req().Delete(task2)
-	j := []*models.Job{}
+	j = []*models.Job{}
 	if err := session.Req().UrlFor("jobs").Do(&j); err != nil {
 		t.Errorf("Error getting jobs: %v", err)
 	} else if len(j) != 4 {

@@ -371,13 +371,15 @@ func (c *Client) Agent(m *models.Machine, exitOnNotRunnable, exitOnFailure, actu
 		return err
 	}
 	defer events.Close()
-	newM := models.Clone(m).(*models.Machine)
-	newM.Runnable = true
-	obj, err := c.PatchTo(m, newM)
-	if err != nil {
-		return err
+	if !m.Runnable {
+		newM := models.Clone(m).(*models.Machine)
+		newM.Runnable = true
+		obj, err := c.PatchTo(m, newM)
+		if err != nil {
+			return err
+		}
+		m = obj.(*models.Machine)
 	}
-	m = obj.(*models.Machine)
 	var runner *TaskRunner
 	for {
 		if runner != nil {
