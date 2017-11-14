@@ -57,6 +57,26 @@ Additionally, the machine maintains an ordered list of profiles that are searche
 .. note:: When updating the Params part of the embedded Profile in the :ref:`rs_model_machine` object, using the **PUT** method will replace the Params map with the map from the input object.  The **PATCH** will merge the Params map in the input with the existing Params map in the current :ref:`rs_model_machine` object.  The **POST** method on the params subaction will replace the map with the input version.
 
 .. index::
+  pair: Model; Param
+
+.. _rs_model_param:
+
+Param
+~~~~~
+
+The Param Object is the lowest level building block.  It is a simple key / value pair.  Each Param is a bounded type parameter, and type definition is enforced.  The following types of parameters may be used:
+
+========================== ========================================================================
+type                       description
+========================== ========================================================================
+integer                    A numerical value (eg "12" or "-3444")
+boolean                    True or False ('true' or 'false')
+string                     Textual string (eg "this is a string!")
+array                      A series of elements of the same type
+map                        a higher-order function that applies a given function to each element of a list, returning a list of results in the same order
+========================== ========================================================================
+
+.. index::
   pair: Model; Profile
 
 .. _rs_model_profile:
