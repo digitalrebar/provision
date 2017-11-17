@@ -50,22 +50,24 @@ Once the installer is downloaded, you can execute it with the appropriate ``inst
 Start dr-provision
 ------------------
 
-Once the install has completed, your terminal should then display something like this:
+Once the install has completed, your terminal should then display something like this (please use the output from YOUR install version, the below is just an example that may be out of date with the current versions output):
 
   ::
 
     # Run the following commands to start up dr-provision in a local isolated way.
     # The server will store information and serve files from the ./drp-data directory.
 
-    sudo ./dr-provision --static-ip=<IP of an Interface> --file-root=`pwd`/drp-data/tftpboot --data-root=drp-data/digitalrebar &
+    sudo ./dr-provision --static-ip=<IP of an Interface> --file-root=`pwd`/drp-data/tftpboot --data-root=`pwd`/drp-data/digitalrebar > dr-provision.loc 2>&1 &
 
     # Once dr-provision is started, the following commands will install the
     # 'BootEnvs'.  Sledgehammer is needed for discovery and other features,
     # you can choose to install one or both of Ubuntu or Centos
 
-    ./drpcli bootenvs uploadiso ce-sledgehammer
-    ./drpcli bootenvs uploadiso ce-ubuntu-16.04-install
-    ./drpcli bootenvs uploadiso ce-centos-7.3.1611-install
+    ./drpcli bootenvs uploadiso sledgehammer
+    ./drpcli bootenvs uploadiso ubuntu-16.04-install
+    ./drpcli bootenvs uploadiso centos-7-install
+
+.. note:: Before trying to install a BootEnv, please verify that the installed BootEnvs matches the above BootEnv Names that can be installed: `drpcli bootenvs list | jq '.[].Name'`
 
 The next step is to execute the *sudo* command which will run an instance of Digital Rebar Provision that uses the ``drp-data`` directory for object and file storage.  Additionally, *dr-provision* will attempt to use the IP address best suited for client interaction, however if that detection fails, the IP address specified by ``--static-ip=IP_ADDRESS`` will be used.  After Digital Rebar Provision has started a prompt for a username and password will appear.
 
@@ -103,7 +105,7 @@ These steps should be performed from the newly installed *dr-provision* endpoint
 
     ./drpcli bootenvs uploadiso sledgehammer
     ./drpcli bootenvs uploadiso ubuntu-16.04-install
-    ./drpcli bootenvs uploadiso centos-7.3.1611-install
+    ./drpcli bootenvs uploadiso centos-7-install
 
 The ``uploadiso`` command will fetch the ISO image as specified in the BootEnv JSON spec, download it, and then "explode" it in to the ``tftpboot`` directory for installation use.  You may optionally choose one or both of the CentOS and Ubuntu BootEnvs to install; depending on which versions you wish to test or use.
 
@@ -134,7 +136,7 @@ Content configuration is the most complex topic with Digital Rebar Provision.  T
 
       drpcli machines list  
       
-  4. Set the BootEnv to either ``centos-7.4.1708-install`` or ``ubuntu-16.04-install`` replace *[UUID]* with your machines ID:
+  4. Set the BootEnv to either ``centos-7-install`` or ``ubuntu-16.04-install`` replace *[UUID]* with your machines ID:
 
     ::
 
