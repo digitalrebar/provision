@@ -19,6 +19,12 @@ type Subnet struct {
 	//
 	// required: true
 	Enabled bool
+	// Proxy indicates if the subnet should act as a proxy DHCP server.
+	// If true, the subnet will not manage ip addresses but will send
+	// offers to requests.
+	//
+	// required: true
+	Proxy bool
 	// Subnet is the network address in CIDR form that all leases
 	// acquired in its range will use for options, lease times, and NextServer settings
 	// by default

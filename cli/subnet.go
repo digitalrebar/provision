@@ -64,6 +64,8 @@ func (be SubnetOps) List(parms map[string]string) (interface{}, error) {
 			params = params.WithStrategy(&v)
 		case "NextServer":
 			params = params.WithNextServer(&v)
+		case "Proxy":
+			params = params.WithProxy(&v)
 		}
 	}
 

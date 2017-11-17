@@ -15,6 +15,7 @@ var subnetPatchJohnMissingErrorString string = "Error: PATCH: subnets/john2: Not
 var subnetDestroyMissingJohnString string = "Error: DELETE: subnets/john: Not Found\n\n"
 
 var subnetInvalidEnabledBooleanListString = "Error: GET: subnets: Enabled must be true or false\n\n"
+var subnetInvalidProxyBooleanListString = "Error: GET: subnets: Proxy must be true or false\n\n"
 var subnetRangeIPFailureString string = "Error: PATCH: subnets/john: invalid IP address: cq.98.42.1234\n\n"
 var subnetRangeIPBadIpString string = "Error: PATCH: subnets/john: invalid IP address: 192.168.100.500\n\n"
 var subnetSubnetCIDRFailureString = "Error: 1111.11.2223.544/66666 is not a valid subnet CIDR\n\n"
@@ -54,6 +55,7 @@ var subnetShowJohnString string = `{
     "nextFree",
     "mostExpired"
   ],
+  "Proxy": false,
   "ReadOnly": false,
   "ReservedLeaseTime": 7200,
   "Strategy": "MAC",
@@ -107,6 +109,7 @@ var subnetCreateJohnString string = `{
     "nextFree",
     "mostExpired"
   ],
+  "Proxy": false,
   "ReadOnly": false,
   "ReservedLeaseTime": 7200,
   "Strategy": "MAC",
@@ -141,6 +144,7 @@ var subnetListBothEnvsString = `[
       "nextFree",
       "mostExpired"
     ],
+    "Proxy": false,
     "ReadOnly": false,
     "ReservedLeaseTime": 7200,
     "Strategy": "MAC",
@@ -183,6 +187,7 @@ var subnetUpdateJohnString string = `{
     "nextFree",
     "mostExpired"
   ],
+  "Proxy": false,
   "ReadOnly": false,
   "ReservedLeaseTime": 7200,
   "Strategy": "NewStrat",
@@ -222,6 +227,7 @@ var subnetPatchBaseString string = `{
     "nextFree",
     "mostExpired"
   ],
+  "Proxy": false,
   "ReadOnly": false,
   "ReservedLeaseTime": 7200,
   "Strategy": "NewStrat",
@@ -258,6 +264,7 @@ var subnetPatchJohnString string = `{
     "nextFree",
     "mostExpired"
   ],
+  "Proxy": false,
   "ReadOnly": false,
   "ReservedLeaseTime": 7200,
   "Strategy": "bootx64.efi",
@@ -325,6 +332,7 @@ var subnetRangeIPSuccessString string = `{
     "nextFree",
     "mostExpired"
   ],
+  "Proxy": false,
   "ReadOnly": false,
   "ReservedLeaseTime": 7200,
   "Strategy": "NewStrat",
@@ -360,6 +368,7 @@ var subnetSubnetCIDRSuccessString = `{
     "nextFree",
     "mostExpired"
   ],
+  "Proxy": false,
   "ReadOnly": false,
   "ReservedLeaseTime": 7200,
   "Strategy": "NewStrat",
@@ -395,6 +404,7 @@ var subnetStrategyMacSuccessString string = `{
     "nextFree",
     "mostExpired"
   ],
+  "Proxy": false,
   "ReadOnly": false,
   "ReservedLeaseTime": 7200,
   "Strategy": "a3:b3:51:66:7e:11",
@@ -430,6 +440,7 @@ var subnetPickersSuccessString string = `{
     "nextFree",
     "mostExpired"
   ],
+  "Proxy": false,
   "ReadOnly": false,
   "ReservedLeaseTime": 7200,
   "Strategy": "a3:b3:51:66:7e:11",
@@ -465,6 +476,7 @@ var subnetNextserverIPSuccess string = `{
     "nextFree",
     "mostExpired"
   ],
+  "Proxy": false,
   "ReadOnly": false,
   "ReservedLeaseTime": 7200,
   "Strategy": "a3:b3:51:66:7e:11",
@@ -499,6 +511,7 @@ var subnetLeasetimesSuccessString string = `{
     "nextFree",
     "mostExpired"
   ],
+  "Proxy": false,
   "ReadOnly": false,
   "ReservedLeaseTime": 7300,
   "Strategy": "a3:b3:51:66:7e:11",
@@ -539,6 +552,7 @@ var subnetSetTo66 string = `{
     "nextFree",
     "mostExpired"
   ],
+  "Proxy": false,
   "ReadOnly": false,
   "ReservedLeaseTime": 7300,
   "Strategy": "a3:b3:51:66:7e:11",
@@ -571,6 +585,7 @@ var subnetSetToNull string = `{
     "nextFree",
     "mostExpired"
   ],
+  "Proxy": false,
   "ReadOnly": false,
   "ReservedLeaseTime": 7300,
   "Strategy": "a3:b3:51:66:7e:11",
@@ -603,6 +618,9 @@ func TestSubnetCli(t *testing.T) {
 		CliTest{false, false, []string{"subnets", "list", "Enabled=false"}, noStdinString, subnetListBothEnvsString, noErrorString},
 		CliTest{false, false, []string{"subnets", "list", "Enabled=true"}, noStdinString, subnetEmptyListString, noErrorString},
 		CliTest{false, true, []string{"subnets", "list", "Enabled=george"}, noStdinString, noContentString, subnetInvalidEnabledBooleanListString},
+		CliTest{false, false, []string{"subnets", "list", "Proxy=false"}, noStdinString, subnetListBothEnvsString, noErrorString},
+		CliTest{false, false, []string{"subnets", "list", "Proxy=true"}, noStdinString, subnetEmptyListString, noErrorString},
+		CliTest{false, true, []string{"subnets", "list", "Proxy=george"}, noStdinString, noContentString, subnetInvalidProxyBooleanListString},
 		CliTest{false, false, []string{"subnets", "list", "Subnet=192.168.103.0/24"}, noStdinString, subnetEmptyListString, noErrorString},
 		CliTest{false, false, []string{"subnets", "list", "Subnet=192.168.100.0/24"}, noStdinString, subnetListBothEnvsString, noErrorString},
 		CliTest{false, true, []string{"subnets", "list", "Subnet=false"}, noStdinString, noContentString, subnetExpireTimeErrorString},
