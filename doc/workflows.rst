@@ -12,7 +12,7 @@ Digital Rebar Provision Workflows
 
 PXE Provisioning requires hand-offs between multiple services and the nodes.  Generally, these flows start with network discovery (DHCP) providing a "next boot" instruction to the server's pre-execution environment (PXE) that can download a very limited operating system using a very simple file transfer protocol (TFTP).  That next operating system can then take more complex actions including using HTTP to download further files.
 
-:note: According to project :ref:`rs_design_restriction`, Digital Rebar Provision does not provide out-of-band management or orchestration.
+.. note:: Digital Rebar Provision does not provide out-of-band management or orchestration in the Open Source version.  See the RackN based advanced plugins for power management capabilities.
 
 In the flow graphics, green steps indicate user actions.
 

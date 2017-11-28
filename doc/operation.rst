@@ -50,7 +50,7 @@ Would be equivalent to the HTTP REST API resource as follows:
     
     https://127.0.0.1:8092/api/v3/templates/create
 
-..note:: See the :ref:`rs_autocomplete` for BASH shell auto completion.
+.. note:: See the :ref:`rs_autocomplete` for BASH shell auto completion.
 
 
 Preference Setting

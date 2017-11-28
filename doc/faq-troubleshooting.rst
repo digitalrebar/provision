@@ -99,3 +99,22 @@ Virtual Box does not add host only networks until a VM is attempting to use them
 
 Virtual Box may also fail to allocate an IP to the host network due to incomplete configuration.  In this case, ``ip addr`` will show the network but no IPv4 address has been allocated; consequently, Digital Rebar will not report this as a working interface. 
 
+.. _rs_filter_gohai:
+
+Filter Out gohai-inventory
+--------------------------
+
+The ``gohai-inventory`` module is extremely useful for providing Machine classification information for use by other stages or tasks.  However, it is very long and causes a lot of content to be output to the console when listing Machine information.  Using a simple ``jq`` filter, you can delete the ``gohai-inventory`` content from the output display. 
+
+Note that since the Param name is ``gohai-inventory``, we have to provide some quoting of the Param name, since the dash (``-``) has special meaning in JSON parsing.  
+
+  ::
+
+    drpcli machines list | jq 'del(.Profile.Params."gohai-inventory")'
+
+Subsequently, if you are listing an individual Machine, then you can also filter it's ``gohai-inventory`` output as well, with:
+
+  ::
+
+    drpcli machines show <UUID> | jq 'del(.Profile.Params."gohai-inventory")'
+

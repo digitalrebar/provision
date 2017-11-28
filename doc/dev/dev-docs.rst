@@ -78,9 +78,13 @@ Now, any time any changes are made to the files in the ``doc/`` directory, the `
 Auto-Refresh Browser
 ~~~~~~~~~~~~~~~~~~~~
 
-The last piece of the puzzle, you will want to set your web browser to auto-refresh a given tab or window.  This way, the HTML rendered documentation will be refreshed in the browser.   There are several extensions for Chrome that will do this for you.  Here at RackN we use the *Auto Refresh Plus* extension:
+The last piece of the puzzle, you will want to set your web browser to auto-refresh a given tab or window.  This way, the HTML rendered documentation will be refreshed in the browser.   There are several add-ons/extensions that will do this for you.  Here at RackN we have used the following extensions:
 
-  https://chrome.google.com/webstore/detail/auto-refresh-plus/hgeljhfekpckiiplhkigfehkdpldcggm 
+  Chrome *Auto Refresh Plus* extension:
+    https://chrome.google.com/webstore/detail/auto-refresh-plus/hgeljhfekpckiiplhkigfehkdpldcggm 
+
+  Firefox *Tab Reloader* add-on (works on Chrome, Firefox, and Opera; but limited to 10 second reloads as minimum reload time):
+    https://add0n.com/tab-reloader.html
 
 Simply set your browser tab to refresh every 5 or so seconds.
 
