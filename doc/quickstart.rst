@@ -13,6 +13,17 @@ This quick start guide provides a basic installation and start point for further
 
 For a full install, please see :ref:`rs_install`
 
+Overview
+--------
+
+  * read Preparation steps below
+  * install DRP Endpoint (in "isolated" mode)
+  * start DRP Endpoint daemon
+  * install BootEnvs (OS media for installation)
+  * set the defaultBootEnv, defaultStage, and unknownBootEnv
+  * configure a Subnet to answer DHCP requests
+  * boot your first Machine and install an OS on it
+
 Preparation
 -----------
 
@@ -29,9 +40,9 @@ Install
 To begin, execute the following command in a shell or terminal:
   ::
 
-    curl -fsSL get.rebar.digital/stable | bash -s -- install --isolated
+    curl -fsSL get.rebar.digital/stable | bash -s -- --isolated install
 
-.. note:: If you want to try the latest code, you can checkout the development tip using ``curl -fsSL get.rebar.digital/tip | bash -s -- install --isolated --drp-version=tip``
+.. note:: If you want to try the latest code, you can checkout the development tip using ``curl -fsSL get.rebar.digital/tip | bash -s -- --isolated --drp-version=tip install``
 
 The command will pull the latest code bundle and checksum from github, extract the code files,
 verify prerequisites are installed, and create some initial directories and links.
@@ -63,9 +74,9 @@ Once the install has completed, your terminal should then display something like
     # 'BootEnvs'.  Sledgehammer is needed for discovery and other features,
     # you can choose to install one or both of Ubuntu or Centos
 
-    ./drpcli bootenvs uploadiso sledgehammer
-    ./drpcli bootenvs uploadiso ubuntu-16.04-install
-    ./drpcli bootenvs uploadiso centos-7-install
+    drpcli bootenvs uploadiso sledgehammer
+    drpcli bootenvs uploadiso ubuntu-16.04-install
+    drpcli bootenvs uploadiso centos-7-install
 
 .. note:: Before trying to install a BootEnv, please verify that the installed BootEnvs matches the above BootEnv Names that can be installed: `drpcli bootenvs list | jq '.[].Name'`
 
@@ -79,7 +90,7 @@ The default username & password used for administering the *dr-provision* servic
     username: rocketskates
     password: r0cketsk8ts
 
-You may also use the RackN Portal UI by pointing your web browser to:
+You may also use the RackN Portal UX by pointing your web browser to:
   ::
 
     https://<ip_address_of_your_endpoint>:8092/
@@ -103,16 +114,58 @@ These steps should be performed from the newly installed *dr-provision* endpoint
 
   ::
 
-    ./drpcli bootenvs uploadiso sledgehammer
-    ./drpcli bootenvs uploadiso ubuntu-16.04-install
-    ./drpcli bootenvs uploadiso centos-7-install
+    drpcli bootenvs uploadiso sledgehammer
+    drpcli bootenvs uploadiso ubuntu-16.04-install
+    drpcli bootenvs uploadiso centos-7-install
 
 The ``uploadiso`` command will fetch the ISO image as specified in the BootEnv JSON spec, download it, and then "explode" it in to the ``tftpboot`` directory for installation use.  You may optionally choose one or both of the CentOS and Ubuntu BootEnvs to install; depending on which versions you wish to test or use.
+
+Configure a Subnet
+------------------
+
+A Subnet defines a network boundary that the DRP Endpoint will answer DHCP queries for.  In this quickstart, we assume you will use the local network interface as a subnet definition, and that your Machines are all booted from the local subnet (layer 2 boundary).  More advanced usage is certainly possible (including use of external DHCP servers, using DRP Endpoint as a DHCP Proxy, etc.).  A Subnet specification includes all of the necessary DHCP boot options to correctly PXE boot a Machine.  
+
+The Subnet create from command line requries us to create a JSON blob that contains the definitions.  Below is a sample you can use.  Please insure you modify the network parameters accordingly.  ``NextServer`` should be set to the DRP Endpoint IP Address (NOT the hostname).  Insure you change the network parameters according to your environment.
+
+  ::
+
+    echo '{
+      "Name": "local_subnet",
+      "Subnet": "10.10.16.10/24",
+      "ActiveStart": "10.10.16.100",
+      "ActiveEnd": "10.10.16.254",
+      "NextServer": "10.10.16.10",
+      "ActiveLeaseTime": 60,
+      "Available": true,
+      "Enabled": true,
+      "Proxy": false,
+      "ReadOnly": false,
+      "ReservedLeaseTime": 7200,
+      "Strategy": "MAC",
+      "Validated": true,
+      "OnlyReservations": false,
+      "Pickers": [ "hint", "nextFree", "mostExpired" ],
+      "Options": [
+        { "Code": 1, "Value": "255.255.255.0", "Description": "Netmask" },
+        { "Code": 3, "Value": "10.10.16.1", "Description": "Default Gateway" },
+        { "Code": 6, "Value": "8.8.8.8", "Description": "DNS Servers" },
+        { "Code": 15, "Value": "example.com", "Description": "Domain Name" },
+        { "Code": 28, "Value": "10.10.16.255", "Description": "Broadcast Address" },
+        { "Code": 67, "Value": "lpxelinux.0", "Description": "Boot file name" }
+      ]
+    }' > /tmp/local_subnet.json
+
+    vi /tmp/local_subnet.json
+
+    drpcli subnets create - < /tmp/local_subnet.json
+
+.. note:: The UX will create a Subnet based on an interface of the DRP Endpoint with sane defaults - it is easier to create a subnet via the UX.
+
 
 Install your first Machine
 --------------------------
 
-Content configuration is the most complex topic with Digital Rebar Provision.  The basic provisioning setup with the above "ISO" upoads will allow you t o install a CentOS or Ubuntu Machine with manual power cycle (power on / reboot / etc) transitions.  More advanced workflows and plugin_providers will allow for complete automation workflows with complex stages and state transitions.  To keep things "quick", the below are just bare basics, for more details and information, please see the Content documentation section.
+Content configuration is the most complex topic with Digital Rebar Provision.  The basic provisioning setup with the above "ISO" upoads will allow you to install a CentOS or Ubuntu Machine with manual power management (on/reboot etc) transitions.  More advanced workflows and plugin_providers will allow for complete automation workflows with complex stages and state transitions.  To keep things "quick", the below are just bare basics, for more details and information, please see the Content documentation section.
 
   1. Set BootEnvs 
     BootEnvs are operating system installable definitions.  You need to specify **what** the DRP endpoint should do when it sees an unknown Machine, and what the default behavior is.  Define the Default Stage, Default BootEnv, and the Unknown BootEnv:
@@ -123,8 +176,9 @@ Content configuration is the most complex topic with Digital Rebar Provision.  T
 
   2. PXE Boot your Machine
     * insure your test Machine is on the same Layer 2 subnet as your DRP endpoint, or that you've configured your networks *IP Helper* to forward your DHCP requests to your DRP Endpoint
+    * the Machine must be in the same subnet as defined in the Subnets section above
     * set your test machine or VM instance to PXE boot
-    * power it on, or reboot it, and verify that the NIC begins the PXE boot process
+    * power the Machine on, or reboot it, and verify that the NIC begins the PXE boot process
     * verify that the DRP Endpoint responds with a DHCP lease to the Machine
 
   3. Set your BootEnv to install an Operating System
@@ -136,7 +190,7 @@ Content configuration is the most complex topic with Digital Rebar Provision.  T
 
       drpcli machines list  
       
-  4. Set the BootEnv to either ``centos-7-install`` or ``ubuntu-16.04-install`` replace *[UUID]* with your machines ID:
+  4. Set the BootEnv to either ``centos-7-install`` or ``ubuntu-16.04-install`` replace *[UUID]* with your machines ID from the above command:
 
     ::
 
@@ -152,21 +206,24 @@ Content configuration is the most complex topic with Digital Rebar Provision.  T
 Isoloated -vs- Production Install Mode
 --------------------------------------
 
-The quickstart guide does NOT create a production deployment and the deployment will NOT restart on failure or reboot.  You will have to start the *dr-provision* service on each system reboot (or add appropiate startup scripts).
+The quickstart guide does NOT create a production deployment and the DRP Endpoint service will NOT restart on failure or reboot.  You will have to start the *dr-provision* service on each system reboot (or add appropiate startup scripts).
 
 A production mode install will install to ``/var/lib/dr-provision`` directory (by default), while an isolated install mode will install to ``$PWD/drp-data``.
 
 For more detailed installation information, see: :ref:`rs_install`
+
 
 Ports
 -----
 
 The Digital Rebar Provision endpoint service requires specific TCP Ports be accessible on the endpoint.  Please see :ref:`rs_arch_ports` for more detailed information.
 
+If you are running in a Containerized environment, please insure you are forwarding all of the ports appropriately in to the container.  If you have a Firewall or packet filtering service on the node running the DRP Endpoint - insure the appropriate ports are open. 
+
 
 Videos
 ------
 
 We constantly update and add videos to the
-`DR Provision 3.1 Playlist <https://www.youtube.com/playlist?list=PLXPBeIrpXjfj5_8Joyehwq1nnaYSPCnmw>`_
+`DR Provision 3 Playlist <https://www.youtube.com/playlist?list=PLXPBeIrpXjfj5_8Joyehwq1nnaYSPCnmw>`_
 so please check to make sure you have the right version!
