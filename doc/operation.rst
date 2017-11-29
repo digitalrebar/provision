@@ -190,6 +190,133 @@ is optional, but I find YAML easier to edit.
     # Edit the discovery.yaml as needed
     drpcli bootenvs update discovery - < discovery.yaml
 
+Subnet Operations
++++++++++++++++++
+
+Subnet definitions provide the necessary information for DHCP IP Address lease assignments, and allows Machines to be enrolled/discovered by a DRP Endpoint.  For any Layer 2 subnet/network that you wish to install Machines from, you must also specify a Subnet definition for.  In some environments, a Subnet definition may not be needed to allow Machines to be discovered. 
+
+Cloning a Subnet
+----------------
+
+It might be necessary to create a new subnet from an existing one.  To do this, do the following:
+
+  ::
+
+    drpcli subnets show eth0 | jq -r > new_subnet.json
+    # edit the new_subnet.json file with the new information
+    drpcli subnets create -< new_subnet.json 
+
+Creating a new Subnet
+---------------------
+
+A new subnet can be created from a JSON specification.  It is necessary to use all of the following JSON keys to successfully create a new Subnet
+
+  ::
+
+    echo '
+    {
+      "Name": "local_subnet",
+      "Subnet": "10.10.16.10/24",
+      "ActiveStart": "10.10.16.100",
+      "ActiveEnd": "10.10.16.254",
+      "NextServer": "10.10.16.10",
+      "ActiveLeaseTime": 60,
+      "Available": true,
+      "Enabled": true,
+      "Proxy": false,
+      "ReadOnly": false,
+      "ReservedLeaseTime": 7200,
+      "Strategy": "MAC",
+      "Validated": true,
+      "OnlyReservations": false,
+      "Pickers": [ "hint", "nextFree", "mostExpired" ],
+      "Options": [
+        { "Code": 1, "Value": "255.255.255.0", "Description": "Netmask" },
+        { "Code": 3, "Value": "10.10.16.1", "Description": "Default Gateway" },
+        { "Code": 6, "Value": "8.8.8.8", "Description": "DNS Servers" },
+        { "Code": 15, "Value": "example.com", "Description": "Domain Name" },
+        { "Code": 28, "Value": "10.10.16.255", "Description": "Broadcast Address" },
+        { "Code": 67, "Value": "lpxelinux.0", "Description": "Boot file name" }
+      ]
+    } ' > /tmp/local_subnet.json 
+
+    drpcli subnets create -< /tmp/local_subnet.json
+
+Note that the "Description" is purely cosmetic and not used - however, it can be safely specified as it'll be ignored (it's added here for the readers reference).  You must provide the minimum DHCP Options as specified above.  You can find a complete set of DHCP Options at: 
+
+  https://www.iana.org/assignments/bootp-dhcp-parameters/bootp-dhcp-parameters.xhtml
+
+For complete documentation and information you can find the DHCP Options officially documented in `RFC2132 <https://tools.ietf.org/html/rfc2132>`_ 
+
+Updating a Subnet
+-----------------
+
+From time to time, you may need to modify an existing Subnet definition.  Depending on your changes, you have a couple of options. 
+
+Set the NTP Server pool via DHCP Option 42 for subnet "local_subnet":
+  ::
+
+    drpcli subnets set local_subnet option 42 to "0.pool.ntp.org"
+
+Set the DHCP IP assignment from the following pick list for subnet "local_subnet".  See :ref:`_rs_model_subnet` for a detailed description of the available Picker types:
+  ::
+
+    drpcli subnets pickers local_subnet hint,nextFree,mostExpired
+
+
+Set the nextserver for PXE operation for subnet "local_subnet":
+  ::
+
+    drpcli subnets  nextserver  local_subnet 10.16.167.10
+
+Set the subnet DHCP range of IP addresses for subnet "local_subnet":
+  ::
+
+    drpcli subnets range local_subnet 192.168.45.100 192.168.45.255
+
+Set Active lease to 60 mins, and reserved lease to 7200 mins for subnet "local_subnet":
+  ::
+
+    drpcli subnets leasetimes local_subnet 60 7200
+
+Update a subnet to set it to disabled (do not discover, and do not provision on this subnet, for subnet "local_subnet":
+  ::
+
+    drpcli subnets update local_subnet '{ "Enabled": false }'
+
+Update a subnet with the contents of the specified JSON file, for subnet "local_subnet":
+    ::
+
+    drpcli subnets update local_subnet -< update-local_subnet.json 
+
+Deleting a Subnet
+-----------------
+
+To remove a Subnet and subsequently cease PXE provisioning operations for that Subnet, perform the following:
+
+  ::
+
+    drpcli subnets destroy local_subnet 
+
+List and Show Subnets
+---------------------
+
+Viewing configuration for all subnets can be done with the ``list`` command as follows:
+  ::
+
+    drpcli subnets list
+
+To ``show`` an individual subnet, you will need the subnet name.  To show just the subnet names, you can use ``jq`` to filter the output, as follows:
+  ::
+
+    drpcli subnets list | jq '.[].Name'
+
+Once you have determined which subnet you'd like to show specific information for, you can do so with the following command:
+  ::
+
+    # show the YAML formatted output for 'local_subnet' subnet
+    drpcli subnets show local_subnet --format=yaml
+
 Template Operations
 +++++++++++++++++++
 

@@ -618,10 +618,13 @@ only be set to **MAC** currently.  This will use the MAC address of the node as 
 **Pickers** defines an ordered list of methods to determine the address to hand out.  Currently, this will default to the list:
 *hint*, *nextFree*, and *mostExpired*.  The following options are available for the list.
 
-* hint - Use what was provided in the DHCP Offer/Request
-* nextFree - Within the subnet's pool of Active IPs, choose the next free making sure to loop over all addresses before reuse.
+* hint - which will try to reuse the address that the DHCP packet is requesting, if it has one.  If the request does not have a requested address, "hint" will fall through to the next strategy. Otherwise, it will refuse to try ant reamining strategies whether or not it can satisfy the request.  This should force the client to fall back to DHCPDISCOVER with no requsted IP address. "hint" will reuse expired leases and unexpired leases that match on the requested address, strategy, and token.
+* nextFree - Within the subnet's pool of Active IPs, choose the next free making sure to loop over all addresses before reuse.  It will fall through to the next strategy if it cannot find a free IP.  "nextFree" only considers addresses that do not have a lease, whether or not the lease is expired.
 * mostExpired - If no free address is available, use the most expired address first.
-* none - Do NOT hand out anything
+* none - Do NOT hand out an address and refuse to try
+  any remaining strategies
+
+All of the address allocation strategies do not consider any addresses that are reserved, as lease creation will be handled by the reservation instead.
 
 
 .. index::
