@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"os"
 	"os/exec"
 	"testing"
 	"time"
@@ -153,60 +154,36 @@ var plugin_providerMissingParamString = "Error: GET: params/incrementer/paramete
 func TestPluginProviderCli(t *testing.T) {
 
 	srcFolder := tmpDir + "/plugins/incrementer"
-	destFolder := tmpDir + "/incrementer"
-	cpCmd := exec.Command("cp", "-rf", srcFolder, destFolder)
+	cpCmd := exec.Command("cp", "-rf", srcFolder, "incrementer")
 	err := cpCmd.Run()
 	if err != nil {
 		t.Errorf("Failed to copy incrementer: %v\n", err)
 	}
 
-	tests := []CliTest{
-		CliTest{true, false, []string{"plugin_providers"}, noStdinString, "Access CLI commands relating to plugin_providers\n", ""},
-
-		CliTest{true, true, []string{"plugin_providers", "show"}, noStdinString, noContentString, plugin_providerShowNoArgErrorString},
-		CliTest{true, true, []string{"plugin_providers", "show", "john", "john2"}, noStdinString, noContentString, plugin_providerShowTooManyArgErrorString},
-		CliTest{false, true, []string{"plugin_providers", "show", "john"}, noStdinString, noContentString, plugin_providerShowMissingArgErrorString},
-		CliTest{false, false, []string{"plugin_providers", "show", "incrementer"}, noStdinString, plugin_providerShowIncrementerString, noErrorString},
-
-		CliTest{true, true, []string{"plugin_providers", "exists"}, noStdinString, noContentString, plugin_providerExistsNoArgErrorString},
-		CliTest{true, true, []string{"plugin_providers", "exists", "john", "john2"}, noStdinString, noContentString, plugin_providerExistsTooManyArgErrorString},
-		CliTest{false, true, []string{"plugin_providers", "exists", "john"}, noStdinString, noContentString, plugin_providerExistsMissingJohnString},
-		CliTest{false, false, []string{"plugin_providers", "exists", "incrementer"}, noStdinString, noContentString, noErrorString},
-
-		CliTest{false, false, []string{"plugin_providers", "list"}, noStdinString, plugin_providerListString, noErrorString},
-
-		CliTest{true, true, []string{"plugin_providers", "destroy"}, noStdinString, noContentString, plugin_providerDestroyNoArgErrorString},
-		CliTest{true, true, []string{"plugin_providers", "destroy", "john", "john2"}, noStdinString, noContentString, plugin_providerDestroyTooManyArgErrorString},
-		CliTest{false, true, []string{"plugin_providers", "destroy", "john"}, noStdinString, noContentString, plugin_providerDestroyMissingArgErrorString},
-		CliTest{false, false, []string{"params", "show", "incrementer/parameter"}, noStdinString, plugin_providerParamString, noErrorString},
-		CliTest{false, false, []string{"plugin_providers", "destroy", "incrementer"}, noStdinString, plugin_providerDestroySuccesString, noErrorString},
-		CliTest{false, true, []string{"params", "show", "incrementer/parameter"}, noStdinString, noContentString, plugin_providerMissingParamString},
-	}
-	for _, test := range tests {
-		testCli(t, test)
-	}
-
+	cliTest(true, false, "plugin_providers").run(t)
+	cliTest(true, true, "plugin_providers", "show").run(t)
+	cliTest(true, true, "plugin_providers", "show", "john", "john2").run(t)
+	cliTest(false, true, "plugin_providers", "show", "john").run(t)
+	cliTest(false, false, "plugin_providers", "show", "incrementer").run(t)
+	cliTest(true, true, "plugin_providers", "exists").run(t)
+	cliTest(true, true, "plugin_providers", "exists", "john", "john2").run(t)
+	cliTest(false, true, "plugin_providers", "exists", "john").run(t)
+	cliTest(false, false, "plugin_providers", "exists", "incrementer").run(t)
+	cliTest(false, false, "plugin_providers", "list").run(t)
+	cliTest(true, true, "plugin_providers", "destroy").run(t)
+	cliTest(true, true, "plugin_providers", "destroy", "john", "john2").run(t)
+	cliTest(false, true, "plugin_providers", "destroy", "john").run(t)
+	cliTest(false, false, "params", "show", "incrementer/parameter").run(t)
+	cliTest(false, false, "plugin_providers", "destroy", "incrementer").run(t)
+	cliTest(false, true, "params", "show", "incrementer/parameter").run(t)
 	time.Sleep(3 * time.Second)
-
-	tests2 := []CliTest{
-		CliTest{false, false, []string{"plugin_providers", "list"}, noStdinString, "[]\n", noErrorString},
-		CliTest{true, true, []string{"plugin_providers", "upload"}, noStdinString, noContentString, plugin_providerUploadNoArgErrorString},
-		CliTest{true, true, []string{"plugin_providers", "upload", "john"}, noStdinString, noContentString, plugin_providerUploadTooFewArgErrorString},
-		CliTest{true, true, []string{"plugin_providers", "upload", "john", "as", "john2", "asdga"}, noStdinString, noContentString, plugin_providerUploadTooManyArgErrorString},
-		CliTest{false, true, []string{"plugin_providers", "upload", "john", "as", "john"}, noStdinString, noContentString, plugin_providerUploadMissingArgErrorString},
-		CliTest{false, false, []string{"plugin_providers", "upload", destFolder, "as", "incrementer"}, noStdinString, plugin_providerUploadSuccessString, noErrorString},
-	}
-
-	for _, test := range tests2 {
-		testCli(t, test)
-	}
-
+	cliTest(false, false, "plugin_providers", "list").run(t)
+	cliTest(true, true, "plugin_providers", "upload").run(t)
+	cliTest(true, true, "plugin_providers", "upload", "john").run(t)
+	cliTest(true, true, "plugin_providers", "upload", "john", "as", "john2", "asdga").run(t)
+	cliTest(false, true, "plugin_providers", "upload", "john", "as", "john").run(t)
+	cliTest(false, false, "plugin_providers", "upload", "incrementer", "as", "incrementer").run(t)
 	time.Sleep(3 * time.Second)
-
-	tests3 := []CliTest{
-		CliTest{false, false, []string{"plugin_providers", "list"}, noStdinString, plugin_providerListString, noErrorString},
-	}
-	for _, test := range tests3 {
-		testCli(t, test)
-	}
+	cliTest(false, false, "plugin_providers", "list").run(t)
+	os.Remove("incrementer")
 }

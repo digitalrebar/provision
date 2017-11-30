@@ -1,0 +1,40 @@
+[
+  {
+    "Available": true,
+    "BootEnv": "local",
+    "Description": "",
+    "Errors": [],
+    "Meta": {},
+    "Name": "john",
+    "OptionalParams": [],
+    "Profiles": [],
+    "ReadOnly": false,
+    "Reboot": false,
+    "RequiredParams": [],
+    "RunnerWait": false,
+    "Tasks": [],
+    "Templates": [],
+    "Validated": true
+  },
+  {
+    "Available": true,
+    "BootEnv": "local",
+    "Description": "Stage to boot into the local BootEnv.",
+    "Errors": [],
+    "Meta": {
+      "color": "green",
+      "icon": "radio",
+      "title": "Digital Rebar Provision"
+    },
+    "Name": "local",
+    "OptionalParams": [],
+    "Profiles": [],
+    "ReadOnly": true,
+    "Reboot": false,
+    "RequiredParams": [],
+    "RunnerWait": false,
+    "Tasks": [],
+    "Templates": [],
+    "Validated": true
+  }
+]

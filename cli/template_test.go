@@ -241,73 +241,53 @@ func TestTemplateCli(t *testing.T) {
 	sb, _ = json.Marshal(string(templateContent))
 	templatesUploadReplaceSuccessString = strings.Replace(templatesUploadReplaceSuccessString, "*REPLACE_WITH_LEASE_GO_CONTENT*", string(sb), 1)
 
-	tests := []CliTest{
-		CliTest{true, false, []string{"templates"}, noStdinString, "Access CLI commands relating to templates\n", ""},
-		CliTest{false, false, []string{"templates", "list"}, noStdinString, templateDefaultListString, noErrorString},
-
-		CliTest{true, true, []string{"templates", "create"}, noStdinString, noContentString, templateCreateNoArgErrorString},
-		CliTest{true, true, []string{"templates", "create", "john", "john2"}, noStdinString, noContentString, templateCreateTooManyArgErrorString},
-		CliTest{false, true, []string{"templates", "create", templateCreateBadJSONString}, noStdinString, noContentString, templateCreateBadJSONErrorString},
-		CliTest{false, false, []string{"templates", "create", templateCreateInputString}, noStdinString, templateCreateJohnString, noErrorString},
-		CliTest{false, true, []string{"templates", "create", templateCreateInputString}, noStdinString, noContentString, templateCreateDuplicateErrorString},
-		CliTest{false, false, []string{"templates", "list"}, noStdinString, templateListBothEnvsString, noErrorString},
-		CliTest{false, false, []string{"templates", "list", "ID=fred"}, noStdinString, templateEmptyListString, noErrorString},
-		CliTest{false, false, []string{"templates", "list", "ID=john"}, noStdinString, templateListJohnOnlyString, noErrorString},
-		CliTest{true, true, []string{"templates", "show"}, noStdinString, noContentString, templateShowNoArgErrorString},
-		CliTest{true, true, []string{"templates", "show", "john", "john2"}, noStdinString, noContentString, templateShowTooManyArgErrorString},
-		CliTest{false, true, []string{"templates", "show", "ignore"}, noStdinString, noContentString, templateShowMissingArgErrorString},
-		CliTest{false, false, []string{"templates", "show", "john"}, noStdinString, templateShowJohnString, noErrorString},
-
-		CliTest{true, true, []string{"templates", "exists"}, noStdinString, noContentString, templateExistsNoArgErrorString},
-		CliTest{true, true, []string{"templates", "exists", "john", "john2"}, noStdinString, noContentString, templateExistsTooManyArgErrorString},
-		CliTest{false, false, []string{"templates", "exists", "john"}, noStdinString, templateExistsIgnoreString, noErrorString},
-		CliTest{false, true, []string{"templates", "exists", "ignore"}, noStdinString, noContentString, templateExistsMissingIgnoreString},
-		CliTest{true, true, []string{"templates", "exists", "john", "john2"}, noStdinString, noContentString, templateExistsTooManyArgErrorString},
-
-		CliTest{true, true, []string{"templates", "update"}, noStdinString, noContentString, templateUpdateNoArgErrorString},
-		CliTest{true, true, []string{"templates", "update", "john", "john2", "john3"}, noStdinString, noContentString, templateUpdateTooManyArgErrorString},
-		CliTest{false, true, []string{"templates", "update", "john", templateUpdateBadJSONString}, noStdinString, noContentString, templateUpdateBadJSONErrorString},
-		CliTest{false, false, []string{"templates", "update", "john", templateUpdateInputString}, noStdinString, templateUpdateJohnString, noErrorString},
-		CliTest{false, true, []string{"templates", "update", "john2", templateUpdateInputString}, noStdinString, noContentString, templateUpdateJohnMissingErrorString},
-		CliTest{false, false, []string{"templates", "show", "john"}, noStdinString, templateUpdateJohnString, noErrorString},
-
-		CliTest{true, true, []string{"templates", "patch"}, noStdinString, noContentString, templatePatchNoArgErrorString},
-		CliTest{true, true, []string{"templates", "patch", "john", "john2", "john3"}, noStdinString, noContentString, templatePatchTooManyArgErrorString},
-		CliTest{false, true, []string{"templates", "patch", templatePatchBaseString, templatePatchBadPatchJSONString}, noStdinString, noContentString, templatePatchBadPatchJSONErrorString},
-		CliTest{false, true, []string{"templates", "patch", templatePatchBadBaseJSONString, templatePatchInputString}, noStdinString, noContentString, templatePatchBadBaseJSONErrorString},
-		CliTest{false, false, []string{"templates", "patch", templatePatchBaseString, templatePatchInputString}, noStdinString, templatePatchJohnString, noErrorString},
-		CliTest{false, true, []string{"templates", "patch", templatePatchMissingBaseString, templatePatchInputString}, noStdinString, noContentString, templatePatchJohnMissingErrorString},
-		CliTest{false, false, []string{"templates", "show", "john"}, noStdinString, templatePatchJohnString, noErrorString},
-
-		CliTest{true, true, []string{"templates", "destroy"}, noStdinString, noContentString, templateDestroyNoArgErrorString},
-		CliTest{true, true, []string{"templates", "destroy", "john", "june"}, noStdinString, noContentString, templateDestroyTooManyArgErrorString},
-		CliTest{false, false, []string{"templates", "destroy", "john"}, noStdinString, templateDestroyJohnString, noErrorString},
-		CliTest{false, true, []string{"templates", "destroy", "john"}, noStdinString, noContentString, templateDestroyMissingJohnString},
-		CliTest{false, false, []string{"templates", "list"}, noStdinString, templateDefaultListString, noErrorString},
-
-		CliTest{false, false, []string{"templates", "create", "-"}, templateCreateInputString + "\n", templateCreateJohnString, noErrorString},
-		CliTest{false, false, []string{"templates", "list"}, noStdinString, templateListBothEnvsString, noErrorString},
-		CliTest{false, false, []string{"templates", "update", "john", "-"}, templateUpdateInputString + "\n", templateUpdateJohnString, noErrorString},
-		CliTest{false, false, []string{"templates", "show", "john"}, noStdinString, templateUpdateJohnString, noErrorString},
-
-		CliTest{false, false, []string{"templates", "destroy", "john"}, noStdinString, templateDestroyJohnString, noErrorString},
-		CliTest{false, false, []string{"templates", "list"}, noStdinString, templateDefaultListString, noErrorString},
-
-		CliTest{true, true, []string{"templates", "upload"}, noStdinString, noContentString, templatesUploadNoArgsErrorString},
-		CliTest{true, true, []string{"templates", "upload", "asg"}, noStdinString, noContentString, templatesUploadOneArgsErrorString},
-		CliTest{true, true, []string{"templates", "upload", "asg", "two", "three", "four"}, noStdinString, noContentString, templatesUploadFourArgsErrorString},
-		CliTest{false, true, []string{"templates", "upload", "greg", "as", "greg"}, noStdinString, noContentString, templatesUploadMissingFileErrorString},
-		CliTest{false, false, []string{"templates", "upload", "template.go", "as", "greg"}, noStdinString, templatesUploadSuccessString, noErrorString},
-		CliTest{false, false, []string{"templates", "upload", "template.go", "as", "greg"}, noStdinString, templatesUploadSuccessString, noErrorString},
-		CliTest{false, false, []string{"templates", "upload", "lease.go", "as", "greg"}, noStdinString, templatesUploadReplaceSuccessString, noErrorString},
-		CliTest{false, false, []string{"templates", "destroy", "greg"}, noStdinString, templateDestroyGregString, noErrorString},
-		CliTest{false, false, []string{"templates", "exists", "etc"}, noStdinString, noContentString, noErrorString},
-		CliTest{false, false, []string{"templates", "exists", "usrshare"}, noStdinString, noContentString, noErrorString},
-		CliTest{false, true, []string{"templates", "destroy", "etc"}, noStdinString, noContentString, "Error: DELETE: readonly: etc\n\n"},
-		CliTest{false, true, []string{"templates", "destroy", "usrshare"}, noStdinString, noContentString, "Error: DELETE: readonly: usrshare\n\n"},
-	}
-
-	for _, test := range tests {
-		testCli(t, test)
-	}
+	cliTest(true, false, "templates").run(t)
+	cliTest(false, false, "templates", "list").run(t)
+	cliTest(true, true, "templates", "create").run(t)
+	cliTest(true, true, "templates", "create", "john", "john2").run(t)
+	cliTest(false, true, "templates", "create", templateCreateBadJSONString).run(t)
+	cliTest(false, false, "templates", "create", templateCreateInputString).run(t)
+	cliTest(false, true, "templates", "create", templateCreateInputString).run(t)
+	cliTest(false, false, "templates", "list").run(t)
+	cliTest(false, false, "templates", "list", "ID=fred").run(t)
+	cliTest(false, false, "templates", "list", "ID=john").run(t)
+	cliTest(true, true, "templates", "show").run(t)
+	cliTest(true, true, "templates", "show", "john", "john2").run(t)
+	cliTest(false, true, "templates", "show", "ignore").run(t)
+	cliTest(false, false, "templates", "show", "john").run(t)
+	cliTest(true, true, "templates", "exists").run(t)
+	cliTest(true, true, "templates", "exists", "john", "john2").run(t)
+	cliTest(false, false, "templates", "exists", "john").run(t)
+	cliTest(false, true, "templates", "exists", "ignore").run(t)
+	cliTest(true, true, "templates", "exists", "john", "john2").run(t)
+	cliTest(true, true, "templates", "update").run(t)
+	cliTest(true, true, "templates", "update", "john", "john2", "john3").run(t)
+	cliTest(false, true, "templates", "update", "john", templateUpdateBadJSONString).run(t)
+	cliTest(false, false, "templates", "update", "john", templateUpdateInputString).run(t)
+	cliTest(false, true, "templates", "update", "john2", templateUpdateInputString).run(t)
+	cliTest(false, false, "templates", "show", "john").run(t)
+	cliTest(false, false, "templates", "show", "john").run(t)
+	cliTest(true, true, "templates", "destroy").run(t)
+	cliTest(true, true, "templates", "destroy", "john", "june").run(t)
+	cliTest(false, false, "templates", "destroy", "john").run(t)
+	cliTest(false, true, "templates", "destroy", "john").run(t)
+	cliTest(false, false, "templates", "list").run(t)
+	cliTest(false, false, "templates", "create", "-").Stdin(templateCreateInputString + "\n").run(t)
+	cliTest(false, false, "templates", "list").run(t)
+	cliTest(false, false, "templates", "update", "john", "-").Stdin(templateUpdateInputString + "\n").run(t)
+	cliTest(false, false, "templates", "show", "john").run(t)
+	cliTest(false, false, "templates", "destroy", "john").run(t)
+	cliTest(false, false, "templates", "list").run(t)
+	cliTest(true, true, "templates", "upload").run(t)
+	cliTest(true, true, "templates", "upload", "asg").run(t)
+	cliTest(true, true, "templates", "upload", "asg", "two", "three", "four").run(t)
+	cliTest(false, true, "templates", "upload", "greg", "as", "greg").run(t)
+	cliTest(false, false, "templates", "upload", "template.go", "as", "greg").run(t)
+	cliTest(false, false, "templates", "upload", "template.go", "as", "greg").run(t)
+	cliTest(false, false, "templates", "upload", "lease.go", "as", "greg").run(t)
+	cliTest(false, false, "templates", "destroy", "greg").run(t)
+	cliTest(false, false, "templates", "exists", "etc").run(t)
+	cliTest(false, false, "templates", "exists", "usrshare").run(t)
+	cliTest(false, true, "templates", "destroy", "etc").run(t)
+	cliTest(false, true, "templates", "destroy", "usrshare").run(t)
 }

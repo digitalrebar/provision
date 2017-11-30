@@ -2,17 +2,17 @@ package cli
 
 import (
 	"fmt"
-	"io/ioutil"
-	"os"
 
-	"github.com/digitalrebar/provision/client/prefs"
-	"github.com/ghodss/yaml"
 	"github.com/spf13/cobra"
 )
 
 func init() {
+	addRegistrar(registerPref)
+}
+
+func registerPref(app *cobra.Command) {
 	tree := addPrefCommands()
-	App.AddCommand(tree)
+	app.AddCommand(tree)
 }
 
 func addPrefCommands() (res *cobra.Command) {
@@ -26,49 +26,39 @@ func addPrefCommands() (res *cobra.Command) {
 		Use:   "list",
 		Short: "List all preferences",
 		RunE: func(c *cobra.Command, args []string) error {
-			dumpUsage = false
-			if resp, err := session.Prefs.ListPrefs(prefs.NewListPrefsParams(), basicAuth); err != nil {
+			prefs := map[string]string{}
+			if err := session.Req().UrlFor("prefs").Do(&prefs); err != nil {
 				return generateError(err, "Error listing prefs")
-			} else {
-				return prettyPrint(resp.Payload)
 			}
+			return prettyPrint(prefs)
 		},
 	})
+	prefsMap := map[string]string{}
 	commands = append(commands, &cobra.Command{
 		Use:   "set [- | JSON or YAML Map of strings | pairs of string args]",
 		Short: "Set preferences",
-		RunE: func(c *cobra.Command, args []string) error {
-			prefsMap := map[string]string{}
+		Args: func(c *cobra.Command, args []string) error {
+			prefsMap = map[string]string{}
 			if len(args) == 1 {
-				var buf []byte
-				var err error
-				if args[0] == `-` {
-					buf, err = ioutil.ReadAll(os.Stdin)
-					if err != nil {
-						dumpUsage = false
-						return fmt.Errorf("Error reading from stdin: %v", err)
-					}
-				} else {
-					buf = []byte(args[0])
-				}
-				err = yaml.Unmarshal(buf, &prefsMap)
-				if err != nil {
-					dumpUsage = false
+				if err := into(args[0], &prefsMap); err != nil {
 					return fmt.Errorf("Invalid prefs: %v\n", err)
 				}
-			} else if len(args) != 0 && len(args)%2 == 0 {
+				return nil
+			}
+			if len(args) != 0 && len(args)%2 == 0 {
 				for i := 0; i < len(args); i += 2 {
 					prefsMap[args[i]] = args[i+1]
 				}
-			} else {
-				return fmt.Errorf("prefs set either takes a single argument or a multiple of two, not %d", len(args))
+				return nil
 			}
-			dumpUsage = false
-			if resp, err := session.Prefs.SetPrefs(prefs.NewSetPrefsParams().WithBody(prefsMap), basicAuth); err != nil {
+			return fmt.Errorf("prefs set either takes a single argument or a multiple of two, not %d", len(args))
+		},
+		RunE: func(c *cobra.Command, args []string) error {
+			prefs := map[string]string{}
+			if err := session.Req().Post(prefsMap).UrlFor("prefs").Do(&prefs); err != nil {
 				return generateError(err, "Error setting prefs")
-			} else {
-				return prettyPrint(resp.Payload)
 			}
+			return prettyPrint(prefs)
 		},
 	})
 	res.AddCommand(commands...)

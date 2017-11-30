@@ -65,7 +65,7 @@ func TestMachineCrud(t *testing.T) {
 			Model:    "machines",
 			Key:      "24679e38-53a2-4a82-99dd-5280139de00c",
 			Type:     "ValidationError",
-			Messages: []string{"Missing Name"},
+			Messages: []string{"Invalid Name ``"},
 			Code:     422,
 		},
 		func() (interface{}, error) {
@@ -91,7 +91,7 @@ func TestMachineCrud(t *testing.T) {
 			Model:    "machines",
 			Key:      "24679e38-53a2-4a82-99dd-5280139de00c",
 			Type:     "ValidationError",
-			Messages: []string{"Name must not contain a '/' or '\\'"},
+			Messages: []string{"Invalid Name `foo\\`"},
 			Code:     422,
 		},
 		func() (interface{}, error) {
@@ -104,7 +104,7 @@ func TestMachineCrud(t *testing.T) {
 			Model:    "machines",
 			Key:      "24679e38-53a2-4a82-99dd-5280139de00c",
 			Type:     "ValidationError",
-			Messages: []string{"Name must not contain a '/' or '\\'"},
+			Messages: []string{"Invalid Name `foo/`"},
 			Code:     422,
 		},
 		func() (interface{}, error) {

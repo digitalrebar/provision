@@ -218,63 +218,42 @@ var paramPatchMissingBaseString string = `{
 var paramDestroyJohnString string = "Deleted param john\n"
 
 func TestParamCli(t *testing.T) {
-
-	tests := []CliTest{
-		CliTest{true, false, []string{"params"}, noStdinString, "Access CLI commands relating to params\n", ""},
-		CliTest{false, false, []string{"params", "list"}, noStdinString, paramDefaultListString, noErrorString},
-
-		CliTest{true, true, []string{"params", "create"}, noStdinString, noContentString, paramCreateNoArgErrorString},
-		CliTest{true, true, []string{"params", "create", "john", "john2"}, noStdinString, noContentString, paramCreateTooManyArgErrorString},
-		CliTest{false, true, []string{"params", "create", paramCreateBadJSONString}, noStdinString, noContentString, paramCreateBadJSONErrorString},
-		CliTest{false, true, []string{"params", "create", paramCreateBadJSON2String}, noStdinString, noContentString, paramCreateBadJSON2ErrorString},
-		CliTest{false, false, []string{"params", "create", paramCreateInputString}, noStdinString, paramCreateJohnString, noErrorString},
-		CliTest{false, true, []string{"params", "create", paramCreateInputString}, noStdinString, noContentString, paramCreateDuplicateErrorString},
-		CliTest{false, false, []string{"params", "list"}, noStdinString, paramListParamsString, noErrorString},
-		CliTest{false, false, []string{"params", "list", "Name=fred"}, noStdinString, paramEmptyListString, noErrorString},
-		CliTest{false, false, []string{"params", "list", "Name=john"}, noStdinString, paramListJohnOnlyString, noErrorString},
-		CliTest{true, true, []string{"params", "show"}, noStdinString, noContentString, paramShowNoArgErrorString},
-		CliTest{true, true, []string{"params", "show", "john", "john2"}, noStdinString, noContentString, paramShowTooManyArgErrorString},
-		CliTest{false, true, []string{"params", "show", "john2"}, noStdinString, noContentString, paramShowMissingArgErrorString},
-		CliTest{false, false, []string{"params", "show", "john"}, noStdinString, paramShowParamString, noErrorString},
-
-		CliTest{true, true, []string{"params", "exists"}, noStdinString, noContentString, paramExistsNoArgErrorString},
-		CliTest{true, true, []string{"params", "exists", "john", "john2"}, noStdinString, noContentString, paramExistsTooManyArgErrorString},
-		CliTest{false, false, []string{"params", "exists", "john"}, noStdinString, paramExistsParamString, noErrorString},
-		CliTest{false, true, []string{"params", "exists", "john2"}, noStdinString, noContentString, paramExistsMissingJohnString},
-		CliTest{true, true, []string{"params", "exists", "john", "john2"}, noStdinString, noContentString, paramExistsTooManyArgErrorString},
-
-		CliTest{true, true, []string{"params", "update"}, noStdinString, noContentString, paramUpdateNoArgErrorString},
-		CliTest{true, true, []string{"params", "update", "john", "john2", "john3"}, noStdinString, noContentString, paramUpdateTooManyArgErrorString},
-		CliTest{false, true, []string{"params", "update", "john", paramUpdateBadJSONString}, noStdinString, noContentString, paramUpdateBadJSONErrorString},
-		CliTest{false, false, []string{"params", "update", "john", paramUpdateInputString}, noStdinString, paramUpdateJohnString, noErrorString},
-		CliTest{false, true, []string{"params", "update", "john2", paramUpdateInputString}, noStdinString, noContentString, paramUpdateJohnMissingErrorString},
-		CliTest{false, false, []string{"params", "show", "john"}, noStdinString, paramUpdateJohnString, noErrorString},
-
-		CliTest{true, true, []string{"params", "patch"}, noStdinString, noContentString, paramPatchNoArgErrorString},
-		CliTest{true, true, []string{"params", "patch", "john", "john2", "john3"}, noStdinString, noContentString, paramPatchTooManyArgErrorString},
-		CliTest{false, true, []string{"params", "patch", paramPatchBaseString, paramPatchBadPatchJSONString}, noStdinString, noContentString, paramPatchBadPatchJSONErrorString},
-		CliTest{false, true, []string{"params", "patch", paramPatchBadBaseJSONString, paramPatchInputString}, noStdinString, noContentString, paramPatchBadBaseJSONErrorString},
-		CliTest{false, false, []string{"params", "patch", paramPatchBaseString, paramPatchInputString}, noStdinString, paramPatchJohnString, noErrorString},
-		CliTest{false, true, []string{"params", "patch", paramPatchMissingBaseString, paramPatchInputString}, noStdinString, noContentString, paramPatchJohnMissingErrorString},
-		CliTest{false, false, []string{"params", "show", "john"}, noStdinString, paramPatchJohnString, noErrorString},
-
-		CliTest{true, true, []string{"params", "destroy"}, noStdinString, noContentString, paramDestroyNoArgErrorString},
-		CliTest{true, true, []string{"params", "destroy", "john", "june"}, noStdinString, noContentString, paramDestroyTooManyArgErrorString},
-		CliTest{false, false, []string{"params", "destroy", "john"}, noStdinString, paramDestroyJohnString, noErrorString},
-		CliTest{false, true, []string{"params", "destroy", "john"}, noStdinString, noContentString, paramDestroyMissingJohnString},
-		CliTest{false, false, []string{"params", "list"}, noStdinString, paramDefaultListString, noErrorString},
-
-		CliTest{false, false, []string{"params", "create", "-"}, paramCreateInputString + "\n", paramCreateJohnString, noErrorString},
-		CliTest{false, false, []string{"params", "list"}, noStdinString, paramListParamsString, noErrorString},
-		CliTest{false, false, []string{"params", "update", "john", "-"}, paramUpdateInputString + "\n", paramUpdateJohnString, noErrorString},
-		CliTest{false, false, []string{"params", "show", "john"}, noStdinString, paramUpdateJohnString, noErrorString},
-
-		CliTest{false, false, []string{"params", "destroy", "john"}, noStdinString, paramDestroyJohnString, noErrorString},
-		CliTest{false, false, []string{"params", "list"}, noStdinString, paramDefaultListString, noErrorString},
-	}
-
-	for _, test := range tests {
-		testCli(t, test)
-	}
-
+	cliTest(true, false, "params").run(t)
+	cliTest(false, false, "params", "list").run(t)
+	cliTest(true, true, "params", "create").run(t)
+	cliTest(true, true, "params", "create", "john", "john2").run(t)
+	cliTest(false, true, "params", "create", paramCreateBadJSONString).run(t)
+	cliTest(false, true, "params", "create", paramCreateBadJSON2String).run(t)
+	cliTest(false, false, "params", "create", paramCreateInputString).run(t)
+	cliTest(false, true, "params", "create", paramCreateInputString).run(t)
+	cliTest(false, false, "params", "list").run(t)
+	cliTest(false, false, "params", "list", "Name=fred").run(t)
+	cliTest(false, false, "params", "list", "Name=john").run(t)
+	cliTest(true, true, "params", "show").run(t)
+	cliTest(true, true, "params", "show", "john", "john2").run(t)
+	cliTest(false, true, "params", "show", "john2").run(t)
+	cliTest(false, false, "params", "show", "john").run(t)
+	cliTest(true, true, "params", "exists").run(t)
+	cliTest(true, true, "params", "exists", "john", "john2").run(t)
+	cliTest(false, false, "params", "exists", "john").run(t)
+	cliTest(false, true, "params", "exists", "john2").run(t)
+	cliTest(true, true, "params", "exists", "john", "john2").run(t)
+	cliTest(true, true, "params", "update").run(t)
+	cliTest(true, true, "params", "update", "john", "john2", "john3").run(t)
+	cliTest(false, true, "params", "update", "john", paramUpdateBadJSONString).run(t)
+	cliTest(false, false, "params", "update", "john", paramUpdateInputString).run(t)
+	cliTest(false, true, "params", "update", "john2", paramUpdateInputString).run(t)
+	cliTest(false, false, "params", "show", "john").run(t)
+	cliTest(false, false, "params", "show", "john").run(t)
+	cliTest(true, true, "params", "destroy").run(t)
+	cliTest(true, true, "params", "destroy", "john", "june").run(t)
+	cliTest(false, false, "params", "destroy", "john").run(t)
+	cliTest(false, true, "params", "destroy", "john").run(t)
+	cliTest(false, false, "params", "list").run(t)
+	cliTest(false, false, "params", "create", "-").Stdin(paramCreateInputString + "\n").run(t)
+	cliTest(false, false, "params", "list").run(t)
+	cliTest(false, false, "params", "update", "john", "-").Stdin(paramUpdateInputString + "\n").run(t)
+	cliTest(false, false, "params", "show", "john").run(t)
+	cliTest(false, false, "params", "destroy", "john").run(t)
+	cliTest(false, false, "params", "list").run(t)
 }

@@ -1,67 +1,118 @@
 package cli
 
 import (
-	"bytes"
+	"fmt"
 	"os"
+	"path"
 
-	"github.com/digitalrebar/provision/client/files"
 	"github.com/spf13/cobra"
 )
 
-type FileOps struct{ CommonOps }
-
-func (be FileOps) GetIndexes() map[string]string {
-	return map[string]string{}
-}
-
-func (be FileOps) List(parms map[string]string) (interface{}, error) {
-	d, e := session.Files.ListFiles(files.NewListFilesParams(), basicAuth)
-	if e != nil {
-		return nil, e
+func blobCommands(bt string) *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   bt,
+		Short: fmt.Sprintf("Access CLI commands relating to %v", bt),
 	}
-	return d.Payload, nil
-}
-
-func (be FileOps) Get(path string) (interface{}, error) {
-	b := bytes.NewBuffer(nil)
-	_, e := session.Files.GetFile(files.NewGetFileParams().WithPath(path), basicAuth, b)
-	if e != nil {
-		return nil, e
-	}
-	noPretty = true
-	return string(b.Bytes()), nil
-}
-
-func (be FileOps) Upload(path string, f *os.File) (interface{}, error) {
-	d, e := session.Files.UploadFile(files.NewUploadFileParams().WithPath(path).WithBody(f), basicAuth)
-	if e != nil {
-		return nil, e
-	}
-	return d.Payload, nil
-}
-
-func (be FileOps) Delete(id string) (interface{}, error) {
-	_, e := session.Files.DeleteFile(files.NewDeleteFileParams().WithPath(id), basicAuth)
-	if e != nil {
-		return nil, e
-	}
-	return "Good", nil
+	cmd.AddCommand(&cobra.Command{
+		Use:   "list [path]",
+		Short: fmt.Sprintf("List all %v", bt),
+		Long:  fmt.Sprintf("You can pass an optional path parameter to show just part of the %s", bt),
+		Args: func(c *cobra.Command, args []string) error {
+			if len(args) <= 1 {
+				return nil
+			}
+			return fmt.Errorf("%v: Expected 0 or 1 argument")
+		},
+		RunE: func(c *cobra.Command, args []string) error {
+			req := session.Req().UrlFor(bt)
+			if len(args) == 1 {
+				req.Params("path", args[0])
+			}
+			req = session.Req().List(bt)
+			data := []interface{}{}
+			err := req.Do(&data)
+			if err != nil {
+				return generateError(err, "listing %v", bt)
+			} else {
+				return prettyPrint(data)
+			}
+		},
+	})
+	cmd.AddCommand(&cobra.Command{
+		Use:     "download [item] to [dest]",
+		Aliases: []string{"show", "get"},
+		Short:   fmt.Sprintf("Download the %v named [item] to [dest]", bt),
+		Args: func(c *cobra.Command, args []string) error {
+			if len(args) == 1 || len(args) == 3 {
+				return nil
+			}
+			return fmt.Errorf("%v requires 1 or 2 arguments", c.UseLine())
+		},
+		RunE: func(c *cobra.Command, args []string) error {
+			dest := os.Stdout
+			if len(args) == 2 && args[1] != "-" {
+				var err error
+				dest, err = os.Create(args[1])
+				if err != nil {
+					return fmt.Errorf("Error opening dest file %s: %v", args[1], err)
+				}
+			}
+			if err := session.GetBlob(dest, bt, args[0]); err != nil {
+				return generateError(err, "Failed to fetch %v: %v", bt, args[0])
+			}
+			return nil
+		},
+	})
+	cmd.AddCommand(&cobra.Command{
+		Use:   "upload [src] as [dest]",
+		Short: fmt.Sprintf("Upload the %v [src] as [dest]", bt),
+		Args: func(c *cobra.Command, args []string) error {
+			if len(args) == 1 || len(args) == 3 {
+				return nil
+			}
+			return fmt.Errorf("%v requires 1 or 2 arguments", c.UseLine())
+		},
+		RunE: func(c *cobra.Command, args []string) error {
+			item := args[0]
+			dest := path.Base(item)
+			if len(args) == 3 {
+				dest = args[2]
+			}
+			data, err := os.Open(item)
+			if err != nil {
+				return fmt.Errorf("Error opening src file %s: %v", item, err)
+			}
+			if info, err := session.PostBlob(data, bt, dest); err != nil {
+				return generateError(err, "Failed to post %v: %v", bt, dest)
+			} else {
+				return prettyPrint(info)
+			}
+		},
+	})
+	cmd.AddCommand(&cobra.Command{
+		Use:   "destroy [item]",
+		Short: fmt.Sprintf("Delete the %v [item] on the DRP server", bt),
+		Args: func(c *cobra.Command, args []string) error {
+			if len(args) == 1 {
+				return nil
+			}
+			return fmt.Errorf("%v requires 1 argument", c.UseLine())
+		},
+		RunE: func(c *cobra.Command, args []string) error {
+			if err := session.DeleteBlob(bt, args[0]); err != nil {
+				return generateError(err, "Failed to delete %v: %v", bt, args[0])
+			}
+			fmt.Printf("Deleted %s", args[0])
+			return nil
+		},
+	})
+	return cmd
 }
 
 func init() {
-	tree := addFileCommands()
-	App.AddCommand(tree)
+	addRegistrar(registerFile)
 }
 
-func addFileCommands() (res *cobra.Command) {
-	singularName := "file"
-	name := "files"
-	d("Making command tree for %v\n", name)
-	res = &cobra.Command{
-		Use:   name,
-		Short: "Commands to manage files on the provisioner",
-	}
-	commands := commonOps(&FileOps{CommonOps{Name: name, SingularName: singularName}})
-	res.AddCommand(commands...)
-	return res
+func registerFile(app *cobra.Command) {
+	app.AddCommand(blobCommands("files"))
 }

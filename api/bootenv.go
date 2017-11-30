@@ -14,6 +14,10 @@ import (
 
 func (c *Client) InstallRawTemplateFromFile(src string) (*models.Template, error) {
 	tid := path.Base(src)
+	return c.InstallRawTemplateFromFileWithId(src, tid)
+}
+
+func (c *Client) InstallRawTemplateFromFileWithId(src, tid string) (*models.Template, error) {
 	tmpl := &models.Template{ID: tid}
 	if fillErr := c.Req().Fill(tmpl); fillErr == nil {
 		return tmpl, nil
@@ -156,23 +160,24 @@ func (c *Client) InstallBootEnvFromFile(src string) (*models.BootEnv, error) {
 		}
 	}
 	files, dirErr := ioutil.ReadDir(tmplDir)
-	if dirErr != nil {
-		err.Errorf("Cannot import extra templates")
-		return nil, err
+	if dirErr == nil {
+		treatAllAsTemplates := path.Base(tmplDir) == "templates"
+		for _, f := range files {
+			if f.IsDir() {
+				continue
+			}
+			fname := f.Name()
+			if !treatAllAsTemplates && !strings.HasSuffix(fname, ".tmpl") {
+				continue
+			}
+			if _, tmplErr := c.InstallRawTemplateFromFile(path.Join(tmplDir, f.Name())); tmplErr != nil {
+				err.AddError(tmplErr)
+			}
+		}
+	} else if !os.IsNotExist(dirErr) {
+		err.Errorf("Cannot import extra templates: %v", dirErr)
 	}
-	treatAllAsTemplates := path.Base(tmplDir) == "templates"
-	for _, f := range files {
-		if f.IsDir() {
-			continue
-		}
-		fname := f.Name()
-		if !treatAllAsTemplates && !strings.HasSuffix(fname, ".tmpl") {
-			continue
-		}
-		if _, tmplErr := c.InstallRawTemplateFromFile(path.Join(tmplDir, f.Name())); tmplErr != nil {
-			err.AddError(tmplErr)
-		}
-	}
+
 	if err.ContainsError() {
 		return nil, err
 	}

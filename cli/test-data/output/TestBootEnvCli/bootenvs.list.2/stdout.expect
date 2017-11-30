@@ -1,0 +1,121 @@
+[
+  {
+    "Available": true,
+    "BootParams": "",
+    "Description": "The boot environment you should use to have unknown machines boot off their local hard drive",
+    "Errors": [],
+    "Initrds": [],
+    "Kernel": "",
+    "Meta": {
+      "feature-flags": "change-stage-v2"
+    },
+    "Name": "ignore",
+    "OS": {
+      "Codename": "",
+      "Family": "",
+      "IsoFile": "",
+      "IsoSha256": "",
+      "IsoUrl": "",
+      "Name": "ignore",
+      "Version": ""
+    },
+    "OnlyUnknown": true,
+    "OptionalParams": [],
+    "ReadOnly": true,
+    "RequiredParams": [],
+    "Templates": [
+      {
+        "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
+        "ID": "",
+        "Name": "pxelinux",
+        "Path": "pxelinux.cfg/default"
+      },
+      {
+        "Contents": "exit",
+        "ID": "",
+        "Name": "elilo",
+        "Path": "elilo.conf"
+      },
+      {
+        "Contents": "#!ipxe\nchain tftp://{{.ProvisionerAddress}}/${netX/ip}.ipxe || exit\n",
+        "ID": "",
+        "Name": "ipxe",
+        "Path": "default.ipxe"
+      }
+    ],
+    "Validated": true
+  },
+  {
+    "Available": false,
+    "BootParams": "",
+    "Description": "",
+    "Errors": [
+      "bootenv: Missing elilo or pxelinux template"
+    ],
+    "Initrds": [],
+    "Kernel": "",
+    "Meta": {},
+    "Name": "john",
+    "OS": {
+      "Codename": "",
+      "Family": "",
+      "IsoFile": "",
+      "IsoSha256": "",
+      "IsoUrl": "",
+      "Name": "",
+      "Version": ""
+    },
+    "OnlyUnknown": false,
+    "OptionalParams": [],
+    "ReadOnly": false,
+    "RequiredParams": [],
+    "Templates": [],
+    "Validated": true
+  },
+  {
+    "Available": true,
+    "BootParams": "",
+    "Description": "The boot environment you should use to have known machines boot off their local hard drive",
+    "Errors": [],
+    "Initrds": [],
+    "Kernel": "",
+    "Meta": {
+      "feature-flags": "change-stage-v2"
+    },
+    "Name": "local",
+    "OS": {
+      "Codename": "",
+      "Family": "",
+      "IsoFile": "",
+      "IsoSha256": "",
+      "IsoUrl": "",
+      "Name": "local",
+      "Version": ""
+    },
+    "OnlyUnknown": false,
+    "OptionalParams": [],
+    "ReadOnly": true,
+    "RequiredParams": [],
+    "Templates": [
+      {
+        "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
+        "ID": "",
+        "Name": "pxelinux",
+        "Path": "pxelinux.cfg/{{.Machine.HexAddress}}"
+      },
+      {
+        "Contents": "exit",
+        "ID": "",
+        "Name": "elilo",
+        "Path": "{{.Machine.HexAddress}}.conf"
+      },
+      {
+        "Contents": "#!ipxe\nexit\n",
+        "ID": "",
+        "Name": "ipxe",
+        "Path": "{{.Machine.Address}}.ipxe"
+      }
+    ],
+    "Validated": true
+  }
+]

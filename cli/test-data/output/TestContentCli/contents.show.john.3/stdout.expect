@@ -1,0 +1,13 @@
+{
+  "meta": {
+    "Description": "Fred Rules",
+    "Meta": {},
+    "Name": "john",
+    "Overwritable": false,
+    "Source": "",
+    "Type": "dynamic",
+    "Version": "",
+    "Writable": false
+  },
+  "sections": {}
+}

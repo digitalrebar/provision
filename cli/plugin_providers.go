@@ -4,62 +4,45 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/digitalrebar/provision/client/plugin_providers"
+	"github.com/digitalrebar/provision/models"
 	"github.com/spf13/cobra"
 )
 
-type PluginProviderOps struct{ CommonOps }
-
-func (be PluginProviderOps) GetIndexes() map[string]string {
-	return map[string]string{}
-}
-
-func (be PluginProviderOps) List(parms map[string]string) (interface{}, error) {
-	d, e := session.PluginProviders.ListPluginProviders(plugin_providers.NewListPluginProvidersParams(), basicAuth)
-	if e != nil {
-		return nil, e
-	}
-	return d.Payload, nil
-}
-
-func (be PluginProviderOps) Get(id string) (interface{}, error) {
-	d, e := session.PluginProviders.GetPluginProvider(plugin_providers.NewGetPluginProviderParams().WithName(id), basicAuth)
-	if e != nil {
-		return nil, e
-	}
-	return d.Payload, nil
-}
-
-func (be PluginProviderOps) Upload(name string, f *os.File) (interface{}, error) {
-	d, e := session.PluginProviders.UploadPluginProvider(plugin_providers.NewUploadPluginProviderParams().WithName(name).WithBody(f), basicAuth)
-	if e != nil {
-		return nil, e
-	}
-	return d.Payload, nil
-}
-
-func (be PluginProviderOps) Delete(name string) (interface{}, error) {
-	_, e := session.PluginProviders.DeletePluginProvider(plugin_providers.NewDeletePluginProviderParams().WithName(name), basicAuth)
-	if e != nil {
-		return nil, e
-	}
-	return "Good", nil
-}
-
 func init() {
-	tree := addPluginProviderCommands()
-	App.AddCommand(tree)
+	addRegistrar(registerPluginProvider)
 }
 
-func addPluginProviderCommands() (res *cobra.Command) {
-	singularName := "plugin_provider"
-	name := "plugin_providers"
-	d("Making command tree for %v\n", name)
-	res = &cobra.Command{
-		Use:   name,
-		Short: fmt.Sprintf("Access CLI commands relating to %v", name),
+func registerPluginProvider(app *cobra.Command) {
+	op := &ops{
+		name:       "plugin_providers",
+		singleName: "plugin_provider",
+		example:    func() models.Model { return &models.PluginProvider{} },
+		noCreate:   true,
+		noUpdate:   true,
 	}
-	commands := commonOps(&PluginProviderOps{CommonOps{Name: name, SingularName: singularName}})
-	res.AddCommand(commands...)
-	return res
+	op.addCommand(&cobra.Command{
+		Use:   "upload [name] from [file]",
+		Short: "Upload a program to act as a plugin_provider",
+		Args: func(c *cobra.Command, args []string) error {
+			if len(args) != 3 {
+				return fmt.Errorf("%v requires 2 arguments", c.UseLine())
+			}
+			return nil
+		},
+		RunE: func(c *cobra.Command, args []string) error {
+			name := args[0]
+			filePath := args[2]
+			fi, err := os.Open(filePath)
+			if err != nil {
+				return fmt.Errorf("Error opening %s: %v", filePath, err)
+			}
+			defer fi.Close()
+			res := &models.PluginProviderUploadInfo{}
+			if err := session.Req().Post(fi).UrlFor(op.name, name).Do(res); err != nil {
+				return err
+			}
+			return prettyPrint(res)
+		},
+	})
+	op.command(app)
 }

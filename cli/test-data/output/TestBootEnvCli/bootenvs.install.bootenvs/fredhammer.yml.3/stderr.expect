@@ -1,0 +1,1 @@
+Error: CLIENT_ERROR: bootenvs: error unmarshaling JSON: json: cannot unmarshal string into Go value of type models.BootEnv

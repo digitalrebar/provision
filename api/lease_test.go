@@ -15,8 +15,8 @@ func TestLeaseCrud(t *testing.T) {
 			Model:    "leases",
 			Key:      "foo",
 			Type:     "GET",
-			Messages: []string{"address not valid"},
-			Code:     400,
+			Messages: []string{"Not Found"},
+			Code:     404,
 		},
 		func() (interface{}, error) {
 			return session.GetModel("leases", "foo")

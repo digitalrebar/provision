@@ -1,0 +1,34 @@
+{
+  "Address": "",
+  "Available": true,
+  "BootEnv": "mylocal",
+  "CurrentJob": "",
+  "CurrentTask": 0,
+  "Description": "",
+  "Errors": [],
+  "Meta": {
+    "feature-flags": "original-change-stage"
+  },
+  "Name": "greg",
+  "OS": "",
+  "Profile": {
+    "Available": false,
+    "Description": "",
+    "Errors": [],
+    "Meta": {},
+    "Name": "",
+    "Params": {},
+    "ReadOnly": false,
+    "Validated": false
+  },
+  "Profiles": [
+    "p1-prof"
+  ],
+  "ReadOnly": false,
+  "Runnable": true,
+  "Secret": "secret1",
+  "Stage": "none",
+  "Tasks": [],
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true
+}

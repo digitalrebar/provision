@@ -1,0 +1,26 @@
+[
+  {
+    "Available": true,
+    "Description": "Global profile attached automatically to all machines.",
+    "Errors": [],
+    "Meta": {
+      "color": "blue",
+      "icon": "world",
+      "title": "Digital Rebar Provision"
+    },
+    "Name": "global",
+    "Params": {},
+    "ReadOnly": false,
+    "Validated": true
+  },
+  {
+    "Available": true,
+    "Description": "pack1-2",
+    "Errors": [],
+    "Meta": {},
+    "Name": "p2-prof",
+    "Params": {},
+    "ReadOnly": true,
+    "Validated": true
+  }
+]

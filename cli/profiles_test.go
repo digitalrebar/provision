@@ -40,6 +40,7 @@ var profilesParamsSetMissingProfileString string = "Error: POST: profiles/john2:
 var profileDefaultListString string = `[
   {
     "Available": true,
+    "Description": "Global profile attached automatically to all machines.",
     "Errors": [],
     "Meta": {
       "color": "blue",
@@ -93,6 +94,7 @@ var profileCreateJohnString string = `{
 var profileListProfilesString = `[
   {
     "Available": true,
+    "Description": "Global profile attached automatically to all machines.",
     "Errors": [],
     "Meta": {
       "color": "blue",
@@ -216,88 +218,63 @@ var profileUpdateJohnWithParamsString string = `{
 `
 
 func TestProfileCli(t *testing.T) {
-
-	tests := []CliTest{
-		CliTest{true, false, []string{"profiles"}, noStdinString, "Access CLI commands relating to profiles\n", ""},
-		CliTest{false, false, []string{"profiles", "list"}, noStdinString, profileDefaultListString, noErrorString},
-
-		CliTest{true, true, []string{"profiles", "create"}, noStdinString, noContentString, profileCreateNoArgErrorString},
-		CliTest{true, true, []string{"profiles", "create", "john", "john2"}, noStdinString, noContentString, profileCreateTooManyArgErrorString},
-		CliTest{false, true, []string{"profiles", "create", profileCreateBadJSONString}, noStdinString, noContentString, profileCreateBadJSONErrorString},
-		CliTest{false, true, []string{"profiles", "create", profileCreateBadJSON2String}, noStdinString, noContentString, profileCreateBadJSON2ErrorString},
-		CliTest{false, false, []string{"profiles", "create", profileCreateInputString}, noStdinString, profileCreateJohnString, noErrorString},
-		CliTest{false, true, []string{"profiles", "create", profileCreateInputString}, noStdinString, noContentString, profileCreateDuplicateErrorString},
-		CliTest{false, false, []string{"profiles", "list"}, noStdinString, profileListProfilesString, noErrorString},
-		CliTest{false, false, []string{"profiles", "list", "Name=fred"}, noStdinString, profileEmptyListString, noErrorString},
-		CliTest{false, false, []string{"profiles", "list", "Name=john"}, noStdinString, profileListJohnOnlyString, noErrorString},
-		CliTest{true, true, []string{"profiles", "show"}, noStdinString, noContentString, profileShowNoArgErrorString},
-		CliTest{true, true, []string{"profiles", "show", "john", "john2"}, noStdinString, noContentString, profileShowTooManyArgErrorString},
-		CliTest{false, true, []string{"profiles", "show", "john2"}, noStdinString, noContentString, profileShowMissingArgErrorString},
-		CliTest{false, false, []string{"profiles", "show", "john"}, noStdinString, profileShowProfileString, noErrorString},
-
-		CliTest{true, true, []string{"profiles", "exists"}, noStdinString, noContentString, profileExistsNoArgErrorString},
-		CliTest{true, true, []string{"profiles", "exists", "john", "john2"}, noStdinString, noContentString, profileExistsTooManyArgErrorString},
-		CliTest{false, false, []string{"profiles", "exists", "john"}, noStdinString, profileExistsProfileString, noErrorString},
-		CliTest{false, true, []string{"profiles", "exists", "john2"}, noStdinString, noContentString, profileExistsMissingJohnString},
-		CliTest{true, true, []string{"profiles", "exists", "john", "john2"}, noStdinString, noContentString, profileExistsTooManyArgErrorString},
-
-		CliTest{true, true, []string{"profiles", "update"}, noStdinString, noContentString, profileUpdateNoArgErrorString},
-		CliTest{true, true, []string{"profiles", "update", "john", "john2", "john3"}, noStdinString, noContentString, profileUpdateTooManyArgErrorString},
-		CliTest{false, true, []string{"profiles", "update", "john", profileUpdateBadJSONString}, noStdinString, noContentString, profileUpdateBadJSONErrorString},
-		CliTest{false, false, []string{"profiles", "update", "john", profileUpdateInputString}, noStdinString, profileUpdateJohnString, noErrorString},
-		CliTest{false, true, []string{"profiles", "update", "john2", profileUpdateInputString}, noStdinString, noContentString, profileUpdateJohnMissingErrorString},
-		CliTest{false, false, []string{"profiles", "show", "john"}, noStdinString, profileUpdateJohnString, noErrorString},
-
-		CliTest{true, true, []string{"profiles", "patch"}, noStdinString, noContentString, profilePatchNoArgErrorString},
-		CliTest{true, true, []string{"profiles", "patch", "john", "john2", "john3"}, noStdinString, noContentString, profilePatchTooManyArgErrorString},
-		CliTest{false, true, []string{"profiles", "patch", profilePatchBaseString, profilePatchBadPatchJSONString}, noStdinString, noContentString, profilePatchBadPatchJSONErrorString},
-		CliTest{false, true, []string{"profiles", "patch", profilePatchBadBaseJSONString, profilePatchInputString}, noStdinString, noContentString, profilePatchBadBaseJSONErrorString},
-		CliTest{false, false, []string{"profiles", "patch", profilePatchBaseString, profilePatchInputString}, noStdinString, profilePatchJohnString, noErrorString},
-		CliTest{false, true, []string{"profiles", "patch", profilePatchMissingBaseString, profilePatchInputString}, noStdinString, noContentString, profilePatchJohnMissingErrorString},
-		CliTest{false, false, []string{"profiles", "show", "john"}, noStdinString, profilePatchJohnString, noErrorString},
-
-		CliTest{true, true, []string{"profiles", "destroy"}, noStdinString, noContentString, profileDestroyNoArgErrorString},
-		CliTest{true, true, []string{"profiles", "destroy", "john", "june"}, noStdinString, noContentString, profileDestroyTooManyArgErrorString},
-		CliTest{false, false, []string{"profiles", "destroy", "john"}, noStdinString, profileDestroyJohnString, noErrorString},
-		CliTest{false, true, []string{"profiles", "destroy", "john"}, noStdinString, noContentString, profileDestroyMissingJohnString},
-		CliTest{false, false, []string{"profiles", "list"}, noStdinString, profileDefaultListString, noErrorString},
-
-		CliTest{false, false, []string{"profiles", "create", "-"}, profileCreateInputString + "\n", profileCreateJohnString, noErrorString},
-		CliTest{false, false, []string{"profiles", "list"}, noStdinString, profileListProfilesString, noErrorString},
-		CliTest{false, false, []string{"profiles", "update", "john", "-"}, profileUpdateInputString + "\n", profileUpdateJohnString, noErrorString},
-		CliTest{false, false, []string{"profiles", "show", "john"}, noStdinString, profileUpdateJohnString, noErrorString},
-
-		CliTest{true, true, []string{"profiles", "get"}, noStdinString, noContentString, profileGetNoArgErrorString},
-		CliTest{false, true, []string{"profiles", "get", "john2", "param", "john2"}, noStdinString, noContentString, profileGetMissingProfileErrorString},
-		CliTest{false, false, []string{"profiles", "get", "john", "param", "john2"}, noStdinString, "null\n", noErrorString},
-
-		CliTest{true, true, []string{"profiles", "set"}, noStdinString, noContentString, profileSetNoArgErrorString},
-		CliTest{false, true, []string{"profiles", "set", "john2", "param", "john2", "to", "cow"}, noStdinString, noContentString, profileSetMissingProfileErrorString},
-		CliTest{false, false, []string{"profiles", "set", "john", "param", "john2", "to", "cow"}, noStdinString, "\"cow\"\n", noErrorString},
-		CliTest{false, false, []string{"profiles", "get", "john", "param", "john2"}, noStdinString, "\"cow\"\n", noErrorString},
-		CliTest{false, false, []string{"profiles", "set", "john", "param", "john2", "to", "3"}, noStdinString, "3\n", noErrorString},
-		CliTest{false, false, []string{"profiles", "set", "john", "param", "john3", "to", "4"}, noStdinString, "4\n", noErrorString},
-		CliTest{false, false, []string{"profiles", "get", "john", "param", "john2"}, noStdinString, "3\n", noErrorString},
-		CliTest{false, false, []string{"profiles", "get", "john", "param", "john3"}, noStdinString, "4\n", noErrorString},
-		CliTest{false, false, []string{"profiles", "set", "john", "param", "john2", "to", "null"}, noStdinString, "null\n", noErrorString},
-		CliTest{false, false, []string{"profiles", "get", "john", "param", "john2"}, noStdinString, "null\n", noErrorString},
-		CliTest{false, false, []string{"profiles", "get", "john", "param", "john3"}, noStdinString, "4\n", noErrorString},
-
-		CliTest{true, true, []string{"profiles", "params"}, noStdinString, noContentString, profileParamsNoArgErrorString},
-		CliTest{false, true, []string{"profiles", "params", "john2"}, noStdinString, noContentString, profileParamsMissingProfileErrorString},
-		CliTest{false, false, []string{"profiles", "params", "john"}, noStdinString, profileParamsStartingString, noErrorString},
-		CliTest{false, true, []string{"profiles", "params", "john2", profilesParamsNextString}, noStdinString, noContentString, profilesParamsSetMissingProfileString},
-		CliTest{false, false, []string{"profiles", "params", "john", profilesParamsNextString}, noStdinString, profilesParamsNextString, noErrorString},
-		CliTest{false, false, []string{"profiles", "params", "john"}, noStdinString, profilesParamsNextString, noErrorString},
-
-		CliTest{false, false, []string{"profiles", "show", "john"}, noStdinString, profileUpdateJohnWithParamsString, noErrorString},
-
-		CliTest{false, false, []string{"profiles", "destroy", "john"}, noStdinString, profileDestroyJohnString, noErrorString},
-		CliTest{false, false, []string{"profiles", "list"}, noStdinString, profileDefaultListString, noErrorString},
-	}
-
-	for _, test := range tests {
-		testCli(t, test)
-	}
-
+	cliTest(true, false, "profiles").run(t)
+	cliTest(false, false, "profiles", "list").run(t)
+	cliTest(true, true, "profiles", "create").run(t)
+	cliTest(true, true, "profiles", "create", "john", "john2").run(t)
+	cliTest(false, true, "profiles", "create", profileCreateBadJSONString).run(t)
+	cliTest(false, true, "profiles", "create", profileCreateBadJSON2String).run(t)
+	cliTest(false, false, "profiles", "create", profileCreateInputString).run(t)
+	cliTest(false, true, "profiles", "create", profileCreateInputString).run(t)
+	cliTest(false, false, "profiles", "list").run(t)
+	cliTest(false, false, "profiles", "list", "Name=fred").run(t)
+	cliTest(false, false, "profiles", "list", "Name=john").run(t)
+	cliTest(true, true, "profiles", "show").run(t)
+	cliTest(true, true, "profiles", "show", "john", "john2").run(t)
+	cliTest(false, true, "profiles", "show", "john2").run(t)
+	cliTest(false, false, "profiles", "show", "john").run(t)
+	cliTest(true, true, "profiles", "exists").run(t)
+	cliTest(true, true, "profiles", "exists", "john", "john2").run(t)
+	cliTest(false, false, "profiles", "exists", "john").run(t)
+	cliTest(false, true, "profiles", "exists", "john2").run(t)
+	cliTest(true, true, "profiles", "exists", "john", "john2").run(t)
+	cliTest(true, true, "profiles", "update").run(t)
+	cliTest(true, true, "profiles", "update", "john", "john2", "john3").run(t)
+	cliTest(false, true, "profiles", "update", "john", profileUpdateBadJSONString).run(t)
+	cliTest(false, false, "profiles", "update", "john", profileUpdateInputString).run(t)
+	cliTest(false, true, "profiles", "update", "john2", profileUpdateInputString).run(t)
+	cliTest(false, false, "profiles", "show", "john").run(t)
+	cliTest(false, false, "profiles", "show", "john").run(t)
+	cliTest(true, true, "profiles", "destroy").run(t)
+	cliTest(true, true, "profiles", "destroy", "john", "june").run(t)
+	cliTest(false, false, "profiles", "destroy", "john").run(t)
+	cliTest(false, true, "profiles", "destroy", "john").run(t)
+	cliTest(false, false, "profiles", "list").run(t)
+	cliTest(false, false, "profiles", "create", "-").Stdin(profileCreateInputString + "\n").run(t)
+	cliTest(false, false, "profiles", "list").run(t)
+	cliTest(false, false, "profiles", "update", "john", "-").Stdin(profileUpdateInputString + "\n").run(t)
+	cliTest(false, false, "profiles", "show", "john").run(t)
+	cliTest(true, true, "profiles", "get").run(t)
+	cliTest(false, true, "profiles", "get", "john2", "param", "john2").run(t)
+	cliTest(false, false, "profiles", "get", "john", "param", "john2").run(t)
+	cliTest(true, true, "profiles", "set").run(t)
+	cliTest(false, true, "profiles", "set", "john2", "param", "john2", "to", "cow").run(t)
+	cliTest(false, false, "profiles", "set", "john", "param", "john2", "to", "cow").run(t)
+	cliTest(false, false, "profiles", "get", "john", "param", "john2").run(t)
+	cliTest(false, false, "profiles", "set", "john", "param", "john2", "to", "3").run(t)
+	cliTest(false, false, "profiles", "set", "john", "param", "john3", "to", "4").run(t)
+	cliTest(false, false, "profiles", "get", "john", "param", "john2").run(t)
+	cliTest(false, false, "profiles", "get", "john", "param", "john3").run(t)
+	cliTest(false, false, "profiles", "set", "john", "param", "john2", "to", "null").run(t)
+	cliTest(false, false, "profiles", "get", "john", "param", "john2").run(t)
+	cliTest(false, false, "profiles", "get", "john", "param", "john3").run(t)
+	cliTest(true, true, "profiles", "params").run(t)
+	cliTest(false, true, "profiles", "params", "john2").run(t)
+	cliTest(false, false, "profiles", "params", "john").run(t)
+	cliTest(false, true, "profiles", "params", "john2", profilesParamsNextString).run(t)
+	cliTest(false, false, "profiles", "params", "john", profilesParamsNextString).run(t)
+	cliTest(false, false, "profiles", "params", "john").run(t)
+	cliTest(false, false, "profiles", "show", "john").run(t)
+	cliTest(false, false, "profiles", "destroy", "john").run(t)
+	cliTest(false, false, "profiles", "list").run(t)
 }

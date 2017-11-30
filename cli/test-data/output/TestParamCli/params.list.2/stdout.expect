@@ -1,0 +1,54 @@
+[
+  {
+    "Available": true,
+    "Description": "",
+    "Documentation": "",
+    "Errors": [],
+    "Meta": {},
+    "Name": "incrementer/parameter",
+    "ReadOnly": true,
+    "Schema": {
+      "type": "string"
+    },
+    "Validated": true
+  },
+  {
+    "Available": true,
+    "Description": "",
+    "Documentation": "",
+    "Errors": [],
+    "Meta": {},
+    "Name": "incrementer/step",
+    "ReadOnly": true,
+    "Schema": {
+      "type": "integer"
+    },
+    "Validated": true
+  },
+  {
+    "Available": true,
+    "Description": "",
+    "Documentation": "",
+    "Errors": [],
+    "Meta": {},
+    "Name": "incrementer/touched",
+    "ReadOnly": true,
+    "Schema": {
+      "type": "integer"
+    },
+    "Validated": true
+  },
+  {
+    "Available": true,
+    "Description": "",
+    "Documentation": "",
+    "Errors": [],
+    "Meta": {},
+    "Name": "john",
+    "ReadOnly": false,
+    "Schema": {
+      "type": "string"
+    },
+    "Validated": true
+  }
+]

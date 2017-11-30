@@ -1,0 +1,11 @@
+[
+  {
+    "Command": "increment",
+    "OptionalParams": [
+      "incrementer/step",
+      "incrementer/parameter"
+    ],
+    "Provider": "incrementer",
+    "RequiredParams": []
+  }
+]

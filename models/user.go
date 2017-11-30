@@ -24,6 +24,10 @@ type User struct {
 	Secret string
 }
 
+func (u *User) Validate() {
+	u.AddError(ValidName("Invalid Name", u.Name))
+}
+
 func (u *User) Prefix() string {
 	return "users"
 }
@@ -71,4 +75,8 @@ func (b *User) ToModels(obj interface{}) []Model {
 		res[i] = Model(item)
 	}
 	return res
+}
+
+func (b *User) SetName(n string) {
+	b.Name = n
 }

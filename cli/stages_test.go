@@ -16,6 +16,26 @@ var stageDefaultListString string = `[
   {
     "Available": true,
     "BootEnv": "",
+    "Description": "Stage to boot into the local BootEnv.",
+    "Errors": [],
+    "Meta": {
+      "color": "green",
+      "icon": "radio",
+      "title": "Digital Rebar Provision"
+    },
+    "Name": "local",
+    "OptionalParams": [],
+    "Profiles": [],
+    "ReadOnly": true,
+    "RequiredParams": [],
+    "Tasks": [],
+    "Templates": [],
+    "Validated": true
+  },
+  {
+    "Available": true,
+    "BootEnv": "",
+    "Description": "Noop / Nothing stage",
     "Errors": [],
     "Meta": {
       "color": "green",
@@ -100,6 +120,26 @@ var stageListStagesString = `[
   {
     "Available": true,
     "BootEnv": "",
+    "Description": "Stage to boot into the local BootEnv.",
+    "Errors": [],
+    "Meta": {
+      "color": "green",
+      "icon": "radio",
+      "title": "Digital Rebar Provision"
+    },
+    "Name": "local",
+    "OptionalParams": [],
+    "Profiles": [],
+    "ReadOnly": true,
+    "RequiredParams": [],
+    "Tasks": [],
+    "Templates": [],
+    "Validated": true
+  },
+  {
+    "Available": true,
+    "BootEnv": "",
+    "Description": "Noop / Nothing stage",
     "Errors": [],
     "Meta": {
       "color": "green",
@@ -203,68 +243,47 @@ var stageDestroyJohnString string = "Deleted stage john\n"
 var stageBootEnvNoArgErrorString string = "Error: drpcli stages bootenv [id] [bootenv] [flags] requires 2 arguments"
 
 func TestStageCli(t *testing.T) {
-
-	tests := []CliTest{
-		CliTest{true, false, []string{"stages"}, noStdinString, "Access CLI commands relating to stages\n", ""},
-		CliTest{false, false, []string{"stages", "list"}, noStdinString, stageDefaultListString, noErrorString},
-
-		CliTest{true, true, []string{"stages", "create"}, noStdinString, noContentString, stageCreateNoArgErrorString},
-		CliTest{true, true, []string{"stages", "create", "john", "john2"}, noStdinString, noContentString, stageCreateTooManyArgErrorString},
-		CliTest{false, true, []string{"stages", "create", stageCreateBadJSONString}, noStdinString, noContentString, stageCreateBadJSONErrorString},
-		CliTest{false, true, []string{"stages", "create", stageCreateBadJSON2String}, noStdinString, noContentString, stageCreateBadJSON2ErrorString},
-		CliTest{false, false, []string{"stages", "create", stageCreateInputString}, noStdinString, stageCreateJohnString, noErrorString},
-		CliTest{false, true, []string{"stages", "create", stageCreateInputString}, noStdinString, noContentString, stageCreateDuplicateErrorString},
-		CliTest{false, false, []string{"stages", "list"}, noStdinString, stageListStagesString, noErrorString},
-		CliTest{false, false, []string{"stages", "list", "Name=fred"}, noStdinString, stageEmptyListString, noErrorString},
-		CliTest{false, false, []string{"stages", "list", "Name=john"}, noStdinString, stageListJohnOnlyString, noErrorString},
-		CliTest{false, false, []string{"stages", "list", "BootEnv=fred"}, noStdinString, stageEmptyListString, noErrorString},
-		CliTest{false, false, []string{"stages", "list", "BootEnv=local"}, noStdinString, stageListJohnOnlyString, noErrorString},
-		CliTest{false, false, []string{"stages", "list", "Reboot=true"}, noStdinString, stageEmptyListString, noErrorString},
-		CliTest{false, false, []string{"stages", "list", "Reboot=false"}, noStdinString, stageListStagesString, noErrorString},
-		CliTest{false, true, []string{"stages", "list", "Reboot=fred"}, noStdinString, noContentString, "Error: GET: stages: Reboot must be true or false\n\n"},
-		CliTest{true, true, []string{"stages", "show"}, noStdinString, noContentString, stageShowNoArgErrorString},
-		CliTest{true, true, []string{"stages", "show", "john", "john2"}, noStdinString, noContentString, stageShowTooManyArgErrorString},
-		CliTest{false, true, []string{"stages", "show", "john2"}, noStdinString, noContentString, stageShowMissingArgErrorString},
-		CliTest{false, false, []string{"stages", "show", "john"}, noStdinString, stageShowStageString, noErrorString},
-
-		CliTest{true, true, []string{"stages", "exists"}, noStdinString, noContentString, stageExistsNoArgErrorString},
-		CliTest{true, true, []string{"stages", "exists", "john", "john2"}, noStdinString, noContentString, stageExistsTooManyArgErrorString},
-		CliTest{false, true, []string{"stages", "exists", "john2"}, noStdinString, noContentString, stageExistsMissingJohnString},
-		CliTest{true, true, []string{"stages", "exists", "john", "john2"}, noStdinString, noContentString, stageExistsTooManyArgErrorString},
-		CliTest{false, false, []string{"stages", "exists", "john"}, noStdinString, stageExistsStageString, noErrorString},
-
-		CliTest{true, true, []string{"stages", "update"}, noStdinString, noContentString, stageUpdateNoArgErrorString},
-		CliTest{true, true, []string{"stages", "update", "john", "john2", "john3"}, noStdinString, noContentString, stageUpdateTooManyArgErrorString},
-		CliTest{false, true, []string{"stages", "update", "john", stageUpdateBadJSONString}, noStdinString, noContentString, stageUpdateBadJSONErrorString},
-		CliTest{false, false, []string{"stages", "update", "john", stageUpdateInputString}, noStdinString, stageUpdateJohnString, noErrorString},
-		CliTest{false, true, []string{"stages", "update", "john2", stageUpdateInputString}, noStdinString, noContentString, stageUpdateJohnMissingErrorString},
-		CliTest{false, false, []string{"stages", "show", "john"}, noStdinString, stageUpdateJohnString, noErrorString},
-
-		CliTest{true, true, []string{"stages", "patch"}, noStdinString, noContentString, stagePatchNoArgErrorString},
-		CliTest{true, true, []string{"stages", "patch", "john", "john2", "john3"}, noStdinString, noContentString, stagePatchTooManyArgErrorString},
-		CliTest{false, true, []string{"stages", "patch", stagePatchBaseString, stagePatchBadPatchJSONString}, noStdinString, noContentString, stagePatchBadPatchJSONErrorString},
-		CliTest{false, true, []string{"stages", "patch", stagePatchBadBaseJSONString, stagePatchInputString}, noStdinString, noContentString, stagePatchBadBaseJSONErrorString},
-		CliTest{false, false, []string{"stages", "patch", stagePatchBaseString, stagePatchInputString}, noStdinString, stagePatchJohnString, noErrorString},
-		CliTest{false, true, []string{"stages", "patch", stagePatchMissingBaseString, stagePatchInputString}, noStdinString, noContentString, stagePatchJohnMissingErrorString},
-		CliTest{false, false, []string{"stages", "show", "john"}, noStdinString, stagePatchJohnString, noErrorString},
-
-		CliTest{true, true, []string{"stages", "destroy"}, noStdinString, noContentString, stageDestroyNoArgErrorString},
-		CliTest{true, true, []string{"stages", "destroy", "john", "june"}, noStdinString, noContentString, stageDestroyTooManyArgErrorString},
-		CliTest{false, false, []string{"stages", "destroy", "john"}, noStdinString, stageDestroyJohnString, noErrorString},
-		CliTest{false, true, []string{"stages", "destroy", "john"}, noStdinString, noContentString, stageDestroyMissingJohnString},
-		CliTest{false, false, []string{"stages", "list"}, noStdinString, stageDefaultListString, noErrorString},
-
-		CliTest{false, false, []string{"stages", "create", "-"}, stageCreateInputString + "\n", stageCreateJohnString, noErrorString},
-		CliTest{false, false, []string{"stages", "list"}, noStdinString, stageListStagesString, noErrorString},
-		CliTest{false, false, []string{"stages", "update", "john", "-"}, stageUpdateInputString + "\n", stageUpdateJohnString, noErrorString},
-		CliTest{false, false, []string{"stages", "show", "john"}, noStdinString, stageUpdateJohnString, noErrorString},
-
-		CliTest{false, false, []string{"stages", "destroy", "john"}, noStdinString, stageDestroyJohnString, noErrorString},
-		CliTest{false, false, []string{"stages", "list"}, noStdinString, stageDefaultListString, noErrorString},
-	}
-
-	for _, test := range tests {
-		testCli(t, test)
-	}
-
+	cliTest(true, false, "stages").run(t)
+	cliTest(false, false, "stages", "list").run(t)
+	cliTest(true, true, "stages", "create").run(t)
+	cliTest(true, true, "stages", "create", "john", "john2").run(t)
+	cliTest(false, true, "stages", "create", stageCreateBadJSONString).run(t)
+	cliTest(false, true, "stages", "create", stageCreateBadJSON2String).run(t)
+	cliTest(false, false, "stages", "create", stageCreateInputString).run(t)
+	cliTest(false, true, "stages", "create", stageCreateInputString).run(t)
+	cliTest(false, false, "stages", "list").run(t)
+	cliTest(false, false, "stages", "list", "Name=fred").run(t)
+	cliTest(false, false, "stages", "list", "Name=john").run(t)
+	cliTest(false, false, "stages", "list", "BootEnv=fred").run(t)
+	cliTest(false, false, "stages", "list", "BootEnv=local").run(t)
+	cliTest(false, false, "stages", "list", "Reboot=true").run(t)
+	cliTest(false, false, "stages", "list", "Reboot=false").run(t)
+	cliTest(false, true, "stages", "list", "Reboot=fred").run(t)
+	cliTest(true, true, "stages", "show").run(t)
+	cliTest(true, true, "stages", "show", "john", "john2").run(t)
+	cliTest(false, true, "stages", "show", "john2").run(t)
+	cliTest(false, false, "stages", "show", "john").run(t)
+	cliTest(true, true, "stages", "exists").run(t)
+	cliTest(true, true, "stages", "exists", "john", "john2").run(t)
+	cliTest(false, true, "stages", "exists", "john2").run(t)
+	cliTest(true, true, "stages", "exists", "john", "john2").run(t)
+	cliTest(false, false, "stages", "exists", "john").run(t)
+	cliTest(true, true, "stages", "update").run(t)
+	cliTest(true, true, "stages", "update", "john", "john2", "john3").run(t)
+	cliTest(false, true, "stages", "update", "john", stageUpdateBadJSONString).run(t)
+	cliTest(false, false, "stages", "update", "john", stageUpdateInputString).run(t)
+	cliTest(false, true, "stages", "update", "john2", stageUpdateInputString).run(t)
+	cliTest(false, false, "stages", "show", "john").run(t)
+	cliTest(false, false, "stages", "show", "john").run(t)
+	cliTest(true, true, "stages", "destroy").run(t)
+	cliTest(true, true, "stages", "destroy", "john", "june").run(t)
+	cliTest(false, false, "stages", "destroy", "john").run(t)
+	cliTest(false, true, "stages", "destroy", "john").run(t)
+	cliTest(false, false, "stages", "list").run(t)
+	cliTest(false, false, "stages", "create", "-").Stdin(stageCreateInputString + "\n").run(t)
+	cliTest(false, false, "stages", "list").run(t)
+	cliTest(false, false, "stages", "update", "john", "-").Stdin(stageUpdateInputString + "\n").run(t)
+	cliTest(false, false, "stages", "show", "john").run(t)
+	cliTest(false, false, "stages", "destroy", "john").run(t)
+	cliTest(false, false, "stages", "list").run(t)
 }

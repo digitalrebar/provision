@@ -73,7 +73,7 @@ var contentDefaultListString string = `[
   {
     "Counts": {
       "bootenvs": 2,
-      "stages": 1
+      "stages": 2
     },
     "Warnings": [],
     "meta": {
@@ -205,7 +205,7 @@ var contentListContentsString = `[
   {
     "Counts": {
       "bootenvs": 2,
-      "stages": 1
+      "stages": 2
     },
     "Warnings": [],
     "meta": {
@@ -262,57 +262,50 @@ var contentDestroyMissingJohnString string = "Error: DELETE: contents/john: No s
 
 func TestContentCli(t *testing.T) {
 
-	tests := []CliTest{
-		CliTest{true, false, []string{"contents"}, noStdinString, "Access CLI commands relating to contents\n", ""},
-		CliTest{false, false, []string{"contents", "list"}, noStdinString, contentDefaultListString, noErrorString},
+	cliTest(true, false, "contents").run(t)
+	cliTest(false, false, "contents", "list").run(t)
 
-		CliTest{true, true, []string{"contents", "create"}, noStdinString, noContentString, contentCreateNoArgErrorString},
-		CliTest{true, true, []string{"contents", "create", "john", "john2"}, noStdinString, noContentString, contentCreateTooManyArgErrorString},
-		CliTest{false, true, []string{"contents", "create", contentCreateBadJSONString}, noStdinString, noContentString, contentCreateBadJSONErrorString},
-		CliTest{false, true, []string{"contents", "create", contentCreateBadJSON2String}, noStdinString, noContentString, contentCreateBadJSON2ErrorString},
-		CliTest{false, false, []string{"contents", "create", contentCreateInputString}, noStdinString, contentCreateJohnString, noErrorString},
-		CliTest{false, true, []string{"contents", "create", contentCreateInputString}, noStdinString, noContentString, contentCreateDuplicateErrorString},
-		CliTest{false, false, []string{"contents", "list"}, noStdinString, contentListContentsString, noErrorString},
-		CliTest{true, true, []string{"contents", "list", "--limit=-1", "--offset=-1"}, noStdinString, noContentString, contentListBadFlagErrorString},
-		CliTest{false, true, []string{"contents", "list", "Cow"}, noStdinString, noContentString, contentListBadFilterErrorString},
-		CliTest{false, true, []string{"contents", "list", "Cow=john"}, noStdinString, noContentString, contentListFilterNotSupportedErrorString},
+	cliTest(false, true, "contents", "create").run(t)
+	cliTest(false, true, "contents", "create", "john", "john2").run(t)
+	cliTest(false, true, "contents", "create", contentCreateBadJSONString).run(t)
+	cliTest(false, true, "contents", "create", contentCreateBadJSON2String).run(t)
+	cliTest(false, false, "contents", "create", contentCreateInputString).run(t)
+	cliTest(false, true, "contents", "create", contentCreateInputString).run(t)
+	cliTest(false, false, "contents", "list").run(t)
+	cliTest(false, true, "contents", "list", "--limit=-1", "--offset=-1").run(t)
+	cliTest(false, true, "contents", "list", "Cow").run(t)
+	cliTest(false, true, "contents", "list", "Cow=john").run(t)
 
-		CliTest{true, true, []string{"contents", "show"}, noStdinString, noContentString, contentShowNoArgErrorString},
-		CliTest{true, true, []string{"contents", "show", "john", "john2"}, noStdinString, noContentString, contentShowTooManyArgErrorString},
-		CliTest{false, true, []string{"contents", "show", "john2"}, noStdinString, noContentString, contentShowMissingArgErrorString},
-		CliTest{false, false, []string{"contents", "show", "john"}, noStdinString, contentShowContentString, noErrorString},
+	cliTest(true, true, "contents", "show").run(t)
+	cliTest(true, true, "contents", "show", "john", "john2").run(t)
+	cliTest(false, true, "contents", "show", "john2").run(t)
+	cliTest(false, false, "contents", "show", "john").run(t)
 
-		CliTest{true, true, []string{"contents", "exists"}, noStdinString, noContentString, contentExistsNoArgErrorString},
-		CliTest{true, true, []string{"contents", "exists", "john", "john2"}, noStdinString, noContentString, contentExistsTooManyArgErrorString},
-		CliTest{false, false, []string{"contents", "exists", "john"}, noStdinString, contentExistsContentString, noErrorString},
-		CliTest{false, true, []string{"contents", "exists", "john2"}, noStdinString, noContentString, contentExistsMissingJohnString},
-		CliTest{true, true, []string{"contents", "exists", "john", "john2"}, noStdinString, noContentString, contentExistsTooManyArgErrorString},
+	cliTest(false, true, "contents", "exists").run(t)
+	cliTest(false, true, "contents", "exists", "john", "john2").run(t)
+	cliTest(false, false, "contents", "exists", "john").run(t)
+	cliTest(false, true, "contents", "exists", "john2").run(t)
+	cliTest(true, true, "contents", "exists", "john", "john2").run(t)
 
-		CliTest{true, true, []string{"contents", "update"}, noStdinString, noContentString, contentUpdateNoArgErrorString},
-		CliTest{true, true, []string{"contents", "update", "john", "john2", "john3"}, noStdinString, noContentString, contentUpdateTooManyArgErrorString},
-		CliTest{false, true, []string{"contents", "update", "john", contentUpdateBadJSONString}, noStdinString, noContentString, contentUpdateBadJSONErrorString},
-		CliTest{false, true, []string{"contents", "update", "john", contentUpdateBadInputString}, noStdinString, noContentString, contentUpdateBadInputErrorString},
-		CliTest{false, false, []string{"contents", "update", "john", contentUpdateInputString}, noStdinString, contentUpdateJohnString, noErrorString},
-		CliTest{false, true, []string{"contents", "update", "john2", contentUpdateInputString}, noStdinString, noContentString, contentUpdateJohnMissingErrorString},
-		CliTest{false, false, []string{"contents", "show", "john"}, noStdinString, contentShowJohnString, noErrorString},
+	cliTest(false, true, "contents", "update").run(t)
+	cliTest(false, true, "contents", "update", "john", "john2", "john3").run(t)
+	cliTest(false, true, "contents", "update", "john", contentUpdateBadJSONString).run(t)
+	cliTest(false, true, "contents", "update", "john", contentUpdateBadInputString).run(t)
+	cliTest(false, false, "contents", "update", "john", contentUpdateInputString).run(t)
+	cliTest(false, true, "contents", "update", "john2", contentUpdateInputString).run(t)
+	cliTest(false, false, "contents", "show", "john").run(t)
 
-		CliTest{true, true, []string{"contents", "destroy"}, noStdinString, noContentString, contentDestroyNoArgErrorString},
-		CliTest{true, true, []string{"contents", "destroy", "john", "june"}, noStdinString, noContentString, contentDestroyTooManyArgErrorString},
-		CliTest{false, false, []string{"contents", "destroy", "john"}, noStdinString, contentDestroyJohnString, noErrorString},
-		CliTest{false, true, []string{"contents", "destroy", "john"}, noStdinString, noContentString, contentDestroyMissingJohnString},
-		CliTest{false, false, []string{"contents", "list"}, noStdinString, contentDefaultListString, noErrorString},
+	cliTest(false, true, "contents", "destroy").run(t)
+	cliTest(false, true, "contents", "destroy", "john", "june").run(t)
+	cliTest(false, false, "contents", "destroy", "john").run(t)
+	cliTest(false, true, "contents", "destroy", "john").run(t)
+	cliTest(false, false, "contents", "list").run(t)
 
-		CliTest{false, false, []string{"contents", "create", "-"}, contentCreateInputString + "\n", contentCreateJohnString, noErrorString},
-		CliTest{false, false, []string{"contents", "list"}, noStdinString, contentListContentsString, noErrorString},
-		CliTest{false, false, []string{"contents", "update", "john", "-"}, contentUpdateInputString + "\n", contentUpdateJohnString, noErrorString},
-		CliTest{false, false, []string{"contents", "show", "john"}, noStdinString, contentShowJohnString, noErrorString},
+	cliTest(false, false, "contents", "create", "-").Stdin(contentCreateInputString + "\n").run(t)
+	cliTest(false, false, "contents", "list").run(t)
+	cliTest(false, false, "contents", "update", "john", "-").Stdin(contentUpdateInputString + "\n").run(t)
+	cliTest(false, false, "contents", "show", "john").run(t)
 
-		CliTest{false, false, []string{"contents", "destroy", "john"}, noStdinString, contentDestroyJohnString, noErrorString},
-		CliTest{false, false, []string{"contents", "list"}, noStdinString, contentDefaultListString, noErrorString},
-	}
-
-	for _, test := range tests {
-		testCli(t, test)
-	}
-
+	cliTest(false, false, "contents", "destroy", "john").run(t)
+	cliTest(false, false, "contents", "list").run(t)
 }

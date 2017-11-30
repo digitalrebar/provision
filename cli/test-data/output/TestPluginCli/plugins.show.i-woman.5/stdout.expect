@@ -1,0 +1,14 @@
+{
+  "Available": true,
+  "Description": "lpxelinux.0",
+  "Errors": [],
+  "Meta": {},
+  "Name": "i-woman",
+  "Params": {
+    "jj": 3
+  },
+  "PluginErrors": [],
+  "Provider": "incrementer",
+  "ReadOnly": false,
+  "Validated": true
+}

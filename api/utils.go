@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 
 	"github.com/VictorLowther/jsonpatch2"
 	yaml "github.com/ghodss/yaml"
@@ -28,9 +29,27 @@ func DecodeYaml(buf []byte, ref interface{}) error {
 	return yaml.Unmarshal(buf, ref)
 }
 
+// Pretty marshals object acciording to the the fmt, in whatever
+// passed for "pretty" according to fmt.
+func Pretty(f string, obj interface{}) ([]byte, error) {
+	switch f {
+	case "json":
+		return json.MarshalIndent(obj, "", "  ")
+	case "yaml":
+		return yaml.Marshal(obj)
+	case "go":
+		buf, err := Pretty("yaml", obj)
+		if err == nil {
+			return []byte(fmt.Sprintf("package main\n\nvar contentYamlString = `\n%s\n`\n", string(buf))), nil
+		}
+		return nil, err
+	default:
+		return nil, fmt.Errorf("Unknown pretty format %s", f)
+	}
+}
+
 // GenPatch generates a JSON patch that will transform source into target.
 // The generated patch will have all the applicable test clauses.
-
 func GenPatch(source, target interface{}) (jsonpatch2.Patch, error) {
 	srcBuf, err := json.Marshal(source)
 	if err != nil {

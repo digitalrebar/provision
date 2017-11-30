@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"reflect"
 	"sort"
-	"strconv"
 	"strings"
 	"sync"
 	"sync/atomic"
@@ -19,43 +19,61 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-// TestItem creates a test function to see if a value in the
-// passed interface is true.
-func TestItem(field, value string) func(interface{}) (bool, error) {
+type TestFunc func(interface{}) (bool, error)
+
+func AndItems(fs ...TestFunc) TestFunc {
 	return func(ref interface{}) (bool, error) {
-		var err error
+		for _, f := range fs {
+			if b, e := f(ref); e != nil {
+				return false, e
+			} else if !b {
+				return false, nil
+			}
+		}
+		return true, nil
+	}
+}
+
+func OrItems(fs ...TestFunc) TestFunc {
+	return func(ref interface{}) (bool, error) {
+		for _, f := range fs {
+			if b, e := f(ref); e != nil {
+				return false, e
+			} else if b {
+				return true, e
+			}
+		}
+		return false, nil
+	}
+}
+
+func NotItem(f TestFunc) TestFunc {
+	return func(ref interface{}) (bool, error) {
+		b, e := f(ref)
+		return !b, e
+	}
+}
+
+// EqualItem creates a test function to see if a value in
+// the passed interface is equal
+func EqualItem(field string, value interface{}) TestFunc {
+	// Convert the value to a json remarshaled value
+	var nv interface{}
+	if err := utils.Remarshal(value, &nv); err != nil {
+		return func(ref interface{}) (bool, error) {
+			return false, err
+		}
+	}
+
+	return func(ref interface{}) (bool, error) {
 		fields := map[string]interface{}{}
 		if err := utils.Remarshal(ref, &fields); err != nil {
 			return false, err
 		}
-		matched := false
 		if d, ok := fields[field]; ok {
-			switch v := d.(type) {
-			case bool:
-				var bval bool
-				bval, err = strconv.ParseBool(value)
-				if err == nil {
-					if v == bval {
-						matched = true
-					}
-				}
-			case string:
-				if v == value {
-					matched = true
-				}
-			case int:
-				var ival int64
-				ival, err = strconv.ParseInt(value, 10, 64)
-				if err == nil {
-					if int(ival) == v {
-						matched = true
-					}
-				}
-			default:
-				err = fmt.Errorf("Unsupported field type: %T\n", d)
-			}
+			return reflect.DeepEqual(d, nv), nil
 		}
-		return matched, err
+		return false, nil
 	}
 }
 
@@ -246,6 +264,7 @@ func (es *EventStream) Deregister(handle int64) error {
 		es.subscriptions[evt] = handles
 		if len(handles) == 0 {
 			es.conn.WriteMessage(websocket.TextMessage, []byte("deregister "+evt))
+			es.subscriptions[evt] = nil
 		}
 	}
 	delete(es.recievers, handle)
@@ -262,25 +281,33 @@ func (es *EventStream) Deregister(handle int64) error {
 // should not be considered to be stable yet.
 func (es *EventStream) WaitFor(
 	item models.Model,
-	test func(interface{}) (bool, error),
+	test TestFunc,
 	timeout time.Duration) (string, error) {
+	// Make some basic vars
 	prefix := item.Prefix()
 	id := item.Key()
 	interrupt := make(chan os.Signal, 1)
 	evts := []string{prefix + ".update." + id, prefix + ".save." + id}
+
+	// Handle interrupt signal while selecting
 	signal.Notify(interrupt, os.Interrupt)
 	defer signal.Reset(os.Interrupt)
+
+	// Register for events
 	handle, ch, err := es.Register(evts...)
 	defer es.Deregister(handle)
 	if err != nil {
 		return "", err
 	}
+
+	// Setup the timer
 	timer := time.NewTimer(timeout)
 	defer func() {
-		if !timer.Stop() {
+		if timer != nil && !timer.Stop() {
 			<-timer.C
 		}
 	}()
+
 	for {
 		if err := es.client.FillModel(item, id); err != nil {
 			return fmt.Sprintf("fill: %v", err), err
@@ -303,6 +330,8 @@ func (es *EventStream) WaitFor(
 		case <-interrupt:
 			return "interrupt", nil
 		case <-timer.C:
+			timer.Stop()
+			timer = nil
 			return "timeout", nil
 		}
 	}

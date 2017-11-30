@@ -31,6 +31,20 @@ type Task struct {
 	OptionalParams []string
 }
 
+func (t *Task) Validate() {
+	t.AddError(ValidName("Invalid Name", t.Name))
+
+	for _, p := range t.RequiredParams {
+		t.AddError(ValidParamName("Invalid Required Param", p))
+	}
+	for _, p := range t.OptionalParams {
+		t.AddError(ValidParamName("Invalid Optional Param", p))
+	}
+	for _, tt := range t.Templates {
+		t.AddError(ValidName("Invalid Template Name", tt.Name))
+	}
+}
+
 func (t *Task) Prefix() string {
 	return "tasks"
 }
@@ -69,4 +83,8 @@ func (b *Task) ToModels(obj interface{}) []Model {
 		res[i] = Model(item)
 	}
 	return res
+}
+
+func (b *Task) SetName(n string) {
+	b.Name = n
 }

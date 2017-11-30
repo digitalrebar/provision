@@ -1,0 +1,110 @@
+[
+  {
+    "Counts": {
+      "bootenvs": 0,
+      "jobs": 0,
+      "leases": 0,
+      "machines": 0,
+      "params": 0,
+      "plugins": 0,
+      "preferences": 0,
+      "profiles": 1,
+      "reservations": 0,
+      "stages": 0,
+      "subnets": 0,
+      "tasks": 0,
+      "templates": 0,
+      "users": 1
+    },
+    "Warnings": [],
+    "meta": {
+      "Description": "Writable backing store",
+      "Meta": {},
+      "Name": "BackingStore",
+      "Overwritable": false,
+      "Source": "",
+      "Type": "writable",
+      "Version": "user",
+      "Writable": true
+    }
+  },
+  {
+    "Counts": {
+      "templates": 1
+    },
+    "Warnings": [],
+    "meta": {
+      "Description": "Local Override Store",
+      "Meta": {},
+      "Name": "LocalStore",
+      "Overwritable": false,
+      "Source": "",
+      "Type": "local",
+      "Version": "user",
+      "Writable": false
+    }
+  },
+  {
+    "Counts": {},
+    "Warnings": [],
+    "meta": {
+      "Description": "",
+      "Meta": {},
+      "Name": "john",
+      "Overwritable": false,
+      "Source": "",
+      "Type": "dynamic",
+      "Version": "",
+      "Writable": false
+    }
+  },
+  {
+    "Counts": {
+      "templates": 1
+    },
+    "Warnings": [],
+    "meta": {
+      "Description": "Initial Default Content",
+      "Meta": {},
+      "Name": "DefaultStore",
+      "Overwritable": true,
+      "Source": "Unspecified",
+      "Type": "default",
+      "Version": "user",
+      "Writable": false
+    }
+  },
+  {
+    "Counts": {
+      "params": 3
+    },
+    "Warnings": [],
+    "meta": {
+      "Description": "Test Plugin for DRP",
+      "Meta": {},
+      "Name": "incrementer",
+      "Overwritable": false,
+      "Source": "Digital Rebar",
+      "Type": "plugin",
+      "Version": "Internal",
+      "Writable": false
+    }
+  },
+  {
+    "Counts": {
+      "bootenvs": 2,
+      "stages": 2
+    },
+    "Warnings": [],
+    "meta": {
+      "Description": "Default objects that must be present",
+      "Meta": {},
+      "Name": "BasicStore",
+      "Overwritable": false,
+      "Source": "",
+      "Type": "basic",
+      "Version": "Unversioned",
+      "Writable": false
+    }
+  }
+]

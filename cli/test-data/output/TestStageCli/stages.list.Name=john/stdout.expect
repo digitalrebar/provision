@@ -1,0 +1,19 @@
+[
+  {
+    "Available": true,
+    "BootEnv": "local",
+    "Description": "",
+    "Errors": [],
+    "Meta": {},
+    "Name": "john",
+    "OptionalParams": [],
+    "Profiles": [],
+    "ReadOnly": false,
+    "Reboot": false,
+    "RequiredParams": [],
+    "RunnerWait": false,
+    "Tasks": [],
+    "Templates": [],
+    "Validated": true
+  }
+]

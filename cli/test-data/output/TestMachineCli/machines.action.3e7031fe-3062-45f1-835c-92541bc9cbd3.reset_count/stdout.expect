@@ -1,0 +1,8 @@
+{
+  "Command": "reset_count",
+  "OptionalParams": [],
+  "Provider": "incrementer",
+  "RequiredParams": [
+    "incrementer/touched"
+  ]
+}

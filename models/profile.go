@@ -26,6 +26,13 @@ type Profile struct {
 	Params map[string]interface{}
 }
 
+func (p *Profile) Validate() {
+	p.AddError(ValidName("Invalid Name", p.Name))
+	for k := range p.Params {
+		p.AddError(ValidParamName("Invalid Param Name", k))
+	}
+}
+
 func (p *Profile) Prefix() string {
 	return "profiles"
 }
@@ -58,4 +65,17 @@ func (b *Profile) ToModels(obj interface{}) []Model {
 		res[i] = Model(item)
 	}
 	return res
+}
+
+// match Paramer interface
+func (b *Profile) GetParams() map[string]interface{} {
+	return b.Params
+}
+
+func (b *Profile) SetParams(p map[string]interface{}) {
+	b.Params = p
+}
+
+func (b *Profile) SetName(n string) {
+	b.Name = n
 }

@@ -1,0 +1,10 @@
+RE:
+{
+  "Available": true,
+  "Errors": \[\],
+  "Meta": {},
+  "Name": "john",
+  "ReadOnly": false,
+  "Secret": "[\s\S]*",
+  "Validated": true
+}

@@ -18,7 +18,7 @@ type DhcpOption struct {
 	// Code is a DHCP Option Code.
 	//
 	// required: true
-	Code dhcp.OptionCode
+	Code byte
 	// Value is a text/template that will be expanded
 	// and then converted into the proper format
 	// for the option code
@@ -28,7 +28,8 @@ type DhcpOption struct {
 }
 
 func (o *DhcpOption) ConvertOptionValueToByte(value string) ([]byte, error) {
-	switch o.Code {
+	code := dhcp.OptionCode(o.Code)
+	switch code {
 	// Single IP-like address
 	case dhcp.OptionSubnetMask,
 		dhcp.OptionBroadcastAddress,
@@ -151,10 +152,10 @@ func (o *DhcpOption) ConvertOptionValueToByte(value string) ([]byte, error) {
 		return make([]byte, 0), nil
 	}
 
-	return nil, errors.New("Invalid Option: " + o.Code.String() + " " + value)
+	return nil, errors.New("Invalid Option: " + code.String() + " " + value)
 }
 
-func (o *DhcpOption) RenderToDHCP(srcOpts map[int]string) (code dhcp.OptionCode, val []byte, err error) {
+func (o *DhcpOption) RenderToDHCP(srcOpts map[int]string) (code byte, val []byte, err error) {
 	tmpl, err := template.New("dhcp_option").Parse(o.Value)
 	if err != nil {
 		return o.Code, nil, err
