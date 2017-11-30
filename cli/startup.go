@@ -37,6 +37,23 @@ func addRegistrar(rs registerSection) {
 	registrations = append(registrations, rs)
 }
 
+var ppr = func(c *cobra.Command, a []string) {
+	c.SilenceUsage = true
+	if session != nil {
+		return
+	}
+	var err error
+	if token != "" {
+		session, err = api.TokenSession(endpoint, token)
+	} else {
+		session, err = api.UserSession(endpoint, username, password)
+	}
+	if err != nil {
+		log.Printf("Error creating session: %v", err)
+		os.Exit(1)
+	}
+}
+
 func NewApp() *cobra.Command {
 	app := &cobra.Command{
 		Use:   "drpcli",
@@ -84,22 +101,14 @@ func NewApp() *cobra.Command {
 		"ref", "r", default_ref,
 		"A reference object for update commands that can be a file name, yaml, or json blob")
 
-	app.PersistentPreRun = func(c *cobra.Command, a []string) {
-		c.SilenceUsage = true
-		if session != nil {
-			return
-		}
-		var err error
-		if token != "" {
-			session, err = api.TokenSession(endpoint, token)
-		} else {
-			session, err = api.UserSession(endpoint, username, password)
-		}
-		if err != nil {
-			log.Printf("Error creating session: %v", err)
-			os.Exit(1)
-		}
+	for _, rs := range registrations {
+		rs(app)
 	}
+
+	for _, c := range app.Commands() {
+		c.PersistentPreRun = ppr
+	}
+	// top-level commands that do not need PersistentPreRun go here.
 	app.AddCommand(&cobra.Command{
 		Use:   "version",
 		Short: "Digital Rebar Provision CLI Command Version",
@@ -120,10 +129,6 @@ func NewApp() *cobra.Command {
 			return nil
 		},
 	})
-
-	for _, rs := range registrations {
-		rs(app)
-	}
 
 	return app
 }
