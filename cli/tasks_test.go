@@ -6,193 +6,22 @@ import (
 	"testing"
 )
 
-var taskAddrErrorString string = "Error: Invalid Address: fred\n\n"
-var taskExpireTimeErrorString string = "Error: Invalid Address: false\n\n"
-var taskShowMissingArgErrorString string = "Error: GET: tasks/jill: Not Found\n\n"
-var taskExistsMissingString string = "Error: GET: tasks/jill: Not Found\n\n"
-var taskCreateBadJSONErrorString = "Error: CREATE: tasks: Empty key not allowed\n\n"
-var taskCreateDuplicateErrorString = "Error: CREATE: tasks/john: already exists\n\n"
-var taskUpdateJohnMissingErrorString string = "Error: GET: tasks/jill: Not Found\n\n"
-var taskPatchOldBaseErrorString = `Error: PATCH: tasks/john
-  Patch error at line 0: Test op failed.
-  Patch line: {"op":"test","path":"/OptionalParams","from":"","value":[]}
+func TestTaskCli(t *testing.T) {
+	var taskCreateBadJSONString = "{asdgasdg}"
 
-`
-var taskPatchJohnMissingErrorString string = "Error: PATCH: tasks/jill: Not Found\n\n"
-var taskPatchBadBaseErrorString string = "Error: Cannot get key for obj: Invalid type passed to task create\n\n"
-var taskDestroyMissingJohnString string = "Error: DELETE: tasks/jill: Not Found\n\n"
-
-var taskDefaultListString string = "[]\n"
-var taskEmptyListString string = "[]\n"
-
-var taskShowNoArgErrorString string = "Error: drpcli tasks show [id] [flags] requires 1 argument\n"
-var taskShowTooManyArgErrorString string = "Error: drpcli tasks show [id] [flags] requires 1 argument\n"
-
-var taskShowJohnString string = `{
-  "Available": true,
-  "Errors": [],
-  "Meta": {
-    "feature-flags": "original-exit-codes"
-  },
-  "Name": "john",
-  "OptionalParams": [],
-  "ReadOnly": false,
-  "RequiredParams": [],
-  "Templates": [],
-  "Validated": true
-}
-`
-
-var taskExistsNoArgErrorString string = "Error: drpcli tasks exists [id] [flags] requires 1 argument"
-var taskExistsTooManyArgErrorString string = "Error: drpcli tasks exists [id] [flags] requires 1 argument"
-var taskExistsIgnoreString string = ""
-
-var taskCreateNoArgErrorString string = "Error: drpcli tasks create [json] [flags] requires 1 argument\n"
-var taskCreateTooManyArgErrorString string = "Error: drpcli tasks create [json] [flags] requires 1 argument\n"
-var taskCreateBadJSONString = "{asdgasdg}"
-
-var taskCreateInputString string = `{
+	var taskCreateInputString string = `{
   "Name": "john",
   "OptionalParams": [],
   "RequiredParams": [],
   "Templates": []
 }
 `
-var taskCreateJohnString string = `{
-  "Available": true,
-  "Errors": [],
-  "Meta": {
-    "feature-flags": "original-exit-codes"
-  },
-  "Name": "john",
-  "OptionalParams": [],
-  "ReadOnly": false,
-  "RequiredParams": [],
-  "Templates": [],
-  "Validated": true
-}
-`
-
-var taskListTasksString = `[
-  {
-    "Available": true,
-    "Errors": [],
-    "Meta": {
-      "feature-flags": "original-exit-codes"
-    },
-    "Name": "john",
-    "OptionalParams": [],
-    "ReadOnly": false,
-    "RequiredParams": [],
-    "Templates": [],
-    "Validated": true
-  }
-]
-`
-var taskListBothEnvsString = `[
-  {
-    "Available": true,
-    "Errors": [],
-    "Meta": {
-      "feature-flags": "original-exit-codes"
-    },
-    "Name": "john",
-    "OptionalParams": [],
-    "ReadOnly": false,
-    "RequiredParams": [],
-    "Templates": [],
-    "Validated": true
-  }
-]
-`
-
-var taskUpdateNoArgErrorString string = "Error: drpcli tasks update [id] [json] [flags] requires 2 arguments"
-var taskUpdateTooManyArgErrorString string = "Error: drpcli tasks update [id] [json] [flags] requires 2 arguments"
-var taskUpdateBadJSONString = "asdgasdg"
-var taskUpdateBadJSONErrorString = "Error: Unable to merge objects: json: cannot unmarshal string into Go value of type map[string]interface {}\n\n\n"
-var taskUpdateInputString string = `{
+	var taskUpdateBadJSONString = "asdgasdg"
+	var taskUpdateInputString string = `{
   "OptionalParams": [ "jillparam" ]
 }
 `
-var taskUpdateJohnString string = `{
-  "Available": true,
-  "Errors": [],
-  "Meta": {
-    "feature-flags": "original-exit-codes"
-  },
-  "Name": "john",
-  "OptionalParams": [
-    "jillparam"
-  ],
-  "ReadOnly": false,
-  "RequiredParams": [],
-  "Templates": [],
-  "Validated": true
-}
-`
 
-var taskPatchNoArgErrorString string = "Error: drpcli tasks patch [objectJson] [changesJson] [flags] requires 2 arguments"
-var taskPatchTooManyArgErrorString string = "Error: drpcli tasks patch [objectJson] [changesJson] [flags] requires 2 arguments"
-var taskPatchBadPatchJSONString = "asdgasdg"
-var taskPatchBadPatchJSONErrorString = "Error: Unable to parse drpcli tasks patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Task\n\n"
-var taskPatchBadBaseJSONString = "asdgasdg"
-var taskPatchBadBaseJSONErrorString = "Error: Unable to parse drpcli tasks patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Task\n\n"
-var taskPatchOldBaseString string = `{
-  "Name": "john",
-  "OptionalParams": [],
-  "RequiredParams": [],
-  "Templates": []
-}
-`
-
-var taskPatchBaseString string = `{
-  "Name": "john",
-  "OptionalParams": [ "jillparam" ],
-  "RequiredParams": [],
-  "Templates": []
-}
-`
-var taskPatchInputString string = `{
-  "OptionalParams": [ "joan" ]
-}
-`
-var taskPatchJohnString string = `{
-  "Available": true,
-  "Errors": [],
-  "Meta": {
-    "feature-flags": "original-exit-codes"
-  },
-  "Name": "john",
-  "OptionalParams": [
-    "joan"
-  ],
-  "ReadOnly": false,
-  "RequiredParams": [],
-  "Templates": [],
-  "Validated": true
-}
-`
-var taskPatchMissingBaseString string = `{
-  "Name": "jill",
-  "OptionalParams": [],
-  "RequiredParams": [],
-  "Templates": []
-}
-`
-
-var taskPatchBadBaseString string = `{
-  "Addr": "jill",
-  "NextServer": "2.2.2.2",
-  "Strategy": "NewStrat",
-  "Token": "john"
-}
-`
-
-var taskDestroyNoArgErrorString string = "Error: drpcli tasks destroy [id] [flags] requires 1 argument"
-var taskDestroyTooManyArgErrorString string = "Error: drpcli tasks destroy [id] [flags] requires 1 argument"
-var taskDestroyJohnString string = "Deleted task john\n"
-
-func TestTaskCli(t *testing.T) {
 	cliTest(true, false, "tasks").run(t)
 	cliTest(false, false, "tasks", "list").run(t)
 	cliTest(true, true, "tasks", "create").run(t)
