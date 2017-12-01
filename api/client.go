@@ -47,14 +47,15 @@ func (c *Client) UrlFor(args ...string) (*url.URL, error) {
 // operations with this API.  It handles capturing any errors that may
 // occur in building and executing the request.
 type R struct {
-	c      *Client
-	method string
-	uri    *url.URL
-	header http.Header
-	body   io.Reader
-	Req    *http.Request
-	Resp   *http.Response
-	err    *models.Error
+	c        *Client
+	method   string
+	uri      *url.URL
+	header   http.Header
+	body     io.Reader
+	Req      *http.Request
+	Resp     *http.Response
+	err      *models.Error
+	paranoid bool
 }
 
 // Req creates a new R for the current client.
@@ -109,6 +110,21 @@ func (r *R) Patch(b jsonpatch2.Patch) *R {
 	return r.Meth("PATCH").Body(b)
 }
 
+// Must be used before PatchXXX calls
+func (r *R) ParanoidPatch() *R {
+	r.paranoid = true
+	return r
+}
+
+func (r *R) PatchObj(old, new interface{}) *R {
+	b, err := GenPatch(old, new, r.paranoid)
+	if err != nil {
+		r.err.AddError(err)
+		return r
+	}
+	return r.Meth("PATCH").Body(b)
+}
+
 func (r *R) PatchTo(old, new models.Model) *R {
 	if old.Prefix() != new.Prefix() || old.Key() != new.Key() {
 		r.err.Model = old.Prefix()
@@ -116,12 +132,7 @@ func (r *R) PatchTo(old, new models.Model) *R {
 		r.err.Errorf("Cannot patch from %T to %T, or change keys from %s to %s", old, new, old.Key(), new.Key())
 		return r
 	}
-	patch, err := GenPatch(old, new)
-	if err != nil {
-		r.err.AddError(err)
-		return r
-	}
-	return r.Patch(patch).UrlForM(old)
+	return r.PatchObj(old, new).UrlForM(old)
 }
 
 func (r *R) Fill(m models.Model) error {
@@ -578,8 +589,16 @@ func (c *Client) PatchModel(prefix, key string, patch jsonpatch2.Patch) (models.
 }
 
 func (c *Client) PatchTo(old models.Model, new models.Model) (models.Model, error) {
+	return c.PatchToFull(old, new, false)
+}
+
+func (c *Client) PatchToFull(old models.Model, new models.Model, paranoid bool) (models.Model, error) {
 	res := models.Clone(old)
-	err := c.Req().PatchTo(old, new).Do(&res)
+	r := c.Req()
+	if paranoid {
+		r = r.ParanoidPatch()
+	}
+	err := r.PatchTo(old, new).Do(&res)
 	if err != nil {
 		return old, err
 	}

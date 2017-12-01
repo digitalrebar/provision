@@ -32,13 +32,13 @@ func registerMachine(app *cobra.Command) {
 			return nil
 		},
 		RunE: func(c *cobra.Command, args []string) error {
-			m := &models.Machine{}
-			if err := session.FillModel(m, args[0]); err != nil {
+			m, err := op.refOrFill(args[0])
+			if err != nil {
 				return generateError(err, "Failed to fetch %v: %v", op.singleName, args[0])
 			}
 			clone := models.Clone(m).(*models.Machine)
 			clone.Stage = args[1]
-			req := session.Req().PatchTo(m, clone)
+			req := session.Req().ParanoidPatch().PatchTo(m, clone)
 			if force {
 				req.Params("force", "true")
 			}

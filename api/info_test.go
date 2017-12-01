@@ -12,8 +12,8 @@ func TestInfo(t *testing.T) {
 	test := &crudTest{
 		name: "get info",
 		expectRes: &models.Info{
-			ApiPort:            10001,
-			FilePort:           10002,
+			ApiPort:            10011,
+			FilePort:           10012,
 			ProvisionerEnabled: true,
 			TftpEnabled:        true,
 			Stats: []*models.Stat{
