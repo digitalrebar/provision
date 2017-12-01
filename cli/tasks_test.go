@@ -58,4 +58,5 @@ func TestTaskCli(t *testing.T) {
 	cliTest(false, false, "tasks", "show", "john").run(t)
 	cliTest(false, false, "tasks", "destroy", "john").run(t)
 	cliTest(false, false, "tasks", "list").run(t)
+	verifyClean(t)
 }

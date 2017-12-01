@@ -114,4 +114,5 @@ func TestSubnetCli(t *testing.T) {
 	//End of Helpers
 	cliTest(false, false, "subnets", "destroy", "john").run(t)
 	cliTest(false, false, "subnets", "list").run(t)
+	verifyClean(t)
 }

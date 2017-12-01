@@ -276,4 +276,5 @@ func TestMachineCli(t *testing.T) {
 	cliTest(false, false, "profiles", "destroy", "stage-prof").run(t)
 	cliTest(false, false, "tasks", "destroy", "jamie").run(t)
 	cliTest(false, false, "tasks", "destroy", "justine").run(t)
+	verifyClean(t)
 }

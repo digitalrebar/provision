@@ -68,4 +68,5 @@ func TestUserCli(t *testing.T) {
 	cliTest(false, false, "users", "token", "rocketskates").run(t)
 	cliTest(false, false, "users", "token", "rocketskates", "scope", "all", "ttl", "330", "action", "list", "specific", "asdgag").run(t)
 	cliTest(false, true, "users", "token", "rocketskates", "scope", "all", "ttl", "cow", "action", "list", "specific", "asdgag").run(t)
+	verifyClean(t)
 }
