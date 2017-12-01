@@ -6,6 +6,7 @@ Usage:
 Available Commands:
   action        Display the action for this machine
   actions       Display actions for this machine
+  add           Add the machines param <key> to <blob>
   addprofile    Add profile to the machine's profile list
   addtask       Add task to the machine's task list
   bootenv       Set the machine's bootenv

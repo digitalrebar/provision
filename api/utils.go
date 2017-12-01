@@ -50,7 +50,7 @@ func Pretty(f string, obj interface{}) ([]byte, error) {
 
 // GenPatch generates a JSON patch that will transform source into target.
 // The generated patch will have all the applicable test clauses.
-func GenPatch(source, target interface{}) (jsonpatch2.Patch, error) {
+func GenPatch(source, target interface{}, paranoid bool) (jsonpatch2.Patch, error) {
 	srcBuf, err := json.Marshal(source)
 	if err != nil {
 		return nil, err
@@ -59,6 +59,5 @@ func GenPatch(source, target interface{}) (jsonpatch2.Patch, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	return jsonpatch2.Generate(srcBuf, tgtBuf, true)
+	return jsonpatch2.GenerateFull(srcBuf, tgtBuf, true, paranoid)
 }

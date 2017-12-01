@@ -27,7 +27,7 @@ func testRepoGen(t *testing.T, env *models.BootEnv, items map[string]string) {
 	for k, v := range items {
 		rt(t, fmt.Sprintf("Check to see if %s rendered properly", k), v, nil,
 			func() (interface{}, error) {
-				urlPath := fmt.Sprintf("http://127.0.0.1:10002/machines/%s/%s", fakeMachine.Key(), k)
+				urlPath := fmt.Sprintf("http://127.0.0.1:10012/machines/%s/%s", fakeMachine.Key(), k)
 				t.Logf("Testing URL: %s", urlPath)
 				resp, err := http.Get(urlPath)
 				if err != nil {
@@ -99,9 +99,9 @@ Schema:
 		"fake-debian-install": {
 			repos: []string{"debian-6-install", "debian-6-security", "debian-6"},
 			local: map[string]string{
-				"url": "http://127.0.0.1:10002/debian-6/install",
+				"url": "http://127.0.0.1:10012/debian-6/install",
 				"install": `d-i mirror/protocol string http
-d-i mirror/http/hostname string 127.0.0.1:10002
+d-i mirror/http/hostname string 127.0.0.1:10012
 d-i mirror/http/directory string /debian-6/install
 
 `,
@@ -126,9 +126,9 @@ deb https://this.url.is.a.mirror/sweet-debs sweet on-fire
 		"fake-ubuntu-install": {
 			repos: []string{"ubuntu-6-install", "ubuntu-6-security", "ubuntu-6"},
 			local: map[string]string{
-				"url": "http://127.0.0.1:10002/ubuntu-6/install",
+				"url": "http://127.0.0.1:10012/ubuntu-6/install",
 				"install": `d-i mirror/protocol string http
-d-i mirror/http/hostname string 127.0.0.1:10002
+d-i mirror/http/hostname string 127.0.0.1:10012
 d-i mirror/http/directory string /ubuntu-6/install
 
 `,
@@ -153,10 +153,10 @@ deb https://this.url.is.secure/ubuntu-security 6 main contrib non-free
 		"fake-centos-install": {
 			repos: []string{"centos-6-install", "centos-6-security", "centos-6"},
 			local: map[string]string{
-				"url": "http://127.0.0.1:10002/centos-6/install",
+				"url": "http://127.0.0.1:10012/centos-6/install",
 				"install": `install
-url --url http://127.0.0.1:10002/centos-6/install
-repo --name="fake-centos-install" --baseurl=http://127.0.0.1:10002/centos-6/install --cost=100
+url --url http://127.0.0.1:10012/centos-6/install
+repo --name="fake-centos-install" --baseurl=http://127.0.0.1:10012/centos-6/install --cost=100
 `,
 			},
 			repo: map[string]string{
@@ -203,10 +203,10 @@ gpgcheck=0
 		"fake-scientificlinux-install": {
 			repos: []string{"scientificlinux-6-install", "scientificlinux-6-security", "scientificlinux-6"},
 			local: map[string]string{
-				"url": "http://127.0.0.1:10002/scientificlinux-6/install",
+				"url": "http://127.0.0.1:10012/scientificlinux-6/install",
 				"install": `install
-url --url http://127.0.0.1:10002/scientificlinux-6/install
-repo --name="fake-scientificlinux-install" --baseurl=http://127.0.0.1:10002/scientificlinux-6/install --cost=100
+url --url http://127.0.0.1:10012/scientificlinux-6/install
+repo --name="fake-scientificlinux-install" --baseurl=http://127.0.0.1:10012/scientificlinux-6/install --cost=100
 `,
 			},
 			repo: map[string]string{

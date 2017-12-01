@@ -15,6 +15,27 @@ import (
 	"github.com/digitalrebar/provision/models"
 )
 
+var encodeJsonPtr = strings.NewReplacer("~", "~0", "/", "~1")
+
+// String translates a pointerSegment into a regular string, encoding it as we go.
+func makeJsonPtr(s string) string {
+	return encodeJsonPtr.Replace(string(s))
+}
+
+func bufOrFileDecode(ref string, data interface{}) (err error) {
+	if buf, terr := bufOrFile(ref); terr != nil {
+		err = fmt.Errorf("Unable to process reference object: %v\n", terr)
+		return
+	} else {
+		err = api.DecodeYaml(buf, &data)
+		if err != nil {
+			err = fmt.Errorf("Unable to unmarshal reference object: %v\n", err)
+			return
+		}
+	}
+	return
+}
+
 func bufOrFile(src string) ([]byte, error) {
 	if s, err := os.Lstat(src); err == nil && s.Mode().IsRegular() {
 		return ioutil.ReadFile(src)

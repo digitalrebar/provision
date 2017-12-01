@@ -4,6 +4,7 @@ Usage:
   drpcli profiles [command]
 
 Available Commands:
+  add         Add the profiles param <key> to <blob>
   create      Create a new profile with the passed-in JSON or string key
   destroy     Destroy profile by id
   exists      See if a profiles exists by id

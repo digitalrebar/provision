@@ -171,9 +171,9 @@ func TestMain(m *testing.M) {
 		"--base-root", tmpDir,
 		"--tls-key", tmpDir + "/server.key",
 		"--tls-cert", tmpDir + "/server.crt",
-		"--api-port", "10001",
-		"--static-port", "10002",
-		"--tftp-port", "10003",
+		"--api-port", "10011",
+		"--static-port", "10012",
+		"--tftp-port", "10013",
 		"--disable-dhcp",
 		"--drp-id", "Fred",
 		"--backend", "memory:///",
@@ -207,7 +207,7 @@ func TestMain(m *testing.M) {
 
 	count := 0
 	for count < 30 {
-		session, err = UserSession("https://127.0.0.1:10001", "rocketskates", "r0cketsk8ts")
+		session, err = UserSession("https://127.0.0.1:10011", "rocketskates", "r0cketsk8ts")
 		if err == nil {
 			break
 		}

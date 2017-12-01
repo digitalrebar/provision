@@ -6,6 +6,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/VictorLowther/jsonpatch2"
 	"github.com/digitalrebar/provision/api"
 	"github.com/digitalrebar/provision/models"
 	"github.com/spf13/cobra"
@@ -31,18 +32,9 @@ func (o *ops) refOrFill(key string) (data models.Model, err error) {
 			return
 		}
 	} else {
-		if buf, terr := bufOrFile(ref); terr != nil {
-			err = fmt.Errorf("Unable to process reference object: %v\n", terr)
-			return
-		} else {
-			err = api.DecodeYaml(buf, &data)
-			if err != nil {
-				err = fmt.Errorf("Unable to unmarshal reference object: %v\n", err)
-				return
-			}
-		}
+		err = bufOrFileDecode(ref, &data)
 	}
-	return data, nil
+	return
 }
 
 func (o *ops) addCommand(c *cobra.Command) {
@@ -274,15 +266,15 @@ empty object of that type.  For User, BootEnv, Machine, and Profile, it will be 
 					return nil
 				},
 				RunE: func(c *cobra.Command, args []string) error {
-					ref, err := o.refOrFill(args[0])
+					refObj, err := o.refOrFill(args[0])
 					if err != nil {
 						return err
 					}
-					toPut, err := mergeFromArgs(ref, args[1])
+					toPut, err := mergeFromArgs(refObj, args[1])
 					if err != nil {
 						return generateError(err, "Failed to generate changed %s:%s object", o.name, args[0])
 					}
-					if res, err := session.PatchTo(ref, toPut); err != nil {
+					if res, err := session.PatchToFull(refObj, toPut, ref != ""); err != nil {
 						return generateError(err, "Unable to update %v", args[0])
 					} else {
 						return prettyPrint(res)
@@ -347,8 +339,8 @@ Returns the following strings:
 					timeout = time.Second * time.Duration(t)
 				}
 				testfn := api.EqualItem(field, value)
-				item := o.example()
-				if err := session.FillModel(item, id); err != nil {
+				item, err := o.refOrFill(id)
+				if err != nil {
 					return err
 				}
 				es, err := session.Events()
@@ -399,8 +391,18 @@ func (o *ops) params() {
 				return fmt.Errorf("Unable to unmarshal input stream: %v\n", err)
 			}
 			res := map[string]interface{}{}
-			if err := session.Req().Post(val).UrlFor(o.name, args[0], "params").Do(&res); err != nil {
-				return generateError(err, "Failed to fetch params %v: %v", o.singleName, uuid)
+			if ref == "" {
+				if err := session.Req().Post(val).UrlFor(o.name, args[0], "params").Do(&res); err != nil {
+					return generateError(err, "Failed to fetch params %v: %v", o.singleName, uuid)
+				}
+			} else {
+				var data map[string]interface{}
+				if err := bufOrFileDecode(ref, &data); err != nil {
+					return generateError(err, "Failed to parse ref %s: %v", o.singleName, err)
+				}
+				if err := session.Req().ParanoidPatch().PatchObj(data, val).UrlFor(o.name, args[0], "params").Do(&res); err != nil {
+					return generateError(err, "Failed to fetch params %v: %v", o.singleName, uuid)
+				}
 			}
 			return prettyPrint(res)
 		},
@@ -434,6 +436,61 @@ func (o *ops) params() {
 	getParam.Flags().BoolVar(&aggregate, "aggregate", false, "Should machine return aggregated view")
 	o.addCommand(getParam)
 	o.addCommand(&cobra.Command{
+		Use:   "add [id] param [key] to [json blob]",
+		Short: fmt.Sprintf("Add the %s param <key> to <blob>", o.name),
+		Long:  fmt.Sprintf(`Helper function to add parameters to the %s. Fails is already present.`, o.name),
+		Args: func(c *cobra.Command, args []string) error {
+			if len(args) != 5 {
+				return fmt.Errorf("%v requires 5 arguments", c.UseLine())
+			}
+			return nil
+		},
+		RunE: func(c *cobra.Command, args []string) error {
+			uuid := args[0]
+			key := args[2]
+			newValue := args[4]
+			var value interface{}
+			err := api.DecodeYaml([]byte(newValue), &value)
+			if err != nil {
+				return fmt.Errorf("Unable to unmarshal input stream: %v\n", err)
+			}
+
+			res := map[string]interface{}{}
+			if ref == "" {
+				if err := session.Req().UrlFor(o.name, uuid, "params").Do(&res); err != nil {
+					return generateError(err, "Failed to fetch params %v: %v", o.singleName, uuid)
+				}
+			} else {
+				if err := bufOrFileDecode(ref, &res); err != nil {
+					return generateError(err, "Failed to parse ref %s: %v", o.singleName, err)
+				}
+			}
+
+			if _, ok := res[key]; ok {
+				return fmt.Errorf("Key, %s, already present on %s %s", key, o.singleName, uuid)
+			}
+
+			var params interface{}
+			path := fmt.Sprintf("/%s", makeJsonPtr(key))
+			patch := jsonpatch2.Patch{
+				jsonpatch2.Operation{
+					Op:    "test",
+					Path:  "",
+					Value: res,
+				},
+				jsonpatch2.Operation{
+					Op:    "add",
+					Path:  path,
+					Value: value,
+				},
+			}
+			if err := session.Req().Patch(patch).UrlFor(o.name, uuid, "params").Do(&params); err != nil {
+				return generateError(err, "Failed to fetch params %v: %v", o.singleName, uuid)
+			}
+			return prettyPrint(value)
+		},
+	})
+	o.addCommand(&cobra.Command{
 		Use:   "set [id] param [key] to [json blob]",
 		Short: fmt.Sprintf("Set the %s param <key> to <blob>", o.name),
 		Long:  fmt.Sprintf(`Helper function to update the %s parameters.`, o.name),
@@ -453,9 +510,32 @@ func (o *ops) params() {
 				return fmt.Errorf("Unable to unmarshal input stream: %v\n", err)
 			}
 			var params interface{}
-			err = session.Req().Post(value).UrlFor(o.name, uuid, "params", key).Do(&params)
-			if err != nil {
-				return generateError(err, "Failed to fetch params %v: %v", o.singleName, uuid)
+			if ref == "" {
+				err = session.Req().Post(value).UrlFor(o.name, uuid, "params", key).Do(&params)
+				if err != nil {
+					return generateError(err, "Failed to fetch params %v: %v", o.singleName, uuid)
+				}
+			} else {
+				var data interface{}
+				if err := bufOrFileDecode(ref, &data); err != nil {
+					return generateError(err, "Failed to parse ref %s: %v", o.singleName, err)
+				}
+				path := fmt.Sprintf("/%s", makeJsonPtr(key))
+				patch := jsonpatch2.Patch{
+					jsonpatch2.Operation{
+						Op:    "test",
+						Path:  path,
+						Value: data,
+					},
+					jsonpatch2.Operation{
+						Op:    "replace",
+						Path:  path,
+						Value: value,
+					},
+				}
+				if err := session.Req().Patch(patch).UrlFor(o.name, uuid, "params").Do(&params); err != nil {
+					return generateError(err, "Failed to fetch params %v: %v", o.singleName, uuid)
+				}
 			}
 			return prettyPrint(value)
 		},
@@ -474,9 +554,31 @@ func (o *ops) params() {
 			uuid := args[0]
 			key := args[2]
 			var param interface{}
-			err := session.Req().Del().UrlFor(o.name, uuid, "params", key).Do(&param)
-			if err != nil {
-				return generateError(err, "Failed to delete param %v: %v", key, uuid)
+			if ref == "" {
+				err := session.Req().Del().UrlFor(o.name, uuid, "params", key).Do(&param)
+				if err != nil {
+					return generateError(err, "Failed to delete param %v: %v", key, uuid)
+				}
+			} else {
+				var data interface{}
+				if err := bufOrFileDecode(ref, &data); err != nil {
+					return generateError(err, "Failed to parse ref %s: %v", o.singleName, err)
+				}
+				path := fmt.Sprintf("/%s", makeJsonPtr(key))
+				patch := jsonpatch2.Patch{
+					jsonpatch2.Operation{
+						Op:    "test",
+						Path:  path,
+						Value: data,
+					},
+					jsonpatch2.Operation{
+						Op:   "remove",
+						Path: path,
+					},
+				}
+				if err := session.Req().Patch(patch).UrlFor(o.name, uuid, "params").Do(&param); err != nil {
+					return generateError(err, "Failed to fetch params %v: %v", o.singleName, uuid)
+				}
 			}
 			return prettyPrint(param)
 		},
@@ -501,7 +603,7 @@ func (o *ops) bootenv() {
 			}
 			ex := models.Clone(data).(models.BootEnver)
 			ex.SetBootEnv(args[1])
-			res, err := session.PatchTo(data, ex)
+			res, err := session.PatchToFull(data, ex, ref != "")
 			if err != nil {
 				return generateError(err, "Unable to update %s: %v", o.singleName, args[0])
 			}
@@ -528,7 +630,7 @@ func (o *ops) profiles() {
 			}
 			ex := models.Clone(data).(models.Profiler)
 			ex.SetProfiles(append(ex.GetProfiles(), args[1]))
-			res, err := session.PatchTo(data, ex)
+			res, err := session.PatchToFull(data, ex, ref != "")
 			if err != nil {
 				return generateError(err, "Unable to update %s: %v", o.singleName, args[0])
 			}
@@ -559,7 +661,7 @@ func (o *ops) profiles() {
 				newProfiles = append(newProfiles, s)
 			}
 			ex.SetProfiles(newProfiles)
-			res, err := session.PatchTo(data, ex)
+			res, err := session.PatchToFull(data, ex, ref != "")
 			if err != nil {
 				return generateError(err, "Unable to update %s: %v", o.singleName, args[0])
 			}
@@ -587,7 +689,7 @@ func (o *ops) tasks() {
 			}
 			ex := models.Clone(data).(models.Tasker)
 			ex.SetTasks(append(ex.GetTasks(), args[1]))
-			res, err := session.PatchTo(data, ex)
+			res, err := session.PatchToFull(data, ex, ref != "")
 			if err != nil {
 				return generateError(err, "Unable to update %s: %v", o.singleName, args[0])
 			}
@@ -619,7 +721,7 @@ func (o *ops) tasks() {
 				newTasks = append(newTasks, s)
 			}
 			ex.SetTasks(newTasks)
-			res, err := session.PatchTo(data, ex)
+			res, err := session.PatchToFull(data, ex, ref != "")
 			if err != nil {
 				return generateError(err, "Unable to update %s: %v", o.singleName, args[0])
 			}
@@ -683,7 +785,7 @@ func (o *ops) tasks() {
 					mutable = append(head, tail...)
 				}
 				ex.SetTasks(append(immutable, mutable...))
-				res, err := session.PatchTo(data, ex)
+				res, err := session.PatchToFull(data, ex, ref != "")
 				if err != nil {
 					return generateError(err, "Unable to update %s: %v", o.singleName, args[0])
 				}

@@ -312,7 +312,7 @@ Templates:
 			op: func() (interface{}, error) {
 				m := models.Clone(phred)
 				m.(*models.BootEnv).OS.Name = "ffred"
-				patch, _ := GenPatch(phred, m)
+				patch, _ := GenPatch(phred, m, false)
 				phred.(*models.BootEnv).OS.Name = "ffred"
 				return session.PatchModel("bootenvs", "fred", patch)
 			},
@@ -335,7 +335,7 @@ Templates:
 				m.(*models.BootEnv).OS.Name = "zfred"
 				session.PutModel(m)
 				m.(*models.BootEnv).OS.Name = "qfred"
-				patch, _ := GenPatch(phred, m)
+				patch, _ := GenPatch(phred, m, false)
 				phred.(*models.BootEnv).OS.Name = "qfred"
 				return session.PatchModel("bootenvs", "fred", patch)
 			},
@@ -392,7 +392,7 @@ Kernel: vmlinuz0
 Name: fredhammer
 OS:
   IsoFile: sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar
-  IsoUrl: http://127.0.0.1:10002/files/sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar
+  IsoUrl: http://127.0.0.1:10012/files/sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar
   Name: sledgehammer/708de8b878e3818b1c1bb598a56de968939f9d4b
 OptionalParams:
 - ntp_servers
@@ -514,7 +514,7 @@ Validated: true`),
 			expectRes: nil,
 			expectErr: &models.Error{
 				Model:    "isos",
-				Key:      "http://127.0.0.1:10002/files/sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar",
+				Key:      "http://127.0.0.1:10012/files/sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar",
 				Type:     "DOWNLOAD_FAILED",
 				Messages: []string{"open /no/iso/here: no such file or directory"},
 			},
@@ -531,9 +531,9 @@ Validated: true`),
 			expectRes: nil,
 			expectErr: &models.Error{
 				Model:    "isos",
-				Key:      "http://127.0.0.1:10002/files/sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar",
+				Key:      "http://127.0.0.1:10012/files/sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar",
 				Type:     "DOWNLOAD_FAILED",
-				Messages: []string{"Unable to start download of http://127.0.0.1:10002/files/sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar: 404 Not Found"},
+				Messages: []string{"Unable to start download of http://127.0.0.1:10012/files/sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar: 404 Not Found"},
 			},
 			op: func() (interface{}, error) {
 				return nil, session.InstallISOForBootenv(fredhammer, path.Join(tmpDir, "fredhammer.iso"), true)
