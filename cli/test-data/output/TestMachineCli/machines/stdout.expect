@@ -26,6 +26,7 @@ Available Commands:
   set           Set the machines param <key> to <blob>
   show          Show a single machines by id
   stage         Set the machine's stage
+  tasks         Access task manipulation for machines
   update        Unsafely update machine by id with the passed-in JSON
   wait          Wait for a machine's field to become a value within a number of seconds
 
