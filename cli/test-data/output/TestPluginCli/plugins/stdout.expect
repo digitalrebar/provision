@@ -4,6 +4,7 @@ Usage:
   drpcli plugins [command]
 
 Available Commands:
+  add         Add the plugins param <key> to <blob>
   create      Create a new plugin with the passed-in JSON or string key
   destroy     Destroy plugin by id
   exists      See if a plugins exists by id
