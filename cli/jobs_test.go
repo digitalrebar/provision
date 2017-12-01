@@ -675,137 +675,134 @@ var jobLogTooManyArgsErrorString = "Error: drpcli jobs log [id] [- or string] [f
 var jobLogUnknownJobErrorString = "Error: ValidationError: Job john does not exist\n\n"
 
 func TestJobCli(t *testing.T) {
-	tests := []CliTest{
-		CliTest{false, false, []string{"tasks", "create", "task1"}, noStdinString, jobTask1Create, noErrorString},
-		CliTest{false, false, []string{"tasks", "create", "-"}, jobTask2Create, jobTask2Create, noErrorString},
-		CliTest{false, false, []string{"tasks", "create", "task3"}, noStdinString, jobTask3Create, noErrorString},
 
-		CliTest{false, false, []string{"stages", "create", jobLocal2CreateInput}, noStdinString, jobLocal2Create, noErrorString},
-		CliTest{false, false, []string{"stages", "update", "stage3", jobLocalUpdateInput}, noStdinString, jobLocalUpdateString, noErrorString},
+	cliTest(false, false, "tasks", "create", "task1").run(t)
+	cliTest(false, false, "tasks", "create", "-").Stdin(jobTask2Create).run(t)
+	cliTest(false, false, "tasks", "create", "task3").run(t)
 
-		CliTest{false, false, []string{"machines", "create", jobCreateMachineInputString}, noStdinString, jobCreateMachineJohnString, noErrorString},
+	cliTest(false, false, "stages", "create", jobLocal2CreateInput).run(t)
+	cliTest(false, false, "stages", "update", "stage3", jobLocalUpdateInput).run(t)
 
-		CliTest{true, false, []string{"jobs"}, noStdinString, "Access CLI commands relating to jobs\n", ""},
-		CliTest{false, false, []string{"jobs", "list"}, noStdinString, jobDefaultListString, noErrorString},
+	cliTest(false, false, "machines", "create", jobCreateMachineInputString).run(t)
 
-		CliTest{true, true, []string{"jobs", "create"}, noStdinString, noContentString, jobCreateNoArgErrorString},
-		CliTest{true, true, []string{"jobs", "create", "john", "john2"}, noStdinString, noContentString, jobCreateTooManyArgErrorString},
-		CliTest{false, true, []string{"jobs", "create", jobCreateBadJSONString}, noStdinString, noContentString, jobCreateBadJSONErrorString},
-		CliTest{false, true, []string{"jobs", "create", jobCreateBadJSON2String}, noStdinString, noContentString, jobCreateBadJSON2ErrorString},
-		CliTest{false, false, []string{"jobs", "create", jobCreateInputString}, noStdinString, jobCreateJohnString, noErrorString},
-		CliTest{false, true, []string{"jobs", "create", jobCreateInputString}, noStdinString, noContentString, jobCreateJobAlreadyRunningErrorString},
+	cliTest(true, false, "jobs").run(t)
+	cliTest(false, false, "jobs", "list").run(t)
 
-		CliTest{false, true, []string{"jobs", "create", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, noContentString, jobCreateJobAlreadyRunningErrorString},
-		CliTest{false, true, []string{"jobs", "create", "john"}, noStdinString, noContentString, jobCreateJobAlreadyRunningErrorString},
-		CliTest{false, true, []string{"jobs", "create", "james"}, noStdinString, noContentString, jobCreateJobInvalidMachineNameErrorString},
+	cliTest(true, true, "jobs", "create").run(t)
+	cliTest(true, true, "jobs", "create", "john", "john2").run(t)
+	cliTest(false, true, "jobs", "create", jobCreateBadJSONString).run(t)
+	cliTest(false, true, "jobs", "create", jobCreateBadJSON2String).run(t)
+	cliTest(false, false, "jobs", "create", jobCreateInputString).run(t)
+	cliTest(false, true, "jobs", "create", jobCreateInputString).run(t)
 
-		CliTest{true, true, []string{"jobs", "show"}, noStdinString, noContentString, jobShowNoArgErrorString},
-		CliTest{true, true, []string{"jobs", "show", "john", "john2"}, noStdinString, noContentString, jobShowTooManyArgErrorString},
-		CliTest{false, true, []string{"jobs", "show", "john"}, noStdinString, noContentString, jobShowMissingArgErrorString},
-		CliTest{false, false, []string{"jobs", "show", "00000000-0000-0000-0000-000000000001"}, noStdinString, jobShowJobString, noErrorString},
-		CliTest{false, false, []string{"jobs", "show", "Key:00000000-0000-0000-0000-000000000001"}, noStdinString, jobShowJobString, noErrorString},
-		CliTest{false, false, []string{"jobs", "show", "Uuid:00000000-0000-0000-0000-000000000001"}, noStdinString, jobShowJobString, noErrorString},
+	cliTest(false, true, "jobs", "create", "3e7031fe-3062-45f1-835c-92541bc9cbd3").run(t)
+	cliTest(false, true, "jobs", "create", "john").run(t)
+	cliTest(false, true, "jobs", "create", "james").run(t)
 
-		CliTest{true, true, []string{"jobs", "exists"}, noStdinString, noContentString, jobExistsNoArgErrorString},
-		CliTest{true, true, []string{"jobs", "exists", "john", "john2"}, noStdinString, noContentString, jobExistsTooManyArgErrorString},
-		CliTest{false, false, []string{"jobs", "exists", "00000000-0000-0000-0000-000000000001"}, noStdinString, jobExistsJobString, noErrorString},
-		CliTest{false, true, []string{"jobs", "exists", "john"}, noStdinString, noContentString, jobExistsMissingJohnString},
-		CliTest{false, false, []string{"jobs", "exists", "Uuid:00000000-0000-0000-0000-000000000001"}, noStdinString, jobExistsJobString, noErrorString},
-		CliTest{false, false, []string{"machines", "show", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, jobShowMachineJohnString, noErrorString},
+	cliTest(true, true, "jobs", "show").run(t)
+	cliTest(true, true, "jobs", "show", "john", "john2").run(t)
+	cliTest(false, true, "jobs", "show", "john").run(t)
+	cliTest(false, false, "jobs", "show", "00000000-0000-0000-0000-000000000001").run(t)
+	cliTest(false, false, "jobs", "show", "Key:00000000-0000-0000-0000-000000000001").run(t)
+	cliTest(false, false, "jobs", "show", "Uuid:00000000-0000-0000-0000-000000000001").run(t)
 
-		CliTest{false, false, []string{"jobs", "list"}, noStdinString, jobListJobsString, noErrorString},
-		CliTest{false, false, []string{"jobs", "list", "Stage=stage3"}, noStdinString, jobListJobsString, noErrorString},
-		CliTest{false, false, []string{"jobs", "list", "Stage=false"}, noStdinString, jobEmptyListString, noErrorString},
-		CliTest{false, false, []string{"jobs", "list", "Task=task1"}, noStdinString, jobListJobsString, noErrorString},
-		CliTest{false, false, []string{"jobs", "list", "Task=false"}, noStdinString, jobEmptyListString, noErrorString},
-		CliTest{false, false, []string{"jobs", "list", "State=created"}, noStdinString, jobListJobsString, noErrorString},
-		CliTest{false, false, []string{"jobs", "list", "State=false"}, noStdinString, jobEmptyListString, noErrorString},
-		CliTest{false, false, []string{"jobs", "list", "Machine=3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, jobListJobsString, noErrorString},
-		CliTest{false, false, []string{"jobs", "list", "Machine=4e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, jobEmptyListString, noErrorString},
-		CliTest{false, true, []string{"jobs", "list", "Machine=false"}, noStdinString, noContentString, jobExpireTimeErrorString},
-		CliTest{false, false, []string{"jobs", "list", "Archived=false"}, noStdinString, jobListJobsString, noErrorString},
-		CliTest{false, false, []string{"jobs", "list", "Archived=true"}, noStdinString, jobEmptyListString, noErrorString},
-		CliTest{false, false, []string{"jobs", "list", "StartTime=0001-01-01T00:00:00Z"}, noStdinString, jobListJobsString, noErrorString},
-		CliTest{false, false, []string{"jobs", "list", "StartTime=2001-01-01T00:00:00Z"}, noStdinString, jobEmptyListString, noErrorString},
-		CliTest{false, true, []string{"jobs", "list", "StartTime=fred"}, noStdinString, noContentString, jobBadTimeFormatString},
-		CliTest{false, false, []string{"jobs", "list", "EndTime=0001-01-01T00:00:00Z"}, noStdinString, jobListJobsString, noErrorString},
-		CliTest{false, false, []string{"jobs", "list", "EndTime=2001-01-01T00:00:00Z"}, noStdinString, jobEmptyListString, noErrorString},
-		CliTest{false, true, []string{"jobs", "list", "EndTime=fred"}, noStdinString, noContentString, jobBadTimeFormatString},
-		CliTest{false, false, []string{"jobs", "list", "UUID=4e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, jobEmptyListString, noErrorString},
-		CliTest{false, false, []string{"jobs", "list", "UUID=00000000-0000-0000-0000-000000000001"}, noStdinString, jobListJobsString, noErrorString},
-		CliTest{false, true, []string{"jobs", "list", "UUID=false"}, noStdinString, noContentString, jobExpireTimeErrorString},
-		CliTest{false, true, []string{"jobs", "destroy", "00000000-0000-0000-0000-000000000001"}, noStdinString, noContentString, jobDestroyBadString},
+	cliTest(true, true, "jobs", "exists").run(t)
+	cliTest(true, true, "jobs", "exists", "john", "john2").run(t)
+	cliTest(false, false, "jobs", "exists", "00000000-0000-0000-0000-000000000001").run(t)
+	cliTest(false, true, "jobs", "exists", "john").run(t)
+	cliTest(false, false, "jobs", "exists", "Uuid:00000000-0000-0000-0000-000000000001").run(t)
+	cliTest(false, false, "machines", "show", "3e7031fe-3062-45f1-835c-92541bc9cbd3").run(t)
 
-		CliTest{true, true, []string{"jobs", "log"}, noStdinString, noContentString, jobLogNoArgErrorString},
-		CliTest{true, true, []string{"jobs", "log", "john", "john2", "john3"}, noStdinString, noContentString, jobLogTooManyArgsErrorString},
-		CliTest{false, true, []string{"jobs", "log", "john"}, noStdinString, noContentString, jobLogUnknownJobErrorString},
-		CliTest{false, false, []string{"jobs", "log", "00000000-0000-0000-0000-000000000001"}, noStdinString, "Log for Job: 00000000-0000-0000-0000-000000000001\n", noErrorString},
-		CliTest{false, false, []string{"jobs", "log", "00000000-0000-0000-0000-000000000001", "Fred\n"}, noStdinString, "Success\n", noErrorString},
-		CliTest{false, false, []string{"jobs", "log", "00000000-0000-0000-0000-000000000001"}, noStdinString, "Log for Job: 00000000-0000-0000-0000-000000000001\nFred\n", noErrorString},
-		CliTest{false, false, []string{"jobs", "log", "00000000-0000-0000-0000-000000000001", "-"}, "Freddy\n", "Success\n", noErrorString},
-		CliTest{false, false, []string{"jobs", "log", "00000000-0000-0000-0000-000000000001"}, noStdinString, "Log for Job: 00000000-0000-0000-0000-000000000001\nFred\nFreddy\n", noErrorString},
+	cliTest(false, false, "jobs", "list").run(t)
+	cliTest(false, false, "jobs", "list", "Stage=stage3").run(t)
+	cliTest(false, false, "jobs", "list", "Stage=false").run(t)
+	cliTest(false, false, "jobs", "list", "Task=task1").run(t)
+	cliTest(false, false, "jobs", "list", "Task=false").run(t)
+	cliTest(false, false, "jobs", "list", "State=created").run(t)
+	cliTest(false, false, "jobs", "list", "State=false").run(t)
+	cliTest(false, false, "jobs", "list", "Machine=3e7031fe-3062-45f1-835c-92541bc9cbd3").run(t)
+	cliTest(false, false, "jobs", "list", "Machine=4e7031fe-3062-45f1-835c-92541bc9cbd3").run(t)
+	cliTest(false, true, "jobs", "list", "Machine=false").run(t)
+	cliTest(false, false, "jobs", "list", "Archived=false").run(t)
+	cliTest(false, false, "jobs", "list", "Archived=true").run(t)
+	cliTest(false, false, "jobs", "list", "StartTime=0001-01-01T00:00:00Z").run(t)
+	cliTest(false, false, "jobs", "list", "StartTime=2001-01-01T00:00:00Z").run(t)
+	cliTest(false, true, "jobs", "list", "StartTime=fred").run(t)
+	cliTest(false, false, "jobs", "list", "EndTime=0001-01-01T00:00:00Z").run(t)
+	cliTest(false, false, "jobs", "list", "EndTime=2001-01-01T00:00:00Z").run(t)
+	cliTest(false, true, "jobs", "list", "EndTime=fred").run(t)
+	cliTest(false, false, "jobs", "list", "Uuid=4e7031fe-3062-45f1-835c-92541bc9cbd3").run(t)
+	cliTest(false, false, "jobs", "list", "Uuid=00000000-0000-0000-0000-000000000001").run(t)
+	cliTest(false, true, "jobs", "list", "Uuid=false").run(t)
+	cliTest(false, true, "jobs", "destroy", "00000000-0000-0000-0000-000000000001").run(t)
 
-		CliTest{true, true, []string{"jobs", "update"}, noStdinString, noContentString, jobUpdateNoArgErrorString},
-		CliTest{true, true, []string{"jobs", "update", "john", "john2", "john3"}, noStdinString, noContentString, jobUpdateTooManyArgErrorString},
-		CliTest{false, true, []string{"jobs", "update", "00000000-0000-0000-0000-000000000001", jobUpdateBadJSONString}, noStdinString, noContentString, jobUpdateBadJSONErrorString},
-		CliTest{false, true, []string{"jobs", "update", "00000000-0000-0000-0000-000000000001", jobUpdateBadJSON2String}, noStdinString, noContentString, jobUpdateBadJSON2ErrorString},
-		CliTest{false, true, []string{"jobs", "update", "00000000-0000-0000-0000-000000000001", jobUpdateBadInputString}, noStdinString, noContentString, jobUpdateBadInputErrorString},
-		CliTest{false, false, []string{"jobs", "update", "00000000-0000-0000-0000-000000000001", jobUpdateInputString}, noStdinString, jobUpdateJohnString, noErrorString},
-		CliTest{false, true, []string{"jobs", "update", "john2", jobUpdateInputString}, noStdinString, noContentString, jobUpdateJohnMissingErrorString},
-		CliTest{false, false, []string{"jobs", "show", "00000000-0000-0000-0000-000000000001"}, noStdinString, jobUpdateJohnString, noErrorString},
-		// This tests that incomplete jobs come back.
-		CliTest{false, false, []string{"jobs", "create", "john"}, noStdinString, jobUpdateJohnString, noErrorString},
+	cliTest(true, true, "jobs", "log").run(t)
+	cliTest(true, true, "jobs", "log", "john", "john2", "john3").run(t)
+	cliTest(false, true, "jobs", "log", "john").run(t)
+	cliTest(false, false, "jobs", "log", "00000000-0000-0000-0000-000000000001").run(t)
+	cliTest(false, false, "jobs", "log", "00000000-0000-0000-0000-000000000001", "Fred\n").run(t)
+	cliTest(false, false, "jobs", "log", "00000000-0000-0000-0000-000000000001").run(t)
+	cliTest(false, false, "jobs", "log", "00000000-0000-0000-0000-000000000001", "-").Stdin("Freddy\n").run(t)
+	cliTest(false, false, "jobs", "log", "00000000-0000-0000-0000-000000000001").run(t)
 
-		CliTest{true, true, []string{"jobs", "patch"}, noStdinString, noContentString, jobPatchNoArgErrorString},
-		CliTest{true, true, []string{"jobs", "patch", "john", "john2", "john3"}, noStdinString, noContentString, jobPatchTooManyArgErrorString},
-		CliTest{false, true, []string{"jobs", "patch", jobPatchBaseString, jobPatchBadPatchJSONString}, noStdinString, noContentString, jobPatchBadPatchJSONErrorString},
-		CliTest{false, true, []string{"jobs", "patch", jobPatchBaseString, jobPatchBadPatchJSON2String}, noStdinString, noContentString, jobPatchBadPatchJSON2ErrorString},
-		CliTest{false, true, []string{"jobs", "patch", jobPatchBadBaseJSONString, jobPatchInputString}, noStdinString, noContentString, jobPatchBadBaseJSONErrorString},
-		CliTest{false, true, []string{"jobs", "patch", jobPatchBaseString, jobPatchBadInputString}, noStdinString, noContentString, jobPatchBadInputErrorString},
-		CliTest{false, false, []string{"jobs", "patch", jobPatchBaseString, jobPatchInputString}, noStdinString, jobPatchInputReplyString, noErrorString},
-		CliTest{false, false, []string{"jobs", "patch", jobPatchBase2String, jobPatchInput2String}, noStdinString, jobPatchJohnString, noErrorString},
-		CliTest{false, true, []string{"jobs", "patch", jobPatchMissingBaseString, jobPatchInputString}, noStdinString, noContentString, jobPatchJohnMissingErrorString},
-		CliTest{false, false, []string{"jobs", "show", "00000000-0000-0000-0000-000000000001"}, noStdinString, jobPatchJohnString, noErrorString},
+	cliTest(true, true, "jobs", "update").run(t)
+	cliTest(true, true, "jobs", "update", "john", "john2", "john3").run(t)
+	cliTest(false, true, "jobs", "update", "00000000-0000-0000-0000-000000000001", jobUpdateBadJSONString).run(t)
+	cliTest(false, true, "jobs", "update", "00000000-0000-0000-0000-000000000001", jobUpdateBadJSON2String).run(t)
+	cliTest(false, true, "jobs", "update", "00000000-0000-0000-0000-000000000001", jobUpdateBadInputString).run(t)
+	cliTest(false, false, "jobs", "update", "00000000-0000-0000-0000-000000000001", jobUpdateInputString).run(t)
+	cliTest(false, true, "jobs", "update", "john2", jobUpdateInputString).run(t)
+	cliTest(false, false, "jobs", "show", "00000000-0000-0000-0000-000000000001").run(t)
+	// This tests that incomplete jobs come back.
+	cliTest(false, false, "jobs", "create", "john").run(t)
+	/* No patch tests for now
+	cliTest(true, true, "jobs", "patch").run(t)
+	cliTest(true, true, "jobs", "patch", "john", "john2", "john3").run(t)
+	cliTest(false, true, "jobs", "patch", jobPatchBaseString, jobPatchBadPatchJSONString).run(t)
+	cliTest(false, true, "jobs", "patch", jobPatchBaseString, jobPatchBadPatchJSON2String).run(t)
+	cliTest(false, true, "jobs", "patch", jobPatchBadBaseJSONString, jobPatchInputString).run(t)
+	cliTest(false, true, "jobs", "patch", jobPatchBaseString, jobPatchBadInputString).run(t)
+	cliTest(false, false, "jobs", "patch", jobPatchBaseString, jobPatchInputString).run(t)
+	cliTest(false, false, "jobs", "patch", jobPatchBase2String, jobPatchInput2String).run(t)
+	cliTest(false, true, "jobs", "patch", jobPatchMissingBaseString, jobPatchInputString).run(t)
+	*/
+	cliTest(false, false, "jobs", "show", "00000000-0000-0000-0000-000000000001").run(t)
 
-		// This tests that incomplet jobs come back again
-		CliTest{false, false, []string{"jobs", "create", "-"}, jobCreateNextInputString + "\n", jobPatchJohnString, noErrorString},
-		CliTest{false, false, []string{"jobs", "update", "00000000-0000-0000-0000-000000000001", jobUpdateFailedJobInputString}, noStdinString, jobUpdateFailedJobUpdateString, noErrorString},
-		CliTest{false, true, []string{"jobs", "create", "-"}, jobCreateNextInputString + "\n", noContentString, jobCreateMachineNotRunningErrorString},
-		CliTest{false, false, []string{"machines", "update", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "{ \"Runnable\": true }"}, noStdinString, jobUpdateMachineRunnableString, noErrorString},
-		CliTest{false, false, []string{"jobs", "create", "-"}, jobCreateNextInputString + "\n", jobCreateNextString, noErrorString},
-		CliTest{false, false, []string{"jobs", "update", "00000000-0000-0000-0000-000000000002", jobUpdateFinishedJobInputString}, noStdinString, jobUpdateFinishedJob2UpdateString, noErrorString},
-		CliTest{false, false, []string{"jobs", "create", "-"}, jobCreateNextInput3String + "\n", jobCreateNext3String, noErrorString},
-		CliTest{false, false, []string{"jobs", "update", "00000000-0000-0000-0000-000000000003", jobUpdateFinishedJobInputString}, noStdinString, jobUpdateFinishedJob3UpdateString, noErrorString},
-		CliTest{false, false, []string{"jobs", "create", "-"}, jobCreateNextInput4String + "\n", jobCreateNext4String, noErrorString},
-		CliTest{false, false, []string{"jobs", "update", "00000000-0000-0000-0000-000000000004", jobUpdateFinishedJobInputString}, noStdinString, jobUpdateFinishedJob4UpdateString, noErrorString},
-		CliTest{false, false, []string{"jobs", "create", "-"}, jobCreateNextInput5String + "\n", "null\n", noErrorString},
+	// This tests that incomplet jobs come back again
+	cliTest(false, false, "jobs", "create", "-").Stdin(jobCreateNextInputString + "\n").run(t)
+	cliTest(false, false, "jobs", "update", "00000000-0000-0000-0000-000000000001", jobUpdateFailedJobInputString).run(t)
+	cliTest(false, true, "jobs", "create", "-").Stdin(jobCreateNextInputString + "\n").run(t)
+	cliTest(false, false, "machines", "update", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "{ \"Runnable\": true }").run(t)
+	cliTest(false, false, "jobs", "create", "-").Stdin(jobCreateNextInputString + "\n").run(t)
+	cliTest(false, false, "jobs", "update", "00000000-0000-0000-0000-000000000002", jobUpdateFinishedJobInputString).run(t)
+	cliTest(false, false, "jobs", "create", "-").Stdin(jobCreateNextInput3String).run(t)
+	cliTest(false, false, "jobs", "update", "00000000-0000-0000-0000-000000000003", jobUpdateFinishedJobInputString).run(t)
+	cliTest(false, false, "jobs", "create", "-").Stdin(jobCreateNextInput4String + "\n").run(t)
+	cliTest(false, false, "jobs", "update", "00000000-0000-0000-0000-000000000004", jobUpdateFinishedJobInputString).run(t)
+	cliTest(false, false, "jobs", "create", "-").Stdin(jobCreateNextInput5String + "\n").run(t)
 
-		CliTest{false, false, []string{"jobs", "list"}, noStdinString, jobFullListString, noErrorString},
+	cliTest(false, false, "jobs", "list").run(t)
 
-		CliTest{true, true, []string{"jobs", "actions"}, noStdinString, noContentString, jobActionsNoArgErrorString},
-		CliTest{true, true, []string{"jobs", "actions", "john", "june"}, noStdinString, noContentString, jobActionsTooManyArgErrorString},
-		CliTest{false, true, []string{"jobs", "actions", "john"}, noStdinString, noContentString, jobActionsMissingJobErrorString},
-		CliTest{false, false, []string{"jobs", "actions", "00000000-0000-0000-0000-000000000001"}, noStdinString, jobActionsRenderedTask1String, noErrorString},
-		CliTest{false, false, []string{"jobs", "actions", "00000000-0000-0000-0000-000000000003"}, noStdinString, jobActionsRenderedTask2String, noErrorString},
-		CliTest{false, false, []string{"machines", "destroy", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, machineDestroyJohnString, noErrorString},
-		CliTest{false, true, []string{"jobs", "actions", "00000000-0000-0000-0000-000000000003"}, noStdinString, noContentString, jobActionsMissingMachineRenderErrorString},
-		CliTest{false, false, []string{"stages", "destroy", "stage3"}, noStdinString, "Deleted stage stage3\n", noErrorString},
-		CliTest{false, false, []string{"tasks", "destroy", "task1"}, noStdinString, "Deleted task task1\n", noErrorString},
-		CliTest{false, false, []string{"tasks", "destroy", "task2"}, noStdinString, "Deleted task task2\n", noErrorString},
-		CliTest{false, false, []string{"tasks", "destroy", "task3"}, noStdinString, "Deleted task task3\n", noErrorString},
-		CliTest{false, true, []string{"jobs", "actions", "00000000-0000-0000-0000-000000000003"}, noStdinString, noContentString, jobActionsMissingTaskRenderErrorString},
+	cliTest(true, true, "jobs", "actions").run(t)
+	cliTest(true, true, "jobs", "actions", "john", "june").run(t)
+	cliTest(false, true, "jobs", "actions", "john").run(t)
+	cliTest(false, false, "jobs", "actions", "00000000-0000-0000-0000-000000000001").run(t)
+	cliTest(false, false, "jobs", "actions", "00000000-0000-0000-0000-000000000003").run(t)
+	cliTest(false, false, "machines", "destroy", "3e7031fe-3062-45f1-835c-92541bc9cbd3").run(t)
+	cliTest(false, true, "jobs", "actions", "00000000-0000-0000-0000-000000000003").run(t)
+	cliTest(false, false, "stages", "destroy", "stage3").run(t)
+	cliTest(false, false, "tasks", "destroy", "task1").run(t)
+	cliTest(false, false, "tasks", "destroy", "task2").run(t)
+	cliTest(false, false, "tasks", "destroy", "task3").run(t)
+	cliTest(false, true, "jobs", "actions", "00000000-0000-0000-0000-000000000003").run(t)
 
-		CliTest{true, true, []string{"jobs", "destroy"}, noStdinString, noContentString, jobDestroyNoArgErrorString},
-		CliTest{true, true, []string{"jobs", "destroy", "john", "june"}, noStdinString, noContentString, jobDestroyTooManyArgErrorString},
-		CliTest{false, true, []string{"jobs", "destroy", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, noContentString, jobDestroyMissingJohnString},
-		CliTest{false, false, []string{"jobs", "destroy", "00000000-0000-0000-0000-000000000001"}, noStdinString, jobDestroy001String, noErrorString},
-		CliTest{false, false, []string{"jobs", "destroy", "00000000-0000-0000-0000-000000000002"}, noStdinString, jobDestroy002String, noErrorString},
-		CliTest{false, false, []string{"jobs", "destroy", "00000000-0000-0000-0000-000000000003"}, noStdinString, jobDestroy003String, noErrorString},
-		CliTest{false, false, []string{"jobs", "destroy", "00000000-0000-0000-0000-000000000004"}, noStdinString, jobDestroy004String, noErrorString},
-		CliTest{false, false, []string{"jobs", "list"}, noStdinString, jobDefaultListString, noErrorString},
-	}
+	cliTest(true, true, "jobs", "destroy").run(t)
+	cliTest(true, true, "jobs", "destroy", "john", "june").run(t)
+	cliTest(false, true, "jobs", "destroy", "3e7031fe-3062-45f1-835c-92541bc9cbd3").run(t)
+	cliTest(false, false, "jobs", "destroy", "00000000-0000-0000-0000-000000000001").run(t)
+	cliTest(false, false, "jobs", "destroy", "00000000-0000-0000-0000-000000000002").run(t)
+	cliTest(false, false, "jobs", "destroy", "00000000-0000-0000-0000-000000000003").run(t)
+	cliTest(false, false, "jobs", "destroy", "00000000-0000-0000-0000-000000000004").run(t)
+	cliTest(false, false, "jobs", "list").run(t)
 
-	for _, test := range tests {
-		testCli(t, test)
-	}
 }

@@ -180,92 +180,68 @@ var pluginUpdateJohnWithParamsString string = `{
 `
 
 func TestPluginCli(t *testing.T) {
-
-	tests := []CliTest{
-		CliTest{true, false, []string{"plugins"}, noStdinString, "Access CLI commands relating to plugins\n", ""},
-		CliTest{false, false, []string{"plugins", "list"}, noStdinString, pluginDefaultListString, noErrorString},
-
-		CliTest{true, true, []string{"plugins", "create"}, noStdinString, noContentString, pluginCreateNoArgErrorString},
-		CliTest{true, true, []string{"plugins", "create", "john", "john2"}, noStdinString, noContentString, pluginCreateTooManyArgErrorString},
-		CliTest{false, true, []string{"plugins", "create", pluginCreateBadJSONString}, noStdinString, noContentString, pluginCreateBadJSONErrorString},
-		CliTest{false, true, []string{"plugins", "create", pluginCreateBadJSON2String}, noStdinString, noContentString, pluginCreateBadJSON2ErrorString},
-		CliTest{false, true, []string{"plugins", "create", pluginCreateMissingAllInputString}, noStdinString, noContentString, pluginCreateMissingAllErrorString},
-		CliTest{false, true, []string{"plugins", "create", pluginCreateMissingProviderInputString}, noStdinString, noContentString, pluginCreateMissingProviderErrorString},
-		CliTest{false, false, []string{"plugins", "create", pluginCreateInputString}, noStdinString, pluginCreateJohnString, noErrorString},
-		CliTest{false, true, []string{"plugins", "create", pluginCreateInputString}, noStdinString, noContentString, pluginCreateDuplicateErrorString},
-		CliTest{false, false, []string{"plugins", "list"}, noStdinString, pluginListPluginsString, noErrorString},
-		CliTest{false, false, []string{"plugins", "list", "Name=fred"}, noStdinString, pluginEmptyListString, noErrorString},
-		CliTest{false, false, []string{"plugins", "list", "Name=i-woman"}, noStdinString, pluginListPluginsString, noErrorString},
-		CliTest{false, false, []string{"plugins", "list", "Provider=local"}, noStdinString, pluginEmptyListString, noErrorString},
-		CliTest{false, false, []string{"plugins", "list", "Provider=incrementer"}, noStdinString, pluginListPluginsString, noErrorString},
-		CliTest{true, true, []string{"plugins", "show"}, noStdinString, noContentString, pluginShowNoArgErrorString},
-		CliTest{true, true, []string{"plugins", "show", "john", "john2"}, noStdinString, noContentString, pluginShowTooManyArgErrorString},
-		CliTest{false, true, []string{"plugins", "show", "john"}, noStdinString, noContentString, pluginShowMissingArgErrorString},
-		CliTest{false, false, []string{"plugins", "show", "i-woman"}, noStdinString, pluginShowPluginString, noErrorString},
-		CliTest{false, false, []string{"plugins", "show", "Key:i-woman"}, noStdinString, pluginShowPluginString, noErrorString},
-		CliTest{false, false, []string{"plugins", "show", "Name:i-woman"}, noStdinString, pluginShowPluginString, noErrorString},
-
-		CliTest{true, true, []string{"plugins", "exists"}, noStdinString, noContentString, pluginExistsNoArgErrorString},
-		CliTest{true, true, []string{"plugins", "exists", "john", "john2"}, noStdinString, noContentString, pluginExistsTooManyArgErrorString},
-		CliTest{false, false, []string{"plugins", "exists", "i-woman"}, noStdinString, pluginExistsPluginString, noErrorString},
-		CliTest{false, true, []string{"plugins", "exists", "john"}, noStdinString, noContentString, pluginExistsMissingJohnString},
-
-		CliTest{true, true, []string{"plugins", "update"}, noStdinString, noContentString, pluginUpdateNoArgErrorString},
-		CliTest{true, true, []string{"plugins", "update", "john", "john2", "john3"}, noStdinString, noContentString, pluginUpdateTooManyArgErrorString},
-		CliTest{false, true, []string{"plugins", "update", "i-woman", pluginUpdateBadJSONString}, noStdinString, noContentString, pluginUpdateBadJSONErrorString},
-		CliTest{false, false, []string{"plugins", "update", "i-woman", pluginUpdateInputString}, noStdinString, pluginUpdateJohnString, noErrorString},
-		CliTest{false, true, []string{"plugins", "update", "john2", pluginUpdateInputString}, noStdinString, noContentString, pluginUpdateJohnMissingErrorString},
-		CliTest{false, false, []string{"plugins", "show", "i-woman"}, noStdinString, pluginUpdateJohnString, noErrorString},
-
-		CliTest{true, true, []string{"plugins", "patch"}, noStdinString, noContentString, pluginPatchNoArgErrorString},
-		CliTest{true, true, []string{"plugins", "patch", "john", "john2", "john3"}, noStdinString, noContentString, pluginPatchTooManyArgErrorString},
-		CliTest{false, true, []string{"plugins", "patch", pluginPatchBaseString, pluginPatchBadPatchJSONString}, noStdinString, noContentString, pluginPatchBadPatchJSONErrorString},
-		CliTest{false, true, []string{"plugins", "patch", pluginPatchBadBaseJSONString, pluginPatchInputString}, noStdinString, noContentString, pluginPatchBadBaseJSONErrorString},
-		CliTest{false, false, []string{"plugins", "patch", pluginPatchBaseString, pluginPatchInputString}, noStdinString, pluginPatchJohnString, noErrorString},
-		CliTest{false, true, []string{"plugins", "patch", pluginPatchMissingBaseString, pluginPatchInputString}, noStdinString, noContentString, pluginPatchJohnMissingErrorString},
-		CliTest{false, false, []string{"plugins", "show", "i-woman"}, noStdinString, pluginPatchJohnString, noErrorString},
-
-		CliTest{true, true, []string{"plugins", "destroy"}, noStdinString, noContentString, pluginDestroyNoArgErrorString},
-		CliTest{true, true, []string{"plugins", "destroy", "john", "june"}, noStdinString, noContentString, pluginDestroyTooManyArgErrorString},
-		CliTest{false, false, []string{"plugins", "destroy", "i-woman"}, noStdinString, pluginDestroyJohnString, noErrorString},
-		CliTest{false, true, []string{"plugins", "destroy", "i-woman"}, noStdinString, noContentString, pluginDestroyMissingJohnString},
-		CliTest{false, false, []string{"plugins", "list"}, noStdinString, pluginDefaultListString, noErrorString},
-
-		CliTest{false, false, []string{"plugins", "create", "-"}, pluginCreateInputString + "\n", pluginCreateJohnString, noErrorString},
-		CliTest{false, false, []string{"plugins", "list"}, noStdinString, pluginListPluginsString, noErrorString},
-		CliTest{false, false, []string{"plugins", "update", "i-woman", "-"}, pluginUpdateInputString + "\n", pluginUpdateJohnString, noErrorString},
-		CliTest{false, false, []string{"plugins", "show", "i-woman"}, noStdinString, pluginUpdateJohnString, noErrorString},
-
-		CliTest{true, true, []string{"plugins", "get"}, noStdinString, noContentString, pluginGetNoArgErrorString},
-		CliTest{false, true, []string{"plugins", "get", "john", "param", "john2"}, noStdinString, noContentString, pluginGetMissingPluginErrorString},
-		CliTest{false, false, []string{"plugins", "get", "i-woman", "param", "john2"}, noStdinString, "null\n", noErrorString},
-
-		CliTest{true, true, []string{"plugins", "set"}, noStdinString, noContentString, pluginSetNoArgErrorString},
-		CliTest{false, true, []string{"plugins", "set", "john", "param", "john2", "to", "cow"}, noStdinString, noContentString, pluginSetMissingPluginErrorString},
-		CliTest{false, false, []string{"plugins", "set", "i-woman", "param", "john2", "to", "cow"}, noStdinString, "\"cow\"\n", noErrorString},
-		CliTest{false, false, []string{"plugins", "get", "i-woman", "param", "john2"}, noStdinString, "\"cow\"\n", noErrorString},
-		CliTest{false, false, []string{"plugins", "set", "i-woman", "param", "john2", "to", "3"}, noStdinString, "3\n", noErrorString},
-		CliTest{false, false, []string{"plugins", "set", "i-woman", "param", "john3", "to", "4"}, noStdinString, "4\n", noErrorString},
-		CliTest{false, false, []string{"plugins", "get", "i-woman", "param", "john2"}, noStdinString, "3\n", noErrorString},
-		CliTest{false, false, []string{"plugins", "get", "i-woman", "param", "john3"}, noStdinString, "4\n", noErrorString},
-		CliTest{false, false, []string{"plugins", "set", "i-woman", "param", "john2", "to", "null"}, noStdinString, "null\n", noErrorString},
-		CliTest{false, false, []string{"plugins", "get", "i-woman", "param", "john2"}, noStdinString, "null\n", noErrorString},
-		CliTest{false, false, []string{"plugins", "get", "i-woman", "param", "john3"}, noStdinString, "4\n", noErrorString},
-
-		CliTest{true, true, []string{"plugins", "params"}, noStdinString, noContentString, pluginParamsNoArgErrorString},
-		CliTest{false, true, []string{"plugins", "params", "john2"}, noStdinString, noContentString, pluginParamsMissingPluginErrorString},
-		CliTest{false, false, []string{"plugins", "params", "i-woman"}, noStdinString, pluginParamsStartingString, noErrorString},
-		CliTest{false, true, []string{"plugins", "params", "john2", pluginsParamsNextString}, noStdinString, noContentString, pluginsParamsSetMissingPluginString},
-		CliTest{false, false, []string{"plugins", "params", "i-woman", pluginsParamsNextString}, noStdinString, pluginsParamsNextString, noErrorString},
-		CliTest{false, false, []string{"plugins", "params", "i-woman"}, noStdinString, pluginsParamsNextString, noErrorString},
-
-		CliTest{false, false, []string{"plugins", "show", "i-woman"}, noStdinString, pluginUpdateJohnWithParamsString, noErrorString},
-
-		CliTest{false, false, []string{"plugins", "destroy", "i-woman"}, noStdinString, pluginDestroyJohnString, noErrorString},
-		CliTest{false, false, []string{"plugins", "list"}, noStdinString, pluginDefaultListString, noErrorString},
-	}
-
-	for _, test := range tests {
-		testCli(t, test)
-	}
+	cliTest(true, false, "plugins").run(t)
+	cliTest(false, false, "plugins", "list").run(t)
+	cliTest(true, true, "plugins", "create").run(t)
+	cliTest(true, true, "plugins", "create", "john", "john2").run(t)
+	cliTest(false, true, "plugins", "create", pluginCreateBadJSONString).run(t)
+	cliTest(false, true, "plugins", "create", pluginCreateBadJSON2String).run(t)
+	cliTest(false, true, "plugins", "create", pluginCreateMissingAllInputString).run(t)
+	cliTest(false, true, "plugins", "create", pluginCreateMissingProviderInputString).run(t)
+	cliTest(false, false, "plugins", "create", pluginCreateInputString).run(t)
+	cliTest(false, true, "plugins", "create", pluginCreateInputString).run(t)
+	cliTest(false, false, "plugins", "list").run(t)
+	cliTest(false, false, "plugins", "list", "Name=fred").run(t)
+	cliTest(false, false, "plugins", "list", "Name=i-woman").run(t)
+	cliTest(false, false, "plugins", "list", "Provider=local").run(t)
+	cliTest(false, false, "plugins", "list", "Provider=incrementer").run(t)
+	cliTest(true, true, "plugins", "show").run(t)
+	cliTest(true, true, "plugins", "show", "john", "john2").run(t)
+	cliTest(false, true, "plugins", "show", "john").run(t)
+	cliTest(false, false, "plugins", "show", "i-woman").run(t)
+	cliTest(false, false, "plugins", "show", "Key:i-woman").run(t)
+	cliTest(false, false, "plugins", "show", "Name:i-woman").run(t)
+	cliTest(true, true, "plugins", "exists").run(t)
+	cliTest(true, true, "plugins", "exists", "john", "john2").run(t)
+	cliTest(false, false, "plugins", "exists", "i-woman").run(t)
+	cliTest(false, true, "plugins", "exists", "john").run(t)
+	cliTest(true, true, "plugins", "update").run(t)
+	cliTest(true, true, "plugins", "update", "john", "john2", "john3").run(t)
+	cliTest(false, true, "plugins", "update", "i-woman", pluginUpdateBadJSONString).run(t)
+	cliTest(false, false, "plugins", "update", "i-woman", pluginUpdateInputString).run(t)
+	cliTest(false, true, "plugins", "update", "john2", pluginUpdateInputString).run(t)
+	cliTest(false, false, "plugins", "show", "i-woman").run(t)
+	cliTest(false, false, "plugins", "show", "i-woman").run(t)
+	cliTest(true, true, "plugins", "destroy").run(t)
+	cliTest(true, true, "plugins", "destroy", "john", "june").run(t)
+	cliTest(false, false, "plugins", "destroy", "i-woman").run(t)
+	cliTest(false, true, "plugins", "destroy", "i-woman").run(t)
+	cliTest(false, false, "plugins", "list").run(t)
+	cliTest(false, false, "plugins", "create", "-").Stdin(pluginCreateInputString + "\n").run(t)
+	cliTest(false, false, "plugins", "list").run(t)
+	cliTest(false, false, "plugins", "update", "i-woman", "-").Stdin(pluginUpdateInputString + "\n").run(t)
+	cliTest(false, false, "plugins", "show", "i-woman").run(t)
+	cliTest(true, true, "plugins", "get").run(t)
+	cliTest(false, true, "plugins", "get", "john", "param", "john2").run(t)
+	cliTest(false, false, "plugins", "get", "i-woman", "param", "john2").run(t)
+	cliTest(true, true, "plugins", "set").run(t)
+	cliTest(false, true, "plugins", "set", "john", "param", "john2", "to", "cow").run(t)
+	cliTest(false, false, "plugins", "set", "i-woman", "param", "john2", "to", "cow").run(t)
+	cliTest(false, false, "plugins", "get", "i-woman", "param", "john2").run(t)
+	cliTest(false, false, "plugins", "set", "i-woman", "param", "john2", "to", "3").run(t)
+	cliTest(false, false, "plugins", "set", "i-woman", "param", "john3", "to", "4").run(t)
+	cliTest(false, false, "plugins", "get", "i-woman", "param", "john2").run(t)
+	cliTest(false, false, "plugins", "get", "i-woman", "param", "john3").run(t)
+	cliTest(false, false, "plugins", "set", "i-woman", "param", "john2", "to", "null").run(t)
+	cliTest(false, false, "plugins", "get", "i-woman", "param", "john2").run(t)
+	cliTest(false, false, "plugins", "get", "i-woman", "param", "john3").run(t)
+	cliTest(true, true, "plugins", "params").run(t)
+	cliTest(false, true, "plugins", "params", "john2").run(t)
+	cliTest(false, false, "plugins", "params", "i-woman").run(t)
+	cliTest(false, true, "plugins", "params", "john2", pluginsParamsNextString).run(t)
+	cliTest(false, false, "plugins", "params", "i-woman", pluginsParamsNextString).run(t)
+	cliTest(false, false, "plugins", "params", "i-woman").run(t)
+	cliTest(false, false, "plugins", "show", "i-woman").run(t)
+	cliTest(false, false, "plugins", "destroy", "i-woman").run(t)
+	cliTest(false, false, "plugins", "list").run(t)
 }

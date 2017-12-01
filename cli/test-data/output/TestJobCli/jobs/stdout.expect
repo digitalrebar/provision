@@ -1,0 +1,31 @@
+Access CLI commands relating to jobs
+
+Usage:
+  drpcli jobs [command]
+
+Available Commands:
+  actions     Get the actions for this job
+  create      Create a new job with the passed-in JSON or string key
+  destroy     Destroy job by id
+  exists      See if a jobs exists by id
+  indexes     Get indexes for jobs
+  list        List all jobs
+  log         Gets the log or appends to the log if a second argument or stream is given
+  show        Show a single jobs by id
+  update      Unsafely update job by id with the passed-in JSON
+  wait        Wait for a job's field to become a value within a number of seconds
+
+Flags:
+  -h, --help   help for jobs
+
+Global Flags:
+  -d, --debug             Whether the CLI should run in debug mode
+  -E, --endpoint string   The Digital Rebar Provision API endpoint to talk to (default "https://127.0.0.1:8092")
+  -f, --force             When needed, attempt to force the operation - used on some update/patch calls
+  -F, --format string     The serialzation we expect for output.  Can be "json" or "yaml" (default "json")
+  -P, --password string   password of the Digital Rebar Provision user (default "r0cketsk8ts")
+  -r, --ref string        A reference object for update commands that can be a file name, yaml, or json blob
+  -T, --token string      token of the Digital Rebar Provision access
+  -U, --username string   Name of the Digital Rebar Provision user to talk to (default "rocketskates")
+
+Use "drpcli jobs [command] --help" for more information about a command.

@@ -55,6 +55,29 @@ type Stage struct {
 	RunnerWait bool
 }
 
+func (s *Stage) Validate() {
+	s.AddError(ValidName("Invalid Name", s.Name))
+	if s.BootEnv != "" {
+		s.AddError(ValidName("Invalid BootEnv", s.BootEnv))
+	}
+
+	for _, p := range s.RequiredParams {
+		s.AddError(ValidParamName("Invalid Required Param", p))
+	}
+	for _, p := range s.OptionalParams {
+		s.AddError(ValidParamName("Invalid Optional Param", p))
+	}
+	for _, t := range s.Templates {
+		s.AddError(ValidName("Invalid Template Name", t.Name))
+	}
+	for _, p := range s.Profiles {
+		s.AddError(ValidName("Invalid Profile", p))
+	}
+	for _, t := range s.Tasks {
+		s.AddError(ValidName("Invalid Task", t))
+	}
+}
+
 func (s *Stage) Prefix() string {
 	return "stages"
 }
@@ -99,4 +122,35 @@ func (b *Stage) ToModels(obj interface{}) []Model {
 		res[i] = Model(item)
 	}
 	return res
+}
+
+// match Profiler interface
+func (b *Stage) GetProfiles() []string {
+	return b.Profiles
+}
+
+func (b *Stage) SetProfiles(p []string) {
+	b.Profiles = p
+}
+
+// match BootEnver interface
+func (b *Stage) GetBootEnv() string {
+	return b.BootEnv
+}
+
+func (b *Stage) SetBootEnv(s string) {
+	b.BootEnv = s
+}
+
+// match TaskRunner interface
+func (b *Stage) GetTasks() []string {
+	return b.Tasks
+}
+
+func (b *Stage) SetTasks(t []string) {
+	b.Tasks = t
+}
+
+func (b *Stage) SetName(n string) {
+	b.Name = n
 }

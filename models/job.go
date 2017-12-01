@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/pborman/uuid"
@@ -58,9 +59,24 @@ type Job struct {
 	//
 	// required: true
 	Current bool
-	// DRP Filesystem path to the log for this job
-	// read only: true
-	LogPath string
+}
+
+func (j *Job) Validate() {
+	j.AddError(ValidName("Invalid Task", j.Task))
+	j.AddError(ValidName("Invalid Stage", j.Stage))
+	switch j.State {
+	case "created", "running", "incomplete":
+	case "failed", "finished":
+	default:
+		j.AddError(fmt.Errorf("Invalid State `%s`", j.State))
+	}
+	if j.ExitState != "" {
+		switch j.ExitState {
+		case "reboot", "poweroff", "stop", "complete", "failed":
+		default:
+			j.AddError(fmt.Errorf("Invalid ExitState `%s`", j.ExitState))
+		}
+	}
 }
 
 func (j *Job) Prefix() string {

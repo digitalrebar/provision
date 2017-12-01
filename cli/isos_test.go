@@ -43,29 +43,19 @@ func TestIsosCli(t *testing.T) {
 	isosUploadCommonSuccessString = strings.Replace(isosUploadCommonSuccessString, "*REPLACE_WITH_SIZE*", strconv.FormatInt(common_size, 10), -1)
 
 	// TODO: Add GetAs
-
-	tests := []CliTest{
-		CliTest{true, false, []string{"isos"}, noStdinString, "Commands to manage isos on the provisioner\n", ""},
-		CliTest{false, false, []string{"isos", "list"}, noStdinString, isosDefaultListString, noErrorString},
-
-		CliTest{true, true, []string{"isos", "upload"}, noStdinString, noContentString, isosUploadNoArgsErrorString},
-		CliTest{true, true, []string{"isos", "upload", "asg"}, noStdinString, noContentString, isosUploadOneArgsErrorString},
-		CliTest{true, true, []string{"isos", "upload", "asg", "two", "three", "four"}, noStdinString, noContentString, isosUploadFourArgsErrorString},
-		CliTest{false, true, []string{"isos", "upload", "greg", "as", "greg"}, noStdinString, noContentString, isosUploadMissingIsoErrorString},
-		CliTest{false, false, []string{"isos", "upload", "isos.go", "as", "greg"}, noStdinString, isosUploadSuccessString, noErrorString},
-		CliTest{false, false, []string{"isos", "upload", "common.go", "as", "greg"}, noStdinString, isosUploadCommonSuccessString, noErrorString},
-		CliTest{false, false, []string{"isos", "upload", "isos.go", "as", "greg"}, noStdinString, isosUploadSuccessString, noErrorString},
-		CliTest{false, false, []string{"isos", "list"}, noStdinString, isosGregListString, noErrorString},
-
-		CliTest{true, true, []string{"isos", "destroy"}, noStdinString, noContentString, isosDestroyNoArgsErrorString},
-		CliTest{true, true, []string{"isos", "destroy", "asdg", "asgs"}, noStdinString, noContentString, isosDestroyTwoArgsErrorString},
-		CliTest{false, false, []string{"isos", "destroy", "greg"}, noStdinString, isosDestroyGregSuccessString, noErrorString},
-		CliTest{false, true, []string{"isos", "destroy", "fred"}, noStdinString, noContentString, isosDestroyFredErrorString},
-		CliTest{false, false, []string{"isos", "list"}, noStdinString, isosDefaultListString, noErrorString},
-	}
-
-	for _, test := range tests {
-		testCli(t, test)
-	}
-
+	cliTest(true, false, "isos").run(t)
+	cliTest(false, false, "isos", "list").run(t)
+	cliTest(true, true, "isos", "upload").run(t)
+	cliTest(false, true, "isos", "upload", "asg").run(t)
+	cliTest(false, true, "isos", "upload", "asg", "two", "three", "four").run(t)
+	cliTest(false, true, "isos", "upload", "greg", "as", "greg").run(t)
+	cliTest(false, false, "isos", "upload", "isos.go", "as", "greg").run(t)
+	cliTest(false, false, "isos", "upload", "common.go", "as", "greg").run(t)
+	cliTest(false, false, "isos", "upload", "isos.go", "as", "greg").run(t)
+	cliTest(false, false, "isos", "list").run(t)
+	cliTest(false, true, "isos", "destroy").run(t)
+	cliTest(false, true, "isos", "destroy", "asdg", "asgs").run(t)
+	cliTest(false, false, "isos", "destroy", "greg").run(t)
+	cliTest(false, true, "isos", "destroy", "fred").run(t)
+	cliTest(false, false, "isos", "list").run(t)
 }

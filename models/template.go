@@ -21,6 +21,10 @@ type Template struct {
 	Contents string
 }
 
+func (t *Template) Validate() {
+	t.AddError(ValidName("Invalid ID", t.ID))
+}
+
 func (t *Template) Prefix() string {
 	return "templates"
 }

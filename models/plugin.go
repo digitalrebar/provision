@@ -27,6 +27,18 @@ type Plugin struct {
 	PluginErrors []string
 }
 
+func (p *Plugin) Validate() {
+	p.AddError(ValidName("Invalid Name", p.Name))
+	p.AddError(ValidName("Invalid Provider", p.Provider))
+	for k := range p.Params {
+		p.AddError(ValidParamName("Invalid Param Name", k))
+	}
+}
+
+func (p *Plugin) SetName(s string) {
+	p.Name = s
+}
+
 func (n *Plugin) Prefix() string {
 	return "plugins"
 }
@@ -62,4 +74,13 @@ func (b *Plugin) ToModels(obj interface{}) []Model {
 		res[i] = Model(item)
 	}
 	return res
+}
+
+// match Paramer interface
+func (b *Plugin) GetParams() map[string]interface{} {
+	return b.Params
+}
+
+func (b *Plugin) SetParams(p map[string]interface{}) {
+	b.Params = p
 }

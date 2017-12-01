@@ -1,0 +1,1 @@
+Error: StillInUseError: bootenvs/local3: BootEnv local3 is the active defaultBootEnv, cannot remove it

@@ -162,69 +162,50 @@ var reservationPatchMissingBaseString string = `{
 var reservationDestroyJohnString string = "Deleted reservation 192.168.100.100\n"
 
 func TestReservationCli(t *testing.T) {
-	tests := []CliTest{
-		CliTest{true, false, []string{"reservations"}, noStdinString, "Access CLI commands relating to reservations\n", ""},
-		CliTest{false, false, []string{"reservations", "list"}, noStdinString, reservationDefaultListString, noErrorString},
-
-		CliTest{true, true, []string{"reservations", "create"}, noStdinString, noContentString, reservationCreateNoArgErrorString},
-		CliTest{true, true, []string{"reservations", "create", "john", "john2"}, noStdinString, noContentString, reservationCreateTooManyArgErrorString},
-		CliTest{false, true, []string{"reservations", "create", reservationCreateBadJSONString}, noStdinString, noContentString, reservationCreateBadJSONErrorString},
-		CliTest{false, false, []string{"reservations", "create", reservationCreateInputString}, noStdinString, reservationCreateJohnString, noErrorString},
-		CliTest{false, true, []string{"reservations", "create", reservationCreateInputString}, noStdinString, noContentString, reservationCreateDuplicateErrorString},
-		CliTest{false, false, []string{"reservations", "list"}, noStdinString, reservationListBothEnvsString, noErrorString},
-		CliTest{false, false, []string{"reservations", "list", "Strategy=fred"}, noStdinString, reservationEmptyListString, noErrorString},
-		CliTest{false, false, []string{"reservations", "list", "Strategy=MAC"}, noStdinString, reservationListReservationsString, noErrorString},
-		CliTest{false, false, []string{"reservations", "list", "Token=john"}, noStdinString, reservationListReservationsString, noErrorString},
-		CliTest{false, false, []string{"reservations", "list", "Token=false"}, noStdinString, reservationEmptyListString, noErrorString},
-		CliTest{false, false, []string{"reservations", "list", "Addr=192.168.100.100"}, noStdinString, reservationListReservationsString, noErrorString},
-		CliTest{false, false, []string{"reservations", "list", "Addr=1.1.1.1"}, noStdinString, reservationEmptyListString, noErrorString},
-		CliTest{false, true, []string{"reservations", "list", "Addr=fred"}, noStdinString, noContentString, reservationAddrErrorString},
-		CliTest{false, false, []string{"reservations", "list", "NextServer=3.3.3.3"}, noStdinString, reservationEmptyListString, noErrorString},
-		CliTest{false, false, []string{"reservations", "list", "NextServer=2.2.2.2"}, noStdinString, reservationListReservationsString, noErrorString},
-		CliTest{false, true, []string{"reservations", "list", "NextServer=false"}, noStdinString, noContentString, reservationExpireTimeErrorString},
-		CliTest{true, true, []string{"reservations", "show"}, noStdinString, noContentString, reservationShowNoArgErrorString},
-		CliTest{true, true, []string{"reservations", "show", "john", "john2"}, noStdinString, noContentString, reservationShowTooManyArgErrorString},
-		CliTest{false, true, []string{"reservations", "show", "192.168.100.103"}, noStdinString, noContentString, reservationShowMissingArgErrorString},
-		CliTest{false, false, []string{"reservations", "show", "192.168.100.100"}, noStdinString, reservationShowJohnString, noErrorString},
-
-		CliTest{true, true, []string{"reservations", "exists"}, noStdinString, noContentString, reservationExistsNoArgErrorString},
-		CliTest{true, true, []string{"reservations", "exists", "john", "john2"}, noStdinString, noContentString, reservationExistsTooManyArgErrorString},
-		CliTest{false, false, []string{"reservations", "exists", "192.168.100.100"}, noStdinString, reservationExistsIgnoreString, noErrorString},
-		CliTest{false, true, []string{"reservations", "exists", "ignore"}, noStdinString, noContentString, reservationExistsMissingIgnoreString},
-		CliTest{true, true, []string{"reservations", "exists", "john", "john2"}, noStdinString, noContentString, reservationExistsTooManyArgErrorString},
-
-		CliTest{true, true, []string{"reservations", "update"}, noStdinString, noContentString, reservationUpdateNoArgErrorString},
-		CliTest{true, true, []string{"reservations", "update", "john", "john2", "john3"}, noStdinString, noContentString, reservationUpdateTooManyArgErrorString},
-		CliTest{false, true, []string{"reservations", "update", "192.168.100.100", reservationUpdateBadJSONString}, noStdinString, noContentString, reservationUpdateBadJSONErrorString},
-		CliTest{false, false, []string{"reservations", "update", "192.168.100.100", reservationUpdateInputString}, noStdinString, reservationUpdateJohnString, noErrorString},
-		CliTest{false, true, []string{"reservations", "update", "192.168.100.103", reservationUpdateInputString}, noStdinString, noContentString, reservationUpdateJohnMissingErrorString},
-		CliTest{false, false, []string{"reservations", "show", "192.168.100.100"}, noStdinString, reservationUpdateJohnString, noErrorString},
-
-		CliTest{true, true, []string{"reservations", "patch"}, noStdinString, noContentString, reservationPatchNoArgErrorString},
-		CliTest{true, true, []string{"reservations", "patch", "john", "john2", "john3"}, noStdinString, noContentString, reservationPatchTooManyArgErrorString},
-		CliTest{false, true, []string{"reservations", "patch", reservationPatchBaseString, reservationPatchBadPatchJSONString}, noStdinString, noContentString, reservationPatchBadPatchJSONErrorString},
-		CliTest{false, true, []string{"reservations", "patch", reservationPatchBadBaseJSONString, reservationPatchInputString}, noStdinString, noContentString, reservationPatchBadBaseJSONErrorString},
-		CliTest{false, false, []string{"reservations", "patch", reservationPatchBaseString, reservationPatchInputString}, noStdinString, reservationPatchJohnString, noErrorString},
-		CliTest{false, true, []string{"reservations", "patch", reservationPatchMissingBaseString, reservationPatchInputString}, noStdinString, noContentString, reservationPatchJohnMissingErrorString},
-		CliTest{false, false, []string{"reservations", "show", "192.168.100.100"}, noStdinString, reservationPatchJohnString, noErrorString},
-
-		CliTest{true, true, []string{"reservations", "destroy"}, noStdinString, noContentString, reservationDestroyNoArgErrorString},
-		CliTest{true, true, []string{"reservations", "destroy", "john", "june"}, noStdinString, noContentString, reservationDestroyTooManyArgErrorString},
-		CliTest{false, false, []string{"reservations", "destroy", "192.168.100.100"}, noStdinString, reservationDestroyJohnString, noErrorString},
-		CliTest{false, true, []string{"reservations", "destroy", "192.168.100.100"}, noStdinString, noContentString, reservationDestroyMissingJohnString},
-		CliTest{false, false, []string{"reservations", "list"}, noStdinString, reservationDefaultListString, noErrorString},
-
-		CliTest{false, false, []string{"reservations", "create", "-"}, reservationCreateInputString + "\n", reservationCreateJohnString, noErrorString},
-		CliTest{false, false, []string{"reservations", "list"}, noStdinString, reservationListBothEnvsString, noErrorString},
-		CliTest{false, false, []string{"reservations", "update", "192.168.100.100", "-"}, reservationUpdateInputString + "\n", reservationUpdateJohnString, noErrorString},
-		CliTest{false, false, []string{"reservations", "show", "192.168.100.100"}, noStdinString, reservationUpdateJohnString, noErrorString},
-
-		CliTest{false, false, []string{"reservations", "destroy", "192.168.100.100"}, noStdinString, reservationDestroyJohnString, noErrorString},
-		CliTest{false, false, []string{"reservations", "list"}, noStdinString, reservationDefaultListString, noErrorString},
-	}
-
-	for _, test := range tests {
-		testCli(t, test)
-	}
+	cliTest(true, false, "reservations").run(t)
+	cliTest(false, false, "reservations", "list").run(t)
+	cliTest(true, true, "reservations", "create").run(t)
+	cliTest(true, true, "reservations", "create", "john", "john2").run(t)
+	cliTest(false, true, "reservations", "create", reservationCreateBadJSONString).run(t)
+	cliTest(false, false, "reservations", "create", reservationCreateInputString).run(t)
+	cliTest(false, true, "reservations", "create", reservationCreateInputString).run(t)
+	cliTest(false, false, "reservations", "list").run(t)
+	cliTest(false, false, "reservations", "list", "Strategy=fred").run(t)
+	cliTest(false, false, "reservations", "list", "Strategy=MAC").run(t)
+	cliTest(false, false, "reservations", "list", "Token=john").run(t)
+	cliTest(false, false, "reservations", "list", "Token=false").run(t)
+	cliTest(false, false, "reservations", "list", "Addr=192.168.100.100").run(t)
+	cliTest(false, false, "reservations", "list", "Addr=1.1.1.1").run(t)
+	cliTest(false, true, "reservations", "list", "Addr=fred").run(t)
+	cliTest(false, false, "reservations", "list", "NextServer=3.3.3.3").run(t)
+	cliTest(false, false, "reservations", "list", "NextServer=2.2.2.2").run(t)
+	cliTest(false, true, "reservations", "list", "NextServer=false").run(t)
+	cliTest(true, true, "reservations", "show").run(t)
+	cliTest(true, true, "reservations", "show", "john", "john2").run(t)
+	cliTest(false, true, "reservations", "show", "192.168.100.103").run(t)
+	cliTest(false, false, "reservations", "show", "192.168.100.100").run(t)
+	cliTest(true, true, "reservations", "exists").run(t)
+	cliTest(true, true, "reservations", "exists", "john", "john2").run(t)
+	cliTest(false, false, "reservations", "exists", "192.168.100.100").run(t)
+	cliTest(false, true, "reservations", "exists", "ignore").run(t)
+	cliTest(true, true, "reservations", "exists", "john", "john2").run(t)
+	cliTest(true, true, "reservations", "update").run(t)
+	cliTest(true, true, "reservations", "update", "john", "john2", "john3").run(t)
+	cliTest(false, true, "reservations", "update", "192.168.100.100", reservationUpdateBadJSONString).run(t)
+	cliTest(false, false, "reservations", "update", "192.168.100.100", reservationUpdateInputString).run(t)
+	cliTest(false, true, "reservations", "update", "192.168.100.103", reservationUpdateInputString).run(t)
+	cliTest(false, false, "reservations", "show", "192.168.100.100").run(t)
+	cliTest(false, false, "reservations", "show", "192.168.100.100").run(t)
+	cliTest(true, true, "reservations", "destroy").run(t)
+	cliTest(true, true, "reservations", "destroy", "john", "june").run(t)
+	cliTest(false, false, "reservations", "destroy", "192.168.100.100").run(t)
+	cliTest(false, true, "reservations", "destroy", "192.168.100.100").run(t)
+	cliTest(false, false, "reservations", "list").run(t)
+	cliTest(false, false, "reservations", "create", "-").Stdin(reservationCreateInputString + "\n").run(t)
+	cliTest(false, false, "reservations", "list").run(t)
+	cliTest(false, false, "reservations", "update", "192.168.100.100", "-").Stdin(reservationUpdateInputString + "\n").run(t)
+	cliTest(false, false, "reservations", "show", "192.168.100.100").run(t)
+	cliTest(false, false, "reservations", "destroy", "192.168.100.100").run(t)
+	cliTest(false, false, "reservations", "list").run(t)
 
 }

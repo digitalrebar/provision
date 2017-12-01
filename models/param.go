@@ -26,6 +26,18 @@ type Param struct {
 	Schema interface{}
 }
 
+func (p *Param) Validate() {
+	p.AddError(ValidParamName("Invalid Name", p.Name))
+	if p.Schema != nil {
+		_, err := gojsonschema.NewSchema(gojsonschema.NewGoLoader(p.Schema))
+		p.AddError(err)
+	}
+}
+
+func (p *Param) SetName(s string) {
+	p.Name = s
+}
+
 func (p *Param) Prefix() string {
 	return "params"
 }
@@ -41,14 +53,6 @@ func (p *Param) Fill() {
 
 func (p *Param) AuthKey() string {
 	return p.Key()
-}
-
-func (p *Param) ValidateSchema() error {
-	if p.Schema == nil {
-		return nil
-	}
-	_, err := gojsonschema.NewSchema(gojsonschema.NewGoLoader(p.Schema))
-	return err
 }
 
 func (b *Param) SliceOf() interface{} {

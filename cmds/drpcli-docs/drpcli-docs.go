@@ -15,7 +15,7 @@ func main() {
 	filePrepender := func(name string) string {
 		return ""
 	}
-	err := doc.GenMarkdownTreeCustom(cli.App, "./doc/cli", filePrepender, linkHandler)
+	err := doc.GenMarkdownTreeCustom(cli.NewApp(), "./doc/cli", filePrepender, linkHandler)
 	if err != nil {
 		log.Fatal(err)
 	}

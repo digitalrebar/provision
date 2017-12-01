@@ -1,0 +1,31 @@
+Access CLI commands relating to bootenvs
+
+Usage:
+  drpcli bootenvs [command]
+
+Available Commands:
+  create      Create a new bootenv with the passed-in JSON or string key
+  destroy     Destroy bootenv by id
+  exists      See if a bootenvs exists by id
+  indexes     Get indexes for bootenvs
+  install     Install a bootenv along with everything it requires
+  list        List all bootenvs
+  show        Show a single bootenvs by id
+  update      Unsafely update bootenv by id with the passed-in JSON
+  uploadiso   This will attempt to upload the ISO from the specified ISO URL.
+  wait        Wait for a bootenv's field to become a value within a number of seconds
+
+Flags:
+  -h, --help   help for bootenvs
+
+Global Flags:
+  -d, --debug             Whether the CLI should run in debug mode
+  -E, --endpoint string   The Digital Rebar Provision API endpoint to talk to (default "https://127.0.0.1:8092")
+  -f, --force             When needed, attempt to force the operation - used on some update/patch calls
+  -F, --format string     The serialzation we expect for output.  Can be "json" or "yaml" (default "json")
+  -P, --password string   password of the Digital Rebar Provision user (default "r0cketsk8ts")
+  -r, --ref string        A reference object for update commands that can be a file name, yaml, or json blob
+  -T, --token string      token of the Digital Rebar Provision access
+  -U, --username string   Name of the Digital Rebar Provision user to talk to (default "rocketskates")
+
+Use "drpcli bootenvs [command] --help" for more information about a command.

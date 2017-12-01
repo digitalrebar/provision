@@ -72,6 +72,18 @@ type Machine struct {
 	OS string
 }
 
+func (n *Machine) Validate() {
+	n.AddError(ValidName("Invalid Name", n.Name))
+	n.AddError(ValidName("Invalid Stage", n.Stage))
+	n.AddError(ValidName("Invalid BootEnv", n.BootEnv))
+	for _, p := range n.Profiles {
+		n.AddError(ValidName("Invalid Profile", p))
+	}
+	for _, t := range n.Tasks {
+		n.AddError(ValidName("Invalid Task", t))
+	}
+}
+
 func (n *Machine) UUID() string {
 	return n.Uuid.String()
 }
@@ -112,4 +124,48 @@ func (b *Machine) ToModels(obj interface{}) []Model {
 		res[i] = Model(item)
 	}
 	return res
+}
+
+// match Paramer interface
+func (b *Machine) GetParams() map[string]interface{} {
+	return b.Profile.Params
+}
+
+func (b *Machine) SetParams(p map[string]interface{}) {
+	b.Profile.Params = p
+}
+
+// match Profiler interface
+func (b *Machine) GetProfiles() []string {
+	return b.Profiles
+}
+
+func (b *Machine) SetProfiles(p []string) {
+	b.Profiles = p
+}
+
+// match BootEnver interface
+func (b *Machine) GetBootEnv() string {
+	return b.BootEnv
+}
+
+func (b *Machine) SetBootEnv(s string) {
+	b.BootEnv = s
+}
+
+// match TaskRunner interface
+func (b *Machine) GetTasks() []string {
+	return b.Tasks
+}
+
+func (b *Machine) SetTasks(t []string) {
+	b.Tasks = t
+}
+
+func (b *Machine) RunningTask() int {
+	return b.CurrentTask
+}
+
+func (b *Machine) SetName(n string) {
+	b.Name = n
 }

@@ -104,6 +104,10 @@ type Subnet struct {
 	Pickers []string
 }
 
+func (s *Subnet) Validate() {
+	s.AddError(ValidName("Invalid Name", s.Name))
+}
+
 func (s *Subnet) Prefix() string {
 	return "subnets"
 }

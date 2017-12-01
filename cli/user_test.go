@@ -1,8 +1,6 @@
 package cli
 
-import (
-	"testing"
-)
+import "testing"
 
 var userShowMissingArgErrorString string = "Error: GET: users/ignore: Not Found\n\n"
 var userExistsMissingIgnoreString string = "Error: GET: users/ignore: Not Found\n\n"
@@ -217,77 +215,53 @@ var userTokenSuccessString string = `RE:
 var userPasswordNoArgsErrorString string = "Error: drpcli users password [id] [password] [flags] needs 2 args\n"
 
 func TestUserCli(t *testing.T) {
-
-	tests := []CliTest{
-		CliTest{true, false, []string{"users"}, noStdinString, "Access CLI commands relating to users\n", ""},
-		CliTest{false, false, []string{"users", "list"}, noStdinString, userDefaultListString, noErrorString},
-
-		CliTest{true, true, []string{"users", "create"}, noStdinString, noContentString, userCreateNoArgErrorString},
-		CliTest{true, true, []string{"users", "create", "john", "john2"}, noStdinString, noContentString, userCreateTooManyArgErrorString},
-		CliTest{false, true, []string{"users", "create", userCreateBadJSONString}, noStdinString, noContentString, userCreateBadJSONErrorString},
-		CliTest{false, true, []string{"users", "create", userCreateBadJSON2String}, noStdinString, noContentString, userCreateBadJSON2ErrorString},
-		CliTest{false, false, []string{"users", "create", userCreateInputString}, noStdinString, userCreateJohnString, noErrorString},
-		CliTest{false, false, []string{"users", "create", userCreateFredInputString}, noStdinString, userCreateFredString, noErrorString},
-		CliTest{false, false, []string{"users", "destroy", userCreateFredInputString}, noStdinString, userDestroyFredString, noErrorString},
-		CliTest{false, true, []string{"users", "create", userCreateInputString}, noStdinString, noContentString, userCreateDuplicateErrorString},
-		CliTest{false, false, []string{"users", "list"}, noStdinString, userListBothEnvsString, noErrorString},
-		CliTest{false, false, []string{"users", "list", "Name=fred"}, noStdinString, userEmptyListString, noErrorString},
-		CliTest{false, false, []string{"users", "list", "Name=john"}, noStdinString, userListJohnOnlyString, noErrorString},
-		CliTest{true, true, []string{"users", "show"}, noStdinString, noContentString, userShowNoArgErrorString},
-		CliTest{true, true, []string{"users", "show", "john", "john2"}, noStdinString, noContentString, userShowTooManyArgErrorString},
-		CliTest{false, true, []string{"users", "show", "ignore"}, noStdinString, noContentString, userShowMissingArgErrorString},
-		CliTest{false, false, []string{"users", "show", "john"}, noStdinString, userShowJohnString, noErrorString},
-
-		CliTest{true, true, []string{"users", "exists"}, noStdinString, noContentString, userExistsNoArgErrorString},
-		CliTest{true, true, []string{"users", "exists", "john", "john2"}, noStdinString, noContentString, userExistsTooManyArgErrorString},
-		CliTest{false, false, []string{"users", "exists", "john"}, noStdinString, userExistsIgnoreString, noErrorString},
-		CliTest{false, true, []string{"users", "exists", "ignore"}, noStdinString, noContentString, userExistsMissingIgnoreString},
-		CliTest{true, true, []string{"users", "exists", "john", "john2"}, noStdinString, noContentString, userExistsTooManyArgErrorString},
-
-		CliTest{true, true, []string{"users", "update"}, noStdinString, noContentString, userUpdateNoArgErrorString},
-		CliTest{true, true, []string{"users", "update", "john", "john2", "john3"}, noStdinString, noContentString, userUpdateTooManyArgErrorString},
-		CliTest{false, true, []string{"users", "update", "john", userUpdateBadJSONString}, noStdinString, noContentString, userUpdateBadJSONErrorString},
-		CliTest{false, true, []string{"users", "update", "john2", userUpdateInputString}, noStdinString, noContentString, userUpdateJohnMissingErrorString},
-		CliTest{false, false, []string{"users", "show", "john"}, noStdinString, userUpdateJohnString, noErrorString},
-
-		CliTest{true, true, []string{"users", "patch"}, noStdinString, noContentString, userPatchNoArgErrorString},
-		CliTest{true, true, []string{"users", "patch", "john", "john2", "john3"}, noStdinString, noContentString, userPatchTooManyArgErrorString},
-		CliTest{false, true, []string{"users", "patch", userPatchBaseString, userPatchBadPatchJSONString}, noStdinString, noContentString, userPatchBadPatchJSONErrorString},
-		CliTest{false, true, []string{"users", "patch", userPatchBadBaseJSONString, userPatchInputString}, noStdinString, noContentString, userPatchBadBaseJSONErrorString},
-		CliTest{false, false, []string{"users", "patch", userPatchBaseString, userPatchInputString}, noStdinString, userPatchJohnString, noErrorString},
-		CliTest{false, true, []string{"users", "patch", userPatchMissingBaseString, userPatchInputString}, noStdinString, noContentString, userPatchJohnMissingErrorString},
-		CliTest{false, false, []string{"users", "show", "john"}, noStdinString, userPatchJohnString, noErrorString},
-
-		CliTest{true, true, []string{"users", "password"}, noStdinString, noContentString, userPasswordNoArgsErrorString},
-		CliTest{true, true, []string{"users", "password", "one"}, noStdinString, noContentString, userPasswordNoArgsErrorString},
-		CliTest{true, true, []string{"users", "password", "one", "two", "three"}, noStdinString, noContentString, userPasswordNoArgsErrorString},
-		CliTest{false, true, []string{"users", "password", "jill", "june"}, noStdinString, noContentString, userPasswordNotFoundErrorString},
-		CliTest{false, false, []string{"users", "password", "john", "june"}, noStdinString, userPatchJohnString, noErrorString},
-
-		CliTest{true, true, []string{"users", "destroy"}, noStdinString, noContentString, userDestroyNoArgErrorString},
-		CliTest{true, true, []string{"users", "destroy", "john", "june"}, noStdinString, noContentString, userDestroyTooManyArgErrorString},
-		CliTest{false, false, []string{"users", "destroy", "john"}, noStdinString, userDestroyJohnString, noErrorString},
-		CliTest{false, true, []string{"users", "destroy", "john"}, noStdinString, noContentString, userDestroyMissingJohnString},
-		CliTest{false, false, []string{"users", "list"}, noStdinString, userDefaultListString, noErrorString},
-
-		CliTest{false, false, []string{"users", "create", "-"}, userCreateInputString + "\n", userCreateJohnString, noErrorString},
-		CliTest{false, false, []string{"users", "list"}, noStdinString, userListBothEnvsString, noErrorString},
-		CliTest{false, false, []string{"users", "show", "john"}, noStdinString, userUpdateJohnString, noErrorString},
-
-		CliTest{false, false, []string{"users", "destroy", "john"}, noStdinString, userDestroyJohnString, noErrorString},
-		CliTest{false, false, []string{"users", "list"}, noStdinString, userDefaultListString, noErrorString},
-
-		CliTest{true, true, []string{"users", "token"}, noStdinString, noContentString, userTokenNoArgErrorString},
-		CliTest{true, true, []string{"users", "token", "greg", "greg2"}, noStdinString, noContentString, userTokenTooManyArgErrorString},
-		CliTest{true, true, []string{"users", "token", "greg", "greg2", "greg3"}, noStdinString, noContentString, userTokenUnknownPairErrorString},
-		CliTest{false, true, []string{"users", "token", "greg"}, noStdinString, noContentString, userTokenUserNotFoundErrorString},
-		CliTest{false, false, []string{"users", "token", "rocketskates"}, noStdinString, userTokenSuccessString, noErrorString},
-		CliTest{false, false, []string{"users", "token", "rocketskates", "scope", "all", "ttl", "330", "action", "list", "specific", "asdgag"}, noStdinString, userTokenSuccessString, noErrorString},
-		CliTest{false, true, []string{"users", "token", "rocketskates", "scope", "all", "ttl", "cow", "action", "list", "specific", "asdgag"}, noStdinString, noContentString, userTokenTTLNotNumberErrorString},
-	}
-
-	for _, test := range tests {
-		testCli(t, test)
-	}
-
+	cliTest(true, false, "users").run(t)
+	cliTest(false, false, "users", "list").run(t)
+	cliTest(true, true, "users", "create").run(t)
+	cliTest(true, true, "users", "create", "john", "john2").run(t)
+	cliTest(false, true, "users", "create", userCreateBadJSONString).run(t)
+	cliTest(false, true, "users", "create", userCreateBadJSON2String).run(t)
+	cliTest(false, false, "users", "create", userCreateInputString).run(t)
+	cliTest(false, false, "users", "create", userCreateFredInputString).run(t)
+	cliTest(false, false, "users", "destroy", userCreateFredInputString).run(t)
+	cliTest(false, true, "users", "create", userCreateInputString).run(t)
+	cliTest(false, false, "users", "list").run(t)
+	cliTest(false, false, "users", "list", "Name=fred").run(t)
+	cliTest(false, false, "users", "list", "Name=john").run(t)
+	cliTest(true, true, "users", "show").run(t)
+	cliTest(true, true, "users", "show", "john", "john2").run(t)
+	cliTest(false, true, "users", "show", "ignore").run(t)
+	cliTest(false, false, "users", "show", "john").run(t)
+	cliTest(true, true, "users", "exists").run(t)
+	cliTest(true, true, "users", "exists", "john", "john2").run(t)
+	cliTest(false, false, "users", "exists", "john").run(t)
+	cliTest(false, true, "users", "exists", "ignore").run(t)
+	cliTest(true, true, "users", "update").run(t)
+	cliTest(true, true, "users", "update", "john", "john2", "john3").run(t)
+	cliTest(false, true, "users", "update", "john", userUpdateBadJSONString).run(t)
+	cliTest(false, true, "users", "update", "john2", userUpdateInputString).run(t)
+	cliTest(false, false, "users", "show", "john").run(t)
+	cliTest(false, false, "users", "show", "john").run(t)
+	cliTest(true, true, "users", "password").run(t)
+	cliTest(true, true, "users", "password", "one").run(t)
+	cliTest(true, true, "users", "password", "one", "two", "three").run(t)
+	cliTest(false, true, "users", "password", "jill", "june").run(t)
+	cliTest(false, false, "users", "password", "john", "june").run(t)
+	cliTest(true, true, "users", "destroy").run(t)
+	cliTest(true, true, "users", "destroy", "john", "june").run(t)
+	cliTest(false, false, "users", "destroy", "john").run(t)
+	cliTest(false, true, "users", "destroy", "john").run(t)
+	cliTest(false, false, "users", "list").run(t)
+	cliTest(false, false, "users", "create", "-").Stdin(userCreateInputString + "\n").run(t)
+	cliTest(false, false, "users", "list").run(t)
+	cliTest(false, false, "users", "show", "john").run(t)
+	cliTest(false, false, "users", "destroy", "john").run(t)
+	cliTest(false, false, "users", "list").run(t)
+	cliTest(true, true, "users", "token").run(t)
+	cliTest(true, true, "users", "token", "greg", "greg2").run(t)
+	cliTest(true, true, "users", "token", "greg", "greg2", "greg3").run(t)
+	cliTest(false, true, "users", "token", "greg").run(t)
+	cliTest(false, false, "users", "token", "rocketskates").run(t)
+	cliTest(false, false, "users", "token", "rocketskates", "scope", "all", "ttl", "330", "action", "list", "specific", "asdgag").run(t)
+	cliTest(false, true, "users", "token", "rocketskates", "scope", "all", "ttl", "cow", "action", "list", "specific", "asdgag").run(t)
 }

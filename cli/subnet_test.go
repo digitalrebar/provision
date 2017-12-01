@@ -19,7 +19,7 @@ var subnetInvalidProxyBooleanListString = "Error: GET: subnets: Proxy must be tr
 var subnetRangeIPFailureString string = "Error: PATCH: subnets/john: invalid IP address: cq.98.42.1234\n\n"
 var subnetRangeIPBadIpString string = "Error: PATCH: subnets/john: invalid IP address: 192.168.100.500\n\n"
 var subnetSubnetCIDRFailureString = "Error: 1111.11.2223.544/66666 is not a valid subnet CIDR\n\n"
-var subnetStrategyMacFailureErrorString string = "Error: t5:44:llll:b is not a valid MAC address\n\n"
+var subnetStrategyMacFailureErrorString string = "Error: t5:44:llll:b is not a valid strategy\n\n"
 var subnetLeasetimesIntFailureString string = "Error: 4x5 could not be read as a number\n\n"
 var subnetSetIntFailureErrorString string = "Error: 6tl could not be read as a number\n\n"
 var subnetGetToNull string = "Error: option 6 does not exist\n\n"
@@ -407,7 +407,7 @@ var subnetStrategyMacSuccessString string = `{
   "Proxy": false,
   "ReadOnly": false,
   "ReservedLeaseTime": 7200,
-  "Strategy": "a3:b3:51:66:7e:11",
+  "Strategy": "MAC",
   "Subnet": "192.168.100.0/10",
   "Validated": true
 }
@@ -598,116 +598,91 @@ var subnetGetTooManyArgErrorString string = "Error: drpcli subnets get [subnetNa
 var subnetGetTo66 string = "Option 6: 66\n"
 
 func TestSubnetCli(t *testing.T) {
-	tests := []CliTest{
-		CliTest{true, false, []string{"subnets"}, noStdinString, "Access CLI commands relating to subnets\n", ""},
-		CliTest{false, false, []string{"subnets", "list"}, noStdinString, subnetDefaultListString, noErrorString},
-
-		CliTest{true, true, []string{"subnets", "create"}, noStdinString, noContentString, subnetCreateNoArgErrorString},
-		CliTest{true, true, []string{"subnets", "create", "john", "john2"}, noStdinString, noContentString, subnetCreateTooManyArgErrorString},
-		CliTest{false, true, []string{"subnets", "create", subnetCreateBadJSONString}, noStdinString, noContentString, subnetCreateBadJSONErrorString},
-		CliTest{false, false, []string{"subnets", "create", subnetCreateInputString}, noStdinString, subnetCreateJohnString, noErrorString},
-		CliTest{false, true, []string{"subnets", "create", subnetCreateInputString}, noStdinString, noContentString, subnetCreateDuplicateErrorString},
-		CliTest{false, false, []string{"subnets", "list"}, noStdinString, subnetListBothEnvsString, noErrorString},
-		CliTest{false, false, []string{"subnets", "list", "Name=fred"}, noStdinString, subnetEmptyListString, noErrorString},
-		CliTest{false, false, []string{"subnets", "list", "Name=john"}, noStdinString, subnetListBothEnvsString, noErrorString},
-		CliTest{false, false, []string{"subnets", "list", "Strategy=MAC"}, noStdinString, subnetListBothEnvsString, noErrorString},
-		CliTest{false, false, []string{"subnets", "list", "Strategy=false"}, noStdinString, subnetEmptyListString, noErrorString},
-		CliTest{false, false, []string{"subnets", "list", "NextServer=3.3.3.3"}, noStdinString, subnetListBothEnvsString, noErrorString},
-		CliTest{false, false, []string{"subnets", "list", "NextServer=1.1.1.1"}, noStdinString, subnetEmptyListString, noErrorString},
-		CliTest{false, true, []string{"subnets", "list", "NextServer=fred"}, noStdinString, noContentString, subnetAddrErrorString},
-		CliTest{false, false, []string{"subnets", "list", "Enabled=false"}, noStdinString, subnetListBothEnvsString, noErrorString},
-		CliTest{false, false, []string{"subnets", "list", "Enabled=true"}, noStdinString, subnetEmptyListString, noErrorString},
-		CliTest{false, true, []string{"subnets", "list", "Enabled=george"}, noStdinString, noContentString, subnetInvalidEnabledBooleanListString},
-		CliTest{false, false, []string{"subnets", "list", "Proxy=false"}, noStdinString, subnetListBothEnvsString, noErrorString},
-		CliTest{false, false, []string{"subnets", "list", "Proxy=true"}, noStdinString, subnetEmptyListString, noErrorString},
-		CliTest{false, true, []string{"subnets", "list", "Proxy=george"}, noStdinString, noContentString, subnetInvalidProxyBooleanListString},
-		CliTest{false, false, []string{"subnets", "list", "Subnet=192.168.103.0/24"}, noStdinString, subnetEmptyListString, noErrorString},
-		CliTest{false, false, []string{"subnets", "list", "Subnet=192.168.100.0/24"}, noStdinString, subnetListBothEnvsString, noErrorString},
-		CliTest{false, true, []string{"subnets", "list", "Subnet=false"}, noStdinString, noContentString, subnetExpireTimeErrorString},
-		CliTest{true, true, []string{"subnets", "show"}, noStdinString, noContentString, subnetShowNoArgErrorString},
-		CliTest{true, true, []string{"subnets", "show", "john", "john2"}, noStdinString, noContentString, subnetShowTooManyArgErrorString},
-		CliTest{false, true, []string{"subnets", "show", "ignore"}, noStdinString, noContentString, subnetShowMissingArgErrorString},
-		CliTest{false, false, []string{"subnets", "show", "john"}, noStdinString, subnetShowJohnString, noErrorString},
-
-		CliTest{true, true, []string{"subnets", "exists"}, noStdinString, noContentString, subnetExistsNoArgErrorString},
-		CliTest{true, true, []string{"subnets", "exists", "john", "john2"}, noStdinString, noContentString, subnetExistsTooManyArgErrorString},
-		CliTest{false, false, []string{"subnets", "exists", "john"}, noStdinString, subnetExistsIgnoreString, noErrorString},
-		CliTest{false, true, []string{"subnets", "exists", "ignore"}, noStdinString, noContentString, subnetExistsMissingIgnoreString},
-		CliTest{true, true, []string{"subnets", "exists", "john", "john2"}, noStdinString, noContentString, subnetExistsTooManyArgErrorString},
-
-		CliTest{true, true, []string{"subnets", "update"}, noStdinString, noContentString, subnetUpdateNoArgErrorString},
-		CliTest{true, true, []string{"subnets", "update", "john", "john2", "john3"}, noStdinString, noContentString, subnetUpdateTooManyArgErrorString},
-		CliTest{false, true, []string{"subnets", "update", "john", subnetUpdateBadJSONString}, noStdinString, noContentString, subnetUpdateBadJSONErrorString},
-		CliTest{false, false, []string{"subnets", "update", "john", subnetUpdateInputString}, noStdinString, subnetUpdateJohnString, noErrorString},
-		CliTest{false, true, []string{"subnets", "update", "john2", subnetUpdateInputString}, noStdinString, noContentString, subnetUpdateJohnMissingErrorString},
-		CliTest{false, false, []string{"subnets", "show", "john"}, noStdinString, subnetUpdateJohnString, noErrorString},
-
-		CliTest{true, true, []string{"subnets", "patch"}, noStdinString, noContentString, subnetPatchNoArgErrorString},
-		CliTest{true, true, []string{"subnets", "patch", "john", "john2", "john3"}, noStdinString, noContentString, subnetPatchTooManyArgErrorString},
-		CliTest{false, true, []string{"subnets", "patch", subnetPatchBaseString, subnetPatchBadPatchJSONString}, noStdinString, noContentString, subnetPatchBadPatchJSONErrorString},
-		CliTest{false, true, []string{"subnets", "patch", subnetPatchBadBaseJSONString, subnetPatchInputString}, noStdinString, noContentString, subnetPatchBadBaseJSONErrorString},
-		CliTest{false, false, []string{"subnets", "patch", subnetPatchBaseString, subnetPatchInputString}, noStdinString, subnetPatchJohnString, noErrorString},
-		CliTest{false, true, []string{"subnets", "patch", subnetPatchMissingBaseString, subnetPatchInputString}, noStdinString, noContentString, subnetPatchJohnMissingErrorString},
-		CliTest{false, false, []string{"subnets", "show", "john"}, noStdinString, subnetPatchJohnString, noErrorString},
-
-		CliTest{true, true, []string{"subnets", "destroy"}, noStdinString, noContentString, subnetDestroyNoArgErrorString},
-		CliTest{true, true, []string{"subnets", "destroy", "john", "june"}, noStdinString, noContentString, subnetDestroyTooManyArgErrorString},
-		CliTest{false, false, []string{"subnets", "destroy", "john"}, noStdinString, subnetDestroyJohnString, noErrorString},
-		CliTest{false, true, []string{"subnets", "destroy", "john"}, noStdinString, noContentString, subnetDestroyMissingJohnString},
-		CliTest{false, false, []string{"subnets", "list"}, noStdinString, subnetDefaultListString, noErrorString},
-
-		CliTest{false, false, []string{"subnets", "create", "-"}, subnetCreateInputString + "\n", subnetCreateJohnString, noErrorString},
-		CliTest{false, false, []string{"subnets", "list"}, noStdinString, subnetListBothEnvsString, noErrorString},
-		CliTest{false, false, []string{"subnets", "update", "john", "-"}, subnetUpdateInputString + "\n", subnetUpdateJohnString, noErrorString},
-		CliTest{false, false, []string{"subnets", "show", "john"}, noStdinString, subnetUpdateJohnString, noErrorString},
-
-		CliTest{true, true, []string{"subnets", "range"}, noStdinString, noContentString, subnetRangeNoArgErrorString},
-		CliTest{true, true, []string{"subnets", "range", "john", "1.24.36.7", "1.24.36.16", "1.24.36.16"}, noStdinString, noContentString, subnetRangeTooManyArgErrorString},
-		CliTest{false, true, []string{"subnets", "range", "john", "192.168.100.10", "192.168.100.500"}, noStdinString, noContentString, subnetRangeIPBadIpString},
-		CliTest{false, true, []string{"subnets", "range", "john", "cq.98.42.1234", "1.24.36.16"}, noStdinString, noContentString, subnetRangeIPFailureString},
-		CliTest{false, false, []string{"subnets", "range", "john", "192.168.100.10", "192.168.100.200"}, noStdinString, subnetRangeIPSuccessString, noErrorString},
-
-		CliTest{true, true, []string{"subnets", "subnet"}, noStdinString, noContentString, subnetSubnetNoArgErrorString},
-		CliTest{true, true, []string{"subnets", "subnet", "john", "june", "1.24.36.16"}, noStdinString, noContentString, subnetSubnetTooManyArgErrorString},
-		CliTest{false, false, []string{"subnets", "subnet", "john", "192.168.100.0/10"}, noStdinString, subnetSubnetCIDRSuccessString, noErrorString},
-		CliTest{false, true, []string{"subnets", "subnet", "john", "1111.11.2223.544/66666"}, noStdinString, noContentString, subnetSubnetCIDRFailureString},
-
-		CliTest{true, true, []string{"subnets", "strategy"}, noStdinString, noContentString, subnetStrategyNoArgErrorString},
-		CliTest{true, true, []string{"subnets", "strategy", "john", "june", "a3:b3:51:66:7e:11"}, noStdinString, noContentString, subnetStrategyTooManyArgErrorString},
-		CliTest{false, false, []string{"subnets", "strategy", "john", "a3:b3:51:66:7e:11"}, noStdinString, subnetStrategyMacSuccessString, noErrorString},
-		CliTest{false, true, []string{"subnets", "strategy", "john", "t5:44:llll:b"}, noStdinString, noContentString, subnetStrategyMacFailureErrorString},
-
-		CliTest{true, true, []string{"subnets", "pickers"}, noStdinString, noContentString, subnetPickersNoArgErrorString},
-		CliTest{true, true, []string{"subnets", "pickers", "john", "june", "test1,test2,test3"}, noStdinString, noContentString, subnetPickersTooManyArgErrorString},
-		CliTest{false, false, []string{"subnets", "pickers", "john", "none,nextFree,mostExpired"}, noStdinString, subnetPickersSuccessString, noErrorString},
-
-		CliTest{true, true, []string{"subnets", "nextserver"}, noStdinString, noContentString, subnetNextserverNoArgErrorString},
-		CliTest{true, true, []string{"subnets", "nextserver", "john", "june", "1.24.36.16"}, noStdinString, noContentString, subnetNextserverTooManyArgErrorString},
-		CliTest{false, false, []string{"subnets", "nextserver", "john", "1.24.36.16"}, noStdinString, subnetNextserverIPSuccess, noErrorString},
-
-		CliTest{true, true, []string{"subnets", "leasetimes"}, noStdinString, noContentString, subnetLeasetimesNoArgErrorString},
-		CliTest{true, true, []string{"subnets", "leasetimes", "john", "june", "32", "55"}, noStdinString, noContentString, subnetLeasetimesTooManyArgErrorString},
-		CliTest{false, false, []string{"subnets", "leasetimes", "john", "65", "7300"}, noStdinString, subnetLeasetimesSuccessString, noErrorString},
-		CliTest{false, true, []string{"subnets", "leasetimes", "john", "4x5", "55"}, noStdinString, noContentString, subnetLeasetimesIntFailureString},
-
-		CliTest{true, true, []string{"subnets", "set"}, noStdinString, noContentString, subnetSetNoArgErrorString},
-		CliTest{true, true, []string{"subnets", "set", "john", "option", "45", "to", "34", "77"}, noStdinString, noContentString, subnetSetTooManyArgErrorString},
-		CliTest{true, true, []string{"subnets", "get"}, noStdinString, noContentString, subnetGetNoArgErrorString},
-		CliTest{true, true, []string{"subnets", "get", "john", "option", "45", "77"}, noStdinString, noContentString, subnetGetTooManyArgErrorString},
-		CliTest{false, true, []string{"subnets", "set", "john", "option", "6tl", "to", "66"}, noStdinString, noContentString, subnetSetIntFailureErrorString},
-		CliTest{false, false, []string{"subnets", "set", "john", "option", "6", "to", "66"}, noStdinString, subnetSetTo66, noErrorString},
-		CliTest{false, false, []string{"subnets", "get", "john", "option", "6"}, noStdinString, subnetGetTo66, noErrorString},
-		CliTest{false, false, []string{"subnets", "set", "john", "option", "6", "to", "null"}, noStdinString, subnetSetToNull, noErrorString},
-		CliTest{false, true, []string{"subnets", "get", "john", "option", "6"}, noStdinString, noContentString, subnetGetToNull},
-
-		//End of Helpers
-
-		CliTest{false, false, []string{"subnets", "destroy", "john"}, noStdinString, subnetDestroyJohnString, noErrorString},
-		CliTest{false, false, []string{"subnets", "list"}, noStdinString, subnetDefaultListString, noErrorString},
-	}
-
-	for _, test := range tests {
-		testCli(t, test)
-	}
-
+	cliTest(true, false, "subnets").run(t)
+	cliTest(false, false, "subnets", "list").run(t)
+	cliTest(true, true, "subnets", "create").run(t)
+	cliTest(true, true, "subnets", "create", "john", "john2").run(t)
+	cliTest(false, true, "subnets", "create", subnetCreateBadJSONString).run(t)
+	cliTest(false, false, "subnets", "create", subnetCreateInputString).run(t)
+	cliTest(false, true, "subnets", "create", subnetCreateInputString).run(t)
+	cliTest(false, false, "subnets", "list").run(t)
+	cliTest(false, false, "subnets", "list", "Name=fred").run(t)
+	cliTest(false, false, "subnets", "list", "Name=john").run(t)
+	cliTest(false, false, "subnets", "list", "Strategy=MAC").run(t)
+	cliTest(false, false, "subnets", "list", "Strategy=false").run(t)
+	cliTest(false, false, "subnets", "list", "NextServer=3.3.3.3").run(t)
+	cliTest(false, false, "subnets", "list", "NextServer=1.1.1.1").run(t)
+	cliTest(false, true, "subnets", "list", "NextServer=fred").run(t)
+	cliTest(false, false, "subnets", "list", "Enabled=false").run(t)
+	cliTest(false, false, "subnets", "list", "Enabled=true").run(t)
+	cliTest(false, true, "subnets", "list", "Enabled=george").run(t)
+	cliTest(false, false, "subnets", "list", "Proxy=false").run(t)
+	cliTest(false, false, "subnets", "list", "Proxy=true").run(t)
+	cliTest(false, true, "subnets", "list", "Proxy=george").run(t)
+	cliTest(false, false, "subnets", "list", "Subnet=192.168.103.0/24").run(t)
+	cliTest(false, false, "subnets", "list", "Subnet=192.168.100.0/24").run(t)
+	cliTest(false, true, "subnets", "list", "Subnet=false").run(t)
+	cliTest(true, true, "subnets", "show").run(t)
+	cliTest(true, true, "subnets", "show", "john", "john2").run(t)
+	cliTest(false, true, "subnets", "show", "ignore").run(t)
+	cliTest(false, false, "subnets", "show", "john").run(t)
+	cliTest(true, true, "subnets", "exists").run(t)
+	cliTest(true, true, "subnets", "exists", "john", "john2").run(t)
+	cliTest(false, false, "subnets", "exists", "john").run(t)
+	cliTest(false, true, "subnets", "exists", "ignore").run(t)
+	cliTest(true, true, "subnets", "exists", "john", "john2").run(t)
+	cliTest(true, true, "subnets", "update").run(t)
+	cliTest(true, true, "subnets", "update", "john", "john2", "john3").run(t)
+	cliTest(false, true, "subnets", "update", "john", subnetUpdateBadJSONString).run(t)
+	cliTest(false, false, "subnets", "update", "john", subnetUpdateInputString).run(t)
+	cliTest(false, true, "subnets", "update", "john2", subnetUpdateInputString).run(t)
+	cliTest(false, false, "subnets", "show", "john").run(t)
+	cliTest(false, false, "subnets", "show", "john").run(t)
+	cliTest(true, true, "subnets", "destroy").run(t)
+	cliTest(true, true, "subnets", "destroy", "john", "june").run(t)
+	cliTest(false, false, "subnets", "destroy", "john").run(t)
+	cliTest(false, true, "subnets", "destroy", "john").run(t)
+	cliTest(false, false, "subnets", "list").run(t)
+	cliTest(false, false, "subnets", "create", "-").Stdin(subnetCreateInputString + "\n").run(t)
+	cliTest(false, false, "subnets", "list").run(t)
+	cliTest(false, false, "subnets", "update", "john", "-").Stdin(subnetUpdateInputString + "\n").run(t)
+	cliTest(false, false, "subnets", "show", "john").run(t)
+	cliTest(true, true, "subnets", "range").run(t)
+	cliTest(true, true, "subnets", "range", "john", "1.24.36.7", "1.24.36.16", "1.24.36.16").run(t)
+	cliTest(false, true, "subnets", "range", "john", "192.168.100.10", "192.168.100.500").run(t)
+	cliTest(false, true, "subnets", "range", "john", "cq.98.42.1234", "1.24.36.16").run(t)
+	cliTest(false, false, "subnets", "range", "john", "192.168.100.10", "192.168.100.200").run(t)
+	cliTest(true, true, "subnets", "subnet").run(t)
+	cliTest(true, true, "subnets", "subnet", "john", "june", "1.24.36.16").run(t)
+	cliTest(false, false, "subnets", "subnet", "john", "192.168.100.0/10").run(t)
+	cliTest(false, true, "subnets", "subnet", "john", "1111.11.2223.544/66666").run(t)
+	/* Save for when we have extra strategies other than MAC */
+	/*
+		cliTest(true, true, "subnets", "strategy").run(t)
+		cliTest(true, true, "subnets", "strategy", "john", "june", "MAC").run(t)
+		cliTest(false, false, "subnets", "strategy", "john", "MAC").run(t)
+		cliTest(false, true, "subnets", "strategy", "john", "t5:44:llll:b").run(t)
+	*/
+	cliTest(true, true, "subnets", "pickers").run(t)
+	cliTest(true, true, "subnets", "pickers", "john", "june", "test1,test2,test3").run(t)
+	cliTest(false, false, "subnets", "pickers", "john", "none,nextFree,mostExpired").run(t)
+	cliTest(true, true, "subnets", "nextserver").run(t)
+	cliTest(true, true, "subnets", "nextserver", "john", "june", "1.24.36.16").run(t)
+	cliTest(false, false, "subnets", "nextserver", "john", "1.24.36.16").run(t)
+	cliTest(true, true, "subnets", "leasetimes").run(t)
+	cliTest(true, true, "subnets", "leasetimes", "john", "june", "32", "55").run(t)
+	cliTest(false, false, "subnets", "leasetimes", "john", "65", "7300").run(t)
+	cliTest(false, true, "subnets", "leasetimes", "john", "4x5", "55").run(t)
+	cliTest(true, true, "subnets", "set").run(t)
+	cliTest(true, true, "subnets", "set", "john", "option", "45", "to", "34", "77").run(t)
+	cliTest(true, true, "subnets", "get").run(t)
+	cliTest(true, true, "subnets", "get", "john", "option", "45", "77").run(t)
+	cliTest(false, true, "subnets", "set", "john", "option", "6tl", "to", "66").run(t)
+	cliTest(false, false, "subnets", "set", "john", "option", "6", "to", "66").run(t)
+	cliTest(false, false, "subnets", "get", "john", "option", "6").run(t)
+	cliTest(false, false, "subnets", "set", "john", "option", "6", "to", "null").run(t)
+	cliTest(false, true, "subnets", "get", "john", "option", "6").run(t)
+	//End of Helpers
+	cliTest(false, false, "subnets", "destroy", "john").run(t)
+	cliTest(false, false, "subnets", "list").run(t)
 }

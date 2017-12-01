@@ -33,6 +33,20 @@ type PluginProvider struct {
 func (p *PluginProvider) Prefix() string { return "plugin_providers" }
 func (p *PluginProvider) Key() string    { return p.Name }
 
+func (p *PluginProvider) SliceOf() interface{} {
+	s := []*PluginProvider{}
+	return &s
+}
+
+func (p *PluginProvider) ToModels(obj interface{}) []Model {
+	items := obj.(*[]*PluginProvider)
+	res := make([]Model, len(*items))
+	for i, item := range *items {
+		res[i] = Model(item)
+	}
+	return res
+}
+
 func (p *PluginProvider) Fill() {
 	p.MetaData.fill()
 	if p.RequiredParams == nil {

@@ -1,0 +1,28 @@
+[
+  {
+    "Available": true,
+    "Description": "Global profile attached automatically to all machines.",
+    "Errors": [],
+    "Meta": {
+      "color": "blue",
+      "icon": "world",
+      "title": "Digital Rebar Provision"
+    },
+    "Name": "global",
+    "Params": {},
+    "ReadOnly": false,
+    "Validated": true
+  },
+  {
+    "Available": true,
+    "Description": "",
+    "Errors": [],
+    "Meta": {},
+    "Name": "john",
+    "Params": {
+      "FRED": "GREG"
+    },
+    "ReadOnly": false,
+    "Validated": true
+  }
+]

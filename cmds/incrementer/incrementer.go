@@ -63,9 +63,10 @@ func executeDrpCliCommand(args ...string) (string, error) {
 		outC <- buf.String()
 	}()
 
-	cli.App.SetArgs(args)
-	cli.App.SetOutput(os.Stderr)
-	err2 := cli.App.Execute()
+	app := cli.NewApp()
+	app.SetArgs(args)
+	app.SetOutput(os.Stderr)
+	err2 := app.Execute()
 
 	// back to normal state
 	w.Close()

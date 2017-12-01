@@ -16,6 +16,8 @@ func TestBootEnvCrud(t *testing.T) {
 	localBootEnv := mustDecode(&models.BootEnv{}, `
 Description: "The boot environment you should use to have known machines boot off their local hard drive"
 Name: "local"
+Meta:
+  feature-flags: change-stage-v2
 OS:
   Name: "local"
 ReadOnly: true
@@ -39,6 +41,8 @@ Templates:
 	ignoreBootEnv := mustDecode(&models.BootEnv{}, `
 Description: "The boot environment you should use to have unknown machines boot off their local hard drive"
 Name:        "ignore"
+Meta:
+  feature-flags: change-stage-v2
 OS:
   Name: "ignore"
 OnlyUnknown: true
@@ -656,7 +660,6 @@ Validated: true
 					"Unable to import template local3-pxelinux.tmpl",
 					"Unable to import template local3-elilo.tmpl",
 					"Unable to import template local3-ipxe.tmpl",
-					"Cannot import extra templates",
 				},
 				Code: 0,
 			},

@@ -1,0 +1,12 @@
+{
+  "Available": true,
+  "Description": "",
+  "Errors": [],
+  "Meta": {},
+  "Name": "john",
+  "Params": {
+    "FRED": "GREG"
+  },
+  "ReadOnly": false,
+  "Validated": true
+}

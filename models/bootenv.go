@@ -87,6 +87,19 @@ type BootEnv struct {
 	OnlyUnknown bool
 }
 
+func (b *BootEnv) Validate() {
+	b.AddError(ValidName("Invalid Name", b.Name))
+	for _, p := range b.RequiredParams {
+		b.AddError(ValidParamName("Invalid Required Param", p))
+	}
+	for _, p := range b.OptionalParams {
+		b.AddError(ValidParamName("Invalid Optional Param", p))
+	}
+	for _, t := range b.Templates {
+		b.AddError(ValidName("Invalid Template Name", t.Name))
+	}
+}
+
 func (b *BootEnv) Prefix() string {
 	return "bootenvs"
 }
@@ -128,4 +141,8 @@ func (b *BootEnv) Fill() {
 	if b.Templates == nil {
 		b.Templates = []TemplateInfo{}
 	}
+}
+
+func (b *BootEnv) SetName(n string) {
+	b.Name = n
 }

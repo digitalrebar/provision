@@ -1,0 +1,26 @@
+{
+  "Available": true,
+  "BootEnv": "local",
+  "Description": "",
+  "Errors": [],
+  "Meta": {},
+  "Name": "stage2",
+  "OptionalParams": [],
+  "Profiles": [
+    "stage-prof"
+  ],
+  "ReadOnly": false,
+  "Reboot": false,
+  "RequiredParams": [],
+  "RunnerWait": false,
+  "Tasks": [],
+  "Templates": [
+    {
+      "Contents": "{{.Param \"sp-param\"}}",
+      "ID": "",
+      "Name": "test",
+      "Path": "{{.Machine.Path}}/file"
+    }
+  ],
+  "Validated": true
+}

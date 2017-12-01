@@ -1,0 +1,13 @@
+{
+  "Available": true,
+  "Description": "",
+  "Documentation": "",
+  "Errors": [],
+  "Meta": {},
+  "Name": "incrementer/parameter",
+  "ReadOnly": true,
+  "Schema": {
+    "type": "string"
+  },
+  "Validated": true
+}

@@ -15,6 +15,7 @@ import (
 	"net/http"
 	"net/url"
 	"path"
+	"strings"
 	"time"
 
 	"github.com/VictorLowther/jsonpatch2"
@@ -78,6 +79,10 @@ func (r *R) Meth(v string) *R {
 // Get sets the R method to GET
 func (r *R) Get() *R {
 	return r.Meth("GET")
+}
+
+func (r *R) List(prefix string) *R {
+	return r.Get().UrlFor(prefix)
 }
 
 // Del sets the R method to DELETE
@@ -232,7 +237,7 @@ func (r *R) Filter(prefix string, filterArgs ...string) *R {
 				r.err.Errorf("Invalid Filter: %s requires an op and at least 1 parameter", filter)
 				return r
 			}
-			op := filterArgs[i+1]
+			op := strings.Title(strings.ToLower(filterArgs[i+1]))
 			i += 2
 			switch op {
 			case "Eq", "Lt", "Lte", "Gt", "Gte", "Ne":
@@ -508,6 +513,14 @@ func (c *Client) GetModel(prefix, key string, params ...string) (models.Model, e
 		return nil, err
 	}
 	return res, c.Req().UrlFor(res.Prefix(), key).Do(res)
+}
+
+func (c *Client) GetModelForPatch(prefix, key string, params ...string) (models.Model, models.Model, error) {
+	ref, err := c.GetModel(prefix, key)
+	if err != nil {
+		return nil, nil, err
+	}
+	return ref, models.Clone(ref), nil
 }
 
 // ExistsModel tests to see if an object exists on the server

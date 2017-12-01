@@ -72,7 +72,7 @@ func TestContentCrud(t *testing.T) {
     Writable: false
 - Counts:
     bootenvs: 2
-    stages: 1
+    stages: 2
   Warnings: []
   meta:
     Description: Default objects that must be present
@@ -157,7 +157,7 @@ sections:
   profiles:
     global:
       Available: false
-      Description: ""
+      Description: Global profile attached automatically to all machines.
       Errors: []
       Meta:
         color: blue
@@ -355,6 +355,8 @@ meta:
 Available: true
 Description: The boot environment you should use to have unknown machines boot off
   their local hard drive
+Meta:
+  feature-flags: change-stage-v2
 Name: ignoble
 OS:
   Name: ignore

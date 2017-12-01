@@ -9,8 +9,11 @@ import (
 	"github.com/digitalrebar/provision/models"
 )
 
-func runAgent(t *testing.T, m *models.Machine, lastTask, lastState, lastExitState string) {
+func runAgent(t *testing.T, mi *models.Machine, lastTask, lastState, lastExitState string) (m *models.Machine) {
 	t.Helper()
+
+	m = mi
+
 	if !m.Runnable {
 		t.Logf("Machine %s not runnable, patching it to a Runnable state", m.Name)
 		mc := models.Clone(m).(*models.Machine)
@@ -23,6 +26,7 @@ func runAgent(t *testing.T, m *models.Machine, lastTask, lastState, lastExitStat
 		t.Logf("Machine %s patched", m.Name)
 		m.Runnable = true
 	}
+
 	buf := &bytes.Buffer{}
 	err := session.Agent(m, true, true, false, buf)
 	if err != nil {
@@ -47,6 +51,7 @@ func runAgent(t *testing.T, m *models.Machine, lastTask, lastState, lastExitStat
 	} else {
 		t.Errorf("Run for task %s finished with unknown state %s:%s", job.Task, job.State, job.ExitState)
 	}
+	return
 }
 
 func TestJobs(t *testing.T) {
@@ -60,6 +65,8 @@ func TestJobs(t *testing.T) {
 	machine1 := mustDecode(&models.Machine{}, `
 Address: 192.168.100.110
 BootEnv: local
+Meta:
+  feature-flags: change-stage-v2
 Name: john
 Uuid: 3e7031fe-3062-45f1-835c-92541bc9cbd3
 Validated: true
@@ -266,10 +273,10 @@ Tasks:
 			}
 			return mc, err
 		}, nil)
-	runAgent(t, machine1, "task2", "incomplete", "reboot")
-	runAgent(t, machine1, "task2", "incomplete", "poweroff")
-	runAgent(t, machine1, "task2", "incomplete", "stop")
-	runAgent(t, machine1, "task2", "failed", "failed")
+	machine1 = runAgent(t, machine1, "task2", "incomplete", "reboot")
+	machine1 = runAgent(t, machine1, "task2", "incomplete", "poweroff")
+	machine1 = runAgent(t, machine1, "task2", "incomplete", "stop")
+	machine1 = runAgent(t, machine1, "task2", "failed", "failed")
 	rt(t, "Try to remove tasks from machine1 (fail)", nil,
 		&models.Error{
 			Model:    "machines",
@@ -328,10 +335,10 @@ Tasks:
 			}
 			return res, err
 		}, nil)
-	runAgent(t, machine1, "task2", "incomplete", "complete")
-	runAgent(t, machine1, "task1", "incomplete", "reboot")
-	runAgent(t, machine1, "task1", "failed", "failed")
-	runAgent(t, machine1, "task1", "incomplete", "complete")
+	machine1 = runAgent(t, machine1, "task2", "incomplete", "complete")
+	machine1 = runAgent(t, machine1, "task1", "incomplete", "reboot")
+	machine1 = runAgent(t, machine1, "task1", "failed", "failed")
+	machine1 = runAgent(t, machine1, "task1", "incomplete", "complete")
 	machineRes = models.Clone(machine1).(*models.Machine)
 	machineRes.Tasks = []string{"task2", "task1"}
 	rt(t, "Remove extra task in the middle of a run", machineRes, nil,
@@ -378,7 +385,7 @@ Tasks:
 			}
 			return res, err
 		}, nil)
-	runAgent(t, machine1, "task1", "finished", "complete")
+	machine1 = runAgent(t, machine1, "task1", "finished", "complete")
 	if machine1.CurrentTask == len(machine1.Tasks) {
 		t.Logf("All tasks on machine1 finished")
 	} else {

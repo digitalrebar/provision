@@ -19,6 +19,10 @@ func (m *MetaData) fill() {
 	}
 }
 
+func (m *MetaData) ClearFeatures() {
+	m.Meta["feature-flags"] = ""
+}
+
 func (m *MetaData) Features() []string {
 	m.fill()
 	if flags, ok := m.Meta["feature-flags"]; ok && len(flags) > 0 {

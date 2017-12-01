@@ -101,6 +101,7 @@ var contentPack2CreateErrorString = "Error: ValidationError: New layer violates 
 var contentPack1ProfileListString = `[
   {
     "Available": true,
+    "Description": "Global profile attached automatically to all machines.",
     "Errors": [],
     "Meta": {
       "color": "blue",
@@ -124,6 +125,7 @@ var contentPack1ProfileListString = `[
 var contentPack1ProfileList2String = `[
   {
     "Available": true,
+    "Description": "Global profile attached automatically to all machines.",
     "Errors": [],
     "Meta": {
       "color": "blue",
@@ -147,6 +149,7 @@ var contentPack1ProfileList2String = `[
 var contentPack1UpdateProfileListString = `[
   {
     "Available": true,
+    "Description": "Global profile attached automatically to all machines.",
     "Errors": [],
     "Meta": {
       "color": "blue",
@@ -171,6 +174,7 @@ var contentPack1UpdateProfileListString = `[
 var contentNoPackProfileListString = `[
   {
     "Available": true,
+    "Description": "Global profile attached automatically to all machines.",
     "Errors": [],
     "Meta": {
       "color": "blue",
@@ -360,36 +364,30 @@ var contentPack1UpdateSuccessString = `{
 
 func TestContentsFunctionalCli(t *testing.T) {
 
-	tests := []CliTest{
-		CliTest{false, false, []string{"contents", "list"}, noStdinString, contentDefaultListString, noErrorString},
-		CliTest{false, false, []string{"bootenvs", "create", contentMyLocalBootEnvString}, noStdinString, contentBootenvGregCreateSuccessString, noErrorString},
+	cliTest(false, false, "contents", "list").run(t)
+	cliTest(false, false, "bootenvs", "create", contentMyLocalBootEnvString).run(t)
 
-		CliTest{false, true, []string{"contents", "create", contentPackBadString}, noStdinString, noContentString, contentPackBadCreateErrorString},
-		CliTest{false, false, []string{"contents", "create", contentPack1String}, noStdinString, contentPack1CreateSuccessString, noErrorString},
-		CliTest{false, false, []string{"profiles", "list"}, noStdinString, contentPack1ProfileListString, noErrorString},
-		CliTest{false, true, []string{"contents", "create", contentPack2String}, noStdinString, noContentString, contentPack2CreateErrorString},
-		CliTest{false, false, []string{"profiles", "list"}, noStdinString, contentPack1ProfileListString, noErrorString},
+	cliTest(false, true, "contents", "create", contentPackBadString).run(t)
+	cliTest(false, false, "contents", "create", contentPack1String).run(t)
+	cliTest(false, false, "profiles", "list").run(t)
+	cliTest(false, true, "contents", "create", contentPack2String).run(t)
+	cliTest(false, false, "profiles", "list").run(t)
 
-		CliTest{false, false, []string{"machines", "create", contentMachineCreateString}, noStdinString, contentMachineCreateSuccessString, noErrorString},
-		CliTest{false, false, []string{"machines", "addprofile", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "p1-prof"}, noStdinString, contentMachineAddProfileString, noErrorString},
+	cliTest(false, false, "machines", "create", contentMachineCreateString).run(t)
+	cliTest(false, false, "machines", "addprofile", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "p1-prof").run(t)
 
-		CliTest{false, true, []string{"contents", "update", "Pack1", contentPack1BadSyntaxUpdateString}, noStdinString, noContentString, contentPack1BadSyntaxUpdateErrorString},
-		CliTest{false, false, []string{"contents", "update", "Pack1", contentPack1BadUpdateString}, noStdinString, contentPack1BadUpdateSuccessString, noErrorString},
-		CliTest{false, false, []string{"profiles", "list"}, noStdinString, contentPack1ProfileList2String, noErrorString},
-		CliTest{false, false, []string{"contents", "update", "Pack1", contentPack1UpdateString}, noStdinString, contentPack1UpdateSuccessString, noErrorString},
-		CliTest{false, false, []string{"profiles", "list"}, noStdinString, contentPack1UpdateProfileListString, noErrorString},
+	cliTest(false, true, "contents", "update", "Pack1", contentPack1BadSyntaxUpdateString).run(t)
+	cliTest(false, false, "contents", "update", "Pack1", contentPack1BadUpdateString).run(t)
+	cliTest(false, false, "profiles", "list").run(t)
+	cliTest(false, false, "contents", "update", "Pack1", contentPack1UpdateString).run(t)
+	cliTest(false, false, "profiles", "list").run(t)
 
-		CliTest{false, false, []string{"machines", "destroy", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, "Deleted machine 3e7031fe-3062-45f1-835c-92541bc9cbd3\n", noErrorString},
+	cliTest(false, false, "machines", "destroy", "3e7031fe-3062-45f1-835c-92541bc9cbd3").run(t)
 
-		CliTest{false, false, []string{"contents", "destroy", "Pack1"}, noStdinString, "Deleted content Pack1\n", noErrorString},
-		CliTest{false, false, []string{"profiles", "list"}, noStdinString, contentNoPackProfileListString, noErrorString},
+	cliTest(false, false, "contents", "destroy", "Pack1").run(t)
+	cliTest(false, false, "profiles", "list").run(t)
 
-		CliTest{false, false, []string{"bootenvs", "destroy", "mylocal"}, noStdinString, "Deleted bootenv mylocal\n", noErrorString},
-		CliTest{false, false, []string{"contents", "list"}, noStdinString, contentDefaultListString, noErrorString},
-	}
-
-	for _, test := range tests {
-		testCli(t, test)
-	}
+	cliTest(false, false, "bootenvs", "destroy", "mylocal").run(t)
+	cliTest(false, false, "contents", "list").run(t)
 
 }

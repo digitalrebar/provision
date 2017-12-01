@@ -52,30 +52,20 @@ func TestFilesCli(t *testing.T) {
 	filesUploadCommonSuccessString = strings.Replace(filesUploadCommonSuccessString, "*REPLACE_WITH_SIZE*", strconv.FormatInt(common_size, 10), -1)
 
 	// TODO: Add GetAs
-
-	tests := []CliTest{
-		CliTest{true, false, []string{"files"}, noStdinString, "Commands to manage files on the provisioner\n", ""},
-		CliTest{false, false, []string{"files", "list"}, noStdinString, filesDefaultListString, noErrorString},
-
-		CliTest{true, true, []string{"files", "upload"}, noStdinString, noContentString, filesUploadNoArgsErrorString},
-		CliTest{true, true, []string{"files", "upload", "asg"}, noStdinString, noContentString, filesUploadOneArgsErrorString},
-		CliTest{true, true, []string{"files", "upload", "asg", "two", "three", "four"}, noStdinString, noContentString, filesUploadFourArgsErrorString},
-		CliTest{false, true, []string{"files", "upload", "greg", "as", "greg"}, noStdinString, noContentString, filesUploadMissingFileErrorString},
-		CliTest{false, false, []string{"files", "upload", "files.go", "as", "greg"}, noStdinString, filesUploadSuccessString, noErrorString},
-		CliTest{false, false, []string{"files", "upload", "common.go", "as", "greg"}, noStdinString, filesUploadCommonSuccessString, noErrorString},
-		CliTest{false, false, []string{"files", "upload", "files.go", "as", "greg"}, noStdinString, filesUploadSuccessString, noErrorString},
-		CliTest{false, true, []string{"files", "upload", "files.go", "as", "greg/greg"}, noStdinString, noContentString, filesUploadMkdirErrorString},
-		CliTest{false, false, []string{"files", "list"}, noStdinString, filesGregListString, noErrorString},
-
-		CliTest{true, true, []string{"files", "destroy"}, noStdinString, noContentString, filesDestroyNoArgsErrorString},
-		CliTest{true, true, []string{"files", "destroy", "asdg", "asgs"}, noStdinString, noContentString, filesDestroyTwoArgsErrorString},
-		CliTest{false, false, []string{"files", "destroy", "greg"}, noStdinString, filesDestroyGregSuccessString, noErrorString},
-		CliTest{false, true, []string{"files", "destroy", "fred"}, noStdinString, noContentString, filesDestroyFredErrorString},
-		CliTest{false, false, []string{"files", "list"}, noStdinString, filesDefaultListString, noErrorString},
-	}
-
-	for _, test := range tests {
-		testCli(t, test)
-	}
-
+	cliTest(true, false, "files").run(t)
+	cliTest(false, false, "files", "list").run(t)
+	cliTest(true, true, "files", "upload").run(t)
+	cliTest(false, true, "files", "upload", "asg").run(t)
+	cliTest(false, true, "files", "upload", "asg", "two", "three", "four").run(t)
+	cliTest(false, true, "files", "upload", "greg", "as", "greg").run(t)
+	cliTest(false, false, "files", "upload", "files.go", "as", "greg").run(t)
+	cliTest(false, false, "files", "upload", "common.go", "as", "greg").run(t)
+	cliTest(false, false, "files", "upload", "files.go", "as", "greg").run(t)
+	cliTest(false, true, "files", "upload", "files.go", "as", "greg/greg").run(t)
+	cliTest(false, false, "files", "list").run(t)
+	cliTest(true, true, "files", "destroy").run(t)
+	cliTest(true, true, "files", "destroy", "asdg", "asgs").run(t)
+	cliTest(false, false, "files", "destroy", "greg").run(t)
+	cliTest(false, true, "files", "destroy", "fred").run(t)
+	cliTest(false, false, "files", "list").run(t)
 }

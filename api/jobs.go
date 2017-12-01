@@ -15,6 +15,7 @@ import (
 	"time"
 
 	"github.com/VictorLowther/jsonpatch2"
+	"github.com/VictorLowther/jsonpatch2/utils"
 	"github.com/digitalrebar/provision/models"
 )
 
@@ -119,14 +120,14 @@ func (r *TaskRunner) Close() {
 // Log writes the string (with a timestamp) to stderr and to the
 // server-side log for the current job.
 func (r *TaskRunner) Log(s string, items ...interface{}) {
-	fmt.Fprintf(r.in, time.Now().String()+": "+s+"\n", items...)
+	fmt.Fprintf(r.in, s+"\n", items...)
 }
 
 // Expand a writes a file template to the appropriate location.
-func (r *TaskRunner) Expand(action *models.JobAction) error {
+func (r *TaskRunner) Expand(action *models.JobAction, taskDir string) error {
 	// Write the Contents of this template to the passed Path
 	if !strings.HasPrefix(action.Path, "/") {
-		action.Path = path.Join(r.agentDir, path.Clean(action.Path))
+		action.Path = path.Join(taskDir, path.Clean(action.Path))
 	}
 	r.Log("%s: Writing %s to %s", time.Now(), action.Name, action.Path)
 	if err := ioutil.WriteFile(action.Path, []byte(action.Content), 0644); err != nil {
@@ -300,7 +301,7 @@ func (r *TaskRunner) Run() error {
 		r.stop = false
 		var err error
 		if action.Path != "" {
-			err = r.Expand(action)
+			err = r.Expand(action, taskDir)
 		} else {
 			if !helperWritten {
 				err = ioutil.WriteFile(path.Join(taskDir, "helper"), cmdHelper, 0600)
@@ -344,10 +345,124 @@ func (r *TaskRunner) Run() error {
 	return nil
 }
 
+//
+// changeStage takes a machine and attempts to change its stage and set return flags.
+// It will issue reboot if needed and force flags to stop = true
+//
+func (c *Client) changeStage(im *models.Machine, actuallyPowerThings bool, logger io.Writer) (m *models.Machine, wait, stop, changed bool, err error) {
+	m = im
+
+	// Get the following data:
+	// - stop - should we stop
+	// - wait - should we wait for more task in the current stage.
+	// - nextStage - what is the next stage we should go to.
+	// - reboot - should the machine be rebooted on this stage change.
+	//
+	// Do this:
+	//   if we have a nextStage, then:
+	//     set the machine's stage to the next stage.
+	//     if we reboot or the new stage says to reboot, then reboot the machine.
+	//
+	reboot := false
+	nextStage := ""
+	currentStage := m.Stage
+
+	// Get current Stage
+	cs := &models.Stage{Name: currentStage}
+	if err = c.Req().Fill(cs); err != nil {
+		return
+	}
+	wait = cs.RunnerWait
+
+	var cmObj interface{}
+	if err = c.Req().Get().UrlForM(m, "params", "change-stage/map").Params("aggregate", "true").Do(&cmObj); err != nil {
+		return
+	}
+	var csMap map[string]string
+	if err = utils.Remarshal(cmObj, &csMap); err != nil {
+		return
+	}
+
+	if ns, ok := csMap[currentStage]; ok {
+		pieces := strings.Split(ns, ":")
+		nextStage = pieces[0]
+		if len(pieces) > 1 && pieces[1] == "Reboot" {
+			reboot = true
+		}
+		if len(pieces) > 1 && pieces[1] == "Stop" {
+			stop = true
+		}
+	} else {
+		// if current stage ends in -install and no stage map entry, then we need to set the
+		// next stage to local.  This makes the code work like the old ce-bootenvs did.
+		if strings.HasSuffix(currentStage, "-install") {
+			nextStage = "local"
+			reboot = false
+			wait = false
+			stop = true
+		} else {
+			nextStage = ""
+		}
+	}
+
+	// If no stage, then just return.
+	if nextStage == "" {
+		return
+	}
+
+	// Get the new stage
+	ns := &models.Stage{Name: nextStage}
+	if err = c.Req().Fill(ns); err != nil {
+		return
+	}
+	if !reboot {
+		reboot = ns.Reboot
+	}
+
+	// Change stage
+	newM := models.Clone(m).(*models.Machine)
+	newM.Stage = nextStage
+	obj, err := c.PatchTo(m, newM)
+	if err != nil {
+		return
+	}
+	m = obj.(*models.Machine)
+	changed = true
+
+	// Reboot if needed
+	if reboot {
+		// Reboot implies stopping the runner
+		wait = false
+		stop = true
+		if actuallyPowerThings {
+			var actionObj interface{}
+			if err = c.Req().Get().UrlForM(m, "actions", "nextbootpxe").Do(&actionObj); err == nil {
+				emptyMap := map[string]interface{}{}
+				var results interface{}
+				if err = c.Req().Post(emptyMap).UrlForM(m, "actions", "nextbootpxe").Do(&results); err != nil {
+					return
+				}
+			} else {
+				err = nil
+			}
+
+			if _, err = exec.Command("reboot").Output(); err != nil {
+				return
+			}
+		} else {
+			fmt.Fprintf(logger, "Would have rebooted on stage change")
+		}
+	}
+
+	return
+}
+
 // Agent runs the machine Agent on the current machine.
 // It assumes there is only one Agent, which is not actually a safe assumption.
 // We should make it safe someday.
 func (c *Client) Agent(m *models.Machine, exitOnNotRunnable, exitOnFailure, actuallyPowerThings bool, logger io.Writer) error {
+	fmt.Fprintf(logger, "Processing jobs for %s: %s\n", m.Key(), time.Now())
+
 	// Clear the current running job, if any
 	currentJob := &models.Job{Uuid: m.CurrentJob}
 	if c.Req().Fill(currentJob) == nil {
@@ -371,15 +486,24 @@ func (c *Client) Agent(m *models.Machine, exitOnNotRunnable, exitOnFailure, actu
 		return err
 	}
 	defer events.Close()
-	if !m.Runnable {
+
+	if m.HasFeature("original-change-stage") || !m.HasFeature("change-stage-v2") {
 		newM := models.Clone(m).(*models.Machine)
 		newM.Runnable = true
-		obj, err := c.PatchTo(m, newM)
-		if err != nil {
-			return err
+		if err := c.Req().PatchTo(m, newM).Do(&newM); err == nil {
+			m = newM
+		} else {
+			res := &models.Error{
+				Type:  "AGENT_WAIT",
+				Model: m.Prefix(),
+				Key:   m.Key(),
+			}
+			res.Errorf("Failed to mark machine runnable.")
+			res.AddError(err)
+			return res
 		}
-		m = obj.(*models.Machine)
 	}
+
 	var runner *TaskRunner
 	for {
 		if runner != nil {
@@ -387,7 +511,7 @@ func (c *Client) Agent(m *models.Machine, exitOnNotRunnable, exitOnFailure, actu
 			runner = nil
 		}
 
-		found, err := events.WaitFor(m, TestItem("Runnable", "true"), 1*time.Hour)
+		found, err := events.WaitFor(m, EqualItem("Runnable", true), 1*time.Hour)
 		if err != nil {
 			res := &models.Error{
 				Type:  "AGENT_WAIT",
@@ -413,20 +537,74 @@ func (c *Client) Agent(m *models.Machine, exitOnNotRunnable, exitOnFailure, actu
 			res.Errorf("Unexpected return from WaitFor: %s", found)
 			return res
 		}
+
 		runner, err = NewTaskRunner(c, m, runnerDir, logger)
 		if err != nil {
 			return err
 		}
 		if runner == nil {
+			// changeStage may have changed stage and rebooted on us.
+			// if it rebooted, it will set stop to true and we should just exit.
+			//
+			// if stop == true, change stage wants us to leave.
+			// if changed == true and stop == false, then change_stage wants us to run more tasks regardless.
+			// if all three are false, then we should leave with nothing to do.
+			// else we are waiting for machine state to change more tasks.
+			//
+			if nm, wait, stop, changed, err := c.changeStage(m, actuallyPowerThings, logger); err != nil {
+				return err
+			} else if stop {
+				break
+			} else if changed {
+				// Continue without waiting
+				m = nm
+				continue
+			} else if !wait {
+				break
+			} else {
+				// Wait
+				m = nm
+			}
+
 			if exitOnNotRunnable {
 				return nil
 			}
-			// Should really wait here for the task list or the current task to change on the machine
+
+			// wait here for the task list or the current task to change on the machine
+			found, err := events.WaitFor(m,
+				OrItems(NotItem(EqualItem("CurrentTask", m.CurrentTask)),
+					NotItem(EqualItem("Tasks", m.Tasks))), 1*time.Hour)
+			if err != nil {
+				res := &models.Error{
+					Type:  "AGENT_WAIT",
+					Model: m.Prefix(),
+					Key:   m.Key(),
+				}
+				res.Errorf("Event wait failed: %s", found)
+				res.AddError(err)
+				return res
+			}
+			switch found {
+			case "interrupt":
+				break
+			case "complete":
+			case "timeout":
+			default:
+				res := &models.Error{
+					Type:  "AGENT_WAIT",
+					Model: m.Prefix(),
+					Key:   m.Key(),
+				}
+				res.Errorf("Unexpected return from WaitFor: %s", found)
+				return res
+			}
+
 			continue
 		}
 		if err := runner.Run(); err != nil {
 			return err
 		}
+
 		if runner.reboot ||
 			runner.poweroff ||
 			runner.stop ||

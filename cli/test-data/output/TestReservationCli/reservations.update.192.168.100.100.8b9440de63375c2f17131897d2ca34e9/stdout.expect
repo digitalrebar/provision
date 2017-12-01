@@ -1,0 +1,17 @@
+{
+  "Addr": "192.168.100.100",
+  "Available": true,
+  "Errors": [],
+  "Meta": {},
+  "NextServer": "2.2.2.2",
+  "Options": [
+    {
+      "Code": 3,
+      "Value": "1.1.1.1"
+    }
+  ],
+  "ReadOnly": false,
+  "Strategy": "MAC",
+  "Token": "john",
+  "Validated": true
+}

@@ -1,0 +1,17 @@
+[
+  {
+    "Available": true,
+    "Description": "",
+    "Documentation": "",
+    "Errors": [],
+    "Meta": {
+      "feature-flags": "original-exit-codes"
+    },
+    "Name": "john",
+    "OptionalParams": [],
+    "ReadOnly": false,
+    "RequiredParams": [],
+    "Templates": [],
+    "Validated": true
+  }
+]

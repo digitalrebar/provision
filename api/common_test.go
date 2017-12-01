@@ -225,6 +225,6 @@ func TestMain(m *testing.M) {
 		os.Exit(1)
 	}
 	ret := m.Run()
-	//os.RemoveAll(tmpDir)
+	os.RemoveAll(tmpDir)
 	os.Exit(ret)
 }

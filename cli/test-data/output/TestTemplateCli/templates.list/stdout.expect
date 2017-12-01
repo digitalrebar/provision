@@ -1,0 +1,22 @@
+[
+  {
+    "Available": true,
+    "Contents": "etc\n",
+    "Description": "A test template for LocalStore testing",
+    "Errors": [],
+    "ID": "etc",
+    "Meta": {},
+    "ReadOnly": true,
+    "Validated": true
+  },
+  {
+    "Available": true,
+    "Contents": "usrshare\n",
+    "Description": "A test template for DefaultStore testing",
+    "Errors": [],
+    "ID": "usrshare",
+    "Meta": {},
+    "ReadOnly": true,
+    "Validated": true
+  }
+]

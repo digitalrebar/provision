@@ -5,8 +5,7 @@ import (
 	"testing"
 	"time"
 
-	models "github.com/digitalrebar/provision/genmodels"
-	"github.com/go-openapi/strfmt"
+	"github.com/digitalrebar/provision/models"
 )
 
 var eventsIntroString = "DigitalRebar Provision Event Commands\n"
@@ -16,20 +15,16 @@ var eventsPostBadJsonString = "Error: Invalid event: error converting YAML to JS
 var eventsPostBadJson1String = "Error: Invalid event: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Event\n\n\n"
 
 func TestEventsCli(t *testing.T) {
-	event := &models.Event{Time: strfmt.DateTime(time.Now()), Type: "events", Action: "post", Key: "test", Object: "String of Data"}
+	event := &models.Event{Time: time.Now(), Type: "events", Action: "post", Key: "test", Object: "String of Data"}
 	jsonBytes, _ := json.Marshal(event)
 	jsonString := string(jsonBytes)
 
-	tests := []CliTest{
-		CliTest{true, false, []string{"events"}, noStdinString, eventsIntroString, noErrorString},
-		CliTest{true, true, []string{"events", "post"}, noStdinString, noContentString, eventsPostNoArgString},
-		CliTest{true, true, []string{"events", "post", "e1", "e2"}, noStdinString, noContentString, eventsPostTooManyArgsString},
-		CliTest{false, true, []string{"events", "post", "{sasdg"}, noStdinString, noContentString, eventsPostBadJsonString},
-		CliTest{false, true, []string{"events", "post", "\"e1\""}, noStdinString, noContentString, eventsPostBadJson1String},
-		CliTest{false, false, []string{"events", "post", jsonString}, noStdinString, noContentString, noErrorString},
-		CliTest{false, false, []string{"events", "post", "-"}, jsonString, noContentString, noErrorString},
-	}
-	for _, test := range tests {
-		testCli(t, test)
-	}
+	CliTest{true, false, []string{"events"}, noStdinString, eventsIntroString, noErrorString}.run(t)
+	CliTest{true, true, []string{"events", "post"}, noStdinString, noContentString, eventsPostNoArgString}.run(t)
+	CliTest{true, true, []string{"events", "post", "e1", "e2"}, noStdinString, noContentString, eventsPostTooManyArgsString}.run(t)
+	CliTest{false, true, []string{"events", "post", "{sasdg"}, noStdinString, noContentString, eventsPostBadJsonString}.run(t)
+	CliTest{false, true, []string{"events", "post", "\"e1\""}, noStdinString, noContentString, eventsPostBadJson1String}.run(t)
+	CliTest{false, false, []string{"events", "post", jsonString}, noStdinString, noContentString, noErrorString}.run(t)
+	CliTest{false, false, []string{"events", "post", "-"}, jsonString, noContentString, noErrorString}.run(t)
+
 }

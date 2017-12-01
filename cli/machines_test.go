@@ -973,234 +973,192 @@ var machinesSetDefaultStageBackString = `{
 `
 
 func TestMachineCli(t *testing.T) {
+	cliTest(false, false, "profiles", "create", "jill").run(t)
+	cliTest(false, false, "profiles", "create", "jean").run(t)
+	cliTest(false, false, "profiles", "create", "stage-prof").run(t)
+	cliTest(false, false, "tasks", "create", "jamie").run(t)
+	cliTest(false, false, "tasks", "create", "justine").run(t)
+	cliTest(false, false, "stages", "create", machineStage1CreateString).run(t)
+	cliTest(false, false, "stages", "create", machineStage2CreateString).run(t)
+	cliTest(false, false, "plugins", "create", machinePluginCreateString).run(t)
+	cliTest(true, false, "machines").run(t)
+	cliTest(false, false, "machines", "list").run(t)
+	cliTest(true, true, "machines", "create").run(t)
+	cliTest(true, true, "machines", "create", "john", "john2").run(t)
+	cliTest(false, true, "machines", "create", machineCreateBadJSONString).run(t)
+	cliTest(false, true, "machines", "create", machineCreateBadJSON2String).run(t)
+	cliTest(false, false, "machines", "create", machineCreateInputString).run(t)
+	cliTest(false, true, "machines", "create", machineCreateInputString).run(t)
+	cliTest(false, false, "machines", "list").run(t)
+	cliTest(false, false, "machines", "list", "Name=fred").run(t)
+	cliTest(false, false, "machines", "list", "Name=john").run(t)
+	cliTest(false, false, "machines", "list", "BootEnv=local").run(t)
+	cliTest(false, false, "machines", "list", "BootEnv=false").run(t)
+	cliTest(false, false, "machines", "list", "Address=192.168.100.110").run(t)
+	cliTest(false, false, "machines", "list", "Address=1.1.1.1").run(t)
+	cliTest(false, true, "machines", "list", "Address=fred").run(t)
+	cliTest(false, false, "machines", "list", "Uuid=4e7031fe-3062-45f1-835c-92541bc9cbd3").run(t)
+	cliTest(false, false, "machines", "list", "Uuid=3e7031fe-3062-45f1-835c-92541bc9cbd3").run(t)
+	cliTest(false, true, "machines", "list", "Uuid=false").run(t)
+	cliTest(false, false, "machines", "list", "Runnable=true").run(t)
+	cliTest(false, false, "machines", "list", "Runnable=false").run(t)
+	cliTest(false, true, "machines", "list", "Runnable=fred").run(t)
+	cliTest(true, true, "machines", "show").run(t)
+	cliTest(true, true, "machines", "show", "john", "john2").run(t)
+	cliTest(false, true, "machines", "show", "john").run(t)
+	cliTest(false, false, "machines", "show", "3e7031fe-3062-45f1-835c-92541bc9cbd3").run(t)
+	cliTest(false, false, "machines", "show", "Key:3e7031fe-3062-45f1-835c-92541bc9cbd3").run(t)
+	cliTest(false, false, "machines", "show", "Uuid:3e7031fe-3062-45f1-835c-92541bc9cbd3").run(t)
+	cliTest(false, false, "machines", "show", "Name:john").run(t)
+	cliTest(true, true, "machines", "exists").run(t)
+	cliTest(true, true, "machines", "exists", "john", "john2").run(t)
+	cliTest(false, false, "machines", "exists", "3e7031fe-3062-45f1-835c-92541bc9cbd3").run(t)
+	cliTest(false, true, "machines", "exists", "john").run(t)
+	cliTest(true, true, "machines", "exists", "john", "john2").run(t)
+	cliTest(true, true, "machines", "update").run(t)
+	cliTest(true, true, "machines", "update", "john", "john2", "john3").run(t)
+	cliTest(false, true, "machines", "update", "3e7031fe-3062-45f1-835c-92541bc9cbd3", machineUpdateBadJSONString).run(t)
+	cliTest(false, false, "machines", "update", "3e7031fe-3062-45f1-835c-92541bc9cbd3", machineUpdateInputString).run(t)
+	cliTest(false, true, "machines", "update", "john2", machineUpdateInputString).run(t)
+	cliTest(false, false, "machines", "show", "3e7031fe-3062-45f1-835c-92541bc9cbd3").run(t)
+	cliTest(false, false, "machines", "show", "3e7031fe-3062-45f1-835c-92541bc9cbd3").run(t)
+	cliTest(true, true, "machines", "destroy").run(t)
+	cliTest(true, true, "machines", "destroy", "john", "june").run(t)
+	cliTest(false, false, "machines", "destroy", "3e7031fe-3062-45f1-835c-92541bc9cbd3").run(t)
+	cliTest(false, true, "machines", "destroy", "3e7031fe-3062-45f1-835c-92541bc9cbd3").run(t)
+	cliTest(false, false, "machines", "list").run(t)
+	cliTest(false, false, "machines", "create", "-").Stdin(machineCreateInputString + "\n").run(t)
+	cliTest(false, false, "machines", "list").run(t)
+	cliTest(false, false, "machines", "update", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "-").Stdin(machineUpdateInputString + "\n").run(t)
+	cliTest(false, false, "machines", "show", "3e7031fe-3062-45f1-835c-92541bc9cbd3").run(t)
+	// bootenv tests
+	cliTest(true, true, "machines", "bootenv").run(t)
+	cliTest(false, true, "machines", "bootenv", "john", "john2").run(t)
+	cliTest(false, false, "machines", "bootenv", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "john2").run(t)
+	cliTest(false, false, "machines", "bootenv", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "local").run(t)
+	cliTest(false, false, "machines", "update", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "{ \"Runnable\": true }").run(t)
+	// stage tests
+	cliTest(true, true, "machines", "stage").run(t)
+	cliTest(false, true, "machines", "stage", "john", "john2").run(t)
+	cliTest(false, true, "machines", "stage", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "john2").run(t)
+	cliTest(false, false, "machines", "stage", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "stage1").run(t)
+	cliTest(false, false, "machines", "update", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "{ \"Runnable\": true }").run(t)
+	cliTest(false, true, "machines", "stage", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "stage2").run(t)
+	cliTest(false, false, "machines", "stage", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "stage2", "--force").run(t)
+	cliTest(false, false, "machines", "stage", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "", "--force").run(t)
+	// Add/Remove Profile tests
+	cliTest(true, true, "machines", "addprofile").run(t)
+	cliTest(false, false, "machines", "addprofile", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "jill").run(t)
+	cliTest(false, false, "machines", "addprofile", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "jean").run(t)
+	cliTest(false, true, "machines", "addprofile", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "jill").run(t)
+	cliTest(false, false, "profiles", "set", "jill", "param", "jill-param", "to", "janga").run(t)
+	cliTest(false, false, "profiles", "set", "stage-prof", "param", "sp-param", "to", "val").run(t)
+	cliTest(false, false, "machines", "stage", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "stage2", "--force").run(t)
+	cliTest(false, false, "stages", "addprofile", "stage2", "stage-prof").run(t)
 
-	tests := []CliTest{
-		CliTest{false, false, []string{"profiles", "create", "jill"}, noStdinString, machineJillCreate, noErrorString},
-		CliTest{false, false, []string{"profiles", "create", "jean"}, noStdinString, machineJeanCreate, noErrorString},
-		CliTest{false, false, []string{"profiles", "create", "stage-prof"}, noStdinString, machineStageProfCreate, noErrorString},
-		CliTest{false, false, []string{"tasks", "create", "jamie"}, noStdinString, machineJamieCreate, noErrorString},
-		CliTest{false, false, []string{"tasks", "create", "justine"}, noStdinString, machineJustineCreate, noErrorString},
-		CliTest{false, false, []string{"stages", "create", machineStage1CreateString}, noStdinString, machineStage1CreateSuccessString, noErrorString},
-		CliTest{false, false, []string{"stages", "create", machineStage2CreateString}, noStdinString, machineStage2CreateSuccessString, noErrorString},
-
-		CliTest{false, false, []string{"plugins", "create", machinePluginCreateString}, noStdinString, machinePluginCreateString, noErrorString},
-
-		CliTest{true, false, []string{"machines"}, noStdinString, "Access CLI commands relating to machines\n", ""},
-		CliTest{false, false, []string{"machines", "list"}, noStdinString, machineDefaultListString, noErrorString},
-
-		CliTest{true, true, []string{"machines", "create"}, noStdinString, noContentString, machineCreateNoArgErrorString},
-		CliTest{true, true, []string{"machines", "create", "john", "john2"}, noStdinString, noContentString, machineCreateTooManyArgErrorString},
-		CliTest{false, true, []string{"machines", "create", machineCreateBadJSONString}, noStdinString, noContentString, machineCreateBadJSONErrorString},
-		CliTest{false, true, []string{"machines", "create", machineCreateBadJSON2String}, noStdinString, noContentString, machineCreateBadJSON2ErrorString},
-		CliTest{false, false, []string{"machines", "create", machineCreateInputString}, noStdinString, machineCreateJohnString, noErrorString},
-		CliTest{false, true, []string{"machines", "create", machineCreateInputString}, noStdinString, noContentString, machineCreateDuplicateErrorString},
-		CliTest{false, false, []string{"machines", "list"}, noStdinString, machineListMachinesString, noErrorString},
-		CliTest{false, false, []string{"machines", "list", "Name=fred"}, noStdinString, machineEmptyListString, noErrorString},
-		CliTest{false, false, []string{"machines", "list", "Name=john"}, noStdinString, machineListMachinesString, noErrorString},
-		CliTest{false, false, []string{"machines", "list", "BootEnv=local"}, noStdinString, machineListMachinesString, noErrorString},
-		CliTest{false, false, []string{"machines", "list", "BootEnv=false"}, noStdinString, machineEmptyListString, noErrorString},
-		CliTest{false, false, []string{"machines", "list", "Address=192.168.100.110"}, noStdinString, machineListMachinesString, noErrorString},
-		CliTest{false, false, []string{"machines", "list", "Address=1.1.1.1"}, noStdinString, machineEmptyListString, noErrorString},
-		CliTest{false, true, []string{"machines", "list", "Address=fred"}, noStdinString, noContentString, machineAddrErrorString},
-		CliTest{false, false, []string{"machines", "list", "UUID=4e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, machineEmptyListString, noErrorString},
-		CliTest{false, false, []string{"machines", "list", "UUID=3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, machineListMachinesString, noErrorString},
-		CliTest{false, true, []string{"machines", "list", "UUID=false"}, noStdinString, noContentString, machineExpireTimeErrorString},
-		CliTest{false, false, []string{"machines", "list", "Runnable=true"}, noStdinString, machineListMachinesString, noErrorString},
-		CliTest{false, false, []string{"machines", "list", "Runnable=false"}, noStdinString, machineEmptyListString, noErrorString},
-		CliTest{false, true, []string{"machines", "list", "Runnable=fred"}, noStdinString, noContentString, machineBadBoolString},
-
-		CliTest{true, true, []string{"machines", "show"}, noStdinString, noContentString, machineShowNoArgErrorString},
-		CliTest{true, true, []string{"machines", "show", "john", "john2"}, noStdinString, noContentString, machineShowTooManyArgErrorString},
-		CliTest{false, true, []string{"machines", "show", "john"}, noStdinString, noContentString, machineShowMissingArgErrorString},
-		CliTest{false, false, []string{"machines", "show", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, machineShowMachineString, noErrorString},
-		CliTest{false, false, []string{"machines", "show", "Key:3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, machineShowMachineString, noErrorString},
-		CliTest{false, false, []string{"machines", "show", "Uuid:3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, machineShowMachineString, noErrorString},
-		CliTest{false, false, []string{"machines", "show", "Name:john"}, noStdinString, machineShowMachineString, noErrorString},
-
-		CliTest{true, true, []string{"machines", "exists"}, noStdinString, noContentString, machineExistsNoArgErrorString},
-		CliTest{true, true, []string{"machines", "exists", "john", "john2"}, noStdinString, noContentString, machineExistsTooManyArgErrorString},
-		CliTest{false, false, []string{"machines", "exists", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, machineExistsMachineString, noErrorString},
-		CliTest{false, true, []string{"machines", "exists", "john"}, noStdinString, noContentString, machineExistsMissingJohnString},
-		CliTest{true, true, []string{"machines", "exists", "john", "john2"}, noStdinString, noContentString, machineExistsTooManyArgErrorString},
-
-		CliTest{true, true, []string{"machines", "update"}, noStdinString, noContentString, machineUpdateNoArgErrorString},
-		CliTest{true, true, []string{"machines", "update", "john", "john2", "john3"}, noStdinString, noContentString, machineUpdateTooManyArgErrorString},
-		CliTest{false, true, []string{"machines", "update", "3e7031fe-3062-45f1-835c-92541bc9cbd3", machineUpdateBadJSONString}, noStdinString, noContentString, machineUpdateBadJSONErrorString},
-		CliTest{false, false, []string{"machines", "update", "3e7031fe-3062-45f1-835c-92541bc9cbd3", machineUpdateInputString}, noStdinString, machineUpdateJohnString, noErrorString},
-		CliTest{false, true, []string{"machines", "update", "john2", machineUpdateInputString}, noStdinString, noContentString, machineUpdateJohnMissingErrorString},
-		CliTest{false, false, []string{"machines", "show", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, machineUpdateJohnString, noErrorString},
-
-		CliTest{true, true, []string{"machines", "patch"}, noStdinString, noContentString, machinePatchNoArgErrorString},
-		CliTest{true, true, []string{"machines", "patch", "john", "john2", "john3"}, noStdinString, noContentString, machinePatchTooManyArgErrorString},
-		CliTest{false, true, []string{"machines", "patch", machinePatchBaseString, machinePatchBadPatchJSONString}, noStdinString, noContentString, machinePatchBadPatchJSONErrorString},
-		CliTest{false, true, []string{"machines", "patch", machinePatchBadBaseJSONString, machinePatchInputString}, noStdinString, noContentString, machinePatchBadBaseJSONErrorString},
-		CliTest{false, false, []string{"machines", "patch", machinePatchBaseString, machinePatchInputString}, noStdinString, machinePatchJohnString, noErrorString},
-		CliTest{false, true, []string{"machines", "patch", machinePatchMissingBaseString, machinePatchInputString}, noStdinString, noContentString, machinePatchJohnMissingErrorString},
-		CliTest{false, false, []string{"machines", "show", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, machinePatchJohnString, noErrorString},
-
-		CliTest{true, true, []string{"machines", "destroy"}, noStdinString, noContentString, machineDestroyNoArgErrorString},
-		CliTest{true, true, []string{"machines", "destroy", "john", "june"}, noStdinString, noContentString, machineDestroyTooManyArgErrorString},
-		CliTest{false, false, []string{"machines", "destroy", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, machineDestroyJohnString, noErrorString},
-		CliTest{false, true, []string{"machines", "destroy", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, noContentString, machineDestroyMissingJohnString},
-		CliTest{false, false, []string{"machines", "list"}, noStdinString, machineDefaultListString, noErrorString},
-
-		CliTest{false, false, []string{"machines", "create", "-"}, machineCreateInputString + "\n", machineCreateJohnString, noErrorString},
-		CliTest{false, false, []string{"machines", "list"}, noStdinString, machineListMachinesString, noErrorString},
-		CliTest{false, false, []string{"machines", "update", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "-"}, machineUpdateInputString + "\n", machineUpdateJohnString, noErrorString},
-		CliTest{false, false, []string{"machines", "show", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, machineUpdateJohnString, noErrorString},
-
-		// bootenv tests
-		CliTest{true, true, []string{"machines", "bootenv"}, noStdinString, noContentString, machineBootEnvNoArgErrorString},
-		CliTest{false, true, []string{"machines", "bootenv", "john", "john2"}, noStdinString, noContentString, machineBootEnvMissingMachineErrorString},
-		CliTest{false, false, []string{"machines", "bootenv", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "john2"}, noStdinString, machineBootEnvErrorBootEnvString, noErrorString},
-		CliTest{false, false, []string{"machines", "bootenv", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "local"}, noStdinString, machineUpdateLocalWithoutRunnableString, noErrorString},
-		CliTest{false, false, []string{"machines", "update", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "{ \"Runnable\": true }"}, noStdinString, machineUpdateLocalString, noErrorString},
-
-		// stage tests
-		CliTest{true, true, []string{"machines", "stage"}, noStdinString, noContentString, machineStageNoArgErrorString},
-		CliTest{false, true, []string{"machines", "stage", "john", "john2"}, noStdinString, noContentString, machineStageMissingMachineErrorString},
-		CliTest{false, true, []string{"machines", "stage", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "john2"}, noStdinString, noContentString, machineStageErrorStageString},
-		CliTest{false, false, []string{"machines", "stage", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "stage1"}, noStdinString, machineUpdateStage1WithoutRunnableString, noErrorString},
-		CliTest{false, false, []string{"machines", "update", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "{ \"Runnable\": true }"}, noStdinString, machineUpdateStage1LocalString, noErrorString},
-		CliTest{false, true, []string{"machines", "stage", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "stage2"}, noStdinString, noContentString, machineUpdateStagePendingErrorString},
-		CliTest{false, false, []string{"machines", "stage", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "stage2", "--force"}, noStdinString, machineUpdateLocal2String, noErrorString},
-		CliTest{false, false, []string{"machines", "stage", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "", "--force"}, noStdinString, machineUpdateLocalString, noErrorString},
-
-		// Add/Remove Profile tests
-		CliTest{true, true, []string{"machines", "addprofile"}, noStdinString, noContentString, machineAddProfileNoArgErrorString},
-		CliTest{false, false, []string{"machines", "addprofile", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "jill"}, noStdinString, machineAddProfileJillString, noErrorString},
-		CliTest{false, false, []string{"machines", "addprofile", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "jean"}, noStdinString, machineAddProfileJillJeanString, noErrorString},
-		CliTest{false, true, []string{"machines", "addprofile", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "jill"}, noStdinString, noContentString, machineAddProfileJillJeanJillErrorString},
-
-		CliTest{false, false, []string{"profiles", "set", "jill", "param", "jill-param", "to", "janga"}, noStdinString, "\"janga\"\n", noErrorString},
-		CliTest{false, false, []string{"profiles", "set", "stage-prof", "param", "sp-param", "to", "val"}, noStdinString, "\"val\"\n", noErrorString},
-		CliTest{false, false, []string{"machines", "stage", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "stage2", "--force"}, noStdinString, machineStage2AgainSuccessString, noErrorString},
-		CliTest{false, false, []string{"stages", "addprofile", "stage2", "stage-prof"}, noStdinString, machinesUpdateStageSuccessString, noErrorString},
-
-		CliTest{false, false, []string{"machines", "params", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, "{}\n", noErrorString},
-		CliTest{false, false, []string{"machines", "params", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "--aggregate"}, noStdinString, machineAggregateParamString, noErrorString},
-	}
-	for _, test := range tests {
-		testCli(t, test)
-	}
-
+	cliTest(false, false, "machines", "params", "3e7031fe-3062-45f1-835c-92541bc9cbd3").run(t)
+	cliTest(false, false, "machines", "params", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "--aggregate").run(t)
 	tr := &http.Transport{}
 	client := &http.Client{Transport: tr}
 	req, _ := http.NewRequest("GET", "http://127.0.0.1:10002/machines/3e7031fe-3062-45f1-835c-92541bc9cbd3/file", nil)
 	req.SetBasicAuth("rocketskates", "r0cketsk8ts")
 	rsp, apierr := client.Do(req)
 	if apierr != nil {
-		t.Errorf("Failed to query machine file: %s", apierr)
+		t.Errorf("FAIL: Failed to query machine file: %s", apierr)
+	} else {
+		defer rsp.Body.Close()
+		body, err := ioutil.ReadAll(rsp.Body)
+		if err != nil {
+			t.Errorf("FAIL: Failed to read all: %s", err)
+		}
+		if string(body) != "val" {
+			t.Errorf("FAIL: Body was: AA%sAA expected %s", string(body), "val")
+		}
 	}
-	defer rsp.Body.Close()
-	body, err := ioutil.ReadAll(rsp.Body)
-	if err != nil {
-		t.Errorf("Failed to read all: %s", err)
-	}
-	if string(body) != "val" {
-		t.Errorf("Body was: AA%sAA expected %s", string(body), "val")
-	}
 
-	tests2 := []CliTest{
-		CliTest{false, false, []string{"machines", "stage", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "", "--force"}, noStdinString, machineUpdateLocal3String, noErrorString},
-		CliTest{true, true, []string{"machines", "removeprofile"}, noStdinString, noContentString, machineRemoveProfileNoArgErrorString},
-		CliTest{false, false, []string{"machines", "removeprofile", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "justine"}, noStdinString, machineAddProfileJillJeanString, noErrorString},
-		CliTest{false, false, []string{"machines", "removeprofile", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "jill"}, noStdinString, machineRemoveProfileJeanString, noErrorString},
-		CliTest{false, false, []string{"machines", "removeprofile", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "jean"}, noStdinString, machineRemoveProfileAllGoneString, noErrorString},
+	cliTest(false, false, "machines", "stage", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "", "--force").run(t)
+	cliTest(true, true, "machines", "removeprofile").run(t)
+	cliTest(false, false, "machines", "removeprofile", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "justine").run(t)
+	cliTest(false, false, "machines", "removeprofile", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "jill").run(t)
+	cliTest(false, false, "machines", "removeprofile", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "jean").run(t)
+	cliTest(true, true, "machines", "get").run(t)
+	cliTest(false, true, "machines", "get", "john", "param", "john2").run(t)
+	cliTest(false, false, "machines", "get", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "param", "john2").run(t)
+	cliTest(true, true, "machines", "set").run(t)
+	cliTest(false, true, "machines", "set", "john", "param", "john2", "to", "cow").run(t)
+	cliTest(false, false, "machines", "set", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "param", "john2", "to", "cow").run(t)
+	cliTest(false, false, "machines", "get", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "param", "john2").run(t)
+	cliTest(false, false, "machines", "set", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "param", "john2", "to", "3").run(t)
+	cliTest(false, false, "machines", "set", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "param", "john3", "to", "4").run(t)
+	cliTest(false, false, "machines", "get", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "param", "john2").run(t)
+	cliTest(false, false, "machines", "get", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "param", "john3").run(t)
+	cliTest(false, false, "machines", "set", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "param", "john2", "to", "null").run(t)
+	cliTest(false, false, "machines", "get", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "param", "john2").run(t)
+	cliTest(false, false, "machines", "get", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "param", "john3").run(t)
+	cliTest(true, true, "machines", "actions").run(t)
+	cliTest(false, true, "machines", "actions", "john").run(t)
+	cliTest(false, false, "machines", "actions", "3e7031fe-3062-45f1-835c-92541bc9cbd3").run(t)
+	cliTest(true, true, "machines", "action").run(t)
+	cliTest(true, true, "machines", "action", "john").run(t)
+	cliTest(false, true, "machines", "action", "john", "command").run(t)
+	cliTest(false, true, "machines", "action", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "command").run(t)
+	cliTest(false, false, "machines", "action", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "increment").run(t)
+	cliTest(true, true, "machines", "runaction").run(t)
+	cliTest(true, true, "machines", "runaction", "fred").run(t)
+	cliTest(false, true, "machines", "runaction", "fred", "command").run(t)
+	cliTest(false, true, "machines", "runaction", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "command").run(t)
+	cliTest(false, false, "machines", "runaction", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "increment").run(t)
+	cliTest(false, true, "machines", "runaction", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "increment", "fred").run(t)
 
-		CliTest{true, true, []string{"machines", "get"}, noStdinString, noContentString, machineGetNoArgErrorString},
-		CliTest{false, true, []string{"machines", "get", "john", "param", "john2"}, noStdinString, noContentString, machineGetMissingMachineErrorString},
-		CliTest{false, false, []string{"machines", "get", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "param", "john2"}, noStdinString, "null\n", noErrorString},
-
-		CliTest{true, true, []string{"machines", "set"}, noStdinString, noContentString, machineSetNoArgErrorString},
-		CliTest{false, true, []string{"machines", "set", "john", "param", "john2", "to", "cow"}, noStdinString, noContentString, machineSetMissingMachineErrorString},
-		CliTest{false, false, []string{"machines", "set", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "param", "john2", "to", "cow"}, noStdinString, "\"cow\"\n", noErrorString},
-		CliTest{false, false, []string{"machines", "get", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "param", "john2"}, noStdinString, "\"cow\"\n", noErrorString},
-		CliTest{false, false, []string{"machines", "set", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "param", "john2", "to", "3"}, noStdinString, "3\n", noErrorString},
-		CliTest{false, false, []string{"machines", "set", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "param", "john3", "to", "4"}, noStdinString, "4\n", noErrorString},
-		CliTest{false, false, []string{"machines", "get", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "param", "john2"}, noStdinString, "3\n", noErrorString},
-		CliTest{false, false, []string{"machines", "get", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "param", "john3"}, noStdinString, "4\n", noErrorString},
-		CliTest{false, false, []string{"machines", "set", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "param", "john2", "to", "null"}, noStdinString, "null\n", noErrorString},
-		CliTest{false, false, []string{"machines", "get", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "param", "john2"}, noStdinString, "null\n", noErrorString},
-		CliTest{false, false, []string{"machines", "get", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "param", "john3"}, noStdinString, "4\n", noErrorString},
-
-		CliTest{true, true, []string{"machines", "actions"}, noStdinString, noContentString, machineActionsNoArgErrorString},
-		CliTest{false, true, []string{"machines", "actions", "john"}, noStdinString, noContentString, machineActionsMissingMachineErrorString},
-		CliTest{false, false, []string{"machines", "actions", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, machineActionsListString, noErrorString},
-		CliTest{true, true, []string{"machines", "action"}, noStdinString, noContentString, machineActionNoArgErrorString},
-		CliTest{true, true, []string{"machines", "action", "john"}, noStdinString, noContentString, machineActionNoArgErrorString},
-		CliTest{false, true, []string{"machines", "action", "john", "command"}, noStdinString, noContentString, machineActionMissingErrorString},
-		CliTest{false, true, []string{"machines", "action", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "command"}, noStdinString, noContentString, machineActionMissingActionErrorString},
-		CliTest{false, false, []string{"machines", "action", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "increment"}, noStdinString, machineActionShowString, noErrorString},
-
-		CliTest{true, true, []string{"machines", "runaction"}, noStdinString, noContentString, machineRunActionNoArgsErrorString},
-		CliTest{true, true, []string{"machines", "runaction", "fred"}, noStdinString, noContentString, machineRunActionOneArgErrorString},
-		CliTest{false, true, []string{"machines", "runaction", "fred", "command"}, noStdinString, noContentString, machineRunActionMissingFredErrorString},
-		CliTest{false, true, []string{"machines", "runaction", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "command"}, noStdinString, noContentString, machineRunActionBadCommandErrorString},
-		CliTest{false, false, []string{"machines", "runaction", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "increment"}, noStdinString, "{}\n", noErrorString},
-		CliTest{false, true, []string{"machines", "runaction", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "increment", "fred"}, noStdinString, noContentString, machineRunActionBadJSONThridArgErrorString},
-
-		CliTest{false, false, []string{"machines", "actions", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, machineActionsListWithResetString, noErrorString},
-		CliTest{false, false, []string{"machines", "action", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "reset_count"}, noStdinString, machineActionShowResetString, noErrorString},
-		CliTest{false, false, []string{"machines", "runaction", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "reset_count"}, noStdinString, "{}\n", noErrorString},
-		CliTest{false, false, []string{"machines", "actions", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, machineActionsListString, noErrorString},
-		CliTest{false, true, []string{"machines", "action", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "reset_count"}, noStdinString, noContentString, machineActionMissingParameterString},
-		CliTest{false, true, []string{"machines", "runaction", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "reset_count"}, noStdinString, noContentString, machineRunActionMissingCommandParametersErrorString},
-		CliTest{false, false, []string{"machines", "runaction", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "increment", "incrementer/parameter", "asgdasdg"}, noStdinString, "{}\n", noErrorString},
-
-		CliTest{false, false, []string{"machines", "runaction", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "increment", "incrementer/parameter", "parm1", "extra", "10"}, noStdinString, "{}\n", noErrorString},
-		CliTest{false, false, []string{"machines", "get", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "param", "parm1"}, noStdinString, "1\n", noErrorString},
-		CliTest{false, true, []string{"machines", "runaction", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "increment", "incrementer/parameter", "parm2", "incrementer/step", "asgdasdg"}, noStdinString, noContentString, machineRunActionBadStepErrorString},
-		CliTest{false, false, []string{"machines", "get", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "param", "parm2"}, noStdinString, "null\n", noErrorString},
-		CliTest{false, false, []string{"machines", "runaction", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "increment", "incrementer/parameter", "parm2", "incrementer/step", "10"}, noStdinString, "{}\n", noErrorString},
-		CliTest{false, false, []string{"machines", "get", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "param", "parm2"}, noStdinString, "10\n", noErrorString},
-
-		CliTest{false, true, []string{"machines", "runaction", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "increment", "-"}, "fred", noContentString, machineRunActionBadJSONThridArgErrorString},
-		CliTest{false, false, []string{"machines", "runaction", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "reset_count", "-"}, machineRunActionMissingParameterStdinString, "{}\n", noErrorString},
-		CliTest{false, true, []string{"machines", "runaction", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "reset_count", "-"}, machineRunActionMissingParameterStdinString, noContentString, machineRunActionMissingCommandParametersErrorString},
-		CliTest{false, false, []string{"machines", "runaction", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "increment", "-"}, machineRunActionMissingParameterStdinString, "{}\n", noErrorString},
-		CliTest{false, false, []string{"machines", "runaction", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "increment", "-"}, machineRunActionGoodStdinString, "{}\n", noErrorString},
-		CliTest{false, false, []string{"machines", "runaction", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "increment", "-"}, machineRunActionGoodStdinString, "{}\n", noErrorString},
-		CliTest{false, false, []string{"machines", "get", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "param", "parm5"}, noStdinString, "20\n", noErrorString},
-
-		CliTest{true, true, []string{"machines", "wait"}, noStdinString, noContentString, machineWaitNoArgErrorString},
-		CliTest{true, true, []string{"machines", "wait", "jk"}, noStdinString, noContentString, machineWaitNoArgErrorString},
-		CliTest{true, true, []string{"machines", "wait", "jk", "jk"}, noStdinString, noContentString, machineWaitNoArgErrorString},
-		CliTest{true, true, []string{"machines", "wait", "jk", "jk", "jk", "jk", "jk"}, noStdinString, noContentString, machineWaitTooManyArgErrorString},
-		CliTest{false, true, []string{"machines", "wait", "jk", "jk", "jk", "jk"}, noStdinString, noContentString, machineWaitBadTimeoutErrorString},
-		CliTest{false, true, []string{"machines", "wait", "jk", "jk", "jk"}, noStdinString, noContentString, machineWaitMissingMachineErrorString},
-		CliTest{false, false, []string{"machines", "wait", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "jk", "jk", "1"}, noStdinString, "timeout\n", noErrorString},
-		CliTest{false, false, []string{"machines", "wait", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "BootEnv", "local", "1"}, noStdinString, "complete\n", noErrorString},
-		CliTest{false, true, []string{"machines", "wait", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "Runnable", "fred", "1"}, noStdinString, noContentString, machineWaitBadBoolErrorString},
-
-		CliTest{true, true, []string{"machines", "params"}, noStdinString, noContentString, machineParamsNoArgErrorString},
-		CliTest{false, true, []string{"machines", "params", "john2"}, noStdinString, noContentString, machineParamsMissingMachineErrorString},
-		CliTest{false, false, []string{"machines", "params", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, machineParamsStartingString, noErrorString},
-		CliTest{false, true, []string{"machines", "params", "john2", machinesParamsNextString}, noStdinString, noContentString, machinesParamsSetMissingMachineString},
-		CliTest{false, false, []string{"machines", "params", "3e7031fe-3062-45f1-835c-92541bc9cbd3", machinesParamsNextString}, noStdinString, machinesParamsNextString, noErrorString},
-		CliTest{false, false, []string{"machines", "params", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, machinesParamsNextString, noErrorString},
-
-		CliTest{false, false, []string{"machines", "show", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, machineUpdateJohnWithParamsString, noErrorString},
-
-		CliTest{false, false, []string{"machines", "destroy", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, machineDestroyJohnString, noErrorString},
-		CliTest{false, false, []string{"machines", "list"}, noStdinString, machineDefaultListString, noErrorString},
-
-		CliTest{false, false, []string{"prefs", "set", "defaultStage", "stage1"}, noStdinString, machinesSetDefaultStageString, noErrorString},
-		CliTest{false, false, []string{"machines", "create", machineCreateInputString}, noStdinString, machineCreateJohnString2, noErrorString},
-		CliTest{false, false, []string{"machines", "destroy", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}, noStdinString, machineDestroyJohnString, noErrorString},
-		CliTest{false, false, []string{"machines", "list"}, noStdinString, machineDefaultListString, noErrorString},
-		CliTest{false, false, []string{"prefs", "set", "defaultStage", "none"}, noStdinString, machinesSetDefaultStageBackString, noErrorString},
-
-		CliTest{false, false, []string{"plugins", "destroy", "incr"}, noStdinString, "Deleted plugin incr\n", noErrorString},
-		CliTest{false, false, []string{"stages", "destroy", "stage1"}, noStdinString, "Deleted stage stage1\n", noErrorString},
-		CliTest{false, false, []string{"stages", "destroy", "stage2"}, noStdinString, "Deleted stage stage2\n", noErrorString},
-		CliTest{false, false, []string{"profiles", "destroy", "jill"}, noStdinString, "Deleted profile jill\n", noErrorString},
-		CliTest{false, false, []string{"profiles", "destroy", "jean"}, noStdinString, "Deleted profile jean\n", noErrorString},
-		CliTest{false, false, []string{"profiles", "destroy", "stage-prof"}, noStdinString, "Deleted profile stage-prof\n", noErrorString},
-		CliTest{false, false, []string{"tasks", "destroy", "jamie"}, noStdinString, "Deleted task jamie\n", noErrorString},
-		CliTest{false, false, []string{"tasks", "destroy", "justine"}, noStdinString, "Deleted task justine\n", noErrorString},
-	}
-	for _, test := range tests2 {
-		testCli(t, test)
-	}
+	cliTest(false, false, "machines", "actions", "3e7031fe-3062-45f1-835c-92541bc9cbd3").run(t)
+	cliTest(false, false, "machines", "action", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "reset_count").run(t)
+	cliTest(false, false, "machines", "runaction", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "reset_count").run(t)
+	cliTest(false, false, "machines", "actions", "3e7031fe-3062-45f1-835c-92541bc9cbd3").run(t)
+	cliTest(false, true, "machines", "action", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "reset_count").run(t)
+	cliTest(false, true, "machines", "runaction", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "reset_count").run(t)
+	cliTest(false, false, "machines", "runaction", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "increment", "incrementer/parameter", "asgdasdg").run(t)
+	cliTest(false, false, "machines", "runaction", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "increment", "incrementer/parameter", "parm1", "extra", "10").run(t)
+	cliTest(false, false, "machines", "get", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "param", "parm1").run(t)
+	cliTest(false, true, "machines", "runaction", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "increment", "incrementer/parameter", "parm2", "incrementer/step", "asgdasdg").run(t)
+	cliTest(false, false, "machines", "get", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "param", "parm2").run(t)
+	cliTest(false, false, "machines", "runaction", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "increment", "incrementer/parameter", "parm2", "incrementer/step", "10").run(t)
+	cliTest(false, false, "machines", "get", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "param", "parm2").run(t)
+	cliTest(false, true, "machines", "runaction", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "increment", "-").Stdin("fred").run(t)
+	cliTest(false, false, "machines", "runaction", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "reset_count", "-").Stdin(machineRunActionMissingParameterStdinString).run(t)
+	cliTest(false, true, "machines", "runaction", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "reset_count", "-").Stdin(machineRunActionMissingParameterStdinString).run(t)
+	cliTest(false, false, "machines", "runaction", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "increment", "-").Stdin(machineRunActionMissingParameterStdinString).run(t)
+	cliTest(false, false, "machines", "runaction", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "increment", "-").Stdin(machineRunActionGoodStdinString).run(t)
+	cliTest(false, false, "machines", "runaction", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "increment", "-").Stdin(machineRunActionGoodStdinString).run(t)
+	cliTest(false, false, "machines", "get", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "param", "parm5").run(t)
+	cliTest(true, true, "machines", "wait").run(t)
+	cliTest(true, true, "machines", "wait", "jk").run(t)
+	cliTest(true, true, "machines", "wait", "jk", "jk").run(t)
+	cliTest(true, true, "machines", "wait", "jk", "jk", "jk", "jk", "jk").run(t)
+	cliTest(false, true, "machines", "wait", "jk", "jk", "jk", "jk").run(t)
+	cliTest(false, true, "machines", "wait", "jk", "jk", "jk").run(t)
+	cliTest(false, false, "machines", "wait", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "jk", "jk", "1").run(t)
+	cliTest(false, false, "machines", "wait", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "BootEnv", "local", "1").run(t)
+	cliTest(false, false, "machines", "wait", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "Runnable", "fred", "1").run(t)
+	cliTest(true, true, "machines", "params").run(t)
+	cliTest(false, true, "machines", "params", "john2").run(t)
+	cliTest(false, false, "machines", "params", "3e7031fe-3062-45f1-835c-92541bc9cbd3").run(t)
+	cliTest(false, true, "machines", "params", "john2", machinesParamsNextString).run(t)
+	cliTest(false, false, "machines", "params", "3e7031fe-3062-45f1-835c-92541bc9cbd3", machinesParamsNextString).run(t)
+	cliTest(false, false, "machines", "params", "3e7031fe-3062-45f1-835c-92541bc9cbd3").run(t)
+	cliTest(false, false, "machines", "show", "3e7031fe-3062-45f1-835c-92541bc9cbd3").run(t)
+	cliTest(false, false, "machines", "destroy", "3e7031fe-3062-45f1-835c-92541bc9cbd3").run(t)
+	cliTest(false, false, "machines", "list").run(t)
+	cliTest(false, false, "prefs", "set", "defaultStage", "stage1").run(t)
+	cliTest(false, false, "machines", "create", machineCreateInputString).run(t)
+	cliTest(false, false, "machines", "destroy", "3e7031fe-3062-45f1-835c-92541bc9cbd3").run(t)
+	cliTest(false, false, "machines", "list").run(t)
+	cliTest(false, false, "prefs", "set", "defaultStage", "none").run(t)
+	cliTest(false, false, "plugins", "destroy", "incr").run(t)
+	cliTest(false, false, "stages", "destroy", "stage1").run(t)
+	cliTest(false, false, "stages", "destroy", "stage2").run(t)
+	cliTest(false, false, "profiles", "destroy", "jill").run(t)
+	cliTest(false, false, "profiles", "destroy", "jean").run(t)
+	cliTest(false, false, "profiles", "destroy", "stage-prof").run(t)
+	cliTest(false, false, "tasks", "destroy", "jamie").run(t)
+	cliTest(false, false, "tasks", "destroy", "justine").run(t)
 }
