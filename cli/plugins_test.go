@@ -4,182 +4,32 @@ import (
 	"testing"
 )
 
-var pluginEmptyListString string = "[]\n"
-var pluginDefaultListString string = "[]\n"
-
-var pluginShowNoArgErrorString string = "Error: drpcli plugins show [id] [flags] requires 1 argument\n"
-var pluginShowTooManyArgErrorString string = "Error: drpcli plugins show [id] [flags] requires 1 argument\n"
-var pluginShowMissingArgErrorString string = "Error: GET: plugins/john: Not Found\n\n"
-var pluginExistsNoArgErrorString string = "Error: drpcli plugins exists [id] [flags] requires 1 argument"
-var pluginExistsTooManyArgErrorString string = "Error: drpcli plugins exists [id] [flags] requires 1 argument"
-var pluginExistsMissingJohnString string = "Error: GET: plugins/john: Not Found\n\n"
-var pluginCreateNoArgErrorString string = "Error: drpcli plugins create [json] [flags] requires 1 argument\n"
-var pluginCreateTooManyArgErrorString string = "Error: drpcli plugins create [json] [flags] requires 1 argument\n"
-var pluginCreateBadJSONErrorString = "Error: Invalid plugin object: error converting YAML to JSON: yaml: line 1: did not find expected ',' or '}' and error converting YAML to JSON: yaml: line 1: did not find expected ',' or '}'\n\n"
-var pluginCreateBadJSON2ErrorString = "Error: Unable to create new plugin: Invalid type passed to plugin create\n\n"
-var pluginCreateMissingProviderErrorString string = "Error: ValidationError: plugins/i-woman: Missing provider\n\n"
-var pluginCreateMissingAllErrorString string = "Error: CREATE: plugins: Empty key not allowed\n\n"
-var pluginCreateDuplicateErrorString = "Error: CREATE: plugins/i-woman: already exists\n\n"
-var pluginUpdateNoArgErrorString string = "Error: drpcli plugins update [id] [json] [flags] requires 2 arguments"
-var pluginUpdateTooManyArgErrorString string = "Error: drpcli plugins update [id] [json] [flags] requires 2 arguments"
-var pluginUpdateBadJSONErrorString = "Error: Unable to merge objects: json: cannot unmarshal string into Go value of type map[string]interface {}\n\n\n"
-var pluginUpdateJohnMissingErrorString string = "Error: GET: plugins/john2: Not Found\n\n"
-var pluginPatchNoArgErrorString string = "Error: drpcli plugins patch [objectJson] [changesJson] [flags] requires 2 arguments"
-var pluginPatchTooManyArgErrorString string = "Error: drpcli plugins patch [objectJson] [changesJson] [flags] requires 2 arguments"
-var pluginPatchBadPatchJSONErrorString = "Error: Unable to parse drpcli plugins patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Plugin\n\n"
-var pluginPatchBadBaseJSONErrorString = "Error: Unable to parse drpcli plugins patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Plugin\n\n"
-var pluginPatchJohnMissingErrorString string = "Error: PATCH: plugins/spider-woman: Not Found\n\n"
-var pluginDestroyNoArgErrorString string = "Error: drpcli plugins destroy [id] [flags] requires 1 argument"
-var pluginDestroyTooManyArgErrorString string = "Error: drpcli plugins destroy [id] [flags] requires 1 argument"
-var pluginDestroyMissingJohnString string = "Error: DELETE: plugins/i-woman: Not Found\n\n"
-var pluginBootEnvNoArgErrorString string = "Error: drpcli plugins bootenv [id] [bootenv] [flags] requires 2 arguments"
-var pluginBootEnvMissingPluginErrorString string = "Error: plugins GET: john: Not Found\n\n"
-var pluginBootEnvErrorBootEnvString string = "Error: Bootenv john2 does not exist\n\n"
-var pluginGetNoArgErrorString string = "Error: drpcli plugins get [id] param [key] [flags] requires 3 arguments"
-var pluginGetMissingPluginErrorString string = "Error: GET: plugins/john: Not Found\n\n"
-var pluginSetNoArgErrorString string = "Error: drpcli plugins set [id] param [key] to [json blob] [flags] requires 5 arguments"
-var pluginSetMissingPluginErrorString string = "Error: GET: plugins/john: Not Found\n\n"
-var pluginParamsNoArgErrorString string = "Error: drpcli plugins params [id] [json] [flags] requires 1 or 2 arguments\n"
-var pluginParamsMissingPluginErrorString string = "Error: GET: plugins/john2: Not Found\n\n"
-var pluginsParamsSetMissingPluginString string = "Error: POST: plugins/john2: Not Found\n\n"
-
-var pluginShowPluginString string = `{
-  "Available": true,
-  "Errors": [],
-  "Name": "i-woman",
-  "PluginErrors": [],
-  "Provider": "incrementer",
-  "ReadOnly": false,
-  "Validated": true
-}
-`
-
-var pluginExistsPluginString string = ""
-var pluginCreateBadJSONString = "{asdgasdg"
-
-var pluginCreateBadJSON2String = "[asdgasdg]"
-
-var pluginCreateMissingProviderInputString string = `{
+func TestPluginCli(t *testing.T) {
+	var pluginCreateBadJSONString = "{asdgasdg"
+	var pluginCreateBadJSON2String = "[asdgasdg]"
+	var pluginCreateMissingProviderInputString string = `{
   "Name": "i-woman"
 }
 `
-
-var pluginCreateMissingAllInputString string = `{
+	var pluginCreateMissingAllInputString string = `{
   "Description": "i-woman's plugin"
 }
 `
-
-var pluginCreateInputString string = `{
+	var pluginCreateInputString string = `{
   "Name": "i-woman",
   "Provider": "incrementer"
 }
 `
-var pluginCreateJohnString string = `{
-  "Available": true,
-  "Errors": [],
-  "Name": "i-woman",
-  "PluginErrors": [],
-  "Provider": "incrementer",
-  "ReadOnly": false,
-  "Validated": true
-}
-`
+	var pluginUpdateBadJSONString = "asdgasdg"
 
-var pluginListPluginsString = `[
-  {
-    "Available": true,
-    "Errors": [],
-    "Name": "i-woman",
-    "PluginErrors": [],
-    "Provider": "incrementer",
-    "ReadOnly": false,
-    "Validated": true
-  }
-]
-`
-
-var pluginUpdateBadJSONString = "asdgasdg"
-
-var pluginUpdateInputString string = `{
+	var pluginUpdateInputString string = `{
   "Description": "lpxelinux.0"
 }
 `
-var pluginUpdateJohnString string = `{
-  "Available": true,
-  "Description": "lpxelinux.0",
-  "Errors": [],
-  "Name": "i-woman",
-  "PluginErrors": [],
-  "Provider": "incrementer",
-  "ReadOnly": false,
-  "Validated": true
-}
-`
-
-var pluginPatchBadPatchJSONString = "asdgasdg"
-
-var pluginPatchBadBaseJSONString = "asdgasdg"
-
-var pluginPatchBaseString string = `{
-  "Available": true,
-  "Description": "lpxelinux.0",
-  "Errors": [],
-  "Name": "i-woman",
-  "PluginErrors": [],
-  "Provider": "incrementer",
-  "Validated": true
-}
-`
-var pluginPatchInputString string = `{
-  "Description": "bootx64.efi"
-}
-`
-var pluginPatchJohnString string = `{
-  "Available": true,
-  "Description": "bootx64.efi",
-  "Errors": [],
-  "Name": "i-woman",
-  "PluginErrors": [],
-  "Provider": "incrementer",
-  "ReadOnly": false,
-  "Validated": true
-}
-`
-var pluginPatchMissingBaseString string = `{
-  "Description": "bootx64.efi",
-  "Errors": [],
-  "Name": "spider-woman",
-  "PluginErrors": [],
-  "Provider": "incrementer"
-}
-`
-
-var pluginDestroyJohnString string = "Deleted plugin i-woman\n"
-
-var pluginParamsStartingString string = `{
-  "john3": 4
-}
-`
-var pluginsParamsNextString string = `{
+	var pluginsParamsNextString string = `{
   "jj": 3
 }
 `
-var pluginUpdateJohnWithParamsString string = `{
-  "Available": true,
-  "Description": "lpxelinux.0",
-  "Errors": [],
-  "Name": "i-woman",
-  "Params": {
-    "jj": 3
-  },
-  "PluginErrors": [],
-  "Provider": "incrementer",
-  "ReadOnly": false,
-  "Validated": true
-}
-`
-
-func TestPluginCli(t *testing.T) {
 	cliTest(true, false, "plugins").run(t)
 	cliTest(false, false, "plugins", "list").run(t)
 	cliTest(true, true, "plugins", "create").run(t)

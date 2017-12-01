@@ -7,178 +7,22 @@ import (
 	"testing"
 )
 
-var templateShowMissingArgErrorString string = "Error: GET: templates/ignore: Not Found\n\n"
-var templateExistsMissingIgnoreString string = "Error: GET: templates/ignore: Not Found\n\n"
-var templateCreateDuplicateErrorString = "Error: CREATE: templates/john: already exists\n\n"
-var templateUpdateJohnMissingErrorString string = "Error: GET: templates/john2: Not Found\n\n"
-var templatePatchJohnMissingErrorString string = "Error: PATCH: templates/john2: Not Found\n\n"
-var templateDestroyMissingJohnString string = "Error: DELETE: templates/john: Not Found\n\n"
+func TestTemplateCli(t *testing.T) {
 
-var templateEmptyListString string = "[]\n"
-
-var templateDefaultListString string = `[
-  {
-    "Available": true,
-    "Contents": "etc\n",
-    "Description": "A test template for LocalStore testing",
-    "Errors": [],
-    "ID": "etc",
-    "ReadOnly": true,
-    "Validated": true
-  },
-  {
-    "Available": true,
-    "Contents": "usrshare\n",
-    "Description": "A test template for DefaultStore testing",
-    "Errors": [],
-    "ID": "usrshare",
-    "ReadOnly": true,
-    "Validated": true
-  }
-]
-`
-
-var templateShowNoArgErrorString string = "Error: drpcli templates show [id] [flags] requires 1 argument\n"
-var templateShowTooManyArgErrorString string = "Error: drpcli templates show [id] [flags] requires 1 argument\n"
-
-var templateShowJohnString string = `{
-  "Available": true,
-  "Contents": "John Rules",
-  "Errors": [],
-  "ID": "john",
-  "ReadOnly": false,
-  "Validated": true
-}
-`
-
-var templateExistsNoArgErrorString string = "Error: drpcli templates exists [id] [flags] requires 1 argument"
-var templateExistsTooManyArgErrorString string = "Error: drpcli templates exists [id] [flags] requires 1 argument"
-var templateExistsIgnoreString string = ""
-
-var templateCreateNoArgErrorString string = "Error: drpcli templates create [json] [flags] requires 1 argument\n"
-var templateCreateTooManyArgErrorString string = "Error: drpcli templates create [json] [flags] requires 1 argument\n"
-var templateCreateBadJSONString = "asdgasdg"
-var templateCreateBadJSONErrorString = "Error: Unable to create new template: Invalid type passed to template create\n\n"
-var templateCreateInputString string = `{
+	var templateCreateBadJSONString = "asdgasdg"
+	var templateCreateInputString string = `{
   "Contents": "John Rules",
   "ID": "john"
 }
 `
-var templateCreateJohnString string = `{
-  "Available": true,
-  "Contents": "John Rules",
-  "Errors": [],
-  "ID": "john",
-  "ReadOnly": false,
-  "Validated": true
-}
-`
 
-var templateListJohnOnlyString = `[
-  {
-    "Available": true,
-    "Contents": "John Rules",
-    "Errors": [],
-    "ID": "john",
-    "ReadOnly": false,
-    "Validated": true
-  }
-]
-`
-var templateListBothEnvsString = `[
-  {
-    "Available": true,
-    "Contents": "etc\n",
-    "Description": "A test template for LocalStore testing",
-    "Errors": [],
-    "ID": "etc",
-    "ReadOnly": true,
-    "Validated": true
-  },
-  {
-    "Available": true,
-    "Contents": "John Rules",
-    "Errors": [],
-    "ID": "john",
-    "ReadOnly": false,
-    "Validated": true
-  },
-  {
-    "Available": true,
-    "Contents": "usrshare\n",
-    "Description": "A test template for DefaultStore testing",
-    "Errors": [],
-    "ID": "usrshare",
-    "ReadOnly": true,
-    "Validated": true
-  }
-]
-`
-
-var templateUpdateNoArgErrorString string = "Error: drpcli templates update [id] [json] [flags] requires 2 arguments"
-var templateUpdateTooManyArgErrorString string = "Error: drpcli templates update [id] [json] [flags] requires 2 arguments"
-var templateUpdateBadJSONString = "asdgasdg"
-var templateUpdateBadJSONErrorString = "Error: Unable to merge objects: json: cannot unmarshal string into Go value of type map[string]interface {}\n\n\n"
-var templateUpdateInputString string = `{
+	var templateUpdateBadJSONString = "asdgasdg"
+	var templateUpdateInputString string = `{
   "Description": "NewStrat"
 }
 `
-var templateUpdateJohnString string = `{
-  "Available": true,
-  "Contents": "John Rules",
-  "Description": "NewStrat",
-  "Errors": [],
-  "ID": "john",
-  "ReadOnly": false,
-  "Validated": true
-}
-`
 
-var templatePatchNoArgErrorString string = "Error: drpcli templates patch [objectJson] [changesJson] [flags] requires 2 arguments"
-var templatePatchTooManyArgErrorString string = "Error: drpcli templates patch [objectJson] [changesJson] [flags] requires 2 arguments"
-var templatePatchBadPatchJSONString = "asdgasdg"
-var templatePatchBadPatchJSONErrorString = "Error: Unable to parse drpcli templates patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Template\n\n"
-var templatePatchBadBaseJSONString = "asdgasdg"
-var templatePatchBadBaseJSONErrorString = "Error: Unable to parse drpcli templates patch [objectJson] [changesJson] [flags] JSON asdgasdg\nError: error unmarshaling JSON: json: cannot unmarshal string into Go value of type genmodels.Template\n\n"
-var templatePatchBaseString string = `{
-  "Available": true,
-  "Contents": "John Rules",
-  "Description": "NewStrat",
-  "Errors": [],
-  "ID": "john",
-  "Validated": true
-}
-`
-var templatePatchInputString string = `{
-  "Description": "bootx64.efi"
-}
-`
-var templatePatchJohnString string = `{
-  "Available": true,
-  "Contents": "John Rules",
-  "Description": "bootx64.efi",
-  "Errors": [],
-  "ID": "john",
-  "ReadOnly": false,
-  "Validated": true
-}
-`
-var templatePatchMissingBaseString string = `{
-  "Contents": "John Rules",
-  "Description": "NewStrat",
-  "ID": "john2"
-}
-`
-
-var templateDestroyNoArgErrorString string = "Error: drpcli templates destroy [id] [flags] requires 1 argument"
-var templateDestroyTooManyArgErrorString string = "Error: drpcli templates destroy [id] [flags] requires 1 argument"
-var templateDestroyJohnString string = "Deleted template john\n"
-
-var templatesUploadNoArgsErrorString string = "Error: Wrong number of args: expected 3, got 0\n"
-var templatesUploadOneArgsErrorString string = "Error: Wrong number of args: expected 3, got 1\n"
-var templatesUploadFourArgsErrorString string = "Error: Wrong number of args: expected 3, got 4\n"
-var templatesUploadMissingFileErrorString string = "Error: Failed to open greg: open greg: no such file or directory\n\n"
-var templatesUploadSuccessString string = `{
+	var templatesUploadSuccessString string = `{
   "Available": true,
   "Contents": *REPLACE_WITH_TEMPLATE_GO_CONTENT*,
   "Errors": [],
@@ -187,7 +31,7 @@ var templatesUploadSuccessString string = `{
   "Validated": true
 }
 `
-var templatesUploadReplaceSuccessString string = `{
+	var templatesUploadReplaceSuccessString string = `{
   "Available": true,
   "Contents": *REPLACE_WITH_LEASE_GO_CONTENT*,
   "Errors": [],
@@ -196,43 +40,7 @@ var templatesUploadReplaceSuccessString string = `{
   "Validated": true
 }
 `
-var templateDestroyGregString string = "Deleted template greg\n"
 
-var templateReadOnlyTrueString string = `[
-  {
-    "Available": true,
-    "Contents": "etc\n",
-    "Description": "A test template for LocalStore testing",
-    "Errors": [],
-    "ID": "etc",
-    "ReadOnly": true,
-    "Validated": true
-  },
-  {
-    "Available": true,
-    "Contents": "usrshare\n",
-    "Description": "A test template for DefaultStore testing",
-    "Errors": [],
-    "ID": "usrshare",
-    "ReadOnly": true,
-    "Validated": true
-  }
-]
-`
-
-var templateReadOnlyFalseString string = `[
-  {
-    "Available": true,
-    "Contents": "John Rules",
-    "Errors": [],
-    "ID": "john",
-    "ReadOnly": false,
-    "Validated": true
-  }
-]
-`
-
-func TestTemplateCli(t *testing.T) {
 	templateContent, _ := ioutil.ReadFile("template.go")
 	sb, _ := json.Marshal(string(templateContent))
 	templatesUploadSuccessString = strings.Replace(templatesUploadSuccessString, "*REPLACE_WITH_TEMPLATE_GO_CONTENT*", string(sb), 1)
