@@ -487,6 +487,23 @@ func (c *Client) Agent(m *models.Machine, exitOnNotRunnable, exitOnFailure, actu
 	}
 	defer events.Close()
 
+	if m.HasFeature("original-change-stage") || !m.HasFeature("change-stage-v2") {
+		newM := models.Clone(m).(*models.Machine)
+		newM.Runnable = true
+		if err := c.Req().PatchTo(m, newM).Do(&newM); err == nil {
+			m = newM
+		} else {
+			res := &models.Error{
+				Type:  "AGENT_WAIT",
+				Model: m.Prefix(),
+				Key:   m.Key(),
+			}
+			res.Errorf("Failed to mark machine runnable.")
+			res.AddError(err)
+			return res
+		}
+	}
+
 	var runner *TaskRunner
 	for {
 		if runner != nil {
