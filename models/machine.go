@@ -187,7 +187,7 @@ func (b *Machine) AddTasks(offset int, tasks ...string) error {
 	}
 	tgtOffset := offset
 	if tgtOffset < 0 {
-		tgtOffset += len(mutable)
+		tgtOffset += len(mutable) + 1
 	}
 	if tgtOffset < 0 {
 		return fmt.Errorf("Offset %d too small", offset)
@@ -225,20 +225,11 @@ func (b *Machine) DelTasks(tasks ...string) {
 	}
 	i := 0
 	nextMutable := []string{}
-	for _, s := range tasks {
-		if i >= len(mutable) {
-			break
-		}
-		for _, c := range mutable[i:] {
+	for _, c := range mutable {
+		if i < len(tasks) && tasks[i] == c {
 			i++
-			if c != s {
-				nextMutable = append(nextMutable, c)
-			} else {
-				if i < len(mutable) {
-					nextMutable = append(nextMutable, mutable[i:]...)
-				}
-				break
-			}
+		} else {
+			nextMutable = append(nextMutable, c)
 		}
 	}
 	b.Tasks = append(immutable, nextMutable...)
