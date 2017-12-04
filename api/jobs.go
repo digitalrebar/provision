@@ -467,8 +467,9 @@ func (c *Client) Agent(m *models.Machine, exitOnNotRunnable, exitOnFailure, actu
 	currentJob := &models.Job{Uuid: m.CurrentJob}
 	if c.Req().Fill(currentJob) == nil {
 		if currentJob.State == "running" || currentJob.State == "created" {
-			currentJob.State = "failed"
-			if err := c.PutModel(currentJob); err != nil {
+			cj := models.Clone(currentJob).(*models.Job)
+			cj.State = "failed"
+			if _, err := c.PatchTo(currentJob, cj); err != nil {
 				return err
 			}
 		}
