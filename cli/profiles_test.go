@@ -118,4 +118,5 @@ func TestProfileCli(t *testing.T) {
 	cliTest(false, false, "profiles", "show", "john").run(t)
 	cliTest(false, false, "profiles", "destroy", "john").run(t)
 	cliTest(false, false, "profiles", "list").run(t)
+	verifyClean(t)
 }

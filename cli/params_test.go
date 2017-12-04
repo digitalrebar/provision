@@ -60,4 +60,5 @@ func TestParamCli(t *testing.T) {
 	cliTest(false, false, "params", "show", "john").run(t)
 	cliTest(false, false, "params", "destroy", "john").run(t)
 	cliTest(false, false, "params", "list").run(t)
+	verifyClean(t)
 }

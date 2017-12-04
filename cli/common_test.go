@@ -334,6 +334,28 @@ func cliTest(expectUsage, expectErr bool, args ...string) *CliTest {
 	}
 }
 
+func verifyClean(t *testing.T) {
+	t.Helper()
+	layer, err := session.GetContentItem("BackingStore")
+	if err != nil {
+		t.Fatalf("Error getting BackingStore: %v", err)
+		return
+	}
+	for k, v := range layer.Sections {
+		switch k {
+		case "preferences":
+			continue
+		case "users", "profiles":
+			if len(v) == 1 {
+				continue
+			}
+		}
+		if len(v) != 0 {
+			t.Errorf("BackingStore layer %s was not cleaned up!", k)
+		}
+	}
+}
+
 func generateArgs(args []string) *server.ProgOpts {
 	var c_opts server.ProgOpts
 
@@ -354,6 +376,7 @@ func TestCorePieces(t *testing.T) {
 	cliTest(false, true, "-F", "cow", "bootenvs", "list").run(t)
 	cliTest(false, false, "-F", "yaml", "bootenvs", "list").run(t)
 	cliTest(false, false, "-F", "json", "bootenvs", "list").run(t)
+	verifyClean(t)
 }
 
 func TestMain(m *testing.M) {

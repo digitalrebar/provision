@@ -166,4 +166,5 @@ func TestBootEnvCli(t *testing.T) {
 	os.RemoveAll("templates")
 	os.RemoveAll("isos")
 	os.RemoveAll("ic")
+	verifyClean(t)
 }

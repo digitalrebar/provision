@@ -62,4 +62,5 @@ func TestStageCli(t *testing.T) {
 	cliTest(false, false, "stages", "show", "john").run(t)
 	cliTest(false, false, "stages", "destroy", "john").run(t)
 	cliTest(false, false, "stages", "list").run(t)
+	verifyClean(t)
 }

@@ -98,4 +98,5 @@ func TestTemplateCli(t *testing.T) {
 	cliTest(false, false, "templates", "exists", "usrshare").run(t)
 	cliTest(false, true, "templates", "destroy", "etc").run(t)
 	cliTest(false, true, "templates", "destroy", "usrshare").run(t)
+	verifyClean(t)
 }

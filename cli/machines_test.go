@@ -4,6 +4,9 @@ import (
 	"io/ioutil"
 	"net/http"
 	"testing"
+
+	"github.com/digitalrebar/provision/models"
+	"github.com/pborman/uuid"
 )
 
 var machineCreateInputString = `{
@@ -276,4 +279,70 @@ func TestMachineCli(t *testing.T) {
 	cliTest(false, false, "profiles", "destroy", "stage-prof").run(t)
 	cliTest(false, false, "tasks", "destroy", "jamie").run(t)
 	cliTest(false, false, "tasks", "destroy", "justine").run(t)
+	verifyClean(t)
+}
+
+func mta(usage, err bool, tasks ...string) *CliTest {
+	args := []string{"machines", "tasks", "add", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}
+	args = append(args, tasks...)
+	return cliTest(usage, err, args...)
+}
+
+func rta(usage, err bool, tasks ...string) *CliTest {
+	args := []string{"machines", "tasks", "del", "3e7031fe-3062-45f1-835c-92541bc9cbd3"}
+	args = append(args, tasks...)
+	return cliTest(usage, err, args...)
+}
+
+func fakeJob(t *testing.T, mUuid, state string) {
+	t.Helper()
+	j := &models.Job{Machine: uuid.Parse(mUuid)}
+	if err := session.CreateModel(j); err != nil {
+		t.Errorf("Error creating job :%v", err)
+		return
+	}
+	j.State = state
+	if err := session.PutModel(j); err != nil {
+		t.Errorf("Error updating state to %s: %v", state, err)
+		return
+	}
+	cliTest(false, false, "machines", "show", mUuid).run(t)
+}
+
+func TestMachineTaskCli(t *testing.T) {
+	mUUID := "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+	cliTest(false, false, "machines", "create", machineCreateInputString).run(t)
+	tasks := []string{"task1", "task2", "task3", "task4"}
+	for _, task := range tasks {
+		cliTest(false, false, "tasks", "create", task).run(t)
+	}
+	// 4 tasks - 1 2 3 4
+	mta(false, false, tasks...).run(t)
+	// 8 tasks - 1 2 3 4 1 2 3 4
+	mta(false, false, tasks...).run(t)
+	// 6 tasks - 1 3 1 2 3 4
+	rta(false, false, "task2", "task4").run(t)
+	// 4 tasks - 1 2 3 4
+	rta(false, false, "task1", "task3").run(t)
+	// 8 tasks - 4 3 2 1 1 2 3 4
+	mta(false, false, "at", "0", "task4", "task3", "task2", "task1").run(t)
+	// 6 tasks - 4 3 2 2 3 4
+	rta(false, false, "task1", "task1").run(t)
+	fakeJob(t, mUUID, "finished")
+	// 7 tasks - 4 3 1 2 2 3 4
+	mta(false, false, "at", "1", "task1").run(t)
+	// 4 tasks - 4 3 2 4
+	rta(false, false, "task1", "task2", "task3").run(t)
+	fakeJob(t, mUUID, "finished")
+	cliTest(false, false, "machines", "destroy", mUUID).run(t)
+	for _, task := range tasks {
+		cliTest(false, false, "tasks", "destroy", task).run(t)
+	}
+	jobs := []*models.Job{}
+	if err := session.Req().List("jobs").Do(&jobs); err == nil {
+		for _, j := range jobs {
+			session.DeleteModel("jobs", j.Uuid.String())
+		}
+	}
+	verifyClean(t)
 }

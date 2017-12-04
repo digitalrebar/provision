@@ -158,5 +158,5 @@ func TestContentsFunctionalCli(t *testing.T) {
 
 	cliTest(false, false, "bootenvs", "destroy", "mylocal").run(t)
 	cliTest(false, false, "contents", "list").run(t)
-
+	verifyClean(t)
 }

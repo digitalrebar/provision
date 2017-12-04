@@ -198,5 +198,5 @@ func TestJobCli(t *testing.T) {
 	cliTest(false, false, "jobs", "destroy", "00000000-0000-0000-0000-000000000003").run(t)
 	cliTest(false, false, "jobs", "destroy", "00000000-0000-0000-0000-000000000004").run(t)
 	cliTest(false, false, "jobs", "list").run(t)
-
+	verifyClean(t)
 }

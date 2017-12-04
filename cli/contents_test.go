@@ -77,4 +77,5 @@ func TestContentCli(t *testing.T) {
 
 	cliTest(false, false, "contents", "destroy", "john").run(t)
 	cliTest(false, false, "contents", "list").run(t)
+	verifyClean(t)
 }

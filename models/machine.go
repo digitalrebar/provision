@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"net"
 
 	"github.com/pborman/uuid"
@@ -168,4 +169,68 @@ func (b *Machine) RunningTask() int {
 
 func (b *Machine) SetName(n string) {
 	b.Name = n
+}
+
+func (b *Machine) AddTasks(offset int, tasks ...string) error {
+	if len(b.Tasks) == 0 {
+		b.Tasks = tasks
+		return nil
+	}
+	var immutable, mutable []string
+	if b.CurrentTask == -1 {
+		mutable = b.Tasks[:]
+	} else if b.CurrentTask == len(b.Tasks) {
+		immutable = b.Tasks[:]
+	} else {
+		immutable = b.Tasks[:b.CurrentTask+1]
+		mutable = b.Tasks[b.CurrentTask+1:]
+	}
+	tgtOffset := offset
+	if tgtOffset < 0 {
+		tgtOffset += len(mutable) + 1
+	}
+	if tgtOffset < 0 {
+		return fmt.Errorf("Offset %d too small", offset)
+	}
+	if tgtOffset >= len(mutable) {
+		tgtOffset = len(mutable)
+	}
+	if tgtOffset == 0 {
+		mutable = append(tasks, mutable...)
+	} else if tgtOffset == len(mutable) {
+		mutable = append(mutable, tasks...)
+	} else {
+		res := []string{}
+		res = append(res, mutable[:tgtOffset]...)
+		res = append(res, tasks...)
+		res = append(res, mutable[tgtOffset:]...)
+		mutable = res
+	}
+	b.Tasks = append(immutable, mutable...)
+	return nil
+}
+
+func (b *Machine) DelTasks(tasks ...string) {
+	if len(b.Tasks) == 0 || b.CurrentTask == len(b.Tasks) {
+		return
+	}
+	var immutable, mutable []string
+	if b.CurrentTask == -1 {
+		mutable = b.Tasks[:]
+	} else if b.CurrentTask == len(b.Tasks) {
+		immutable = b.Tasks[:]
+	} else {
+		immutable = b.Tasks[:b.CurrentTask+1]
+		mutable = b.Tasks[b.CurrentTask+1:]
+	}
+	i := 0
+	nextMutable := []string{}
+	for _, c := range mutable {
+		if i < len(tasks) && tasks[i] == c {
+			i++
+		} else {
+			nextMutable = append(nextMutable, c)
+		}
+	}
+	b.Tasks = append(immutable, nextMutable...)
 }

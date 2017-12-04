@@ -63,5 +63,5 @@ func TestReservationCli(t *testing.T) {
 	cliTest(false, false, "reservations", "show", "192.168.100.100").run(t)
 	cliTest(false, false, "reservations", "destroy", "192.168.100.100").run(t)
 	cliTest(false, false, "reservations", "list").run(t)
-
+	verifyClean(t)
 }

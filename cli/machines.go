@@ -3,6 +3,7 @@ package cli
 import (
 	"fmt"
 	"os"
+	"strconv"
 
 	"github.com/digitalrebar/provision/api"
 	"github.com/digitalrebar/provision/models"
@@ -48,7 +49,83 @@ func registerMachine(app *cobra.Command) {
 			return prettyPrint(clone)
 		},
 	})
-
+	tasks := &cobra.Command{
+		Use:   "tasks",
+		Short: "Access task manipulation for machines",
+	}
+	tasks.AddCommand(&cobra.Command{
+		Use:   "add [id] [at [offset]] [task...]",
+		Short: "Add tasks to the task list for [id]",
+		Long: `You may omit "at [offset]" to indicate that the task should be appended to the
+end of the task list.  Otherwise, [offset] 0 indicates that the tasks
+should be inserted immediately after the current task. Negative numbers
+are not accepted.`,
+		Args: func(c *cobra.Command, args []string) error {
+			if len(args) < 2 {
+				return fmt.Errorf("%v requires at least an id and one task", c.UseLine())
+			}
+			if args[1] == "at" {
+				if len(args) < 4 {
+					return fmt.Errorf("%v requires at least 3 arguments when specifying an offset", c.UseLine())
+				}
+				if _, err := strconv.Atoi(args[2]); err != nil {
+					return fmt.Errorf("%v: %s is not a number", args[2])
+				}
+			}
+			return nil
+		},
+		RunE: func(c *cobra.Command, args []string) error {
+			id := args[0]
+			var offset = -1
+			var tasks []string
+			if args[1] == "at" {
+				offset, _ = strconv.Atoi(args[2])
+				tasks = args[3:]
+			} else {
+				tasks = args[1:]
+			}
+			obj, err := op.refOrFill(id)
+			if err != nil {
+				return err
+			}
+			m := models.Clone(obj).(*models.Machine)
+			if err := m.AddTasks(offset, tasks...); err != nil {
+				generateError(err, "Cannot add tasks")
+			}
+			if err := session.Req().PatchTo(obj, m).Do(&m); err != nil {
+				return err
+			}
+			return prettyPrint(m)
+		},
+	})
+	tasks.AddCommand(&cobra.Command{
+		Use:   "del [task...]",
+		Short: "Remove tasks from the mutable part of the task list",
+		Long: `Each entry in [task...] will remove at most one instance of it from the
+machine task list.  If you want to remove more than one, you need to
+pass in more than one task.`,
+		Args: func(c *cobra.Command, args []string) error {
+			if len(args) < 2 {
+				return fmt.Errorf("%v requires at least an id and one task", c.UseLine())
+			}
+			return nil
+		},
+		RunE: func(c *cobra.Command, args []string) error {
+			id := args[0]
+			tasks := args[1:]
+			obj, err := op.refOrFill(id)
+			if err != nil {
+				return err
+			}
+			m := models.Clone(obj).(*models.Machine)
+			m.DelTasks(tasks...)
+			if err := session.Req().PatchTo(obj, m).Do(&m); err != nil {
+				return err
+			}
+			return prettyPrint(m)
+		},
+	})
+	op.addCommand(tasks)
 	op.addCommand(&cobra.Command{
 		Use:   "actions [id]",
 		Short: fmt.Sprintf("Display actions for this machine"),
