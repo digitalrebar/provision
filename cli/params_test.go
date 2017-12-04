@@ -4,6 +4,15 @@ import (
 	"testing"
 )
 
+var paramCreateInputWithGoodDefaultString string = `{
+  "Name": "goodDefault",
+  "Schema": {
+    "type": "string",
+    "default": "goodDefault"
+  }
+}
+`
+
 func TestParamCli(t *testing.T) {
 	var paramCreateBadJSONString = "{asdgasdg"
 	var paramCreateBadJSON2String = "[asdgasdg]"
@@ -11,6 +20,15 @@ func TestParamCli(t *testing.T) {
   "Name": "john",
   "Schema": {
     "type": "string"
+  }
+}
+`
+
+	var paramCreateInputWithBadDefaultString string = `{
+  "Name": "badDefault",
+  "Schema": {
+    "type": "string",
+    "default": false
   }
 }
 `
@@ -29,6 +47,8 @@ func TestParamCli(t *testing.T) {
 	cliTest(false, true, "params", "create", paramCreateBadJSONString).run(t)
 	cliTest(false, true, "params", "create", paramCreateBadJSON2String).run(t)
 	cliTest(false, false, "params", "create", paramCreateInputString).run(t)
+	cliTest(false, true, "params", "create", paramCreateInputWithBadDefaultString).run(t)
+	cliTest(false, false, "params", "create", paramCreateInputWithGoodDefaultString).run(t)
 	cliTest(false, true, "params", "create", paramCreateInputString).run(t)
 	cliTest(false, false, "params", "list").run(t)
 	cliTest(false, false, "params", "list", "Name=fred").run(t)
@@ -59,6 +79,20 @@ func TestParamCli(t *testing.T) {
 	cliTest(false, false, "params", "update", "john", "-").Stdin(paramUpdateInputString + "\n").run(t)
 	cliTest(false, false, "params", "show", "john").run(t)
 	cliTest(false, false, "params", "destroy", "john").run(t)
+	cliTest(false, false, "params", "destroy", "goodDefault").run(t)
 	cliTest(false, false, "params", "list").run(t)
+	verifyClean(t)
+}
+
+func TestParamsDefaultGet(t *testing.T) {
+	mUUID := "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+	cliTest(false, false, "params", "create", paramCreateInputWithGoodDefaultString).run(t)
+	cliTest(false, false, "machines", "create", machineCreateInputString).run(t)
+	// expect nil
+	cliTest(false, false, "machines", "get", mUUID, "param", "goodDefault").run(t)
+	// expect "goodDefault"
+	cliTest(false, false, "machines", "get", mUUID, "param", "goodDefault", "--aggregate").run(t)
+	cliTest(false, false, "machines", "destroy", mUUID).run(t)
+	cliTest(false, false, "params", "destroy", "goodDefault").run(t)
 	verifyClean(t)
 }
