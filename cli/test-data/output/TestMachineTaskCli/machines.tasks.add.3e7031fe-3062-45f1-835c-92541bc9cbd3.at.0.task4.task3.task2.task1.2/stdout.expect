@@ -27,8 +27,14 @@
   "Secret": "secret1",
   "Stage": "none",
   "Tasks": [
+    "task4",
+    "task3",
+    "task2",
     "task1",
-    "task3"
+    "task1",
+    "task2",
+    "task3",
+    "task4"
   ],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Validated": true

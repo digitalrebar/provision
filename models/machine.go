@@ -3,6 +3,7 @@ package models
 import (
 	"fmt"
 	"net"
+	"reflect"
 
 	"github.com/pborman/uuid"
 )
@@ -196,10 +197,22 @@ func (b *Machine) AddTasks(offset int, tasks ...string) error {
 		tgtOffset = len(mutable)
 	}
 	if tgtOffset == 0 {
+		if len(mutable) >= len(tasks) && reflect.DeepEqual(tasks, mutable[:len(tasks)]) {
+			// We are already in the desired task state.
+			return nil
+		}
 		mutable = append(tasks, mutable...)
 	} else if tgtOffset == len(mutable) {
+		if len(mutable) >= len(tasks) && reflect.DeepEqual(tasks, mutable[len(mutable)-len(tasks):]) {
+			// We are alredy in the desired state
+			return nil
+		}
 		mutable = append(mutable, tasks...)
 	} else {
+		if len(mutable[tgtOffset:]) >= len(tasks) && reflect.DeepEqual(tasks, mutable[tgtOffset:tgtOffset+len(tasks)]) {
+			// Already in the desired state
+			return nil
+		}
 		res := []string{}
 		res = append(res, mutable[:tgtOffset]...)
 		res = append(res, tasks...)
