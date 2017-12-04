@@ -318,18 +318,24 @@ func TestMachineTaskCli(t *testing.T) {
 	}
 	// 4 tasks - 1 2 3 4
 	mta(false, false, tasks...).run(t)
-	// 8 tasks - 1 2 3 4 1 2 3 4
+	// Idempotent add -- 4 tasks -- 1 2 3 4
 	mta(false, false, tasks...).run(t)
-	// 6 tasks - 1 3 1 2 3 4
+	// 2 tasks - 1 3
 	rta(false, false, "task2", "task4").run(t)
-	// 4 tasks - 1 2 3 4
+	// 0 tasks
 	rta(false, false, "task1", "task3").run(t)
+	// 4 tasks - 1 2 3 4
+	mta(false, false, tasks...).run(t)
 	// 8 tasks - 4 3 2 1 1 2 3 4
+	mta(false, false, "at", "0", "task4", "task3", "task2", "task1").run(t)
+	// still 8 tasks - 4 3 2 1 1 2 3 4
 	mta(false, false, "at", "0", "task4", "task3", "task2", "task1").run(t)
 	// 6 tasks - 4 3 2 2 3 4
 	rta(false, false, "task1", "task1").run(t)
 	fakeJob(t, mUUID, "finished")
 	// 7 tasks - 4 3 1 2 2 3 4
+	mta(false, false, "at", "1", "task1").run(t)
+	// still 7 tasks - 4 3 1 2 2 3 4
 	mta(false, false, "at", "1", "task1").run(t)
 	// 4 tasks - 4 3 2 4
 	rta(false, false, "task1", "task2", "task3").run(t)
