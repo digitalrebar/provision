@@ -20,6 +20,7 @@ func (m *MetaData) fill() {
 }
 
 func (m *MetaData) ClearFeatures() {
+	m.fill()
 	m.Meta["feature-flags"] = ""
 }
 
