@@ -1,11 +1,14 @@
 package cli
 
 import (
+	"crypto/tls"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
+	"net/http"
+	"net/url"
 	"os"
 	"reflect"
 	"strings"
@@ -40,6 +43,19 @@ func bufOrFile(src string) ([]byte, error) {
 	if s, err := os.Lstat(src); err == nil && s.Mode().IsRegular() {
 		return ioutil.ReadFile(src)
 	}
+	if u, err := url.Parse(src); err == nil && u.Scheme != "" {
+		tr := &http.Transport{
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		}
+		client := &http.Client{Transport: tr}
+		if res, err := client.Get(src); err != nil {
+			return nil, err
+		} else {
+			defer res.Body.Close()
+			body, err := ioutil.ReadAll(res.Body)
+			return []byte(body), err
+		}
+	}
 	return []byte(src), nil
 }
 
@@ -47,7 +63,7 @@ func bufOrStdin(src string) ([]byte, error) {
 	if src == "-" {
 		return ioutil.ReadAll(os.Stdin)
 	}
-	return []byte(src), nil
+	return bufOrFile(src)
 }
 
 func into(src string, res interface{}) error {

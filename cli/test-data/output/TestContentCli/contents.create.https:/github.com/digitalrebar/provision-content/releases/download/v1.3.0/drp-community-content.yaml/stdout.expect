@@ -1,0 +1,24 @@
+RE:
+{
+  "Counts": {
+    "bootenvs": 7,
+    "params": 17,
+    "profiles": 1,
+    "stages": 13,
+    "tasks": 7,
+    "templates": 14
+  },
+  "Warnings": \[
+[\s\S]*
+  \],
+  "meta": {
+    "Description": "Digital Rebar Provision Community Content",
+    "Meta": {},
+    "Name": "drp-community-content",
+    "Overwritable": false,
+    "Source": "https://github.com/digitalrebar/provision-content",
+    "Type": "dynamic",
+    "Version": "v1.3.0-0-066c0d69eb5f1d7a33ba801978150040b61da725",
+    "Writable": false
+  }
+}

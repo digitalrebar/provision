@@ -1,0 +1,432 @@
+meta:
+  Description: Digital Rebar Provision Community Contrib
+  Name: drp-community-contrib
+  Source: https://github.com/digitalrebar/provision-content
+  Type: dynamic
+  Version: stable.galthaus.7-strange-30b5a4603088a31f898ce1960f1f4475bda2630d
+sections:
+  bootenvs:
+    centos-6-install:
+      Available: false
+      BootParams: ksdevice=bootif ks={{.Machine.Url}}/compute.ks method={{.Env.InstallUrl}}
+        -- {{ if .ParamExists "kernel-console"}}{{.Param "kernel-console" }}{{ end
+        }}
+      Description: CentOS 6 install bootenv that references the latest release
+      Errors: []
+      Initrds:
+      - images/pxeboot/initrd.img
+      Kernel: images/pxeboot/vmlinuz
+      Meta:
+        feature-flags: sane-exit-codes
+      Name: centos-6-install
+      OS:
+        Codename: ""
+        Family: ""
+        IsoFile: CentOS-6.9-x86_64-bin-DVD1.iso
+        IsoSha256: d27cf37a40509c17ad70f37bc743f038c1feba00476fe6b69682aa424c399ea6
+        IsoUrl: http://mirrors.kernel.org/centos/6.9/isos/x86_64/CentOS-6.9-x86_64-bin-DVD1.iso
+        Name: centos-6
+        Version: ""
+      OnlyUnknown: false
+      OptionalParams:
+      - operating-system-disk
+      - provisioner-default-password-hash
+      - proxy-servers
+      - kernel-console
+      ReadOnly: false
+      RequiredParams: []
+      Templates:
+      - Contents: ""
+        ID: default-pxelinux.tmpl
+        Name: pxelinux
+        Path: pxelinux.cfg/{{.Machine.HexAddress}}
+      - Contents: ""
+        ID: default-elilo.tmpl
+        Name: elilo
+        Path: '{{.Machine.HexAddress}}.conf'
+      - Contents: ""
+        ID: default-ipxe.tmpl
+        Name: ipxe
+        Path: '{{.Machine.Address}}.ipxe'
+      - Contents: ""
+        ID: centos-6.ks.tmpl
+        Name: compute.ks
+        Path: '{{.Machine.Path}}/compute.ks'
+      Validated: false
+    centos-6.9-install:
+      Available: false
+      BootParams: ksdevice=bootif ks={{.Machine.Url}}/compute.ks method={{.Env.InstallUrl}}
+        -- {{ if .ParamExists "kernel-console"}}{{.Param "kernel-console" }}{{ end
+        }}
+      Description: CentOS-6.9 install bootenv
+      Errors: []
+      Initrds:
+      - images/pxeboot/initrd.img
+      Kernel: images/pxeboot/vmlinuz
+      Meta:
+        feature-flags: sane-exit-codes
+      Name: centos-6.9-install
+      OS:
+        Codename: ""
+        Family: ""
+        IsoFile: CentOS-6.9-x86_64-bin-DVD1.iso
+        IsoSha256: d27cf37a40509c17ad70f37bc743f038c1feba00476fe6b69682aa424c399ea6
+        IsoUrl: http://mirrors.kernel.org/centos/6.9/isos/x86_64/CentOS-6.9-x86_64-bin-DVD1.iso
+        Name: centos-6.9
+        Version: ""
+      OnlyUnknown: false
+      OptionalParams:
+      - operating-system-disk
+      - provisioner-default-password-hash
+      - proxy-servers
+      - kernel-console
+      ReadOnly: false
+      RequiredParams: []
+      Templates:
+      - Contents: ""
+        ID: default-pxelinux.tmpl
+        Name: pxelinux
+        Path: pxelinux.cfg/{{.Machine.HexAddress}}
+      - Contents: ""
+        ID: default-elilo.tmpl
+        Name: elilo
+        Path: '{{.Machine.HexAddress}}.conf'
+      - Contents: ""
+        ID: default-ipxe.tmpl
+        Name: ipxe
+        Path: '{{.Machine.Address}}.ipxe'
+      - Contents: ""
+        ID: centos-6.ks.tmpl
+        Name: compute.ks
+        Path: '{{.Machine.Path}}/compute.ks'
+      Validated: false
+    centos-7.3.1611-install:
+      Available: false
+      BootParams: ksdevice=bootif ks={{.Machine.Url}}/compute.ks method={{.Env.InstallUrl}}
+        inst.geoloc=0 -- {{if .ParamExists "kernel-console"}}{{.Param "kernel-console"}}{{end}}
+      Description: CentOS 7.3.1611 install bootenv
+      Errors: []
+      Initrds:
+      - images/pxeboot/initrd.img
+      Kernel: images/pxeboot/vmlinuz
+      Meta:
+        feature-flags: sane-exit-codes
+      Name: centos-7.3.1611-install
+      OS:
+        Codename: ""
+        Family: ""
+        IsoFile: CentOS-7-x86_64-Minimal-1611.iso
+        IsoSha256: 27bd866242ee058b7a5754e83d8ee8403e216b93d130d800852a96f41c34d86a
+        IsoUrl: http://mirrors.kernel.org/centos/7.3.1611/isos/x86_64/CentOS-7-x86_64-Minimal-1611.iso
+        Name: centos-7.3.1611
+        Version: ""
+      OnlyUnknown: false
+      OptionalParams:
+      - operating-system-disk
+      - provisioner-default-password-hash
+      - proxy-servers
+      - kernel-console
+      ReadOnly: false
+      RequiredParams: []
+      Templates:
+      - Contents: ""
+        ID: default-pxelinux.tmpl
+        Name: pxelinux
+        Path: pxelinux.cfg/{{.Machine.HexAddress}}
+      - Contents: ""
+        ID: default-elilo.tmpl
+        Name: elilo
+        Path: '{{.Machine.HexAddress}}.conf'
+      - Contents: ""
+        ID: default-ipxe.tmpl
+        Name: ipxe
+        Path: '{{.Machine.Address}}.ipxe'
+      - Contents: ""
+        ID: centos-7.ks.tmpl
+        Name: compute.ks
+        Path: '{{.Machine.Path}}/compute.ks'
+      Validated: false
+    scientificlinux-6.8-install:
+      Available: false
+      BootParams: ksdevice=bootif ks={{.Machine.Url}}/compute.ks method={{.Env.InstallUrl}}
+        -- {{ if .ParamExists "kernel-console"}}{{.Param "kernel-console" }}{{ end
+        }}
+      Description: Scientific Linux 6.8 install bootenv
+      Errors: []
+      Initrds:
+      - images/pxeboot/initrd.img
+      Kernel: images/pxeboot/vmlinuz
+      Meta:
+        feature-flags: sane-exit-codes
+      Name: scientificlinux-6.8-install
+      OS:
+        Codename: ""
+        Family: ""
+        IsoFile: SL-68-x86_64-2016-06-29-DVD-DL.iso
+        IsoSha256: ada95b0e920612a5a9c56e268515a9965663377407a7897167be7a2efdade804
+        IsoUrl: http://ftp1.scientificlinux.org/linux/scientific/6.8/x86_64/iso/SL-68-x86_64-2016-06-29-DVD-DL.iso
+        Name: scientificlinux-6.8
+        Version: ""
+      OnlyUnknown: false
+      OptionalParams:
+      - operating-system-disk
+      - provisioner-default-password-hash
+      - proxy-servers
+      - kernel-console
+      ReadOnly: false
+      RequiredParams: []
+      Templates:
+      - Contents: ""
+        ID: default-pxelinux.tmpl
+        Name: pxelinux
+        Path: pxelinux.cfg/{{.Machine.HexAddress}}
+      - Contents: ""
+        ID: default-elilo.tmpl
+        Name: elilo
+        Path: '{{.Machine.HexAddress}}.conf'
+      - Contents: ""
+        ID: default-ipxe.tmpl
+        Name: ipxe
+        Path: '{{.Machine.Address}}.ipxe'
+      - Contents: ""
+        ID: centos-6.ks.tmpl
+        Name: compute.ks
+        Path: '{{.Machine.Path}}/compute.ks'
+      Validated: false
+    ubuntu-14.04-install:
+      Available: false
+      BootParams: debian-installer/locale=en_US.utf8 console-setup/layoutcode=us keyboard-configuration/layoutcode=us
+        netcfg/dhcp_timeout=120 netcfg/choose_interface=auto url={{.Machine.Url}}/seed
+        netcfg/get_hostname={{.Machine.Name}} root=/dev/ram rw quiet {{ if .ParamExists
+        "kernel-console"}}{{.Param "kernel-console" }}{{ end }} -- {{ if .ParamExists
+        "kernel-console"}}{{.Param "kernel-console" }}{{ end }}
+      Description: Ubuntu 14.04 install bootenv that references latest release
+      Errors: []
+      Initrds:
+      - install/netboot/ubuntu-installer/amd64/initrd.gz
+      Kernel: install/netboot/ubuntu-installer/amd64/linux
+      Meta:
+        feature-flags: sane-exit-codes
+      Name: ubuntu-14.04-install
+      OS:
+        Codename: ""
+        Family: ubuntu
+        IsoFile: ubuntu-14.04.5-server-amd64.iso
+        IsoSha256: dde07d37647a1d2d9247e33f14e91acb10445a97578384896b4e1d985f754cc1
+        IsoUrl: http://mirrors.kernel.org/ubuntu-releases/trusty/ubuntu-14.04.5-server-amd64.iso
+        Name: ubuntu-14.04
+        Version: "14.04"
+      OnlyUnknown: false
+      OptionalParams:
+      - part-scheme
+      - operating-system-disk
+      - provisioner-default-user
+      - provisioner-default-fullname
+      - provisioner-default-uid
+      - provisioner-default-password-hash
+      - kernel-console
+      - proxy-servers
+      - dns-domain
+      - local-repo
+      - proxy-servers
+      - ntp-servers
+      ReadOnly: false
+      RequiredParams: []
+      Templates:
+      - Contents: ""
+        ID: default-pxelinux.tmpl
+        Name: pxelinux
+        Path: pxelinux.cfg/{{.Machine.HexAddress}}
+      - Contents: ""
+        ID: default-elilo.tmpl
+        Name: elilo
+        Path: '{{.Machine.HexAddress}}.conf'
+      - Contents: ""
+        ID: default-ipxe.tmpl
+        Name: ipxe
+        Path: '{{.Machine.Address}}.ipxe'
+      - Contents: ""
+        ID: net-seed.tmpl
+        Name: seed
+        Path: '{{.Machine.Path}}/seed'
+      - Contents: ""
+        ID: net-post-install.sh.tmpl
+        Name: net-post-install.sh
+        Path: '{{.Machine.Path}}/post-install.sh'
+      Validated: false
+  stages:
+    centos-6-install:
+      Available: false
+      BootEnv: centos-6-install
+      Description: CentOS 6 install stage that references the latest version
+      Errors: []
+      Meta:
+        color: yellow
+        icon: download
+        title: Digital Rebar Community Content
+      Name: centos-6-install
+      OptionalParams: []
+      Profiles: []
+      ReadOnly: false
+      Reboot: false
+      RequiredParams: []
+      RunnerWait: true
+      Tasks:
+      - set-hostname
+      - centos-drp-only-repos
+      - ssh-access
+      Templates: []
+      Validated: false
+    centos-6.9-install:
+      Available: false
+      BootEnv: centos-6.9-install
+      Description: CentOS 6.9 install stage
+      Errors: []
+      Meta:
+        color: yellow
+        icon: download
+        title: Digital Rebar Community Content
+      Name: centos-6.9-install
+      OptionalParams: []
+      Profiles: []
+      ReadOnly: false
+      Reboot: false
+      RequiredParams: []
+      RunnerWait: true
+      Tasks:
+      - set-hostname
+      - centos-drp-only-repos
+      - ssh-access
+      Templates: []
+      Validated: false
+    centos-7.3.1611-install:
+      Available: false
+      BootEnv: centos-7.3.1611-install
+      Description: CentOS 7.3.1611 install stage
+      Errors: []
+      Meta:
+        color: yellow
+        icon: download
+        title: Digital Rebar Community Content
+      Name: centos-7.3.1611-install
+      OptionalParams: []
+      Profiles: []
+      ReadOnly: false
+      Reboot: false
+      RequiredParams: []
+      RunnerWait: true
+      Tasks:
+      - set-hostname
+      - centos-drp-only-repos
+      - ssh-access
+      Templates: []
+      Validated: false
+    scientificlinux-6.8-install:
+      Available: false
+      BootEnv: scientificlinux-6.8-install
+      Description: Scientific Linux 6.8 install stage
+      Errors: []
+      Meta:
+        color: yellow
+        icon: download
+        title: Digital Rebar Community Content
+      Name: scientificlinux-6.8-install
+      OptionalParams: []
+      Profiles: []
+      ReadOnly: false
+      Reboot: false
+      RequiredParams: []
+      RunnerWait: true
+      Tasks:
+      - set-hostname
+      - centos-drp-only-repos
+      - ssh-access
+      Templates: []
+      Validated: false
+    ubuntu-14.04-install:
+      Available: false
+      BootEnv: ubuntu-14.04-install
+      Description: Ubuntu 14.04 install stage that references latest release
+      Errors: []
+      Meta:
+        color: yellow
+        icon: download
+        title: Digital Rebar Community Content
+      Name: ubuntu-14.04-install
+      OptionalParams: []
+      Profiles: []
+      ReadOnly: false
+      Reboot: false
+      RequiredParams: []
+      RunnerWait: true
+      Tasks:
+      - ubuntu-drp-only-repos
+      - ssh-access
+      Templates: []
+      Validated: false
+  templates:
+    centos-6.ks.tmpl:
+      Available: false
+      Contents: |
+        # DigitalRebar Provision Centos-6 (and related distros) kickstart
+
+        install
+        url --url {{ .Env.InstallUrl }}
+        # Add support for our local proxy.
+        repo --name="CentOS"  --baseurl={{ .Env.InstallUrl }} {{if .ParamExists "proxy-servers"}} --proxy="{{index (.Param "proxy-servers") 0}}"{{end}} --cost=100
+        key --skip
+        lang en_US.UTF-8
+        keyboard us
+        # rebar
+        rootpw --iscrypted {{if .ParamExists "provisioner-default-password-hash"}}{{ .Param "provisioner-default-password-hash" }}{{else}}$6$rebar$HBaBj/uDmsQMEw4Si6eja9Yba3rhB73Na36hbrp9KxDHm6s5veeWyXlsUkoxRACtP47978iiidziRdsYUC7gC/{{end}}
+        firewall --disabled
+        authconfig --enableshadow --enablemd5
+        selinux --disabled
+        timezone --utc UTC
+        bootloader --location=mbr {{if .ParamExists "operating-system-disk"}}--driveorder={{ .Param "operating-system-disk" }}{{end}} --append="rhgb quiet"
+        zerombr
+        {{if .ParamExists "operating-system-disk"}}ignoredisk --only-use={{ .Param "operating-system-disk" }}{{end}}
+        clearpart --all {{if .ParamExists "operating-system-disk"}}--drives={{ .Param "operating-system-disk" }}{{end}}
+        part /boot --fstype ext4 --size=512 {{if .ParamExists "operating-system-disk"}}--ondisk={{ .Param "operating-system-disk" }}{{end}}
+        part /boot/efi --fstype vfat --size=512 {{if .ParamExists "operating-system-disk"}}--ondisk={{ .Param "operating-system-disk" }}{{end}}
+        part swap --recommended
+        part pv.6 --size=1 --grow {{if .ParamExists "operating-system-disk"}}--ondisk={{ .Param "operating-system-disk" }}{{end}}
+        volgroup {{ .Machine.ShortName }} --pesize=32768 pv.6
+        logvol / --fstype ext4 --name=lv_root --vgname={{ .Machine.ShortName }} --size=1 --grow --maxsize=10240
+        text
+        reboot
+
+        %packages
+        @base
+        @core
+        vim-enhanced
+        keyutils
+        trousers
+        fipscheck
+        device-mapper-multipath
+        OpenIPMI
+        OpenIPMI-tools
+        emacs-nox
+        openssh
+        curl.x86_64
+        ntp
+        ntpdate
+        tcpdump
+        efibootmgr
+        %post
+
+        exec > /root/post-install.log 2>&1
+        set -x
+        export PS4='${BASH_SOURCE}@${LINENO}(${FUNCNAME[0]}): '
+
+        {{ template "reset-workflow.tmpl" . }}
+        {{ template "runner.tmpl" . }}
+
+        sync
+        %end
+      Description: ""
+      Errors: []
+      ID: centos-6.ks.tmpl
+      Meta: {}
+      ReadOnly: false
+      Validated: false
