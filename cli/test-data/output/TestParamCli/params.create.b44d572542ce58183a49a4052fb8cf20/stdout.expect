@@ -1,0 +1,14 @@
+{
+  "Available": true,
+  "Description": "",
+  "Documentation": "",
+  "Errors": [],
+  "Meta": {},
+  "Name": "goodDefault",
+  "ReadOnly": false,
+  "Schema": {
+    "default": "goodDefault",
+    "type": "string"
+  },
+  "Validated": true
+}

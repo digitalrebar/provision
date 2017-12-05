@@ -26,11 +26,34 @@ type Param struct {
 	Schema interface{}
 }
 
+func (p *Param) DefaultValue() (interface{}, bool) {
+	if km, ok := p.Schema.(map[string]interface{}); ok {
+		v, vok := km["default"]
+		return v, vok
+	}
+	return nil, false
+}
+
 func (p *Param) Validate() {
 	p.AddError(ValidParamName("Invalid Name", p.Name))
 	if p.Schema != nil {
-		_, err := gojsonschema.NewSchema(gojsonschema.NewGoLoader(p.Schema))
-		p.AddError(err)
+		validator, err := gojsonschema.NewSchema(gojsonschema.NewGoLoader(p.Schema))
+		if err != nil {
+			p.AddError(err)
+			return
+		}
+		dv, ok := p.DefaultValue()
+		if !ok {
+			return
+		}
+		res, err := validator.Validate(gojsonschema.NewGoLoader(dv))
+		if err != nil {
+			p.Errorf("Error validating default value: %v", err)
+		} else if !res.Valid() {
+			for _, e := range res.Errors() {
+				p.Errorf("Error in default value: %v", e.String())
+			}
+		}
 	}
 }
 

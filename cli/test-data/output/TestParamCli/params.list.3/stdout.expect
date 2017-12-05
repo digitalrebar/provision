@@ -5,6 +5,20 @@
     "Documentation": "",
     "Errors": [],
     "Meta": {},
+    "Name": "goodDefault",
+    "ReadOnly": false,
+    "Schema": {
+      "default": "goodDefault",
+      "type": "string"
+    },
+    "Validated": true
+  },
+  {
+    "Available": true,
+    "Description": "",
+    "Documentation": "",
+    "Errors": [],
+    "Meta": {},
     "Name": "incrementer/parameter",
     "ReadOnly": true,
     "Schema": {
