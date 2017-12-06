@@ -11,7 +11,7 @@ package models
 type Profile struct {
 	Validation
 	Access
-	MetaData
+	Meta
 	// The name of the profile.  This must be unique across all
 	// profiles.
 	//
@@ -43,7 +43,9 @@ func (p *Profile) Key() string {
 
 func (p *Profile) Fill() {
 	p.Validation.fill()
-	p.MetaData.fill()
+	if p.Meta == nil {
+		p.Meta = Meta{}
+	}
 	if p.Params == nil {
 		p.Params = map[string]interface{}{}
 	}

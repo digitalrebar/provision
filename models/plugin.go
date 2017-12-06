@@ -6,7 +6,7 @@ package models
 type Plugin struct {
 	Validation
 	Access
-	MetaData
+	Meta
 	// The name of the plugin instance.  THis must be unique across all
 	// plugins.
 	//
@@ -48,7 +48,9 @@ func (n *Plugin) Key() string {
 }
 
 func (n *Plugin) Fill() {
-	n.MetaData.fill()
+	if n.Meta == nil {
+		n.Meta = Meta{}
+	}
 	n.Validation.fill()
 	if n.Params == nil {
 		n.Params = map[string]interface{}{}

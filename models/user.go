@@ -9,7 +9,7 @@ import (
 type User struct {
 	Validation
 	Access
-	MetaData
+	Meta
 	// Name is the name of the user
 	//
 	// required: true
@@ -38,7 +38,9 @@ func (u *User) Key() string {
 
 func (u *User) Fill() {
 	u.Validation.fill()
-	u.MetaData.fill()
+	if u.Meta == nil {
+		u.Meta = Meta{}
+	}
 }
 
 func (u *User) CheckPassword(pass string) bool {

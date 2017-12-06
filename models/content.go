@@ -3,7 +3,7 @@ package models
 import "github.com/digitalrebar/store"
 
 type ContentMetaData struct {
-	MetaData
+	Meta
 
 	// required: true
 	Name        string
@@ -122,7 +122,9 @@ func (c *Content) Key() string {
 }
 
 func (c *Content) Fill() {
-	c.Meta.MetaData.fill()
+	if c.Meta.Meta == nil {
+		c.Meta.Meta = Meta{}
+	}
 	if c.Sections == nil {
 		c.Sections = Sections(map[string]Section{})
 	}
@@ -140,7 +142,9 @@ type ContentSummary struct {
 }
 
 func (c *ContentSummary) Fill() {
-	c.Meta.fill()
+	if c.Meta.Meta == nil {
+		c.Meta.Meta = Meta{}
+	}
 	if c.Counts == nil {
 		c.Counts = map[string]int{}
 	}

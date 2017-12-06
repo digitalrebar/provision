@@ -3,7 +3,7 @@ package models
 // swagger:model
 type Interface struct {
 	Access
-	MetaData
+	Meta
 	// Name of the interface
 	//
 	// required: true
@@ -24,7 +24,9 @@ type Interface struct {
 func (i *Interface) Prefix() string { return "interfaces" }
 func (i *Interface) Key() string    { return i.Name }
 func (i *Interface) Fill() {
-	i.MetaData.fill()
+	if i.Meta == nil {
+		i.Meta = Meta{}
+	}
 	if i.Addresses == nil {
 		i.Addresses = []string{}
 	}

@@ -11,7 +11,7 @@ import (
 // instantiated by a plugin.
 // swagger:model
 type PluginProvider struct {
-	MetaData
+	Meta
 
 	Name    string
 	Version string
@@ -48,7 +48,9 @@ func (p *PluginProvider) ToModels(obj interface{}) []Model {
 }
 
 func (p *PluginProvider) Fill() {
-	p.MetaData.fill()
+	if p.Meta == nil {
+		p.Meta = Meta{}
+	}
 	if p.RequiredParams == nil {
 		p.RequiredParams = []string{}
 	}

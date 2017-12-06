@@ -31,7 +31,7 @@ type OsInfo struct {
 type BootEnv struct {
 	Validation
 	Access
-	MetaData
+	Meta
 	// The name of the boot environment.  Boot environments that install
 	// an operating system must end in '-install'.
 	//
@@ -127,8 +127,10 @@ func (b *BootEnv) ToModels(obj interface{}) []Model {
 }
 
 func (b *BootEnv) Fill() {
-	b.MetaData.fill()
 	b.Validation.fill()
+	if b.Meta == nil {
+		b.Meta = Meta{}
+	}
 	if b.Initrds == nil {
 		b.Initrds = []string{}
 	}

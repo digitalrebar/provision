@@ -5,7 +5,7 @@ package models
 // default bootenv for known systems, etc.
 //
 type Pref struct {
-	MetaData
+	Meta
 	Name string
 	Val  string
 }
@@ -19,7 +19,9 @@ func (p *Pref) Key() string {
 }
 
 func (p *Pref) Fill() {
-	p.MetaData.fill()
+	if p.Meta == nil {
+		p.Meta = Meta{}
+	}
 }
 
 func (p *Pref) AuthKey() string {

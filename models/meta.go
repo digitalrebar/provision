@@ -9,30 +9,20 @@ import (
 // Initial usage will be for UX elements.
 //
 // swagger: model
-type MetaData struct {
-	Meta map[string]string
+type Meta map[string]string
+
+func (m Meta) ClearFeatures() {
+	m["feature-flags"] = ""
 }
 
-func (m *MetaData) fill() {
-	if m.Meta == nil {
-		m.Meta = map[string]string{}
-	}
-}
-
-func (m *MetaData) ClearFeatures() {
-	m.fill()
-	m.Meta["feature-flags"] = ""
-}
-
-func (m *MetaData) Features() []string {
-	m.fill()
-	if flags, ok := m.Meta["feature-flags"]; ok && len(flags) > 0 {
+func (m Meta) Features() []string {
+	if flags, ok := m["feature-flags"]; ok && len(flags) > 0 {
 		return strings.Split(flags, ",")
 	}
 	return []string{}
 }
 
-func (m *MetaData) HasFeature(flag string) bool {
+func (m Meta) HasFeature(flag string) bool {
 	flag = strings.TrimSpace(flag)
 	for _, testFlag := range m.Features() {
 		if flag == strings.TrimSpace(testFlag) {
@@ -42,7 +32,7 @@ func (m *MetaData) HasFeature(flag string) bool {
 	return false
 }
 
-func (m *MetaData) AddFeature(flag string) {
+func (m Meta) AddFeature(flag string) {
 	flag = strings.TrimSpace(flag)
 	if m.HasFeature(flag) || flag == "" {
 		return
@@ -50,10 +40,10 @@ func (m *MetaData) AddFeature(flag string) {
 	flags := m.Features()
 	flags = append(flags, flag)
 	sort.Strings(flags)
-	m.Meta["feature-flags"] = strings.Join(flags, ",")
+	m["feature-flags"] = strings.Join(flags, ",")
 }
 
-func (m *MetaData) RemoveFeature(flag string) {
+func (m Meta) RemoveFeature(flag string) {
 	flag = strings.TrimSpace(flag)
 	newFlags := []string{}
 	for _, testFlag := range m.Features() {
@@ -62,10 +52,10 @@ func (m *MetaData) RemoveFeature(flag string) {
 		}
 		newFlags = append(newFlags, testFlag)
 	}
-	m.Meta["feature-flags"] = strings.Join(newFlags, ",")
+	m["feature-flags"] = strings.Join(newFlags, ",")
 }
 
-func (m *MetaData) MergeFeatures(other []string) {
+func (m Meta) MergeFeatures(other []string) {
 	flags := map[string]struct{}{}
 	for _, flag := range m.Features() {
 		flags[flag] = struct{}{}
@@ -81,5 +71,5 @@ func (m *MetaData) MergeFeatures(other []string) {
 		newFlags = append(newFlags, k)
 	}
 	sort.Strings(newFlags)
-	m.Meta["feature-flags"] = strings.Join(newFlags, ",")
+	m["feature-flags"] = strings.Join(newFlags, ",")
 }

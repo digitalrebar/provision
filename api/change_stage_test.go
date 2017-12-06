@@ -23,18 +23,17 @@ BootEnv: local
 Meta:
   feature-flags: ""
 Name: john
-Profile:
-  Params:
-    change-stage/map:
-      stageNoWait: stageDoneNoWait:Success
-      stageNoWait1: stageDoneWait:Success
-      stageWait: stageDoneNoWait:Success
-      stageWait1: stageDoneWait:Success
-      stageStop: stageDoneWait:Stop
-      stageReboot: stageDoneWait:Reboot
-      stageRealReboot: stageDoneWait:Success
-      stageRealReboot1: stageDoneReboot:Success
-      fred-install: stageDoneWait:Success
+Params:
+  change-stage/map:
+    stageNoWait: stageDoneNoWait:Success
+    stageNoWait1: stageDoneWait:Success
+    stageWait: stageDoneNoWait:Success
+    stageWait1: stageDoneWait:Success
+    stageStop: stageDoneWait:Stop
+    stageReboot: stageDoneWait:Reboot
+    stageRealReboot: stageDoneWait:Success
+    stageRealReboot1: stageDoneReboot:Success
+    fred-install: stageDoneWait:Success
 Uuid: 3e7031fe-3062-45f1-835c-92541bc9cbd3
 Validated: true
 `).(*models.Machine)

@@ -24,7 +24,7 @@ type JobAction struct {
 type Job struct {
 	Validation
 	Access
-	MetaData
+	Meta
 	// The UUID of the job.  The primary key.
 	// required: true
 	// swagger:strfmt uuid
@@ -88,7 +88,9 @@ func (j *Job) Key() string {
 }
 
 func (j *Job) Fill() {
-	j.MetaData.fill()
+	if j.Meta == nil {
+		j.Meta = Meta{}
+	}
 	j.Validation.fill()
 }
 

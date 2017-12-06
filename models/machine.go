@@ -14,7 +14,7 @@ import (
 type Machine struct {
 	Validation
 	Access
-	MetaData
+	Meta
 	// The name of the machine.  THis must be unique across all
 	// machines, and by convention it is the FQDN of the machine,
 	// although nothing enforces that.
@@ -54,8 +54,11 @@ type Machine struct {
 	Profiles []string
 	//
 	// The Machine specific Profile Data - only used for the map (name and other
-	// fields not used
+	// fields not used - THIS IS DEPRECATED AND WILL GO AWAY.
+	// Data will migrated from this struct to Params and then cleared.
 	Profile Profile
+	// Replaces the Profile.
+	Params map[string]interface{}
 	// The tasks this machine has to run.
 	Tasks []string
 	// required: true
@@ -99,7 +102,9 @@ func (n *Machine) Key() string {
 }
 
 func (n *Machine) Fill() {
-	n.MetaData.fill()
+	if n.Meta == nil {
+		n.Meta = Meta{}
+	}
 	n.Validation.fill()
 	if n.Profiles == nil {
 		n.Profiles = []string{}
@@ -107,7 +112,9 @@ func (n *Machine) Fill() {
 	if n.Tasks == nil {
 		n.Tasks = []string{}
 	}
-	n.Profile.Fill()
+	if n.Params == nil {
+		n.Params = map[string]interface{}{}
+	}
 }
 
 func (n *Machine) AuthKey() string {
@@ -130,11 +137,11 @@ func (b *Machine) ToModels(obj interface{}) []Model {
 
 // match Paramer interface
 func (b *Machine) GetParams() map[string]interface{} {
-	return b.Profile.Params
+	return b.Params
 }
 
 func (b *Machine) SetParams(p map[string]interface{}) {
-	b.Profile.Params = p
+	b.Params = p
 }
 
 // match Profiler interface
