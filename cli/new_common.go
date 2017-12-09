@@ -387,7 +387,7 @@ func (o *ops) params() {
 				return prettyPrint(res)
 			}
 			val := map[string]interface{}{}
-			if err := api.DecodeYaml([]byte(args[1]), &val); err != nil {
+			if err := into(args[1], &val); err != nil {
 				return fmt.Errorf("Unable to unmarshal input stream: %v\n", err)
 			}
 			res := map[string]interface{}{}
@@ -450,8 +450,7 @@ func (o *ops) params() {
 			key := args[2]
 			newValue := args[4]
 			var value interface{}
-			err := api.DecodeYaml([]byte(newValue), &value)
-			if err != nil {
+			if err := into(newValue, &value); err != nil {
 				return fmt.Errorf("Unable to unmarshal input stream: %v\n", err)
 			}
 
@@ -505,14 +504,12 @@ func (o *ops) params() {
 			key := args[2]
 			newValue := args[4]
 			var value interface{}
-			err := api.DecodeYaml([]byte(newValue), &value)
-			if err != nil {
+			if err := into(newValue, &value); err != nil {
 				return fmt.Errorf("Unable to unmarshal input stream: %v\n", err)
 			}
 			var params interface{}
 			if ref == "" {
-				err = session.Req().Post(value).UrlFor(o.name, uuid, "params", key).Do(&params)
-				if err != nil {
+				if err := session.Req().Post(value).UrlFor(o.name, uuid, "params", key).Do(&params); err != nil {
 					return generateError(err, "Failed to fetch params %v: %v", o.singleName, uuid)
 				}
 			} else {
