@@ -8,7 +8,7 @@ import "net"
 type Subnet struct {
 	Validation
 	Access
-	MetaData
+	Meta
 	// Name is the name of the subnet.
 	// Subnet names must be unique
 	//
@@ -118,7 +118,9 @@ func (s *Subnet) Key() string {
 
 func (s *Subnet) Fill() {
 	s.Validation.fill()
-	s.MetaData.fill()
+	if s.Meta == nil {
+		s.Meta = Meta{}
+	}
 	if s.Options == nil {
 		s.Options = []*DhcpOption{}
 	}

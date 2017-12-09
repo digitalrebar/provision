@@ -7,7 +7,7 @@ package models
 type Stage struct {
 	Validation
 	Access
-	MetaData
+	Meta
 	// The name of the boot environment.  Boot environments that install
 	// an operating system must end in '-install'.
 	//
@@ -88,7 +88,9 @@ func (s *Stage) Key() string {
 
 func (s *Stage) Fill() {
 	s.Validation.fill()
-	s.MetaData.fill()
+	if s.Meta == nil {
+		s.Meta = Meta{}
+	}
 	if s.Templates == nil {
 		s.Templates = []TemplateInfo{}
 	}

@@ -8,7 +8,7 @@ import "net"
 type Reservation struct {
 	Validation
 	Access
-	MetaData
+	Meta
 	// Addr is the IP address permanently assigned to the strategy/token combination.
 	//
 	// required: true
@@ -42,7 +42,9 @@ func (r *Reservation) Key() string {
 
 func (r *Reservation) Fill() {
 	r.Validation.fill()
-	r.MetaData.fill()
+	if r.Meta == nil {
+		r.Meta = Meta{}
+	}
 	if r.Options == nil {
 		r.Options = []DhcpOption{}
 	}

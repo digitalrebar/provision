@@ -6,7 +6,7 @@ package models
 type Task struct {
 	Validation
 	Access
-	MetaData
+	Meta
 	// Name is the name of this Task.  Task names must be globally unique
 	//
 	// required: true
@@ -55,7 +55,9 @@ func (t *Task) Key() string {
 
 func (t *Task) Fill() {
 	t.Validation.fill()
-	t.MetaData.fill()
+	if t.Meta == nil {
+		t.Meta = Meta{}
+	}
 	if t.Templates == nil {
 		t.Templates = []TemplateInfo{}
 	}

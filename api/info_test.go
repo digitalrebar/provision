@@ -37,6 +37,7 @@ func TestInfo(t *testing.T) {
 				"change-stage-map",
 				"job-exit-states",
 				"package-repository-handling",
+				"profileless-machine",
 			},
 		},
 		expectErr: nil,

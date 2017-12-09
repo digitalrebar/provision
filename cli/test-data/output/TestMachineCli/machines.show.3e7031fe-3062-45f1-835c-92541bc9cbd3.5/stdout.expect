@@ -11,15 +11,16 @@
   },
   "Name": "john",
   "OS": "",
+  "Params": {
+    "jj": 3
+  },
   "Profile": {
     "Available": false,
     "Description": "",
-    "Errors": [],
-    "Meta": {},
+    "Errors": null,
+    "Meta": null,
     "Name": "",
-    "Params": {
-      "jj": 3
-    },
+    "Params": null,
     "ReadOnly": false,
     "Validated": false
   },

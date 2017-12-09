@@ -7,7 +7,7 @@ package models
 type Template struct {
 	Validation
 	Access
-	MetaData
+	Meta
 	// ID is a unique identifier for this template.  It cannot change once it is set.
 	//
 	// required: true
@@ -35,7 +35,9 @@ func (t *Template) Key() string {
 
 func (t *Template) Fill() {
 	t.Validation.fill()
-	t.MetaData.fill()
+	if t.Meta == nil {
+		t.Meta = Meta{}
+	}
 }
 
 func (t *Template) AuthKey() string {

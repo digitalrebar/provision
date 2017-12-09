@@ -10,7 +10,7 @@ import "github.com/xeipuuv/gojsonschema"
 type Param struct {
 	Validation
 	Access
-	MetaData
+	Meta
 	// Name is the name of the param.  Params must be uniquely named.
 	//
 	// required: true
@@ -70,7 +70,9 @@ func (p *Param) Key() string {
 }
 
 func (p *Param) Fill() {
-	p.MetaData.fill()
+	if p.Meta == nil {
+		p.Meta = Meta{}
+	}
 	p.Validation.fill()
 }
 

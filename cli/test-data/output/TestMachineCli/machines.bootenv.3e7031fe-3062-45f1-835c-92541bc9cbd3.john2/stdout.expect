@@ -13,13 +13,14 @@
   },
   "Name": "john",
   "OS": "",
+  "Params": {},
   "Profile": {
     "Available": false,
     "Description": "",
-    "Errors": [],
-    "Meta": {},
+    "Errors": null,
+    "Meta": null,
     "Name": "",
-    "Params": {},
+    "Params": null,
     "ReadOnly": false,
     "Validated": false
   },
