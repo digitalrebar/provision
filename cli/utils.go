@@ -43,7 +43,7 @@ func bufOrFile(src string) ([]byte, error) {
 	if s, err := os.Lstat(src); err == nil && s.Mode().IsRegular() {
 		return ioutil.ReadFile(src)
 	}
-	if u, err := url.Parse(src); err == nil && u.Scheme != "" {
+	if u, err := url.Parse(src); err == nil && (u.Scheme == "http" || u.Scheme == "https") {
 		tr := &http.Transport{
 			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 		}
@@ -55,6 +55,8 @@ func bufOrFile(src string) ([]byte, error) {
 			body, err := ioutil.ReadAll(res.Body)
 			return []byte(body), err
 		}
+	} else if err == nil && u.Scheme == "file" {
+		return nil, fmt.Errorf("file:// scheme not supported")
 	}
 	return []byte(src), nil
 }
