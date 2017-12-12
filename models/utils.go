@@ -33,6 +33,7 @@ type Slicer interface {
 func All() []Model {
 	return []Model{
 		&BootEnv{},
+		&Interface{},
 		&Job{},
 		&Lease{},
 		&Machine{},
@@ -42,6 +43,7 @@ func All() []Model {
 		&Pref{},
 		&Profile{},
 		&Reservation{},
+		&Stage{},
 		&Subnet{},
 		&Task{},
 		&Template{},
