@@ -1,6 +1,7 @@
 package api
 
 import (
+	"net"
 	"runtime"
 	"testing"
 
@@ -12,6 +13,7 @@ func TestInfo(t *testing.T) {
 	test := &crudTest{
 		name: "get info",
 		expectRes: &models.Info{
+			Address:            net.IPv4(127, 0, 0, 1),
 			ApiPort:            10011,
 			FilePort:           10012,
 			PxePort:            4011,

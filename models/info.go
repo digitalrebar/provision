@@ -1,5 +1,7 @@
 package models
 
+import "net"
+
 // swagger:model
 type Stat struct {
 	// required: true
@@ -36,6 +38,8 @@ type Info struct {
 	PxeEnabled bool `json:"pxe_enabled"`
 	// required: true
 	ProvisionerEnabled bool `json:"prov_enabled"`
+	// required: true
+	Address net.IP `json:"address"`
 	// required: true
 	Stats    []*Stat  `json:"stats"`
 	Features []string `json:"features"`
