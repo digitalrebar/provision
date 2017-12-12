@@ -23,9 +23,17 @@ type Info struct {
 	// required: true
 	FilePort int `json:"file_port"`
 	// required: true
+	DhcpPort int `json:"dhcp_port"`
+	// required: true
+	PxePort int `json:"pxe_port"`
+	// required: true
+	TftpPort int `json:"tftp_port"`
+	// required: true
 	TftpEnabled bool `json:"tftp_enabled"`
 	// required: true
 	DhcpEnabled bool `json:"dhcp_enabled"`
+	// required: true
+	PxeEnabled bool `json:"pxe_enabled"`
 	// required: true
 	ProvisionerEnabled bool `json:"prov_enabled"`
 	// required: true

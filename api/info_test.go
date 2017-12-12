@@ -14,8 +14,11 @@ func TestInfo(t *testing.T) {
 		expectRes: &models.Info{
 			ApiPort:            10011,
 			FilePort:           10012,
+			PxePort:            4011,
+			TftpPort:           10013,
 			ProvisionerEnabled: true,
 			TftpEnabled:        true,
+			PxeEnabled:         true,
 			Stats: []*models.Stat{
 				{
 					Name:  "machines.count",
