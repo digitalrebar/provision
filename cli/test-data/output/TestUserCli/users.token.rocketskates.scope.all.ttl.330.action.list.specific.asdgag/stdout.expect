@@ -1,9 +1,11 @@
 RE:
 {
   "Info": {
+    "address": "127.0.0.1",
     "api_port": 10001,
     "arch": "[\s\S]*",
-    "dhcp_enabled": false,
+    "dhcp_enabled": true,
+    "dhcp_port": 10004,
     "features": \[
       "api-v3",
       "sane-exit-codes",
@@ -17,6 +19,8 @@ RE:
     "id": "Fred",
     "os": "[\s\S]*",
     "prov_enabled": true,
+    "pxe_enabled": true,
+    "pxe_port": 10005,
     "stats": \[
       {
         "count": 0,
@@ -28,6 +32,7 @@ RE:
       }
     \],
     "tftp_enabled": true,
+    "tftp_port": 10003,
     "version": "[\s\S]*"
   },
   "Token": "[\s\S]*"
