@@ -59,7 +59,7 @@ func addInfoCommands() (res *cobra.Command) {
 				Port           int
 			}
 			results := map[string]*status{}
-			for _, service := range []string{"API", "Static", "TFTP", "DHCP", "BINC"} {
+			for _, service := range []string{"API", "Static", "TFTP", "DHCP", "BINL"} {
 				alive := false
 				switch service {
 				case "API":
@@ -109,7 +109,7 @@ func addInfoCommands() (res *cobra.Command) {
 						}
 					}
 					results[service] = &status{d.DhcpEnabled, alive, d.DhcpPort}
-				case "BINC":
+				case "BINL":
 					if d.PxeEnabled {
 						xid := make([]byte, 4)
 						rand.Read(xid)

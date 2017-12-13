@@ -4,7 +4,7 @@
     "Enabled": true,
     "Port": 10001
   },
-  "BINC": {
+  "BINL": {
     "Alive": true,
     "Enabled": true,
     "Port": 10005
