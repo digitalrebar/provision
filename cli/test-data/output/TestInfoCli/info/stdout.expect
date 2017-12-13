@@ -5,6 +5,7 @@ Usage:
 
 Available Commands:
   get         Get info about DRP
+  status      Get aliveness status of the various DRP ports
 
 Flags:
   -h, --help   help for info

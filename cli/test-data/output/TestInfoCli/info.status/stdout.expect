@@ -1,0 +1,27 @@
+{
+  "API": {
+    "Alive": true,
+    "Enabled": true,
+    "Port": 10001
+  },
+  "BINC": {
+    "Alive": true,
+    "Enabled": true,
+    "Port": 10005
+  },
+  "DHCP": {
+    "Alive": true,
+    "Enabled": true,
+    "Port": 10004
+  },
+  "Static": {
+    "Alive": true,
+    "Enabled": true,
+    "Port": 10002
+  },
+  "TFTP": {
+    "Alive": true,
+    "Enabled": true,
+    "Port": 10003
+  }
+}

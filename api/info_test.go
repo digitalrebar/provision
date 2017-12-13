@@ -16,11 +16,13 @@ func TestInfo(t *testing.T) {
 			Address:            net.IPv4(127, 0, 0, 1),
 			ApiPort:            10011,
 			FilePort:           10012,
-			PxePort:            4011,
+			PxePort:            10015,
+			DhcpPort:           10014,
 			TftpPort:           10013,
 			ProvisionerEnabled: true,
 			TftpEnabled:        true,
 			PxeEnabled:         true,
+			DhcpEnabled:        true,
 			Stats: []*models.Stat{
 				{
 					Name:  "machines.count",
