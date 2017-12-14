@@ -1,0 +1,55 @@
+{
+  "Available": true,
+  "BootParams": "rootflags=loop root=live:/sledgehammer.iso rootfstype=auto ro liveimg rd_NO_LUKS rd_NO_MD rd_NO_DM provisioner.web={{.ProvisionerURL}} rebar.web={{.CommandURL}} rs.uuid={{.Machine.UUID}} rs.api={{.ApiURL}}",
+  "Description": "",
+  "Errors": [],
+  "Initrds": [
+    "stage1.img"
+  ],
+  "Kernel": "vmlinuz0",
+  "Meta": {},
+  "Name": "phredhammer",
+  "OS": {
+    "Codename": "",
+    "Family": "",
+    "IsoFile": "",
+    "IsoSha256": "",
+    "IsoUrl": "",
+    "Name": "sledgehammer/708de8b878e3818b1c1bb598a56de968939f9d4b",
+    "Version": ""
+  },
+  "OnlyUnknown": false,
+  "OptionalParams": [
+    "ntp_servers",
+    "access_keys"
+  ],
+  "ReadOnly": false,
+  "RequiredParams": [],
+  "Templates": [
+    {
+      "Contents": "DEFAULT discovery\nPROMPT 0\nTIMEOUT 10\nLABEL discovery\n  KERNEL {{.Env.PathFor \"tftp\" .Env.Kernel}}\n  INITRD {{.Env.JoinInitrds \"tftp\"}}\n  APPEND {{.BootParams}}\n  IPAPPEND 2\n",
+      "ID": "",
+      "Name": "pxelinux",
+      "Path": "pxelinux.cfg/{{.Machine.HexAddress}}"
+    },
+    {
+      "Contents": "delay=2\ntimeout=20\nverbose=5\nimage={{.Env.PathFor \"tftp\" .Env.Kernel}}\ninitrd={{.Env.JoinInitrds \"tftp\"}}\nappend={{.BootParams}}\n",
+      "ID": "",
+      "Name": "elilo",
+      "Path": "{{.Machine.HexAddress}}.conf"
+    },
+    {
+      "Contents": "#!ipxe\nkernel {{.Env.PathFor \"http\" .Env.Kernel}} {{.BootParams}} BOOTIF=01-${netX/mac:hexhyp}\n{{ range $initrd := .Env.Initrds }}\ninitrd {{$.Env.PathFor \"http\" $initrd}}\n{{ end }}\nboot\n",
+      "ID": "",
+      "Name": "ipxe",
+      "Path": "{{.Machine.Address}}.ipxe"
+    },
+    {
+      "Contents": "#!/bin/bash\n# Copyright 2017, RackN\n#\n# Licensed under the Apache License, Version 2.0 (the \"License\");\n# you may not use this file except in compliance with the License.\n# You may obtain a copy of the License at\n#\n#  http://www.apache.org/licenses/LICENSE-2.0\n#\n# Unless required by applicable law or agreed to in writing, software\n# distributed under the License is distributed on an \"AS IS\" BASIS,\n# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n# See the License for the specific language governing permissions and\n# limitations under the License.\n#\n\n# We get the following variables from start-up.sh\n# MAC BOOTDEV ADMIN_IP DOMAIN HOSTNAME HOSTNAME_MAC MYIP\n\nset -x\nshopt -s extglob\nexport PS4=\"${BASH_SOURCE}@${LINENO}(${FUNCNAME[0]}): \"\ncp /usr/share/zoneinfo/GMT /etc/localtime\n\n# Set up just enough infrastructure to let the jigs work.\n# Allow client to pass http proxy environment variables\necho \"AcceptEnv http_proxy https_proxy no_proxy\" \u003e\u003e /etc/ssh/sshd_config\nservice sshd restart\n\n# Synchronize our date\n{{ if (.ParamExists \"ntp_servers\") }}\nntpdate \"{{index (.Param \"ntp_servers\") 0}}\"\n{{ end }}\n\n{{ if (.ParamExists \"access_keys\") }}\nmkdir -p /root/.ssh\ncat \u003e/root/.ssh/authorized_keys \u003c\u003cEOF\n### BEGIN GENERATED CONTENT\n{{ range $key := .Param \"access_keys\" }}{{$key}}{{ end }}\n#### END GENERATED CONTENT\nEOF\n{{ end }}\n\n# The last line in this script must always be exit 0!!\nexit 0\n",
+      "ID": "",
+      "Name": "control.sh",
+      "Path": "{{.Machine.Path}}/control.sh"
+    }
+  ],
+  "Validated": true
+}

@@ -1,12 +1,15 @@
 package cli
 
 import (
+	"bytes"
 	"io/ioutil"
+	"net/http"
 	"os"
+	"path"
 	"testing"
+	"time"
 
-	"github.com/digitalrebar/provision/backend"
-	"github.com/digitalrebar/provision/midlayer"
+	"github.com/pin/tftp"
 )
 
 func TestBootEnvCli(t *testing.T) {
@@ -111,8 +114,6 @@ func TestBootEnvCli(t *testing.T) {
 
 	cliTest(false, true, "bootenvs", "install", "bootenvs/fredhammer.yml").run(t)
 
-	midlayer.ServeStatic("127.0.0.1:10003", backend.NewFS("test-data", nil), nil, backend.NewPublishers(nil))
-
 	os.RemoveAll("bootenvs/fredhammer.yml")
 	if err := os.MkdirAll("bootenvs", 0755); err != nil {
 		t.Errorf("FAIL: Failed to create bootenvs dir: %v\n", err)
@@ -166,5 +167,62 @@ func TestBootEnvCli(t *testing.T) {
 	os.RemoveAll("templates")
 	os.RemoveAll("isos")
 	os.RemoveAll("ic")
+	os.RemoveAll(path.Join(tmpDir, "tftpboot", "sledgehammer"))
+	verifyClean(t)
+}
+
+func TestBootEnvLookaside(t *testing.T) {
+	cliTest(false, false, "profiles", "add", "global", "param", "package-repositories", "to", "-").Stdin(`
+- tag: "sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b"
+  os:
+    - "sledgehammer/708de8b878e3818b1c1bb598a56de968939f9d4b"
+  installSource: true
+  url: "http://127.0.0.1:10003/hammertime"
+`).run(t)
+	cliTest(false, false, "bootenvs", "install", "test-data/phredhammer.yml").run(t)
+	time.Sleep(5 * time.Second)
+	cliTest(false, false, "bootenvs", "show", "phredhammer").run(t)
+	resp, err := http.Get("http://127.0.0.1:10002/sledgehammer/708de8b878e3818b1c1bb598a56de968939f9d4b/")
+	if err != nil {
+		t.Errorf("Error %v looking for redirected phredhammer files", err)
+	} else if resp.StatusCode != 200 {
+		t.Errorf("Invalid status code looking for phredhammer files: %d", resp.StatusCode)
+	}
+	if resp != nil {
+		expected := `<pre>
+<a href="sha1sums">sha1sums</a>
+<a href="stage1.img">stage1.img</a>
+<a href="stage2.img">stage2.img</a>
+<a href="vmlinuz0">vmlinuz0</a>
+</pre>
+`
+		body, _ := ioutil.ReadAll(resp.Body)
+
+		resp.Body.Close()
+		if string(body) != expected {
+			t.Errorf("Wanted body\n`%s`\nnot\n`%s`\n", expected, string(body))
+		} else {
+			t.Logf("Lookaside from \nhttp://127.0.0.1:10002/sledgehammer/708de8b878e3818b1c1bb598a56de968939f9d4b/\nto\nhttp://127.0.0.1:10003/hammertime\nworked")
+		}
+	}
+	c, err := tftp.NewClient("127.0.0.1:10003")
+	if err == nil {
+		expected := "GREG-vmlinuz0\n"
+		if src, err := c.Receive("sledgehammer/708de8b878e3818b1c1bb598a56de968939f9d4b/vmlinuz0", ""); err == nil {
+			buf := &bytes.Buffer{}
+			src.WriteTo(buf)
+			body := buf.String()
+			if body != expected {
+				t.Errorf("Wanted body\n`%s`\nnot\n`%s`\n", expected, body)
+			} else {
+				t.Logf("Lookaside from \nhttp://127.0.0.1:10002/sledgehammer/708de8b878e3818b1c1bb598a56de968939f9d4b/vmlinuz0\nto\nhttp://127.0.0.1:10003/hammertime/vmlinuz0\nworked")
+			}
+		}
+	}
+	cliTest(false, false, "profiles", "remove", "global", "param", "package-repositories").run(t)
+	cliTest(false, false, "bootenvs", "destroy", "phredhammer").run(t)
+	cliTest(false, false, "templates", "destroy", "local3-pxelinux.tmpl").run(t)
+	cliTest(false, false, "templates", "destroy", "local3-elilo.tmpl").run(t)
+	cliTest(false, false, "templates", "destroy", "local3-ipxe.tmpl").run(t)
 	verifyClean(t)
 }
