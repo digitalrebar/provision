@@ -17,7 +17,7 @@ import (
 
 	"github.com/digitalrebar/provision/api"
 	"github.com/digitalrebar/provision/backend"
-  "github.com/digitalrebar/provision/embedded"
+	"github.com/digitalrebar/provision/embedded"
 	"github.com/digitalrebar/provision/midlayer"
 	"github.com/digitalrebar/provision/server"
 	"github.com/jessevdk/go-flags"
