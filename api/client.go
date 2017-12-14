@@ -523,11 +523,11 @@ func (c *Client) GetModel(prefix, key string, params ...string) (models.Model, e
 	if err != nil {
 		return nil, err
 	}
-	return res, c.Req().UrlFor(res.Prefix(), key).Do(res)
+	return res, c.Req().UrlFor(res.Prefix(), key).Params(params...).Do(res)
 }
 
 func (c *Client) GetModelForPatch(prefix, key string, params ...string) (models.Model, models.Model, error) {
-	ref, err := c.GetModel(prefix, key)
+	ref, err := c.GetModel(prefix, key, params...)
 	if err != nil {
 		return nil, nil, err
 	}
