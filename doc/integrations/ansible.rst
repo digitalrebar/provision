@@ -1,3 +1,6 @@
+
+.. _rs_ansible:
+
 Dyamic Ansible Inventory (w Kubernetes via Kubespray Ansible)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
