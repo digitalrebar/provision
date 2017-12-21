@@ -16,7 +16,9 @@ import (
 	"time"
 
 	"github.com/digitalrebar/provision/api"
-	"github.com/digitalrebar/provision/embedded"
+	"github.com/digitalrebar/provision/backend"
+  "github.com/digitalrebar/provision/embedded"
+	"github.com/digitalrebar/provision/midlayer"
 	"github.com/digitalrebar/provision/server"
 	"github.com/jessevdk/go-flags"
 )
@@ -404,6 +406,7 @@ func TestMain(m *testing.M) {
 		"--debug-frontend", "0",
 		"--debug-renderer", "0",
 		"--debug-plugins", "0",
+		"--debug-bootenv", "0",
 		"--local-content", "directory:../test-data/etc/dr-provision?codec=yaml",
 		"--default-content", "file:../test-data/usr/share/dr-provision/default.yaml?codec=yaml",
 		"--base-token-secret", "token-secret-token-secret-token1",
@@ -450,6 +453,7 @@ func TestMain(m *testing.M) {
 		myToken = session.Token()
 		session.Close()
 		session = nil
+		midlayer.ServeStatic("127.0.0.1:10003", backend.NewFS("test-data", nil), nil, backend.NewPublishers(nil))
 		ret = m.Run()
 	}
 
