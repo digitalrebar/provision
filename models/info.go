@@ -27,7 +27,7 @@ type Info struct {
 	// required: true
 	DhcpPort int `json:"dhcp_port"`
 	// required: true
-	PxePort int `json:"pxe_port"`
+	BinlPort int `json:"binl_port"`
 	// required: true
 	TftpPort int `json:"tftp_port"`
 	// required: true
@@ -35,7 +35,7 @@ type Info struct {
 	// required: true
 	DhcpEnabled bool `json:"dhcp_enabled"`
 	// required: true
-	PxeEnabled bool `json:"pxe_enabled"`
+	BinlEnabled bool `json:"binl_enabled"`
 	// required: true
 	ProvisionerEnabled bool `json:"prov_enabled"`
 	// required: true
