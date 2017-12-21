@@ -81,7 +81,7 @@ Table of Contents
    
    doc/quickstart
    doc/install
-   doc/integrations/ansible
+   doc/integrations
    doc/configuring
    doc/release
    doc/upgrade
