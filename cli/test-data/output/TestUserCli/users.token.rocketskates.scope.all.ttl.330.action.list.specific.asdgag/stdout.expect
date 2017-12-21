@@ -4,6 +4,8 @@ RE:
     "address": "127.0.0.1",
     "api_port": 10001,
     "arch": "[\s\S]*",
+    "binl_enabled": true,
+    "binl_port": 10005,
     "dhcp_enabled": true,
     "dhcp_port": 10004,
     "features": \[
@@ -19,8 +21,6 @@ RE:
     "id": "Fred",
     "os": "[\s\S]*",
     "prov_enabled": true,
-    "pxe_enabled": true,
-    "pxe_port": 10005,
     "stats": \[
       {
         "count": 0,

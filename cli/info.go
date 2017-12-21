@@ -110,10 +110,10 @@ func addInfoCommands() (res *cobra.Command) {
 					}
 					results[service] = &status{d.DhcpEnabled, alive, d.DhcpPort}
 				case "BINL":
-					if d.PxeEnabled {
+					if d.BinlEnabled {
 						xid := make([]byte, 4)
 						rand.Read(xid)
-						dest := &net.UDPAddr{d.Address, d.PxePort, ""}
+						dest := &net.UDPAddr{d.Address, d.BinlPort, ""}
 						packet := dhcp.RequestPacket(dhcp.Request, nil, net.IPv4(0, 0, 0, 0), xid, false, nil)
 						conn, err := net.ListenUDP("udp", &net.UDPAddr{Port: 0})
 						if err == nil {
@@ -132,7 +132,7 @@ func addInfoCommands() (res *cobra.Command) {
 							}
 						}
 					}
-					results[service] = &status{d.PxeEnabled, alive, d.PxePort}
+					results[service] = &status{d.BinlEnabled, alive, d.BinlPort}
 				}
 			}
 			prettyPrint(results)
