@@ -64,12 +64,17 @@ func (v *Validation) fill() {
 	}
 }
 
+type ChangeForcer interface {
+	ForceChange()
+	ChangeForced() bool
+}
+
 func (v *Validation) ForceChange() {
 	v.forceChange = true
 }
 
 func (v *Validation) ChangeForced() bool {
-	return v.forceChange
+	return v != nil && v.forceChange
 }
 
 func (v *Validation) Errorf(fmtStr string, args ...interface{}) {

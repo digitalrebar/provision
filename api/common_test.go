@@ -28,6 +28,7 @@ type crudTest struct {
 func (l crudTest) run(t *testing.T) {
 	t.Helper()
 	t.Logf("Testing %s", l.name)
+	session.TraceToken(l.name)
 	if l.clean != nil {
 		defer l.clean()
 	}
@@ -35,26 +36,27 @@ func (l crudTest) run(t *testing.T) {
 	if l.expectErr == nil {
 		if err == nil {
 			if equal, delta := diff(res, l.expectRes); !equal {
-				t.Errorf("Unexpected result:\n%s\n\nDiff:%s",
+				t.Errorf("ERROR: Unexpected result:\n%s\n\nDiff:%s",
 					pretty(res),
 					delta)
 			} else {
 				t.Logf("Got expected results")
 			}
 		} else {
-			t.Errorf("Got unexpected error: %#v", err)
+			t.Errorf("ERROR: Got unexpected error: %#v", err)
 		}
 	} else {
 		if err == nil {
-			t.Errorf("Did not get expected error %v", l.expectErr)
+			t.Errorf("ERROR: Did not get expected error %v", l.expectErr)
 			t.Errorf("Got result: %v", pretty(res))
 		} else if !reflect.DeepEqual(err, l.expectErr) {
-			t.Errorf("Expected error %#v", l.expectErr)
+			t.Errorf("ERROR: Expected error %#v", l.expectErr)
 			t.Errorf("Got error %#v", err)
 		} else {
 			t.Logf("Got expected error %v", err)
 		}
 	}
+	session.TraceToken("")
 }
 
 func rt(t *testing.T,
@@ -179,9 +181,6 @@ func TestMain(m *testing.M) {
 		"--fake-pinger",
 		"--drp-id", "Fred",
 		"--backend", "memory:///",
-		"--debug-frontend", "0",
-		"--debug-renderer", "0",
-		"--debug-plugins", "0",
 		"--local-content", "directory:../test-data/etc/dr-provision?codec=yaml",
 		"--default-content", "file:../test-data/usr/share/dr-provision/default.yaml?codec=yaml",
 	}

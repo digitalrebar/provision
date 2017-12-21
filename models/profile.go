@@ -71,11 +71,11 @@ func (b *Profile) ToModels(obj interface{}) []Model {
 
 // match Paramer interface
 func (b *Profile) GetParams() map[string]interface{} {
-	return b.Params
+	return copyMap(b.Params)
 }
 
 func (b *Profile) SetParams(p map[string]interface{}) {
-	b.Params = p
+	b.Params = copyMap(p)
 }
 
 func (b *Profile) SetName(n string) {

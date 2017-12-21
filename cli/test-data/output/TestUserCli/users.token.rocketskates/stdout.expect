@@ -15,7 +15,8 @@ RE:
       "change-stage-map",
       "job-exit-states",
       "package-repository-handling",
-      "profileless-machine"
+      "profileless-machine",
+      "threaded-log-levels"
     \],
     "file_port": 10002,
     "id": "Fred",

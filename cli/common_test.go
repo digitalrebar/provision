@@ -83,6 +83,7 @@ type CliTest struct {
 	stdin          string
 	expectedStdOut string
 	expectedStdErr string
+	trace          string
 }
 
 func (c CliTest) run(t *testing.T) {
@@ -91,6 +92,11 @@ func (c CliTest) run(t *testing.T) {
 }
 func (c *CliTest) Stdin(s string) *CliTest {
 	c.stdin = s
+	return c
+}
+
+func (c *CliTest) Trace(s string) *CliTest {
+	c.trace = s
 	return c
 }
 
@@ -188,7 +194,8 @@ func reTest(t *testing.T, expected, actual string) bool {
 func testCli(t *testing.T, test CliTest) {
 	t.Helper()
 	var err error
-	testPath := path.Join("test-data", "output", test.loc(t.Name()))
+	loc := test.loc(t.Name())
+	testPath := path.Join("test-data", "output", loc)
 	expectOut := path.Join(testPath, "stdout.expect")
 	expectErr := path.Join(testPath, "stderr.expect")
 	realOut := path.Join(testPath, "stdout.actual")
@@ -254,6 +261,9 @@ func testCli(t *testing.T, test CliTest) {
 		for _, a := range test.args {
 			args = append(args, a)
 		}
+	}
+	if test.trace != "" {
+		args = append(args, "--trace", test.trace, "--traceToken", loc)
 	}
 	if session != nil {
 		session.Close()
@@ -403,10 +413,6 @@ func TestMain(m *testing.M) {
 		"--fake-pinger",
 		"--drp-id", "Fred",
 		"--backend", "memory:///",
-		"--debug-frontend", "0",
-		"--debug-renderer", "0",
-		"--debug-plugins", "0",
-		"--debug-bootenv", "0",
 		"--local-content", "directory:../test-data/etc/dr-provision?codec=yaml",
 		"--default-content", "file:../test-data/usr/share/dr-provision/default.yaml?codec=yaml",
 		"--base-token-secret", "token-secret-token-secret-token1",

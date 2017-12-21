@@ -30,6 +30,8 @@ var (
 	noPretty         = false
 	ref              = ""
 	default_ref      = ""
+	trace            = ""
+	traceToken       = ""
 	registrations    = []registerSection{}
 )
 
@@ -39,19 +41,20 @@ func addRegistrar(rs registerSection) {
 
 var ppr = func(c *cobra.Command, a []string) {
 	c.SilenceUsage = true
-	if session != nil {
-		return
+	if session == nil {
+		var err error
+		if token != "" {
+			session, err = api.TokenSession(endpoint, token)
+		} else {
+			session, err = api.UserSession(endpoint, username, password)
+		}
+		if err != nil {
+			log.Printf("Error creating session: %v", err)
+			os.Exit(1)
+		}
 	}
-	var err error
-	if token != "" {
-		session, err = api.TokenSession(endpoint, token)
-	} else {
-		session, err = api.UserSession(endpoint, username, password)
-	}
-	if err != nil {
-		log.Printf("Error creating session: %v", err)
-		os.Exit(1)
-	}
+	session.Trace(trace)
+	session.TraceToken(traceToken)
 }
 
 func NewApp() *cobra.Command {
@@ -100,6 +103,12 @@ func NewApp() *cobra.Command {
 	app.PersistentFlags().StringVarP(&ref,
 		"ref", "r", default_ref,
 		"A reference object for update commands that can be a file name, yaml, or json blob")
+	app.PersistentFlags().StringVarP(&trace,
+		"trace", "t", "",
+		"The log level API requests should be logged at on the server side")
+	app.PersistentFlags().StringVarP(&traceToken,
+		"traceToken", "Z", "",
+		"A token that individual traced requests should report in the server logs")
 
 	for _, rs := range registrations {
 		rs(app)
