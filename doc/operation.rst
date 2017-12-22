@@ -258,11 +258,10 @@ Set the NTP Server pool via DHCP Option 42 for subnet "local_subnet":
 
     drpcli subnets set local_subnet option 42 to "0.pool.ntp.org"
 
-Set the DHCP IP assignment from the following pick list for subnet "local_subnet".  See :ref:`_rs_model_subnet` for a detailed description of the available Picker types:
+Set the DHCP IP assignment from the following pick list for subnet "local_subnet".  See :ref:`rs_model_pickers` for a detailed description of the available Picker types:
   ::
 
     drpcli subnets pickers local_subnet hint,nextFree,mostExpired
-
 
 Set the nextserver for PXE operation for subnet "local_subnet":
   ::
@@ -576,6 +575,8 @@ To create a user, do the following:
 
 .. note:: This :ref:`rs_model_user` will *NOT* be able to access the system without additional admin action.
 
+
+.. _rs_grant_token:
 
 Granting a User Token
 ---------------------
