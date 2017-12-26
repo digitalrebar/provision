@@ -1,3 +1,6 @@
+
+.. _rs_Trademark:
+
 Trademark
 =========
 
@@ -23,11 +26,11 @@ It is acceptable to use the Digital Rebar logos when referencing the project or 
 
 Large Icon:
 
-.. image:: /images/digital_rebar_small.png
+.. image:: /doc/images/digital_rebar_small.png
 
 Small Icon
 
-.. image:: /images/digitalrebar.ico
+.. image:: /doc/images/digitalrebar.ico
    :height: 25px
 
 Mascot

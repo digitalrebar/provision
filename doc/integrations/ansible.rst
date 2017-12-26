@@ -68,11 +68,15 @@ Optionally, ansible/groupvars maps profile and their params into groups:vars.
 
 Optionally, ansible/hostvars maps variables into the hostvars variable lists.
 
+  ::
+
     "ansible/hostvars": {
       "ansible_user": "root"
     },
 
 Optionally, ansible/parent-groups can be used to create children groups.
+
+  ::
 
     "ansible/parent-groups": {
       "kube-cluster": [

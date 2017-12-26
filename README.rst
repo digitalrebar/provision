@@ -12,7 +12,7 @@ Digital Rebar Provision
 
 **DR Provision** is a APLv2 simple Golang executable that provides a simple yet complete API-driven DHCP/PXE/TFTP provisioning system. It is designed to stand alone or operate as part of the `Digital Rebar <http://rebar.digital>`_ management system.
 
-Simply, Digital Rebar Provisioner acts as a Cobbler Replacement
+Simply, Digital Rebar Provisioner acts as a Cobbler Replacement - with additional per-Machine workflow provisioning capabilities.
 
 .. figure::  doc/images/dr_provision.png
    :align:   right
@@ -43,14 +43,16 @@ Community Resources
 
 .. image:: https://readthedocs.org/projects/provision/badge/?version=stable
   :target: http://provision.readthedocs.io/en/stable/?badge=stable
-  :alt: Documentation Stable Status
+  :alt: Documentation STABLE Status
 
 .. image:: https://readthedocs.org/projects/provision/badge/?version=latest
   :target: http://provision.readthedocs.io/en/latest/?badge=latest
   :alt: Documentation Latest Status
 
 
-* `Mailing List <http://bit.ly/digitalrebarlist>`_ and `Live Chat <https://gitter.im/digitalrebar/core?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge>`_  (Gitter.im) and Freenode #DigitalRebar
+* `Mailing List <http://bit.ly/digitalrebarlist>`_ 
+* Chat/messaging via the Digital Rebar ``#community`` channel is our preferred communication method.  If you do not have a Slack invite to our channel, you can `Request a Slack Invite <http://www.rackn.com/support/slack/>`_
+* Alternate chat vi Gitter `Live Chat <https://gitter.im/digitalrebar/core?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge>`_  (Gitter.im) and IRC on Freenode #DigitalRebar
 * `Issues and Features <https://github.com/digitalrebar/provision/issues>`_
 * Full `Documentation <http://provision.readthedocs.io/en/stable/>`_ (Github `/doc <https://github.com/digitalrebar/provision/tree/master/doc>`_ sources are updatable via pull request).
 * Videos on the `DR Provision Playlist <https://www.youtube.com/playlist?list=PLXPBeIrpXjfilUi7Qj1Sl0UhjxNRSC7nx>`_ provide both specific and general background information.
@@ -61,11 +63,11 @@ Community Resources
 Install & Quick Start
 ---------------------
 
-Our `Stable Quick Start <http://provision.readthedocs.io/en/stable/doc/quickstart.html>`_ has fast play-with-it steps.  Don't worry, they are very simple and take about 5 minutes.
+Our `Stable Quick Start <http://provision.readthedocs.io/en/stable/doc/quickstart.html>`_ has fast play-with-it steps.  Don't worry, they are very simple and take 10 to 20 minutes.
 
 Want the `Latest Quick Start <http://provision.readthedocs.io/en/tip/doc/quickstart.html>`_? You'll have access to the newest features in tested work for the next release.  This is NOT the bleeding edge! 
 
-Regular `Install <http://provision.readthedocs.io/en/latest/doc/install.html>`_ for more details on the install steps.  These include production options. (`Previous Version Docs<http://provision.readthedocs.io/en/latest/doc/quickstart.html>`_)
+Regular `Install <http://provision.readthedocs.io/en/latest/doc/install.html>`_ for more details on the install steps.  These include production options. (`Previous Version Docs <http://provision.readthedocs.io/en/latest/doc/quickstart.html>`_)
 
 .. _rs_toc:
 
@@ -98,4 +100,7 @@ Table of Contents
    doc/dev/dev-cli
    doc/dev/dev-docs
    doc/faq-troubleshooting
+   CONTRIBUTING
+   Trademark
    LICENSE
+
