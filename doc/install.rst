@@ -159,10 +159,12 @@ To enable any non-privileged user to start up the dr-provision binary and bind t
 
 # in "isolated" mode, as the user you installed DRP as:
   ::
+
     sudo setcap "cap_net_raw,cap_net_bind_service=+ep" $HOME/bin/linux/amd64/dr-provision
 
 or, in "production" mode:
   ::
+
     sudo setcap "cap_net_raw,cap_net_bind_service=+ep" /usr/local/bin/dr-provision
 
 Start the "dr-provision" binary as an ordinary user, and now it will have permission to bind to privileged ports 67 and 69.

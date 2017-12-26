@@ -1,3 +1,6 @@
+
+.. _rs_CONTRIBUTING:
+
 Contributing to Digital Rebar Provision
 ---------------------------------------
 

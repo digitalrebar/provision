@@ -18,5 +18,7 @@ The default installation includes an assets directory that contain pre-existing 
 
 This section of the docs provides some hints and gotchas for the various platforms.
 
+LinuxKit
+--------
 1. :ref:`linuxkit <rs_os_linuxkit>`
 
