@@ -22,7 +22,7 @@ The DHCP server has three primary models
 
 #. DHCP Relay allows other DHCP listeners to forward requests to the Digital Rebar Provision server.  In this mode, the server is passive and can easily co-exist with other DHCP servers.  This mode works with the Provisioner by setting the many optional parameters (like next boot) that are needed for PXE boot processes.
 
-#. Proxy DHCP Mode - this allows for other DHCP servers to forward requests to the DRP Endpoint, and fillin necessary PXE related options that may be missing from the original DHCP request options.  In some environments, very limited DHCP servers may be in use (which do not support the appropriate Options), or a DRP Endpoint user may not have administrative authority over the initial DHCP server in use.   In this case, the :ref:`_rs_model_subnet` should include the following configuration to enable Proxy DHCP mode:
+#. Proxy DHCP Mode - this allows for other DHCP servers to forward requests to the DRP Endpoint, and fillin necessary PXE related options that may be missing from the original DHCP request options.  In some environments, very limited DHCP servers may be in use (which do not support the appropriate Options), or a DRP Endpoint user may not have administrative authority over the initial DHCP server in use.   In this case, the :ref:`rs_model_subnet` should include the following configuration to enable Proxy DHCP mode:
 
   ::
 

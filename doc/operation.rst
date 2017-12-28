@@ -284,7 +284,7 @@ Update a subnet to set it to disabled (do not discover, and do not provision on 
     drpcli subnets update local_subnet '{ "Enabled": false }'
 
 Update a subnet with the contents of the specified JSON file, for subnet "local_subnet":
-    ::
+  ::
 
     drpcli subnets update local_subnet -< update-local_subnet.json 
 

@@ -615,7 +615,10 @@ The final elements of a subnet are the **Strategy** and **Pickers** options.  Th
 They define how a node should be identified (**Strategy**) and the algorithm for picking addresses (**Pickers**).  The strategy can
 only be set to **MAC** currently.  This will use the MAC address of the node as its DHCP identifier.  Others may show up in time.
 
-.. _rs_model_pickers:
+.. _rs_model_pickers: 
+
+Pickers
+~~~~~~~
 
 **Pickers** defines an ordered list of methods to determine the address to hand out.  Currently, this will default to the list:
 *hint*, *nextFree*, and *mostExpired*.  The following options are available for the list.
