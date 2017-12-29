@@ -79,19 +79,22 @@ Table of Contents
 .. toctree::
    :glob:
    :numbered:
-   :maxdepth: 2
+   :maxdepth: 1
    
    doc/quickstart
    doc/install
+   doc/arch/features
+   doc/arch/server
+   doc/arch/data
    doc/integrations
    doc/configuring
    doc/release
    doc/upgrade
-   doc/architecture
    doc/workflows
    doc/deployment
    doc/operation
    doc/os-support
+   doc/os-support/linuxkit
    doc/ui
    doc/Swagger
    doc/cli

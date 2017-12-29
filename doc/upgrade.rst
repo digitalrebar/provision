@@ -122,6 +122,8 @@ Version to Version Notes
 
 In this section, notes about migrating from one release to another will be added.
 
+Release Notes for each version can be found at:  https://github.com/digitalrebar/provision/releases 
+
 v3.0.0 to v3.0.1
 ----------------
 If parameters were added to machines or global, these will need to be manually re-added to the machine or 
@@ -161,7 +163,7 @@ Nothing needs to be done.
 
 v3.0.5 to v3.1.0
 ----------------
-.. _Release Notes: https://github.com/digitalrebar/provision/releases/tag/v3.1.0
+`Release Notes for v3.1.0 <https://github.com/digitalrebar/provision/releases/tag/v3.1.0>`_
 
 The v3.1.0 ``install.sh`` script now supports an ``--upgrade`` flag.  Depending on your installation method (eg ``isolated`` or ``production`` mode), the behavior of the flag will alter the installation process slightly.  Please insure you `Backup`_ your content and configurations first just in case. 
 
@@ -197,13 +199,15 @@ In DRP v3.1.0 and newer, the content will be moved by the ``--upgrade`` function
 
 v3.1.0 to v3.2.0
 ----------------
-.. _Release Notes: https://github.com/digitalrebar/provision/releases/tag/v3.2.0
+
+`Release Notes for v3.2.0 <https://github.com/digitalrebar/provision/releases/tag/v3.2.0>`_
 
 There are fairly significant updates to the DRP Contents structure and layout in v3.2.0.  If you are upgrading to v3.2.0 you must remove any Digital Rebar and RackN content that you have installed in your Provisioning endpoint.  The following outline will help you understand the necessary steps.  If you have any issues with the upgrade process, please drop by the Slack #community channel for additional help. 
 
 Please read the steps through carefully, and make note of the current contents/plugins you currently have installed.  You will have to re-add these elements again.  You absolutely should backup your existing install prior to this upgrade. 
 
   1. Overview
+
     Overiew of the update steps necessary, you should do in the following order.
 
     1. Update DRP to "stable" (v3.2.0)
@@ -213,6 +217,7 @@ Please read the steps through carefully, and make note of the current contents/p
     #. Fix up things
 
   2. Updating DRP Endpoint
+
     If you are running isolated, do this (remove ``--isolated`` if you are not using isolated mode):
 
     ::
@@ -228,6 +233,7 @@ Please read the steps through carefully, and make note of the current contents/p
     If in ``--isolated`` mode, don’t forget to copy ``drpcli`` and/or ``dr-provision`` binaries to where you prefer to keep them (eg ``$HOME/bin`` or ``/usr/local/bin``, etc... .
 
   3. Remove old content
+
     With the rework of content, you need to remove the following content packages if they were previously installed.
 
     ::
@@ -258,6 +264,7 @@ Please read the steps through carefully, and make note of the current contents/p
     Previously, a ``plugin-provider`` was installed separately from a Content of the same name.  
 
   6. Fix things up
+
     This is mainly if you were using the Community Content version of things (``drp-community-content``, and BootEnvs with a prefix of ``ce-``).  The BootEnvs names change, by removing the prefix of "ce-" from the name.
 
     Make sure all the bootenvs are up to date and available.  This is a task you should always do after updating content.  If the BootEnv is marked with an "X" in the UX, or ``"Available": false`` from the CLI/API, you'll need to reload the ISO for the BootEnv.

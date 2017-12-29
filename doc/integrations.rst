@@ -20,7 +20,7 @@ Websockets
 ----------
 :ref:`websocket <rs_websocket>`
 
-KRIB (Kubernetis Rebar Immutable Bootsrapping)
+KRIB (Kubernetes Rebar Immutable Bootsrapping)
 ----------------------------------------------
 :ref:`krib <rs_krib>`
 

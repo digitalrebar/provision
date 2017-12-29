@@ -10,4 +10,4 @@ KRIB Zero Config Video
 ----------------------
 For now, please see:
 
-* `KRIB Zero Config Kubernets Cluster with RackN <https://youtu.be/OMm6Oz1NF6I>`_ on YouTube
+* `KRIB Zero Config Kubernetes Cluster with RackN <https://youtu.be/OMm6Oz1NF6I>`_ on YouTube

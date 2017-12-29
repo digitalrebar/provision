@@ -10,8 +10,7 @@
 Digital Rebar Provision Command Line Interface (CLI)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The Digital Rebar Provision Command Line Interface (drpcli) prevents a simplified way to interact with the
-:ref:`rs_api`.
+The Digital Rebar Provision Command Line Interface (drpcli) provides a simplified way to interact with the :ref:`rs_api`.  The command line tool (``drpcli``) is auto-generated from source code via reference of the API.  This means the CLI should implement 100% coverage of the API.
 
 Overview
 ========
@@ -77,6 +76,8 @@ the terminal/shell or reload the completions.
     sudo drpcli autocomplete /usr/local/etc/bash_completion.d/drpcli
     . /usr/local/etc/bash_completion
 
-Commands
-========
-:ref:`CLI Commands <rs_cli_command>`
+
+Command Line Reference
+======================
+
+:ref:`rs_cli_command`

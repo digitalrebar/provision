@@ -1,8 +1,8 @@
 
 .. _rs_ansible:
 
-Dyamic Ansible Inventory (w Kubernetes via Kubespray Ansible)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Dyamic Ansible Inventory (w/ Kubernetes via Kubespray Ansible)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The following instructions help with Ansible Playbooks via
 Digital Rebar.  The instructions are generic and could be 
