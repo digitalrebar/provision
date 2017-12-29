@@ -122,6 +122,8 @@ Version to Version Notes
 
 In this section, notes about migrating from one release to another will be added.
 
+Release Notes for each version can be found at:  https://github.com/digitalrebar/provision/releases 
+
 v3.0.0 to v3.0.1
 ----------------
 If parameters were added to machines or global, these will need to be manually re-added to the machine or 
