@@ -7,8 +7,8 @@
 
 .. _rs_cli_command:
 
-CLI Commands
-~~~~~~~~~~~~
+CLI Commands Reference
+----------------------
 
 .. toctree::
    :glob:

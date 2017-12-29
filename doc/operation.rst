@@ -48,7 +48,7 @@ Would be equivalent to the HTTP REST API resource as follows:
 
   ::
     
-    https://127.0.0.1:8092/api/v3/templates/create
+    https://127.0.0.1:8092/api/v3/templates/ereate
 
 .. note:: See the :ref:`rs_autocomplete` for BASH shell auto completion.
 
@@ -540,6 +540,8 @@ It might be necessary to change the :ref:`rs_model_bootenv` associated with a :r
 DHCP Operations
 +++++++++++++++
 
+.. _rs_create_reservation:
+
 Creating a Reservation
 ----------------------
 
@@ -557,6 +559,46 @@ Additionally, it is possible to add DHCP options or the Next Boot server.
      drpcli reservations create '{ "Addr": "1.1.1.5", "Token": "08:01:27:33:77:de", "Strategy": "MAC", "NextServer": "1.1.1.2", "Options": [ { "Code": 44, "Value": "1.1.1.1" } ] }'
 
 Remember to add an option 1 (netmask) if a subnet is not being used to fill the default options.
+
+.. _rs_advanced_workflow:
+
+Advanced Workflow
++++++++++++++++++
+
+Placeholder for Advanced Workflow overview.
+
+
+.. _rs_stages:
+
+Stages
+------
+
+Placeholder for Stages information.
+
+
+.. _rs_stagemaps:
+
+Stage Maps
+----------
+
+Placeholder for Stage Map information.
+
+
+.. _rs_tasks:
+
+Tasks
+-----
+
+Placeholder for Tasks information.
+
+
+.. _rs_jobs:
+
+Jobs
+----
+
+Placeholder for Jobs information.
+
 
 User Operations
 +++++++++++++++
