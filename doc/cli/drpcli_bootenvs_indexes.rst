@@ -1,28 +1,23 @@
-drpcli leases create
-====================
+drpcli bootenvs indexes
+=======================
 
-Create a new lease with the passed-in JSON or string key
+Get indexes for bootenvs
 
 Synopsis
 --------
 
-As a useful shortcut, '-' can be passed to indicate that the JSON should
-be read from stdin.
-
-In either case, for the Machine, BootEnv, User, and Profile objects, a
-string may be provided to create a new empty object of that type. For
-User, BootEnv, Machine, and Profile, it will be the object's name.
+Different object types can have indexes on various fields.
 
 ::
 
-    drpcli leases create [json] [flags]
+    drpcli bootenvs indexes [flags]
 
 Options
 -------
 
 ::
 
-      -h, --help   help for create
+      -h, --help   help for indexes
 
 Options inherited from parent commands
 --------------------------------------
@@ -34,11 +29,12 @@ Options inherited from parent commands
       -f, --force             When needed, attempt to force the operation - used on some update/patch calls
       -F, --format string     The serialzation we expect for output.  Can be "json" or "yaml" (default "json")
       -P, --password string   password of the Digital Rebar Provision user (default "r0cketsk8ts")
+      -r, --ref string        A reference object for update commands that can be a file name, yaml, or json blob
       -T, --token string      token of the Digital Rebar Provision access
       -U, --username string   Name of the Digital Rebar Provision user to talk to (default "rocketskates")
 
 SEE ALSO
 --------
 
--  `drpcli leases <drpcli_leases.html>`__ - Access CLI commands relating
-   to leases
+-  `drpcli bootenvs <drpcli_bootenvs.html>`__ - Access CLI commands
+   relating to bootenvs

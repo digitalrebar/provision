@@ -25,6 +25,7 @@ Options inherited from parent commands
       -f, --force             When needed, attempt to force the operation - used on some update/patch calls
       -F, --format string     The serialzation we expect for output.  Can be "json" or "yaml" (default "json")
       -P, --password string   password of the Digital Rebar Provision user (default "r0cketsk8ts")
+      -r, --ref string        A reference object for update commands that can be a file name, yaml, or json blob
       -T, --token string      token of the Digital Rebar Provision access
       -U, --username string   Name of the Digital Rebar Provision user to talk to (default "rocketskates")
 
@@ -34,8 +35,12 @@ SEE ALSO
 -  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
    DigitalRebar Provision API
 -  `drpcli interfaces exists <drpcli_interfaces_exists.html>`__ - See if
-   a interface exists by id
+   a interfaces exists by id
+-  `drpcli interfaces indexes <drpcli_interfaces_indexes.html>`__ - Get
+   indexes for interfaces
 -  `drpcli interfaces list <drpcli_interfaces_list.html>`__ - List all
    interfaces
 -  `drpcli interfaces show <drpcli_interfaces_show.html>`__ - Show a
-   single interface by id
+   single interfaces by id
+-  `drpcli interfaces wait <drpcli_interfaces_wait.html>`__ - Wait for a
+   interface's field to become a value within a number of seconds

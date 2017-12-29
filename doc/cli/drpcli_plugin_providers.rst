@@ -25,6 +25,7 @@ Options inherited from parent commands
       -f, --force             When needed, attempt to force the operation - used on some update/patch calls
       -F, --format string     The serialzation we expect for output.  Can be "json" or "yaml" (default "json")
       -P, --password string   password of the Digital Rebar Provision user (default "r0cketsk8ts")
+      -r, --ref string        A reference object for update commands that can be a file name, yaml, or json blob
       -T, --token string      token of the Digital Rebar Provision access
       -U, --username string   Name of the Digital Rebar Provision user to talk to (default "rocketskates")
 
@@ -38,11 +39,17 @@ SEE ALSO
    plugin\_provider by id
 -  `drpcli plugin\_providers
    exists <drpcli_plugin_providers_exists.html>`__ - See if a
-   plugin\_provider exists by id
+   plugin\_providers exists by id
+-  `drpcli plugin\_providers
+   indexes <drpcli_plugin_providers_indexes.html>`__ - Get indexes for
+   plugin\_providers
 -  `drpcli plugin\_providers list <drpcli_plugin_providers_list.html>`__
    - List all plugin\_providers
 -  `drpcli plugin\_providers show <drpcli_plugin_providers_show.html>`__
-   - Show a single plugin\_provider by id
+   - Show a single plugin\_providers by id
 -  `drpcli plugin\_providers
-   upload <drpcli_plugin_providers_upload.html>`__ - Upload a local file
-   to Digital Rebar Provision
+   upload <drpcli_plugin_providers_upload.html>`__ - Upload a program to
+   act as a plugin\_provider
+-  `drpcli plugin\_providers wait <drpcli_plugin_providers_wait.html>`__
+   - Wait for a plugin\_provider's field to become a value within a
+   number of seconds

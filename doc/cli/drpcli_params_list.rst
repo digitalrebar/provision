@@ -6,42 +6,35 @@ List all params
 Synopsis
 --------
 
-This will list all params by default.
+This will list all params by default. You can narrow down the items
+returned using index filters. Use the "indexes" command to get the
+indexes available for params.
 
-It is possible to specify:
+To filter by indexes, you can use the following stanzas:
 
--  Offset = integer, 0-based inclusive starting point in filter data.
--  Limit = integer, number of items to return
+-   Eq This will return items Equal to according to
+-   Ne This will return items Not Equal to according to
+-   Lt This will return items Less Than according to
+-   Lte This will return items Less Than Or Equal to according to
+-   Gt This will return items Greater Than according to
+-   Gte This will return items Greater Than Or Equal to according to
+-   Between This will return items Greater Than Or Equal to and Less
+   Than Or Equal to according to
+-   Except This will return items Less Than or Greater Than according to
 
-Functional Indexs:
+You can chain any number of filters together, and they will pipeline
+into each other as appropriate. After the above filters have been
+applied, you can further tweak how the results are returned using the
+following meta-filters:
 
--  Available = boolean
--  Name = string
--  ReadOnly = boolean
--  Valid = boolean
-
-Functions:
-
--  Eq(value) = Return items that are equal to value
--  Lt(value) = Return items that are less than value
--  Lte(value) = Return items that less than or equal to value
--  Gt(value) = Return items that are greater than value
--  Gte(value) = Return items that greater than or equal to value
--  Between(lower,upper) = Return items that are inclusively between
-   lower and upper
--  Except(lower,upper) = Return items that are not inclusively between
-   lower and upper
-
-Example:
-
--  Valid=fred - returns items named fred
--  Valid=Lt(fred) - returns items that alphabetically less than fred.
--  Valid=Lt(fred)&Available=true - returns items with Name less than
-   fred and Available is true
+-  'reverse' to return items in reverse order
+-  'limit' to only return the first items
+-  'offset' to skip items
+-  'sort' to sort items according to
 
 ::
 
-    drpcli params list [key=value] ... [flags]
+    drpcli params list [filters...] [flags]
 
 Options
 -------
@@ -62,6 +55,7 @@ Options inherited from parent commands
       -f, --force             When needed, attempt to force the operation - used on some update/patch calls
       -F, --format string     The serialzation we expect for output.  Can be "json" or "yaml" (default "json")
       -P, --password string   password of the Digital Rebar Provision user (default "r0cketsk8ts")
+      -r, --ref string        A reference object for update commands that can be a file name, yaml, or json blob
       -T, --token string      token of the Digital Rebar Provision access
       -U, --username string   Name of the Digital Rebar Provision user to talk to (default "rocketskates")
 

@@ -1,12 +1,12 @@
 drpcli stages removeprofile
 ===========================
 
-Remove a profile from the stage's list
+Remove a profile from the machine's list
 
 Synopsis
 --------
 
-Helper function to update the stage's profile list by removing one.
+Helper function to update the machine's profile list by removing one.
 
 ::
 
@@ -29,6 +29,7 @@ Options inherited from parent commands
       -f, --force             When needed, attempt to force the operation - used on some update/patch calls
       -F, --format string     The serialzation we expect for output.  Can be "json" or "yaml" (default "json")
       -P, --password string   password of the Digital Rebar Provision user (default "r0cketsk8ts")
+      -r, --ref string        A reference object for update commands that can be a file name, yaml, or json blob
       -T, --token string      token of the Digital Rebar Provision access
       -U, --username string   Name of the Digital Rebar Provision user to talk to (default "rocketskates")
 

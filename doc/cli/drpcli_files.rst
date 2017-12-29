@@ -1,12 +1,12 @@
 drpcli files
 ============
 
-Commands to manage files on the provisioner
+Access CLI commands relating to files
 
 Synopsis
 --------
 
-Commands to manage files on the provisioner
+Access CLI commands relating to files
 
 Options
 -------
@@ -25,6 +25,7 @@ Options inherited from parent commands
       -f, --force             When needed, attempt to force the operation - used on some update/patch calls
       -F, --format string     The serialzation we expect for output.  Can be "json" or "yaml" (default "json")
       -P, --password string   password of the Digital Rebar Provision user (default "r0cketsk8ts")
+      -r, --ref string        A reference object for update commands that can be a file name, yaml, or json blob
       -T, --token string      token of the Digital Rebar Provision access
       -U, --username string   Name of the Digital Rebar Provision user to talk to (default "rocketskates")
 
@@ -33,12 +34,10 @@ SEE ALSO
 
 -  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
    DigitalRebar Provision API
--  `drpcli files destroy <drpcli_files_destroy.html>`__ - Destroy file
-   by id
--  `drpcli files exists <drpcli_files_exists.html>`__ - See if a file
-   exists by id
+-  `drpcli files destroy <drpcli_files_destroy.html>`__ - Delete the
+   files [item] on the DRP server
+-  `drpcli files download <drpcli_files_download.html>`__ - Download the
+   files named [item] to [dest]
 -  `drpcli files list <drpcli_files_list.html>`__ - List all files
--  `drpcli files show <drpcli_files_show.html>`__ - Show a single file
-   by id
--  `drpcli files upload <drpcli_files_upload.html>`__ - Upload a local
-   file to Digital Rebar Provision
+-  `drpcli files upload <drpcli_files_upload.html>`__ - Upload the files
+   [src] as [dest]

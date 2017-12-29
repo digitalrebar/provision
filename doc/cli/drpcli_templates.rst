@@ -25,6 +25,7 @@ Options inherited from parent commands
       -f, --force             When needed, attempt to force the operation - used on some update/patch calls
       -F, --format string     The serialzation we expect for output.  Can be "json" or "yaml" (default "json")
       -P, --password string   password of the Digital Rebar Provision user (default "r0cketsk8ts")
+      -r, --ref string        A reference object for update commands that can be a file name, yaml, or json blob
       -T, --token string      token of the Digital Rebar Provision access
       -U, --username string   Name of the Digital Rebar Provision user to talk to (default "rocketskates")
 
@@ -38,14 +39,16 @@ SEE ALSO
 -  `drpcli templates destroy <drpcli_templates_destroy.html>`__ -
    Destroy template by id
 -  `drpcli templates exists <drpcli_templates_exists.html>`__ - See if a
-   template exists by id
+   templates exists by id
+-  `drpcli templates indexes <drpcli_templates_indexes.html>`__ - Get
+   indexes for templates
 -  `drpcli templates list <drpcli_templates_list.html>`__ - List all
    templates
--  `drpcli templates patch <drpcli_templates_patch.html>`__ - Patch
-   template with the passed-in JSON
 -  `drpcli templates show <drpcli_templates_show.html>`__ - Show a
-   single template by id
+   single templates by id
 -  `drpcli templates update <drpcli_templates_update.html>`__ - Unsafely
    update template by id with the passed-in JSON
--  `drpcli templates upload <drpcli_templates_upload.html>`__ - Upload a
-   local file to Digital Rebar Provision
+-  `drpcli templates upload <drpcli_templates_upload.html>`__ - Upload
+   the template file [file] as template [id]
+-  `drpcli templates wait <drpcli_templates_wait.html>`__ - Wait for a
+   template's field to become a value within a number of seconds

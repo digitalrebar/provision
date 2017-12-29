@@ -1,30 +1,12 @@
 drpcli users exists
 ===================
 
-See if a user exists by id
+See if a users exists by id
 
 Synopsis
 --------
 
-This will detect if a users exists.
-
-It is possible to specify the id in the request by the using normal key
-or by index.
-
-Functional Indexs:
-
--  Available = boolean
--  Name = string
--  ReadOnly = boolean
--  Valid = boolean
-
-When using the index name, use the following form:
-
--  Index:Value
-
-Example:
-
--  e.g: Valid:fred
+This will detect if a user exists.
 
 ::
 
@@ -47,6 +29,7 @@ Options inherited from parent commands
       -f, --force             When needed, attempt to force the operation - used on some update/patch calls
       -F, --format string     The serialzation we expect for output.  Can be "json" or "yaml" (default "json")
       -P, --password string   password of the Digital Rebar Provision user (default "r0cketsk8ts")
+      -r, --ref string        A reference object for update commands that can be a file name, yaml, or json blob
       -T, --token string      token of the Digital Rebar Provision access
       -U, --username string   Name of the Digital Rebar Provision user to talk to (default "rocketskates")
 

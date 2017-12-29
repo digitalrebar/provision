@@ -25,6 +25,7 @@ Options inherited from parent commands
       -f, --force             When needed, attempt to force the operation - used on some update/patch calls
       -F, --format string     The serialzation we expect for output.  Can be "json" or "yaml" (default "json")
       -P, --password string   password of the Digital Rebar Provision user (default "r0cketsk8ts")
+      -r, --ref string        A reference object for update commands that can be a file name, yaml, or json blob
       -T, --token string      token of the Digital Rebar Provision access
       -U, --username string   Name of the Digital Rebar Provision user to talk to (default "rocketskates")
 
@@ -37,12 +38,14 @@ SEE ALSO
    task with the passed-in JSON or string key
 -  `drpcli tasks destroy <drpcli_tasks_destroy.html>`__ - Destroy task
    by id
--  `drpcli tasks exists <drpcli_tasks_exists.html>`__ - See if a task
+-  `drpcli tasks exists <drpcli_tasks_exists.html>`__ - See if a tasks
    exists by id
+-  `drpcli tasks indexes <drpcli_tasks_indexes.html>`__ - Get indexes
+   for tasks
 -  `drpcli tasks list <drpcli_tasks_list.html>`__ - List all tasks
--  `drpcli tasks patch <drpcli_tasks_patch.html>`__ - Patch task with
-   the passed-in JSON
--  `drpcli tasks show <drpcli_tasks_show.html>`__ - Show a single task
+-  `drpcli tasks show <drpcli_tasks_show.html>`__ - Show a single tasks
    by id
 -  `drpcli tasks update <drpcli_tasks_update.html>`__ - Unsafely update
    task by id with the passed-in JSON
+-  `drpcli tasks wait <drpcli_tasks_wait.html>`__ - Wait for a task's
+   field to become a value within a number of seconds

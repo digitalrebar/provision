@@ -1,23 +1,29 @@
-drpcli params patch
-===================
+drpcli interfaces wait
+======================
 
-Patch param with the passed-in JSON
+Wait for a interface's field to become a value within a number of
+seconds
 
 Synopsis
 --------
 
-Patch param with the passed-in JSON
+This function waits for the value to become the new value.
+
+Timeout is optional, defaults to 1 day, and is measured in seconds.
+
+Returns the following strings: complete - field is equal to value
+interrupt - user interrupted the command timeout - timeout has exceeded
 
 ::
 
-    drpcli params patch [objectJson] [changesJson] [flags]
+    drpcli interfaces wait [id] [field] [value] [timeout] [flags]
 
 Options
 -------
 
 ::
 
-      -h, --help   help for patch
+      -h, --help   help for wait
 
 Options inherited from parent commands
 --------------------------------------
@@ -29,11 +35,12 @@ Options inherited from parent commands
       -f, --force             When needed, attempt to force the operation - used on some update/patch calls
       -F, --format string     The serialzation we expect for output.  Can be "json" or "yaml" (default "json")
       -P, --password string   password of the Digital Rebar Provision user (default "r0cketsk8ts")
+      -r, --ref string        A reference object for update commands that can be a file name, yaml, or json blob
       -T, --token string      token of the Digital Rebar Provision access
       -U, --username string   Name of the Digital Rebar Provision user to talk to (default "rocketskates")
 
 SEE ALSO
 --------
 
--  `drpcli params <drpcli_params.html>`__ - Access CLI commands relating
-   to params
+-  `drpcli interfaces <drpcli_interfaces.html>`__ - Access CLI commands
+   relating to interfaces

@@ -1,36 +1,13 @@
 drpcli subnets show
 ===================
 
-Show a single subnet by id
+Show a single subnets by id
 
 Synopsis
 --------
 
-This will show a subnets.
-
-It is possible to specify the id in the request by the using normal key
-or by index.
-
-Functional Indexs:
-
--  ActiveAddress = IP Address
--  Address = IP Address
--  Available = boolean
--  Enabled = boolean
--  Name = string
--  NextServer = IP Address
--  ReadOnly = boolean
--  Strategy = string
--  Subnet = CIDR Address
--  Valid = boolean
-
-When using the index name, use the following form:
-
--  Index:Value
-
-Example:
-
--  e.g: Valid:fred
+This will show a subnet by ID. You may also show a single item using a
+unique index. In that case, format id as :
 
 ::
 
@@ -53,6 +30,7 @@ Options inherited from parent commands
       -f, --force             When needed, attempt to force the operation - used on some update/patch calls
       -F, --format string     The serialzation we expect for output.  Can be "json" or "yaml" (default "json")
       -P, --password string   password of the Digital Rebar Provision user (default "r0cketsk8ts")
+      -r, --ref string        A reference object for update commands that can be a file name, yaml, or json blob
       -T, --token string      token of the Digital Rebar Provision access
       -U, --username string   Name of the Digital Rebar Provision user to talk to (default "rocketskates")
 
