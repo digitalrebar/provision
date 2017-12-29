@@ -1,23 +1,23 @@
-drpcli bootenvs patch
-=====================
+drpcli interfaces indexes
+=========================
 
-Patch bootenv with the passed-in JSON
+Get indexes for interfaces
 
 Synopsis
 --------
 
-Patch bootenv with the passed-in JSON
+Different object types can have indexes on various fields.
 
 ::
 
-    drpcli bootenvs patch [objectJson] [changesJson] [flags]
+    drpcli interfaces indexes [flags]
 
 Options
 -------
 
 ::
 
-      -h, --help   help for patch
+      -h, --help   help for indexes
 
 Options inherited from parent commands
 --------------------------------------
@@ -29,11 +29,12 @@ Options inherited from parent commands
       -f, --force             When needed, attempt to force the operation - used on some update/patch calls
       -F, --format string     The serialzation we expect for output.  Can be "json" or "yaml" (default "json")
       -P, --password string   password of the Digital Rebar Provision user (default "r0cketsk8ts")
+      -r, --ref string        A reference object for update commands that can be a file name, yaml, or json blob
       -T, --token string      token of the Digital Rebar Provision access
       -U, --username string   Name of the Digital Rebar Provision user to talk to (default "rocketskates")
 
 SEE ALSO
 --------
 
--  `drpcli bootenvs <drpcli_bootenvs.html>`__ - Access CLI commands
-   relating to bootenvs
+-  `drpcli interfaces <drpcli_interfaces.html>`__ - Access CLI commands
+   relating to interfaces

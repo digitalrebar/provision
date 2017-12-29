@@ -19,6 +19,7 @@ Options
       -F, --format string     The serialzation we expect for output.  Can be "json" or "yaml" (default "json")
       -h, --help              help for drpcli
       -P, --password string   password of the Digital Rebar Provision user (default "r0cketsk8ts")
+      -r, --ref string        A reference object for update commands that can be a file name, yaml, or json blob
       -T, --token string      token of the Digital Rebar Provision access
       -U, --username string   Name of the Digital Rebar Provision user to talk to (default "rocketskates")
 
@@ -30,17 +31,17 @@ SEE ALSO
 -  `drpcli bootenvs <drpcli_bootenvs.html>`__ - Access CLI commands
    relating to bootenvs
 -  `drpcli contents <drpcli_contents.html>`__ - Access CLI commands
-   relating to contents
+   relating to content
 -  `drpcli events <drpcli_events.html>`__ - DigitalRebar Provision Event
    Commands
--  `drpcli files <drpcli_files.html>`__ - Commands to manage files on
-   the provisioner
+-  `drpcli files <drpcli_files.html>`__ - Access CLI commands relating
+   to files
 -  `drpcli info <drpcli_info.html>`__ - Access CLI commands relating to
    info
 -  `drpcli interfaces <drpcli_interfaces.html>`__ - Access CLI commands
    relating to interfaces
--  `drpcli isos <drpcli_isos.html>`__ - Commands to manage isos on the
-   provisioner
+-  `drpcli isos <drpcli_isos.html>`__ - Access CLI commands relating to
+   isos
 -  `drpcli jobs <drpcli_jobs.html>`__ - Access CLI commands relating to
    jobs
 -  `drpcli leases <drpcli_leases.html>`__ - Access CLI commands relating

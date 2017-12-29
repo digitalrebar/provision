@@ -25,6 +25,7 @@ Options inherited from parent commands
       -f, --force             When needed, attempt to force the operation - used on some update/patch calls
       -F, --format string     The serialzation we expect for output.  Can be "json" or "yaml" (default "json")
       -P, --password string   password of the Digital Rebar Provision user (default "r0cketsk8ts")
+      -r, --ref string        A reference object for update commands that can be a file name, yaml, or json blob
       -T, --token string      token of the Digital Rebar Provision access
       -U, --username string   Name of the Digital Rebar Provision user to talk to (default "rocketskates")
 
@@ -38,16 +39,16 @@ SEE ALSO
 -  `drpcli subnets destroy <drpcli_subnets_destroy.html>`__ - Destroy
    subnet by id
 -  `drpcli subnets exists <drpcli_subnets_exists.html>`__ - See if a
-   subnet exists by id
+   subnets exists by id
 -  `drpcli subnets get <drpcli_subnets_get.html>`__ - Get dhcpOption
    [number]
+-  `drpcli subnets indexes <drpcli_subnets_indexes.html>`__ - Get
+   indexes for subnets
 -  `drpcli subnets leasetimes <drpcli_subnets_leasetimes.html>`__ - Set
    the leasetimes of a subnet
 -  `drpcli subnets list <drpcli_subnets_list.html>`__ - List all subnets
 -  `drpcli subnets nextserver <drpcli_subnets_nextserver.html>`__ - Set
    next non-reserved IP
--  `drpcli subnets patch <drpcli_subnets_patch.html>`__ - Patch subnet
-   with the passed-in JSON
 -  `drpcli subnets pickers <drpcli_subnets_pickers.html>`__ - assigns IP
    allocation methods to a subnet
 -  `drpcli subnets range <drpcli_subnets_range.html>`__ - set the range
@@ -55,10 +56,10 @@ SEE ALSO
 -  `drpcli subnets set <drpcli_subnets_set.html>`__ - Set the given
    subnet's dhcpOption to a value
 -  `drpcli subnets show <drpcli_subnets_show.html>`__ - Show a single
-   subnet by id
--  `drpcli subnets strategy <drpcli_subnets_strategy.html>`__ - Set
-   Subnet strategy
+   subnets by id
 -  `drpcli subnets subnet <drpcli_subnets_subnet.html>`__ - Set the CIDR
    network address
 -  `drpcli subnets update <drpcli_subnets_update.html>`__ - Unsafely
    update subnet by id with the passed-in JSON
+-  `drpcli subnets wait <drpcli_subnets_wait.html>`__ - Wait for a
+   subnet's field to become a value within a number of seconds

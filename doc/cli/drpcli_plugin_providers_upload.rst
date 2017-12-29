@@ -1,16 +1,16 @@
 drpcli plugin\_providers upload
 ===============================
 
-Upload a local file to Digital Rebar Provision
+Upload a program to act as a plugin\_provider
 
 Synopsis
 --------
 
-Upload a local file to Digital Rebar Provision
+Upload a program to act as a plugin\_provider
 
 ::
 
-    drpcli plugin_providers upload [file] as [name] [flags]
+    drpcli plugin_providers upload [name] from [file] [flags]
 
 Options
 -------
@@ -29,6 +29,7 @@ Options inherited from parent commands
       -f, --force             When needed, attempt to force the operation - used on some update/patch calls
       -F, --format string     The serialzation we expect for output.  Can be "json" or "yaml" (default "json")
       -P, --password string   password of the Digital Rebar Provision user (default "r0cketsk8ts")
+      -r, --ref string        A reference object for update commands that can be a file name, yaml, or json blob
       -T, --token string      token of the Digital Rebar Provision access
       -U, --username string   Name of the Digital Rebar Provision user to talk to (default "rocketskates")
 

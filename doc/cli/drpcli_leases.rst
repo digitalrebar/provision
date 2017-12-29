@@ -25,6 +25,7 @@ Options inherited from parent commands
       -f, --force             When needed, attempt to force the operation - used on some update/patch calls
       -F, --format string     The serialzation we expect for output.  Can be "json" or "yaml" (default "json")
       -P, --password string   password of the Digital Rebar Provision user (default "r0cketsk8ts")
+      -r, --ref string        A reference object for update commands that can be a file name, yaml, or json blob
       -T, --token string      token of the Digital Rebar Provision access
       -U, --username string   Name of the Digital Rebar Provision user to talk to (default "rocketskates")
 
@@ -33,16 +34,14 @@ SEE ALSO
 
 -  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
    DigitalRebar Provision API
--  `drpcli leases create <drpcli_leases_create.html>`__ - Create a new
-   lease with the passed-in JSON or string key
 -  `drpcli leases destroy <drpcli_leases_destroy.html>`__ - Destroy
    lease by id
--  `drpcli leases exists <drpcli_leases_exists.html>`__ - See if a lease
-   exists by id
+-  `drpcli leases exists <drpcli_leases_exists.html>`__ - See if a
+   leases exists by id
+-  `drpcli leases indexes <drpcli_leases_indexes.html>`__ - Get indexes
+   for leases
 -  `drpcli leases list <drpcli_leases_list.html>`__ - List all leases
--  `drpcli leases patch <drpcli_leases_patch.html>`__ - Patch lease with
-   the passed-in JSON
 -  `drpcli leases show <drpcli_leases_show.html>`__ - Show a single
-   lease by id
--  `drpcli leases update <drpcli_leases_update.html>`__ - Unsafely
-   update lease by id with the passed-in JSON
+   leases by id
+-  `drpcli leases wait <drpcli_leases_wait.html>`__ - Wait for a lease's
+   field to become a value within a number of seconds

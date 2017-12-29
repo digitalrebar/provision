@@ -1,23 +1,24 @@
-drpcli plugins patch
-====================
+drpcli machines add
+===================
 
-Patch plugin with the passed-in JSON
+Add the machines param to
 
 Synopsis
 --------
 
-Patch plugin with the passed-in JSON
+Helper function to add parameters to the machines. Fails is already
+present.
 
 ::
 
-    drpcli plugins patch [objectJson] [changesJson] [flags]
+    drpcli machines add [id] param [key] to [json blob] [flags]
 
 Options
 -------
 
 ::
 
-      -h, --help   help for patch
+      -h, --help   help for add
 
 Options inherited from parent commands
 --------------------------------------
@@ -29,11 +30,12 @@ Options inherited from parent commands
       -f, --force             When needed, attempt to force the operation - used on some update/patch calls
       -F, --format string     The serialzation we expect for output.  Can be "json" or "yaml" (default "json")
       -P, --password string   password of the Digital Rebar Provision user (default "r0cketsk8ts")
+      -r, --ref string        A reference object for update commands that can be a file name, yaml, or json blob
       -T, --token string      token of the Digital Rebar Provision access
       -U, --username string   Name of the Digital Rebar Provision user to talk to (default "rocketskates")
 
 SEE ALSO
 --------
 
--  `drpcli plugins <drpcli_plugins.html>`__ - Access CLI commands
-   relating to plugins
+-  `drpcli machines <drpcli_machines.html>`__ - Access CLI commands
+   relating to machines

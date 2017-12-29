@@ -25,6 +25,7 @@ Options inherited from parent commands
       -f, --force             When needed, attempt to force the operation - used on some update/patch calls
       -F, --format string     The serialzation we expect for output.  Can be "json" or "yaml" (default "json")
       -P, --password string   password of the Digital Rebar Provision user (default "r0cketsk8ts")
+      -r, --ref string        A reference object for update commands that can be a file name, yaml, or json blob
       -T, --token string      token of the Digital Rebar Provision access
       -U, --username string   Name of the Digital Rebar Provision user to talk to (default "rocketskates")
 
@@ -38,12 +39,15 @@ SEE ALSO
 -  `drpcli reservations destroy <drpcli_reservations_destroy.html>`__ -
    Destroy reservation by id
 -  `drpcli reservations exists <drpcli_reservations_exists.html>`__ -
-   See if a reservation exists by id
+   See if a reservations exists by id
+-  `drpcli reservations indexes <drpcli_reservations_indexes.html>`__ -
+   Get indexes for reservations
 -  `drpcli reservations list <drpcli_reservations_list.html>`__ - List
    all reservations
--  `drpcli reservations patch <drpcli_reservations_patch.html>`__ -
-   Patch reservation with the passed-in JSON
 -  `drpcli reservations show <drpcli_reservations_show.html>`__ - Show a
-   single reservation by id
+   single reservations by id
 -  `drpcli reservations update <drpcli_reservations_update.html>`__ -
    Unsafely update reservation by id with the passed-in JSON
+-  `drpcli reservations wait <drpcli_reservations_wait.html>`__ - Wait
+   for a reservation's field to become a value within a number of
+   seconds

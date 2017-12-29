@@ -25,6 +25,7 @@ Options inherited from parent commands
       -f, --force             When needed, attempt to force the operation - used on some update/patch calls
       -F, --format string     The serialzation we expect for output.  Can be "json" or "yaml" (default "json")
       -P, --password string   password of the Digital Rebar Provision user (default "r0cketsk8ts")
+      -r, --ref string        A reference object for update commands that can be a file name, yaml, or json blob
       -T, --token string      token of the Digital Rebar Provision access
       -U, --username string   Name of the Digital Rebar Provision user to talk to (default "rocketskates")
 
@@ -37,16 +38,18 @@ SEE ALSO
    user with the passed-in JSON or string key
 -  `drpcli users destroy <drpcli_users_destroy.html>`__ - Destroy user
    by id
--  `drpcli users exists <drpcli_users_exists.html>`__ - See if a user
+-  `drpcli users exists <drpcli_users_exists.html>`__ - See if a users
    exists by id
+-  `drpcli users indexes <drpcli_users_indexes.html>`__ - Get indexes
+   for users
 -  `drpcli users list <drpcli_users_list.html>`__ - List all users
 -  `drpcli users password <drpcli_users_password.html>`__ - Set the
    password for this id
--  `drpcli users patch <drpcli_users_patch.html>`__ - Patch user with
-   the passed-in JSON
--  `drpcli users show <drpcli_users_show.html>`__ - Show a single user
+-  `drpcli users show <drpcli_users_show.html>`__ - Show a single users
    by id
 -  `drpcli users token <drpcli_users_token.html>`__ - Get a login token
    for this user with optional parameters
 -  `drpcli users update <drpcli_users_update.html>`__ - Unsafely update
    user by id with the passed-in JSON
+-  `drpcli users wait <drpcli_users_wait.html>`__ - Wait for a user's
+   field to become a value within a number of seconds

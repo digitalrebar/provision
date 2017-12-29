@@ -1,24 +1,23 @@
-drpcli leases update
-====================
+drpcli machines addtask
+=======================
 
-Unsafely update lease by id with the passed-in JSON
+Add task to the machine's task list
 
 Synopsis
 --------
 
-As a useful shortcut, '-' can be passed to indicate that the JSON should
-be read from stdin
+Helper function to add a task to the machine's task list.
 
 ::
 
-    drpcli leases update [id] [json] [flags]
+    drpcli machines addtask [id] [task] [flags]
 
 Options
 -------
 
 ::
 
-      -h, --help   help for update
+      -h, --help   help for addtask
 
 Options inherited from parent commands
 --------------------------------------
@@ -30,11 +29,12 @@ Options inherited from parent commands
       -f, --force             When needed, attempt to force the operation - used on some update/patch calls
       -F, --format string     The serialzation we expect for output.  Can be "json" or "yaml" (default "json")
       -P, --password string   password of the Digital Rebar Provision user (default "r0cketsk8ts")
+      -r, --ref string        A reference object for update commands that can be a file name, yaml, or json blob
       -T, --token string      token of the Digital Rebar Provision access
       -U, --username string   Name of the Digital Rebar Provision user to talk to (default "rocketskates")
 
 SEE ALSO
 --------
 
--  `drpcli leases <drpcli_leases.html>`__ - Access CLI commands relating
-   to leases
+-  `drpcli machines <drpcli_machines.html>`__ - Access CLI commands
+   relating to machines

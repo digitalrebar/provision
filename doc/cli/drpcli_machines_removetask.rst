@@ -1,23 +1,23 @@
-drpcli files exists
-===================
+drpcli machines removetask
+==========================
 
-See if a file exists by id
+Remove a task from the machine's list
 
 Synopsis
 --------
 
-This will detect if a files exists.
+Helper function to update the machine's task list by removing one.
 
 ::
 
-    drpcli files exists [id] [flags]
+    drpcli machines removetask [id] [task] [flags]
 
 Options
 -------
 
 ::
 
-      -h, --help   help for exists
+      -h, --help   help for removetask
 
 Options inherited from parent commands
 --------------------------------------
@@ -29,11 +29,12 @@ Options inherited from parent commands
       -f, --force             When needed, attempt to force the operation - used on some update/patch calls
       -F, --format string     The serialzation we expect for output.  Can be "json" or "yaml" (default "json")
       -P, --password string   password of the Digital Rebar Provision user (default "r0cketsk8ts")
+      -r, --ref string        A reference object for update commands that can be a file name, yaml, or json blob
       -T, --token string      token of the Digital Rebar Provision access
       -U, --username string   Name of the Digital Rebar Provision user to talk to (default "rocketskates")
 
 SEE ALSO
 --------
 
--  `drpcli files <drpcli_files.html>`__ - Commands to manage files on
-   the provisioner
+-  `drpcli machines <drpcli_machines.html>`__ - Access CLI commands
+   relating to machines

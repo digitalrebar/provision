@@ -9,9 +9,8 @@ Synopsis
 As a useful shortcut, '-' can be passed to indicate that the JSON should
 be read from stdin.
 
-In either case, for the Machine, BootEnv, User, and Profile objects, a
-string may be provided to create a new empty object of that type. For
-User, BootEnv, Machine, and Profile, it will be the object's name.
+You may also pass in a machine UUID or Name to create a new job on that
+Name.
 
 ::
 
@@ -34,6 +33,7 @@ Options inherited from parent commands
       -f, --force             When needed, attempt to force the operation - used on some update/patch calls
       -F, --format string     The serialzation we expect for output.  Can be "json" or "yaml" (default "json")
       -P, --password string   password of the Digital Rebar Provision user (default "r0cketsk8ts")
+      -r, --ref string        A reference object for update commands that can be a file name, yaml, or json blob
       -T, --token string      token of the Digital Rebar Provision access
       -U, --username string   Name of the Digital Rebar Provision user to talk to (default "rocketskates")
 
