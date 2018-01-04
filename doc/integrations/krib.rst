@@ -30,10 +30,39 @@ The *Live Boot* mode uses an in-memory Linux image based on the Digital Rebar Sl
 
 The Local Install mode mimics the traditional "install-to-my-disk" method that most people are familiar with. 
 
+Ready State Infrastructure
+--------------------------
+
+This process assumes that your machines have been discovered and and are in a "ready state" for the next provisioning activities.  Typically, this can be done by setting the ``global`` profile to move discovered machines to ``sledgehammer-wait`` state.  A ``change-stage/map`` similar to:
+  ::
+
+    discover --> packet-discover --> sledgehammer-wait
+
+Will provide the appropriate waitint (ready-state) stage to put your Machines in to prior to advancing through the KRIB workflow below.
+
+
+
 KRIB Basics
 -----------
 
 KRIB is essentially nothing more than a Content Pack addition to Digital Rebar, which works with the Open version of Digital Rebar.  It uses the *cluster bootstrapping* support built in to the Digital Rebar solution which provides atomic guarantees.  This allows for a Kubernetes Master to be dynamically elected, forcing all other nodes that fail the *race-to-master* election to wait until the elected master is completed and bootstrapped.  Once the Kubernetes Master is bootstrapped, the Digital Rebar system facilitates the security token hand-off to the Minions that join the cluster, to allow them to join with out any operator intervention.  
+
+Elected -vs- Specified Master
+-----------------------------
+
+By default the KRIB process will dynamically elect a Master for the Kubernetes cluster.  This master simply wins the *race-to-master* election process and the rest of the cluster will coalesce around the elected master.   There is no failover mechanisms or High Availability (as *kubeadm* doesn't yet support this pattern).  
+
+If you wish to specify a specific machine to be the designated Master, you can do so by setting a *Param* on the specific Machine that will be come the master.  To do so, set the ``krib/cluster-master``  *Param* to the UUID of the machine to become master.  You may add this *Param* to the *Profile* in the below specifications, as follows:
+
+  ::
+
+    # JSON reference to add 
+    "krib/cluster-master": "<UUID>"
+
+    # or drpcli command line option
+    drpcli profiles set my-k8s-cluster param krib/cluster-master to <UUID>
+
+The Kubernetes Master will be built on this Machine specified by the *<UUID>* value.
 
 Install KRIB
 ------------
@@ -79,13 +108,18 @@ The basic outline for configuring KRIB follows the below steps:
 Configure with the CLI
 ======================
 
-Create the YAML for the Profile with stagemap and param required - modify the *Name* or other fields as appropriate - be sure you rename all subsequent fields appropriately.
+The configuration of the Cluster includes a *Stagemap* - and depending on which stage map you use, will determine if the cluster is built via install-to-local-disk or via an immutable pattern (live boot in-memory boot process).   Outside of the stagemap differences, all remaining configuration elements are the same. 
+
+You must create a *Profile* from YAML (or JSON if you prefer) with the stagemap and param required information. Modify the *Name* or other fields as appropriate - be sure you rename all subsequent fields appropriately.  This example uses CentOS 7 as the BootEnv for the install-to-local-disk option.  
+
+Additionally - insure you correctly modify the ``ssh-access`` Param to inject your apprpriate SSH public key half or halves appropriately.
+
   ::
 
     echo '
     ---
     Name: "my-k8s-cluster"
-    Description: "My Kubernetes Cluster"
+    Description: "Kubernetes install-to-local-disk"
     Params:
       krib/cluster-profile: "my-k8s-cluster"
       change-stage/map:
@@ -95,12 +129,41 @@ Create the YAML for the Profile with stagemap and param required - modify the *N
         docker-install: krib-install:Success
         krib-install: complete:Success
         discover: sledgehammer-wait:Success
+      ssh-access:
+        user1: ssh <user_1_key> user@krib
+        user2: ssh <user_2_key> user@krib
     Meta:
       color: "purple"
       icon: "ship"
-      title: "My Kubernetes Cluster"
+      title: "My Installed Kubernetes Cluster"
     ' > /tmp/krib-config.yaml
 
+
+For an Immutable Kubernetes cluster install, use the below *Profile* with the stagemap below.
+  ::
+
+    echo '
+    ---
+    Name: "my-k8s-cluster"
+    Description: "Kubernetes Live Boot (immutable) cluster"
+    Params:
+      krib/cluster-profile: "my-k8s-cluster"
+      change-stage/map:
+        ssh-access:Success
+        mount-local-disks:Success
+        docker-install:Success
+        krib-install:Success
+        sledgehammer-wait:Success
+      ssh-access:
+        user1: ssh <user_1_key> user@krib
+        user2: ssh <user_2_key> user@krib
+    Meta:
+      color: "orange"
+      icon: "ship"
+      title: "My Immutable Kubernetes Cluster"
+    ' > /tmp/krib-config.yaml
+
+.. note:: ONLY select one of the two above YAML profile options.  
 
 Apply/create the Profile 
   ::
@@ -138,15 +201,24 @@ Add the Profile to your machines that will be enrolled in the cluster
     # runs example command:
     # drpcli machines addprofile <UUID> my-k8s-cluster
 
-Change stage on the Machines to initiate the Workflow transition
+Change stage on the Machines to initiate the Workflow transition.  YOU MUST select the correct stage, dependent on your install type (Immutable/Live Boot mode or install-to-local-disk mode).  For Live Boot mode, select the stage ``ssh-access`` and for the install-to-local-disk mode select the stage ``centos-7-install``.
+
   ::
 
+    # for Live Boot/Immutable Kubernetes mode
+    my_machines stage ssh-access
+
+    # for intall-to-local-disk mode:
     my_machines stage centos-7-install
 
     # runs example command:
+    # drpcli machines stage <UUID> ssh-access
+    # or
     # drpcli machines stage <UUID> centos-7-install
 
     # if fails, try below for each UUID - there is a potential "stage" change bug in CLI
+    # drpcli machines update <UUID> '{ "Stage": "ssh-access" }'
+    # or
     # drpcli machines update <UUID> '{ "Stage": "centos-7-install" }'
 
 
@@ -167,7 +239,9 @@ RackN assumes the use of CentOS 7 BootEnv during this process.  However, it shou
 
 1. create a *Profile* for the Kubernetes Cluster (e.g. ``my-k8s-cluster``)
 2. add a *Param* to that *Profile*: ``krib/cluster-profile`` = ``my-k8s-cluster``
-3. Using workflow editor, add the following workflow to the ``my-k8s-cluster`` *Profile*.
+3. add the following workflow to the ``my-k8s-cluster`` *Profile*.
+
+  for install-to-local-disk mode:
 
   a. ``centos-7-install -> runner-service:Success``
   b. ``runner-service -> finish-install:Stop``
@@ -176,10 +250,19 @@ RackN assumes the use of CentOS 7 BootEnv during this process.  However, it shou
   e. ``krib-install-> complete:Success``
   f. ``discover->sledgehammer-wait:Success``
 
+  OR 
+
+  for Immutable Kubernetes/Live Boot mode:
+
+  a. ``ssh-access`` -> ``mount-local-disks:Success``
+  b. ``mount-local-disks`` -> ``docker-install:Success``
+  c. ``docker-install`` -> ``krib-install:Success``
+  d. ``krib-install`` -> ``sledgehammer-wait:Success``
+
   The last entry is to handle discovery if you reimage the servers.
 
 4. Add the *Profile* (eg ``my-k8s-cluster``) to all the machines you want in the cluster.
-5. Change stage on all the machines to ``centos-7-install``
+5. Change stage on all the machines to ``centos-7-install`` for install-to-local-disk, or to ``ssh-access`` for the Live Boot/Immutable Kubernetes mode
 6. Reboot all the machines in your cluster.
 
 
@@ -189,10 +272,59 @@ Then wait for them to complete.  You can watch the Stage transitions via the Bul
 Operating KRIB
 --------------
 
-This section is not yet complete.
+Who is my Master?
+=================
 
-Footnotes:
-----------
+If you have not specified who the Kubernetes Master should be; and the master was chosen by election - you will need to determine which Machine is the cluster Master. 
+  ::
+
+    # returns the Kubernetes cluster Machine UUID
+    drpcli profiles show my-k8s-cluster | jq -r '.Params."krib/cluster-master"'
+
+Use ``kubectl`` - on Master
+===========================
+
+You can log in to the Master node as identified above, and execute ``kubectl`` commands as follows:
+  ::
+
+      export KUBECONFIG=/etc/kubernetes/admin.conf
+      kubectl get nodes
+
+
+Use ``kubectl`` - from anywhere
+===============================
+
+Once the Kubernetes cluster build has been completed, you may use the ``kubectl`` command to both verify and manage the cluster.  You will need to download the *conf* file with the appropriate tokens and information to connect to and authenticate your ``kubectl`` connections. Below is an example of doing this:
+  ::
+
+    # get the Admin configuration and tokens
+    drpcli profiles get my-k8s-cluster param krib/cluster-admin-conf > admin.conf
+
+    # set our KUBECONFIG variable and get nodes information
+    export KUBECONFIG=`pwd`/admin.conf
+    kubectl get nodes
+
+Use Kubernetes Dashboard via Proxy
+==================================
+
+Once you have obtained the ``admin.conf`` configuration file and security tokens, you may use ``kubectl`` in Proxy mode to the Master.  Simply open a separate terminal/console session to dedicate to the Proxy connection, and do:
+  ::
+    
+    kubectl proxy 
+
+Now, in a local web browser (on the same machine you executed the Proxy command) open the following URL:
+
+    https://127.0.0.1:8001/ui
+
+
+Multiple Clusters
+-----------------
+
+It is absolutely possible to build multiple Kubernetes KRIB clusters with this process.  The only difference is each cluster should have a unique name and profile assigned to it.  A given Machine may only participate in a single Kubernetes cluster type at any one time.  You can install and operate both Live Boot/Immutable with install-to-disk cluster types in the same DRP Endpoint.  
+
+
+Footnotes
+---------
 
 .. [#] Immutable Infrastructure Reference: `Making Server Deployment 10x Faster – the ROI on Immutable Infrastructure <https://www.rackn.com/2017/10/11/making-server-deployment-10x-faster-roi-immutable-infrastructure/>`_
 
