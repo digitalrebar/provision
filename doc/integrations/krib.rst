@@ -38,7 +38,7 @@ This process assumes that your machines have been discovered and and are in a "r
 
     discover --> packet-discover --> sledgehammer-wait
 
-Will provide the appropriate waitint (ready-state) stage to put your Machines in to prior to advancing through the KRIB workflow below.
+Will provide the appropriate waiting (ready-state) stage to put your Machines in to prior to advancing through the KRIB workflow below.
 
 
 
@@ -52,17 +52,19 @@ Elected -vs- Specified Master
 
 By default the KRIB process will dynamically elect a Master for the Kubernetes cluster.  This master simply wins the *race-to-master* election process and the rest of the cluster will coalesce around the elected master.   There is no failover mechanisms or High Availability (as *kubeadm* doesn't yet support this pattern).  
 
-If you wish to specify a specific machine to be the designated Master, you can do so by setting a *Param* on the specific Machine that will be come the master.  To do so, set the ``krib/cluster-master``  *Param* to the UUID of the machine to become master.  You may add this *Param* to the *Profile* in the below specifications, as follows:
+If you wish to specify a specific machine to be the designated Master, you can do so by setting a *Param* in the cluster *Profile* to the specific *Machine* that will be come the master.  To do so, set the ``krib/cluster-master``  *Param* to the UUID of the machine to become master.  You may add this *Param* to the *Profile* in the below specifications, as follows:
 
   ::
 
-    # JSON reference to add 
+    # JSON reference to add to the Profile Params section
     "krib/cluster-master": "<UUID>"
 
     # or drpcli command line option
     drpcli profiles set my-k8s-cluster param krib/cluster-master to <UUID>
 
 The Kubernetes Master will be built on this Machine specified by the *<UUID>* value.
+
+.. note:: This *MUST* be in the cluster profile because all machines in the cluster must be able to see this parameter.
 
 Install KRIB
 ------------
@@ -222,7 +224,7 @@ Change stage on the Machines to initiate the Workflow transition.  YOU MUST sele
     # drpcli machines update <UUID> '{ "Stage": "centos-7-install" }'
 
 
-Now you need to reboot the Machines you modified above.  You can do this through your own tooling or power control methods.  If you are using the RackN `IPMI` plugin provider (paid piece), you can do this with the following commands:
+For the *install-to-local-disk* mode, you now need to reboot the Machines you modified above.  You can do this through your own tooling or power control methods.  If you are using the RackN `IPMI` plugin provider (paid piece), you can do this with the following commands:
   ::
 
     my_machines action powercycle
@@ -263,11 +265,12 @@ RackN assumes the use of CentOS 7 BootEnv during this process.  However, it shou
 
 4. Add the *Profile* (eg ``my-k8s-cluster``) to all the machines you want in the cluster.
 5. Change stage on all the machines to ``centos-7-install`` for install-to-local-disk, or to ``ssh-access`` for the Live Boot/Immutable Kubernetes mode
-6. Reboot all the machines in your cluster.
+6. Reboot all the machines in your cluster if you are using the *install-to-local-disk* mode.
 
 
 Then wait for them to complete.  You can watch the Stage transitions via the Bulk Actions panel (which requires RackN Portal authentication to view).
 
+.. note:: The reason the *Immutable Kubernetes/Live Boot* mode does not need a reboot is because they are already running *Sledgehammer* and will start installing upon the stage change.
 
 Operating KRIB
 --------------
