@@ -151,14 +151,13 @@ For an Immutable Kubernetes cluster install, use the below *Profile* with the st
     Params:
       krib/cluster-profile: "my-k8s-cluster"
       change-stage/map:
-        ssh-access:Success
-        mount-local-disks:Success
-        docker-install:Success
-        krib-install:Success
-        sledgehammer-wait:Success
+        ssh-access: mount-local-disks:Success
+        mount-local-disks: docker-install:Success
+        docker-install: krib-install:Success
+        krib-install: sledgehammer-wait:Success
       ssh-access:
-        user1: ssh <user_1_key> user@krib
-        user2: ssh <user_2_key> user@krib
+        user1: ssh <user_1_key> user1@krib
+        user2: ssh <user_2_key> user2@krib
     Meta:
       color: "orange"
       icon: "ship"
