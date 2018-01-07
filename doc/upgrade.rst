@@ -53,8 +53,8 @@ For "production" install modes (no ``--isolated`` flag provided to ``install.sh`
      mkdir backups
      sudo cp -r /var/lib/dr-provision backups/dr-provision.backup.$D
 
-Steps
-=====
+Upgrade Steps
+=============
 
 The basic steps are the same for both Isolated and Production install modes:
 
@@ -197,6 +197,22 @@ In DRP v3.1.0 and newer, the content will be moved by the ``--upgrade`` function
 .. note:: Digital Rebar Provision version 3.1.0 introduced a new behavior to the ``subnets`` definitions.  ``subnets`` may now be ``enabled`` or ``disableed`` to selectively turn on/off provisioning for a given subnet.  By default, a subnet witll be disabled.  After an upgrade, you MUST enable the subnet for it to function again. See `Subnet Enabled`_ for additional details. 
 
 
+Subnet Enabled
+++++++++++++++
+
+Starting in v3.1.0, subnet objects have an enabled flag that allows for subnets to be turned off without deleting them.  This value defaults to false (off).  To enable existing subnets, you will need to do the following for each subnet in your system:
+
+  ::
+
+    drpcli subnets update subnet1 '{ "Enabled": true }'
+
+Replace *subnet1* with the name of your subnet.  You may obtain a list of configured subnets with:
+
+  ::
+
+    drpcli subnets list | jq -r '.[].Name'
+
+
 v3.1.0 to v3.2.0
 ----------------
 
@@ -329,21 +345,65 @@ Please read the steps through carefully, and make note of the current contents/p
 
     Again - make sure you modify things appropriately in the above scriptlet. YOU MUST MODIFY THE *RACK_AUTH* variable appropriately for the download authentication to work correctly.
 
+v3.2.0 to v3.3.0
+----------------
 
-Subnet Enabled
-~~~~~~~~~~~~~~
+`Release Notes for v3.3.0 <https://github.com/digitalrebar/provision/releases/tag/v3.3.0>`_
 
-Starting in v3.1.0, subnet objects have an enabled flag that allows for subnets to be turned off without deleting them.  This value defaults to false (off).  To enable existing subnets, you will need to do the following for each subnet in your system:
+No aditional steps required.
 
+v3.3.0 to v3.4.0
+----------------
+
+`Release Notes for v3.4.0 <https://github.com/digitalrebar/provision/releases/tag/v3.4.0>`_
+
+Content Changes
++++++++++++++++
+
+Prior to restart Digital Rebar Provision endpoint - you may need to fix the Machines JSON entries for the ``Meta`` field.  It used to be an optional field, but is now required.  If your ``Meta`` field is set to ``null``, or non-existent, DRP will not startup correctly.  You will receive the following error message on start:
   ::
 
-    drpcli subnets update subnet1 '{ "Enabled": true }'
+    dr-provision2018/01/07 15:14:01.275082 Extracting Default Assets
+    panic: assignment to entry in nil map
 
-Replace *subnet1* with the name of your subnet.  You may obtain a list of configured subnets with:
+To correct the problem, you will need to edit your JSON configuration files for your Machines. You can find your Machines spec files in ``/var/lib/dr-provision/digitalrebar/machines`` if you are running in *production* mode install.  If you are running in *isolated* mode, you will need to locate your ``drp-data`` directory which is in the base directory where you performed the install at; the machines directory will be ``drp-data/digitalrebar/machines``. 
 
+There may be two ``Meta`` tags.  You do NOT need to modify the ``Meta`` tag that is located in the *Params* section.  
+
+Change the first ``Meta`` tag as follows:
+  ::
+      # from:
+      "Meta":null,
+
+      # to something like:
+      "Meta":{"feature-flags":"change-stage-v2"},
+
+It is entirely possible that the ``Meta`` field is completely missing.  If so - inject the full ``Meta`` field as specified above.
+
+``drpcli`` changes
+++++++++++++++++++
+
+Please see the `Release Notes <https://github.com/digitalrebar/provision/releases/tag/v3.4.0>`_ for information related to the ``drpcli`` command line changes.  The most notable changes that may impact your use (eg in existing scripts) of the tool:
+
+#. Plugin upload method changed:
   ::
 
-    drpcli subnets list | jq -r '.[].Name'
+    # prior to v3.4.0
+    drpcli plugin_providers upload $PLUGIN as $PLUG_NAME
+
+    # v3.4.0 and newer version method:
+    drpcli plugin_providers upload $PLUG_NAME from $PLUGIN
+
+2. Many commands now have new *helper* capabilities.  See each command outputs relevant help statement.
+
+
+v3.4.0 to v3.5.0
+----------------
+
+`Release Notes for v3.5.0 <https://github.com/digitalrebar/provision/releases/tag/v3.5.0>`_
+
+No additional changes necessary.
+
 
 Local UI Removed
 ~~~~~~~~~~~~~~~~
