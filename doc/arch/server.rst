@@ -17,7 +17,9 @@ These are expanded on startup and made available by the file server services.
 Design Restrictions
 -------------------
 
-Since Digital Rebar Provision is part of the larger Digital Rebar system, it's scope is limited to handling DHCP and Provisioning actions.  Out of band management to control server flow or configure firmware plus other management features will be handled by other Digital Rebar services.
+Digital Rebar Provision is intended to be a focused provisioning service that does not by design provide complex orchestration of application services.  Simple per-Machine Workflow is implemented allowing for per-Machine provisioning.
+
+DRP can be driven by other complex orchestration systems with integrations or plugins.  For example, DRP has been (or is currently under development) integrated with Device42, OpsRamp, and StackStorm.  
 
 .. _rs_arch_services:
 
