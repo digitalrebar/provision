@@ -19,12 +19,12 @@ func TestEventsCli(t *testing.T) {
 	jsonBytes, _ := json.Marshal(event)
 	jsonString := string(jsonBytes)
 
-	CliTest{true, false, []string{"events"}, noStdinString, eventsIntroString, noErrorString}.run(t)
-	CliTest{true, true, []string{"events", "post"}, noStdinString, noContentString, eventsPostNoArgString}.run(t)
-	CliTest{true, true, []string{"events", "post", "e1", "e2"}, noStdinString, noContentString, eventsPostTooManyArgsString}.run(t)
-	CliTest{false, true, []string{"events", "post", "{sasdg"}, noStdinString, noContentString, eventsPostBadJsonString}.run(t)
-	CliTest{false, true, []string{"events", "post", "\"e1\""}, noStdinString, noContentString, eventsPostBadJson1String}.run(t)
-	CliTest{false, false, []string{"events", "post", jsonString}, noStdinString, noContentString, noErrorString}.run(t)
-	CliTest{false, false, []string{"events", "post", "-"}, jsonString, noContentString, noErrorString}.run(t)
+	CliTest{true, false, []string{"events"}, noStdinString, eventsIntroString, noErrorString, ""}.run(t)
+	CliTest{true, true, []string{"events", "post"}, noStdinString, noContentString, eventsPostNoArgString, ""}.run(t)
+	CliTest{true, true, []string{"events", "post", "e1", "e2"}, noStdinString, noContentString, eventsPostTooManyArgsString, ""}.run(t)
+	CliTest{false, true, []string{"events", "post", "{sasdg"}, noStdinString, noContentString, eventsPostBadJsonString, ""}.run(t)
+	CliTest{false, true, []string{"events", "post", "\"e1\""}, noStdinString, noContentString, eventsPostBadJson1String, ""}.run(t)
+	CliTest{false, false, []string{"events", "post", jsonString}, noStdinString, noContentString, noErrorString, ""}.run(t)
+	CliTest{false, false, []string{"events", "post", "-"}, jsonString, noContentString, noErrorString, ""}.run(t)
 
 }

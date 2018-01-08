@@ -16,7 +16,7 @@ func TestContentCrud(t *testing.T) {
     machines: 0
     params: 0
     plugins: 0
-    preferences: 12
+    preferences: 13
     profiles: 1
     reservations: 0
     stages: 0
@@ -113,23 +113,23 @@ sections:
     debugBootEnv:
       Meta: {}
       Name: debugBootEnv
-      Val: "0"
+      Val: warn
     debugDhcp:
       Meta: {}
       Name: debugDhcp
-      Val: "0"
+      Val: warn
     debugFrontend:
       Meta: {}
       Name: debugFrontend
-      Val: "0"
+      Val: warn
     debugPlugins:
       Meta: {}
       Name: debugPlugins
-      Val: "0"
+      Val: warn
     debugRenderer:
       Meta: {}
       Name: debugRenderer
-      Val: "0"
+      Val: warn
     defaultBootEnv:
       Meta: {}
       Name: defaultBootEnv
@@ -142,6 +142,10 @@ sections:
       Meta: {}
       Name: knownTokenTimeout
       Val: "3600"
+    logLevel:
+      Meta: {}
+      Name: logLevel
+      Val: warn
     systemGrantorSecret:
       Meta: {}
       Name: systemGrantorSecret

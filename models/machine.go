@@ -137,11 +137,11 @@ func (b *Machine) ToModels(obj interface{}) []Model {
 
 // match Paramer interface
 func (b *Machine) GetParams() map[string]interface{} {
-	return b.Params
+	return copyMap(b.Params)
 }
 
 func (b *Machine) SetParams(p map[string]interface{}) {
-	b.Params = p
+	b.Params = copyMap(p)
 }
 
 // match Profiler interface

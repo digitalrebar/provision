@@ -80,9 +80,9 @@ func (b *Plugin) ToModels(obj interface{}) []Model {
 
 // match Paramer interface
 func (b *Plugin) GetParams() map[string]interface{} {
-	return b.Params
+	return copyMap(b.Params)
 }
 
 func (b *Plugin) SetParams(p map[string]interface{}) {
-	b.Params = p
+	b.Params = copyMap(p)
 }

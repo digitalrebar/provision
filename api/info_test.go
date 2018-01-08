@@ -45,6 +45,7 @@ func TestInfo(t *testing.T) {
 				"job-exit-states",
 				"package-repository-handling",
 				"profileless-machine",
+				"threaded-log-levels",
 			},
 		},
 		expectErr: nil,

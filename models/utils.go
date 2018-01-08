@@ -8,6 +8,14 @@ import (
 	"regexp"
 )
 
+func copyMap(m map[string]interface{}) map[string]interface{} {
+	res := map[string]interface{}{}
+	for k, v := range m {
+		res[k] = v
+	}
+	return res
+}
+
 // swagger:model
 type BlobInfo struct {
 	Path string

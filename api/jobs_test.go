@@ -11,36 +11,35 @@ import (
 
 func runAgent(t *testing.T, mi *models.Machine, lastTask, lastState, lastExitState string) (m *models.Machine) {
 	t.Helper()
-
 	m = mi
 
 	if !m.Runnable {
 		t.Logf("Machine %s not runnable, patching it to a Runnable state", m.Name)
 		mc := models.Clone(m).(*models.Machine)
 		mc.Runnable = true
-		_, err := session.PatchTo(m, mc)
+		mr, err := session.PatchTo(m, mc)
 		if err != nil {
-			t.Errorf("Failed to make machine runnable: %v", err)
+			t.Errorf("ERROR: Failed to make machine runnable: %v", err)
 			return
 		}
+		m = mr.(*models.Machine)
 		t.Logf("Machine %s patched", m.Name)
-		m.Runnable = true
 	}
 
 	buf := &bytes.Buffer{}
 	err := session.Agent(m, true, true, false, buf)
 	if err != nil {
-		t.Errorf("Agent run failed: %v", err)
+		t.Errorf("ERROR: Agent run failed: %v", err)
 		return
 	}
 	if err := session.FillModel(m, m.Key()); err != nil {
-		t.Errorf("Failed to fetch machine1: %v", err)
+		t.Errorf("ERROR: Failed to fetch machine1: %v", err)
 		return
 	}
 	t.Logf("Machine current job: %v", m.CurrentJob)
 	job := &models.Job{Uuid: m.CurrentJob}
 	if err := session.FillModel(job, job.Key()); err != nil {
-		t.Errorf("Failed to fetch current job: %v", err)
+		t.Errorf("ERROR: Failed to fetch current job: %v", err)
 		return
 	}
 	t.Logf("Job log: \n---------------\n")
@@ -49,7 +48,7 @@ func runAgent(t *testing.T, mi *models.Machine, lastTask, lastState, lastExitSta
 	if job.Task == lastTask && job.State == lastState && job.ExitState == lastExitState {
 		t.Logf("Run for task %s finished with desired state %s:%s", job.Task, job.State, job.ExitState)
 	} else {
-		t.Errorf("Run for task %s finished with unknown state %s:%s", job.Task, job.State, job.ExitState)
+		t.Errorf("ERROR: Run for task %s finished with unknown state %s:%s", job.Task, job.State, job.ExitState)
 	}
 	return
 }
@@ -362,11 +361,7 @@ Tasks:
 		func() (interface{}, error) {
 			mc := models.Clone(machine1).(*models.Machine)
 			mc.Tasks = []string{}
-			res, err := session.PatchTo(machine1, mc)
-			if err == nil {
-				machine1 = res.(*models.Machine)
-			}
-			return res, err
+			return session.PatchTo(machine1, mc)
 		}, nil)
 	rt(t, "Try to change order of tasks on a machine (fail again)", nil,
 		&models.Error{
@@ -379,17 +374,13 @@ Tasks:
 		func() (interface{}, error) {
 			mc := models.Clone(machine1).(*models.Machine)
 			mc.Tasks = []string{"task1", "task2"}
-			res, err := session.PatchTo(machine1, mc)
-			if err == nil {
-				machine1 = res.(*models.Machine)
-			}
-			return res, err
+			return session.PatchTo(machine1, mc)
 		}, nil)
 	machine1 = runAgent(t, machine1, "task1", "finished", "complete")
 	if machine1.CurrentTask == len(machine1.Tasks) {
 		t.Logf("All tasks on machine1 finished")
 	} else {
-		t.Errorf("Machine1: currentTask %d, tasks %v:%d", machine1.CurrentTask, machine1.Tasks, len(machine1.Tasks))
+		t.Errorf("ERROR: Machine1: currentTask %d, tasks %v:%d", machine1.CurrentTask, machine1.Tasks, len(machine1.Tasks))
 	}
 	machineRes = models.Clone(machine1).(*models.Machine)
 	machineRes.CurrentTask = -1

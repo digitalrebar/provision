@@ -375,12 +375,11 @@ func (c *Client) changeStage(im *models.Machine, actuallyPowerThings bool, logge
 	wait = cs.RunnerWait
 
 	var cmObj interface{}
-	if err = c.Req().Get().UrlForM(m, "params", "change-stage/map").Params("aggregate", "true").Do(&cmObj); err != nil {
-		return
-	}
-	var csMap map[string]string
-	if err = utils.Remarshal(cmObj, &csMap); err != nil {
-		return
+	csMap := map[string]string{}
+	if csErr := c.Req().Get().UrlForM(m, "params", "change-stage/map").Params("aggregate", "true").Do(&cmObj); csErr == nil {
+		if err = utils.Remarshal(cmObj, &csMap); err != nil {
+			return
+		}
 	}
 
 	if ns, ok := csMap[currentStage]; ok {
