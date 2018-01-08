@@ -10,9 +10,9 @@ Digital Rebar Provision
 
 *simple, fast and open API-driven server provisioning.*
 
-**DR Provision** is a APLv2 simple Golang executable that provides a simple yet complete API-driven DHCP/PXE/TFTP provisioning system. It is designed to stand alone or operate as part of the `Digital Rebar <http://rebar.digital>`_ management system.
+**DR Provision** is a APLv2 simple Golang executable that provides a simple yet complete API-driven DHCP/PXE/TFTP provisioning system. 
 
-Simply, Digital Rebar Provisioner acts as a Cobbler Replacement - with additional per-Machine workflow provisioning capabilities.
+Simply, Digital Rebar Provisioner acts as a Cobbler Replacement - with additional powerful per-Machine workflow provisioning capabilities.
 
 .. figure::  doc/images/dr_provision.png
    :align:   right
