@@ -10,8 +10,8 @@ Architecture Reference
 ----------------------
 
 .. toctree::
-   :glob:
-   :numbered:
-   :maxdepth: 1
+   :hidden:
    
-   arch/*
+   arch/models
+   arch/provision
+   arch/dhcp

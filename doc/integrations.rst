@@ -12,15 +12,10 @@ Integrations
 
 Digital Rebar Provision provides many growing integration points.  Here are a few:
 
-Ansible
--------
-:ref:`ansible <rs_ansible>`
 
-Websockets
-----------
-:ref:`websocket <rs_websocket>`
+.. toctree::
+   :hidden:
 
-KRIB (Kubernetes Rebar Immutable Bootsrapping)
-----------------------------------------------
-:ref:`krib <rs_krib>`
-
+   integrations/ansible
+   integrations/websocket
+   integrations/krib

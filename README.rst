@@ -77,7 +77,7 @@ Table of Contents
 **Reading on Github?** Visit `Generated Docs <http://provision.readthedocs.io/en/stable/README.html#rs_toc>`_ for a generated ToC.
 
 .. toctree::
-   :glob:
+   :includehidden:
    :numbered:
    :maxdepth: 1
    
@@ -85,7 +85,6 @@ Table of Contents
    doc/install
    doc/features
    doc/server
-   doc/integrations
    doc/configuring
    doc/release
    doc/upgrade
@@ -103,6 +102,7 @@ Table of Contents
    doc/dev/dev-docs
    doc/faq-troubleshooting
    doc/arch
+   doc/integrations
    CONTRIBUTING
    Trademark
    LICENSE
