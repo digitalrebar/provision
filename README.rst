@@ -83,9 +83,8 @@ Table of Contents
    
    doc/quickstart
    doc/install
-   doc/arch/features
-   doc/arch/server
-   doc/arch/data
+   doc/features
+   doc/server
    doc/integrations
    doc/configuring
    doc/release
@@ -103,6 +102,7 @@ Table of Contents
    doc/dev/dev-cli
    doc/dev/dev-docs
    doc/faq-troubleshooting
+   doc/arch
    CONTRIBUTING
    Trademark
    LICENSE

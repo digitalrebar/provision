@@ -40,7 +40,7 @@ services including protocols and default ports.  The services are:
    #. HTTP: faster file transfer protocol used by more advanced boot processes
 
 
-.. figure::  ../images/core_services.png
+.. figure::  images/core_services.png
    :alt: Core Digital Rebar Provision Services
    :target: https://docs.google.com/drawings/d/1SVGGwQZxopiVEYjIM3FXC92yG4DKCCejRBDNMsHmxKE/edit?usp=sharing
 
