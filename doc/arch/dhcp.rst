@@ -4,36 +4,8 @@
 .. index::
   pair: Digital Rebar Provision; DHCP Models
 
-DHCP Management
-<<<<<<<<<<<<<<<
-
-The DHCP server built in to dr-provision is designed to be fully API
-driven and to provide all the features needed to manage system IP
-address assignments through the complete provisioning lifecycle. As
-such, it has a few interesting features that other DHCP servers may
-not have:
-
-- The ability to have different ways of determining what unique
-  attribute in a DHCP packet to use to allocate an IP address.  When
-  you see references to Strategy and Token in the DHCP models,
-  Strategy refers to the unique attribute the DHCP server should use,
-  and Token refers to the value that the Stategy picked.
-
-  For now, the only implemented Strategy is MAC, which has the DHCP
-  server use the MAC address of the network adaptor of the network
-  interface as the unique value of the Token.
-
-- The DHCP server is fully API driven.  You can add, remove, and
-  modify Reservations and Subnets on the fly, and changes take effect
-  immediately.
-
-- Built-in ProxyDHCP support, on a subnet by subnet basis.  The
-  dr-provision can coexist with other DHCP servers to only provide PXE
-  support for specific address ranges, leaving address management to
-  your preexisting DHCP infrastructure.
-
-Models
-^^^^^^
+DHCP Models
+^^^^^^^^^^^
 
 These models manage how the DHCP server built into dr-provision.  They
 determines what IP addresses it can hand out to which systems, what
