@@ -10,11 +10,10 @@
 Integrations
 ~~~~~~~~~~~~
 
-Digital Rebar Provision provides many growing integration points.  Here are a few:
+Digital Rebar Provision provides many growing integration points.
 
 
 .. toctree::
-   :hidden:
 
    integrations/ansible
    integrations/websocket
