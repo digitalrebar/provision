@@ -40,11 +40,31 @@ determines what IP addresses it can hand out to which systems, what
 values to set for DHCP options, and how to handle DHCP requests at
 various points in the lifecycle of any given DHCP lease.
 
+Interface
+---------
+
+Interface objects are provided by dr-provision as an easy means for
+the UX and the CLI to enumerate the network interfaces on the
+dr-provision server and provide some basic information for building
+local subnets.  Interface objects have the following fields:
+
+- Name: the name of the interface that the OS assigned.
+
+- Index: The index of the interface.  This is an OS specific index,
+  and does not mena anything to dr-provision directly.
+
+- Addresses: A list of CIDR addresses that are bound to the interface.
+
+- ActiveAddress: The CIDR address that you should use as the Subnet
+  address if you want to create a Subnet specifically for this
+  interface.
+
 DHCP Option
 -----------
 
 The DHCP Option object holds templated values for DHCP options that
-should be returned to clients in response to requests.  It has the following fields:
+should be returned to clients in response to requests.  It has the
+following fields:
 
 - Code: A byte that holds the numeric DHCP option code. See `RFC 2132
   <https://tools.ietf.org/html/rfc2132>`_ and friends for what these
@@ -118,10 +138,37 @@ have the following fields:
 - Strategy: The strategy that the DHCP service should use to determine
   whether this reservations should be used.
 
-- Token: The unique string that the Strategy uniquely identifies a
+- Token: The string that the Strategy uniquely identifies a
   network interface with.
 
 - Address: The IP address that is being reserved.
 
 - Options: The DHCP options that should be returned when creating or
   renewing a Lease based on this Reservation.
+
+Lease
+-----
+
+Leases track what IP addresses the system has handed out to what
+Strategy/Token pairs.  Leases contain the following fields:
+
+- Strategy: The strategy that the DHCP service used to allocate the IP
+  address this lease handed out.
+
+- Token: The string that the Strategy uniquely identifies a
+  network interface with.
+
+- Address: The IP address that was handed out.
+
+- State: The state the lease is in.  State can be one of the follosing
+  values:
+
+  - PROBE: The IP address is being probed via ICMP Echo Requests to
+    make sure it is not in use by another system.
+
+  - OFFER: The IP address was offered to a system in response to
+    a DHCP discover.
+
+  - ACK: The IP address was offered in response to a DHCP Request.
+
+- ExpireTime: The time at which the Lease expires.
