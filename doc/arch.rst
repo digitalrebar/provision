@@ -19,3 +19,4 @@ dr-provision for developers and power users.
    arch/provision
    arch/dhcp
    arch/sledgehammer
+   arch/workflow
