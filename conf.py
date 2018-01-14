@@ -45,7 +45,7 @@ import os
 # ones.
 extensions = [
     'sphinx.ext.todo',
-    'sphinx.ext.pngmath',
+    'sphinx.ext.imgmath',
     'sphinxcontrib.swaggerdoc',
 ]
 
