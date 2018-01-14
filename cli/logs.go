@@ -30,6 +30,18 @@ func registerLog(app *cobra.Command) {
 			}
 		},
 	})
+	cmd.AddCommand(&cobra.Command{
+		Use:   "get",
+		Short: "Get the currently buffered log entries from dr-provision",
+		Args:  cobra.NoArgs,
+		RunE: func(c *cobra.Command, args []string) error {
+			res, err := session.Logs()
+			if err != nil {
+				return err
+			}
+			return prettyPrint(res)
+		},
+	})
 	app.AddCommand(cmd)
 }
 

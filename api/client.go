@@ -20,6 +20,7 @@ import (
 
 	"github.com/VictorLowther/jsonpatch2"
 
+	"github.com/digitalrebar/logger"
 	"github.com/digitalrebar/provision/models"
 )
 
@@ -480,6 +481,12 @@ func (c *Client) Token() string {
 func (c *Client) Info() (*models.Info, error) {
 	res := &models.Info{}
 	return res, c.Req().UrlFor("info").Do(res)
+}
+
+// Logs returns the currently buffered logs from the dr-provision server
+func (c *Client) Logs() ([]logger.Line, error) {
+	res := []logger.Line{}
+	return res, c.Req().UrlFor("logs").Do(&res)
 }
 
 // Authorize sets the Authorization header in the Request with the

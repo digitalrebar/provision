@@ -1,0 +1,25 @@
+RE:
+\[
+  {
+    "Data": \[\],
+    "File": "(.*/)?github.com/digitalrebar/provision/frontend/(_obj/)?frontend.go",
+    "Group": 2,
+    "Level": "audit",
+    "Line": .*,
+    "Message": "Authenticated rocketskates",
+    "Seq": 1,
+    "Service": "frontend",
+    "Time": ".*"
+  },
+  {
+    "Data": \[\],
+    "File": "(.*/)?github.com/digitalrebar/provision/frontend/(_obj/)?frontend.go",
+    "Group": 3,
+    "Level": "audit",
+    "Line": .*,
+    "Message": "Authenticated rocketskates",
+    "Seq": 2,
+    "Service": "frontend",
+    "Time": ".*"
+  }
+\]
