@@ -27,6 +27,7 @@ metadata fields you will see are:
 
 icon
   The icon that the UX will use to display instances of this model.
+  Users can choose icons from http://fontawesome.io/icons/.
 
 color
   The color the icon will be displayed as

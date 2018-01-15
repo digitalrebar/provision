@@ -7,37 +7,49 @@
 Architecture Overview
 ---------------------
 
-Architecturally, dr-provision is split into several different packages:
+Architecturally, *dr-provision* is split into several different packages:
 
-- backend is responsible for making sure that all the data is valid
-  and gets written to the persistent store whenever things get
-  updated, along with storing any non-persistent runtime data we need
-  to keep track of.
+.. glossary::
 
-- midlayer is where the TFTP, static HTTP, and DHCP
-  services live, along with the plugin management code.
+  :ref:`rs_arch_backend`
+    is responsible for making sure that all the data is valid
+    and gets written to the persistent store whenever things get
+    updated, along with storing any non-persistent runtime data we need
+    to keep track of.
 
-- frontend is responsible for providing the REST API.
+  :ref:`rs_arch_midlayer`
+    is where the TFTP, static HTTP, and DHCP
+    services live, along with the plugin management code.
 
-- models define the data models that the other packages use, along
-  with some common functionality that can be shared between the client
-  and server side.
+  :ref:`rs_arch_frontend`
+    is responsible for providing the REST API.
 
-- api defines a client-side Go API for interacting with a dr-provision server.
+  :ref:`rs_arch_models`
+    define the data models that the other packages use, along
+    with some common functionality that can be shared between the client
+    and server side.
 
-- cli provides our default CLI for interacting with dr-provision.
+  :ref:`rs_arch_api`
+    defines a client-side Go API for interacting with *dr-provision*.
 
-- plugin implements the core client code that all plugins should use
-  to act as a dr-provision plugin.
+  :ref:`rs_arch_cli`
+    provides our default CLI for interacting with *dr-provision*.
 
-Backend Design
-~~~~~~~~~~~~~~
+  :ref:`rs_arch_plugin`
+    implements the core client code that all plugins should use
+    to act as a *dr-provision* plugin.
+
+
+.. _rs_arch_backend:
+
+backend
+~~~~~~~
 
 In Memory Database
 ^^^^^^^^^^^^^^^^^^
 
 All operating data lives in memory all the time.  The only time
-dr-provision reads information from persistent storage is when it is
+*dr-provision* reads information from persistent storage is when it is
 starting up, otherwise we treat the persistent store as write-only.
 The only exception to this design principle is streaming log data from
 job execution.  We may revisit this design principle if memory
@@ -73,7 +85,7 @@ validation.
 Static FS with Dynamic Overlay
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-A large part of what dr-provision does boils down to rendering
+A large part of what *dr-provision* does boils down to rendering
 templates and making them available in the right place at the right
 time.  Whenever a machine, bootenv, or stage changes, there are
 generally templates that have to be rerendered and made available via
@@ -97,17 +109,19 @@ actually have a file tree present locally.
 Dynamic Remote IP to Local IP Caching
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-dr-provision is designed to work seamlessly on a multi-homed system
+*dr-provision* is designed to work seamlessly on a multi-homed system
 and to deal with complex local network configurations.  To that end,
 every other subsystem that listens for packets is instrumented to
 capture the IP where the request originated and the local IP address
 that the request came in on.  Template rendering and DHCP request
 handling use this information to make sure that we supply the best IP
-address that a client should use to contact dr-provision at for any
+address that a client should use to contact *dr-provision* at for any
 future communication.
 
-Midlayer Design
-~~~~~~~~~~~~~~~
+.. _rs_arch_midlayer:
+
+midlayer
+~~~~~~~~
 
 TFTP Service
 ^^^^^^^^^^^^
@@ -130,7 +144,7 @@ cached.
 DHCP Service
 ^^^^^^^^^^^^
 
-The DHCP service built in to dr-provision is designed to be fully API
+The DHCP service built in to *dr-provision* is designed to be fully API
 driven and to provide all the features needed to manage system IP
 address assignments through the complete provisioning lifecycle. As
 such, it has a few interesting features that other DHCP servers may
@@ -151,25 +165,27 @@ not have:
   immediately.
 
 - Built-in ProxyDHCP support, on a subnet by subnet basis.
-  dr-provision can coexist with other DHCP servers to only provide PXE
+  *dr-provision* can coexist with other DHCP servers to only provide PXE
   support for specific address ranges, leaving address management to
   your preexisting DHCP infrastructure.
 
 Plugin Management
 ^^^^^^^^^^^^^^^^^
 
-dr-provision can add extended functionality via external plugins.  The
+*dr-provision* can add extended functionality via external plugins.  The
 midlayer implements all of the functionality needed to accept plugin
 uploads, interrogate them to discover what functionality they
 implement, import any content built in to the plugin, and hand off
 requests and events to the plugin for further processing.
 
-Frontend Design
-~~~~~~~~~~~~~~~
+.. _rs_arch_frontend:
+
+frontend
+~~~~~~~~
 
 The DRP frontend implements a REST + JSON API for others to interact
-with and manage dr-provision.  The dr-provison API is available via
-HTTPS, and we will upgrade to HTTP v2 oppourtunistically.
+with and manage *dr-provision*.  The *dr-provision* API is available via
+HTTPS, and we will upgrade to HTTP v2 opportunistically.
 
 Threaded Logging
 ^^^^^^^^^^^^^^^^
@@ -182,7 +198,7 @@ enabled on a per-request basis to aid in debugging and audit purposes.
 Basic and JWT Token Authentication
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-You can authenticate to the dr-provision API via basic auth and via
+You can authenticate to the *dr-provision* API via basic auth and via
 time-limited JWT tokens.  We also provide means to invalidate tokens
 globally and on a per-user basis.
 
@@ -194,18 +210,39 @@ Authenticated users can open a websocket and arrange for a variety of
 different events to be watched for.  This eliminates the need to poll
 in a loop for a wide variety of different situations.
 
-Models
+.. _rs_arch_models:
+
+models
 ~~~~~~
 
-Every valid dr-provision object has a Model that is implemented in
-this package.  These models are authoridative, and their JSON
+Every valid *dr-provision* object has a Model that is implemented in
+this package.  These models are authoritative, and their JSON
 serialization in Go is the canonical wire format.
 
-API
+.. _rs_arch_api:
+
+api
 ~~~
 
 The API package implements the reference Go client API for
-dr-provision. You should consult the go docs for the API at
+*dr-provision*. You should consult the go docs for the API at
 https://godoc.org/github.com/digitalrebar/provision/api for in-depth
 discussion on how to use the client API.
+
+.. _rs_arch_cli:
+
+cli
+~~~
+
+The CLI package implements the reference Go client CLI for
+*dr-provision*.  The main program for *drpcli* includes this 
+set of functions.
+
+.. _rs_arch_plugin:
+
+plugin
+~~~~~~
+
+The plugin package implements the Go core functions needed to create
+a *dr-provision* plugin.
 
