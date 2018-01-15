@@ -1,24 +1,23 @@
-drpcli plugins params
-=====================
+drpcli logs watch
+=================
 
-Gets/sets all parameters for the plugin
+Watch log entrys as theyt come in real time
 
 Synopsis
 --------
 
-A helper function to return all or set all the parameters on the plugin
+Watch log entrys as theyt come in real time
 
 ::
 
-    drpcli plugins params [id] [json] [flags]
+    drpcli logs watch [flags]
 
 Options
 -------
 
 ::
 
-          --aggregate   Should machine return aggregated view
-      -h, --help        help for params
+      -h, --help   help for watch
 
 Options inherited from parent commands
 --------------------------------------
@@ -39,5 +38,4 @@ Options inherited from parent commands
 SEE ALSO
 --------
 
--  `drpcli plugins <drpcli_plugins.html>`__ - Access CLI commands
-   relating to plugins
+-  `drpcli logs <drpcli_logs.html>`__ - Access commands relating to logs

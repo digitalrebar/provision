@@ -379,7 +379,7 @@ Local Repos
 +++++++++++
 
 **This section is deprecated, it is being replaced by the more general
- package-repositories functionality**
+package-repositories functionality**
 
 It is possible to use the exploded ISOs as repositories for
 post-installation work.  This can be helpful when missing internet
@@ -736,11 +736,11 @@ Pickers
 ~~~~~~~
 
 **Pickers** defines an ordered list of methods to determine the
-*address to hand out.  Currently, this will default to the list:
+address to hand out.  Currently, this will default to the list:
 *hint*, *nextFree*, and *mostExpired*.  The following options are
-*available for the list.
+available for the list.
 
-* hint - which will try to reuse the address that the DHCP packet is
+* **hint** - which will try to reuse the address that the DHCP packet is
   requesting, if it has one.  If the request does not have a requested
   address, "hint" will fall through to the next strategy. Otherwise,
   it will refuse to try ant reamining strategies whether or not it can
@@ -748,14 +748,14 @@ Pickers
   DHCPDISCOVER with no requsted IP address. "hint" will reuse expired
   leases and unexpired leases that match on the requested address,
   strategy, and token.
-* nextFree - Within the subnet's pool of Active IPs, choose the next
+* **nextFree** - Within the subnet's pool of Active IPs, choose the next
   free making sure to loop over all addresses before reuse.  It will
   fall through to the next strategy if it cannot find a free IP.
   "nextFree" only considers addresses that do not have a lease,
   whether or not the lease is expired.
-* mostExpired - If no free address is available, use the most expired
+* **mostExpired** - If no free address is available, use the most expired
   address first.
-* none - Do NOT hand out an address and refuse to try any remaining
+* **none** - Do NOT hand out an address and refuse to try any remaining
   strategies
 
 All of the address allocation strategies do not consider any addresses

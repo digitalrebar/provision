@@ -6,7 +6,7 @@ Usage:
 Available Commands:
   action        Display the action for this machine
   actions       Display actions for this machine
-  add           Add the machines param <key> to <blob>
+  add           Add the machines param *key* to *blob*
   addprofile    Add profile to the machine's profile list
   addtask       Add task to the machine's task list
   bootenv       Set the machine's bootenv
@@ -19,11 +19,11 @@ Available Commands:
   list          List all machines
   params        Gets/sets all parameters for the machine
   processjobs   For the given machine, process pending jobs until done.
-  remove        Remove the param <key> from machines
+  remove        Remove the param *key* from machines
   removeprofile Remove a profile from the machine's list
   removetask    Remove a task from the machine's list
   runaction     Set preferences
-  set           Set the machines param <key> to <blob>
+  set           Set the machines param *key* to *blob*
   show          Show a single machines by id
   stage         Set the machine's stage
   tasks         Access task manipulation for machines

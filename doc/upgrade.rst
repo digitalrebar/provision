@@ -387,6 +387,7 @@ It is entirely possible that the ``Meta`` field is completely missing.  If so - 
 Please see the `Release Notes <https://github.com/digitalrebar/provision/releases/tag/v3.4.0>`_ for information related to the ``drpcli`` command line changes.  The most notable changes that may impact your use (eg in existing scripts) of the tool:
 
 #. Plugin upload method changed:
+
   ::
 
     # prior to v3.4.0

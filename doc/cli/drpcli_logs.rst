@@ -1,24 +1,19 @@
-drpcli plugins params
-=====================
+drpcli logs
+===========
 
-Gets/sets all parameters for the plugin
+Access commands relating to logs
 
 Synopsis
 --------
 
-A helper function to return all or set all the parameters on the plugin
-
-::
-
-    drpcli plugins params [id] [json] [flags]
+Access commands relating to logs
 
 Options
 -------
 
 ::
 
-          --aggregate   Should machine return aggregated view
-      -h, --help        help for params
+      -h, --help   help for logs
 
 Options inherited from parent commands
 --------------------------------------
@@ -39,5 +34,9 @@ Options inherited from parent commands
 SEE ALSO
 --------
 
--  `drpcli plugins <drpcli_plugins.html>`__ - Access CLI commands
-   relating to plugins
+-  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
+   DigitalRebar Provision API
+-  `drpcli logs get <drpcli_logs_get.html>`__ - Get the currently
+   buffered log entries from dr-provision
+-  `drpcli logs watch <drpcli_logs_watch.html>`__ - Watch log entrys as
+   theyt come in real time

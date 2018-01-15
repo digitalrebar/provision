@@ -4,7 +4,7 @@ Usage:
   drpcli plugins [command]
 
 Available Commands:
-  add         Add the plugins param <key> to <blob>
+  add         Add the plugins param *key* to *blob*
   create      Create a new plugin with the passed-in JSON or string key
   destroy     Destroy plugin by id
   exists      See if a plugins exists by id
@@ -12,8 +12,8 @@ Available Commands:
   indexes     Get indexes for plugins
   list        List all plugins
   params      Gets/sets all parameters for the plugin
-  remove      Remove the param <key> from plugins
-  set         Set the plugins param <key> to <blob>
+  remove      Remove the param *key* from plugins
+  set         Set the plugins param *key* to *blob*
   show        Show a single plugins by id
   update      Unsafely update plugin by id with the passed-in JSON
   wait        Wait for a plugin's field to become a value within a number of seconds
