@@ -127,9 +127,9 @@ func NewApp() *cobra.Command {
 		},
 	})
 	app.AddCommand(&cobra.Command{
-		Use:   "autocomplete <filename>",
+		Use:   "autocomplete [filename]",
 		Short: "Digital Rebar Provision CLI Command Bash AutoCompletion File",
-		Long:  "Generate a bash autocomplete file as <filename>.\nPlace the generated file in /etc/bash_completion.d or /usr/local/etc/bash_completion.d.",
+		Long:  "Generate a bash autocomplete file as *filename*.\nPlace the generated file in /etc/bash_completion.d or /usr/local/etc/bash_completion.d.",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) != 1 {
 				return fmt.Errorf("%v requires 1  argument", cmd.UseLine())

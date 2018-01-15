@@ -20,14 +20,16 @@ Options inherited from parent commands
 
 ::
 
-      -d, --debug             Whether the CLI should run in debug mode
-      -E, --endpoint string   The Digital Rebar Provision API endpoint to talk to (default "https://127.0.0.1:8092")
-      -f, --force             When needed, attempt to force the operation - used on some update/patch calls
-      -F, --format string     The serialzation we expect for output.  Can be "json" or "yaml" (default "json")
-      -P, --password string   password of the Digital Rebar Provision user (default "r0cketsk8ts")
-      -r, --ref string        A reference object for update commands that can be a file name, yaml, or json blob
-      -T, --token string      token of the Digital Rebar Provision access
-      -U, --username string   Name of the Digital Rebar Provision user to talk to (default "rocketskates")
+      -d, --debug               Whether the CLI should run in debug mode
+      -E, --endpoint string     The Digital Rebar Provision API endpoint to talk to (default "https://127.0.0.1:8092")
+      -f, --force               When needed, attempt to force the operation - used on some update/patch calls
+      -F, --format string       The serialzation we expect for output.  Can be "json" or "yaml" (default "json")
+      -P, --password string     password of the Digital Rebar Provision user (default "r0cketsk8ts")
+      -r, --ref string          A reference object for update commands that can be a file name, yaml, or json blob
+      -T, --token string        token of the Digital Rebar Provision access
+      -t, --trace string        The log level API requests should be logged at on the server side
+      -Z, --traceToken string   A token that individual traced requests should report in the server logs
+      -U, --username string     Name of the Digital Rebar Provision user to talk to (default "rocketskates")
 
 SEE ALSO
 --------
@@ -39,7 +41,7 @@ SEE ALSO
 -  `drpcli machines actions <drpcli_machines_actions.html>`__ - Display
    actions for this machine
 -  `drpcli machines add <drpcli_machines_add.html>`__ - Add the machines
-   param to
+   param *key* to *blob*
 -  `drpcli machines addprofile <drpcli_machines_addprofile.html>`__ -
    Add profile to the machine's profile list
 -  `drpcli machines addtask <drpcli_machines_addtask.html>`__ - Add task
@@ -65,7 +67,7 @@ SEE ALSO
 -  `drpcli machines processjobs <drpcli_machines_processjobs.html>`__ -
    For the given machine, process pending jobs until done.
 -  `drpcli machines remove <drpcli_machines_remove.html>`__ - Remove the
-   param from machines
+   param *key* from machines
 -  `drpcli machines
    removeprofile <drpcli_machines_removeprofile.html>`__ - Remove a
    profile from the machine's list
@@ -74,7 +76,7 @@ SEE ALSO
 -  `drpcli machines runaction <drpcli_machines_runaction.html>`__ - Set
    preferences
 -  `drpcli machines set <drpcli_machines_set.html>`__ - Set the machines
-   param to
+   param *key* to *blob*
 -  `drpcli machines show <drpcli_machines_show.html>`__ - Show a single
    machines by id
 -  `drpcli machines stage <drpcli_machines_stage.html>`__ - Set the

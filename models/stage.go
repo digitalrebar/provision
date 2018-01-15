@@ -8,30 +8,29 @@ type Stage struct {
 	Validation
 	Access
 	Meta
-	// The name of the boot environment.  Boot environments that install
-	// an operating system must end in '-install'.
+	// The name of the stage.
 	//
 	// required: true
 	Name string
-	// A description of this boot environment.  This should tell what
-	// the boot environment is for, any special considerations that
-	// shoudl be taken into account when using it, etc.
+	// A description of this stage.  This should tell what it is for,
+	// any special considerations that shoudl be taken into account when
+	// using it, etc.
 	Description string
 	// The templates that should be expanded into files for the stage.
 	//
 	// required: true
 	Templates []TemplateInfo
 	// The list of extra required parameters for this
-	// bootstate. They should be present as Machine.Params when
-	// the bootenv is applied to the machine.
+	// stage. They should be present as Machine.Params when
+	// the stage is applied to the machine.
 	//
 	// required: true
 	RequiredParams []string
 	// The list of extra optional parameters for this
-	// bootstate. They can be present as Machine.Params when
-	// the bootenv is applied to the machine.  These are more
-	// other consumers of the bootenv to know what parameters
-	// could additionally be applied to the bootenv by the
+	// stage. They can be present as Machine.Params when
+	// the stage is applied to the machine.  These are more
+	// other consumers of the stage to know what parameters
+	// could additionally be applied to the stage by the
 	// renderer based upon the Machine.Params
 	//
 	OptionalParams []string

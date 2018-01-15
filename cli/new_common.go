@@ -52,33 +52,33 @@ Use the "indexes" command to get the indexes available for %v.
 
 To filter by indexes, you can use the following stanzas:
 
-* <index> Eq <value>
-  This will return items Equal to <value> according to <index>
-* <index> Ne <value>
-  This will return items Not Equal to <value> according to <index>
-* <index> Lt <value>
-  This will return items Less Than <value> according to <index>
-* <index> Lte <value>
-  This will return items Less Than Or Equal to <value> according to <index>
-* <index> Gt <value>
-  This will return items Greater Than <value> according to <index>
-* <index> Gte <value>
-  This will return items Greater Than Or Equal to <value> according to <index>
-* <index> Between <lower> <upper>
-  This will return items Greater Than Or Equal to <lower>
-  and Less Than Or Equal to <upper> according to <index>
-* <index> Except <lower> <upper>
-  This will return items Less Than <lower> or
-  Greater Than <upper> according to <index>
+* *index* Eq *value*
+  This will return items Equal to *value* according to *index*
+* *index* Ne *value*
+  This will return items Not Equal to *value* according to *index*
+* *index* Lt *value*
+  This will return items Less Than *value* according to *index*
+* *index* Lte *value*
+  This will return items Less Than Or Equal to *value* according to *index*
+* *index* Gt *value*
+  This will return items Greater Than *value* according to *index*
+* *index* Gte *value*
+  This will return items Greater Than Or Equal to *value* according to *index*
+* *index* Between *lower* *upper*
+  This will return items Greater Than Or Equal to *lower*
+  and Less Than Or Equal to *upper* according to *index*
+* *index* Except *lower* *upper*
+  This will return items Less Than *lower* or
+  Greater Than *upper* according to *index*
 
 You can chain any number of filters together, and they will pipeline into
 each other as appropriate.  After the above filters have been applied, you can
 further tweak how the results are returned using the following meta-filters:
 
 * 'reverse' to return items in reverse order
-* 'limit' <number> to only return the first <number> items
-* 'offset' <number> to skip <number> items
-* 'sort' <index> to sort items according to <index>
+* 'limit' *number* to only return the first *number* items
+* 'offset' *number* to skip *number* items
+* 'sort' *index* to sort items according to *index*
 `, o.name, o.name),
 		Args: func(c *cobra.Command, args []string) error {
 			if len(args) == 0 {
@@ -152,7 +152,7 @@ further tweak how the results are returned using the following meta-filters:
 		Short: fmt.Sprintf("Show a single %v by id", o.name),
 		Long: fmt.Sprintf(`This will show a %v by ID.
 You may also show a single item using a unique index.  In that case,
-format id as <index>:<value>
+format id as *index*:*value*
 `, o.singleName),
 		Args: func(c *cobra.Command, args []string) error {
 			if len(args) != 1 {
@@ -437,7 +437,7 @@ func (o *ops) params() {
 	o.addCommand(getParam)
 	o.addCommand(&cobra.Command{
 		Use:   "add [id] param [key] to [json blob]",
-		Short: fmt.Sprintf("Add the %s param <key> to <blob>", o.name),
+		Short: fmt.Sprintf("Add the %s param *key* to *blob*", o.name),
 		Long:  fmt.Sprintf(`Helper function to add parameters to the %s. Fails is already present.`, o.name),
 		Args: func(c *cobra.Command, args []string) error {
 			if len(args) != 5 {
@@ -491,7 +491,7 @@ func (o *ops) params() {
 	})
 	o.addCommand(&cobra.Command{
 		Use:   "set [id] param [key] to [json blob]",
-		Short: fmt.Sprintf("Set the %s param <key> to <blob>", o.name),
+		Short: fmt.Sprintf("Set the %s param *key* to *blob*", o.name),
 		Long:  fmt.Sprintf(`Helper function to update the %s parameters.`, o.name),
 		Args: func(c *cobra.Command, args []string) error {
 			if len(args) != 5 {
@@ -539,7 +539,7 @@ func (o *ops) params() {
 	})
 	o.addCommand(&cobra.Command{
 		Use:   "remove [id] param [key]",
-		Short: fmt.Sprintf("Remove the param <key> from %s", o.name),
+		Short: fmt.Sprintf("Remove the param *key* from %s", o.name),
 		Long:  fmt.Sprintf(`Helper function to update the %s parameters.`, o.name),
 		Args: func(c *cobra.Command, args []string) error {
 			if len(args) != 3 {

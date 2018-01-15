@@ -4,7 +4,7 @@ Usage:
   drpcli profiles [command]
 
 Available Commands:
-  add         Add the profiles param <key> to <blob>
+  add         Add the profiles param *key* to *blob*
   create      Create a new profile with the passed-in JSON or string key
   destroy     Destroy profile by id
   exists      See if a profiles exists by id
@@ -12,8 +12,8 @@ Available Commands:
   indexes     Get indexes for profiles
   list        List all profiles
   params      Gets/sets all parameters for the profile
-  remove      Remove the param <key> from profiles
-  set         Set the profiles param <key> to <blob>
+  remove      Remove the param *key* from profiles
+  set         Set the profiles param *key* to *blob*
   show        Show a single profiles by id
   update      Unsafely update profile by id with the passed-in JSON
   wait        Wait for a profile's field to become a value within a number of seconds

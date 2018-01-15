@@ -9,13 +9,18 @@
 Data Architecture
 =================
 
-Digital Rebar Provision uses a fairly simple data model.  There are 4 main models for the provisioner server
-and 4 models for the DHCP server.  Each model has a corresponding API in the :ref:`rs_api`.
+Digital Rebar Provision uses a fairly simple data model.  There are 4
+main models for the provisioner server and 4 models for the DHCP
+server.  Each model has a corresponding API in the :ref:`rs_api`.
 
-The models define elements of the system.  The API provides basic CRUD (create, read, update, and delete) operations as well as
-some additional actions for manipulating the state of the system.  The :ref:`rs_api` contains that definitions of the actual
-structures and methods on those objects.  Additionally, the :ref:`rs_operation` will describe common actions to use and do with
-these models and how to build them.  The :ref:`rs_cli` describes the Command Line manipulators for the model.
+The models define elements of the system.  The API provides basic CRUD
+(create, read, update, and delete) operations as well as some
+additional actions for manipulating the state of the system.  The
+:ref:`rs_api` contains that definitions of the actual structures and
+methods on those objects.  Additionally, the :ref:`rs_operation` will
+describe common actions to use and do with these models and how to
+build them.  The :ref:`rs_cli` describes the Command Line manipulators
+for the model.
 
 This section will describe its use and role in the system.
 
@@ -35,26 +40,45 @@ These models represent things that the provisioner server use and manipulate.
 Machine
 ~~~~~~~
 
-The Machine object defines a machine that is being provisioned.  The Machine is represented by a unique **UUID**.  The UUID
-is immutable after machine creation.  The machine's primary purpose is to map an incoming IP address to a :ref:`rs_model_bootenv`.
-The :ref:`rs_model_bootenv` provides a set of rendered :ref:`rs_model_template` that will can be used to boot the machine.  The
-machine provides parameters to the :ref:`rs_model_template`.  The Machine provides configuration to the renderer in the
-form of parameters and fields.  Also, each :ref:`rs_model_machine` must have a :ref:`rs_model_bootenv` to boot from.
-If a machine is created without a :ref:`rs_model_bootenv` specified, the system will assign the one specified by
-the value of :ref:`rs_model_prefs` *defaultBootEnv*.
+The Machine object defines a machine that is being provisioned.  The
+Machine is represented by a unique **UUID**.  The UUID is immutable
+after machine creation.  The machine's primary purpose is to map an
+incoming IP address to a :ref:`rs_model_bootenv`.  The
+:ref:`rs_model_bootenv` provides a set of rendered
+:ref:`rs_model_template` that will can be used to boot the machine.
+The machine provides parameters to the :ref:`rs_model_template`.  The
+Machine provides configuration to the renderer in the form of
+parameters and fields.  Also, each :ref:`rs_model_machine` must have a
+:ref:`rs_model_bootenv` to boot from.  If a machine is created without
+a :ref:`rs_model_bootenv` specified, the system will assign the one
+specified by the value of :ref:`rs_model_prefs` *defaultBootEnv*.
 
 The **Name** field should contain the FQDN of the node.
 
-The Machine object contains an **Error** field that represents errors encountered while operating on the machine.  In general,
-these are errors pertaining to rendering the :ref:`rs_model_bootenv`.
+The Machine object contains an **Error** field that represents errors
+encountered while operating on the machine.  In general, these are
+errors pertaining to rendering the :ref:`rs_model_bootenv`.
 
-The Machine parameters are defined as a special :ref:`rs_model_profile` on the Machine.  The profile stores a dictionary of
-string keys to arbitrary objects.  These could be strings, booleans, numbers, arrays, or objects representing similarly
-defined dictionaries.  The machine parameters are available to templates for expansion in them.
+The Machine parameters are defined as a special
+:ref:`rs_model_profile` on the Machine.  The profile stores a
+dictionary of string keys to arbitrary objects.  These could be
+strings, booleans, numbers, arrays, or objects representing similarly
+defined dictionaries.  The machine parameters are available to
+templates for expansion in them.
 
-Additionally, the machine maintains an ordered list of profiles that are searched and then finally the **global profile**.  See :ref:`rs_model_profile` and :ref:`rs_model_template` for more information.
+Additionally, the machine maintains an ordered list of profiles that
+are searched and then finally the **global profile**.  See
+:ref:`rs_model_profile` and :ref:`rs_model_template` for more
+information.
 
-.. note:: When updating the Params part of the embedded Profile in the :ref:`rs_model_machine` object, using the **PUT** method will replace the Params map with the map from the input object.  The **PATCH** will merge the Params map in the input with the existing Params map in the current :ref:`rs_model_machine` object.  The **POST** method on the params subaction will replace the map with the input version.
+.. note:: When updating the Params part of the embedded Profile in the
+          :ref:`rs_model_machine` object, using the **PUT** method
+          will replace the Params map with the map from the input
+          object.  The **PATCH** will merge the Params map in the
+          input with the existing Params map in the current
+          :ref:`rs_model_machine` object.  The **POST** method on the
+          params subaction will replace the map with the input
+          version.
 
 .. index::
   pair: Model; Param
@@ -64,7 +88,10 @@ Additionally, the machine maintains an ordered list of profiles that are searche
 Param
 ~~~~~
 
-The Param Object is the lowest level building block.  It is a simple key / value pair.  Each Param is a bounded type parameter, and type definition is enforced.  The following types of parameters may be used:
+The Param Object is the lowest level building block.  It is a simple
+key / value pair.  Each Param is a bounded type parameter, and type
+definition is enforced.  The following types of parameters may be
+used:
 
 ========================== ========================================================================
 type                       description
@@ -84,23 +111,38 @@ map                        a higher-order function that applies a given function
 Profile
 ~~~~~~~
 
-The Profile Object defines a set of key / value pairs (or parameters).  All of these may be manipulated by the :ref:`rs_api`.
-The key space is a free form string and the value is an arbitrary data blob specified by JSON through
-the :ref:`rs_api`.  The common parameters defined in :ref:`rs_model_template` can be set on these objects.
-The system maintains a **global** profile for setting system wide parameters.  They are the lowest level of precedence.
+The Profile Object defines a set of key / value pairs (or parameters).
+All of these may be manipulated by the :ref:`rs_api`.  The key space
+is a free form string and the value is an arbitrary data blob
+specified by JSON through the :ref:`rs_api`.  The common parameters
+defined in :ref:`rs_model_template` can be set on these objects.  The
+system maintains a **global** profile for setting system wide
+parameters.  They are the lowest level of precedence.
 
-The profiles are free form dictionaries and default empty.  Any key/value pair can be added and referenced.
+The profiles are free form dictionaries and default empty.  Any
+key/value pair can be added and referenced.
 
-Other profiles may be created to group parameters together to apply to sets of machines.  The machine's profile
-list allows the administrator to specify an ordered set of profiles that apply to that machine as well.
-Additionally, the system maintains a special
-profile for each machine to store custom parameters specific to that machine.  This profile is embedded in the :ref:`rs_model_machine` object.
+Other profiles may be created to group parameters together to apply to
+sets of machines.  The machine's profile list allows the administrator
+to specify an ordered set of profiles that apply to that machine as
+well.  Additionally, the system maintains a special profile for each
+machine to store custom parameters specific to that machine.  This
+profile is embedded in the :ref:`rs_model_machine` object.
 
-When the system needs to render a template parameter, the machine's specific profile is checked, then the order
-list of profiles stored in the Machine Object are checked, and finally the **global** profile is checked.  The
-key and its value are used if found in template rendering.
+When the system needs to render a template parameter, the machine's
+specific profile is checked, then the order list of profiles stored in
+the Machine Object are checked, and finally the **global** profile is
+checked.  The key and its value are used if found in template
+rendering.
 
-.. note:: When updating the Params part of the :ref:`rs_model_profile`, using the **PUT** method will replace the Params map with the map from the input object.  The **PATCH** method will merge the Params map in the input with the existing Params map in the current :ref:`rs_model_profile` object.  The **POST** method on the params subaction will replace the map with the input version.
+.. note:: When updating the Params part of the
+          :ref:`rs_model_profile`, using the **PUT** method will
+          replace the Params map with the map from the input object.
+          The **PATCH** method will merge the Params map in the input
+          with the existing Params map in the current
+          :ref:`rs_model_profile` object.  The **POST** method on the
+          params subaction will replace the map with the input
+          version.
 
 
 .. index::
@@ -111,28 +153,41 @@ key and its value are used if found in template rendering.
 BootEnv
 ~~~~~~~
 
-The BootEnv object defines an environment to boot a machine.  It has two main components an OS information section and a templates
-list.  The OS information section defines what makes up the installation base for this bootenv.  It defines the install ISO, a
-URL to get the ISO, and SHA256 checksum to validate the image.  These are used to provide the basic install image, kernel, and
-base packages for the bootenv.
+The BootEnv object defines an environment to boot a machine.  It has
+two main components an OS information section and a templates list.
+The OS information section defines what makes up the installation base
+for this bootenv.  It defines the install ISO, a URL to get the ISO,
+and SHA256 checksum to validate the image.  These are used to provide
+the basic install image, kernel, and base packages for the bootenv.
 
-The other primary section is a set of templates that represent files in the file server's file space that can served via HTTP or
-TFTP.  The templates can be in-line in the BootEnv object or reference a :ref:`rs_model_template`.  The templates are specified as
-a list of paths in the filesystem and either an ID of a :ref:`rs_model_template` or inline content.  The path field of the
-template information can use the same template expansion that is used in the template.  See :ref:`rs_model_template` for more
-information.
+The other primary section is a set of templates that represent files
+in the file server's file space that can served via HTTP or TFTP.  The
+templates can be in-line in the BootEnv object or reference a
+:ref:`rs_model_template`.  The templates are specified as a list of
+paths in the filesystem and either an ID of a :ref:`rs_model_template`
+or inline content.  The path field of the template information can use
+the same template expansion that is used in the template.  See
+:ref:`rs_model_template` for more information.
 
-Additionally, the BootEnv defines required and optional parameters.  The required parameters validated at render time to be
-present or an error is generated.  These parameters can be met by the parameters on the machine, the profiles in machine's profiles list,
-or from the global :ref:`rs_model_profile`.
+Additionally, the BootEnv defines required and optional parameters.
+The required parameters validated at render time to be present or an
+error is generated.  These parameters can be met by the parameters on
+the machine, the profiles in machine's profiles list, or from the
+global :ref:`rs_model_profile`.
 
-BootEnvs can be marked **OnlyUnknown**.  This tells the rest of the system that this BootEnv is not for specific machines.  It is a
-general BootEnv.  For example, *discovery* and *ignore* are **OnlyUnknown**.  *discovery* is used to discover unknown machines and
-add them to Digital Rebar Provision.  *ignore* is a special bootenv that tells machines to boot their local disk.  These BootEnvs
-populate the pxelinux.0, ipxe, and elilo default fallthrough files.  These are different than their counterpart BootEnvs,
-*sledgehammer* and *local* which are machine specific BootEnvs that populate configuration files that are specific to a single
-machine.  A machine boots *local*; an unknown machine boots *ignore*.  There can only be one **OnlyUnknown** BootEnv active
-at a time.  This is specified by the :ref:`rs_model_prefs` *unknownBootEnv*.
+BootEnvs can be marked **OnlyUnknown**.  This tells the rest of the
+system that this BootEnv is not for specific machines.  It is a
+general BootEnv.  For example, *discovery* and *ignore* are
+**OnlyUnknown**.  *discovery* is used to discover unknown machines and
+add them to Digital Rebar Provision.  *ignore* is a special bootenv
+that tells machines to boot their local disk.  These BootEnvs populate
+the pxelinux.0, ipxe, and elilo default fallthrough files.  These are
+different than their counterpart BootEnvs, *sledgehammer* and *local*
+which are machine specific BootEnvs that populate configuration files
+that are specific to a single machine.  A machine boots *local*; an
+unknown machine boots *ignore*.  There can only be one **OnlyUnknown**
+BootEnv active at a time.  This is specified by the
+:ref:`rs_model_prefs` *unknownBootEnv*.
 
 .. index::
   pair: Model; Template
@@ -142,17 +197,24 @@ at a time.  This is specified by the :ref:`rs_model_prefs` *unknownBootEnv*.
 Template
 ~~~~~~~~
 
-The Template object defines a templated content that can be referenced by its ID.  The content of the template (or
-in-line template in a :ref:`rs_model_bootenv`) is a `golang text/template <https://golang.org/pkg/text/template/#hdr-Actions>`_ string.
-The template has a set of special expansions.  The normal expansion syntax is:
+The Template object defines a templated content that can be referenced
+by its ID.  The content of the template (or in-line template in a
+:ref:`rs_model_bootenv`) is a `golang text/template
+<https://golang.org/pkg/text/template/#hdr-Actions>`_ string.  The
+template has a set of special expansions.  The normal expansion syntax
+is:
 
   ::
 
     {{ .Machine.Name }}
 
-This would expand to the machine's **Name** field.  There are helpers for the parameter spaces, the :ref:`rs_model_bootenv` object,
-and some miscellaneous functions.  Additionally, the normal `golang text/template <https://golang.org/pkg/text/template/#hdr-Actions>`_
-functions are available as well.  Things like **range**, **len**, and comparators are available as well.  **template** inclusion is supported by the following syntax:
+This would expand to the machine's **Name** field.  There are helpers
+for the parameter spaces, the :ref:`rs_model_bootenv` object, and some
+miscellaneous functions.  Additionally, the normal `golang
+text/template <https://golang.org/pkg/text/template/#hdr-Actions>`_
+functions are available as well.  Things like **range**, **len**, and
+comparators are available as well.  **template** inclusion is
+supported by the following syntax:
 
   ::
 
@@ -191,25 +253,36 @@ Expansion                      Description
 template <string> .            Includes the template specified by the string.  String can be a variable and note that template does NOT have a dot (.) in front.
 ============================== =================================================================================================================================================================================================
 
-**GenerateToken** is very special.  This generates either a *known token* or an *unknown token* for use by the template to update objects
-in Digital Rebar Provision.  The tokens are valid for a limited time as defined by the **knownTokenTimeout** and **unknownTokenTimeout**
-:ref:`rs_model_prefs` respectively.  The tokens are also restricted to the function the can perform.  The *known token* is limited to only
-reading and updating the specific machine the template is being rendered for.  If a machine is not present during the render, an
-*unknown token* is generated that has the ability to query and create machines.  These are used by the install process to indicate that
-the install is finished and that the *local* BootEnv should be used for the next boot and during the discovery process to create
-the newly discovered machine.
+**GenerateToken** is very special.  This generates either a *known
+token* or an *unknown token* for use by the template to update objects
+in Digital Rebar Provision.  The tokens are valid for a limited time
+as defined by the **knownTokenTimeout** and **unknownTokenTimeout**
+:ref:`rs_model_prefs` respectively.  The tokens are also restricted to
+the function the can perform.  The *known token* is limited to only
+reading and updating the specific machine the template is being
+rendered for.  If a machine is not present during the render, an
+*unknown token* is generated that has the ability to query and create
+machines.  These are used by the install process to indicate that the
+install is finished and that the *local* BootEnv should be used for
+the next boot and during the discovery process to create the newly
+discovered machine.
 
-.. note::
-  **.Machine.Path** is particularly useful for ensuring that templates are expanded into a unique file space for
-  each machine.  An example of this is per machine kickstart files.  These can be seen in the `assets/bootenvs/ubuntu-16.04.yml <https://github.com/digitalrebar/provision/blob/master/assets/bootenvs/ubuntu-16.04.yml>`_.
+.. note:: **.Machine.Path** is particularly useful for ensuring that
+  templates are expanded into a unique file space for each machine.
+  An example of this is per machine kickstart files.  These can be
+  seen in the `assets/bootenvs/ubuntu-16.04.yml
+  <https://github.com/digitalrebar/provision/blob/master/assets/bootenvs/ubuntu-16.04.yml>`_.
 
-With regard to the **.Param** and **.ParamExists** functions, these return the parameter or existence of
-the parameter specified by the *key* input.  The parameters are examined from most specific to global.  This means
-that the Machine object's profile is checked first, then the list of :ref:`rs_model_profile` associated with the machine,
-and finally the global :ref:`rs_model_profile`.  The parameters are stored in a :ref:`rs_model_profile`.
+With regard to the **.Param** and **.ParamExists** functions, these
+return the parameter or existence of the parameter specified by the
+*key* input.  The parameters are examined from most specific to
+global.  This means that the Machine object's profile is checked
+first, then the list of :ref:`rs_model_profile` associated with the
+machine, and finally the global :ref:`rs_model_profile`.  The
+parameters are stored in a :ref:`rs_model_profile`.
 
-The default :ref:`rs_model_template` and :ref:`rs_model_bootenv` use the following optional (unless marked with an \*)
-parameters.
+The default :ref:`rs_model_template` and :ref:`rs_model_bootenv` use
+the following optional (unless marked with an \*) parameters.
 
 =================================  ================  =================================================================================================================================
 Parameter                          Type              Description
@@ -225,17 +298,20 @@ dns-domain                         String            DNS Domain to use for this 
 \*operating-system-install-flavor  String            Windows Only
 =================================  ================  =================================================================================================================================
 
-For some examples of this in use, see :ref:`rs_operation` as well as the example profiles in the assets
-:ref:`rs_install` directory.
+For some examples of this in use, see :ref:`rs_operation` as well as
+the example profiles in the assets :ref:`rs_install` directory.
 
 
 Sub-templates
 _____________
 
-A :ref:`rs_model_template` may contain other templates as described above.  The system comes with some pre-existing
-sub-templates to make kickstart and preseed generation easier.  The following templates are available had
-have some parameters that drive them.  The required parameters can be applied through profiles or the
-:ref:`rs_model_machine` profile.  The templates contain comments with how to use and parameters to set.
+A :ref:`rs_model_template` may contain other templates as described
+above.  The system comes with some pre-existing sub-templates to make
+kickstart and preseed generation easier.  The following templates are
+available had have some parameters that drive them.  The required
+parameters can be applied through profiles or the
+:ref:`rs_model_machine` profile.  The templates contain comments with
+how to use and parameters to set.
 
 .. index::
   pair: SubTemplate; Update DRP BootEnv
@@ -243,16 +319,19 @@ have some parameters that drive them.  The required parameters can be applied th
 Update Digital Rebar Provisioner BootEnv
 ++++++++++++++++++++++++++++++++++++++++
 
-This sub-template updates the :ref:`rs_model_machine` object's BootEnv to the parameter, **next_boot_env**.  If
-**next_boot_env** is not defined, the BootEnv will be set to *local*.  This template uses the **GenerateToken**
-function to securely update Digital Rebar Provision.  To use, add the following to the post install section of
-the kickstart or net-post-install.sh template.
+This sub-template updates the :ref:`rs_model_machine` object's BootEnv
+to the parameter, **next_boot_env**.  If **next_boot_env** is not
+defined, the BootEnv will be set to *local*.  This template uses the
+**GenerateToken** function to securely update Digital Rebar Provision.
+To use, add the following to the post install section of the kickstart
+or net-post-install.sh template.
 
   ::
 
     {{ template "update-drp-local.tmpl" . }}
 
-An example :ref:`rs_model_profile` that sets the next BootEnv would be:
+An example :ref:`rs_model_profile` that sets the next BootEnv would
+be:
 
   ::
 
@@ -269,16 +348,19 @@ An example :ref:`rs_model_profile` that sets the next BootEnv would be:
 Web Proxy
 +++++++++
 
-This sub-template sets up the environment variables and conditionally the apt repo to use a web proxy.  The
-sub-template uses the **proxy-servers** parameter.  The place the template in the post-install section of
-the kickstart or the net-post-install.sh script.
+This sub-template sets up the environment variables and conditionally
+the apt repo to use a web proxy.  The sub-template uses the
+**proxy-servers** parameter.  The place the template in the
+post-install section of the kickstart or the net-post-install.sh
+script.
 
   ::
 
     {{ template "web-proxy.tmpl" . }}
 
 
-An example :ref:`rs_model_profile` that sets proxies would look like this yaml.
+An example :ref:`rs_model_profile` that sets proxies would look like
+this yaml.
 
   ::
 
@@ -296,13 +378,18 @@ An example :ref:`rs_model_profile` that sets proxies would look like this yaml.
 Local Repos
 +++++++++++
 
-**This section is deprecated, it is being replaced by the more general package-repositories functionality**
+**This section is deprecated, it is being replaced by the more general
+package-repositories functionality**
 
-It is possible to use the exploded ISOs as repositories for post-installation work.  This can be helpful
-when missing internet connectivity.  To cause the local repos to replace the public repos, set the *local_repo*
-parameter to *true*.  This will force them to be changed.  There is one for ubuntu/debian-based systems,
-**ubuntu-drp-only-repos.tmpl** and one for centos/redhat-based systems, **centos-drp-only-repos.tmpl**.
-The place the template in the post-install section of the kickstart or the net-post-install.sh script.
+It is possible to use the exploded ISOs as repositories for
+post-installation work.  This can be helpful when missing internet
+connectivity.  To cause the local repos to replace the public repos,
+set the *local_repo* parameter to *true*.  This will force them to be
+changed.  There is one for ubuntu/debian-based systems,
+**ubuntu-drp-only-repos.tmpl** and one for centos/redhat-based
+systems, **centos-drp-only-repos.tmpl**.  The place the template in
+the post-install section of the kickstart or the net-post-install.sh
+script.
 
   ::
 
@@ -438,7 +525,8 @@ Repo Object
 
 As mentioned above, the template-level .Repos, .MachineRepos, and
 .InstallRepos return a list of Repo objects that can be used for
-further template expansion.  The Repo object contains its own fields and functions that can be used for template expansion:
+further template expansion.  The Repo object contains its own fields
+and functions that can be used for template expansion:
 
 ===================    ===========
 Expansion              Description
@@ -479,9 +567,11 @@ To expand the repos suitable for post-install package management, use::
 Set Hostname
 ++++++++++++
 
-To set the hostname on the post-installed system, include this template.  It will work for ubuntu and centos-based
-systems.  The place the template in the post-install section of the kickstart or the net-post-install.sh script.
-The template uses the :ref:`rs_model_machine` built in parameters.
+To set the hostname on the post-installed system, include this
+template.  It will work for ubuntu and centos-based systems.  The
+place the template in the post-install section of the kickstart or the
+net-post-install.sh script.  The template uses the
+:ref:`rs_model_machine` built in parameters.
 
   ::
 
@@ -495,9 +585,11 @@ The template uses the :ref:`rs_model_machine` built in parameters.
 Remote Root Access
 ++++++++++++++++++
 
-This templates installs an authorized_keys file in the root user's home directory.  Multiple keys may be provided.
-The template also sets the **/etc/ssh/sshd_config** entry *PermitRootLogin*.  The default setting is
-*without-password* (keyed access only), but other values are available, *no*, *yes*, *forced-commands-only*.
+This templates installs an authorized_keys file in the root user's
+home directory.  Multiple keys may be provided.  The template also
+sets the **/etc/ssh/sshd_config** entry *PermitRootLogin*.  The
+default setting is *without-password* (keyed access only), but other
+values are available, *no*, *yes*, *forced-commands-only*.
 
   ::
 
@@ -520,14 +612,19 @@ An example :ref:`rs_model_profile` that sets the keys and *PermitRootLogin* woul
 Digital Rebar Integration
 +++++++++++++++++++++++++
 
-This template will join the newly installed node into Digital Rebar.  This template requires the
-use of the :ref:`rs_st_remote_root_access` and :ref:`rs_st_set_hostname` subtemplates as well.  To use, include
-these in the kickstart post install section or the net-post-install.sh script.  The **join-to-dr.tmpl** requires
-setting the *join_dr* parameter to *true* and credentials to access Digital Rebar.  Digital Rebar's Endpoint is
-specified with the *CommandURL* parameter, e.g. https://70.2.3.5.  The username and password used to access
-Digital Rebar is specified with *rebar-machine_key*.  This should be the machine key in the rebar-access role
-in the system deployment.  It is necessary to make sure that the rebar root access key is added to the **access_keys**
-parameter.  To get these last two values, see the commands below.
+This template will join the newly installed node into Digital Rebar.
+This template requires the use of the :ref:`rs_st_remote_root_access`
+and :ref:`rs_st_set_hostname` subtemplates as well.  To use, include
+these in the kickstart post install section or the net-post-install.sh
+script.  The **join-to-dr.tmpl** requires setting the *join_dr*
+parameter to *true* and credentials to access Digital Rebar.  Digital
+Rebar's Endpoint is specified with the *CommandURL* parameter,
+e.g. https://70.2.3.5.  The username and password used to access
+Digital Rebar is specified with *rebar-machine_key*.  This should be
+the machine key in the rebar-access role in the system deployment.  It
+is necessary to make sure that the rebar root access key is added to
+the **access_keys** parameter.  To get these last two values, see the
+commands below.
 
 
   ::
@@ -550,8 +647,8 @@ An example :ref:`rs_model_profile`.
       CommandURL: https://70.2.3.5
       rebar-machine_key: machine_install:109asdga;hkljhjha3aksljdga
 
-To get the values for the ssh key and the *rebar-machine_key*, check the *rebar-access* role's attributes or run the
-following commands.
+To get the values for the ssh key and the *rebar-machine_key*, check
+the *rebar-access* role's attributes or run the following commands.
 
 .. note:: DR Integration - commands to run on admin node to get values.
 
@@ -574,18 +671,28 @@ These models represent things that the DHCP server use and manipulate.
 Subnet
 ~~~~~~
 
-The Subnet Object defines the configuration of a single subnet for the DHCP server to process.  Multiple subnets are allowed.  The Subnet
-can represent a local subnet attached to a local interface (Broadcast Subnet) to the Digital Rebar Provision server or a subnet that is
-being forwarded or relayed (Relayed Subnet) to the Digital Rebar Provision server.
+The Subnet Object defines the configuration of a single subnet for the
+DHCP server to process.  Multiple subnets are allowed.  The Subnet can
+represent a local subnet attached to a local interface (Broadcast
+Subnet) to the Digital Rebar Provision server or a subnet that is
+being forwarded or relayed (Relayed Subnet) to the Digital Rebar
+Provision server.
 
-The subnet is uniquely identified by its **Name**.  The subnet defines a CIDR-based range with a specific subrange to hand out for
-nodes that do NOT have explicit reservations (**ActiveStart** thru **ActiveEnd**).  The subnet also defines the **NextServer** in
-the PXE chain.  This is usually an IP associated with Digital Rebar Provision, but if the provisioner is disabled, this can be
-any next hop server.  The lease times for both reserved and unreserved clients as specified here (**ReservedLeaseTime** and **ActiveLeaseTime**).
-The subnet can also me marked as only working for explicitly reserved nodes (**ReservedOnly**).
+The subnet is uniquely identified by its **Name**.  The subnet defines
+a CIDR-based range with a specific subrange to hand out for nodes that
+do NOT have explicit reservations (**ActiveStart** thru
+**ActiveEnd**).  The subnet also defines the **NextServer** in the PXE
+chain.  This is usually an IP associated with Digital Rebar Provision,
+but if the provisioner is disabled, this can be any next hop server.
+The lease times for both reserved and unreserved clients as specified
+here (**ReservedLeaseTime** and **ActiveLeaseTime**).  The subnet can
+also me marked as only working for explicitly reserved nodes
+(**ReservedOnly**).
 
-The subnet also allows for the specification of DHCP options to be sent to clients.  These can be overridden by :ref:`rs_model_reservation`
-specific options.  Some common options are:
+The subnet also allows for the specification of DHCP options to be
+sent to clients.  These can be overridden by
+:ref:`rs_model_reservation` specific options.  Some common options
+are:
 
 ========  ====  =================================
 Type      #     Description
@@ -596,40 +703,64 @@ IP        15    Domain Name
 String    67    Next Boot File - e.g. lpxelinux.0
 ========  ====  =================================
 
-golang template expansion also works in these fields.  This can be used to make custom request-based reply options.
+golang template expansion also works in these fields.  This can be
+used to make custom request-based reply options.
 
-For example, this value in the Next Boot File option (67) will return a file based upon what type of machine is booting.  If
-the machine supports, iPXE then an iPXE boot image is sent, if the system is marked for legacy bios, then lpxelinux.0 is returned,
-otherwise return a 64-bit UEFI network boot loader:
+For example, this value in the Next Boot File option (67) will return
+a file based upon what type of machine is booting.  If the machine
+supports, iPXE then an iPXE boot image is sent, if the system is
+marked for legacy bios, then lpxelinux.0 is returned, otherwise return
+a 64-bit UEFI network boot loader:
 
   ::
 
     {{if (eq (index . 77) "iPXE") }}default.ipxe{{else if (eq (index . 93) "0")}}lpxelinux.0{{else}}bootx64.efi{{end}}
 
 
-The data element for the template expansion as represented by the '.' above is a map of strings indexed by an integer.  The
-integer is the option number from the DHCP request's incoming options.  The IP addresses and other data fields are converted to
-a string form (dotted quads or base 10 numerals).
+The data element for the template expansion as represented by the '.'
+above is a map of strings indexed by an integer.  The integer is the
+option number from the DHCP request's incoming options.  The IP
+addresses and other data fields are converted to a string form (dotted
+quads or base 10 numerals).
 
-The final elements of a subnet are the **Strategy** and **Pickers** options.  These are described in the :ref:`rs_api` JSON description.
-They define how a node should be identified (**Strategy**) and the algorithm for picking addresses (**Pickers**).  The strategy can
-only be set to **MAC** currently.  This will use the MAC address of the node as its DHCP identifier.  Others may show up in time.
+The final elements of a subnet are the **Strategy** and **Pickers**
+options.  These are described in the :ref:`rs_api` JSON description.
+They define how a node should be identified (**Strategy**) and the
+algorithm for picking addresses (**Pickers**).  The strategy can only
+be set to **MAC** currently.  This will use the MAC address of the
+node as its DHCP identifier.  Others may show up in time.
 
-.. _rs_model_pickers: 
+.. _rs_model_pickers:
 
 Pickers
 ~~~~~~~
 
-**Pickers** defines an ordered list of methods to determine the address to hand out.  Currently, this will default to the list:
-*hint*, *nextFree*, and *mostExpired*.  The following options are available for the list.
+**Pickers** defines an ordered list of methods to determine the
+address to hand out.  Currently, this will default to the list:
+*hint*, *nextFree*, and *mostExpired*.  The following options are
+available for the list.
 
-* hint - which will try to reuse the address that the DHCP packet is requesting, if it has one.  If the request does not have a requested address, "hint" will fall through to the next strategy. Otherwise, it will refuse to try ant reamining strategies whether or not it can satisfy the request.  This should force the client to fall back to DHCPDISCOVER with no requsted IP address. "hint" will reuse expired leases and unexpired leases that match on the requested address, strategy, and token.
-* nextFree - Within the subnet's pool of Active IPs, choose the next free making sure to loop over all addresses before reuse.  It will fall through to the next strategy if it cannot find a free IP.  "nextFree" only considers addresses that do not have a lease, whether or not the lease is expired.
-* mostExpired - If no free address is available, use the most expired address first.
-* none - Do NOT hand out an address and refuse to try
-  any remaining strategies
+* **hint** - which will try to reuse the address that the DHCP packet is
+  requesting, if it has one.  If the request does not have a requested
+  address, "hint" will fall through to the next strategy. Otherwise,
+  it will refuse to try ant reamining strategies whether or not it can
+  satisfy the request.  This should force the client to fall back to
+  DHCPDISCOVER with no requsted IP address. "hint" will reuse expired
+  leases and unexpired leases that match on the requested address,
+  strategy, and token.
+* **nextFree** - Within the subnet's pool of Active IPs, choose the next
+  free making sure to loop over all addresses before reuse.  It will
+  fall through to the next strategy if it cannot find a free IP.
+  "nextFree" only considers addresses that do not have a lease,
+  whether or not the lease is expired.
+* **mostExpired** - If no free address is available, use the most expired
+  address first.
+* **none** - Do NOT hand out an address and refuse to try any remaining
+  strategies
 
-All of the address allocation strategies do not consider any addresses that are reserved, as lease creation will be handled by the reservation instead.
+All of the address allocation strategies do not consider any addresses
+that are reserved, as lease creation will be handled by the
+reservation instead.
 
 
 .. index::
@@ -640,13 +771,18 @@ All of the address allocation strategies do not consider any addresses that are 
 Reservation
 ~~~~~~~~~~~
 
-The Reservation Object defines a mapping between a token and an IP address.  The token is defined by the assigned strategy.  Similar
-to :ref:`rs_model_subnet`, the only current strategy is **MAC**.  This will use the MAC address of the incoming requests as the
-identity token.  The reservation allows for the optional specification of specific options and a next server that override or
-augment the options defined in a subnet.  Because the reservation is an explicit binding of the token to an IP address, the
-address can be handed out without the definition of a subnet.  This requires that the reservation have the Netmask Option (Option 1)
-specified.  In general, it is a good idea to define a subnet that will cover the reservation with default options and parameters, but
-it is not required.
+The Reservation Object defines a mapping between a token and an IP
+address.  The token is defined by the assigned strategy.  Similar to
+:ref:`rs_model_subnet`, the only current strategy is **MAC**.  This
+will use the MAC address of the incoming requests as the identity
+token.  The reservation allows for the optional specification of
+specific options and a next server that override or augment the
+options defined in a subnet.  Because the reservation is an explicit
+binding of the token to an IP address, the address can be handed out
+without the definition of a subnet.  This requires that the
+reservation have the Netmask Option (Option 1) specified.  In general,
+it is a good idea to define a subnet that will cover the reservation
+with default options and parameters, but it is not required.
 
 .. index::
   pair: Model; Lease
@@ -656,9 +792,12 @@ it is not required.
 Lease
 ~~~~~
 
-The Lease Object defines the ephemeral mapping of a token, as defined by the reservation's or subnet's strategy, and an IP address assigned
-by the reservation or pulled form the subnet's pool.  The lease contains the Strategy used for the token and the expiration time.  The
-contents of the lease are immutable with the exception of the expiration time.
+The Lease Object defines the ephemeral mapping of a token, as defined
+by the reservation's or subnet's strategy, and an IP address assigned
+by the reservation or pulled form the subnet's pool.  The lease
+contains the Strategy used for the token and the expiration time.  The
+contents of the lease are immutable with the exception of the
+expiration time.
 
 .. index::
   pair: Model; Interface
@@ -668,9 +807,11 @@ contents of the lease are immutable with the exception of the expiration time.
 Interface
 ~~~~~~~~~
 
-The Interface Object is a read-only object that is used to identify local interfaces and their addresses on the
-Digital Rebar Provision server.  This is useful for determining what subnets to create and with what address ranges.
-The :ref:`rs_ui_subnets` part of the :ref:`rs_ui` uses this to populate possible subnets to create.
+The Interface Object is a read-only object that is used to identify
+local interfaces and their addresses on the Digital Rebar Provision
+server.  This is useful for determining what subnets to create and
+with what address ranges.  The :ref:`rs_ui_subnets` part of the
+:ref:`rs_ui` uses this to populate possible subnets to create.
 
 
 .. _rs_additional_models:
@@ -688,15 +829,21 @@ These models control additional parts and actions of the system.
 User
 ~~~~
 
-The User Object controls access to the system.  The User object contains a name and a password hash for validating access.  Additionally,
-the User :ref:`rs_api` can be used to generate time-based, function restricted tokens for use in :ref:`rs_api` calls.  The
-:ref:`rs_model_template` provides a helper function to generate these for restricted machine access in the discovery and post-install
+The User Object controls access to the system.  The User object
+contains a name and a password hash for validating access.
+Additionally, the User :ref:`rs_api` can be used to generate
+time-based, function restricted tokens for use in :ref:`rs_api` calls.
+The :ref:`rs_model_template` provides a helper function to generate
+these for restricted machine access in the discovery and post-install
 process.
 
-The User Object is usually created with an unset password.  This allows for the User have no access but still access the system
-through constructed tokens.  The :ref:`rs_cli` has commands to set the password for a user.
+The User Object is usually created with an unset password.  This
+allows for the User have no access but still access the system through
+constructed tokens.  The :ref:`rs_cli` has commands to set the
+password for a user.
 
-More on access tokens, user creation,  and an control in :ref:`rs_operation`.
+More on access tokens, user creation, and an control in
+:ref:`rs_operation`.
 
 
 .. index::
@@ -707,10 +854,12 @@ More on access tokens, user creation,  and an control in :ref:`rs_operation`.
 Prefs
 ~~~~~
 
-Most configuration is handle through the :ref:`rs_model_profile` system, but there are a few modifiable
-options that can be changed over time in the server (outside of command line flags).  These are preferences.  The preferences are
-key value pairs where both the key and the value are strings.  The use internally may be an integer, but the specification through
-the :ref:`rs_api` is by string.
+Most configuration is handle through the :ref:`rs_model_profile`
+system, but there are a few modifiable options that can be changed
+over time in the server (outside of command line flags).  These are
+preferences.  The preferences are key value pairs where both the key
+and the value are strings.  The use internally may be an integer, but
+the specification through the :ref:`rs_api` is by string.
 
 =================== ======= ==================================================================================================================================================================================
 Pref                Type    Description
@@ -729,7 +878,8 @@ debugBootEnv        integer The debug level of the BootEnv system.  0 = off, 1 =
 Special Objects
 ---------------
 
-These are not objects in the system but represent files and directories in the server space.
+These are not objects in the system but represent files and
+directories in the server space.
 
 .. index::
   pair: Model; Files
@@ -739,15 +889,22 @@ These are not objects in the system but represent files and directories in the s
 Files
 ~~~~~
 
-File server has a managed filesystem space.  The :ref:`rs_api` defines methods to upload, destroy, and get these files outside of the
-normal TFTP and HTTP path.  The TFTP and HTTP access paths are read-only.  The only way to modify this space is through the :ref:`rs_api`
-or direct filesystem access underneath Digital Rebar Provision.  The filesystem space defaults to */var/lib/tftpboot*, but can be overridden
-by the command line flag *--file-root*, e.g. *--file-root=`pwd`/drp-data* when using *--isolated* on install.  These directories can be
-directly manipulated by administrators for faster loading times.
+File server has a managed filesystem space.  The :ref:`rs_api` defines
+methods to upload, destroy, and get these files outside of the normal
+TFTP and HTTP path.  The TFTP and HTTP access paths are read-only.
+The only way to modify this space is through the :ref:`rs_api` or
+direct filesystem access underneath Digital Rebar Provision.  The
+filesystem space defaults to */var/lib/tftpboot*, but can be
+overridden by the command line flag *--file-root*,
+e.g. *--file-root=`pwd`/drp-data* when using *--isolated* on install.
+These directories can be directly manipulated by administrators for
+faster loading times.
 
-This space is also used by the :ref:`rs_model_bootenv` import process when "exploding" an ISO for use by :ref:`rs_model_machine`.
+This space is also used by the :ref:`rs_model_bootenv` import process
+when "exploding" an ISO for use by :ref:`rs_model_machine`.
 
-.. note:: Templates are **NOT** rendered to the file system.  They are in-memory generated on the fly content.
+.. note:: Templates are **NOT** rendered to the file system.  They are
+          in-memory generated on the fly content.
 
 .. index::
   pair: Model; Isos
@@ -757,10 +914,13 @@ This space is also used by the :ref:`rs_model_bootenv` import process when "expl
 Isos
 ~~~~
 
-The ISO directory in the file server space is managed specially by the ISO :ref:`rs_api`.  The API handles upload and destroy
-functionality.  The API also handles notification of the :ref:`rs_model_bootenv` system to "explode" ISOs that are needed by :ref:`rs_model_bootenv` and marking
-the :ref:`rs_model_bootenv` as available.
+The ISO directory in the file server space is managed specially by the
+ISO :ref:`rs_api`.  The API handles upload and destroy functionality.
+The API also handles notification of the :ref:`rs_model_bootenv`
+system to "explode" ISOs that are needed by :ref:`rs_model_bootenv`
+and marking the :ref:`rs_model_bootenv` as available.
 
-ISOs can be directly placed into the **isos** directory in the file root, but the using :ref:`rs_model_bootenv` needs to be modified or deleted and
-re-added to force the ISO to be exploded for use.
+ISOs can be directly placed into the **isos** directory in the file
+root, but the using :ref:`rs_model_bootenv` needs to be modified or
+deleted and re-added to force the ISO to be exploded for use.
 
