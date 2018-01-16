@@ -143,3 +143,7 @@ func (b *Subnet) ToModels(obj interface{}) []Model {
 	}
 	return res
 }
+
+func (b *Subnet) CanHaveActions() bool {
+	return true
+}

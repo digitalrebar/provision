@@ -1,5 +1,6 @@
 {
   "Command": "increment",
+  "Model": "machines",
   "OptionalParams": [
     "incrementer/step",
     "incrementer/parameter"

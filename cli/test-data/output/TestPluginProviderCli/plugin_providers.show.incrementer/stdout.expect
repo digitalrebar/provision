@@ -2,6 +2,7 @@
   "AvailableActions": [
     {
       "Command": "increment",
+      "Model": "machines",
       "OptionalParams": [
         "incrementer/step",
         "incrementer/parameter"
@@ -11,6 +12,7 @@
     },
     {
       "Command": "reset_count",
+      "Model": "machines",
       "OptionalParams": [],
       "Provider": "incrementer",
       "RequiredParams": [

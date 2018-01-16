@@ -1,5 +1,6 @@
 {
   "Command": "reset_count",
+  "Model": "machines",
   "OptionalParams": [],
   "Provider": "incrementer",
   "RequiredParams": [

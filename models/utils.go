@@ -172,3 +172,9 @@ type TaskRunner interface {
 	Tasker
 	RunningTask() int
 }
+
+// Only implement this if you want actions
+type Actor interface {
+	Model
+	CanHaveActions() bool
+}

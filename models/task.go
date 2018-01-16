@@ -90,3 +90,7 @@ func (b *Task) ToModels(obj interface{}) []Model {
 func (b *Task) SetName(n string) {
 	b.Name = n
 }
+
+func (b *Task) CanHaveActions() bool {
+	return true
+}

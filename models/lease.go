@@ -83,3 +83,7 @@ func (b *Lease) ToModels(obj interface{}) []Model {
 	}
 	return res
 }
+
+func (b *Lease) CanHaveActions() bool {
+	return true
+}

@@ -82,3 +82,7 @@ func (b *User) ToModels(obj interface{}) []Model {
 func (b *User) SetName(n string) {
 	b.Name = n
 }
+
+func (b *User) CanHaveActions() bool {
+	return true
+}

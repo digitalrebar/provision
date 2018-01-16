@@ -5,44 +5,64 @@ package plugin
  */
 
 import (
-	"bufio"
+	"context"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"log"
+	"net"
+	"net/http"
 	"os"
-	"sync/atomic"
 	"time"
 
+	"github.com/digitalrebar/logger"
+	"github.com/digitalrebar/provision/api"
 	"github.com/digitalrebar/provision/models"
+	"github.com/gin-gonic/gin"
 	"github.com/spf13/cobra"
 )
 
+type PluginStop interface {
+	Stop(logger.Logger)
+}
+
 type PluginConfig interface {
-	Config(map[string]interface{}) *models.Error
+	Config(logger.Logger, *api.Client, map[string]interface{}) *models.Error
 }
 
 type PluginPublisher interface {
-	Publish(*models.Event) *models.Error
+	Publish(logger.Logger, *models.Event) *models.Error
 }
 
 type PluginActor interface {
-	Action(*models.MachineAction) *models.Error
+	Action(logger.Logger, *models.Action) (interface{}, *models.Error)
 }
 
 var (
-	App = &cobra.Command{
+	thelog logger.Logger
+	App    = &cobra.Command{
 		Use:   "replaceme",
 		Short: "Replace ME!",
 	}
-	debug = false
+	debug   = false
+	client  *http.Client
+	session *api.Client
 )
 
-func Log(format string, args ...interface{}) {
-	fmt.Fprintf(os.Stderr, format, args...)
+func Publish(t, a, k string, o interface{}) {
+	e := &models.Event{Time: time.Now(), Type: t, Action: a, Key: k, Object: o}
+	_, err := post("/publish", e)
+	if err != nil {
+		thelog.Errorf("Failed to publish event! %v %v", e, err)
+	}
 }
 
 func InitApp(use, short, version string, def *models.PluginProvider, pc PluginConfig) {
 	App.Use = use
 	App.Short = short
+
+	localLogger := log.New(ioutil.Discard, App.Use, log.LstdFlags|log.Lmicroseconds|log.LUTC)
+	thelog = logger.New(localLogger).SetDefaultLevel(logger.Debug).SetPublisher(logToDRP).Log(App.Use)
 
 	App.PersistentFlags().BoolVarP(&debug,
 		"debug", "d", false,
@@ -72,122 +92,145 @@ func InitApp(use, short, version string, def *models.PluginProvider, pc PluginCo
 		Use:   "define",
 		Short: "Digital Rebar Provision CLI Command Define",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			prettyPrint(def)
-			return nil
+			if buf, err := json.MarshalIndent(def, "", "  "); err == nil {
+				fmt.Println(string(buf))
+				return nil
+			} else {
+				return err
+			}
 		},
 	})
 	App.AddCommand(&cobra.Command{
-		Use:   "listen",
+		Use:   "listen <socket path to plugin> <socket path from plugin>",
 		Short: "Digital Rebar Provision CLI Command Listen",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return Run(pc)
+			if len(args) != 2 {
+				fmt.Printf("Failed\n")
+				return fmt.Errorf("%v requires 2 argument", cmd.UseLine())
+			}
+
+			return Run(args[0], args[1], pc)
 		},
 	})
 }
 
-func prettyPrint(o interface{}) (err error) {
-	var buf []byte
-	buf, err = json.MarshalIndent(o, "", "  ")
-	fmt.Println(string(buf))
-	return nil
-}
-
-func Run(pc PluginConfig) error {
-	var ops int64 = 0
-	origStdOut := os.Stdout
-
-	in := bufio.NewScanner(os.Stdin)
-	for in.Scan() {
-		jsonString := in.Text()
-
-		var req models.PluginClientRequest
-		err := json.Unmarshal([]byte(jsonString), &req)
-		if err != nil {
-			Log("Failed to process: %v\n", err)
-			continue
-		}
-
-		atomic.AddInt64(&ops, 1)
-		go handleRequest(pc, &req, &ops, origStdOut)
-	}
-	if err := in.Err(); err != nil {
-		Log("Plugin error: %s", err)
+func Run(toPath, fromPath string, pc PluginConfig) error {
+	// Get HTTP2 client on our socket.
+	client = &http.Client{
+		Transport: &http.Transport{
+			DialContext: func(_ context.Context, _, _ string) (net.Conn, error) {
+				return net.Dial("unix", fromPath)
+			},
+		},
 	}
 
-	count := 0
-	for a := atomic.LoadInt64(&ops); a > 0 && count < 10; {
-		Log("Exiting ... waiting on %d go routines to leave: %d\n", a, count)
-		time.Sleep(time.Second * 1)
-		count += 1
-	}
+	gc := newGinServer(thelog.NoPublish())
+	gc.NoMethod(func(c *gin.Context) { thelog.Warnf("Unknown method: %v\n", c) })
+	gc.NoRoute(func(c *gin.Context) { thelog.Warnf("Unknown route: %v\n", c) })
+	apiGroup := gc.Group("/api-plugin/v3")
 
-	return nil
-}
-
-func handleRequest(pc PluginConfig, req *models.PluginClientRequest, ops *int64, origStdOut *os.File) {
-	defer atomic.AddInt64(ops, -1)
-
-	if req.Action == "Config" {
-		resp := &models.PluginClientReply{Id: req.Id}
-
-		var params map[string]interface{}
-		if jerr := json.Unmarshal(req.Data, &params); jerr != nil {
-			resp.Code = 400
-			resp.Data, _ = json.Marshal(&models.Error{Code: 400, Model: "plugin", Type: "Config", Messages: []string{fmt.Sprintf("Failed to unmarshal data: %v", jerr)}})
-		} else {
-			if err := pc.Config(params); err != nil {
-				resp.Code = err.Code
-				resp.Data, _ = json.Marshal(err)
-			}
-		}
-		bytes, _ := json.Marshal(resp)
-		fmt.Fprintln(origStdOut, string(bytes))
-	} else if req.Action == "Action" {
-		resp := &models.PluginClientReply{Id: req.Id}
-
-		var actionInfo models.MachineAction
-		if jerr := json.Unmarshal(req.Data, &actionInfo); jerr != nil {
-			resp.Code = 400
-			resp.Data, _ = json.Marshal(&models.Error{Code: 400, Model: "plugin", Type: "Action", Messages: []string{fmt.Sprintf("Failed to unmarshal data: %v", jerr)}})
-		} else {
-			s, ok := pc.(PluginActor)
-			if !ok {
-				resp.Code = 400
-				resp.Data, _ = json.Marshal(&models.Error{Code: 400, Model: "plugin", Type: "Action", Messages: []string{"Plugin doesn't support Action"}})
-			} else {
-				if err := s.Action(&actionInfo); err != nil {
-					resp.Code = err.Code
-					resp.Data, _ = json.Marshal(err)
-				}
-			}
-		}
-		bytes, _ := json.Marshal(resp)
-		fmt.Fprintln(origStdOut, string(bytes))
-	} else if req.Action == "Publish" {
-		resp := &models.PluginClientReply{Id: req.Id}
-
-		var event models.Event
-		if jerr := json.Unmarshal(req.Data, &event); jerr != nil {
-			resp.Code = 400
-			resp.Data, _ = json.Marshal(&models.Error{Code: 400, Model: "plugin", Type: "Publish", Messages: []string{fmt.Sprintf("Failed to unmarshal data: %v", jerr)}})
-		} else {
-			s, ok := pc.(PluginPublisher)
-			if !ok {
-				resp.Code = 400
-				resp.Data, _ = json.Marshal(&models.Error{Code: 400, Model: "plugin", Type: "Publish", Messages: []string{"Plugin doesn't support Publish"}})
-			} else {
-				if err := s.Publish(&event); err != nil {
-					resp.Code = err.Code
-					resp.Data, _ = json.Marshal(err)
-				}
-			}
-		}
-		bytes, _ := json.Marshal(resp)
-		fmt.Fprintln(origStdOut, string(bytes))
+	// Required Pieces.
+	apiGroup.POST("/config", func(c *gin.Context) { configHandler(c, pc) })
+	if ps, ok := pc.(PluginStop); ok {
+		apiGroup.POST("/stop", func(c *gin.Context) { stopHandler(c, ps) })
 	} else {
-		resp := &models.PluginClientReply{Code: 400, Id: req.Id}
-		resp.Data, _ = json.Marshal(&models.Error{Code: 400, Model: "plugin", Type: "Publish", Messages: []string{"Plugin unknown command type"}})
-		bytes, _ := json.Marshal(resp)
-		fmt.Fprintln(origStdOut, string(bytes))
+		apiGroup.POST("/stop", func(c *gin.Context) { stopHandler(c, nil) })
 	}
+
+	// Optional Pieces
+	if pp, ok := pc.(PluginPublisher); ok {
+		apiGroup.POST("/publish", func(c *gin.Context) { publishHandler(c, pp) })
+	}
+	if pa, ok := pc.(PluginActor); ok {
+		apiGroup.POST("/action", func(c *gin.Context) { actionHandler(c, pa) })
+	}
+
+	fmt.Printf("READY!\n")
+	return gc.RunUnix(toPath)
+}
+
+func logToDRP(l *logger.Line) {
+	_, err := post("/log", l)
+	if err != nil {
+		thelog.NoPublish().Errorf("Failed to log line! %v %v", l, err)
+	}
+}
+
+func stopHandler(c *gin.Context, ps PluginStop) {
+	// GREG: Do better?
+	if ps != nil {
+		ps.Stop(thelog)
+	}
+	resp := models.Error{Code: http.StatusOK}
+	c.JSON(resp.Code, resp)
+	thelog.Infof("STOPPING\n")
+	os.Exit(0)
+}
+
+func configHandler(c *gin.Context, pc PluginConfig) {
+	var params map[string]interface{}
+	if !assureDecode(c, &params) {
+		return
+	}
+
+	thelog.Infof("Setting API session\n")
+
+	default_endpoint := "https://127.0.0.1:8092"
+	if ep := os.Getenv("RS_ENDPOINT"); ep != "" {
+		default_endpoint = ep
+	}
+	default_token := ""
+	if tk := os.Getenv("RS_TOKEN"); tk != "" {
+		default_token = tk
+	}
+
+	var err2 error
+	if default_token != "" {
+		thelog.Infof("Starting session with endpoint and token: %s\n", default_endpoint)
+		session, err2 = api.TokenSession(default_endpoint, default_token)
+	} else {
+		err2 = fmt.Errorf("Must have a token specified\n")
+	}
+
+	if err2 != nil {
+		err := &models.Error{Code: 400, Model: "plugin", Key: "incrementer", Type: "plugin", Messages: []string{}}
+		err.AddError(err2)
+		c.JSON(err.Code, err)
+		return
+	}
+
+	thelog.Infof("Received Config request: %v\n", params)
+	resp := models.Error{Code: http.StatusOK}
+	if err := pc.Config(thelog, session, params); err != nil {
+		resp.Code = err.Code
+		b, _ := json.Marshal(err)
+		resp.Messages = append(resp.Messages, string(b))
+	}
+	c.JSON(resp.Code, resp)
+}
+
+func actionHandler(c *gin.Context, pa PluginActor) {
+	var actionInfo models.Action
+	if !assureDecode(c, &actionInfo) {
+		return
+	}
+	if ret, err := pa.Action(thelog, &actionInfo); err != nil {
+		c.JSON(err.Code, err)
+	} else {
+		c.JSON(200, ret)
+	}
+}
+
+func publishHandler(c *gin.Context, pp PluginPublisher) {
+	var event models.Event
+	if !assureDecode(c, &event) {
+		return
+	}
+	resp := models.Error{Code: http.StatusOK}
+	if err := pp.Publish(thelog.NoPublish(), &event); err != nil {
+		resp.Code = err.Code
+		b, _ := json.Marshal(err)
+		resp.Messages = append(resp.Messages, string(b))
+	}
+	c.JSON(resp.Code, resp)
 }

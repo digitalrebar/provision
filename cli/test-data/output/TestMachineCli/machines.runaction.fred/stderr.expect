@@ -3,7 +3,8 @@ Usage:
   drpcli machines runaction [id] [command] [- | JSON or YAML Map of objects | pairs of string objects] [flags]
 
 Flags:
-  -h, --help   help for runaction
+  -h, --help            help for runaction
+      --plugin string   Plugin to filter action search
 
 Global Flags:
   -d, --debug               Whether the CLI should run in debug mode

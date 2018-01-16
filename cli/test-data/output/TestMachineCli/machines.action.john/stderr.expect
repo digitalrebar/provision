@@ -3,7 +3,8 @@ Usage:
   drpcli machines action [id] [action] [flags]
 
 Flags:
-  -h, --help   help for action
+  -h, --help            help for action
+      --plugin string   Plugin to filter action search
 
 Global Flags:
   -d, --debug               Whether the CLI should run in debug mode

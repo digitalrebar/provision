@@ -81,3 +81,7 @@ func (b *Profile) SetParams(p map[string]interface{}) {
 func (b *Profile) SetName(n string) {
 	b.Name = n
 }
+
+func (b *Profile) CanHaveActions() bool {
+	return true
+}

@@ -4,10 +4,13 @@ Usage:
   drpcli leases [command]
 
 Available Commands:
+  action      Display the action for this lease
+  actions     Display actions for this lease
   destroy     Destroy lease by id
   exists      See if a leases exists by id
   indexes     Get indexes for leases
   list        List all leases
+  runaction   Run action on object from plugin
   show        Show a single leases by id
   wait        Wait for a lease's field to become a value within a number of seconds
 

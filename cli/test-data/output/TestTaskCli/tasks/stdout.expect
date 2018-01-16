@@ -4,11 +4,14 @@ Usage:
   drpcli tasks [command]
 
 Available Commands:
+  action      Display the action for this task
+  actions     Display actions for this task
   create      Create a new task with the passed-in JSON or string key
   destroy     Destroy task by id
   exists      See if a tasks exists by id
   indexes     Get indexes for tasks
   list        List all tasks
+  runaction   Run action on object from plugin
   show        Show a single tasks by id
   update      Unsafely update task by id with the passed-in JSON
   wait        Wait for a task's field to become a value within a number of seconds

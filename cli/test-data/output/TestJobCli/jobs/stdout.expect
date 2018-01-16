@@ -4,16 +4,19 @@ Usage:
   drpcli jobs [command]
 
 Available Commands:
-  actions     Get the actions for this job
-  create      Create a new job with the passed-in JSON or string key
-  destroy     Destroy job by id
-  exists      See if a jobs exists by id
-  indexes     Get indexes for jobs
-  list        List all jobs
-  log         Gets the log or appends to the log if a second argument or stream is given
-  show        Show a single jobs by id
-  update      Unsafely update job by id with the passed-in JSON
-  wait        Wait for a job's field to become a value within a number of seconds
+  actions          Get the actions for this job
+  create           Create a new job with the passed-in JSON or string key
+  destroy          Destroy job by id
+  exists           See if a jobs exists by id
+  indexes          Get indexes for jobs
+  list             List all jobs
+  log              Gets the log or appends to the log if a second argument or stream is given
+  plugin_action    Display the action for this job
+  plugin_actions   Display actions for this job
+  runplugin_action Run action on object from plugin
+  show             Show a single jobs by id
+  update           Unsafely update job by id with the passed-in JSON
+  wait             Wait for a job's field to become a value within a number of seconds
 
 Flags:
   -h, --help   help for jobs

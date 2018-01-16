@@ -67,3 +67,7 @@ func (b *Reservation) ToModels(obj interface{}) []Model {
 	}
 	return res
 }
+
+func (b *Reservation) CanHaveActions() bool {
+	return true
+}

@@ -4,6 +4,8 @@ Usage:
   drpcli subnets [command]
 
 Available Commands:
+  action      Display the action for this subnet
+  actions     Display actions for this subnet
   create      Create a new subnet with the passed-in JSON or string key
   destroy     Destroy subnet by id
   exists      See if a subnets exists by id
@@ -14,6 +16,7 @@ Available Commands:
   nextserver  Set next non-reserved IP
   pickers     assigns IP allocation methods to a subnet
   range       set the range of a subnet
+  runaction   Run action on object from plugin
   set         Set the given subnet's dhcpOption to a value
   show        Show a single subnets by id
   subnet      Set the CIDR network address
