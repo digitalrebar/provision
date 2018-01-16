@@ -36,6 +36,10 @@ SEE ALSO
 
 -  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
    DigitalRebar Provision API
+-  `drpcli bootenvs action <drpcli_bootenvs_action.html>`__ - Display
+   the action for this bootenv
+-  `drpcli bootenvs actions <drpcli_bootenvs_actions.html>`__ - Display
+   actions for this bootenv
 -  `drpcli bootenvs create <drpcli_bootenvs_create.html>`__ - Create a
    new bootenv with the passed-in JSON or string key
 -  `drpcli bootenvs destroy <drpcli_bootenvs_destroy.html>`__ - Destroy
@@ -48,6 +52,8 @@ SEE ALSO
    a bootenv along with everything it requires
 -  `drpcli bootenvs list <drpcli_bootenvs_list.html>`__ - List all
    bootenvs
+-  `drpcli bootenvs runaction <drpcli_bootenvs_runaction.html>`__ - Run
+   action on object from plugin
 -  `drpcli bootenvs show <drpcli_bootenvs_show.html>`__ - Show a single
    bootenvs by id
 -  `drpcli bootenvs update <drpcli_bootenvs_update.html>`__ - Unsafely

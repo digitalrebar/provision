@@ -36,6 +36,10 @@ SEE ALSO
 
 -  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
    DigitalRebar Provision API
+-  `drpcli profiles action <drpcli_profiles_action.html>`__ - Display
+   the action for this profile
+-  `drpcli profiles actions <drpcli_profiles_actions.html>`__ - Display
+   actions for this profile
 -  `drpcli profiles add <drpcli_profiles_add.html>`__ - Add the profiles
    param *key* to *blob*
 -  `drpcli profiles create <drpcli_profiles_create.html>`__ - Create a
@@ -54,6 +58,8 @@ SEE ALSO
    all parameters for the profile
 -  `drpcli profiles remove <drpcli_profiles_remove.html>`__ - Remove the
    param *key* from profiles
+-  `drpcli profiles runaction <drpcli_profiles_runaction.html>`__ - Run
+   action on object from plugin
 -  `drpcli profiles set <drpcli_profiles_set.html>`__ - Set the profiles
    param *key* to *blob*
 -  `drpcli profiles show <drpcli_profiles_show.html>`__ - Show a single

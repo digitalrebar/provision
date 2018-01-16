@@ -36,6 +36,10 @@ SEE ALSO
 
 -  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
    DigitalRebar Provision API
+-  `drpcli stages action <drpcli_stages_action.html>`__ - Display the
+   action for this stage
+-  `drpcli stages actions <drpcli_stages_actions.html>`__ - Display
+   actions for this stage
 -  `drpcli stages addprofile <drpcli_stages_addprofile.html>`__ - Add
    profile to the machine's profile list
 -  `drpcli stages addtask <drpcli_stages_addtask.html>`__ - Add task to
@@ -55,6 +59,8 @@ SEE ALSO
    Remove a profile from the machine's list
 -  `drpcli stages removetask <drpcli_stages_removetask.html>`__ - Remove
    a task from the stage's list
+-  `drpcli stages runaction <drpcli_stages_runaction.html>`__ - Run
+   action on object from plugin
 -  `drpcli stages show <drpcli_stages_show.html>`__ - Show a single
    stages by id
 -  `drpcli stages update <drpcli_stages_update.html>`__ - Unsafely

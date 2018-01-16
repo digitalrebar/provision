@@ -36,6 +36,10 @@ SEE ALSO
 
 -  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
    DigitalRebar Provision API
+-  `drpcli plugins action <drpcli_plugins_action.html>`__ - Display the
+   action for this plugin
+-  `drpcli plugins actions <drpcli_plugins_actions.html>`__ - Display
+   actions for this plugin
 -  `drpcli plugins add <drpcli_plugins_add.html>`__ - Add the plugins
    param *key* to *blob*
 -  `drpcli plugins create <drpcli_plugins_create.html>`__ - Create a new
@@ -53,6 +57,8 @@ SEE ALSO
    all parameters for the plugin
 -  `drpcli plugins remove <drpcli_plugins_remove.html>`__ - Remove the
    param *key* from plugins
+-  `drpcli plugins runaction <drpcli_plugins_runaction.html>`__ - Run
+   action on object from plugin
 -  `drpcli plugins set <drpcli_plugins_set.html>`__ - Set the plugins
    param *key* to *blob*
 -  `drpcli plugins show <drpcli_plugins_show.html>`__ - Show a single

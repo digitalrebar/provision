@@ -1,12 +1,12 @@
 drpcli machines runaction
 =========================
 
-Set preferences
+Run action on object from plugin
 
 Synopsis
 --------
 
-Set preferences
+Run action on object from plugin
 
 ::
 
@@ -17,7 +17,8 @@ Options
 
 ::
 
-      -h, --help   help for runaction
+      -h, --help            help for runaction
+          --plugin string   Plugin to filter action search
 
 Options inherited from parent commands
 --------------------------------------

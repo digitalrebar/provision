@@ -36,6 +36,10 @@ SEE ALSO
 
 -  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
    DigitalRebar Provision API
+-  `drpcli reservations action <drpcli_reservations_action.html>`__ -
+   Display the action for this reservation
+-  `drpcli reservations actions <drpcli_reservations_actions.html>`__ -
+   Display actions for this reservation
 -  `drpcli reservations create <drpcli_reservations_create.html>`__ -
    Create a new reservation with the passed-in JSON or string key
 -  `drpcli reservations destroy <drpcli_reservations_destroy.html>`__ -
@@ -46,6 +50,9 @@ SEE ALSO
    Get indexes for reservations
 -  `drpcli reservations list <drpcli_reservations_list.html>`__ - List
    all reservations
+-  `drpcli reservations
+   runaction <drpcli_reservations_runaction.html>`__ - Run action on
+   object from plugin
 -  `drpcli reservations show <drpcli_reservations_show.html>`__ - Show a
    single reservations by id
 -  `drpcli reservations update <drpcli_reservations_update.html>`__ -

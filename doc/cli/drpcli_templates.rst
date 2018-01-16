@@ -36,6 +36,10 @@ SEE ALSO
 
 -  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
    DigitalRebar Provision API
+-  `drpcli templates action <drpcli_templates_action.html>`__ - Display
+   the action for this template
+-  `drpcli templates actions <drpcli_templates_actions.html>`__ -
+   Display actions for this template
 -  `drpcli templates create <drpcli_templates_create.html>`__ - Create a
    new template with the passed-in JSON or string key
 -  `drpcli templates destroy <drpcli_templates_destroy.html>`__ -
@@ -46,6 +50,8 @@ SEE ALSO
    indexes for templates
 -  `drpcli templates list <drpcli_templates_list.html>`__ - List all
    templates
+-  `drpcli templates runaction <drpcli_templates_runaction.html>`__ -
+   Run action on object from plugin
 -  `drpcli templates show <drpcli_templates_show.html>`__ - Show a
    single templates by id
 -  `drpcli templates update <drpcli_templates_update.html>`__ - Unsafely

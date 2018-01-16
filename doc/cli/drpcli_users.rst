@@ -36,6 +36,10 @@ SEE ALSO
 
 -  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
    DigitalRebar Provision API
+-  `drpcli users action <drpcli_users_action.html>`__ - Display the
+   action for this user
+-  `drpcli users actions <drpcli_users_actions.html>`__ - Display
+   actions for this user
 -  `drpcli users create <drpcli_users_create.html>`__ - Create a new
    user with the passed-in JSON or string key
 -  `drpcli users destroy <drpcli_users_destroy.html>`__ - Destroy user
@@ -47,6 +51,8 @@ SEE ALSO
 -  `drpcli users list <drpcli_users_list.html>`__ - List all users
 -  `drpcli users password <drpcli_users_password.html>`__ - Set the
    password for this id
+-  `drpcli users runaction <drpcli_users_runaction.html>`__ - Run action
+   on object from plugin
 -  `drpcli users show <drpcli_users_show.html>`__ - Show a single users
    by id
 -  `drpcli users token <drpcli_users_token.html>`__ - Get a login token
