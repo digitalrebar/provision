@@ -10,14 +10,10 @@ type PluginProvider struct {
 	Version string
 
 	HasPublish       bool
-	AvailableActions []*AvailableAction
+	AvailableActions []AvailableAction
 
 	RequiredParams []string
 	OptionalParams []string
-
-	// Ensure that these are in the system.
-	// This should be deprecated and should be converted to content.
-	Parameters []*Param
 
 	// Content Bundle Yaml string - can be optional or empty
 	Content string
@@ -51,16 +47,10 @@ func (p *PluginProvider) Fill() {
 		p.OptionalParams = []string{}
 	}
 	if p.AvailableActions == nil {
-		p.AvailableActions = []*AvailableAction{}
-	}
-	if p.Parameters == nil {
-		p.Parameters = []*Param{}
+		p.AvailableActions = []AvailableAction{}
 	}
 	for _, a := range p.AvailableActions {
 		a.Fill()
-	}
-	for _, param := range p.Parameters {
-		param.Fill()
 	}
 }
 

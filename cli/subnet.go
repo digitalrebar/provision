@@ -184,7 +184,7 @@ func registerSubnet(app *cobra.Command) {
 				sub := data.(*models.Subnet)
 				found := false
 				if sub.Options == nil {
-					sub.Options = []*models.DhcpOption{}
+					sub.Options = []models.DhcpOption{}
 				}
 				idx := -1
 				for ii, do := range sub.Options {
@@ -202,7 +202,7 @@ func registerSubnet(app *cobra.Command) {
 					sub.Options = append(sub.Options[:idx], sub.Options[idx+1:]...)
 				}
 				if !found {
-					newOption := &models.DhcpOption{Code: optionNumber, Value: newVal}
+					newOption := models.DhcpOption{Code: optionNumber, Value: newVal}
 					sub.Options = append(sub.Options, newOption)
 				}
 				return sub, true

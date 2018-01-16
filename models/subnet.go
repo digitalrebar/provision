@@ -14,6 +14,10 @@ type Subnet struct {
 	//
 	// required: true
 	Name string
+	// A description of this Subnet.  This should tell what it is for,
+	// any special considerations that should be taken into account when
+	// using it, etc.
+	Description string
 	// Enabled indicates if the subnet should hand out leases or continue operating
 	// leases if already running.
 	//
@@ -64,7 +68,7 @@ type Subnet struct {
 	//
 	// required: true
 	OnlyReservations bool
-	Options          []*DhcpOption
+	Options          []DhcpOption
 	// Strategy is the leasing strategy that will be used determine what to use from
 	// the DHCP packet to handle lease management.
 	//
@@ -122,7 +126,7 @@ func (s *Subnet) Fill() {
 		s.Meta = Meta{}
 	}
 	if s.Options == nil {
-		s.Options = []*DhcpOption{}
+		s.Options = []DhcpOption{}
 	}
 }
 

@@ -379,7 +379,7 @@ func (o *DhcpOption) ConvertOptionValueToByte(value string) ([]byte, error) {
 	return fn(value)
 }
 
-func (o *DhcpOption) RenderToDHCP(srcOpts map[int]string) (code byte, val []byte, err error) {
+func (o DhcpOption) RenderToDHCP(srcOpts map[int]string) (code byte, val []byte, err error) {
 	tmpl, err := template.New("dhcp_option").Parse(o.Value)
 	if err != nil {
 		return o.Code, nil, err

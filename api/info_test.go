@@ -23,7 +23,7 @@ func TestInfo(t *testing.T) {
 			TftpEnabled:        true,
 			BinlEnabled:        true,
 			DhcpEnabled:        true,
-			Stats: []*models.Stat{
+			Stats: []models.Stat{
 				{
 					Name:  "machines.count",
 					Count: 0,

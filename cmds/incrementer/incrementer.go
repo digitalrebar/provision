@@ -20,19 +20,15 @@ var (
 		Name:       "incrementer",
 		Version:    version,
 		HasPublish: true,
-		AvailableActions: []*models.AvailableAction{
-			&models.AvailableAction{Command: "increment",
+		AvailableActions: []models.AvailableAction{
+			models.AvailableAction{Command: "increment",
 				Model:          "machines",
 				OptionalParams: []string{"incrementer/step", "incrementer/parameter"},
 			},
-			&models.AvailableAction{Command: "reset_count",
+			models.AvailableAction{Command: "reset_count",
 				Model:          "machines",
 				RequiredParams: []string{"incrementer/touched"},
 			},
-		},
-		Parameters: []*models.Param{
-			&models.Param{Name: "incrementer/parameter", Schema: map[string]interface{}{"type": "string"}},
-			&models.Param{Name: "incrementer/step", Schema: map[string]interface{}{"type": "integer"}},
 		},
 		Content: contentYamlString,
 	}

@@ -3,6 +3,7 @@
   "ActiveLeaseTime": 60,
   "ActiveStart": "192.168.100.20",
   "Available": true,
+  "Description": "",
   "Enabled": false,
   "Errors": [],
   "Meta": {},
