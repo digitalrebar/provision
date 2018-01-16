@@ -69,17 +69,23 @@ The Kubernetes Master will be built on this Machine specified by the *<UUID>* va
 Install KRIB
 ------------
 
-KRIB is a Content Pack and is installed in the standard method as any other Contents.  
+KRIB is a Content Pack and is installed in the standard method as any other Contents.   We need the ``krib.json`` content as well as the ``task-library.json`` content packs to fully support KRIB and install the helper utility contents for stage changes. 
 
 
 CLI Install
 ===========
 
+
 Using the Command Line (`drpcli`) utility, use this process:
   ::
 
+    # KRIB content install
     curl -s https://qww9e4paf1.execute-api.us-west-2.amazonaws.com/main/catalog/content/krib -o /tmp/krib.json
     drpcli contents create -< /tmp/krib.json
+
+    # task-libary helper content install
+    curl -s https://qww9e4paf1.execute-api.us-west-2.amazonaws.com/main/catalog/content/task-library -o /tmp/task-library.json
+    drpcli contents create -< /tmp/task-library.json
 
 
 UX Install
@@ -91,8 +97,9 @@ In the UX, follow this process:
 #. Authenticate to your Endpoint
 #. Login with your ```RackN Portal Login``` account (upper right)
 #. Go to the left panel "Content Packages" menu 
-#. Select `Kubernetes (KRIB: Kubernetes Rebar Immutable Bootstrapping)` from the right side panel (you may need to select *Browser for more Content* or use the *Catalog* button)
-#. Select the *Transfer* button to add the content to your local Digital Rebar endpoint
+#. Select ``Kubernetes (KRIB: Kubernetes Rebar Immutable Bootstrapping)`` from the right side panel (you may need to select *Browser for more Content* or use the *Catalog* button)
+#. *also* select the ``task-library`` content
+#. Select the *Transfer* button for both content packs to add the content to your local Digital Rebar endpoint
 
 
 Configuring KRIB
@@ -101,7 +108,7 @@ Configuring KRIB
 The basic outline for configuring KRIB follows the below steps:
 
 #. create a *Profile* to hold the *Params* for the KRIB configuration
-#. add a *Param* of name `krib/cluster-profile` to the *Profile* you created
+#. add a *Param* of name ``krib/cluster-profile`` to the *Profile* you created
 #. add a stagemap workflow to the *Profile* you created above, to move machines through the KRIB install process
 #. apply the Profile to the Machines you are going to add to the KRIB cluster
 #. change the Stage on the Machines to set the starting point of the workflow
