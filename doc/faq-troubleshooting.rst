@@ -116,6 +116,34 @@ If the sledgehammer discovery image should fail to launch Runner jobs successful
 
       journalctl -u sledgehammer
 
+
+.. _rs_convert_to_production_mode:
+
+Convert Isolated Install to Production Mode
+-------------------------------------------
+
+There currently is no officually supported *migration* tool to move from an ``Isolated`` to ``Production`` install mode.  However, any existing customizations, Machines, Leases, Reservations, Contents, etc. can be moved over from the Isolated install directory structure to a Production install directory, and you should be able to retain your Isolated mode environment.
+
+All customized content is stored in subdirectories as follows:
+
+  Isolated: in ``drp-data/`` in the Current Working Directory the installation was performed in
+  Production:  in ``/var/lib/dr-provision``
+
+The contents and structure of these locations is the same.  Follow the below procedure to safely move from Isolated to Production mode.
+
+#. backup your current ``drp-data`` directory (eg ``tar -czvf /root/drp-isolated-backup.tgz drp-data/``)
+#. ``pkill dr-provision`` service
+#. perform fresh install on same host, without the ``--isolated`` flag
+#. follow the start up scripts setup - BUT do NOT start the ``dr-provision`` service at this point
+#.  copy the ``drp-data/*`` directories recursively to ``/var/lib/dr-provision`` (eg: ``unalias cp; cp -ra drp-data/* /var/lib/dr-provision/``)
+#. make sure you're start up scripts are in place for your production mode (eg: ``/etc/systemd/system/dr-provision.service``)
+#. start the new production version with  ``systemctl start dr-provision.service``
+#. verify everything is running fine
+#. delete the ``drp-data`` directory (suggest retaining the backup copy for later just in case)
+
+.. note::  WARNING:  If you install a new version of the Digital Rebar Provision service, you must verify that there are no Contents differences between the two versions.  Should the ``dr-provision`` service fail to start up; it's entirely likely that there may be some content changes that need to be addressed in the JSON/YAML files prior to the new version being started.  See the :ref:`rs_upgrade` notes for any version-to-version specific documentation.
+
+
 .. _rs_jq_examples:
 
 JQ Usage Examples
