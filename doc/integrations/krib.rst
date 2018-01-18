@@ -230,7 +230,13 @@ Change stage on the Machines to initiate the Workflow transition.  YOU MUST sele
     # drpcli machines update <UUID> '{ "Stage": "centos-7-install" }'
 
 
-For the *install-to-local-disk* mode, you now need to reboot the Machines you modified above.  You can do this through your own tooling or power control methods.  If you are using the RackN `IPMI` plugin provider (paid piece), you can do this with the following commands:
+For the *install-to-local-disk* mode, you now need to reboot the Machines you modified above.  
+
+.. note:: You can do this through your own tooling or power control methods.  For example, via IPMI protocol, Console access and rebooting, physically power cycling the machine, or other methods. 
+
+  Digital Rebar Provision does support installing Plugin Providers that implement IPMI control (power on/off/reboot) actions.  Some of these are available for free as a Registered user, some of these are Paid pieces.   Please see your UX ``Contents`` menu for the status of each plugin provider.   
+
+If you are using the RackN `IPMI` plugin provider (free or paid piece), you can do this with the following commands:
   ::
 
     my_machines action powercycle
@@ -273,6 +279,9 @@ RackN assumes the use of CentOS 7 BootEnv during this process.  However, it shou
 5. Change stage on all the machines to ``centos-7-install`` for install-to-local-disk, or to ``ssh-access`` for the Live Boot/Immutable Kubernetes mode
 6. Reboot all the machines in your cluster if you are using the *install-to-local-disk* mode.
 
+.. note:: You can do this through your own tooling or power control methods.  For example, via IPMI protocol, Console access and rebooting, physically power cycling the machine, or other methods. 
+
+  Digital Rebar Provision does support installing Plugin Providers that implement IPMI control (power on/off/reboot) actions.  Some of these are available for free as a Registered user, some of these are Paid pieces.   Please see your UX ``Contents`` menu for the status of each plugin provider.   
 
 Then wait for them to complete.  You can watch the Stage transitions via the Bulk Actions panel (which requires RackN Portal authentication to view).
 
