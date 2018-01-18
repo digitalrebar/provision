@@ -16,7 +16,8 @@ RE:
       "job-exit-states",
       "package-repository-handling",
       "profileless-machine",
-      "threaded-log-levels"
+      "threaded-log-levels",
+      "plugin-v2"
     \],
     "file_port": 10002,
     "id": "Fred",
