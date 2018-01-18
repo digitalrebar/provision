@@ -1,0 +1,9 @@
+[
+  {
+    "Command": "incrstatus",
+    "Model": "",
+    "OptionalParams": [],
+    "Provider": "incrementer",
+    "RequiredParams": []
+  }
+]

@@ -800,22 +800,37 @@ func (o *ops) actions() {
 		actionName = "action"
 	}
 	actionsName := fmt.Sprintf("%ss", actionName)
-	prefix := o.example().Prefix()
+	prefix := "system"
+	idStr := ""
+	argCount := 0
+	evenCount := 1
+	if o.example != nil {
+		prefix = o.example().Prefix()
+		idStr = " [id]"
+		argCount = 1
+		evenCount = 0
+	}
 	plugin := ""
 	actions := &cobra.Command{
-		Use:   fmt.Sprintf("%s [id]", actionsName),
+		Use:   fmt.Sprintf("%s%s", actionsName, idStr),
 		Short: fmt.Sprintf("Display actions for this %s", o.singleName),
 		Long:  fmt.Sprintf("Helper function to display the %s's actions.", o.singleName),
 		Args: func(c *cobra.Command, args []string) error {
-			if len(args) != 1 {
-				return fmt.Errorf("%v requires 1 argument", c.UseLine())
+			if len(args) != argCount {
+				return fmt.Errorf("%v requires %d argument", c.UseLine(), argCount)
 			}
 			return nil
 		},
 		RunE: func(c *cobra.Command, args []string) error {
-			id := args[0]
 			res := []models.AvailableAction{}
-			req := session.Req().UrlFor(prefix, id, actionsName)
+			var req *api.R
+			id := "system"
+			if argCount == 1 {
+				id = args[0]
+				req = session.Req().UrlFor(prefix, id, actionsName)
+			} else {
+				req = session.Req().UrlFor(prefix, actionsName)
+			}
 			if plugin != "" {
 				req = req.Params("plugin", plugin)
 			}
@@ -828,20 +843,26 @@ func (o *ops) actions() {
 	actions.Flags().StringVar(&plugin, "plugin", "", "Plugin to filter action search")
 	o.addCommand(actions)
 	action := &cobra.Command{
-		Use:   fmt.Sprintf("%s [id] [action]", actionName),
+		Use:   fmt.Sprintf("%s%s [action]", actionName, idStr),
 		Short: fmt.Sprintf("Display the action for this %s", o.singleName),
 		Long:  fmt.Sprintf("Helper function to display the %s's action.", o.singleName),
 		Args: func(c *cobra.Command, args []string) error {
-			if len(args) != 2 {
-				return fmt.Errorf("%v requires 2 arguments", c.UseLine())
+			if len(args) != argCount+1 {
+				return fmt.Errorf("%v requires %d arguments", c.UseLine(), argCount+1)
 			}
 			return nil
 		},
 		RunE: func(c *cobra.Command, args []string) error {
-			id := args[0]
-			action := args[1]
+			action := args[argCount]
 			res := &models.AvailableAction{}
-			req := session.Req().UrlFor(prefix, id, actionsName, action)
+			var req *api.R
+			id := "system"
+			if argCount == 1 {
+				id = args[0]
+				req = session.Req().UrlFor(prefix, id, actionsName, action)
+			} else {
+				req = session.Req().UrlFor(prefix, actionsName, action)
+			}
 			if plugin != "" {
 				req = req.Params("plugin", plugin)
 			}
@@ -855,18 +876,18 @@ func (o *ops) actions() {
 	o.addCommand(action)
 	actionParams := map[string]interface{}{}
 	runaction := &cobra.Command{
-		Use:   fmt.Sprintf("run%s [id] [command] [- | JSON or YAML Map of objects | pairs of string objects]", actionName),
+		Use:   fmt.Sprintf("run%s%s [command] [- | JSON or YAML Map of objects | pairs of string objects]", actionName, idStr),
 		Short: "Run action on object from plugin",
 		Args: func(c *cobra.Command, args []string) error {
 			actionParams = map[string]interface{}{}
-			if len(args) == 3 {
-				if err := into(args[2], &actionParams); err != nil {
+			if len(args) == argCount+2 {
+				if err := into(args[argCount+1], &actionParams); err != nil {
 					return err
 				}
 				return nil
 			}
-			if len(args) >= 2 && len(args)%2 == 0 {
-				for i := 2; i < len(args); i += 2 {
+			if len(args) >= argCount+1 && len(args)%2 == evenCount {
+				for i := argCount + 1; i < len(args); i += 2 {
 					var obj interface{}
 					if err := api.DecodeYaml([]byte(args[i+1]), &obj); err != nil {
 						return fmt.Errorf("Invalid parameters: %s %v\n", args[i+1], err)
@@ -875,14 +896,22 @@ func (o *ops) actions() {
 				}
 				return nil
 			}
-			return fmt.Errorf("runaction either takes three arguments or a multiple of two, not %d", len(args))
+			if argCount == 1 {
+				return fmt.Errorf("runaction either takes three arguments or a multiple of two, not %d", len(args))
+			}
+			return fmt.Errorf("runaction either takes two arguments or one plus a multiple of two, not %d", len(args))
 		},
 
 		RunE: func(c *cobra.Command, args []string) error {
-			id := args[0]
-			command := args[1]
+			command := args[argCount]
 			var resp interface{}
-			req := session.Req().Post(actionParams).UrlFor(prefix, id, actionsName, command)
+			var req *api.R
+			if argCount == 1 {
+				id := args[0]
+				req = session.Req().Post(actionParams).UrlFor(prefix, id, actionsName, command)
+			} else {
+				req = session.Req().Post(actionParams).UrlFor(prefix, actionsName, command)
+			}
 			if plugin != "" {
 				req = req.Params("plugin", plugin)
 			}

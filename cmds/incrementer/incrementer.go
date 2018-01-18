@@ -29,6 +29,7 @@ var (
 				Model:          "machines",
 				RequiredParams: []string{"incrementer/touched"},
 			},
+			models.AvailableAction{Command: "incrstatus"},
 		},
 		Content: contentYamlString,
 	}
@@ -126,6 +127,8 @@ func (p *Plugin) Action(thelog logger.Logger, ma *models.Action) (interface{}, *
 		}
 		e := p.removeParameter(machine.UUID(), "incrementer/touched")
 		return "Success", e
+	} else if ma.Command == "incrstatus" {
+		return "Running", nil
 	}
 
 	return nil, &models.Error{Code: 404,
