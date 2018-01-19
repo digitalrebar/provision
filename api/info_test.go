@@ -46,6 +46,7 @@ func TestInfo(t *testing.T) {
 				"package-repository-handling",
 				"profileless-machine",
 				"threaded-log-levels",
+				"plugin-v2",
 			},
 		},
 		expectErr: nil,
