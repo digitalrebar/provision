@@ -290,7 +290,7 @@ Parameter                          Type              Description
 ntp_servers                        Array of string   The format is an array of IP addresses in dotted quad format.
 proxy-servers                      Array of objects  See below, :ref:`rs_arch_proxy_server` as well as some kickstart templates.
 operating-system-disk              String            A string to use as the default install drive.  /dev/sda or sda depending upon kickstart or preseed.
-access_keys                        Map of strings    The key is the name of the public key.  The value is the public key.  All keys are placed in the .authorized_keys file of root.
+access-keys                        Map of strings    The key is the name of the public key.  The value is the public key.  All keys are placed in the .authorized_keys file of root.
 provisioner-default-password-hash  String            The password hash for the initial default password, **RocketSkates**
 provisioner-default-user           String            The initial user to create for ubuntu/debian installs
 dns-domain                         String            DNS Domain to use for this system's install
@@ -601,7 +601,7 @@ An example :ref:`rs_model_profile` that sets the keys and *PermitRootLogin* woul
 
     Name: root-access
     Params:
-      access_keys:
+      access-keys:
         key1:  ssh-rsa abasbaksl;gksj;glasgjasyyp
         key2:  ssh-rsa moreblablabalkhjlkasjg
       access_ssh_root_mode: yes
@@ -623,7 +623,7 @@ e.g. https://70.2.3.5.  The username and password used to access
 Digital Rebar is specified with *rebar-machine_key*.  This should be
 the machine key in the rebar-access role in the system deployment.  It
 is necessary to make sure that the rebar root access key is added to
-the **access_keys** parameter.  To get these last two values, see the
+the **access-keys** parameter.  To get these last two values, see the
 commands below.
 
 
@@ -641,7 +641,7 @@ An example :ref:`rs_model_profile`.
     # Contains parameters for join-to-dr.tmpl and root-remote-access.tmpl
     Name: dr-int
     Params:
-      access_keys:
+      access-keys:
         key1:  ssh-rsa abasbaksl;gksj;glasgjasyyp
       dr_join: true
       CommandURL: https://70.2.3.5
