@@ -121,7 +121,7 @@ The configuration of the Cluster includes a *Stagemap* - and depending on which 
 
 You must create a *Profile* from YAML (or JSON if you prefer) with the stagemap and param required information. Modify the *Name* or other fields as appropriate - be sure you rename all subsequent fields appropriately.  This example uses CentOS 7 as the BootEnv for the install-to-local-disk option.  
 
-Additionally - insure you correctly modify the ``ssh-access`` Param to inject your apprpriate SSH public key half or halves appropriately.
+Additionally - insure you correctly modify the ``access-keys`` Param to inject your apprpriate SSH public key half or halves appropriately.
 
   ::
 
@@ -138,7 +138,7 @@ Additionally - insure you correctly modify the ``ssh-access`` Param to inject yo
         docker-install: krib-install:Success
         krib-install: complete:Success
         discover: sledgehammer-wait:Success
-      ssh-access:
+      access-keys:
         user1: ssh <user_1_key> user@krib
         user2: ssh <user_2_key> user@krib
     Meta:
@@ -158,11 +158,11 @@ For an Immutable Kubernetes cluster install, use the below *Profile* with the st
     Params:
       krib/cluster-profile: "my-k8s-cluster"
       change-stage/map:
-        ssh-access: mount-local-disks:Success
+        access-keys: mount-local-disks:Success
         mount-local-disks: docker-install:Success
         docker-install: krib-install:Success
         krib-install: sledgehammer-wait:Success
-      ssh-access:
+      access-keys:
         user1: ssh <user_1_key> user1@krib
         user2: ssh <user_2_key> user2@krib
     Meta:
