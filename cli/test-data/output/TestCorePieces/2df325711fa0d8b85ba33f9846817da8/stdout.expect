@@ -63,25 +63,6 @@
   OptionalParams: []
   ReadOnly: true
   RequiredParams: []
-  Templates:
-  - Contents: |
-      DEFAULT local
-      PROMPT 0
-      TIMEOUT 10
-      LABEL local
-      localboot 0
-    ID: ""
-    Name: pxelinux
-    Path: pxelinux.cfg/{{.Machine.HexAddress}}
-  - Contents: exit
-    ID: ""
-    Name: elilo
-    Path: '{{.Machine.HexAddress}}.conf'
-  - Contents: |
-      #!ipxe
-      exit
-    ID: ""
-    Name: ipxe
-    Path: '{{.Machine.Address}}.ipxe'
+  Templates: []
   Validated: true
 

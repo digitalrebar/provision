@@ -23,26 +23,7 @@
     "OptionalParams": [],
     "ReadOnly": true,
     "RequiredParams": [],
-    "Templates": [
-      {
-        "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
-        "ID": "",
-        "Name": "pxelinux",
-        "Path": "pxelinux.cfg/{{.Machine.HexAddress}}"
-      },
-      {
-        "Contents": "exit",
-        "ID": "",
-        "Name": "elilo",
-        "Path": "{{.Machine.HexAddress}}.conf"
-      },
-      {
-        "Contents": "#!ipxe\nexit\n",
-        "ID": "",
-        "Name": "ipxe",
-        "Path": "{{.Machine.Address}}.ipxe"
-      }
-    ],
+    "Templates": [],
     "Validated": true
   }
 ]

@@ -8,6 +8,7 @@
   "Errors": [
     "Bootenv john2 does not exist"
   ],
+  "HardwareAddrs": [],
   "Meta": {
     "feature-flags": "original-change-stage"
   },
