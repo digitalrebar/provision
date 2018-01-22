@@ -34,6 +34,14 @@ func (p *Param) DefaultValue() (interface{}, bool) {
 	return nil, false
 }
 
+func (p *Param) TypeValue() (interface{}, bool) {
+	if km, ok := p.Schema.(map[string]interface{}); ok {
+		v, vok := km["type"]
+		return v, vok
+	}
+	return nil, false
+}
+
 func (p *Param) Validate() {
 	p.AddError(ValidParamName("Invalid Name", p.Name))
 	if p.Schema != nil {
