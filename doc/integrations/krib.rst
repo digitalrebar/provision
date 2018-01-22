@@ -8,6 +8,10 @@ This document provides information on how to use the Digital Rebar *KRIB* conten
 
 KRIB uses the `kubeadm <https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/>`_ cluster deployment methodology coupled with Digital Rebar enhancements to help proctor the cluster Master election and secrets management.  With this content pack, you can install Kubernetes in a zero-touch manner.  
 
+.. note:: The `kubeadm` installation and configuration method is very new to the Kubernetes community.  It does not support High Availability of the master, it is still in it's infancy in regards to external networking (SDN, etc) integrations, etc.  The implementation provided via KRIB is intended to demonstrate a *Cluster Provisioning* workflow process.  We do not recommend using this Kubernetes configuration as a production solution.   It could become the base for a strong production deployment, but at this time, does not support production grade features.  
+
+  For production installations, you may be better served by using the Ansible ``kubespray`` playbooks for deployment of the cluster.  See the :ref:`rs_ansible` documentation for further details.
+
 This document assumes you have your Digital Rebar Provisioning endpoint fully configured, tested, and working.  We assume that you are able to properly provision Machines in your environment as a base level requirement for use of the KRIB content add-on use.
 
 KRIB Video References
@@ -322,8 +326,17 @@ Once the Kubernetes cluster build has been completed, you may use the ``kubectl`
     export KUBECONFIG=`pwd`/admin.conf
     kubectl get nodes
 
-Use Kubernetes Dashboard via Proxy
-==================================
+Ingress/Egress Traffic and Dashboard Access
+===========================================
+
+The Kubernetes dashboard is enabled within a default KRIB built cluster.  However no Ingress traffic rules are set up.  As such, you must access services from external connections by making changes to Kubernetes, or via the :ref:`rs_k8s_proxy`. 
+
+These are all issues relating to managing, operating, and running a Kubernetes cluster, and not restrictions that are imposed by Digital Rebar Provision.  Please see the appropriate Kubernetes documentation on questions regarding operating, running, and administering Kubernetes (https://kubernetes.io/docs/home/). 
+
+.. _rs_k8s_proxy:
+
+Kubernetes Dashboard via Proxy
+==============================
 
 Once you have obtained the ``admin.conf`` configuration file and security tokens, you may use ``kubectl`` in Proxy mode to the Master.  Simply open a separate terminal/console session to dedicate to the Proxy connection, and do:
   ::
