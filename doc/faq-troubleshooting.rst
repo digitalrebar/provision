@@ -48,6 +48,8 @@ It may be necessary to install the openssl tools.
 Add SSH Keys to Authorized Keys
 -------------------------------
 
+VIDEO TUTORIAL: https://www.youtube.com/watch?v=StQql8Xn08c 
+
 To have provisioned operating systems (including discovery/sledgehammer) add keys, you should set the ``access_keys`` parameter with a hash of the desired keys.  This can be accomplished by editing the root access profile to add your key(s) and then update the profile via the CLI.
 
   ::
