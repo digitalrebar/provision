@@ -3,7 +3,7 @@ RE:
   {
     "Data": \[\],
     "File": "(.*/)?github.com/digitalrebar/provision/frontend/(_obj/)?frontend.go",
-    "Group": 2,
+    "Group": .*,
     "Level": "audit",
     "Line": .*,
     "Message": "Authenticated rocketskates",
@@ -14,7 +14,7 @@ RE:
   {
     "Data": \[\],
     "File": "(.*/)?github.com/digitalrebar/provision/frontend/(_obj/)?frontend.go",
-    "Group": 3,
+    "Group": .*,
     "Level": "audit",
     "Line": .*,
     "Message": "Authenticated rocketskates",
