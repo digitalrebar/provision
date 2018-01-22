@@ -149,12 +149,14 @@ func (es *EventStream) processEvents(running chan struct{}) {
 				}
 			}
 		}
-		es.mux.Unlock()
-		go func(ts map[int64]chan RecievedEvent, evt RecievedEvent) {
-			for i := range ts {
-				ts[i] <- evt
+		for i := range toSend {
+			select {
+			case toSend[i] <- evt:
+			default:
+				fmt.Printf("Failed to send an event\n")
 			}
-		}(toSend, evt)
+		}
+		es.mux.Unlock()
 	}
 }
 
@@ -238,7 +240,7 @@ func (es *EventStream) Register(events ...string) (int64, <-chan RecievedEvent, 
 	newID := atomic.AddInt64(&es.handleId, 1)
 	es.mux.Lock()
 	defer es.mux.Unlock()
-	ch := make(chan RecievedEvent)
+	ch := make(chan RecievedEvent, 100)
 	es.recievers[newID] = ch
 	return newID, ch, es.subscribe(newID, events...)
 }
@@ -295,10 +297,10 @@ func (es *EventStream) WaitFor(
 
 	// Register for events
 	handle, ch, err := es.Register(evts...)
-	defer es.Deregister(handle)
 	if err != nil {
 		return "", err
 	}
+	defer es.Deregister(handle)
 
 	// Setup the timer
 	timer := time.NewTimer(timeout)
