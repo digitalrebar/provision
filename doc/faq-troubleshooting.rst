@@ -50,23 +50,41 @@ Add SSH Keys to Authorized Keys
 
 VIDEO TUTORIAL: https://www.youtube.com/watch?v=StQql8Xn08c 
 
-To have provisioned operating systems (including discovery/sledgehammer) add keys, you should set the ``access_keys`` parameter with a hash of the desired keys.  This can be accomplished by editing the root access profile to add your key(s) and then update the profile via the CLI.
+To have provisioned operating systems (including discovery/sledgehammer) add SSH keys, you should set the ``access-keys`` parameter with a hash of the desired keys.  This Param should be applied to the Machines you wish to update, either directly via adding the Param to the Machines, or by adding the Param to a Profile that is subsequently added to the Machines.  NOTE that the ``global`` Profile applies to all Machines, and you can add it to ``global`` should you desire to add the set of keys to ALL Machines being provisioned.
+
+The below example adds *User1* and *User2* SSH keys to the profile *my-profile*.  Change appropriately for your enviornment.
 
   ::
 
-    vi assets/profiles/root-access.yaml
-    drpcli profiles update root-access - < assets/profiles/root-access.yaml
+    cat << END_KEYS > my-keys.json
+    {
+      "Params": {
+        "access-keys": {
+          "user1": "ssh-rsa user_1_key user1@krib",
+          "user2": "ssh-rsa user_2_key user2@krib"
+        }
+      }
+    }
+    END_KEYS
+
+    drpcli profiles update my-profile -< keys.json
     
-NOTE: By default, these changes are targeted at the ``root-access`` profile and you will need to add that profile to selected machines for your keys to be injected.
+.. _rs_access_ssh_root_mode:
 
-If you want this parameter applied to all machines by default, then you should change ``root-access`` to ``global`` in the yaml file and command line.  
+Set SSH Root Mode
+-----------------
 
-  ::
+The Param ``access-ssh-root-mode`` defines the login policy for the *root* user.  The default vaule is ``without-password`` which means the remote SSH *root* user must access must be performed with SSH keys (see :ref:`rs_add_ssh`).  Possible values are:
 
-    cp assets/profiles/root-access.yaml assets/profiles/global.yaml
-    # remember to change root-access to global!
-    vi assets/profiles/global.yaml
-    drpcli profiles update global - < assets/profiles/global.yaml
+========================  ==========================================================
+value                     definition
+========================  ==========================================================
+``without-password``      require SSH public keys for root login, no forced commands
+``yes``                   allow SSH *root* user login with password
+``no``                    do not allow SSH *root* user login at all
+``forced-commands-only``  only allow forced commands to run via remote login
+========================  ==========================================================
+
 
 .. _rs_autocomplete:
 
