@@ -21,23 +21,8 @@ Meta:
 OS:
   Name: "local"
 ReadOnly: true
-Templates:
-- Contents: |
-    DEFAULT local
-    PROMPT 0
-    TIMEOUT 10
-    LABEL local
-    localboot 0
-  Name: "pxelinux"
-  Path: "pxelinux.cfg/{{.Machine.HexAddress}}"
-- Contents: "exit"
-  Name: "elilo"
-  Path:     "{{.Machine.HexAddress}}.conf"
-- Contents: |
-    #!ipxe
-    exit
-  Name: "ipxe"
-  Path: "{{.Machine.Address}}.ipxe"`).(*models.BootEnv)
+Templates: []
+`).(*models.BootEnv)
 	ignoreBootEnv := mustDecode(&models.BootEnv{}, `
 Description: "The boot environment you should use to have unknown machines boot off their local hard drive"
 Name:        "ignore"
@@ -66,7 +51,6 @@ Templates:
   Path: "default.ipxe"`).(*models.BootEnv)
 	fred := &models.BootEnv{Name: "fred"}
 	fred.SetValid()
-	fred.Errorf("bootenv: Missing elilo or pxelinux template")
 	fred.SetAvailable()
 	testFill(fred)
 

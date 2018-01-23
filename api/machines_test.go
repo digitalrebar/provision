@@ -32,7 +32,7 @@ func TestMachineCrud(t *testing.T) {
 						Path:     `{{.Machine.Path}}/file`,
 					},
 				}}
-			b := &models.BootEnv{Name: "foo"}
+			b := &models.BootEnv{Name: "foo", Kernel: "missing-kernel"}
 			if err := session.CreateModel(st1); err != nil {
 				return nil, err
 			}
