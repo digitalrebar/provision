@@ -30,12 +30,10 @@
     ID: ""
     Name: pxelinux
     Path: pxelinux.cfg/default
-  - Contents: exit
-    ID: ""
-    Name: elilo
-    Path: elilo.conf
   - Contents: |
       #!ipxe
+      chain {{.ProvisionerURL}}/${netX/mac}.ipxe && exit || goto chainip
+      :chainip
       chain tftp://{{.ProvisionerAddress}}/${netX/ip}.ipxe || exit
     ID: ""
     Name: ipxe

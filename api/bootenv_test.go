@@ -41,11 +41,10 @@ Templates:
     localboot 0
   Name: "pxelinux"
   Path: "pxelinux.cfg/default"
-- Contents: "exit"
-  Name:     "elilo"
-  Path:     "elilo.conf"
 - Contents: |
     #!ipxe
+    chain {{.ProvisionerURL}}/${netX/mac}.ipxe && exit || goto chainip
+    :chainip
     chain tftp://{{.ProvisionerAddress}}/${netX/ip}.ipxe || exit
   Name: "ipxe"
   Path: "default.ipxe"`).(*models.BootEnv)

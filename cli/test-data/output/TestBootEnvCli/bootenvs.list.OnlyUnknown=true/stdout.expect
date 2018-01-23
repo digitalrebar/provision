@@ -31,13 +31,7 @@
         "Path": "pxelinux.cfg/default"
       },
       {
-        "Contents": "exit",
-        "ID": "",
-        "Name": "elilo",
-        "Path": "elilo.conf"
-      },
-      {
-        "Contents": "#!ipxe\nchain tftp://{{.ProvisionerAddress}}/${netX/ip}.ipxe || exit\n",
+        "Contents": "#!ipxe\nchain {{.ProvisionerURL}}/${netX/mac}.ipxe \u0026\u0026 exit || goto chainip\n:chainip\nchain tftp://{{.ProvisionerAddress}}/${netX/ip}.ipxe || exit\n",
         "ID": "",
         "Name": "ipxe",
         "Path": "default.ipxe"
