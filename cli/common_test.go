@@ -387,6 +387,7 @@ func generateArgs(args []string) *server.ProgOpts {
 
 func TestCorePieces(t *testing.T) {
 	cliTest(false, false, "-E", "https://127.0.0.1:10001", "-U", "rocketskates", "-P", "r0cketsk8ts", "version").run(t)
+	cliTest(false, false, "gohai", "--help").run(t)
 	cliTest(false, true, "-F", "cow", "bootenvs", "list").run(t)
 	cliTest(false, false, "-F", "yaml", "bootenvs", "list").run(t)
 	cliTest(false, false, "-F", "json", "bootenvs", "list").run(t)
