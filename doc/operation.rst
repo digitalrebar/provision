@@ -574,6 +574,11 @@ Now that we have our reference Machine object, we'll use the ``update`` option t
       "Name": "wilma",
       <...snip...>
 
+Here is a single command example (using our ``$UUID`` variable above) that does not require temporary files.
+  ::
+
+    drpcli machines update $UUID '{ "Name": "barney" }' --ref "$(drpcli machines show $UUID)"
+
 You can update "unsafely", but if multiple updates occur, you can't guarantee that you're changing what you expected to (eg. someone/thing else beat you to the punch).  It is almost always a better pattern to insure you make a Machine name change with the use of the ``--ref`` Macine Object.   
   ::
 
