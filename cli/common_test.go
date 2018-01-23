@@ -15,6 +15,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/digitalrebar/logger"
 	"github.com/digitalrebar/provision/api"
 	"github.com/digitalrebar/provision/backend"
 	"github.com/digitalrebar/provision/embedded"
@@ -459,7 +460,10 @@ func TestMain(m *testing.M) {
 		myToken = session.Token()
 		session.Close()
 		session = nil
-		midlayer.ServeStatic("127.0.0.1:10003", backend.NewFS("test-data", nil), nil, backend.NewPublishers(nil))
+		midlayer.ServeStatic("127.0.0.1:10003",
+			backend.NewFS("test-data", nil),
+			logger.New(nil).Log(""),
+			backend.NewPublishers(nil))
 		ret = m.Run()
 	}
 
