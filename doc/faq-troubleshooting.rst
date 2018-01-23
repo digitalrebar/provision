@@ -164,6 +164,22 @@ The contents and structure of these locations is the same.  Follow the below pro
 .. note::  WARNING:  If you install a new version of the Digital Rebar Provision service, you must verify that there are no Contents differences between the two versions.  Should the ``dr-provision`` service fail to start up; it's entirely likely that there may be some content changes that need to be addressed in the JSON/YAML files prior to the new version being started.  See the :ref:`rs_upgrade` notes for any version-to-version specific documentation.
 
 
+.. _rs_kickseed:
+
+Custom Kickstart and Preseeds
+-----------------------------
+
+Starting with ``drp-community-content`` version 1.5.0 and newer, you can now define a custom Kickstart or Preseed (aka *kickseed*) to override the defaults in the selected BootEnv.  You simply need to only define a single Param with the name of the Kickstart or Preseed you wish to override the default value. 
+  ::
+    
+    export UUID="f6ca7bb6-d74f-4bc1-8544-f3df500fb15e"
+    drpcli machines set $UUID param kickseed to "my_kickstart.cfg"
+
+Of course, you can apply a Param to a Profile, and apply that Profile to a group of Machines if desired. 
+
+.. note:: The Digital Rebar default kickstart and preseeds have Digital Rebar specific interactions that may be necessary to replicate.  Please review the default kickstart and preseeds for patterns ane examples you may need to re-use. 
+
+
 .. _rs_jq_examples:
 
 JQ Usage Examples
