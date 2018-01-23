@@ -537,6 +537,57 @@ It might be necessary to change the :ref:`rs_model_bootenv` associated with a :r
 .. note:: The :ref:`rs_model_bootenv` *MUST* exists or the command will fail.
 
 
+.. _rs_rename_machine:
+
+Rename a Machine
+----------------
+
+By default, machines are given names based on the machines primary network MAC address.  Most infrastructure environments need to rename machines to fall in line with a naming scheme in use with the company.   To do that safely, we will use the existing Machins object information as a baseline to apply a Patch operation to the JSON.  This is a two step process that is completed in the following example: 
+
+
+First lets define the Machine (UUID) that we're going to operate on, and lets get the current name of the machine for reference (``fred`` in this case).
+  ::
+
+    # get our machine to operate on
+    export UUID="f6ca7bb6-d74f-4bc1-8544-f3df500fb15e"
+
+    # our reference starting point for 'Name'
+    drpcli machines show $UUID | jq '.Name'
+    "fred"
+
+We now need to obtain the Machine object JSON tha we are going to apply the patch against. 
+  ::
+
+    # get current machine object that we want to reference the change against
+    drpcli machines show $UUID  > /tmp/machine.json
+
+Now that we have our reference Machine object, we'll use the ``update`` option to the ``machines`` manipulation.
+  ::
+
+    # set the name using the reference JSON object
+    drpcli machines update $UUID '{ "Name": "wilma" }' --ref /tmp/machine.json
+
+    # outputs
+    {
+      "Address": "147.75.66.137",
+      <...snip...>
+      "Name": "wilma",
+      <...snip...>
+
+You can update "unsafely", but if multiple updates occur, you can't guarantee that you're changing what you expected to (eg. someone/thing else beat you to the punch).  It is almost always a better pattern to insure you make a Machine name change with the use of the ``--ref`` Macine Object.   
+  ::
+
+    # this is a BAD way to do it - as it does not guarantee atomicity 
+    drpcli machines update $UUID '{ "Name": "betty" }'
+
+    # outputs
+    {
+      "Address": "147.75.66.137",
+      <...snip...>
+      "Name": "betty",
+      <...snip...>
+
+
 DHCP Operations
 +++++++++++++++
 
