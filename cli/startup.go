@@ -139,5 +139,14 @@ func NewApp() *cobra.Command {
 		},
 	})
 
+	app.AddCommand(&cobra.Command{
+		Use:   "gohai",
+		Short: "Get basic system information as a JSON blob",
+		Args:  cobra.NoArgs,
+		RunE: func(c *cobra.Command, args []string) error {
+			return gohai()
+		},
+	})
+
 	return app
 }
