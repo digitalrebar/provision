@@ -145,7 +145,16 @@ func Run(toPath, fromPath string, pc PluginConfig) error {
 		apiGroup.POST("/action", func(c *gin.Context) { actionHandler(c, pa) })
 	}
 
-	fmt.Printf("READY!\n")
+	go func() {
+		for {
+			if _, err := os.Stat(toPath); os.IsNotExist(err) {
+				time.Sleep(1 * time.Second)
+			} else {
+				break
+			}
+		}
+		fmt.Printf("READY!\n")
+	}()
 	return gc.RunUnix(toPath)
 }
 

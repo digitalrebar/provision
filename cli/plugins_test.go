@@ -30,6 +30,7 @@ func TestPluginCli(t *testing.T) {
   "jj": 3
 }
 `
+
 	cliTest(true, false, "plugins").run(t)
 	cliTest(false, false, "plugins", "list").run(t)
 	cliTest(true, true, "plugins", "create").run(t)
