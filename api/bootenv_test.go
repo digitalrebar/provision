@@ -21,7 +21,37 @@ Meta:
 OS:
   Name: "local"
 ReadOnly: true
-Templates: []
+Templates:
+  - Contents: |
+      DEFAULT local
+      PROMPT 0
+      TIMEOUT 10
+      LABEL local
+      localboot 0
+    ID: ""
+    Name: pxelinux
+    Path: pxelinux.cfg/{{.Machine.HexAddress}}
+  - Contents: |
+      #!ipxe
+      exit
+    ID: ""
+    Name: ipxe
+    Path: '{{.Machine.Address}}.ipxe'
+  - Contents: |
+      DEFAULT local
+      PROMPT 0
+      TIMEOUT 10
+      LABEL local
+      localboot 0
+    ID: ""
+    Name: pxelinux-mac
+    Path: pxelinux.cfg/{{.Machine.MacAddr "pxelinux"}}
+  - Contents: |
+      #!ipxe
+      exit
+    ID: ""
+    Name: ipxe-mac
+    Path: '{{.Machine.MacAddr "ipxe"}}.ipxe'
 `).(*models.BootEnv)
 	ignoreBootEnv := mustDecode(&models.BootEnv{}, `
 Description: "The boot environment you should use to have unknown machines boot off their local hard drive"
