@@ -9,6 +9,9 @@ type PluginProvider struct {
 	Name    string
 	Version string
 
+	// This is used to indicate what version the plugin is built for
+	PluginVersion int
+
 	HasPublish       bool
 	AvailableActions []AvailableAction
 

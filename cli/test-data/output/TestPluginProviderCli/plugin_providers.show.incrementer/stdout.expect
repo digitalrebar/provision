@@ -32,6 +32,7 @@
   "Meta": {},
   "Name": "incrementer",
   "OptionalParams": [],
+  "PluginVersion": 2,
   "RequiredParams": [],
   "Version": "v3.0.2-pre-alpha-NotSet"
 }

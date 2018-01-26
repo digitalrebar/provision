@@ -17,9 +17,10 @@ import (
 var (
 	version = provision.RS_VERSION
 	def     = models.PluginProvider{
-		Name:       "incrementer",
-		Version:    version,
-		HasPublish: true,
+		Name:          "incrementer",
+		Version:       version,
+		PluginVersion: 2,
+		HasPublish:    true,
 		AvailableActions: []models.AvailableAction{
 			models.AvailableAction{Command: "increment",
 				Model:          "machines",
