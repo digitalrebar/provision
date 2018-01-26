@@ -5,7 +5,7 @@
     "Documentation": "",
     "Errors": [],
     "Meta": {
-      "feature-flags": "original-exit-codes"
+      "feature-flags": "sane-exit-codes"
     },
     "Name": "john",
     "OptionalParams": [],
