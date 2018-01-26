@@ -180,6 +180,26 @@ Of course, you can apply a Param to a Profile, and apply that Profile to a group
 .. note:: The Digital Rebar default kickstart and preseeds have Digital Rebar specific interactions that may be necessary to replicate.  Please review the default kickstart and preseeds for patterns and examples you may need to re-use.   We HIGHLY recommend you start with a `clone` operation of an existing Kickstart/Preseed file; and making appropriate modifications from that as a baseline. 
 
 
+.. _rs_nested_templates:
+
+Nested Templates (or "Sub-templates")
+-------------------------------------
+
+The Golang templating language does not provide a call-out to include another template.  However, at RackN, we've added the ability to include *nested templates* (sometimes referred to as *sub-templates*).  In any content piece that is valid to use the templating capabilities, simply use the following Template construct to refer to another     template.  The template referred to will be expanded inline in the calling template.  The nested template example below calls the template named (oddly enough) *nested.     tmpl*.
+  ::
+
+    {{template "nested.tmpl" .}}
+
+    # or alternatively:
+
+    {{$templateName := (printf "part-seed-%s.tmpl" (.Param "part-scheme")) -}}
+    {{.CallTemplate $templateName .}}
+
+The ``template`` construct must refer to a given template name that exists already.  
+
+The ``CallTemplate`` construct can be a parameter or expression that evaluates to a string. 
+
+
 .. _rs_jq_examples:
 
 JQ Usage Examples
