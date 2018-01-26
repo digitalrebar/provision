@@ -177,7 +177,7 @@ Starting with ``drp-community-content`` version 1.5.0 and newer, you can now def
 
 Of course, you can apply a Param to a Profile, and apply that Profile to a group of Machines if desired. 
 
-.. note:: The Digital Rebar default kickstart and preseeds have Digital Rebar specific interactions that may be necessary to replicate.  Please review the default kickstart and preseeds for patterns ane examples you may need to re-use. 
+.. note:: The Digital Rebar default kickstart and preseeds have Digital Rebar specific interactions that may be necessary to replicate.  Please review the default kickstart and preseeds for patterns and examples you may need to re-use.   We HIGHLY recommend you start with a `clone` operation of an existing Kickstart/Preseed file; and making appropriate modifications from that as a baseline. 
 
 
 .. _rs_jq_examples:
