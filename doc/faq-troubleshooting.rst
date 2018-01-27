@@ -195,9 +195,22 @@ The Golang templating language does not provide a call-out to include another te
     {{$templateName := (printf "part-seed-%s.tmpl" (.Param "part-scheme")) -}}
     {{.CallTemplate $templateName .}}
 
-The ``template`` construct must refer to a given template name that exists already.  
+The ``template`` construct is a text string that refers to a given template name which exists already.  
 
-The ``CallTemplate`` construct can be a parameter or expression that evaluates to a string. 
+The ``CallTemplate`` construct can be a variable or expression that evaluates to a string. 
+
+
+.. _rs_change_machine_name:
+
+Change a Machines Name
+----------------------
+If you wish to update/change a Machine Name, you can do:
+  ::
+
+    export UUID="abcd-efgh-ijkl-mnop-qrst"
+    drpcli machines update $UUID '{ "Name": "foobar" }'
+
+.. note:: Note that you can NOT use the ``drpcli machines set ...`` construct as it only sets Param values.  The Machines name is a Field, not a Parameter.  This will NOT work: ``drpcli machines set $UUID param Name to foobar``.
 
 
 .. _rs_jq_examples:
@@ -273,19 +286,4 @@ The Job Logs provide a lot of information about the provisioning process of your
 
     export UUID=`abcd-efgh-ijkl-mnop-qrps"
     drpcli jobs list | jq ".[] | select(.Machine==\"$UUID\")"
-
-Change a Machines Name
-======================
-If you wish to update/change a Machine Name, you can do: 
-  ::
-
-    export UUID="abcd-efgh-ijkl-mnop-qrst"
-    drpcli machines update $UUID '{ "Name": "foobar" }'
-
-Or, you can use the ``set`` method:
-  ::
-
-    export UUID="abcd-efgh-ijkl-mnop-qrst"
-    drpcli machines set $UUID param Name to foobar
-
 
