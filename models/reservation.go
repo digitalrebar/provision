@@ -14,6 +14,10 @@ type Reservation struct {
 	// required: true
 	// swagger:strfmt ipv4
 	Addr net.IP
+	// A description of this Reservation.  This should tell what it is for,
+	// any special considerations that should be taken into account when
+	// using it, etc.
+	Description string
 	// Token is the unique identifier that the strategy for this Reservation should use.
 	//
 	// required: true
@@ -66,4 +70,8 @@ func (b *Reservation) ToModels(obj interface{}) []Model {
 		res[i] = Model(item)
 	}
 	return res
+}
+
+func (b *Reservation) CanHaveActions() bool {
+	return true
 }

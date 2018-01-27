@@ -73,8 +73,8 @@ SEE ALSO
    profile from the machine's list
 -  `drpcli machines removetask <drpcli_machines_removetask.html>`__ -
    Remove a task from the machine's list
--  `drpcli machines runaction <drpcli_machines_runaction.html>`__ - Set
-   preferences
+-  `drpcli machines runaction <drpcli_machines_runaction.html>`__ - Run
+   action on object from plugin
 -  `drpcli machines set <drpcli_machines_set.html>`__ - Set the machines
    param *key* to *blob*
 -  `drpcli machines show <drpcli_machines_show.html>`__ - Show a single

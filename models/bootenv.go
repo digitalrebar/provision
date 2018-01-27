@@ -148,3 +148,7 @@ func (b *BootEnv) Fill() {
 func (b *BootEnv) SetName(n string) {
 	b.Name = n
 }
+
+func (b *BootEnv) CanHaveActions() bool {
+	return true
+}

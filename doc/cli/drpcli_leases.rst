@@ -36,6 +36,10 @@ SEE ALSO
 
 -  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
    DigitalRebar Provision API
+-  `drpcli leases action <drpcli_leases_action.html>`__ - Display the
+   action for this lease
+-  `drpcli leases actions <drpcli_leases_actions.html>`__ - Display
+   actions for this lease
 -  `drpcli leases destroy <drpcli_leases_destroy.html>`__ - Destroy
    lease by id
 -  `drpcli leases exists <drpcli_leases_exists.html>`__ - See if a
@@ -43,6 +47,8 @@ SEE ALSO
 -  `drpcli leases indexes <drpcli_leases_indexes.html>`__ - Get indexes
    for leases
 -  `drpcli leases list <drpcli_leases_list.html>`__ - List all leases
+-  `drpcli leases runaction <drpcli_leases_runaction.html>`__ - Run
+   action on object from plugin
 -  `drpcli leases show <drpcli_leases_show.html>`__ - Show a single
    leases by id
 -  `drpcli leases wait <drpcli_leases_wait.html>`__ - Wait for a lease's

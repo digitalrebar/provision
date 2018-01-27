@@ -4,11 +4,14 @@ Usage:
   drpcli templates [command]
 
 Available Commands:
+  action      Display the action for this template
+  actions     Display actions for this template
   create      Create a new template with the passed-in JSON or string key
   destroy     Destroy template by id
   exists      See if a templates exists by id
   indexes     Get indexes for templates
   list        List all templates
+  runaction   Run action on object from plugin
   show        Show a single templates by id
   update      Unsafely update template by id with the passed-in JSON
   upload      Upload the template file [file] as template [id]

@@ -86,3 +86,7 @@ func (b *Plugin) GetParams() map[string]interface{} {
 func (b *Plugin) SetParams(p map[string]interface{}) {
 	b.Params = copyMap(p)
 }
+
+func (b *Plugin) CanHaveActions() bool {
+	return true
+}

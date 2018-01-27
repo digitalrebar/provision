@@ -4,6 +4,8 @@ Usage:
   drpcli profiles [command]
 
 Available Commands:
+  action      Display the action for this profile
+  actions     Display actions for this profile
   add         Add the profiles param *key* to *blob*
   create      Create a new profile with the passed-in JSON or string key
   destroy     Destroy profile by id
@@ -13,6 +15,7 @@ Available Commands:
   list        List all profiles
   params      Gets/sets all parameters for the profile
   remove      Remove the param *key* from profiles
+  runaction   Run action on object from plugin
   set         Set the profiles param *key* to *blob*
   show        Show a single profiles by id
   update      Unsafely update profile by id with the passed-in JSON

@@ -415,6 +415,7 @@ func TestMain(m *testing.M) {
 		"--fake-pinger",
 		"--drp-id", "Fred",
 		"--backend", "memory:///",
+		"--plugin-comm-root", "/tmp",
 		"--local-content", "directory:../test-data/etc/dr-provision?codec=yaml",
 		"--default-content", "file:../test-data/usr/share/dr-provision/default.yaml?codec=yaml",
 		"--base-token-secret", "token-secret-token-secret-token1",

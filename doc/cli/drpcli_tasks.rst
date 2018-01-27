@@ -36,6 +36,10 @@ SEE ALSO
 
 -  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
    DigitalRebar Provision API
+-  `drpcli tasks action <drpcli_tasks_action.html>`__ - Display the
+   action for this task
+-  `drpcli tasks actions <drpcli_tasks_actions.html>`__ - Display
+   actions for this task
 -  `drpcli tasks create <drpcli_tasks_create.html>`__ - Create a new
    task with the passed-in JSON or string key
 -  `drpcli tasks destroy <drpcli_tasks_destroy.html>`__ - Destroy task
@@ -45,6 +49,8 @@ SEE ALSO
 -  `drpcli tasks indexes <drpcli_tasks_indexes.html>`__ - Get indexes
    for tasks
 -  `drpcli tasks list <drpcli_tasks_list.html>`__ - List all tasks
+-  `drpcli tasks runaction <drpcli_tasks_runaction.html>`__ - Run action
+   on object from plugin
 -  `drpcli tasks show <drpcli_tasks_show.html>`__ - Show a single tasks
    by id
 -  `drpcli tasks update <drpcli_tasks_update.html>`__ - Unsafely update

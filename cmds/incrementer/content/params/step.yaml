@@ -1,0 +1,4 @@
+---
+Name: incrementer/step
+Schema:
+  type: integer

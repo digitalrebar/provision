@@ -41,6 +41,6 @@ type Info struct {
 	// required: true
 	Address net.IP `json:"address"`
 	// required: true
-	Stats    []*Stat  `json:"stats"`
+	Stats    []Stat   `json:"stats"`
 	Features []string `json:"features"`
 }

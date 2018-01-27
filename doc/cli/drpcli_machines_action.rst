@@ -17,7 +17,8 @@ Options
 
 ::
 
-      -h, --help   help for action
+      -h, --help            help for action
+          --plugin string   Plugin to filter action search
 
 Options inherited from parent commands
 --------------------------------------

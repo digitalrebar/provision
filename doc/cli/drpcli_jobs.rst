@@ -49,6 +49,12 @@ SEE ALSO
 -  `drpcli jobs list <drpcli_jobs_list.html>`__ - List all jobs
 -  `drpcli jobs log <drpcli_jobs_log.html>`__ - Gets the log or appends
    to the log if a second argument or stream is given
+-  `drpcli jobs plugin\_action <drpcli_jobs_plugin_action.html>`__ -
+   Display the action for this job
+-  `drpcli jobs plugin\_actions <drpcli_jobs_plugin_actions.html>`__ -
+   Display actions for this job
+-  `drpcli jobs runplugin\_action <drpcli_jobs_runplugin_action.html>`__
+   - Run action on object from plugin
 -  `drpcli jobs show <drpcli_jobs_show.html>`__ - Show a single jobs by
    id
 -  `drpcli jobs update <drpcli_jobs_update.html>`__ - Unsafely update

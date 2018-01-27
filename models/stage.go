@@ -155,3 +155,7 @@ func (b *Stage) SetTasks(t []string) {
 func (b *Stage) SetName(n string) {
 	b.Name = n
 }
+
+func (b *Stage) CanHaveActions() bool {
+	return true
+}

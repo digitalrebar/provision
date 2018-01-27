@@ -6,12 +6,12 @@ Digital Rebar Provision CLI Command Bash AutoCompletion File
 Synopsis
 --------
 
-Generate a bash autocomplete file as . Place the generated file in
-/etc/bash\_completion.d or /usr/local/etc/bash\_completion.d.
+Generate a bash autocomplete file as *filename*. Place the generated
+file in /etc/bash\_completion.d or /usr/local/etc/bash\_completion.d.
 
 ::
 
-    drpcli autocomplete <filename> [flags]
+    drpcli autocomplete [filename] [flags]
 
 Options
 -------

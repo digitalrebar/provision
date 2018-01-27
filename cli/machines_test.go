@@ -44,6 +44,17 @@ var machineCreateJohnString = `{
 
 var machineDestroyJohnString = "Deleted machine 3e7031fe-3062-45f1-835c-92541bc9cbd3\n"
 
+var machinePluginCreateString = `{
+  "Available": true,
+  "Errors": [],
+  "Name": "incr",
+  "PluginErrors": [],
+  "Provider": "incrementer",
+  "ReadOnly": false,
+  "Validated": true
+}
+`
+
 func TestMachineCli(t *testing.T) {
 	var machineCreateBadJSONString = "{asdgasdg"
 	var machineCreateBadJSON2String = "[asdgasdg]"
@@ -56,17 +67,6 @@ func TestMachineCli(t *testing.T) {
   "jj": 3
 }
 `
-	var machinePluginCreateString = `{
-  "Available": true,
-  "Errors": [],
-  "Name": "incr",
-  "PluginErrors": [],
-  "Provider": "incrementer",
-  "ReadOnly": false,
-  "Validated": true
-}
-`
-
 	var machineRunActionMissingParameterStdinString = "{}"
 	var machineRunActionGoodStdinString = `{
 	"incrementer/parameter": "parm5",

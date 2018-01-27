@@ -119,6 +119,7 @@ type EventStream struct {
 	subscriptions map[string][]int64
 	recievers     map[int64]chan RecievedEvent
 	mux           *sync.Mutex
+	rchan         chan RecievedEvent
 }
 
 func (es *EventStream) processEvents(running chan struct{}) {
@@ -173,6 +174,10 @@ func (c *Client) Events() (*EventStream, error) {
 		recievers:     map[int64]chan RecievedEvent{},
 		mux:           &sync.Mutex{},
 	}
+	newID := atomic.AddInt64(&res.handleId, 1)
+	res.rchan = make(chan RecievedEvent, 100)
+	res.subscriptions["websocket.*.*"] = []int64{newID}
+	res.recievers[newID] = res.rchan
 	running := make(chan struct{})
 	go res.processEvents(running)
 	<-running
@@ -187,10 +192,11 @@ func (es *EventStream) Close() error {
 		websocket.FormatCloseMessage(websocket.CloseNormalClosure, ""))
 }
 
-func (es *EventStream) subscribe(handle int64, events ...string) error {
+func (es *EventStream) subscribe(handle int64, events ...string) (int, error) {
 	if es.recievers[handle] == nil {
-		return fmt.Errorf("No such handle %d", handle)
+		return 0, fmt.Errorf("No such handle %d", handle)
 	}
+	count := 0
 	for _, evt := range events {
 		handles := es.subscriptions[evt]
 		if handles == nil {
@@ -208,18 +214,27 @@ func (es *EventStream) subscribe(handle int64, events ...string) error {
 		}
 		if es.subscriptions[evt] == nil {
 			if err := es.conn.WriteMessage(websocket.TextMessage, []byte("register "+evt)); err != nil {
-				return err
+				return count, err
 			}
+			count += 1
 		}
 		es.subscriptions[evt] = handles
 	}
-	return nil
+	return count, nil
 }
 
 func (es *EventStream) Subscribe(handle int64, events ...string) error {
 	es.mux.Lock()
-	defer es.mux.Unlock()
-	return es.subscribe(handle, events...)
+	count, err := es.subscribe(handle, events...)
+	es.mux.Unlock()
+	if err == nil {
+		// Really wait should be for my specific one, but ...
+		// Multi-threaded apps will have issues.
+		for i := 0; i < count; i++ {
+			<-es.rchan
+		}
+	}
+	return err
 }
 
 // Register directs the EventStream to subscribe to Events from the digital rebar provisioner.
@@ -239,10 +254,18 @@ func (es *EventStream) Subscribe(handle int64, events ...string) error {
 func (es *EventStream) Register(events ...string) (int64, <-chan RecievedEvent, error) {
 	newID := atomic.AddInt64(&es.handleId, 1)
 	es.mux.Lock()
-	defer es.mux.Unlock()
 	ch := make(chan RecievedEvent, 100)
 	es.recievers[newID] = ch
-	return newID, ch, es.subscribe(newID, events...)
+	count, err := es.subscribe(newID, events...)
+	es.mux.Unlock()
+	if err == nil {
+		// Really wait should be for my specific one, but ...
+		// Multi-threaded apps will have issues.
+		for i := 0; i < count; i++ {
+			<-es.rchan
+		}
+	}
+	return newID, ch, err
 }
 
 // Deregister directs the EventStream to unsubscribe from Events from
@@ -250,11 +273,12 @@ func (es *EventStream) Register(events ...string) (int64, <-chan RecievedEvent, 
 // Register.
 func (es *EventStream) Deregister(handle int64) error {
 	es.mux.Lock()
-	defer es.mux.Unlock()
 	ch := es.recievers[handle]
 	if ch == nil {
+		es.mux.Unlock()
 		return fmt.Errorf("No such handle %d", handle)
 	}
+	count := 0
 	for evt, handles := range es.subscriptions {
 		idx := sort.Search(len(handles), func(i int) bool { return handles[i] >= handle })
 		if idx == len(handles) || handles[idx] != handle {
@@ -265,12 +289,19 @@ func (es *EventStream) Deregister(handle int64) error {
 		handles = handles[:len(handles)-1]
 		es.subscriptions[evt] = handles
 		if len(handles) == 0 {
+			count += 1
 			es.conn.WriteMessage(websocket.TextMessage, []byte("deregister "+evt))
-			es.subscriptions[evt] = nil
+			delete(es.subscriptions, evt)
 		}
 	}
 	delete(es.recievers, handle)
 	close(ch)
+	es.mux.Unlock()
+	// Really wait should be for my specific one, but ...
+	// Multi-threaded apps will have issues.
+	for i := 0; i < count; i++ {
+		<-es.rchan
+	}
 	return nil
 }
 

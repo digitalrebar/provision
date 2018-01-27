@@ -4,6 +4,8 @@ Usage:
   drpcli plugins [command]
 
 Available Commands:
+  action      Display the action for this plugin
+  actions     Display actions for this plugin
   add         Add the plugins param *key* to *blob*
   create      Create a new plugin with the passed-in JSON or string key
   destroy     Destroy plugin by id
@@ -13,6 +15,7 @@ Available Commands:
   list        List all plugins
   params      Gets/sets all parameters for the plugin
   remove      Remove the param *key* from plugins
+  runaction   Run action on object from plugin
   set         Set the plugins param *key* to *blob*
   show        Show a single plugins by id
   update      Unsafely update plugin by id with the passed-in JSON

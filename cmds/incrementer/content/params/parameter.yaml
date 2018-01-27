@@ -1,0 +1,4 @@
+---
+Name: incrementer/parameter
+Schema:
+  type: string

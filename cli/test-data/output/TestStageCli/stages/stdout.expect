@@ -4,6 +4,8 @@ Usage:
   drpcli stages [command]
 
 Available Commands:
+  action        Display the action for this stage
+  actions       Display actions for this stage
   addprofile    Add profile to the machine's profile list
   addtask       Add task to the stage's task list
   bootenv       Set the stage's bootenv
@@ -14,6 +16,7 @@ Available Commands:
   list          List all stages
   removeprofile Remove a profile from the machine's list
   removetask    Remove a task from the stage's list
+  runaction     Run action on object from plugin
   show          Show a single stages by id
   update        Unsafely update stage by id with the passed-in JSON
   wait          Wait for a stage's field to become a value within a number of seconds

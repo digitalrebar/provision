@@ -254,3 +254,7 @@ func (b *Machine) DelTasks(tasks ...string) {
 	}
 	b.Tasks = append(immutable, nextMutable...)
 }
+
+func (b *Machine) CanHaveActions() bool {
+	return true
+}

@@ -20,6 +20,7 @@ func registerJob(app *cobra.Command) {
 		singleName: "job",
 		example:    func() models.Model { return &models.Job{} },
 		noCreate:   true,
+		actionName: "plugin_action",
 	}
 	op.addCommand(&cobra.Command{
 		Use:   "create [json]",

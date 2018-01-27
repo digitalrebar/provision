@@ -22,7 +22,7 @@ Available Commands:
   remove        Remove the param *key* from machines
   removeprofile Remove a profile from the machine's list
   removetask    Remove a task from the machine's list
-  runaction     Set preferences
+  runaction     Run action on object from plugin
   set           Set the machines param *key* to *blob*
   show          Show a single machines by id
   stage         Set the machine's stage

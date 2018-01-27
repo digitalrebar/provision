@@ -4,12 +4,15 @@ Usage:
   drpcli users [command]
 
 Available Commands:
+  action      Display the action for this user
+  actions     Display actions for this user
   create      Create a new user with the passed-in JSON or string key
   destroy     Destroy user by id
   exists      See if a users exists by id
   indexes     Get indexes for users
   list        List all users
   password    Set the password for this id
+  runaction   Run action on object from plugin
   show        Show a single users by id
   token       Get a login token for this user with optional parameters
   update      Unsafely update user by id with the passed-in JSON

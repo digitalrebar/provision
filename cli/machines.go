@@ -5,7 +5,6 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/digitalrebar/provision/api"
 	"github.com/digitalrebar/provision/models"
 	"github.com/spf13/cobra"
 )
@@ -126,80 +125,6 @@ pass in more than one task.`,
 		},
 	})
 	op.addCommand(tasks)
-	op.addCommand(&cobra.Command{
-		Use:   "actions [id]",
-		Short: fmt.Sprintf("Display actions for this machine"),
-		Long:  `Helper function to display the machine's actions.`,
-		Args: func(c *cobra.Command, args []string) error {
-			if len(args) != 1 {
-				return fmt.Errorf("%v requires 1 argument", c.UseLine())
-			}
-			return nil
-		},
-		RunE: func(c *cobra.Command, args []string) error {
-			uuid := args[0]
-			res := []models.AvailableAction{}
-			if err := session.Req().UrlFor("machines", uuid, "actions").Do(&res); err != nil {
-				return generateError(err, "Failed to fetch actions %v: %v", op.singleName, uuid)
-			}
-			return prettyPrint(res)
-		},
-	})
-	op.addCommand(&cobra.Command{
-		Use:   "action [id] [action]",
-		Short: fmt.Sprintf("Display the action for this machine"),
-		Long:  `Helper function to display the machine's action.`,
-		Args: func(c *cobra.Command, args []string) error {
-			if len(args) != 2 {
-				return fmt.Errorf("%v requires 2 arguments", c.UseLine())
-			}
-			return nil
-		},
-		RunE: func(c *cobra.Command, args []string) error {
-			uuid := args[0]
-			action := args[1]
-			res := &models.AvailableAction{}
-			if err := session.Req().UrlFor("machines", uuid, "actions", action).Do(&res); err != nil {
-				return generateError(err, "Failed to fetch action %v: %v", op.singleName, uuid)
-			}
-			return prettyPrint(res)
-		},
-	})
-	actionParams := map[string]interface{}{}
-	op.addCommand(&cobra.Command{
-		Use:   "runaction [id] [command] [- | JSON or YAML Map of objects | pairs of string objects]",
-		Short: "Set preferences",
-		Args: func(c *cobra.Command, args []string) error {
-			actionParams = map[string]interface{}{}
-			if len(args) == 3 {
-				if err := into(args[2], &actionParams); err != nil {
-					return err
-				}
-				return nil
-			}
-			if len(args) >= 2 && len(args)%2 == 0 {
-				for i := 2; i < len(args); i += 2 {
-					var obj interface{}
-					if err := api.DecodeYaml([]byte(args[i+1]), &obj); err != nil {
-						return fmt.Errorf("Invalid parameters: %s %v\n", args[i+1], err)
-					}
-					actionParams[args[i]] = obj
-				}
-				return nil
-			}
-			return fmt.Errorf("runaction either takes three arguments or a multiple of two, not %d", len(args))
-		},
-		RunE: func(c *cobra.Command, args []string) error {
-			uuid := args[0]
-			command := args[1]
-			var resp interface{}
-			err := session.Req().Post(actionParams).UrlFor("machines", uuid, "actions", command).Do(resp)
-			if err != nil {
-				return generateError(err, "Error running action")
-			}
-			return prettyPrint(resp)
-		},
-	})
 	var exitOnFailure = false
 	processJobs := &cobra.Command{
 		Use:   "processjobs [id]",

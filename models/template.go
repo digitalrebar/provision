@@ -57,3 +57,7 @@ func (b *Template) ToModels(obj interface{}) []Model {
 	}
 	return res
 }
+
+func (b *Template) CanHaveActions() bool {
+	return true
+}

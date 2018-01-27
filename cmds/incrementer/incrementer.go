@@ -3,16 +3,13 @@ package main
 //go:generate drbundler content content.go
 
 import (
-	"bytes"
 	"fmt"
-	"io"
 	"os"
-	"strconv"
-	"strings"
-	"sync"
 
+	"github.com/VictorLowther/jsonpatch2/utils"
+	"github.com/digitalrebar/logger"
 	"github.com/digitalrebar/provision"
-	"github.com/digitalrebar/provision/cli"
+	"github.com/digitalrebar/provision/api"
 	"github.com/digitalrebar/provision/models"
 	"github.com/digitalrebar/provision/plugin"
 )
@@ -20,129 +17,83 @@ import (
 var (
 	version = provision.RS_VERSION
 	def     = models.PluginProvider{
-		Name:       "incrementer",
-		Version:    version,
-		HasPublish: true,
-		AvailableActions: []*models.AvailableAction{
-			&models.AvailableAction{Command: "increment",
+		Name:          "incrementer",
+		Version:       version,
+		PluginVersion: 2,
+		HasPublish:    true,
+		AvailableActions: []models.AvailableAction{
+			models.AvailableAction{Command: "increment",
+				Model:          "machines",
 				OptionalParams: []string{"incrementer/step", "incrementer/parameter"},
 			},
-			&models.AvailableAction{Command: "reset_count",
+			models.AvailableAction{Command: "reset_count",
+				Model:          "machines",
 				RequiredParams: []string{"incrementer/touched"},
 			},
-		},
-		Parameters: []*models.Param{
-			&models.Param{Name: "incrementer/parameter", Schema: map[string]interface{}{"type": "string"}},
-			&models.Param{Name: "incrementer/step", Schema: map[string]interface{}{"type": "integer"}},
+			models.AvailableAction{Command: "incrstatus"},
 		},
 		Content: contentYamlString,
 	}
-	lock sync.Mutex
 )
 
 type Plugin struct {
+	session *api.Client
 }
 
-func (p *Plugin) Config(config map[string]interface{}) *models.Error {
-	err := &models.Error{Code: 0, Model: "plugin", Key: "incrementer", Type: "plugin", Messages: []string{}}
-	plugin.Log("Config: %v\n", config)
-	return err
+func (p *Plugin) Config(thelog logger.Logger, session *api.Client, config map[string]interface{}) *models.Error {
+	thelog.Infof("Config: %v\n", config)
+	p.session = session
+	return nil
 }
 
-func executeDrpCliCommand(args ...string) (string, error) {
-	r, w, _ := os.Pipe()
-	lock.Lock()
-	savedOut := os.Stdout
-	os.Stdout = w
-
-	outC := make(chan string)
-	// copy the output in a separate goroutine so printing can't block indefinitely
-	go func() {
-		var buf bytes.Buffer
-		io.Copy(&buf, r)
-		outC <- buf.String()
-	}()
-
-	app := cli.NewApp()
-	app.SetArgs(args)
-	app.SetOutput(os.Stderr)
-	err2 := app.Execute()
-
-	// back to normal state
-	w.Close()
-	os.Stdout = savedOut
-	lock.Unlock()
-	out := <-outC
-
-	return out, err2
-}
-
-func updateOrCreateParameter(uuid, parameter string, step int) *models.Error {
-	out, err2 := executeDrpCliCommand("machines", "get", uuid, "param", parameter)
-	if err2 != nil {
-		return &models.Error{Code: 409,
-			Model:    "plugin",
-			Key:      "incrementer",
-			Type:     "plugin",
-			Messages: []string{fmt.Sprintf("Finding parameter failed: %s\n", err2.Error())}}
-	}
-
-	if strings.TrimSpace(out) == "null" {
-		_, err2 = executeDrpCliCommand("machines", "set", uuid, "param", parameter, "to", fmt.Sprintf("%d", step))
-		if err2 != nil {
-			return &models.Error{Code: 409,
-				Model:    "plugin",
-				Key:      "incrementer",
-				Type:     "plugin",
-				Messages: []string{fmt.Sprintf("Failed to set an int to 0: %s\n", err2.Error())}}
-		}
-	} else {
-		i, err2 := strconv.ParseInt(strings.TrimSpace(out), 10, 64)
-		if err2 != nil {
-			return &models.Error{Code: 409,
-				Model:    "plugin",
-				Key:      "incrementer",
-				Type:     "plugin",
-				Messages: []string{fmt.Sprintf("Retrieved something not an int: %s\n", err2.Error())}}
-		}
-
-		_, err2 = executeDrpCliCommand("machines", "set", uuid, "param", parameter, "to", fmt.Sprintf("%d", i+int64(step)))
-		if err2 != nil {
-			return &models.Error{Code: 409,
-				Model:    "plugin",
-				Key:      "incrementer",
-				Type:     "plugin",
-				Messages: []string{fmt.Sprintf("Failed to set an int: %s\n", err2.Error())}}
-		}
-	}
-
-	return &models.Error{Code: 0,
+func (p *Plugin) updateOrCreateParameter(uuid, parameter string, step int) (interface{}, *models.Error) {
+	e := &models.Error{Code: 400,
 		Model:    "plugin",
 		Key:      "incrementer",
 		Type:     "plugin",
 		Messages: []string{}}
+	var res interface{}
+	if err := p.session.Req().UrlFor("machines", uuid, "params", parameter).Do(&res); err != nil {
+		e.AddError(err)
+		return nil, e
+	}
+	i := int64(step)
+	if res != nil {
+		i += int64(res.(float64))
+	}
+	var params interface{}
+	if err := p.session.Req().Post(i).UrlFor("machines", uuid, "params", parameter).Do(&params); err != nil {
+		e.AddError(err)
+		return nil, e
+	}
+	return i, nil
 }
 
-func removeParameter(uuid, parameter string) *models.Error {
-	_, err2 := executeDrpCliCommand("machines", "set", uuid, "param", parameter, "to", "null")
-	if err2 != nil {
-		return &models.Error{Code: 409,
+func (p *Plugin) removeParameter(uuid, parameter string) *models.Error {
+	var param interface{}
+	if err := p.session.Req().Del().UrlFor("machines", uuid, "params", parameter).Do(&param); err != nil {
+		e := &models.Error{Code: 400,
 			Model:    "plugin",
 			Key:      "incrementer",
 			Type:     "plugin",
-			Messages: []string{fmt.Sprintf("Failed to remove param %s: %s\n", parameter, err2.Error())}}
+			Messages: []string{}}
+		e.AddError(err)
+		return e
 	}
-
-	return &models.Error{Code: 0,
-		Model:    "plugin",
-		Key:      "incrementer",
-		Type:     "plugin",
-		Messages: []string{}}
+	return nil
 }
 
-func (p *Plugin) Action(ma *models.MachineAction) *models.Error {
-	plugin.Log("Action: %v\n", ma)
+func (p *Plugin) Action(thelog logger.Logger, ma *models.Action) (interface{}, *models.Error) {
+	thelog.Infof("Action: %v\n", ma)
 	if ma.Command == "increment" {
+		var machine models.Machine
+		if err := utils.Remarshal(ma.Model, &machine); err != nil {
+			return nil, &models.Error{Code: 409,
+				Model:    "plugin",
+				Key:      "incrementer",
+				Type:     "plugin",
+				Messages: []string{fmt.Sprintf("%v", err)}}
+		}
 		parameter, ok := ma.Params["incrementer/parameter"].(string)
 		if !ok {
 			parameter = "incrementer/default"
@@ -161,28 +112,37 @@ func (p *Plugin) Action(ma *models.MachineAction) *models.Error {
 			}
 		}
 
-		err := updateOrCreateParameter(ma.Uuid.String(), parameter, step)
-		if err.Code == 0 {
-			updateOrCreateParameter(ma.Uuid.String(), "incrementer/touched", 1)
+		val, err := p.updateOrCreateParameter(machine.UUID(), parameter, step)
+		if err == nil {
+			_, err = p.updateOrCreateParameter(machine.UUID(), "incrementer/touched", 1)
 		}
-		return err
+		return val, err
 	} else if ma.Command == "reset_count" {
-		return removeParameter(ma.Uuid.String(), "incrementer/touched")
+		var machine models.Machine
+		if err := utils.Remarshal(ma.Model, &machine); err != nil {
+			return nil, &models.Error{Code: 409,
+				Model:    "plugin",
+				Key:      "incrementer",
+				Type:     "plugin",
+				Messages: []string{fmt.Sprintf("%v", err)}}
+		}
+		e := p.removeParameter(machine.UUID(), "incrementer/touched")
+		return "Success", e
+	} else if ma.Command == "incrstatus" {
+		return "Running", nil
 	}
 
-	return &models.Error{Code: 404,
+	return nil, &models.Error{Code: 404,
 		Model:    "plugin",
 		Key:      "incrementer",
 		Type:     "plugin",
 		Messages: []string{fmt.Sprintf("Unknown command: %s\n", ma.Command)}}
 }
 
-func (p *Plugin) Publish(e *models.Event) *models.Error {
-	return &models.Error{Code: 0,
-		Model:    "plugin",
-		Type:     "publish",
-		Key:      "incrementer",
-		Messages: []string{}}
+func (p *Plugin) Publish(thelog logger.Logger, e *models.Event) *models.Error {
+	thelog.Debugf("Plugin received: %v\n", e)
+	// Just eat the publish messages.
+	return nil
 }
 
 func main() {

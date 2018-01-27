@@ -67,6 +67,8 @@ SEE ALSO
    to stages
 -  `drpcli subnets <drpcli_subnets.html>`__ - Access CLI commands
    relating to subnets
+-  `drpcli system <drpcli_system.html>`__ - Access CLI commands relating
+   to system
 -  `drpcli tasks <drpcli_tasks.html>`__ - Access CLI commands relating
    to tasks
 -  `drpcli templates <drpcli_templates.html>`__ - Access CLI commands

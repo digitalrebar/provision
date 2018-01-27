@@ -36,6 +36,10 @@ SEE ALSO
 
 -  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
    DigitalRebar Provision API
+-  `drpcli subnets action <drpcli_subnets_action.html>`__ - Display the
+   action for this subnet
+-  `drpcli subnets actions <drpcli_subnets_actions.html>`__ - Display
+   actions for this subnet
 -  `drpcli subnets create <drpcli_subnets_create.html>`__ - Create a new
    subnet with the passed-in JSON or string key
 -  `drpcli subnets destroy <drpcli_subnets_destroy.html>`__ - Destroy
@@ -55,6 +59,8 @@ SEE ALSO
    allocation methods to a subnet
 -  `drpcli subnets range <drpcli_subnets_range.html>`__ - set the range
    of a subnet
+-  `drpcli subnets runaction <drpcli_subnets_runaction.html>`__ - Run
+   action on object from plugin
 -  `drpcli subnets set <drpcli_subnets_set.html>`__ - Set the given
    subnet's dhcpOption to a value
 -  `drpcli subnets show <drpcli_subnets_show.html>`__ - Show a single

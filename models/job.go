@@ -111,3 +111,7 @@ func (b *Job) ToModels(obj interface{}) []Model {
 	}
 	return res
 }
+
+func (b *Job) CanHaveActions() bool {
+	return true
+}
