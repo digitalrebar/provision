@@ -169,15 +169,87 @@ The contents and structure of these locations is the same.  Follow the below pro
 Custom Kickstart and Preseeds
 -----------------------------
 
-Starting with ``drp-community-content`` version 1.5.0 and newer, you can now define a custom Kickstart or Preseed (aka *kickseed*) to override the defaults in the selected BootEnv.  You simply need to only define a single Param with the name of the Kickstart or Preseed you wish to override the default value. 
+Starting with ``drp-community-content`` version 1.5.0 and newer, you can now define a custom Kickstart or Preseed (aka *kickseed*) to override the defaults in the selected BootEnv.  You simply need to only define a single Param (``select-kickseed``) with the name of the Kickstart or Preseed you wish to override the default value. 
   ::
     
     export UUID="f6ca7bb6-d74f-4bc1-8544-f3df500fb15e"
-    drpcli machines set $UUID param kickseed to "my_kickstart.cfg"
+    drpcli machines set $UUID param select-kickseed to "my_kickstart.cfg"
 
 Of course, you can apply a Param to a Profile, and apply that Profile to a group of Machines if desired. 
 
 .. note:: The Digital Rebar default kickstart and preseeds have Digital Rebar specific interactions that may be necessary to replicate.  Please review the default kickstart and preseeds for patterns and examples you may need to re-use.   We HIGHLY recommend you start with a `clone` operation of an existing Kickstart/Preseed file; and making appropriate modifications from that as a baseline. 
+
+
+.. _rs_download_rackn_content:
+
+Download RackN Content via Command Line
+---------------------------------------
+
+If you need to download RackN content requiring authentication, you can do this via the command line by adding Auth Token to the download URL.  Your Auth Token is your RackN UserID (UUID) found after logging in to the `RackN Portal User Management panel <https://portal.rackn.io/#/user/>`_. 
+
+Here is an example download using our Auth Token, and using the Catalog to locate the correct download URL based on our DRP Endpoint OS and Architecture:
+  ::
+
+      # Set our RACKN_AUTH token to our UUID
+      export RACKN_AUTH="?username=<rackn_username_uuid>"
+
+      # set our DRP OS and ARCH type
+      export DRP_ARCH="amd64"
+      export DRP_OS="linux"
+
+      # set our catalog location
+      PACKET_URL="https://qww9e4paf1.execute-api.us-west-2.amazonaws.com/main/catalog/plugins/packet-ipmi${RACKN_AUTH}"
+
+      # obtain our parts for the final plugin download
+      PART=`curl -sfSL $PACKET_URL | jq -r ".$DRP_ARCH.$DRP_OS"`
+      BASE=`curl -sfSL $PACKET_URL | jq -r '.base'`
+
+      # download the plugin - AWS cares about extra slashes ... blech
+      curl -s ${BASE}${PART}${RACKN_AUTH} -o drp-plugin-packet-ipmi
+
+
+.. _rs_update_content_command_line:
+
+Update Community Content via Command Line
+-----------------------------------------
+
+Here's a brief example o how to upgrade the Community Content installed in a DRP Endpoint using the command line.  Please note that some RackN specific content requires authentication to download, while community content does not.   See :ref:`rs_download_rackn_content` for additional steps with RackN content.
+
+Perform the following steps to obtain new content.  
+
+View our currently installed Content version:
+  ::
+  
+    $ contents show drp-community-content | jq .meta.Version
+      "v1.4.0-0-ec1a3fa94e41a2d6a83fe8e6c9c0e99c5a039f79"
+
+Get our new version (in this example, explicitly set version to ``v1.5.0``.  However, you may also specify ``stable``, or ``tip``, and do not require specific version numbers for those.
+  ::
+
+    export VER="v1.5.0"
+    curl -sfL -o drp-cc.yaml https://github.com/digitalrebar/provision-content/releases/download/v1.5.0/drp-community-content.yaml
+
+It is suggested that you view this file and insure it contains the content/changes you are expecting.   
+
+No update the content.  NOTE that content that is marked *Writable* may need to be destroyed, and recreated if it's currently in use on other objects.  For *Read Only* content you can safely update the content. 
+  ::
+    
+    $ drpcli contents update drp-community-content -< drp-cc.yaml
+      {
+        "Counts": {
+          "bootenvs": 7,
+          "params": 18,
+          "profiles": 1,
+          "stages": 13,
+          "tasks": 7,
+          "templates": 15
+      <...snip...>
+
+Now verify that our installed content matches the new vesion we expected ... 
+  ::
+
+    $ drpcli contents show drp-community-content | jq .meta.Version
+      "v1.5.0-0-13f1aff688b53d5dfdab9a1a0c1098bd3c6dc76c"
 
 
 .. _rs_nested_templates:
