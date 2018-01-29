@@ -394,22 +394,19 @@ func (o DhcpOption) RenderToDHCP(srcOpts map[int]string) (code byte, val []byte,
 
 func DHCPOptionsInOrder(p dhcp.Packet) []*DhcpOption {
 	res := []*DhcpOption{}
-	opts := p.Options()
-	for len(opts) > 1 {
+	for opts := p.Options(); len(opts) > 2; opts = opts[2+opts[1]:] {
 		switch dhcp.OptionCode(opts[0]) {
 		case dhcp.End:
-			break
+			return res
 		case dhcp.Pad:
 			opts = opts[1:]
-			continue
 		default:
 			if len(opts) < int(opts[1])+2 {
-				break
+				return res
 			}
 			opt, val := &DhcpOption{Code: opts[0]}, opts[2:2+opts[1]]
 			opt.FillFromPacketOpt(val)
 			res = append(res, opt)
-			opts = opts[2+opts[1]:]
 		}
 	}
 	return res
