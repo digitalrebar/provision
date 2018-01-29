@@ -2,6 +2,7 @@ meta:
   Description: Initial Default Content
   Name: DefaultStore
   Source: Unspecified
+  Type: default
   Version: user
 sections:
   templates:
