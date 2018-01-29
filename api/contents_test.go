@@ -41,7 +41,7 @@ func TestContentCrud(t *testing.T) {
     Description: Local Override Store
     Meta: {}
     Name: LocalStore
-    Overwritable: false
+    Overwritable: true
     Source: ""
     Type: local
     Version: user
@@ -78,7 +78,7 @@ func TestContentCrud(t *testing.T) {
     Description: Default objects that must be present
     Meta: {}
     Name: BasicStore
-    Overwritable: false
+    Overwritable: true
     Source: ""
     Type: basic
     Version: Unversioned
