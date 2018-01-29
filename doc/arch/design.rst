@@ -123,6 +123,9 @@ future communication.
 midlayer
 ~~~~~~~~
 
+The *midlayer* package handles some basic services that DRP provides as well as
+the content package management system.
+
 TFTP Service
 ^^^^^^^^^^^^
 
@@ -177,6 +180,50 @@ midlayer implements all of the functionality needed to accept plugin
 uploads, interrogate them to discover what functionality they
 implement, import any content built in to the plugin, and hand off
 requests and events to the plugin for further processing.
+
+.. _rs_arch_content:
+
+Content Package Management
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The *Content Package Management* system builds a stack of content layers
+that are provided to the :ref:`rs_arch_backend` to provide objects to the rest
+of the system.  The data stack has the following layers used in this order:
+
+.. csv-table:: Definitions
+   :header: "Heading", "Definition"
+   :widths: 20, 80
+
+   "Layer Type", "Type of layer in the data stack as reported in the content layer meta data"
+   "Overwritable", "Can layers above overwrite content packages at this layer."
+   "Can Override", "Can a content package at this layer override lower layers."
+   "Writable", "Can the system receive written objects"
+   "Many", "Can multiple content packages be added to this layer"
+   "Use", "Who provideds and its use"
+
+.. csv-table:: Content Package Management
+   :header: "Layer", "Overwritable", "Can Override", "Writable", "Many", "Use"
+   :widths: 20, 10, 10, 10, 10, 50
+
+   "writable", "yes", "no",  "yes", "no",  "Persistent layer"
+   "local",    "yes", "yes", "no",  "no",  "Layer providing content from local filesystem, /etc/dr-provision directory"
+   "dynamic",  "no",  "yes", "no",  "yes", "Layer providing dynamic content packages provided by the API"
+   "default",  "yes", "yes", "no",  "no",  "Layer providing default content that is always present, but replaceable."
+   "plugin",   "no",  "yes", "no",  "yes", "Layer providing plugin provided content packages."
+   "basic",    "yes", "yes", "no",  "no",  "Layer providing mandatory DRP model objects."
+
+When an object is looked up, the look up code will start walking down the stack until the object is
+found and it will be returned.  When an object is to be updated or created, the *Writable* aspect of
+the layer will be checked to see if the object can be updated or created.  If the object can be
+stored in a layer, it will be used.  The content layer stack places the wriable store at the top of
+the stack.
+
+The simplified view of the stack from the API can be boiled down to:
+
+* Create - Created object's key must not exist in the stack.
+* Read - Object will be searched from the top down until it is found.
+* Update - Updated object must exist only in the writable layer.
+* Delete - Deleted Object must exist only in the writable layer.
 
 .. _rs_arch_frontend:
 
