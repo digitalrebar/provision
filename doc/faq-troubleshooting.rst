@@ -213,25 +213,28 @@ Here is an example download using our Auth Token, and using the Catalog to locat
 Update Community Content via Command Line
 -----------------------------------------
 
-Here's a brief example o how to upgrade the Community Content installed in a DRP Endpoint using the command line.  Please note that some RackN specific content requires authentication to download, while community content does not.   See :ref:`rs_download_rackn_content` for additional steps with RackN content.
+Here's a brief example of how to upgrade the Community Content installed in a DRP Endpoint using the command line.  Please note that some RackN specific content requires authentication to download, while community content does not.   See :ref:`rs_download_rackn_content` for additional steps with RackN content.
 
 Perform the following steps to obtain new content.  
 
 View our currently installed Content version:
   ::
   
-    $ contents show drp-community-content | jq .meta.Version
+    $ drpcli contents show drp-community-content | jq .meta.Version
       "v1.4.0-0-ec1a3fa94e41a2d6a83fe8e6c9c0e99c5a039f79"
 
 Get our new version (in this example, explicitly set version to ``v1.5.0``.  However, you may also specify ``stable``, or ``tip``, and do not require specific version numbers for those.
   ::
 
     export VER="v1.5.0"
-    curl -sfL -o drp-cc.yaml https://github.com/digitalrebar/provision-content/releases/download/v1.5.0/drp-community-content.yaml
+    curl -sfL -o drp-cc.yaml https://github.com/digitalrebar/provision-content/releases/download/${VER}/drp-community-content.yaml
 
 It is suggested that you view this file and insure it contains the content/changes you are expecting.   
 
-No update the content.  NOTE that content that is marked *Writable* may need to be destroyed, and recreated if it's currently in use on other objects.  For *Read Only* content you can safely update the content. 
+Now update the content.  
+
+.. note:: Content that is marked *writable* (field ``"ReadOnly": false``) may need to be destroyed, and recreated if it's currently in use on other objects.  For *read only* content you can safely update the content. 
+
   ::
     
     $ drpcli contents update drp-community-content -< drp-cc.yaml
