@@ -46,12 +46,14 @@ type Content struct {
 }
 
 func (c *Content) ToStore(dest store.Store) error {
+	c.Fill()
 	if dmeta, ok := dest.(store.MetaSaver); ok {
 		meta := map[string]string{
 			"Name":        c.Meta.Name,
 			"Source":      c.Meta.Source,
 			"Description": c.Meta.Description,
 			"Version":     c.Meta.Version,
+			"Type":        c.Meta.Type,
 		}
 		if err := dmeta.SetMetaData(meta); err != nil {
 			return err
@@ -72,6 +74,7 @@ func (c *Content) ToStore(dest store.Store) error {
 }
 
 func (c *Content) FromStore(src store.Store) error {
+	c.Fill()
 	if smeta, ok := src.(store.MetaSaver); ok {
 		for k, v := range smeta.MetaData() {
 			switch k {
@@ -83,10 +86,11 @@ func (c *Content) FromStore(src store.Store) error {
 				c.Meta.Description = v
 			case "Version":
 				c.Meta.Version = v
+			case "Type":
+				c.Meta.Type = v
 			}
 		}
 	}
-	c.Sections = Sections(map[string]Section{})
 	for section, subStore := range src.Subs() {
 		if _, err := New(section); err != nil {
 			continue
@@ -107,6 +111,8 @@ func (c *Content) FromStore(src store.Store) error {
 			c.Sections[section][key] = val
 		}
 	}
+
+	c.Meta.Type, c.Meta.Overwritable, c.Meta.Writable = getExtraFields(c.Key(), c.Meta.Type)
 	return nil
 }
 
@@ -151,4 +157,61 @@ func (c *ContentSummary) Fill() {
 	if c.Warnings == nil {
 		c.Warnings = []string{}
 	}
+}
+
+func (c *ContentSummary) FromStore(src store.Store) {
+	c.Fill()
+	if smeta, ok := src.(store.MetaSaver); ok {
+		for k, v := range smeta.MetaData() {
+			switch k {
+			case "Name":
+				c.Meta.Name = v
+			case "Source":
+				c.Meta.Source = v
+			case "Description":
+				c.Meta.Description = v
+			case "Version":
+				c.Meta.Version = v
+			case "Type":
+				c.Meta.Type = v
+			}
+		}
+	}
+	for section, subStore := range src.Subs() {
+		keys, err := subStore.Keys()
+		if err != nil {
+			continue
+		}
+		c.Counts[section] = len(keys)
+	}
+
+	c.Meta.Type, c.Meta.Overwritable, c.Meta.Writable = getExtraFields(c.Meta.Name, c.Meta.Type)
+	return
+}
+
+// Return type, overwritable, writable
+func getExtraFields(n, t string) (string, bool, bool) {
+	writable := false
+	overwritable := false
+	if t != "" {
+		if t == "default" {
+			overwritable = true
+		}
+	} else {
+		t = "dynamic"
+	}
+	if n == "BackingStore" {
+		t = "writable"
+		writable = true
+	} else if n == "LocalStore" {
+		t = "local"
+		overwritable = true
+	} else if n == "BasicStore" {
+		t = "basic"
+		overwritable = true
+	} else if n == "DefaultStore" {
+		t = "default"
+		overwritable = true
+	}
+	return t, overwritable, writable
 }
