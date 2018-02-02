@@ -37,6 +37,58 @@ func TestEvents(t *testing.T) {
 	t.Logf("Recieved event: %#v", recieved)
 }
 
+func TestEventDeadlock(t *testing.T) {
+	t.Logf("Setting up event listener to deadlock")
+	listener, err := session.Events()
+	if err != nil {
+		t.Errorf("Failed to create EventStream: %v", err)
+		return
+	}
+	t.Logf("Listening for users events")
+	handle, ch, err := listener.Register("log.*.*")
+	defer listener.Deregister(handle)
+	if err != nil {
+		t.Errorf("Failed to register for users events: %v", err)
+		return
+	}
+
+	done := make(chan bool)
+	finished := make(chan bool)
+	go func() {
+		leave := false
+		for !leave {
+			select {
+			case <-done:
+				leave = true
+			default:
+				user := &models.User{Name: "user1"}
+				session.FillModel(user, "user1")
+			}
+		}
+		finished <- true
+	}()
+
+	user1 := &models.User{Name: "user1"}
+	if err := session.CreateModel(user1); err != nil {
+		t.Errorf("Failed to create user1 for users events: %v", err)
+		return
+	}
+
+	if _, err := session.DeleteModel("users", user1.Name); err != nil {
+		t.Errorf("Failed to destroy user1 for users events: %v", err)
+		return
+	}
+
+	t.Logf("Waiting for event from server")
+	recieved := <-ch
+	t.Logf("Recieved event: %#v", recieved)
+	recieved = <-ch
+	t.Logf("Recieved event: %#v", recieved)
+
+	done <- true
+	<-finished
+}
+
 func TestWaitFor(t *testing.T) {
 	machine1 := mustDecode(&models.Machine{}, `
 Address: 192.168.100.110
