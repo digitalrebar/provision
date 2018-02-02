@@ -22,22 +22,37 @@ OS:
   Name: "local"
 ReadOnly: true
 Templates:
-- Contents: |
-    DEFAULT local
-    PROMPT 0
-    TIMEOUT 10
-    LABEL local
-    localboot 0
-  Name: "pxelinux"
-  Path: "pxelinux.cfg/{{.Machine.HexAddress}}"
-- Contents: "exit"
-  Name: "elilo"
-  Path:     "{{.Machine.HexAddress}}.conf"
-- Contents: |
-    #!ipxe
-    exit
-  Name: "ipxe"
-  Path: "{{.Machine.Address}}.ipxe"`).(*models.BootEnv)
+  - Contents: |
+      DEFAULT local
+      PROMPT 0
+      TIMEOUT 10
+      LABEL local
+      localboot 0
+    ID: ""
+    Name: pxelinux
+    Path: pxelinux.cfg/{{.Machine.HexAddress}}
+  - Contents: |
+      #!ipxe
+      exit
+    ID: ""
+    Name: ipxe
+    Path: '{{.Machine.Address}}.ipxe'
+  - Contents: |
+      DEFAULT local
+      PROMPT 0
+      TIMEOUT 10
+      LABEL local
+      localboot 0
+    ID: ""
+    Name: pxelinux-mac
+    Path: pxelinux.cfg/{{.Machine.MacAddr "pxelinux"}}
+  - Contents: |
+      #!ipxe
+      exit
+    ID: ""
+    Name: ipxe-mac
+    Path: '{{.Machine.MacAddr "ipxe"}}.ipxe'
+`).(*models.BootEnv)
 	ignoreBootEnv := mustDecode(&models.BootEnv{}, `
 Description: "The boot environment you should use to have unknown machines boot off their local hard drive"
 Name:        "ignore"
@@ -56,17 +71,15 @@ Templates:
     localboot 0
   Name: "pxelinux"
   Path: "pxelinux.cfg/default"
-- Contents: "exit"
-  Name:     "elilo"
-  Path:     "elilo.conf"
 - Contents: |
     #!ipxe
+    chain {{.ProvisionerURL}}/${netX/mac}.ipxe && exit || goto chainip
+    :chainip
     chain tftp://{{.ProvisionerAddress}}/${netX/ip}.ipxe || exit
   Name: "ipxe"
   Path: "default.ipxe"`).(*models.BootEnv)
 	fred := &models.BootEnv{Name: "fred"}
 	fred.SetValid()
-	fred.Errorf("bootenv: Missing elilo or pxelinux template")
 	fred.SetAvailable()
 	testFill(fred)
 

@@ -31,16 +31,22 @@
         "Path": "pxelinux.cfg/{{.Machine.HexAddress}}"
       },
       {
-        "Contents": "exit",
-        "ID": "",
-        "Name": "elilo",
-        "Path": "{{.Machine.HexAddress}}.conf"
-      },
-      {
         "Contents": "#!ipxe\nexit\n",
         "ID": "",
         "Name": "ipxe",
         "Path": "{{.Machine.Address}}.ipxe"
+      },
+      {
+        "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
+        "ID": "",
+        "Name": "pxelinux-mac",
+        "Path": "pxelinux.cfg/{{.Machine.MacAddr \"pxelinux\"}}"
+      },
+      {
+        "Contents": "#!ipxe\nexit\n",
+        "ID": "",
+        "Name": "ipxe-mac",
+        "Path": "{{.Machine.MacAddr \"ipxe\"}}.ipxe"
       }
     ],
     "Validated": true

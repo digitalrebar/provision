@@ -6,6 +6,7 @@
   "CurrentTask": 0,
   "Description": "lpxelinux.0",
   "Errors": [],
+  "HardwareAddrs": [],
   "Meta": {
     "feature-flags": "change-stage-v2"
   },

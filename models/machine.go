@@ -75,6 +75,10 @@ type Machine struct {
 	// OS is the operating system that the node is running in
 	//
 	OS string
+	// HardwareAddrs is a list of MAC addresses we expect that the system might boot from.
+	//
+	//
+	HardwareAddrs []string
 }
 
 func (n *Machine) Validate() {
@@ -86,6 +90,11 @@ func (n *Machine) Validate() {
 	}
 	for _, t := range n.Tasks {
 		n.AddError(ValidName("Invalid Task", t))
+	}
+	for _, m := range n.HardwareAddrs {
+		if _, err := net.ParseMAC(m); err != nil {
+			n.Errorf("Invalid Hardware Address `%s`: %v", m, err)
+		}
 	}
 }
 
@@ -114,6 +123,9 @@ func (n *Machine) Fill() {
 	}
 	if n.Params == nil {
 		n.Params = map[string]interface{}{}
+	}
+	if n.HardwareAddrs == nil {
+		n.HardwareAddrs = []string{}
 	}
 }
 
