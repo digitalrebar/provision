@@ -25,10 +25,19 @@ type Subnet struct {
 	Enabled bool
 	// Proxy indicates if the subnet should act as a proxy DHCP server.
 	// If true, the subnet will not manage ip addresses but will send
-	// offers to requests.
+	// offers to requests.  It is an error for Proxy and Unmanaged to be
+	// true.
 	//
 	// required: true
 	Proxy bool
+	// Unmanaged indicates that dr-provision will never send
+	// boot-related options to machines that get leases from this
+	// subnet.  If false, dr-provision will send whatever boot-related
+	// options it would normally send.  It is an error for Unmanaged and
+	// Proxy to both be true.
+	//
+	// required: true
+	Unmanaged bool
 	// Subnet is the network address in CIDR form that all leases
 	// acquired in its range will use for options, lease times, and NextServer settings
 	// by default
