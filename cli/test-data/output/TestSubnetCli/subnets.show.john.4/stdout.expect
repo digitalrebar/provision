@@ -30,5 +30,6 @@
   "ReservedLeaseTime": 7200,
   "Strategy": "NewStrat",
   "Subnet": "192.168.100.0/24",
+  "Unmanaged": false,
   "Validated": true
 }
