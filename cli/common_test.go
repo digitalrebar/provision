@@ -115,7 +115,9 @@ func (c *CliTest) loc(prefix string) string {
 			str := strings.Join(c.args[i:], ".")
 			sum.Write([]byte(str))
 		default:
-			res = append(res, strings.Replace(arg, "\n", "nl", -1))
+			s := strings.Replace(arg, "\n", "nl", -1)
+			s = strings.Replace(s, ":", ".", -1)
+			res = append(res, s)
 		}
 		if haveSum {
 			break
