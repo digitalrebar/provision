@@ -117,6 +117,8 @@ func (c *CliTest) loc(prefix string) string {
 		default:
 			s := strings.Replace(arg, "\n", "nl", -1)
 			s = strings.Replace(s, ":", ".", -1)
+			s = strings.Replace(s, "\"", "dquote", -1)
+			s = strings.Replace(s, "'", "squote", -1)
 			res = append(res, s)
 		}
 		if haveSum {
