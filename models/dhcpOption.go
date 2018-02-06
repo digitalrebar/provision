@@ -120,7 +120,6 @@ func DHCPOptionParser(code dhcp.OptionCode) (func(string) ([]byte, error), func(
 		dhcp.OptionRootPath,
 		dhcp.OptionExtensionsPath,
 		dhcp.OptionNetworkInformationServiceDomain,
-		dhcp.OptionVendorSpecificInformation, // This is wrong, but ...
 		dhcp.OptionNetBIOSOverTCPIPScope,
 		dhcp.OptionNetworkInformationServicePlusDomain,
 		dhcp.OptionTFTPServerName,

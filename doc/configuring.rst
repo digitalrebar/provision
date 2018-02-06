@@ -28,13 +28,6 @@ The DHCP server has three primary models
 
     drpcli subnets update mysubnet '{ "Proxy": true }'
 
-  Note that you must also verify the following (at a minimum) DHCP configuration are set for the Subnet:
-
-  ::
-
-    Option 67 - boot file 
-    NextServer - the DRP Endpoint address
-
 
 Provisioner (bootenvs)
 ----------------------

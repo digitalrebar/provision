@@ -235,8 +235,7 @@ A new subnet can be created from a JSON specification.  It is necessary to use a
         { "Code": 3, "Value": "10.10.16.1", "Description": "Default Gateway" },
         { "Code": 6, "Value": "8.8.8.8", "Description": "DNS Servers" },
         { "Code": 15, "Value": "example.com", "Description": "Domain Name" },
-        { "Code": 28, "Value": "10.10.16.255", "Description": "Broadcast Address" },
-        { "Code": 67, "Value": "lpxelinux.0", "Description": "Boot file name" }
+        { "Code": 28, "Value": "10.10.16.255", "Description": "Broadcast Address" }
       ]
     } ' > /tmp/local_subnet.json 
 
