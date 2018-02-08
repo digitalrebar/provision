@@ -22,7 +22,9 @@ type Reservation struct {
 	//
 	// required: true
 	Token string
-	// NextServer is the address the server should contact next.
+	// NextServer is the address the server should contact next. You
+	// should only set this if you want to talk to a DHCP or TFTP server
+	// other than the one provided by dr-provision.
 	//
 	// required: false
 	// swagger:strfmt ipv4

@@ -128,9 +128,20 @@ The ``uploadiso`` command will fetch the ISO image as specified in the BootEnv J
 Configure a Subnet
 ------------------
 
-A Subnet defines a network boundary that the DRP Endpoint will answer DHCP queries for.  In this quickstart, we assume you will use the local network interface as a subnet definition, and that your Machines are all booted from the local subnet (layer 2 boundary).  More advanced usage is certainly possible (including use of external DHCP servers, using DRP Endpoint as a DHCP Proxy, etc.).  A Subnet specification includes all of the necessary DHCP boot options to correctly PXE boot a Machine.
+A Subnet defines a network boundary that the DRP Endpoint will answer
+DHCP queries for.  In this quickstart, we assume you will use the
+local network interface as a subnet definition, and that your Machines
+are all booted from the local subnet (layer 2 boundary).  More
+advanced usage is certainly possible (including use of external DHCP
+servers, using DRP Endpoint as a DHCP Proxy, etc.).  A Subnet
+specification includes all of the necessary DHCP boot options to
+correctly PXE boot a Machine.
 
-To create a Subnet from command line we must create a JSON blob that contains the Subnet and DHCP definitions.  Below is a sample you can use.  Please insure you modify the network parameters accordingly.  ``NextServer`` should be set to the DRP Endpoint IP Address (NOT the DNS hostname).  Insure you change the network parameters according to your environment.
+To create a Subnet from command line we must create a JSON blob that
+contains the Subnet and DHCP definitions.  Below is a sample you can
+use.  Please insure you modify the network parameters accordingly.
+Insure you change the network parameters according to your
+environment.
 
   ::
 
@@ -139,23 +150,14 @@ To create a Subnet from command line we must create a JSON blob that contains th
       "Subnet": "10.10.16.10/24",
       "ActiveStart": "10.10.16.100",
       "ActiveEnd": "10.10.16.254",
-      "NextServer": "10.10.16.10",
       "ActiveLeaseTime": 60,
-      "Available": true,
       "Enabled": true,
-      "Proxy": false,
-      "ReadOnly": false,
       "ReservedLeaseTime": 7200,
       "Strategy": "MAC",
-      "Validated": true,
-      "OnlyReservations": false,
-      "Pickers": [ "hint", "nextFree", "mostExpired" ],
       "Options": [
-        { "Code": 1, "Value": "255.255.255.0", "Description": "Netmask" },
         { "Code": 3, "Value": "10.10.16.1", "Description": "Default Gateway" },
         { "Code": 6, "Value": "8.8.8.8", "Description": "DNS Servers" },
-        { "Code": 15, "Value": "example.com", "Description": "Domain Name" },
-        { "Code": 28, "Value": "10.10.16.255", "Description": "Broadcast Address" }
+        { "Code": 15, "Value": "example.com", "Description": "Domain Name" }
       ]
     }' > /tmp/local_subnet.json
 
