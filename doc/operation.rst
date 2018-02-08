@@ -209,7 +209,10 @@ It might be necessary to create a new subnet from an existing one.  To do this, 
 Creating a new Subnet
 ---------------------
 
-A new subnet can be created from a JSON specification.  It is necessary to use all of the following JSON keys to successfully create a new Subnet
+A new subnet can be created from a JSON specification.  It is
+necessary to use all of the following JSON keys to successfully create
+a new Subnet that can be immediately used to manage machines -- the rest
+of the keys will be autofilled with reasonable defaults.
 
   ::
 
@@ -219,25 +222,16 @@ A new subnet can be created from a JSON specification.  It is necessary to use a
       "Subnet": "10.10.16.10/24",
       "ActiveStart": "10.10.16.100",
       "ActiveEnd": "10.10.16.254",
-      "NextServer": "10.10.16.10",
       "ActiveLeaseTime": 60,
-      "Available": true,
       "Enabled": true,
-      "Proxy": false,
-      "ReadOnly": false,
       "ReservedLeaseTime": 7200,
       "Strategy": "MAC",
-      "Validated": true,
-      "OnlyReservations": false,
-      "Pickers": [ "hint", "nextFree", "mostExpired" ],
       "Options": [
-        { "Code": 1, "Value": "255.255.255.0", "Description": "Netmask" },
         { "Code": 3, "Value": "10.10.16.1", "Description": "Default Gateway" },
         { "Code": 6, "Value": "8.8.8.8", "Description": "DNS Servers" },
-        { "Code": 15, "Value": "example.com", "Description": "Domain Name" },
-        { "Code": 28, "Value": "10.10.16.255", "Description": "Broadcast Address" }
+        { "Code": 15, "Value": "example.com", "Description": "Domain Name" }
       ]
-    } ' > /tmp/local_subnet.json 
+    } ' > /tmp/local_subnet.json
 
     drpcli subnets create -< /tmp/local_subnet.json
 
@@ -250,7 +244,7 @@ For complete documentation and information you can find the DHCP Options officia
 Updating a Subnet
 -----------------
 
-From time to time, you may need to modify an existing Subnet definition.  Depending on your changes, you have a couple of options. 
+From time to time, you may need to modify an existing Subnet definition.  Depending on your changes, you have a couple of options.
 
 Set the NTP Server pool via DHCP Option 42 for subnet "local_subnet":
   ::

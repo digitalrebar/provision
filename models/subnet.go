@@ -45,7 +45,9 @@ type Subnet struct {
 	// required: true
 	// pattern: ^([0-9]+\.){3}[0-9]+/[0-9]+$
 	Subnet string
-	// NextServer is the address of the next server
+	// NextServer is the address of the next server in the DHCP/TFTP/PXE
+	// chain.  You should only set this if you want to transfer control
+	// to a different DHCP or TFTP server.
 	//
 	// required: true
 	// swagger:strfmt ipv4
