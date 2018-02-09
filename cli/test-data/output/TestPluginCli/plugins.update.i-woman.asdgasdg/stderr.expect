@@ -1,1 +1,2 @@
-Error: Failed to generate changed plugins:i-woman object: invalid character 'a' looking for beginning of value
+Error: Failed to generate changed plugins:i-woman object: Unable to unmarshal reference object: error unmarshaling JSON: json: cannot unmarshal string into Go value of type map[string]interface {}
+
