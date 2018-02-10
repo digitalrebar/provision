@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -119,4 +120,28 @@ func TestProfileCli(t *testing.T) {
 	cliTest(false, false, "profiles", "destroy", "john").run(t)
 	cliTest(false, false, "profiles", "list").run(t)
 	verifyClean(t)
+}
+
+func TestProfileFileImport(t *testing.T) {
+	prefix := "profiles"
+	yamlId := "yamltest"
+	jsonId := "jsontest"
+
+	yamlCreate := fmt.Sprintf("test-data/base/%s/create.yaml", prefix)
+	jsonCreate := fmt.Sprintf("test-data/base/%s/create.json", prefix)
+	yamlBad := fmt.Sprintf("test-data/base/%s/bad.yaml", prefix)
+	jsonBad := fmt.Sprintf("test-data/base/%s/bad.json", prefix)
+	yamlUpdate := fmt.Sprintf("test-data/base/%s/update.yaml", prefix)
+	jsonUpdate := fmt.Sprintf("test-data/base/%s/update.json", prefix)
+
+	cliTest(false, false, prefix, "create", yamlCreate).run(t)
+	cliTest(false, false, prefix, "create", jsonCreate).run(t)
+	cliTest(false, true, prefix, "create", yamlBad).run(t)
+	cliTest(false, true, prefix, "create", jsonBad).run(t)
+	cliTest(false, false, prefix, "update", yamlId, yamlUpdate).run(t)
+	cliTest(false, false, prefix, "update", jsonId, jsonUpdate).run(t)
+	cliTest(false, true, prefix, "update", yamlId, yamlBad).run(t)
+	cliTest(false, true, prefix, "update", jsonId, jsonBad).run(t)
+	cliTest(false, false, prefix, "destroy", yamlId).run(t)
+	cliTest(false, false, prefix, "destroy", jsonId).run(t)
 }
