@@ -152,3 +152,7 @@ func (b *BootEnv) SetName(n string) {
 func (b *BootEnv) CanHaveActions() bool {
 	return true
 }
+
+func (b *BootEnv) NetBoot() bool {
+	return b.OnlyUnknown || b.Kernel != ""
+}
