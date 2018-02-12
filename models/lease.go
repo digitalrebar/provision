@@ -87,3 +87,23 @@ func (b *Lease) ToModels(obj interface{}) []Model {
 func (b *Lease) CanHaveActions() bool {
 	return true
 }
+
+func (l *Lease) Expired() bool {
+	return l.ExpireTime.Before(time.Now())
+}
+
+func (l *Lease) Fake() bool {
+	return l.State == "FAKE"
+}
+
+func (l *Lease) Expire() {
+	l.ExpireTime = time.Now()
+	l.State = "EXPIRED"
+}
+
+func (l *Lease) Invalidate() {
+	l.ExpireTime = time.Now().Add(10 * time.Minute)
+	l.Token = ""
+	l.Strategy = ""
+	l.State = "INVALID"
+}
