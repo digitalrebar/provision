@@ -20,6 +20,8 @@ Simply, Digital Rebar Provisioner acts as a Cobbler Replacement - with additiona
    :alt: Digital Rebar Provision
    :target: https://github.com/digitalrebar/provision
 
+.. note::  We HIGHLY recommend using the ``latest`` version of the documentation, as it contains the most up to date information.  Use the version selector in the lower     right corner of your browser.
+
 .. _rs_community:
 
 Community Resources

@@ -6,6 +6,8 @@
 
 .. _rs_quickstart:
 
+.. note::  We HIGHLY recommend using the ``latest`` version of the documentation, as it contains the most up to date information.  Use the version selector in the lower     right corner of your browser.
+
 Quick Start
 ~~~~~~~~~~~
 
