@@ -53,6 +53,10 @@ func (t *Task) Key() string {
 	return t.Name
 }
 
+func (t *Task) KeyName() string {
+	return "Name"
+}
+
 func (t *Task) Fill() {
 	t.Validation.fill()
 	if t.Meta == nil {

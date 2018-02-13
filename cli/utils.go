@@ -26,7 +26,7 @@ func makeJsonPtr(s string) string {
 }
 
 func bufOrFileDecode(ref string, data interface{}) (err error) {
-	if buf, terr := bufOrFile(ref); terr != nil {
+	if buf, terr := bufOrStdin(ref); terr != nil {
 		err = fmt.Errorf("Unable to process reference object: %v\n", terr)
 		return
 	} else {
@@ -130,10 +130,16 @@ func mergeInto(src models.Model, changes []byte) (models.Model, error) {
 }
 
 func mergeFromArgs(src models.Model, changes string) (models.Model, error) {
-	buf, err := bufOrStdin(changes)
+	// We have to load this and then convert to json to merge safely.
+	data := map[string]interface{}{}
+	if err := bufOrFileDecode(changes, &data); err != nil {
+		return nil, err
+	}
+	buf, err := json.Marshal(data)
 	if err != nil {
 		return nil, err
 	}
+
 	return mergeInto(src, buf)
 }
 

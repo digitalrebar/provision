@@ -6,6 +6,7 @@ import (
 	"path"
 	"strings"
 
+	"github.com/digitalrebar/provision/api"
 	"github.com/digitalrebar/provision/models"
 	"github.com/digitalrebar/store"
 	"github.com/spf13/cobra"
@@ -173,7 +174,8 @@ func registerContent(app *cobra.Command) {
 				return fmt.Errorf("Failed to open store %s: %v", target, err)
 			}
 			defer os.Remove(target + ".tmp")
-			if err := session.BundleContent(".", s, params); err != nil {
+			cc := &api.Client{}
+			if err := cc.BundleContent(".", s, params); err != nil {
 				return fmt.Errorf("Failed to load: %v", err)
 			}
 			os.Rename(target+".tmp", target)
@@ -191,7 +193,6 @@ func registerContent(app *cobra.Command) {
 		},
 		RunE: func(c *cobra.Command, args []string) error {
 			src := args[0]
-			target := args[1]
 			ext := path.Ext(src)
 			codec := ""
 			switch ext {
@@ -205,9 +206,10 @@ func registerContent(app *cobra.Command) {
 			storeURI := fmt.Sprintf("file:%s?codec=%s", src, codec)
 			s, err := store.Open(storeURI)
 			if err != nil {
-				return fmt.Errorf("Failed to open store %s: %v", target, err)
+				return fmt.Errorf("Failed to open store %s: %v", src, err)
 			}
-			return session.UnbundleContent(s, ".")
+			cc := &api.Client{}
+			return cc.UnbundleContent(s, ".")
 		},
 	})
 	app.AddCommand(content)

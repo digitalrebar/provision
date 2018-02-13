@@ -21,8 +21,9 @@ type Interface struct {
 	ActiveAddress string
 }
 
-func (i *Interface) Prefix() string { return "interfaces" }
-func (i *Interface) Key() string    { return i.Name }
+func (i *Interface) Prefix() string  { return "interfaces" }
+func (i *Interface) Key() string     { return i.Name }
+func (i *Interface) KeyName() string { return "Name" }
 func (i *Interface) Fill() {
 	if i.Meta == nil {
 		i.Meta = Meta{}

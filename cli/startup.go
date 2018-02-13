@@ -115,8 +115,18 @@ func NewApp() *cobra.Command {
 	}
 
 	for _, c := range app.Commands() {
-		c.PersistentPreRun = ppr
+		// contents needs some help.
+		if c.Use == "contents" {
+			for _, sc := range c.Commands() {
+				if !strings.HasPrefix(sc.Use, "bundle") && !strings.HasPrefix(sc.Use, "unbundle") {
+					sc.PersistentPreRun = ppr
+				}
+			}
+		} else {
+			c.PersistentPreRun = ppr
+		}
 	}
+
 	// top-level commands that do not need PersistentPreRun go here.
 	app.AddCommand(&cobra.Command{
 		Use:   "version",

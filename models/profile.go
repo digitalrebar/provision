@@ -41,6 +41,10 @@ func (p *Profile) Key() string {
 	return p.Name
 }
 
+func (p *Profile) KeyName() string {
+	return "Name"
+}
+
 func (p *Profile) Fill() {
 	p.Validation.fill()
 	if p.Meta == nil {

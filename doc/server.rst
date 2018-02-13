@@ -57,6 +57,7 @@ Ports     Feature   Usage
 ========  =======   =====================
 67/udp    DHCP      DHCP Port
 69/udp    PROV      TFTP Port
+4011/udp  BINL      PXE/BINL port
 8091/tcp  PROV      HTTP-base File Server
 8092/tcp  Always    API and Swagger-UI
 ========  =======   =====================
@@ -65,6 +66,6 @@ All default ports can be changed at start up time of the ``dr-provision`` servic
 
 Port access requirements:
 
-In all usage cases (67, 69, 8091, and 8092) the ports *from* the Machines being provisioned *to* the DRP Endpoint must be accessible.  The DRP Endpont must be able to reach the Machines being provisioned on port 67 for In addition, the API and Swagger-UI port must be accessible to any operator/administrator workstations or systems that are controlling and managing the DRP Endpoint service.  Additionally any services or integrations that interact with the DRP Endpoint (eg IPAM, DCIM, Asset Management, CMS, CMDB, etc) may need access to the API port.
+In all usage cases (67, 69, 4011, 8091, and 8092) the ports *from* the Machines being provisioned *to* the DRP Endpoint must be accessible.  The DRP Endpont must be able to reach the Machines being provisioned on port 67 for In addition, the API and Swagger-UI port must be accessible to any operator/administrator workstations or systems that are controlling and managing the DRP Endpoint service.  Additionally any services or integrations that interact with the DRP Endpoint (eg IPAM, DCIM, Asset Management, CMS, CMDB, etc) may need access to the API port.
 
 

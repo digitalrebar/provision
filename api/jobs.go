@@ -573,7 +573,8 @@ func (c *Client) Agent(m *models.Machine, exitOnNotRunnable, exitOnFailure, actu
 			// wait here for the task list or the current task to change on the machine
 			found, err := events.WaitFor(m,
 				OrItems(NotItem(EqualItem("CurrentTask", m.CurrentTask)),
-					NotItem(EqualItem("Tasks", m.Tasks))), 1*time.Hour)
+					NotItem(EqualItem("Tasks", m.Tasks)),
+					NotItem(EqualItem("Stage", m.Stage))), 1*time.Hour)
 			if err != nil {
 				res := &models.Error{
 					Type:  "AGENT_WAIT",

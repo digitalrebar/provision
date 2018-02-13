@@ -108,6 +108,10 @@ func (b *BootEnv) Key() string {
 	return b.Name
 }
 
+func (b *BootEnv) KeyName() string {
+	return "Name"
+}
+
 func (b *BootEnv) AuthKey() string {
 	return b.Key()
 }
@@ -151,4 +155,8 @@ func (b *BootEnv) SetName(n string) {
 
 func (b *BootEnv) CanHaveActions() bool {
 	return true
+}
+
+func (b *BootEnv) NetBoot() bool {
+	return b.OnlyUnknown || b.Kernel != ""
 }

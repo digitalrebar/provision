@@ -6,6 +6,8 @@
 
 .. _rs_quickstart:
 
+.. note::  We HIGHLY recommend using the ``latest`` version of the documentation, as it contains the most up to date information.  Use the version selector in the lower     right corner of your browser.
+
 Quick Start
 ~~~~~~~~~~~
 
@@ -26,12 +28,12 @@ Overview
   * configure a Subnet to answer DHCP requests
   * boot your first Machine and install an OS on it
 
-This document refers to the ``drpcli`` command line tool for manipulating the ``dr-provision`` service.  We do not specify any paths in the documentation.  However, in our default quickstart for *isolated* mode, the ``drpcli`` tool will NOT be installed in any system PATH locations.  You must do this, or you may use the local setup symbolic link.  For example - simply change ``drpcli`` to ``./drpcli`` in the documentation below.  Or ... copy the binary to a PATH location. 
+This document refers to the ``drpcli`` command line tool for manipulating the ``dr-provision`` service.  We do not specify any paths in the documentation.  However, in our default quickstart for *isolated* mode, the ``drpcli`` tool will NOT be installed in any system PATH locations.  You must do this, or you may use the local setup symbolic link.  For example - simply change ``drpcli`` to ``./drpcli`` in the documentation below.  Or ... copy the binary to a PATH location.
 
 Preparation
 -----------
 
-Please make sure you're environment doesn't have any conflicts or issues that might cause PXE booting to fail.  Some things to note: 
+Please make sure you're environment doesn't have any conflicts or issues that might cause PXE booting to fail.  Some things to note:
 
   * only one DHCP server on a local subnet
   * if your DRP Endpoint is "straddling" multiple networks - make sure you have routing set up correctly, or specify the ``--static-ip=`` start up option correctly
@@ -81,7 +83,7 @@ Once the install has completed, your terminal should then display something like
 
 .. note:: Before trying to install a BootEnv, please verify that the installed BootEnvs matches the above BootEnv Names that can be installed: ``drpcli bootenvs list | jq '.[].Name'``
 
-The next step is to execute the *sudo* command which will start an instance of Digital Rebar Provision service that uses the ``drp-data`` directory for object and file storage.  Additionally, *dr-provision* will attempt to use the IP address best suited for client interaction, however if that detection fails, the IP address specified by ``--static-ip=IP_ADDRESS`` will be used.  
+The next step is to execute the *sudo* command which will start an instance of Digital Rebar Provision service that uses the ``drp-data`` directory for object and file storage.  Additionally, *dr-provision* will attempt to use the IP address best suited for client interaction, however if that detection fails, the IP address specified by ``--static-ip=IP_ADDRESS`` will be used.
 
 .. note:: On MAC DARWIN there are two additional steps. First, use the ``--static-ip=`` flag to help the service understand traffic targets.  Second, you may have to add a route for broadcast addresses to work.  This can be done with following command ``sudo route -n add -net 255.255.255.255 192.168.100.1`` In this example, the 192.168.100.1 is the IP address of the interface that you want to send messages through. The install script should make suggestions for you.
 
@@ -128,9 +130,20 @@ The ``uploadiso`` command will fetch the ISO image as specified in the BootEnv J
 Configure a Subnet
 ------------------
 
-A Subnet defines a network boundary that the DRP Endpoint will answer DHCP queries for.  In this quickstart, we assume you will use the local network interface as a subnet definition, and that your Machines are all booted from the local subnet (layer 2 boundary).  More advanced usage is certainly possible (including use of external DHCP servers, using DRP Endpoint as a DHCP Proxy, etc.).  A Subnet specification includes all of the necessary DHCP boot options to correctly PXE boot a Machine.  
+A Subnet defines a network boundary that the DRP Endpoint will answer
+DHCP queries for.  In this quickstart, we assume you will use the
+local network interface as a subnet definition, and that your Machines
+are all booted from the local subnet (layer 2 boundary).  More
+advanced usage is certainly possible (including use of external DHCP
+servers, using DRP Endpoint as a DHCP Proxy, etc.).  A Subnet
+specification includes all of the necessary DHCP boot options to
+correctly PXE boot a Machine.
 
-To create a Subnet from command line we must create a JSON blob that contains the Subnet and DHCP definitions.  Below is a sample you can use.  Please ensure you modify the network parameters accordingly.  ``NextServer`` should be set to the DRP Endpoint IP Address (NOT the DNS hostname).  Ensure you change the network parameters according to your environment.
+To create a Subnet from command line we must create a JSON blob that
+contains the Subnet and DHCP definitions.  Below is a sample you can
+use.  Please ensure you modify the network parameters accordingly.
+Ensure you change the network parameters according to your
+environment.
 
   ::
 
@@ -139,24 +152,14 @@ To create a Subnet from command line we must create a JSON blob that contains th
       "Subnet": "10.10.16.10/24",
       "ActiveStart": "10.10.16.100",
       "ActiveEnd": "10.10.16.254",
-      "NextServer": "10.10.16.10",
       "ActiveLeaseTime": 60,
-      "Available": true,
       "Enabled": true,
-      "Proxy": false,
-      "ReadOnly": false,
       "ReservedLeaseTime": 7200,
       "Strategy": "MAC",
-      "Validated": true,
-      "OnlyReservations": false,
-      "Pickers": [ "hint", "nextFree", "mostExpired" ],
       "Options": [
-        { "Code": 1, "Value": "255.255.255.0", "Description": "Netmask" },
         { "Code": 3, "Value": "10.10.16.1", "Description": "Default Gateway" },
         { "Code": 6, "Value": "8.8.8.8", "Description": "DNS Servers" },
-        { "Code": 15, "Value": "example.com", "Description": "Domain Name" },
-        { "Code": 28, "Value": "10.10.16.255", "Description": "Broadcast Address" },
-        { "Code": 67, "Value": "lpxelinux.0", "Description": "Boot file name" }
+        { "Code": 15, "Value": "example.com", "Description": "Domain Name" }
       ]
     }' > /tmp/local_subnet.json
 
@@ -173,12 +176,12 @@ Install your first Machine
 
 Content configuration is the most complex topic with Digital Rebar Provision.  The basic provisioning setup with the above "ISO" upoads will allow you to install a CentOS or Ubuntu Machine with manual power management (on/reboot etc) transitions.  More advanced workflows and plugin_providers will allow for complete automation workflows with complex stages and state transitions.  To keep things "quick", the below are just bare basics, for more details and information, please see the Content documentation section.
 
-  1. Set BootEnvs 
+  1. Set BootEnvs
 
     BootEnvs are operating system installable definitions.  You need to specify **what** the DRP endpoint should do when it sees an unknown Machine, and what the default behavior is. To do this, Digital Rebar Provision uses a *discovery* image provisioning method, and you must first set up these steps.  Define the Default Stage, Default BootEnv, and the Unknown BootEnv:
-      
+
     ::
-        
+
       drpcli prefs set unknownBootEnv discovery defaultBootEnv sledgehammer defaultStage discover
 
   2. PXE Boot your Machine
@@ -198,7 +201,7 @@ Content configuration is the most complex topic with Digital Rebar Provision.  T
     ::
 
       drpcli machines list | jq '.[].Uuid'
-      
+
   4. Set the BootEnv to either ``centos-7-install`` or ``ubuntu-16.04-install`` (or other BootEnv if previously installed and desired) replace *<UUID>* with your machines ID from the above command:
 
 
@@ -206,7 +209,7 @@ Content configuration is the most complex topic with Digital Rebar Provision.  T
 
       drpcli machines bootenv <UUID> ubuntu-16.04-install
 
-  5. Reboot your Machine - it should now kick off a BootEnv install as you specified above.  
+  5. Reboot your Machine - it should now kick off a BootEnv install as you specified above.
 
     * watch the console, and you should see the appropriate installer running
     * the machine should reboot in to the Operating System you specified once install is completed
@@ -216,19 +219,19 @@ Content configuration is the most complex topic with Digital Rebar Provision.  T
 More Advanced Workflow
 ----------------------
 
-The above procedure uses manual reboot of Machines, and manual application of the BootEnv definition to the Machine for final installation.  A simple workflow can be used to achieve the same effect, but it is a little more complex to setup.  See the :ref:`rs_operation` documentation for further details. 
+The above procedure uses manual reboot of Machines, and manual application of the BootEnv definition to the Machine for final installation.  A simple workflow can be used to achieve the same effect, but it is a little more complex to setup.  See the :ref:`rs_operation` documentation for further details.
 
 Machine Power Management
 ------------------------
 
-Fully automated provisioning control requires use of advanced RackN features (plugins) for Power Management actions.  These are done through the IPMI subsystem, with a specific IPMI plugin for a specific environments.  Some existing plugins exist for environments like: 
+Fully automated provisioning control requires use of advanced RackN features (plugins) for Power Management actions.  These are done through the IPMI subsystem, with a specific IPMI plugin for a specific environments.  Some existing plugins exist for environments like:
 
   * bare metal - hardware based BMC (baseboard management controller) functions that implement the IPMI protocol
-  * Virtual Box 
+  * Virtual Box
   * Packet bare metal hosting provider (https://www.packet.net/)
   * Advanced BMC functions are supported for some hardware vendors (eg Dell, HP, IBM, etc)
 
-`Contact RackN <https://www.rackn.com/company/contact-us/>`_ for additional details and information. 
+`Contact RackN <https://www.rackn.com/company/contact-us/>`_ for additional details and information.
 
 Isoloated -vs- Production Install Mode
 --------------------------------------
@@ -245,7 +248,7 @@ Ports
 
 The Digital Rebar Provision endpoint service requires specific TCP Ports be accessible on the endpoint.  Please see :ref:`rs_arch_ports` for more detailed information.
 
-If you are running in a Containerized environment, please ensure you are forwarding all of the ports appropriately in to the container.  If you have a Firewall or packet filtering service on the node running the DRP Endpoint - ensure the appropriate ports are open. 
+If you are running in a Containerized environment, please ensure you are forwarding all of the ports appropriately in to the container.  If you have a Firewall or packet filtering service on the node running the DRP Endpoint - ensure the appropriate ports are open.
 
 
 Videos

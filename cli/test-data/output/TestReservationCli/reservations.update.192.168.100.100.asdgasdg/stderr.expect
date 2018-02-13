@@ -1,1 +1,2 @@
-Error: Failed to generate changed reservations:192.168.100.100 object: invalid character 'a' looking for beginning of value
+Error: Failed to generate changed reservations:192.168.100.100 object: Unable to unmarshal reference object: error unmarshaling JSON: json: cannot unmarshal string into Go value of type map[string]interface {}
+

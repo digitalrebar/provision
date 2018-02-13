@@ -127,6 +127,10 @@ func (c *Content) Key() string {
 	return c.Meta.Name
 }
 
+func (c *Content) KeyName() string {
+	return "Meta.Name"
+}
+
 func (c *Content) Fill() {
 	if c.Meta.Meta == nil {
 		c.Meta.Meta = Meta{}

@@ -75,6 +75,11 @@ Provision server.  Subnet objects have the following fields:
   specification
   <http://www.pix.net/software/pxeboot/archive/pxespec.pdf>`_).
 
+- Unmanaged: A boolean value that indicates whether dr-provision will
+  send any DHCP options required for a system to boot over the
+  network.  If this bit is set, dr-provision will never send any DHCP
+  options that may be needed to network boot a system.  
+
 - Subnet: The network address in CIDR form of this Subnet.  Subnets
   may not have overlapping address ranges.
 
