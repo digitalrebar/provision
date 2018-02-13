@@ -18,6 +18,10 @@ func (p *Pref) Key() string {
 	return p.Name
 }
 
+func (p *Pref) KeyName() string {
+	return "Name"
+}
+
 func (p *Pref) Fill() {
 	if p.Meta == nil {
 		p.Meta = Meta{}

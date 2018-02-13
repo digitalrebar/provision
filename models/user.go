@@ -36,6 +36,10 @@ func (u *User) Key() string {
 	return u.Name
 }
 
+func (u *User) KeyName() string {
+	return "Name"
+}
+
 func (u *User) Fill() {
 	u.Validation.fill()
 	if u.Meta == nil {

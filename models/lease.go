@@ -59,6 +59,10 @@ func (l *Lease) Key() string {
 	return Hexaddr(l.Addr)
 }
 
+func (l *Lease) KeyName() string {
+	return "Addr"
+}
+
 func (l *Lease) Fill() {
 	if l.Meta == nil {
 		l.Meta = Meta{}

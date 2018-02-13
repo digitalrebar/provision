@@ -25,6 +25,7 @@ type BlobInfo struct {
 type Model interface {
 	Prefix() string
 	Key() string
+	KeyName() string
 }
 
 type Filler interface {
