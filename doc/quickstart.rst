@@ -141,8 +141,8 @@ correctly PXE boot a Machine.
 
 To create a Subnet from command line we must create a JSON blob that
 contains the Subnet and DHCP definitions.  Below is a sample you can
-use.  Please insure you modify the network parameters accordingly.
-Insure you change the network parameters according to your
+use.  Please ensure you modify the network parameters accordingly.
+Ensure you change the network parameters according to your
 environment.
 
   ::
@@ -186,7 +186,7 @@ Content configuration is the most complex topic with Digital Rebar Provision.  T
 
   2. PXE Boot your Machine
 
-    * insure your test Machine is on the same Layer 2 subnet as your DRP endpoint, or that you've configured your networks *IP Helper* to forward your DHCP requests to your DRP Endpoint
+    * ensure your test Machine is on the same Layer 2 subnet as your DRP endpoint, or that you've configured your networks *IP Helper* to forward your DHCP requests to your DRP Endpoint
     * the Machine must be in the same subnet as defined in the Subnets section above
     * set your test machine or VM instance to PXE boot
     * power the Machine on, or reboot it, and verify that the NIC begins the PXE boot process
@@ -248,7 +248,7 @@ Ports
 
 The Digital Rebar Provision endpoint service requires specific TCP Ports be accessible on the endpoint.  Please see :ref:`rs_arch_ports` for more detailed information.
 
-If you are running in a Containerized environment, please insure you are forwarding all of the ports appropriately in to the container.  If you have a Firewall or packet filtering service on the node running the DRP Endpoint - insure the appropriate ports are open.
+If you are running in a Containerized environment, please ensure you are forwarding all of the ports appropriately in to the container.  If you have a Firewall or packet filtering service on the node running the DRP Endpoint - ensure the appropriate ports are open.
 
 
 Videos
