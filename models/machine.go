@@ -110,6 +110,10 @@ func (n *Machine) Key() string {
 	return n.UUID()
 }
 
+func (n *Machine) KeyName() string {
+	return "Uuid"
+}
+
 func (n *Machine) Fill() {
 	if n.Meta == nil {
 		n.Meta = Meta{}

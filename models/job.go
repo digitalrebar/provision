@@ -87,6 +87,10 @@ func (j *Job) Key() string {
 	return j.Uuid.String()
 }
 
+func (j *Job) KeyName() string {
+	return "Uuid"
+}
+
 func (j *Job) Fill() {
 	if j.Meta == nil {
 		j.Meta = Meta{}

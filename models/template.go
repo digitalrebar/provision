@@ -33,6 +33,10 @@ func (t *Template) Key() string {
 	return t.ID
 }
 
+func (t *Template) KeyName() string {
+	return "ID"
+}
+
 func (t *Template) Fill() {
 	t.Validation.fill()
 	if t.Meta == nil {

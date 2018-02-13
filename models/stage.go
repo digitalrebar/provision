@@ -85,6 +85,10 @@ func (s *Stage) Key() string {
 	return s.Name
 }
 
+func (s *Stage) KeyName() string {
+	return "Name"
+}
+
 func (s *Stage) Fill() {
 	s.Validation.fill()
 	if s.Meta == nil {

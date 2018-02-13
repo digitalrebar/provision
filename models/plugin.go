@@ -47,6 +47,10 @@ func (n *Plugin) Key() string {
 	return n.Name
 }
 
+func (n *Plugin) KeyName() string {
+	return "Name"
+}
+
 func (n *Plugin) Fill() {
 	if n.Meta == nil {
 		n.Meta = Meta{}

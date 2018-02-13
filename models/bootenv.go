@@ -108,6 +108,10 @@ func (b *BootEnv) Key() string {
 	return b.Name
 }
 
+func (b *BootEnv) KeyName() string {
+	return "Name"
+}
+
 func (b *BootEnv) AuthKey() string {
 	return b.Key()
 }

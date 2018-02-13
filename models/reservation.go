@@ -46,6 +46,10 @@ func (r *Reservation) Key() string {
 	return Hexaddr(r.Addr)
 }
 
+func (r *Reservation) KeyName() string {
+	return "Addr"
+}
+
 func (r *Reservation) Fill() {
 	r.Validation.fill()
 	if r.Meta == nil {

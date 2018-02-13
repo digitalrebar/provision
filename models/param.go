@@ -77,6 +77,10 @@ func (p *Param) Key() string {
 	return p.Name
 }
 
+func (p *Param) KeyName() string {
+	return "Name"
+}
+
 func (p *Param) Fill() {
 	if p.Meta == nil {
 		p.Meta = Meta{}

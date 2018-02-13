@@ -131,6 +131,10 @@ func (s *Subnet) Key() string {
 	return s.Name
 }
 
+func (s *Subnet) KeyName() string {
+	return "Name"
+}
+
 func (s *Subnet) Fill() {
 	s.Validation.fill()
 	if s.Meta == nil {
