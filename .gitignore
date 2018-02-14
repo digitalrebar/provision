@@ -27,6 +27,7 @@ genmodels
 assets/isos/
 dr-provision.zip
 dr-provision.sha256
+dr-provision-hash.*
 server.key
 server.crt
 cmds/incrementer/content.go
