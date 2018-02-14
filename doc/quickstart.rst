@@ -6,10 +6,10 @@
 
 .. _rs_quickstart:
 
-.. note::  We HIGHLY recommend using the ``latest`` version of the documentation, as it contains the most up to date information.  Use the version selector in the lower     right corner of your browser.
-
 Quick Start
 ~~~~~~~~~~~
+
+.. note::  We HIGHLY recommend using the ``latest`` version of the documentation, as it contains the most up to date information.  Use the version selector in the lower     right corner of your browser.
 
 This quick start guide provides a basic installation and start point for further exploration.  The guide has been designed for UNIX systems: Mac OS, Linux OS, Linux VMs and Linux Packet Servers.  While it is possible to install and run Digital Rebar Provision on a Windows instance, we do not cover that here.  The guide employs Curl and Bash commands which are not typically considered safe, but they do provide a simple and quick process for start up.
 
@@ -233,8 +233,8 @@ Fully automated provisioning control requires use of advanced RackN features (pl
 
 `Contact RackN <https://www.rackn.com/company/contact-us/>`_ for additional details and information.
 
-Isoloated -vs- Production Install Mode
---------------------------------------
+Isolated vs Production Install Mode
+-----------------------------------
 
 The quickstart guide does NOT create a production deployment and the DRP Endpoint service will NOT restart on failure or reboot.  You will have to start the *dr-provision* service on each system reboot (or add appropiate startup scripts).
 
