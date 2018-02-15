@@ -40,5 +40,7 @@ func TestPluginProviderCli(t *testing.T) {
 	cliTest(false, false, "plugin_providers", "upload", "incrementer", "as", "incrementer").run(t)
 	time.Sleep(3 * time.Second)
 	cliTest(false, false, "plugin_providers", "list").run(t)
+	cliTest(false, true, "files", "get", "/plugin_providers/incrementer/noFile", "to", "-").run(t)
+	cliTest(false, false, "files", "get", "/plugin_providers/incrementer/testFile", "to", "-").run(t)
 	os.Remove("incrementer")
 }
