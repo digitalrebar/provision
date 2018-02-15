@@ -1,4 +1,5 @@
 [
   "drpcli.amd64.linux",
-  "jq"
+  "jq",
+  "plugin_providers/"
 ]
