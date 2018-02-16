@@ -18,7 +18,7 @@ import (
 	"github.com/digitalrebar/logger"
 	"github.com/digitalrebar/provision/api"
 	"github.com/digitalrebar/provision/models"
-	"github.com/gin-gonic/gin"
+	"github.com/digitalrebar/provision/plugin/mux"
 	"github.com/spf13/cobra"
 )
 
@@ -51,7 +51,7 @@ var (
 
 func Publish(t, a, k string, o interface{}) {
 	e := &models.Event{Time: time.Now(), Type: t, Action: a, Key: k, Object: o}
-	_, err := post("/publish", e)
+	_, err := mux.Post(client, "/publish", e)
 	if err != nil {
 		thelog.Errorf("Failed to publish event! %v %v", e, err)
 	}
@@ -123,66 +123,63 @@ func Run(toPath, fromPath string, pc PluginConfig) error {
 			},
 		},
 	}
-
-	gc := newGinServer(thelog.NoPublish())
-	gc.NoMethod(func(c *gin.Context) { thelog.Warnf("Unknown method: %v\n", c) })
-	gc.NoRoute(func(c *gin.Context) { thelog.Warnf("Unknown route: %v\n", c) })
-	apiGroup := gc.Group("/api-plugin/v3")
-
-	// Required Pieces.
-	apiGroup.POST("/config", func(c *gin.Context) { configHandler(c, pc) })
+	pmux := mux.New(thelog.NoPublish())
+	pmux.Handle("/api-plugin/v3/config",
+		func(w http.ResponseWriter, r *http.Request) { configHandler(w, r, pc) })
 	if ps, ok := pc.(PluginStop); ok {
-		apiGroup.POST("/stop", func(c *gin.Context) { stopHandler(c, ps) })
+		pmux.Handle("/api-plugin/v3/stop",
+			func(w http.ResponseWriter, r *http.Request) { stopHandler(w, r, ps) })
 	} else {
-		apiGroup.POST("/stop", func(c *gin.Context) { stopHandler(c, nil) })
+		pmux.Handle("/api-plugin/v3/stop",
+			func(w http.ResponseWriter, r *http.Request) { stopHandler(w, r, nil) })
 	}
 
 	// Optional Pieces
 	if pp, ok := pc.(PluginPublisher); ok {
-		apiGroup.POST("/publish", func(c *gin.Context) { publishHandler(c, pp) })
+		pmux.Handle("/api-plugin/v3/publish",
+			func(w http.ResponseWriter, r *http.Request) { publishHandler(w, r, pp) })
 	}
 	if pa, ok := pc.(PluginActor); ok {
-		apiGroup.POST("/action", func(c *gin.Context) { actionHandler(c, pa) })
+		pmux.Handle("/api-plugin/v3/action",
+			func(w http.ResponseWriter, r *http.Request) { actionHandler(w, r, pa) })
 	}
-
+	os.Remove(toPath)
+	sock, err := net.Listen("unix", toPath)
+	if err != nil {
+		return err
+	}
+	defer sock.Close()
 	go func() {
-		for {
-			if _, err := os.Stat(toPath); os.IsNotExist(err) {
-				time.Sleep(1 * time.Second)
-			} else {
-				break
-			}
-		}
 		fmt.Printf("READY!\n")
 	}()
-	return gc.RunUnix(toPath)
+	return http.Serve(sock, pmux)
 }
 
 func logToDRP(l *logger.Line) {
-	_, err := post("/log", l)
+	_, err := mux.Post(client, "/log", l)
 	if err != nil {
 		thelog.NoPublish().Errorf("Failed to log line! %v %v", l, err)
 	}
 }
 
-func stopHandler(c *gin.Context, ps PluginStop) {
-	// GREG: Do better?
+func stopHandler(w http.ResponseWriter, r *http.Request, ps PluginStop) {
+	l := w.(logger.Logger)
 	if ps != nil {
-		ps.Stop(thelog)
+		ps.Stop(l)
 	}
 	resp := models.Error{Code: http.StatusOK}
-	c.JSON(resp.Code, resp)
-	thelog.Infof("STOPPING\n")
+	mux.JsonResponse(w, resp.Code, resp)
+	l.Infof("STOPPING\n")
 	os.Exit(0)
 }
 
-func configHandler(c *gin.Context, pc PluginConfig) {
+func configHandler(w http.ResponseWriter, r *http.Request, pc PluginConfig) {
 	var params map[string]interface{}
-	if !assureDecode(c, &params) {
+	if !mux.AssureDecode(w, r, &params) {
 		return
 	}
-
-	thelog.Infof("Setting API session\n")
+	l := w.(logger.Logger)
+	l.Infof("Setting API session\n")
 
 	default_endpoint := "https://127.0.0.1:8092"
 	if ep := os.Getenv("RS_ENDPOINT"); ep != "" {
@@ -195,7 +192,7 @@ func configHandler(c *gin.Context, pc PluginConfig) {
 
 	var err2 error
 	if default_token != "" {
-		thelog.Infof("Starting session with endpoint and token: %s\n", default_endpoint)
+		l.Infof("Starting session with endpoint and token: %s\n", default_endpoint)
 		session, err2 = api.TokenSession(default_endpoint, default_token)
 	} else {
 		err2 = fmt.Errorf("Must have a token specified\n")
@@ -204,42 +201,44 @@ func configHandler(c *gin.Context, pc PluginConfig) {
 	if err2 != nil {
 		err := &models.Error{Code: 400, Model: "plugin", Key: "incrementer", Type: "plugin", Messages: []string{}}
 		err.AddError(err2)
-		c.JSON(err.Code, err)
+		mux.JsonResponse(w, err.Code, err)
 		return
 	}
 
-	thelog.Infof("Received Config request: %v\n", params)
+	l.Infof("Received Config request: %v\n", params)
 	resp := models.Error{Code: http.StatusOK}
-	if err := pc.Config(thelog, session, params); err != nil {
+	if err := pc.Config(l, session, params); err != nil {
 		resp.Code = err.Code
 		b, _ := json.Marshal(err)
 		resp.Messages = append(resp.Messages, string(b))
 	}
-	c.JSON(resp.Code, resp)
+	mux.JsonResponse(w, resp.Code, resp)
 }
 
-func actionHandler(c *gin.Context, pa PluginActor) {
+func actionHandler(w http.ResponseWriter, r *http.Request, pa PluginActor) {
 	var actionInfo models.Action
-	if !assureDecode(c, &actionInfo) {
+	if !mux.AssureDecode(w, r, &actionInfo) {
 		return
 	}
-	if ret, err := pa.Action(thelog, &actionInfo); err != nil {
-		c.JSON(err.Code, err)
+	l := w.(logger.Logger)
+	if ret, err := pa.Action(l, &actionInfo); err != nil {
+		mux.JsonResponse(w, err.Code, err)
 	} else {
-		c.JSON(200, ret)
+		mux.JsonResponse(w, http.StatusOK, ret)
 	}
 }
 
-func publishHandler(c *gin.Context, pp PluginPublisher) {
+func publishHandler(w http.ResponseWriter, r *http.Request, pp PluginPublisher) {
 	var event models.Event
-	if !assureDecode(c, &event) {
+	if !mux.AssureDecode(w, r, &event) {
 		return
 	}
+	l := w.(logger.Logger)
 	resp := models.Error{Code: http.StatusOK}
-	if err := pp.Publish(thelog.NoPublish(), &event); err != nil {
+	if err := pp.Publish(l.NoPublish(), &event); err != nil {
 		resp.Code = err.Code
 		b, _ := json.Marshal(err)
 		resp.Messages = append(resp.Messages, string(b))
 	}
-	c.JSON(resp.Code, resp)
+	mux.JsonResponse(w, resp.Code, resp)
 }
