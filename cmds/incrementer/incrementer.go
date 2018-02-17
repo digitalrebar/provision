@@ -14,7 +14,6 @@ import (
 	"github.com/digitalrebar/provision/api"
 	"github.com/digitalrebar/provision/models"
 	"github.com/digitalrebar/provision/plugin"
-	"github.com/spf13/cobra"
 )
 
 var (
@@ -148,21 +147,12 @@ func (p *Plugin) Publish(thelog logger.Logger, e *models.Event) *models.Error {
 	return nil
 }
 
+func (p *Plugin) Unpack(thelog logger.Logger, dir string) error {
+	return ioutil.WriteFile(path.Join(dir, "testFile"), []byte("ImaFile"), 0644)
+}
+
 func main() {
 	plugin.InitApp("incrementer", "Increments a parameter on a machine", version, &def, &Plugin{})
-	plugin.App.AddCommand(&cobra.Command{
-		Use:   "unpack [loc]",
-		Short: "Unpack embedded static content to [loc]",
-		RunE: func(c *cobra.Command, args []string) error {
-			if args[0] == `` {
-				return fmt.Errorf("Not a valid location: `%s`", args[0])
-			}
-			if err := os.MkdirAll(args[0], 0755); err != nil {
-				return err
-			}
-			return ioutil.WriteFile(path.Join(args[0], "testFile"), []byte("ImaFile"), 0644)
-		},
-	})
 	err := plugin.App.Execute()
 	if err != nil {
 		os.Exit(1)
