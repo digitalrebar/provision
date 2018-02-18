@@ -38,6 +38,10 @@ type PluginActor interface {
 	Action(logger.Logger, *models.Action) (interface{}, *models.Error)
 }
 
+type PluginUnpacker interface {
+	Unpack(logger.Logger, string) error
+}
+
 var (
 	thelog logger.Logger
 	App    = &cobra.Command{
@@ -110,6 +114,22 @@ func InitApp(use, short, version string, def *models.PluginProvider, pc PluginCo
 			}
 
 			return Run(args[0], args[1], pc)
+		},
+	})
+	App.AddCommand(&cobra.Command{
+		Use:   "unpack [loc]",
+		Short: "Unpack embedded static content to [loc]",
+		RunE: func(c *cobra.Command, args []string) error {
+			if args[0] == `` {
+				return fmt.Errorf("Not a valid location: `%s`", args[0])
+			}
+			if pu, ok := pc.(PluginUnpacker); ok {
+				if err := os.MkdirAll(args[0], 0755); err != nil {
+					return err
+				}
+				return pu.Unpack(thelog, args[0])
+			}
+			return nil
 		},
 	})
 }
