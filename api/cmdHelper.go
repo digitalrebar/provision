@@ -138,7 +138,7 @@ service() {
 get_param() {
     # $1 attrib to get.  Attrib will be fetched in the context of the current machine
     local attr
-    drpcli machines get "$RS_UUID" param "$1"
+    drpcli machines get "$RS_UUID" param "$1" --aggregate
 }
 
 set_param() {
