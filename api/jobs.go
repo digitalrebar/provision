@@ -3,7 +3,7 @@ package api
 // Come back to processJobs later
 
 import (
-	"bytes"
+	"bufio"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -218,16 +218,13 @@ func (r *TaskRunner) Run() error {
 	helperWritten := false
 	go func() {
 		defer reader.Close()
-		buf := bytes.NewBuffer(make([]byte, 64*1024))
-		for {
-			count, err := io.CopyN(buf, reader, 64*1024)
-			if count > 0 {
-				if r.c.Req().Put(buf).UrlFor("jobs", r.j.Key(), "log").Do(nil) != nil {
-					return
-				}
-				buf.Reset()
+		scanner := bufio.NewScanner(reader)
+		for scanner.Scan() {
+			if scanner.Err() != nil {
+				return
 			}
-			if err != nil {
+			line := scanner.Text() + "\n"
+			if r.c.Req().Put([]byte(line)).UrlFor("jobs", r.j.Key(), "log").Do(nil) != nil {
 				return
 			}
 		}
