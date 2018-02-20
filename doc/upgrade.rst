@@ -406,6 +406,29 @@ v3.4.0 to v3.5.0
 
 No additional changes necessary.
 
+v3.5.0 to v3.6.0
+----------------
+
+`Release Notes for v3.6.0 <https://github.com/digitalrebar/provision/releases/tag/v3.6.0>`_
+
+No additional changes necessary.
+
+v3.6.0 to v3.7.0
+----------------
+
+`Release Notes for v3.7.0 <https://github.com/digitalrebar/provision/releases/tag/v3.7.0>`_
+
+The plugin system has been updated to a new version.  All plugins have been updated to
+use the new version.  After updating to *v3.7.0*, all plugins must be updated to function.
+The system will start after update, but the plugin-providers will not load until they are
+udpated.  Use the RackN UX to get the updates for the plugins.
+
+The Task subsystem has been updated to default to `sane-exit-codes`.  This is a change from
+the default of `original-exit-codes`.  This was done to address the need of task authors to
+match some basic assumptions about exit codes.  *1* should be a fail and not reboot your box.
+
+Additionally, the default UX redirect has changed to the `stable portal <https://portal.rackn.io`_.
+This will result in more stable UX experience.
 
 Local UI Removed
 ~~~~~~~~~~~~~~~~

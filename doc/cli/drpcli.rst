@@ -38,6 +38,8 @@ SEE ALSO
    Commands
 -  `drpcli files <drpcli_files.html>`__ - Access CLI commands relating
    to files
+-  `drpcli gohai <drpcli_gohai.html>`__ - Get basic system information
+   as a JSON blob
 -  `drpcli info <drpcli_info.html>`__ - Access CLI commands relating to
    info
 -  `drpcli interfaces <drpcli_interfaces.html>`__ - Access CLI commands
