@@ -217,6 +217,7 @@ func (r *TaskRunner) Run() error {
 	r.pipeWriter = writer
 	helperWritten := false
 	go func() {
+		key := r.j.Key()
 		defer reader.Close()
 		scanner := bufio.NewScanner(reader)
 		for scanner.Scan() {
@@ -224,7 +225,7 @@ func (r *TaskRunner) Run() error {
 				return
 			}
 			line := scanner.Text() + "\n"
-			if r.c.Req().Put([]byte(line)).UrlFor("jobs", r.j.Key(), "log").Do(nil) != nil {
+			if r.c.Req().Put([]byte(line)).UrlFor("jobs", key, "log").Do(nil) != nil {
 				return
 			}
 		}
