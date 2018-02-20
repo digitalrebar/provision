@@ -3,7 +3,7 @@ package api
 // Come back to processJobs later
 
 import (
-	"bytes"
+	"bufio"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -50,7 +50,7 @@ type TaskRunner struct {
 	in io.Writer
 	// The write side of the pipe that communicates to the servver.
 	// Closing this will flush any data left in the pipe.
-	pipeWriter       *io.PipeWriter
+	pipeWriter       *os.File
 	agentDir, jobDir string
 	logger           io.Writer
 }
@@ -209,22 +209,23 @@ func (r *TaskRunner) Run() error {
 	}
 	// Arrange to log everything to the job log and stderr at the same time.
 	// Due to how io.Pipe works, this should wind up being fairly synchronous.
-	reader, writer := io.Pipe()
+	reader, writer, err := os.Pipe()
+	if err != nil {
+		return err
+	}
 	r.in = io.MultiWriter(writer, r.logger)
 	r.pipeWriter = writer
 	helperWritten := false
 	go func() {
+		key := r.j.Key()
 		defer reader.Close()
-		buf := bytes.NewBuffer(make([]byte, 64*1024))
-		for {
-			count, err := io.CopyN(buf, reader, 64*1024)
-			if count > 0 {
-				if r.c.Req().Put(buf).UrlFor("jobs", r.j.Key(), "log").Do(nil) != nil {
-					return
-				}
-				buf.Reset()
+		scanner := bufio.NewScanner(reader)
+		for scanner.Scan() {
+			if scanner.Err() != nil {
+				return
 			}
-			if err != nil {
+			line := scanner.Text() + "\n"
+			if r.c.Req().Put([]byte(line)).UrlFor("jobs", key, "log").Do(nil) != nil {
 				return
 			}
 		}

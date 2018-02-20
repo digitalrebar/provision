@@ -16,6 +16,7 @@ import (
 	"net/url"
 	"path"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/VictorLowther/jsonpatch2"
@@ -33,6 +34,7 @@ const APIPATH = "/api/v3"
 // against digitalrebar provision.
 type Client struct {
 	*http.Client
+	mux                          *sync.Mutex
 	endpoint, username, password string
 	token                        *models.UserToken
 	closer                       chan struct{}
@@ -50,6 +52,8 @@ func (c *Client) UrlFor(args ...string) (*url.URL, error) {
 // be logged at on the server side.  Setting lvl to an empty string
 // turns off tracing.
 func (c *Client) Trace(lvl string) {
+	c.mux.Lock()
+	defer c.mux.Unlock()
 	c.traceLvl = lvl
 }
 
@@ -57,6 +61,8 @@ func (c *Client) Trace(lvl string) {
 // a log for at the Error log level. It can be used to tie logs
 // generated on the server side to requests made by a specific Client.
 func (c *Client) TraceToken(t string) {
+	c.mux.Lock()
+	defer c.mux.Unlock()
 	c.traceToken = t
 }
 
@@ -80,6 +86,8 @@ type R struct {
 // Req creates a new R for the current client.
 // It defaults to using the GET method.
 func (c *Client) Req() *R {
+	c.mux.Lock()
+	defer c.mux.Unlock()
 	return &R{
 		c:          c,
 		traceLvl:   c.traceLvl,
@@ -671,6 +679,7 @@ func TokenSession(endpoint, token string) (*Client, error) {
 		ExpectContinueTimeout: 1 * time.Second,
 	}
 	c := &Client{
+		mux:      &sync.Mutex{},
 		endpoint: endpoint,
 		Client:   &http.Client{Transport: tr},
 		closer:   make(chan struct{}, 0),
@@ -704,6 +713,7 @@ func UserSession(endpoint, username, password string) (*Client, error) {
 		TLSClientConfig:       &tls.Config{InsecureSkipVerify: true},
 	}
 	c := &Client{
+		mux:      &sync.Mutex{},
 		endpoint: endpoint,
 		username: username,
 		password: password,
@@ -730,7 +740,9 @@ func UserSession(endpoint, username, password string) (*Client, error) {
 				if err := c.reauth(token); err != nil {
 					log.Fatalf("Error reauthing token, aborting: %v", err)
 				}
+				c.mux.Lock()
 				c.token = token
+				c.mux.Unlock()
 			}
 		}
 	}()
