@@ -50,7 +50,7 @@ type TaskRunner struct {
 	in io.Writer
 	// The write side of the pipe that communicates to the servver.
 	// Closing this will flush any data left in the pipe.
-	pipeWriter       *io.PipeWriter
+	pipeWriter       *os.File
 	agentDir, jobDir string
 	logger           io.Writer
 }
@@ -209,7 +209,10 @@ func (r *TaskRunner) Run() error {
 	}
 	// Arrange to log everything to the job log and stderr at the same time.
 	// Due to how io.Pipe works, this should wind up being fairly synchronous.
-	reader, writer := io.Pipe()
+	reader, writer, err := os.Pipe()
+	if err != nil {
+		return err
+	}
 	r.in = io.MultiWriter(writer, r.logger)
 	r.pipeWriter = writer
 	helperWritten := false
