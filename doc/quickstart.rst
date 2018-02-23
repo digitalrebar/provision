@@ -33,7 +33,7 @@ This document refers to the ``drpcli`` command line tool for manipulating the ``
 Preparation
 -----------
 
-Please make sure you're environment doesn't have any conflicts or issues that might cause PXE booting to fail.  Some things to note:
+Please make sure your environment doesn't have any conflicts or issues that might cause PXE booting to fail.  Some things to note:
 
   * only one DHCP server on a local subnet
   * if your DRP Endpoint is "straddling" multiple networks - make sure you have routing set up correctly, or specify the ``--static-ip=`` start up option correctly
@@ -127,21 +127,43 @@ These steps should be performed from the newly installed *dr-provision* endpoint
 
 The ``uploadiso`` command will fetch the ISO image as specified in the BootEnv JSON spec, download it, and then "explode" it in to the ``drp-data/tftpboot/`` directory for installation use.  You may optionally choose one or both of the CentOS and Ubuntu BootEnvs (or any other Community Content supported BootEnv) to install; depending on which Operating System and Version you wish to test or use.
 
+
 Configure a Subnet
 ------------------
 
 A Subnet defines a network boundary that the DRP Endpoint will answer
 DHCP queries for.  In this quickstart, we assume you will use the
 local network interface as a subnet definition, and that your Machines
-are all booted from the local subnet (layer 2 boundary).  More
-advanced usage is certainly possible (including use of external DHCP
-servers, using DRP Endpoint as a DHCP Proxy, etc.).  A Subnet
-specification includes all of the necessary DHCP boot options to
+are all booted from the local subnet (layer 2 boundary).  A Subnet
+specification must include all of the necessary DHCP boot options to
 correctly PXE boot a Machine.
 
-To create a Subnet from command line we must create a JSON blob that
+.. note:: DRP supports the use of external DHCP servers, DHCP Proxy, etc.  However, this is considered an advanced topic, and not discussed in the QuickStart.  
+
+Starting with Stable release v3.7.0 and newer, Digital Rebar Provision
+supports "magic" DHCP Boot Options for `next-server` and `bootfile` 
+(option code 67).  This means that these options should work "magically"
+for you without needing to be set. 
+
+HOWEVER - VirtualBox has a broken iPXE implementation. 
+
+If you are creating a subnet for an older version of Digital Rebar 
+Provision, you must set the `next-server` to your DRP Endpoint IP Address,
+and set the Option 67 value to ``lpxelinux.0`` for Legacy BIOS mode 
+Machines.  
+
+If you are using VirtualBox, you set the `next-server` value to the DRP
+Endpoint IP address _and_ the DHCP Option 67 value to ``lpxelinux.0``
+
+.. note:: The UX will create a Subnet based on an interface of the DRP Endpoint with sane defaults - it is easier to create a subnet via the UX.  
+
+  If you are using a VirtualBox environment, and if you set the Name of the `Subnet` to ``vboxnet0``, the UX will automatically correct the Option 67 bootfile value to support the broken iPXE environment for VirtualBox networks.
+
+  You must still set all of the remaining network values correctly in your Subnet specification, even in the UX. 
+
+To create a basic Subnet from command line we must create a JSON blob that
 contains the Subnet and DHCP definitions.  Below is a sample you can
-use.  Please ensure you modify the network parameters accordingly.
+use.  *PLEASE ENSURE* you modify the network parameters accordingly.
 Ensure you change the network parameters according to your
 environment.
 
@@ -164,21 +186,36 @@ environment.
     }' > /tmp/local_subnet.json
 
     # edit the above JSON spec to suit your environment
+    #
+    # for v3.6.0 and older:
+    #  add a next-server after "Name" with the IP address of your DRP Endpoint, like:
+    #    NextServer": "10.10.16.10",
+    #
+    # for v3.6.0 and older, OR for v3.7.0 VirtualBox environments:
+    #  add DHCP Option 67 to the Options map, like:
+    #    { "Code": 67, "Value": "lpxelinux.0", "Description": "Bootfile" },
+    # 
     vim /tmp/local_subnet.json
 
     drpcli subnets create - < /tmp/local_subnet.json
 
-.. note:: The UX will create a Subnet based on an interface of the DRP Endpoint with sane defaults - it is easier to create a subnet via the UX.
+.. note:: Option 67 (bootfile name) specifies the PXE boot file.  The `lpxelinux.0` boot file is for Legacy BIOS machines.  If you are booting a UEFI system, you will need to make more advanced changes to support UEFI boot mode. Please see the FAQ on :ref:`rs_uefi_boot_option`.  DRP v3.7.0 and newer has magic helpers to try and set the Legacy/UEFI bootfile for you, but custom usage or custom/unique PXE implementations may require changes.
 
 
 Install your first Machine
 --------------------------
 
-Content configuration is the most complex topic with Digital Rebar Provision.  The basic provisioning setup with the above "ISO" upoads will allow you to install a CentOS or Ubuntu Machine with manual power management (on/reboot etc) transitions.  More advanced workflows and plugin_providers will allow for complete automation workflows with complex stages and state transitions.  To keep things "quick", the below are just bare basics, for more details and information, please see the Content documentation section.
+Content configuration is the most complex topic with Digital Rebar Provision.  The basic provisioning setup with the above "ISO" uploads will allow you to install a CentOS or Ubuntu Machine with manual power management (on/off/reboot etc) transitions.  More advanced workflows and plugin_providers will allow for complete automation workflows with complex stages and state transitions.  To keep things "quick", the below are just bare basics, for more details and information, please see the Content documentation section.
 
-  1. Set BootEnvs
+  1. Set default BootEnvs and Stages
 
-    BootEnvs are operating system installable definitions.  You need to specify **what** the DRP endpoint should do when it sees an unknown Machine, and what the default behavior is. To do this, Digital Rebar Provision uses a *discovery* image provisioning method, and you must first set up these steps.  Define the Default Stage, Default BootEnv, and the Unknown BootEnv:
+    BootEnvs are operating system installable definitions.  You need to specify **what** the DRP endpoint should do when it sees an unknown Machine, and what the default behavior is. To do this, Digital Rebar Provision uses a *discovery* image provisioning method (sometimes referred to as *ready state* infrastructure), and you must first set up these steps.  
+
+    Stages allow you to create per-Machine `workflow`, where you can transition from one stage to the next to complete more comlex provisioning activities.  
+
+    .. note:: In the below *Prefs* example, we set both BootEnvs and Stages.  This means that the "Stage" workflow system is activated, and you must change a Machine install definition (eg CentOS or Ubuntu), via the use of Stage changes.  If you do NOT set the ``defaultStage`` value, then you would change a Machine by the use of only setting the BootEnv on a Machine.  We will use the Stages method for this quickstart. 
+
+    Define the Default Stage, Default BootEnv, and the Unknown BootEnv:
 
     ::
 
@@ -187,12 +224,12 @@ Content configuration is the most complex topic with Digital Rebar Provision.  T
   2. PXE Boot your Machine
 
     * ensure your test Machine is on the same Layer 2 subnet as your DRP endpoint, or that you've configured your networks *IP Helper* to forward your DHCP requests to your DRP Endpoint
-    * the Machine must be in the same subnet as defined in the Subnets section above
+    * the Machine should be in the same subnet as defined in the Subnets section above (not strictly required, but this is a simplified quickstart environment!)
     * set your test machine or VM instance to PXE boot
     * power the Machine on, or reboot it, and verify that the NIC begins the PXE boot process
     * verify that the DRP Endpoint responds with a DHCP lease to the Machine
 
-  3. Set your BootEnv to install an Operating System
+  3. Set your Machine to a desired Stage to install an Operating System
 
     * once your machine has booted, and received DHCP from the DRP Endpoint, it will now be "registered" with the Endpoint for installation
     * by default, DRP will NOT attempt an OS install unless you explicitly direct it to (for safety's sake!)
@@ -202,12 +239,11 @@ Content configuration is the most complex topic with Digital Rebar Provision.  T
 
       drpcli machines list | jq '.[].Uuid'
 
-  4. Set the BootEnv to either ``centos-7-install`` or ``ubuntu-16.04-install`` (or other BootEnv if previously installed and desired) replace *<UUID>* with your machines ID from the above command:
-
+  4. Set the Stage to either ``centos-7-install`` or ``ubuntu-16.04-install`` (or other Stage if previously installed and desired) replace *<UUID>* with your machines ID from the above command:
 
     ::
 
-      drpcli machines bootenv <UUID> ubuntu-16.04-install
+      drpcli machines stages <UUID> ubuntu-16.04-install
 
   5. Reboot your Machine - it should now kick off a BootEnv install as you specified above.
 
