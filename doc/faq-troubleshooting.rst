@@ -156,7 +156,7 @@ The contents and structure of these locations is the same.  Follow the below pro
 #. perform fresh install on same host, without the ``--isolated`` flag
 #. follow the start up scripts setup - BUT do NOT start the ``dr-provision`` service at this point
 #.  copy the ``drp-data/*`` directories recursively to ``/var/lib/dr-provision`` (eg: ``unalias cp; cp -ra drp-data/* /var/lib/dr-provision/``)
-#. make sure you're start up scripts are in place for your production mode (eg: ``/etc/systemd/system/dr-provision.service``)
+#. make sure your startup scripts are in place for your production mode (eg: ``/etc/systemd/system/dr-provision.service``)
 #. start the new production version with  ``systemctl start dr-provision.service``
 #. verify everything is running fine
 #. delete the ``drp-data`` directory (suggest retaining the backup copy for later just in case)
@@ -287,6 +287,28 @@ If you wish to update/change a Machine Name, you can do:
 
 .. note:: Note that you can NOT use the ``drpcli machines set ...`` construct as it only sets Param values.  The Machines name is a Field, not a Parameter.  This will NOT work: ``drpcli machines set $UUID param Name to foobar``.
 
+.. _rs_uefi_boot_option:
+
+UEFI Boot Support - Option 67
+-----------------------------
+Starting with v3.7.0 and newer, a DHCP Subnet specification will try to automatically determine the correct values for the ``next-server`` and *DHCP Option 67* values.  In most cases, you shouldn't need to change this.  However, if you are using a VirtualBox environment, you will need to specify DHCP Option 67; as VirtualBox has a broken iPXE implementation.  Older versions of DRP may need the ``next-boot`` and/or the *DHCP Option 67* values set to work correctly. 
+
+The DHCP service in Digital Rebar Provision can support fairly complex boot file service.  You can use advanced logic to insure you send the right PXE boot file to a client, based on Legacy BIOS boot mode, or UEFI boot mode.  Note that UEFI boot mode can vary dramatically in implementations, and some (sadly; extensive) testing may be necessary to get it to work for your system.  We have several reports of field deployments with various UEFI implementations working with the new v3.7.0 and newer "magic" Option 67 values.   
+
+Here is an example of an advanced Option 67 parameter for a DHCP Subnet specification:
+  ::
+    
+    {{if (eq (index . 77) "iPXE") }}default.ipxe{{else if (eq (index . 93) "0")}}lpxelinux.0{{else}}bootx64.efi{{end}} 
+
+If you run in to issues with UEFI boot support - please do NOT hesitate to contact us on the `Slack Channel <https://www.rackn.com/support/slack>`_ as we may have updated info to help you with UEFI boot support.  
+
+An example of adding this to your Subnet specification might look something like: 
+  ::
+
+    # assumes your subnet name is "eth1" - change it to match your Subnet name:
+    # you may need to delete the existing value if there is one, first, by doing:
+    # drpcli subnets set eth1 option 67 to null 
+    drpcli subnets set eth1 option 67 to '"lpxelinux.0" {{if (eq (index . 77) "iPXE") }}default.ipxe{{else if (eq (index . 93) "0")}}lpxelinux.0{{else}}bootx64.efi{{end}}'
 
 .. _rs_jq_examples:
 
