@@ -192,7 +192,7 @@ func registerSubnet(app *cobra.Command) {
 						if newVal == "null" {
 							idx = ii
 						} else {
-							do.Value = newVal
+							sub.Options[ii].Value = newVal
 						}
 						found = true
 						break

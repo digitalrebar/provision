@@ -109,6 +109,8 @@ func TestSubnetCli(t *testing.T) {
 	cliTest(false, true, "subnets", "set", "john", "option", "6tl", "to", "66").run(t)
 	cliTest(false, false, "subnets", "set", "john", "option", "6", "to", "66").run(t)
 	cliTest(false, false, "subnets", "get", "john", "option", "6").run(t)
+	cliTest(false, false, "subnets", "set", "john", "option", "6", "to", "67").run(t)
+	cliTest(false, false, "subnets", "get", "john", "option", "6").run(t)
 	cliTest(false, false, "subnets", "set", "john", "option", "6", "to", "null").run(t)
 	cliTest(false, true, "subnets", "get", "john", "option", "6").run(t)
 	//End of Helpers
