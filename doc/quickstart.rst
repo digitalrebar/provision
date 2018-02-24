@@ -36,7 +36,6 @@ Preparation
 Please make sure your environment doesn't have any conflicts or issues that might cause PXE booting to fail.  Some things to note:
 
   * only one DHCP server on a local subnet
-  * if your DRP Endpoint is "straddling" multiple networks - make sure you have routing set up correctly, or specify the ``--static-ip=`` start up option correctly
   * your Machines should be set to PXE boot the correct NIC (on the correct provisioning network interface)
   * if you customize Reservations - you must also add all of the correct PXE boot options (see :ref:`rs_create_reservation` )
   * you need the network information for the subnet that your target Machines will be on
@@ -46,9 +45,10 @@ Please make sure your environment doesn't have any conflicts or issues that migh
 Install
 -------
 
-To begin, execute the following command in a shell or terminal:
+To begin, execute the following commands in a shell or terminal:
   ::
 
+    mkdir drp ; cd drp
     curl -fsSL get.rebar.digital/stable | bash -s -- --isolated install
 
 .. note:: If you want to try the latest code, you can checkout the development tip using ``curl -fsSL get.rebar.digital/tip | bash -s -- --isolated --drp-version=tip install``
@@ -66,6 +66,8 @@ For reference, you can download the installer (``install.sh``), and observe what
 
 Once the installer is downloaded, you can execute it with the appropriate ``install`` options (try ``bash ./install.sh --help`` for details).
 
+It is recommended that directory is used for this process.  The ``mkdir drp ; cd drp`` command does this as the ``drp`` directory.  The directory will contain all installed and operating files. The ``drp`` directory can be anything.
+
 Start dr-provision
 ------------------
 
@@ -78,14 +80,15 @@ Once the install has completed, your terminal should then display something like
     # Run the following commands to start up dr-provision in a local isolated way.
     # The server will store information and serve files from the ./drp-data directory.
 
-    sudo ./dr-provision --static-ip=<IP_of_provisioning_interface> --base-root=`pwd`/drp-data --local-content="" --default-content="" > drp.log 2>&1 &
+    sudo ./dr-provision --base-root=`pwd`/drp-data --local-content="" --default-content="" > drp.log 2>&1 &
 
+
+.. note:: On MAC DARWIN there is one additional step. You may have to add a route for broadcast addresses to work.  This can be done with following command ``sudo route -n add -net 255.255.255.255 192.168.100.1`` In this example, the ``192.168.100.1`` is the IP address of the interface that you want to send messages through. The install script should make suggestions for you.
+
+The next step is to execute the *sudo* command which will start an instance of Digital Rebar Provision service that uses the ``drp-data`` directory for object and file storage.
 
 .. note:: Before trying to install a BootEnv, please verify that the installed BootEnvs matches the above BootEnv Names that can be installed: ``drpcli bootenvs list | jq '.[].Name'``
 
-The next step is to execute the *sudo* command which will start an instance of Digital Rebar Provision service that uses the ``drp-data`` directory for object and file storage.  Additionally, *dr-provision* will attempt to use the IP address best suited for client interaction, however if that detection fails, the IP address specified by ``--static-ip=IP_ADDRESS`` will be used.
-
-.. note:: On MAC DARWIN there are two additional steps. First, use the ``--static-ip=`` flag to help the service understand traffic targets.  Second, you may have to add a route for broadcast addresses to work.  This can be done with following command ``sudo route -n add -net 255.255.255.255 192.168.100.1`` In this example, the 192.168.100.1 is the IP address of the interface that you want to send messages through. The install script should make suggestions for you.
 
 You may also use the RackN Portal UX by pointing your web browser to:
   ::
@@ -191,7 +194,7 @@ environment.
     #  add a next-server after "Name" with the IP address of your DRP Endpoint, like:
     #    NextServer": "10.10.16.10",
     #
-    # for v3.6.0 and older, OR for v3.7.0 VirtualBox environments:
+    # for v3.6.0 and older:
     #  add DHCP Option 67 to the Options map, like:
     #    { "Code": 67, "Value": "lpxelinux.0", "Description": "Bootfile" },
     # 
@@ -278,6 +281,12 @@ A production mode install will install to ``/var/lib/dr-provision`` directory (b
 
 For more detailed installation information, see: :ref:`rs_install`
 
+Clean Up
+--------
+
+Once you are finished exploring Digital Rebar Provision in isolated mode, the system can cleaned by removing the directory containing the isolated install.  In the previous sections, we used ''drp'' as the directory containing the isolated install.  Removing this directory will cleanup in the installed files.
+
+For production deployments, the ``install.sh`` script can be run with the ``remove`` argument instead of the ``install`` argument to clean up the system.
 
 Ports
 -----

@@ -137,7 +137,7 @@ The API, File Server, DHCP, and TFTP ports can be configured, but DHCP and TFTP 
 
 If the SSL certificate is not valid, then follow the :ref:`rs_gen_cert` steps.
 
-.. note:: On MAC DARWIN there are two additional steps. First, use the ``--static-ip=`` flag to help the service understand traffic targets.  Second, you may have to add a route for broadcast addresses to work.  This can be done with the following comand.  The 192.168.100.1 is the IP address of the interface that you want to send messages through. The install script will make suggestions for you.
+.. note:: On MAC DARWIN there is one additional step. You may have to add a route for broadcast addresses to work.  This can be done with the following comand.  The 192.168.100.1 is the IP address of the interface that you want to send messages through. The install script will make suggestions for you.
 
   ::
 
