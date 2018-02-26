@@ -143,28 +143,28 @@ are all booted from the local subnet (layer 2 boundary).  A Subnet
 specification must include all of the necessary DHCP boot options to
 correctly PXE boot a Machine.
 
-.. note:: DRP supports the use of external DHCP servers, DHCP Proxy, etc.  However, this is considered an advanced topic, and not discussed in the QuickStart.  
+.. note:: DRP supports the use of external DHCP servers, DHCP Proxy, etc.  However, this is considered an advanced topic, and not discussed in the QuickStart.
 
 Starting with Stable release v3.7.0 and newer, Digital Rebar Provision
-supports "magic" DHCP Boot Options for `next-server` and `bootfile` 
+supports "magic" DHCP Boot Options for `next-server` and `bootfile`
 (option code 67).  This means that these options should work "magically"
-for you without needing to be set. 
+for you without needing to be set.
 
-HOWEVER - VirtualBox has a broken iPXE implementation. 
+HOWEVER - VirtualBox has a broken iPXE implementation.
 
-If you are creating a subnet for an older version of Digital Rebar 
+If you are creating a subnet for an older version of Digital Rebar
 Provision, you must set the `next-server` to your DRP Endpoint IP Address,
-and set the Option 67 value to ``lpxelinux.0`` for Legacy BIOS mode 
-Machines.  
+and set the Option 67 value to ``lpxelinux.0`` for Legacy BIOS mode
+Machines.
 
 If you are using VirtualBox, you set the `next-server` value to the DRP
 Endpoint IP address _and_ the DHCP Option 67 value to ``lpxelinux.0``
 
-.. note:: The UX will create a Subnet based on an interface of the DRP Endpoint with sane defaults - it is easier to create a subnet via the UX.  
+.. note:: The UX will create a Subnet based on an interface of the DRP Endpoint with sane defaults - it is easier to create a subnet via the UX.
 
   If you are using a VirtualBox environment, and if you set the Name of the `Subnet` to ``vboxnet0``, the UX will automatically correct the Option 67 bootfile value to support the broken iPXE environment for VirtualBox networks.
 
-  You must still set all of the remaining network values correctly in your Subnet specification, even in the UX. 
+  You must still set all of the remaining network values correctly in your Subnet specification, even in the UX.
 
 To create a basic Subnet from command line we must create a JSON blob that
 contains the Subnet and DHCP definitions.  Below is a sample you can
@@ -199,7 +199,7 @@ environment.
     # for v3.6.0 and older:
     #  add DHCP Option 67 to the Options map, like:
     #    { "Code": 67, "Value": "lpxelinux.0", "Description": "Bootfile" },
-    # 
+    #
     vim /tmp/local_subnet.json
 
     drpcli subnets create - < /tmp/local_subnet.json
@@ -214,11 +214,11 @@ Content configuration is the most complex topic with Digital Rebar Provision.  T
 
   1. Set default BootEnvs and Stages
 
-    BootEnvs are operating system installable definitions.  You need to specify **what** the DRP endpoint should do when it sees an unknown Machine, and what the default behavior is. To do this, Digital Rebar Provision uses a *discovery* image provisioning method (sometimes referred to as *ready state* infrastructure), and you must first set up these steps.  
+    BootEnvs are operating system installable definitions.  You need to specify **what** the DRP endpoint should do when it sees an unknown Machine, and what the default behavior is. To do this, Digital Rebar Provision uses a *discovery* image provisioning method (sometimes referred to as *ready state* infrastructure), and you must first set up these steps.
 
-    Stages allow you to create per-Machine `workflow`, where you can transition from one stage to the next to complete more comlex provisioning activities.  
+    Stages allow you to create per-Machine `workflow`, where you can transition from one stage to the next to complete more comlex provisioning activities.
 
-    .. note:: In the below *Prefs* example, we set both BootEnvs and Stages.  This means that the "Stage" workflow system is activated, and you must change a Machine install definition (eg CentOS or Ubuntu), via the use of Stage changes.  If you do NOT set the ``defaultStage`` value, then you would change a Machine by the use of only setting the BootEnv on a Machine.  We will use the Stages method for this quickstart. 
+    .. note:: In the below *Prefs* example, we set both BootEnvs and Stages.  This means that the "Stage" workflow system is activated, and you must change a Machine install definition (eg CentOS or Ubuntu), via the use of Stage changes.  If you do NOT set the ``defaultStage`` value, then you would change a Machine by the use of only setting the BootEnv on a Machine.  We will use the Stages method for this quickstart.
 
     Define the Default Stage, Default BootEnv, and the Unknown BootEnv:
 

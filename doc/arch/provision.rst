@@ -175,7 +175,7 @@ RenderData includes the following helper methods:
 - **template <string> .** includes the template specified by the string.
   String can NOT be a variable and note that template does NOT have a dot
   (.) in front.
-- **.CallTemplate <string> .** works like **template** but allows for 
+- **.CallTemplate <string> .** works like **template** but allows for
   template expansion inside the string to allow for dynamic template
   references.  Note that CallTemplate does have dot (.) in frount.
 

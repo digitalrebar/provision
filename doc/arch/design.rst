@@ -282,7 +282,7 @@ cli
 ~~~
 
 The CLI package implements the reference Go client CLI for
-*dr-provision*.  The main program for *drpcli* includes this 
+*dr-provision*.  The main program for *drpcli* includes this
 set of functions.
 
 .. _rs_arch_plugin:

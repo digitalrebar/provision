@@ -17,7 +17,7 @@ It generates the following directories:
 * client
 * models
 
-The cli uses those client files to access the server.  The editable 
+The cli uses those client files to access the server.  The editable
 cli code lives in:
 
 * cli

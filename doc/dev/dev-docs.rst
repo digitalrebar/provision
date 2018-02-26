@@ -9,7 +9,7 @@
 Developing Documentation
 ========================
 
-As an open source project, we encourage community feedback and involvement.  Docs can be updated by 
+As an open source project, we encourage community feedback and involvement.  Docs can be updated by
 pull requests against the `github <https://github.com/digitalrebar/provision>`_ repository either from a private
 tree or directly against the tree.
 
@@ -25,7 +25,7 @@ Otherwise, try and find a good place for what needs to be added.  And Thanks!
 Documentation Tooling
 ---------------------
 
-There are a lot of ways to work with ReStructuredText...  Below is only one possible way of setting up a working environment to ensure you are writing clean RST based documentation.  This method is designed to be as lightlweight as possible, while still being as accurate as possible with the final rendered doc changes.   There are a lot of editors tha will render RST formatted markup, but very few of them render it the same way, or similar enough to the final rendered documentation styles to be correct. 
+There are a lot of ways to work with ReStructuredText...  Below is only one possible way of setting up a working environment to ensure you are writing clean RST based documentation.  This method is designed to be as lightlweight as possible, while still being as accurate as possible with the final rendered doc changes.   There are a lot of editors tha will render RST formatted markup, but very few of them render it the same way, or similar enough to the final rendered documentation styles to be correct.
 
 This process uses the following elements:
 
@@ -47,7 +47,7 @@ Edit the Docs
   * Modify the doc as appropriate
   * Create a branch
   * Submit a pull request for your changes
-  
+
 Rebuild the HTML Rendered Docs
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -57,14 +57,14 @@ To assist with editing/reviewing your changes, you will want to rebuild the RST 
 
     make html
 
-If you are making a lot of changes, you will want to use a file watching utility to see watch for file writes, and automatically kick the ``make html`` process off for you.  
+If you are making a lot of changes, you will want to use a file watching utility to see watch for file writes, and automatically kick the ``make html`` process off for you.
 
 On Mac OS X - you can install the ``fswatch`` package:
 
   ::
 
     brew install fswatch
-    
+
 An example use would be:
 
   ::
@@ -81,7 +81,7 @@ Auto-Refresh Browser
 The last piece of the puzzle, you will want to set your web browser to auto-refresh a given tab or window.  This way, the HTML rendered documentation will be refreshed in the browser.   There are several add-ons/extensions that will do this for you.  Here at RackN we have used the following extensions:
 
   Chrome *Auto Refresh Plus* extension:
-    https://chrome.google.com/webstore/detail/auto-refresh-plus/hgeljhfekpckiiplhkigfehkdpldcggm 
+    https://chrome.google.com/webstore/detail/auto-refresh-plus/hgeljhfekpckiiplhkigfehkdpldcggm
 
   Firefox *Tab Reloader* add-on (works on Chrome, Firefox, and Opera; but limited to 10 second reloads as minimum reload time):
     https://add0n.com/tab-reloader.html

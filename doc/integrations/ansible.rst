@@ -5,7 +5,7 @@ Dyamic Ansible Inventory (w/ Kubernetes via Kubespray Ansible)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The following instructions help with Ansible Playbooks via
-Digital Rebar.  The instructions are generic and could be 
+Digital Rebar.  The instructions are generic and could be
 adapted to run on any Ansible run.
 
 To make the documentation more specific, they use the installation
@@ -39,7 +39,7 @@ You must create a ansible/groups profile with the following required params:
       "kube-master",
       "kube-node"
     ],
- 
+
 You must supply a ansible/groups-members list to map hosts into groups.  The RackN UX will build this for you using a graphic selection matrix.
 
   ::
@@ -84,7 +84,7 @@ Optionally, ansible/parent-groups can be used to create children groups.
         "kube-node"
       ]
     }
- 
+
 
 Ansible Dynamic Inventory from Digital Rebar Provision
 ------------------------------------------------------
@@ -103,7 +103,7 @@ Download the inventory script to the local system to a convenient location and m
     chmod +x inventory.py
     RS_PROFILE=mycluster ./inventory.py | jq
 
-In order to test the Ansible integration, use the ping command.  If everything is working, all the machines in the system should receive and respond to the ping command. 
+In order to test the Ansible integration, use the ping command.  If everything is working, all the machines in the system should receive and respond to the ping command.
 
   ::
 
@@ -131,4 +131,4 @@ Wait until Kubernetes complete and log into the master using `https://[kube-mast
 Summary
 -------
 
-Now that these steps are completed, the Digital Rebar Provision dynamic inventory script can be used in any number of ways. 
+Now that these steps are completed, the Digital Rebar Provision dynamic inventory script can be used in any number of ways.

@@ -100,7 +100,7 @@ For non-isolated (aka "production mode") :ref:`rs_install`, update this way:
 
 #. Install new code - Use the same install technique as the first install, adding the ``--upgrade`` option.  :ref:`rs_install`
    ::
-     
+
      tools/install.sh --isolated --upgrade install
 
 #. Start up dr-provision
@@ -122,22 +122,22 @@ Version to Version Notes
 
 In this section, notes about migrating from one release to another will be added.
 
-Release Notes for each version can be found at:  https://github.com/digitalrebar/provision/releases 
+Release Notes for each version can be found at:  https://github.com/digitalrebar/provision/releases
 
 v3.0.0 to v3.0.1
 ----------------
-If parameters were added to machines or global, these will need to be manually re-added to the machine or 
+If parameters were added to machines or global, these will need to be manually re-added to the machine or
 global profile, respectively.  The machine's parameter setting cli is unchanged.  The global parameters will
 need to be changed to a profiles call.
 
   ::
-    
+
     drpcli parameters set fred greg
 
   to
 
   ::
-    
+
     drpcli profiles set global fred greg
 
 
@@ -165,7 +165,7 @@ v3.0.5 to v3.1.0
 ----------------
 `Release Notes for v3.1.0 <https://github.com/digitalrebar/provision/releases/tag/v3.1.0>`_
 
-The v3.1.0 ``install.sh`` script now supports an ``--upgrade`` flag.  Depending on your installation method (eg ``isolated`` or ``production`` mode), the behavior of the flag will alter the installation process slightly.  Please ensure you `Backup`_ your content and configurations first just in case. 
+The v3.1.0 ``install.sh`` script now supports an ``--upgrade`` flag.  Depending on your installation method (eg ``isolated`` or ``production`` mode), the behavior of the flag will alter the installation process slightly.  Please ensure you `Backup`_ your content and configurations first just in case.
 
 For ``isolated`` mode:
 
@@ -194,7 +194,7 @@ In DRP v3.1.0 and newer, the content will be moved by the ``--upgrade`` function
     /var/lib/dr-provision/tftpboot - old "tftpboot" directory
 
 
-.. note:: Digital Rebar Provision version 3.1.0 introduced a new behavior to the ``subnets`` definitions.  ``subnets`` may now be ``enabled`` or ``disableed`` to selectively turn on/off provisioning for a given subnet.  By default, a subnet witll be disabled.  After an upgrade, you MUST enable the subnet for it to function again. See `Subnet Enabled`_ for additional details. 
+.. note:: Digital Rebar Provision version 3.1.0 introduced a new behavior to the ``subnets`` definitions.  ``subnets`` may now be ``enabled`` or ``disableed`` to selectively turn on/off provisioning for a given subnet.  By default, a subnet witll be disabled.  After an upgrade, you MUST enable the subnet for it to function again. See `Subnet Enabled`_ for additional details.
 
 
 Subnet Enabled
@@ -218,9 +218,9 @@ v3.1.0 to v3.2.0
 
 `Release Notes for v3.2.0 <https://github.com/digitalrebar/provision/releases/tag/v3.2.0>`_
 
-There are fairly significant updates to the DRP Contents structure and layout in v3.2.0.  If you are upgrading to v3.2.0 you must remove any Digital Rebar and RackN content that you have installed in your Provisioning endpoint.  The following outline will help you understand the necessary steps.  If you have any issues with the upgrade process, please drop by the Slack #community channel for additional help. 
+There are fairly significant updates to the DRP Contents structure and layout in v3.2.0.  If you are upgrading to v3.2.0 you must remove any Digital Rebar and RackN content that you have installed in your Provisioning endpoint.  The following outline will help you understand the necessary steps.  If you have any issues with the upgrade process, please drop by the Slack #community channel for additional help.
 
-Please read the steps through carefully, and make note of the current contents/plugins you currently have installed.  You will have to re-add these elements again.  You absolutely should backup your existing install prior to this upgrade. 
+Please read the steps through carefully, and make note of the current contents/plugins you currently have installed.  You will have to re-add these elements again.  You absolutely should backup your existing install prior to this upgrade.
 
   1. Overview
 
@@ -277,7 +277,7 @@ Please read the steps through carefully, and make note of the current contents/p
 
     To facilitate version tracking, plugins provide their own content as a injected content from the plugin.  When the plugin is added, it will also add a content layer that will show up in the content packages section.
 
-    Previously, a ``plugin-provider`` was installed separately from a Content of the same name.  
+    Previously, a ``plugin-provider`` was installed separately from a Content of the same name.
 
   6. Fix things up
 
@@ -366,9 +366,9 @@ Prior to restart Digital Rebar Provision endpoint - you may need to fix the Mach
     dr-provision2018/01/07 15:14:01.275082 Extracting Default Assets
     panic: assignment to entry in nil map
 
-To correct the problem, you will need to edit your JSON configuration files for your Machines. You can find your Machines spec files in ``/var/lib/dr-provision/digitalrebar/machines`` if you are running in *production* mode install.  If you are running in *isolated* mode, you will need to locate your ``drp-data`` directory which is in the base directory where you performed the install at; the machines directory will be ``drp-data/digitalrebar/machines``. 
+To correct the problem, you will need to edit your JSON configuration files for your Machines. You can find your Machines spec files in ``/var/lib/dr-provision/digitalrebar/machines`` if you are running in *production* mode install.  If you are running in *isolated* mode, you will need to locate your ``drp-data`` directory which is in the base directory where you performed the install at; the machines directory will be ``drp-data/digitalrebar/machines``.
 
-There may be two ``Meta`` tags.  You do NOT need to modify the ``Meta`` tag that is located in the *Params* section.  
+There may be two ``Meta`` tags.  You do NOT need to modify the ``Meta`` tag that is located in the *Params* section.
 
 Change the first ``Meta`` tag as follows:
   ::

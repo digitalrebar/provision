@@ -91,7 +91,7 @@ DigiatlRebar Provision uses Swagger to generate interactive help for the API.  T
     -        url = "http://petstore.swagger.io/v2/swagger.json";
     +        url = "https://127.0.0.1:8092/swagger.json";
            }
-     
+
            hljs.configure({
 
 * Rebuild the world (**tools/build.sh**)

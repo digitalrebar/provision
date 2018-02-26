@@ -15,7 +15,7 @@ The Digital Rebar Provision Command Line Interface (drpcli) provides a simplifie
 Overview
 ========
 
-The CLI provides help for commands and follows a pattern of chained parameters with a few flags for additional 
+The CLI provides help for commands and follows a pattern of chained parameters with a few flags for additional
 modifications.
 
 Some examples are:
@@ -57,7 +57,7 @@ Endpoint RS_ENDPOINT          -E or --endpoint URL for access, https://IP:PORT. 
 Another useful flag is *--format*.  this will change the tool output to YAML instead of JSON.  This can
 be helpful when editing files by hand.  e.g. *--format yaml*
 
-For Bash users, the drpcli can generate its own bash completion file.  Once generated, it is necessary to restart 
+For Bash users, the drpcli can generate its own bash completion file.  Once generated, it is necessary to restart
 the terminal/shell or reload the completions.
 
 .. admonition:: linux

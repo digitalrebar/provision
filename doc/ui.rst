@@ -92,7 +92,7 @@ Reservations may contain options to be applied to connected servers, which are a
 Leases
 ------
 
-Leases show individual links between tokens and addresses, created through reservation or subnet strategies. Leases remain valid for short periods of time, and cannot be edited. 
+Leases show individual links between tokens and addresses, created through reservation or subnet strategies. Leases remain valid for short periods of time, and cannot be edited.
 
 The expiration time of each lease is visible through the UI. Once a lease has expired, it may be removed.
 
@@ -110,6 +110,6 @@ Within a task, templates are processed in the order they are assigned, so it's i
 Jobs
 -----
 
-A job defines a machine's current step in its boot process. After completing a job, the machine creates a new job from the next instruction in the machine's task list. 
+A job defines a machine's current step in its boot process. After completing a job, the machine creates a new job from the next instruction in the machine's task list.
 
 Machines will only process one job at a time, and jobs aren't created until the instant they are required.

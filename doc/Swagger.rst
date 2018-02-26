@@ -11,7 +11,7 @@ To access the Swagger web interface, point your web browser at your DRP Endpoint
 
     https://<IP_ADDRESS>:8092/swagger-ui
 
-Insure that the input form contains the same *IP_ADDRESS* reference as your DRP Endpoint.  Click the *Authorize* button to obtain an API Token from the Username/Password authentication.  
+Insure that the input form contains the same *IP_ADDRESS* reference as your DRP Endpoint.  Click the *Authorize* button to obtain an API Token from the Username/Password authentication.
 
 Default credentials are:
 

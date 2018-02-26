@@ -14,6 +14,6 @@ CLI Commands Reference
    :glob:
    :numbered:
    :maxdepth: 1
-   
+
    cli/*
 

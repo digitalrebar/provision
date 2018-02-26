@@ -49,7 +49,7 @@ Configuration Options
 Using ``dr-provision --help`` will provide the most complete list of configuration options.  The following common items are provided for reference.  Please note these may change from version to version, check the current scripts options with the ``--help`` flag to verify current options.
 
   ::
-  
+
       --version                Print Version and exit
       --disable-provisioner    Disable provisioner
       --disable-dhcp           Disable DHCP
@@ -72,7 +72,7 @@ Prerequisites
 -------------
 
 **dr-provision** requires two applications to operate correctly, **bsdtar** and **7z**.  These are used to extract the contents
-of iso and tar images to be served by the file server component of **dr-provision**.  The ``install.sh`` script will attempt to ensure these packages are installed by default.  However, if you are installing via manual process or baking your own installer, you must ensure these prerequisistes are met. 
+of iso and tar images to be served by the file server component of **dr-provision**.  The ``install.sh`` script will attempt to ensure these packages are installed by default.  However, if you are installing via manual process or baking your own installer, you must ensure these prerequisistes are met.
 
 For Linux, the **bsdtar** and **p7zip** packages are required.
 
@@ -93,14 +93,14 @@ For Linux, the **bsdtar** and **p7zip** packages are required.
 
 At this point, the server can be started.
 
-.. note:: In a future release, the required packages may be removed, which will help ensure cross-platform compatibility without relying on these external dependencies. 
+.. note:: In a future release, the required packages may be removed, which will help ensure cross-platform compatibility without relying on these external dependencies.
 
 Running The Server
 ------------------
 
 Additional support materials in :ref:`rs_faq`.
 
-The **install.sh** script provides two options for running **dr-provision**.  
+The **install.sh** script provides two options for running **dr-provision**.
 
 The default values install the server and cli in /usr/local/bin.  It will also put a service control file in place.  Once that finishes, the appropriate service start method will run the daemon.  The **install.sh** script prints out the command to run
 and enable the service.  The method described in the :ref:`rs_quickstart` can be used to deploy this way if the
@@ -169,7 +169,7 @@ or, in "production" mode:
 
 Start the "dr-provision" binary as an ordinary user, and now it will have permission to bind to privileged ports 67 and 69.
 
-.. note:: The *setcap* command must reference the actual binary itself, and can not be pointed at a symbolic link.  Additional refinement of the capabilities may be possible.  For extremely security conscious setups, you may want to refer to the StackOverflow discussion (eg setting capabilities on a per-user basis, etc.): 
+.. note:: The *setcap* command must reference the actual binary itself, and can not be pointed at a symbolic link.  Additional refinement of the capabilities may be possible.  For extremely security conscious setups, you may want to refer to the StackOverflow discussion (eg setting capabilities on a per-user basis, etc.):
   https://stackoverflow.com/questions/1956732/is-it-possible-to-configure-linux-capabilities-per-user
 
 System Logs
