@@ -246,7 +246,7 @@ Content configuration is the most complex topic with Digital Rebar Provision.  T
 
     ::
 
-      drpcli machines stages <UUID> ubuntu-16.04-install
+      drpcli machines stage <UUID> ubuntu-16.04-install
 
   5. Reboot your Machine - it should now kick off a BootEnv install as you specified above.
 
@@ -284,9 +284,9 @@ For more detailed installation information, see: :ref:`rs_install`
 Clean Up
 --------
 
-Once you are finished exploring Digital Rebar Provision in isolated mode, the system can cleaned by removing the directory containing the isolated install.  In the previous sections, we used ''drp'' as the directory containing the isolated install.  Removing this directory will cleanup in the installed files.
+Once you are finished exploring Digital Rebar Provision in isolated mode, the system can cleaned by removing the directory containing the isolated install.  In the previous sections, we used ''drp'' as the directory containing the isolated install.  Removing this directory will clean up the installed files.
 
-For production deployments, the ``install.sh`` script can be run with the ``remove`` argument instead of the ``install`` argument to clean up the system.
+For production deployments, the ``install.sh`` script can be run with the ``remove`` argument instead of the ``install`` argument to clean up the system.  This will not remove the data files stored in ``/var/lib/dr-provision``, ``/etc/dr-provision``, or ``/usr/share/dr-provision``.  To remove those files, you will need to run ``sudo rm -rf /var/lib/dr-provision /etc/dr-provision /usr/share/dr-provision`` or add ``--remove-data`` to the ``remove`` script.
 
 Ports
 -----
