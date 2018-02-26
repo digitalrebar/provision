@@ -58,3 +58,10 @@ the resulting build available in the `releases <https://github.com/digitalrebar/
 Additionally, as releases cut at stable points, the **stable** tag will be set to the new most recent milestone.
 Release notes and comments will be added to the github release page.
 
+Release Notes
+-------------
+
+Each of the release specific changes are annotated in the Release Notes documentation.  You can find the release notes
+at:
+
+   https://github.com/digitalrebar/provision/releases 
