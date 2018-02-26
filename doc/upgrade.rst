@@ -427,7 +427,7 @@ The Task subsystem has been updated to default to `sane-exit-codes`.  This is a 
 the default of `original-exit-codes`.  This was done to address the need of task authors to
 match some basic assumptions about exit codes.  *1* should be a fail and not reboot your box.
 
-Additionally, the default UX redirect has changed to the `stable portal <https://portal.rackn.io`_.
+Additionally, the default UX redirect has changed to the `stable portal <https://portal.rackn.io>`_.
 This will result in more stable UX experience.
 
 Local UI Removed
