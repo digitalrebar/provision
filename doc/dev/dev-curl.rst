@@ -11,22 +11,22 @@ Using CURL with the API
 
 In many cases, it is helpful to test the API using CURL commands.
 
-.. note: This topic is covered in several areas, please try and consolidate them into this page1 
+.. note: This topic is covered in several areas, please try and consolidate them into this page1
 
 
 Here is the basic structure of a curl command using an auth token
 
-  :: 
+  ::
 
     ./drpcli users token [username]
   	export TOKEN=[token]
-  	curl -H "Authorization: Bearer $TOKEN" --insecure https//[endpoint url]/api/v3/info 
+  	curl -H "Authorization: Bearer $TOKEN" --insecure https//[endpoint url]/api/v3/info
 
 You can also use user security
 
-  :: 
+  ::
 
-  	curl --user rocketskates:r0cketsk8ts --insecure https//[endpoint url]/api/v3/info 
+  	curl --user rocketskates:r0cketsk8ts --insecure https//[endpoint url]/api/v3/info
 
 
 .. note: the ``--insecure`` flag is needed if you are using self-signed certificates.

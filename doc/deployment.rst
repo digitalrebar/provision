@@ -22,7 +22,7 @@ The :ref:`rs_api` doesn't change based upon these flags, only the services being
 DHCP Disabled
 -------------
 
-If a DHCP environment already exists or a more declarative mode is more desirable, there are a couple of things in each case to be aware of.  
+If a DHCP environment already exists or a more declarative mode is more desirable, there are a couple of things in each case to be aware of.
 For either case, the underlying assumption is that something will direct the node to use
 the provisioner as its *NextBoot* server.
 

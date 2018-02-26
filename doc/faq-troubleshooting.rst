@@ -48,7 +48,7 @@ It may be necessary to install the openssl tools.
 Add SSH Keys to Authorized Keys
 -------------------------------
 
-VIDEO TUTORIAL: https://www.youtube.com/watch?v=StQql8Xn08c 
+VIDEO TUTORIAL: https://www.youtube.com/watch?v=StQql8Xn08c
 
 To have provisioned operating systems (including discovery/sledgehammer) add SSH keys, you should set the ``access-keys`` parameter with a hash of the desired keys.  This Param should be applied to the Machines you wish to update, either directly via adding the Param to the Machines, or by adding the Param to a Profile that is subsequently added to the Machines.  NOTE that the ``global`` Profile applies to all Machines, and you can add it to ``global`` should you desire to add the set of keys to ALL Machines being provisioned.
 
@@ -68,7 +68,7 @@ The below example adds *User1* and *User2* SSH keys to the profile *my-profile*.
     END_KEYS
 
     drpcli profiles update my-profile -< keys.json
-    
+
 .. _rs_access_ssh_root_mode:
 
 Set SSH Root Mode
@@ -91,13 +91,13 @@ value                     definition
 Turn on autocomplete for the CLI
 --------------------------------
 
-The DRP CLI has built in support to generate autocomplete (tab completion) capabilities for the BASH shell.  To enable, you must generate the autocomplete script file, and add it to your system.  This can also be added to your global shell ``rc`` files to enable autocompletion every time you log in.  NOTE that most Linux distros do this slightly differently.  Select the method that works for your distro.  
+The DRP CLI has built in support to generate autocomplete (tab completion) capabilities for the BASH shell.  To enable, you must generate the autocomplete script file, and add it to your system.  This can also be added to your global shell ``rc`` files to enable autocompletion every time you log in.  NOTE that most Linux distros do this slightly differently.  Select the method that works for your distro.
 
-You must specify a filename as an argument to the DRP CLI autocomplete command.  The filename will be created with the autocomplete script.  If you are writing to system areas, you need ``root`` access (eg via `sudo`).  
+You must specify a filename as an argument to the DRP CLI autocomplete command.  The filename will be created with the autocomplete script.  If you are writing to system areas, you need ``root`` access (eg via `sudo`).
 
 For Debian/Ubuntu and RHEL/CentOS distros:
   ::
-  
+
     sudo drpcli autocomplete /etc/bash_completion.d/drpcli
 
 For Mac OSX (Darwin):
@@ -109,7 +109,7 @@ Once the autocomplete file has been created, either log out and log back in, or 
   ::
 
     source /etc/bash_completion.d/drpcli
-    
+
 .. _rs_more_debug:
 
 Turn Up the Debug
@@ -124,7 +124,7 @@ Missing VBoxNet Network
 
 Virtual Box does not add host only networks until a VM is attempting to use them.  If you are using the interfaces API (or UX wizard) to find available networks and ``vboxnet0`` does not appear then start your VM and recreate the address.
 
-Virtual Box may also fail to allocate an IP to the host network due to incomplete configuration.  In this case, ``ip addr`` will show the network but no IPv4 address has been allocated; consequently, Digital Rebar will not report this as a working interface. 
+Virtual Box may also fail to allocate an IP to the host network due to incomplete configuration.  In this case, ``ip addr`` will show the network but no IPv4 address has been allocated; consequently, Digital Rebar will not report this as a working interface.
 
 .. _rs_debug_sledgehammer:
 
@@ -169,15 +169,15 @@ The contents and structure of these locations is the same.  Follow the below pro
 Custom Kickstart and Preseeds
 -----------------------------
 
-Starting with ``drp-community-content`` version 1.5.0 and newer, you can now define a custom Kickstart or Preseed (aka *kickseed*) to override the defaults in the selected BootEnv.  You simply need to only define a single Param (``select-kickseed``) with the name of the Kickstart or Preseed you wish to override the default value. 
+Starting with ``drp-community-content`` version 1.5.0 and newer, you can now define a custom Kickstart or Preseed (aka *kickseed*) to override the defaults in the selected BootEnv.  You simply need to only define a single Param (``select-kickseed``) with the name of the Kickstart or Preseed you wish to override the default value.
   ::
-    
+
     export UUID="f6ca7bb6-d74f-4bc1-8544-f3df500fb15e"
     drpcli machines set $UUID param select-kickseed to "my_kickstart.cfg"
 
-Of course, you can apply a Param to a Profile, and apply that Profile to a group of Machines if desired. 
+Of course, you can apply a Param to a Profile, and apply that Profile to a group of Machines if desired.
 
-.. note:: The Digital Rebar default kickstart and preseeds have Digital Rebar specific interactions that may be necessary to replicate.  Please review the default kickstart and preseeds for patterns and examples you may need to re-use.   We HIGHLY recommend you start with a `clone` operation of an existing Kickstart/Preseed file; and making appropriate modifications from that as a baseline. 
+.. note:: The Digital Rebar default kickstart and preseeds have Digital Rebar specific interactions that may be necessary to replicate.  Please review the default kickstart and preseeds for patterns and examples you may need to re-use.   We HIGHLY recommend you start with a `clone` operation of an existing Kickstart/Preseed file; and making appropriate modifications from that as a baseline.
 
 
 .. _rs_download_rackn_content:
@@ -185,7 +185,7 @@ Of course, you can apply a Param to a Profile, and apply that Profile to a group
 Download RackN Content via Command Line
 ---------------------------------------
 
-If you need to download RackN content requiring authentication, you can do this via the command line by adding Auth Token to the download URL.  Your Auth Token is your RackN UserID (UUID) found after logging in to the `RackN Portal User Management panel <https://portal.rackn.io/#/user/>`_. 
+If you need to download RackN content requiring authentication, you can do this via the command line by adding Auth Token to the download URL.  Your Auth Token is your RackN UserID (UUID) found after logging in to the `RackN Portal User Management panel <https://portal.rackn.io/#/user/>`_.
 
 Here is an example download using our Auth Token, and using the Catalog to locate the correct download URL based on our DRP Endpoint OS and Architecture:
   ::
@@ -215,11 +215,11 @@ Update Community Content via Command Line
 
 Here's a brief example of how to upgrade the Community Content installed in a DRP Endpoint using the command line.  Please note that some RackN specific content requires authentication to download, while community content does not.   See :ref:`rs_download_rackn_content` for additional steps with RackN content.
 
-Perform the following steps to obtain new content.  
+Perform the following steps to obtain new content.
 
 View our currently installed Content version:
   ::
-  
+
     $ drpcli contents show drp-community-content | jq .meta.Version
       "v1.4.0-0-ec1a3fa94e41a2d6a83fe8e6c9c0e99c5a039f79"
 
@@ -229,14 +229,14 @@ Get our new version (in this example, explicitly set version to ``v1.5.0``.  How
     export VER="v1.5.0"
     curl -sfL -o drp-cc.yaml https://github.com/digitalrebar/provision-content/releases/download/${VER}/drp-community-content.yaml
 
-It is suggested that you view this file and insure it contains the content/changes you are expecting.   
+It is suggested that you view this file and ensure it contains the content/changes you are expecting.
 
-Now update the content.  
+Now update the content.
 
-.. note:: Content that is marked *writable* (field ``"ReadOnly": false``) may need to be destroyed, and recreated if it's currently in use on other objects.  For *read only* content you can safely update the content. 
+.. note:: Content that is marked *writable* (field ``"ReadOnly": false``) may need to be destroyed, and recreated if it's currently in use on other objects.  For *read only* content you can safely update the content.
 
   ::
-    
+
     $ drpcli contents update drp-community-content -< drp-cc.yaml
       {
         "Counts": {
@@ -248,7 +248,7 @@ Now update the content.
           "templates": 15
       <...snip...>
 
-Now verify that our installed content matches the new vesion we expected ... 
+Now verify that our installed content matches the new vesion we expected ...
   ::
 
     $ drpcli contents show drp-community-content | jq .meta.Version
@@ -270,9 +270,9 @@ The Golang templating language does not provide a call-out to include another te
     {{$templateName := (printf "part-seed-%s.tmpl" (.Param "part-scheme")) -}}
     {{.CallTemplate $templateName .}}
 
-The ``template`` construct is a text string that refers to a given template name which exists already.  
+The ``template`` construct is a text string that refers to a given template name which exists already.
 
-The ``CallTemplate`` construct can be a variable or expression that evaluates to a string. 
+The ``CallTemplate`` construct can be a variable or expression that evaluates to a string.
 
 
 .. _rs_change_machine_name:
@@ -291,24 +291,25 @@ If you wish to update/change a Machine Name, you can do:
 
 UEFI Boot Support - Option 67
 -----------------------------
-Starting with v3.7.0 and newer, a DHCP Subnet specification will try to automatically determine the correct values for the ``next-server`` and *DHCP Option 67* values.  In most cases, you shouldn't need to change this.  However, if you are using a VirtualBox environment, you will need to specify DHCP Option 67; as VirtualBox has a broken iPXE implementation.  Older versions of DRP may need the ``next-boot`` and/or the *DHCP Option 67* values set to work correctly. 
+Starting with v3.7.1 and newer, a DHCP Subnet specification will try to automatically determine the correct values for the ``next-server`` and *DHCP Option 67* values.  In most cases, you shouldn't need to change this.  Older versions of DRP may need the ``next-boot`` and/or the *DHCP Option 67* values set to work correctly.  This is especially true of Virtualbox environments prior to v3.7.1.  You will need to force the *DHCP Option 67* to ``lpxelinux.0``.
 
-The DHCP service in Digital Rebar Provision can support fairly complex boot file service.  You can use advanced logic to insure you send the right PXE boot file to a client, based on Legacy BIOS boot mode, or UEFI boot mode.  Note that UEFI boot mode can vary dramatically in implementations, and some (sadly; extensive) testing may be necessary to get it to work for your system.  We have several reports of field deployments with various UEFI implementations working with the new v3.7.0 and newer "magic" Option 67 values.   
+The DHCP service in Digital Rebar Provision can support fairly complex boot file service.  You can use advanced logic to ensure you send the right PXE boot file to a client, based on Legacy BIOS boot mode, or UEFI boot mode.  Note that UEFI boot mode can vary dramatically in implementations, and some (sadly; extensive) testing may be necessary to get it to work for your system.  We have several reports of field deployments with various UEFI implementations working with the new v3.7.0 and newer "magic" Option 67 values.
 
 Here is an example of an advanced Option 67 parameter for a DHCP Subnet specification:
+
   ::
-    
-    {{if (eq (index . 77) "iPXE") }}default.ipxe{{else if (eq (index . 93) "0")}}lpxelinux.0{{else}}bootx64.efi{{end}} 
 
-If you run in to issues with UEFI boot support - please do NOT hesitate to contact us on the `Slack Channel <https://www.rackn.com/support/slack>`_ as we may have updated info to help you with UEFI boot support.  
+    {{if (eq (index . 77) "iPXE") }}default.ipxe{{else if (eq (index . 93) "0")}}lpxelinux.0{{else}}bootx64.efi{{end}}
 
-An example of adding this to your Subnet specification might look something like: 
+If you run in to issues with UEFI boot support - please do NOT hesitate to contact us on the `Slack Channel <https://www.rackn.com/support/slack>`_ as we may have updated info to help you with UEFI boot support.
+
+An example of adding this to your Subnet specification might look something like:
   ::
 
     # assumes your subnet name is "eth1" - change it to match your Subnet name:
     # you may need to delete the existing value if there is one, first, by doing:
-    # drpcli subnets set eth1 option 67 to null 
-    drpcli subnets set eth1 option 67 to '"lpxelinux.0" {{if (eq (index . 77) "iPXE") }}default.ipxe{{else if (eq (index . 93) "0")}}lpxelinux.0{{else}}bootx64.efi{{end}}'
+    # drpcli subnets set eth1 option 67 to null # The setting to null is not needed with v3.7.1 and beyond.
+    drpcli subnets set eth1 option 67 to '{{if (eq (index . 77) "iPXE") }}default.ipxe{{else if (eq (index . 93) "0")}}lpxelinux.0{{else}}bootx64.efi{{end}}'
 
 .. _rs_jq_examples:
 
@@ -321,16 +322,16 @@ JQ Raw Mode
 Raw JSON output is usefull when passing the results of one ``jq`` command in to another for scripted interaction.  Be sure to specify "Raw" mode in this case - to prevent colorization and extraneous quotes being wrapped around Key/Value data output.
   ::
 
-      <some command> | jq -r ... 
+      <some command> | jq -r ...
 
 .. _rs_filter_gohai:
 
 Filter Out gohai-inventory
 ==========================
 
-The ``gohai-inventory`` module is extremely useful for providing Machine classification information for use by other stages or tasks.  However, it is very long and causes a lot of content to be output to the console when listing Machine information.  Using a simple ``jq`` filter, you can delete the ``gohai-inventory`` content from the output display. 
+The ``gohai-inventory`` module is extremely useful for providing Machine classification information for use by other stages or tasks.  However, it is very long and causes a lot of content to be output to the console when listing Machine information.  Using a simple ``jq`` filter, you can delete the ``gohai-inventory`` content from the output display.
 
-Note that since the Param name is ``gohai-inventory``, we have to provide some quoting of the Param name, since the dash (``-``) has special meaning in JSON parsing.  
+Note that since the Param name is ``gohai-inventory``, we have to provide some quoting of the Param name, since the dash (``-``) has special meaning in JSON parsing.
   ::
 
     drpcli machines list | jq 'del(.[].Params."gohai-inventory")'
@@ -354,7 +355,7 @@ Reformat Output With Specific Keys
 
 Get list of machines, output "Name:Uuid" pairs from the the JSON output:
   ::
-      
+
     drpcli machines list | jq -r '.[] | "\(.Name):\(.Uuid)"'
 
 Output is printed as follows:

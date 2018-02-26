@@ -13,12 +13,12 @@ This section will attempt to describe common operations and actions that can be 
 
 Some of these operations are in the :ref:`rs_ui`, but not all.  This will focus on CLI usage for now.  See the :ref:`rs_ui` section for UI usage.
 
-.. note:: **drpcli** normally spits out JSON formatted objects or an array of objects.  To help with some of the command line functions, we use the **jq** tool.  This is available for both Linux and Darwin.  You can specify output format to be YAML, with the ``--format=yaml`` flag. 
+.. note:: **drpcli** normally spits out JSON formatted objects or an array of objects.  To help with some of the command line functions, we use the **jq** tool.  This is available for both Linux and Darwin.  You can specify output format to be YAML, with the ``--format=yaml`` flag.
 
 Using the ``drpcli`` tool
 +++++++++++++++++++++++++
 
-The ``drpcli`` tool is designed to provide a single, easy to use compiled stand alone binary.  It very closely mimics the API call parameters and usage, and allows for easy "transition" between the use of the CLI binary, and the use of the API calls. 
+The ``drpcli`` tool is designed to provide a single, easy to use compiled stand alone binary.  It very closely mimics the API call parameters and usage, and allows for easy "transition" between the use of the CLI binary, and the use of the API calls.
 
 We assume that you have the binary in your ``PATH`` somewhere (``/usr/local/bin/drpcli`` in "production" mode by default).  If you are using an "isolated" install mode, you will need to link the correct binary in to an apprpriate directory in your PATH.  For example:
 
@@ -47,7 +47,7 @@ Note that the CLI syntax closely follows the API calls.  For example:
 Would be equivalent to the HTTP REST API resource as follows:
 
   ::
-    
+
     https://127.0.0.1:8092/api/v3/templates/ereate
 
 .. note:: See the :ref:`rs_autocomplete` for BASH shell auto completion.
@@ -56,9 +56,9 @@ Would be equivalent to the HTTP REST API resource as follows:
 Preference Setting
 ++++++++++++++++++
 
-By default Digital Rebar Provision (DRP) attempts to "do no harm".  This means that by default, any system that receives a DHCP lease from the DRP Endpoint, will by default, be set to ``local`` mode, which means boot from local disks.  You must explicitly change this behavior to enable provisioning activities of Machines. 
+By default Digital Rebar Provision (DRP) attempts to "do no harm".  This means that by default, any system that receives a DHCP lease from the DRP Endpoint, will by default, be set to ``local`` mode, which means boot from local disks.  You must explicitly change this behavior to enable provisioning activities of Machines.
 
-It is necessary to get or set the preferences for the system, to enable OS Installs (BootEnvs). 
+It is necessary to get or set the preferences for the system, to enable OS Installs (BootEnvs).
 
   ::
 
@@ -88,7 +88,7 @@ BootEnv Operations
 A :ref:`rs_model_bootenv` is the primary component for an Operating System installation definition.  A :ref:`rs_model_bootenv` is comprised of two primary pieces:
 
   #. A :ref:`rs_model_bootenv` JSON/YAML specification
-  #. (usually) an ISO Image that installs that :ref:`rs_model_bootenv` 
+  #. (usually) an ISO Image that installs that :ref:`rs_model_bootenv`
 
 The JSON/YAML specification will contain a set of definitions for the ISO image.  The default distributed :ref:`rs_model_bootenv` specs use the public mirror repos for the ISO images.  You can create a customer :ref:`rs_model_bootenv` with a pointer to your own hosted ISO images.  An example looks something like:
 
@@ -193,7 +193,7 @@ is optional, but I find YAML easier to edit.
 Subnet Operations
 +++++++++++++++++
 
-Subnet definitions provide the necessary information for DHCP IP Address lease assignments, and allows Machines to be enrolled/discovered by a DRP Endpoint.  For any Layer 2 subnet/network that you wish to install Machines from, you must also specify a Subnet definition for.  In some environments, a Subnet definition may not be needed to allow Machines to be discovered. 
+Subnet definitions provide the necessary information for DHCP IP Address lease assignments, and allows Machines to be enrolled/discovered by a DRP Endpoint.  For any Layer 2 subnet/network that you wish to install Machines from, you must also specify a Subnet definition for.  In some environments, a Subnet definition may not be needed to allow Machines to be discovered.
 
 Cloning a Subnet
 ----------------
@@ -204,7 +204,7 @@ It might be necessary to create a new subnet from an existing one.  To do this, 
 
     drpcli subnets show eth0 | jq -r > new_subnet.json
     # edit the new_subnet.json file with the new information
-    drpcli subnets create -< new_subnet.json 
+    drpcli subnets create -< new_subnet.json
 
 Creating a new Subnet
 ---------------------
@@ -235,11 +235,11 @@ of the keys will be autofilled with reasonable defaults.
 
     drpcli subnets create -< /tmp/local_subnet.json
 
-Note that the "Description" is purely cosmetic and not used - however, it can be safely specified as it'll be ignored (it's added here for the readers reference).  You must provide the minimum DHCP Options as specified above.  You can find a complete set of DHCP Options at: 
+Note that the "Description" is purely cosmetic and not used - however, it can be safely specified as it'll be ignored (it's added here for the readers reference).  You must provide the minimum DHCP Options as specified above.  You can find a complete set of DHCP Options at:
 
   https://www.iana.org/assignments/bootp-dhcp-parameters/bootp-dhcp-parameters.xhtml
 
-For complete documentation and information you can find the DHCP Options officially documented in `RFC2132 <https://tools.ietf.org/html/rfc2132>`_ 
+For complete documentation and information you can find the DHCP Options officially documented in `RFC2132 <https://tools.ietf.org/html/rfc2132>`_
 
 Updating a Subnet
 -----------------
@@ -279,7 +279,7 @@ Update a subnet to set it to disabled (do not discover, and do not provision on 
 Update a subnet with the contents of the specified JSON file, for subnet "local_subnet":
   ::
 
-    drpcli subnets update local_subnet -< update-local_subnet.json 
+    drpcli subnets update local_subnet -< update-local_subnet.json
 
 Deleting a Subnet
 -----------------
@@ -288,7 +288,7 @@ To remove a Subnet and subsequently cease PXE provisioning operations for that S
 
   ::
 
-    drpcli subnets destroy local_subnet 
+    drpcli subnets destroy local_subnet
 
 List and Show Subnets
 ---------------------
@@ -349,7 +349,7 @@ If there already is a template present, then it can be replaced with the upload 
 Param Operations
 ++++++++++++++++
 
-:ref:`rs_model_param` are simply key/value pairs.  However, DRP provides a strong typing model to enforce a specific type to a given Param.  This insures that Param values are valid elements as designed by the operator.
+:ref:`rs_model_param` are simply key/value pairs.  However, DRP provides a strong typing model to enforce a specific type to a given Param.  This ensures that Param values are valid elements as designed by the operator.
 
 Creating a Param
 ----------------
@@ -376,7 +376,7 @@ In this example, the type ``string`` was defined for the param.
 Deleting a Param
 ----------------
 
-It might be necessary to delete a :ref:`rs_model_param`. 
+It might be necessary to delete a :ref:`rs_model_param`.
 
   ::
 
@@ -535,7 +535,7 @@ It might be necessary to change the :ref:`rs_model_bootenv` associated with a :r
 Rename a Machine
 ----------------
 
-By default, machines are given names based on the machines primary network MAC address.  Most infrastructure environments need to rename machines to fall in line with a naming scheme in use with the company.   To do that safely, we will use the existing Machins object information as a baseline to apply a Patch operation to the JSON.  This is a two step process that is completed in the following example: 
+By default, machines are given names based on the machines primary network MAC address.  Most infrastructure environments need to rename machines to fall in line with a naming scheme in use with the company.   To do that safely, we will use the existing Machins object information as a baseline to apply a Patch operation to the JSON.  This is a two step process that is completed in the following example:
 
 
 First lets define the Machine (UUID) that we're going to operate on, and lets get the current name of the machine for reference (``fred`` in this case).
@@ -548,7 +548,7 @@ First lets define the Machine (UUID) that we're going to operate on, and lets ge
     drpcli machines show $UUID | jq '.Name'
     "fred"
 
-We now need to obtain the Machine object JSON tha we are going to apply the patch against. 
+We now need to obtain the Machine object JSON tha we are going to apply the patch against.
   ::
 
     # get current machine object that we want to reference the change against
@@ -572,10 +572,10 @@ Here is a single command example (using our ``$UUID`` variable above) that does 
 
     drpcli machines update $UUID '{ "Name": "barney" }' --ref "$(drpcli machines show $UUID)"
 
-You can update "unsafely", but if multiple updates occur, you can't guarantee that you're changing what you expected to (eg. someone/thing else beat you to the punch).  It is almost always a better pattern to insure you make a Machine name change with the use of the ``--ref`` Macine Object.   
+You can update "unsafely", but if multiple updates occur, you can't guarantee that you're changing what you expected to (eg. someone/thing else beat you to the punch).  It is almost always a better pattern to ensure you make a Machine name change with the use of the ``--ref`` Macine Object.
   ::
 
-    # this is a BAD way to do it - as it does not guarantee atomicity 
+    # this is a BAD way to do it - as it does not guarantee atomicity
     drpcli machines update $UUID '{ "Name": "betty" }'
 
     # outputs

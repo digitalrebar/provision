@@ -16,7 +16,7 @@ PXE Provisioning requires hand-offs between multiple services and the nodes.  Ge
 
 In the flow graphics, green steps indicate user actions.
 
-.. _rs_basic_discovery: 
+.. _rs_basic_discovery:
 
 Basic Discovery
 ---------------
@@ -30,7 +30,7 @@ This recommended process allows operators to start with minimal information abou
    :target: https://docs.google.com/a/rackn.com/drawings/d/1FPI8JAyXDHqI9A5pmZd3NVyVdBcSRWeJAzjb_4OWpfI/edit?usp=sharing
 
 
-.. _rs_provision_discovered: 
+.. _rs_provision_discovered:
 
 Provision O/S on Discovered Systems
 -----------------------------------
@@ -42,12 +42,12 @@ Once systems have been discovered using :ref:`rs_basic_discovery`, their machine
    :alt: Install O/S from Discovered Machine
    :target: https://docs.google.com/a/rackn.com/drawings/d/1vDs8_LYIRE6We-Y97Uh5uk639TSQMC866CLxJ2S58VE/edit?usp=sharing
 
-.. _rs_provision_known: 
+.. _rs_provision_known:
 
 Provision O/S on Known Systems
 ------------------------------
 
-:note: This workflow requires users to know their machine information in advance.  
+:note: This workflow requires users to know their machine information in advance.
 
 This is the typical workflow for Cobbler users in which machine definitions are determined in advance using spread sheets, stone tablets, Ouija boards or other 1990s data center inventory management techniques.
 

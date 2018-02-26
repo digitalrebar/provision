@@ -49,7 +49,7 @@ Configuration Options
 Using ``dr-provision --help`` will provide the most complete list of configuration options.  The following common items are provided for reference.  Please note these may change from version to version, check the current scripts options with the ``--help`` flag to verify current options.
 
   ::
-  
+
       --version                Print Version and exit
       --disable-provisioner    Disable provisioner
       --disable-dhcp           Disable DHCP
@@ -72,7 +72,7 @@ Prerequisites
 -------------
 
 **dr-provision** requires two applications to operate correctly, **bsdtar** and **7z**.  These are used to extract the contents
-of iso and tar images to be served by the file server component of **dr-provision**.  The ``intall.sh`` script will attempt to insure these packages are installed by default.  However, if you are installing via manual process or baking your own installer, you must insure these prerequisistes are met. 
+of iso and tar images to be served by the file server component of **dr-provision**.  The ``install.sh`` script will attempt to ensure these packages are installed by default.  However, if you are installing via manual process or baking your own installer, you must ensure these prerequisistes are met.
 
 For Linux, the **bsdtar** and **p7zip** packages are required.
 
@@ -88,19 +88,19 @@ For Linux, the **bsdtar** and **p7zip** packages are required.
 
   The new package, **p7zip** is required, and **tar** must also be updated.  The **tar** program on Darwin is already **bsdtar**
 
-  * 7z - install from homebrew: brew install p7zip
-  * libarchive - update from homebrew to get a functional tar: brew install libarchive
+  * 7z - install from homebrew: ``brew install p7zip``
+  * libarchive - update from homebrew to get a functional tar: ``brew install libarchive --force ; brew link libarchive --force``
 
 At this point, the server can be started.
 
-.. note:: In a future release, the required packages may be removed, which will help insure cross-platform compatibility without relying on these external dependencies. 
+.. note:: In a future release, the required packages may be removed, which will help ensure cross-platform compatibility without relying on these external dependencies.
 
 Running The Server
 ------------------
 
 Additional support materials in :ref:`rs_faq`.
 
-The **install.sh** script provides two options for running **dr-provision**.  
+The **install.sh** script provides two options for running **dr-provision**.
 
 The default values install the server and cli in /usr/local/bin.  It will also put a service control file in place.  Once that finishes, the appropriate service start method will run the daemon.  The **install.sh** script prints out the command to run
 and enable the service.  The method described in the :ref:`rs_quickstart` can be used to deploy this way if the
@@ -127,17 +127,17 @@ Once running, the following endpoints are available:
 * https://127.0.0.1:8092/swagger-ui - swagger-ui to explore the API
 * https://127.0.0.1:8092/swagger.json - API Swagger JSON file
 * https://127.0.0.1:8092/api/v3 - Raw api endpoint
-* https://127.0.0.1:8092/ui - User Configuration Pages (*3.0.x only, removed after 3.1.0*)
 * https://127.0.0.1:8092/ux - Redirects to Community Portal (maintained by RackN)
 * http://127.0.0.1:8091 - Static files served by http from the *test-data/tftpboot* directory
 * udp 69 - Static files served from the test-data/tftpboot directory through the tftp protocol
 * udp 67 - DHCP Server listening socket - will only serve addresses when once configured.  By default, silent.
+* udp 4011 - BINL Server listening socket - will only serve bootfiles when once configured.  By default, silent.
 
-The API, File Server, DHCP, and TFTP ports can be configured, but DHCP and TFTP may not function properly on non-standard ports.
+The API, File Server, DHCP, BINL,  and TFTP ports can be configured, but DHCP, BINL, and TFTP may not function properly on non-standard ports.
 
 If the SSL certificate is not valid, then follow the :ref:`rs_gen_cert` steps.
 
-.. note:: On MAC DARWIN there are two additional steps. First, use the ``--static-ip=`` flag to help the service understand traffic targets.  Second, you may have to add a route for broadcast addresses to work.  This can be done with the following comand.  The 192.168.100.1 is the IP address of the interface that you want to send messages through. The install script will make suggestions for you.
+.. note:: On MAC DARWIN there is one additional step. You may have to add a route for broadcast addresses to work.  This can be done with the following comand.  The 192.168.100.1 is the IP address of the interface that you want to send messages through. The install script will make suggestions for you.
 
   ::
 
@@ -153,7 +153,7 @@ Start DRP Without Root (or sudo)
 
 If you are using DHCPD and TFTPD services of DRP, you will need to be able to bind to port 67 and 69 (respectively).  Typically Unix/Linux systems require root privileges to do this.  DRP doesn't start as root, and then drop privileges with a ``fork()`` to another less privileged user by default.
 
-To enable DRP endpoint to run as a non-privileged user and insure a higher level of security, it's possible to use the Linux "*setcap*" (Capabilities) system to assign rights for the *dr-provision* binary to open low numbered (privileged) ports.  The process is relatively simple, but does (clearly/obviously) require root permissions initially to enable the capabilities for the binary.  Once the capabilities have been set, the *dr-provision* binary can be run as a standard user.
+To enable DRP endpoint to run as a non-privileged user and ensure a higher level of security, it's possible to use the Linux "*setcap*" (Capabilities) system to assign rights for the *dr-provision* binary to open low numbered (privileged) ports.  The process is relatively simple, but does (clearly/obviously) require root permissions initially to enable the capabilities for the binary.  Once the capabilities have been set, the *dr-provision* binary can be run as a standard user.
 
 To enable any non-privileged user to start up the dr-provision binary and bind to privileged ports 67 and 69, do the following:
 
@@ -169,7 +169,7 @@ or, in "production" mode:
 
 Start the "dr-provision" binary as an ordinary user, and now it will have permission to bind to privileged ports 67 and 69.
 
-.. note:: The *setcap* command must reference the actual binary itself, and can not be pointed at a symbolic link.  Additional refinement of the capabilities may be possible.  For extremely security conscious setups, you may want to refer to the StackOverflow discussion (eg setting capabilities on a per-user basis, etc.): 
+.. note:: The *setcap* command must reference the actual binary itself, and can not be pointed at a symbolic link.  Additional refinement of the capabilities may be possible.  For extremely security conscious setups, you may want to refer to the StackOverflow discussion (eg setting capabilities on a per-user basis, etc.):
   https://stackoverflow.com/questions/1956732/is-it-possible-to-configure-linux-capabilities-per-user
 
 System Logs
@@ -183,3 +183,25 @@ Job Log Rotation
 If you are using the jobs system, Digital Rebar Provision stores job logs based on the directory configuration of the system.  This data is considered compliance related information; consequently, the system does not automatically remove these records.
 
 Operators should set up a job log rotation mechanism to ensure that these logs to not exhaust available disk space.
+
+Removal of Digital Rebar Provision
+==================================
+
+To remove Digital Rebar Provision, you can use the *tools/install.sh* script to remove programs for a ``production`` installs.  The *tools/install.sh* script should be run as root or under sudo unless the ``setcap`` process was used.
+
+  ::
+
+    tools/install.sh remove
+
+To remove programs and data use.
+
+  ::
+
+    tools/install.sh --remove-data remove
+
+For *iolated* installs, remove the directory used to contain the isolated install.  In the example above, the directory *dr-provision-install* was used to isolate the install process.  A command like this would clean up the system.
+
+  ::
+
+    sudo rm -rf dr-provision-install
+

@@ -15,9 +15,11 @@
 drp-data
 /dr-provision
 /drpcli
+/default.yaml
 drpcli-docs
 drpcli.amd64.linux
 drpcli.amd64.darwin
+cli/test.log
 bin
 vendor
 coverage.txt

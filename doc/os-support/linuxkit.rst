@@ -136,7 +136,7 @@ use discovered nodes.
 First, start some nodes.  The Digital Rebar team prefers kvm-slave tool that starts KVM on my Digital Rebar Provision network. .e.g. tools/kvm-slave
 Anything that PXEs and can three will work.
 
-Once they are discovered, something like this from **drpcli machines list** should appear: 
+Once they are discovered, something like this from **drpcli machines list** should appear:
 
   ::
 

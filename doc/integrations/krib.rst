@@ -4,11 +4,11 @@
 KRIB (Kubernetes Rebar Immutable Bootstrapping)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This document provides information on how to use the Digital Rebar *KRIB* content add-on.  Use of this content will enable the operator to install Kubernetes in either a Live Boot (immutable infrastructure pattern) mode, or via installed to local hard disk OS mode.  
+This document provides information on how to use the Digital Rebar *KRIB* content add-on.  Use of this content will enable the operator to install Kubernetes in either a Live Boot (immutable infrastructure pattern) mode, or via installed to local hard disk OS mode.
 
-KRIB uses the `kubeadm <https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/>`_ cluster deployment methodology coupled with Digital Rebar enhancements to help proctor the cluster Master election and secrets management.  With this content pack, you can install Kubernetes in a zero-touch manner.  
+KRIB uses the `kubeadm <https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/>`_ cluster deployment methodology coupled with Digital Rebar enhancements to help proctor the cluster Master election and secrets management.  With this content pack, you can install Kubernetes in a zero-touch manner.
 
-.. note:: The `kubeadm` installation and configuration method is very new to the Kubernetes community.  It does not support High Availability of the master, it is still in it's infancy in regards to external networking (SDN, etc) integrations, etc.  The implementation provided via KRIB is intended to demonstrate a *Cluster Provisioning* workflow process.  We do not recommend using this Kubernetes configuration as a production solution.   It could become the base for a strong production deployment, but at this time, does not support production grade features.  
+.. note:: The `kubeadm` installation and configuration method is very new to the Kubernetes community.  It does not support High Availability of the master, it is still in it's infancy in regards to external networking (SDN, etc) integrations, etc.  The implementation provided via KRIB is intended to demonstrate a *Cluster Provisioning* workflow process.  We do not recommend using this Kubernetes configuration as a production solution.   It could become the base for a strong production deployment, but at this time, does not support production grade features.
 
   For production installations, you may be better served by using the Ansible ``kubespray`` playbooks for deployment of the cluster.  See the :ref:`rs_ansible` documentation for further details.
 
@@ -17,7 +17,7 @@ This document assumes you have your Digital Rebar Provisioning endpoint fully co
 KRIB Video References
 ---------------------
 
-The following videos have been produced or presented by RackN related to the Digital Rebar KRIB solution. 
+The following videos have been produced or presented by RackN related to the Digital Rebar KRIB solution.
 
 * `KRIB Zero Config Kubernetes Cluster with RackN <https://youtu.be/OMm6Oz1NF6I>`_ on YouTube - RackN recorded presentation with just KRIB deployment information
 * `KubeCon: Zero Configuration Pattern on Bare Metal <https://youtu.be/Psm9aOWzfWk>`_ on YouTube - RackN presentation at 2017 KubeCon/Cloud NativeCon in Austin TX
@@ -30,9 +30,9 @@ The two primary deployment patterns that the Digital Rebar KRIB content pack sup
 #. Live Boot (immutable infrastructure pattern - references [#]_ [#]_)
 #. Local Install (standard install-to-disk pattern)
 
-The *Live Boot* mode uses an in-memory Linux image based on the Digital Rebar Sledgehammer (CentOS based) image.  After each reboot of the Machine, the node is reloaded with the in-memory live boot image.  This enforces the concept of *immutable infrastructure* - every time a node is booted, deployed, or needs updating, simply reload the latest Live Boot image with appropriate fixes, patches, enhancements, etc. 
+The *Live Boot* mode uses an in-memory Linux image based on the Digital Rebar Sledgehammer (CentOS based) image.  After each reboot of the Machine, the node is reloaded with the in-memory live boot image.  This enforces the concept of *immutable infrastructure* - every time a node is booted, deployed, or needs updating, simply reload the latest Live Boot image with appropriate fixes, patches, enhancements, etc.
 
-The Local Install mode mimics the traditional "install-to-my-disk" method that most people are familiar with. 
+The Local Install mode mimics the traditional "install-to-my-disk" method that most people are familiar with.
 
 Ready State Infrastructure
 --------------------------
@@ -49,12 +49,12 @@ Will provide the appropriate waiting (ready-state) stage to put your Machines in
 KRIB Basics
 -----------
 
-KRIB is essentially nothing more than a Content Pack addition to Digital Rebar, which works with the Open version of Digital Rebar.  It uses the *cluster bootstrapping* support built in to the Digital Rebar solution which provides atomic guarantees.  This allows for a Kubernetes Master to be dynamically elected, forcing all other nodes that fail the *race-to-master* election to wait until the elected master is completed and bootstrapped.  Once the Kubernetes Master is bootstrapped, the Digital Rebar system facilitates the security token hand-off to the Minions that join the cluster, to allow them to join with out any operator intervention.  
+KRIB is essentially nothing more than a Content Pack addition to Digital Rebar, which works with the Open version of Digital Rebar.  It uses the *cluster bootstrapping* support built in to the Digital Rebar solution which provides atomic guarantees.  This allows for a Kubernetes Master to be dynamically elected, forcing all other nodes that fail the *race-to-master* election to wait until the elected master is completed and bootstrapped.  Once the Kubernetes Master is bootstrapped, the Digital Rebar system facilitates the security token hand-off to the Minions that join the cluster, to allow them to join with out any operator intervention.
 
 Elected -vs- Specified Master
 -----------------------------
 
-By default the KRIB process will dynamically elect a Master for the Kubernetes cluster.  This master simply wins the *race-to-master* election process and the rest of the cluster will coalesce around the elected master.   There is no failover mechanisms or High Availability (as *kubeadm* doesn't yet support this pattern).  
+By default the KRIB process will dynamically elect a Master for the Kubernetes cluster.  This master simply wins the *race-to-master* election process and the rest of the cluster will coalesce around the elected master.   There is no failover mechanisms or High Availability (as *kubeadm* doesn't yet support this pattern).
 
 If you wish to specify a specific machine to be the designated Master, you can do so by setting a *Param* in the cluster *Profile* to the specific *Machine* that will be come the master.  To do so, set the ``krib/cluster-master``  *Param* to the UUID of the machine to become master.  You may add this *Param* to the *Profile* in the below specifications, as follows:
 
@@ -73,7 +73,7 @@ The Kubernetes Master will be built on this Machine specified by the *<UUID>* va
 Install KRIB
 ------------
 
-KRIB is a Content Pack and is installed in the standard method as any other Contents.   We need the ``krib.json`` content as well as the ``task-library.json`` content packs to fully support KRIB and install the helper utility contents for stage changes. 
+KRIB is a Content Pack and is installed in the standard method as any other Contents.   We need the ``krib.json`` content as well as the ``task-library.json`` content packs to fully support KRIB and install the helper utility contents for stage changes.
 
 
 CLI Install
@@ -100,7 +100,7 @@ In the UX, follow this process:
 #. Open your DRP Endpoint: (eg. https://127.0.0.1:8092/ )
 #. Authenticate to your Endpoint
 #. Login with your ```RackN Portal Login``` account (upper right)
-#. Go to the left panel "Content Packages" menu 
+#. Go to the left panel "Content Packages" menu
 #. Select ``Kubernetes (KRIB: Kubernetes Rebar Immutable Bootstrapping)`` from the right side panel (you may need to select *Browser for more Content* or use the *Catalog* button)
 #. *also* select the ``task-library`` content
 #. Select the *Transfer* button for both content packs to add the content to your local Digital Rebar endpoint
@@ -121,11 +121,11 @@ The basic outline for configuring KRIB follows the below steps:
 Configure with the CLI
 ======================
 
-The configuration of the Cluster includes a *Stagemap* - and depending on which stage map you use, will determine if the cluster is built via install-to-local-disk or via an immutable pattern (live boot in-memory boot process).   Outside of the stagemap differences, all remaining configuration elements are the same. 
+The configuration of the Cluster includes a *Stagemap* - and depending on which stage map you use, will determine if the cluster is built via install-to-local-disk or via an immutable pattern (live boot in-memory boot process).   Outside of the stagemap differences, all remaining configuration elements are the same.
 
-You must create a *Profile* from YAML (or JSON if you prefer) with the stagemap and param required information. Modify the *Name* or other fields as appropriate - be sure you rename all subsequent fields appropriately.  This example uses CentOS 7 as the BootEnv for the install-to-local-disk option.  
+You must create a *Profile* from YAML (or JSON if you prefer) with the stagemap and param required information. Modify the *Name* or other fields as appropriate - be sure you rename all subsequent fields appropriately.  This example uses CentOS 7 as the BootEnv for the install-to-local-disk option.
 
-Additionally - insure you correctly modify the ``access-keys`` Param to inject your apprpriate SSH public key half or halves appropriately.
+Additionally - ensure you correctly modify the ``access-keys`` Param to inject your apprpriate SSH public key half or halves appropriately.
 
   ::
 
@@ -175,14 +175,14 @@ For an Immutable Kubernetes cluster install, use the below *Profile* with the st
       title: "My Immutable Kubernetes Cluster"
     ' > /tmp/krib-config.yaml
 
-.. note:: ONLY select one of the two above YAML profile options.  
+.. note:: ONLY select one of the two above YAML profile options.
 
-Apply/create the Profile 
+Apply/create the Profile
   ::
 
     drpcli profiles create - < /tmp/krib-config.yaml
 
-.. note:: The following commands should be applied to all of the Machines you wish to enroll in your KRIB cluster.  Each Machine needs to be referenced by the Digital Rebar Machine UUID.  This example shows how to collect the UUIDs, then you will need to assign them to the ``UUIDS`` variable.  We re-use this variable throughout the below documentation within the shell function named *my_machines*.  We also show the correct ``drpcli`` command that should be run for you by the helper function, for your reference. 
+.. note:: The following commands should be applied to all of the Machines you wish to enroll in your KRIB cluster.  Each Machine needs to be referenced by the Digital Rebar Machine UUID.  This example shows how to collect the UUIDs, then you will need to assign them to the ``UUIDS`` variable.  We re-use this variable throughout the below documentation within the shell function named *my_machines*.  We also show the correct ``drpcli`` command that should be run for you by the helper function, for your reference.
 
 Create our helper shell function *my_machines*
   ::
@@ -198,10 +198,10 @@ IF YOU WANT to make ALL Machines in your endpoint use KRIB, do:
   ::
 
     export UUIDS=`drpcli machines list | jq -r '.[].Uuid'`
-    
+
 Otherwise - individually add them to the *UUIDS* variable, like:
   ::
-    
+
     export UUIDS="UUID_1 UUID_2 ... UUID_n"
 
 Add the Profile to your machines that will be enrolled in the cluster
@@ -234,11 +234,11 @@ Change stage on the Machines to initiate the Workflow transition.  YOU MUST sele
     # drpcli machines update <UUID> '{ "Stage": "centos-7-install" }'
 
 
-For the *install-to-local-disk* mode, you now need to reboot the Machines you modified above.  
+For the *install-to-local-disk* mode, you now need to reboot the Machines you modified above.
 
-.. note:: You can do this through your own tooling or power control methods.  For example, via IPMI protocol, Console access and rebooting, physically power cycling the machine, or other methods. 
+.. note:: You can do this through your own tooling or power control methods.  For example, via IPMI protocol, Console access and rebooting, physically power cycling the machine, or other methods.
 
-  Digital Rebar Provision does support installing Plugin Providers that implement IPMI control (power on/off/reboot) actions.  Some of these are available for free as a Registered user, some of these are Paid pieces.   Please see your UX ``Contents`` menu for the status of each plugin provider.   
+  Digital Rebar Provision does support installing Plugin Providers that implement IPMI control (power on/off/reboot) actions.  Some of these are available for free as a Registered user, some of these are Paid pieces.   Please see your UX ``Contents`` menu for the status of each plugin provider.
 
 If you are using the RackN `IPMI` plugin provider (free or paid piece), you can do this with the following commands:
   ::
@@ -251,9 +251,9 @@ If you are using the RackN `IPMI` plugin provider (free or paid piece), you can 
 Configure with the UX
 =====================
 
-The below example outlines the process for the UX.  
+The below example outlines the process for the UX.
 
-RackN assumes the use of CentOS 7 BootEnv during this process.  However, it should theoretically work on most of the BootEnvs.  We have not tested it, and your mileage will absolutely vary... 
+RackN assumes the use of CentOS 7 BootEnv during this process.  However, it should theoretically work on most of the BootEnvs.  We have not tested it, and your mileage will absolutely vary...
 
 1. create a *Profile* for the Kubernetes Cluster (e.g. ``my-k8s-cluster``)
 2. add a *Param* to that *Profile*: ``krib/cluster-profile`` = ``my-k8s-cluster``
@@ -268,7 +268,7 @@ RackN assumes the use of CentOS 7 BootEnv during this process.  However, it shou
   e. ``krib-install-> complete:Success``
   f. ``discover->sledgehammer-wait:Success``
 
-  OR 
+  OR
 
   for Immutable Kubernetes/Live Boot mode:
 
@@ -283,9 +283,9 @@ RackN assumes the use of CentOS 7 BootEnv during this process.  However, it shou
 5. Change stage on all the machines to ``centos-7-install`` for install-to-local-disk, or to ``ssh-access`` for the Live Boot/Immutable Kubernetes mode
 6. Reboot all the machines in your cluster if you are using the *install-to-local-disk* mode.
 
-.. note:: You can do this through your own tooling or power control methods.  For example, via IPMI protocol, Console access and rebooting, physically power cycling the machine, or other methods. 
+.. note:: You can do this through your own tooling or power control methods.  For example, via IPMI protocol, Console access and rebooting, physically power cycling the machine, or other methods.
 
-  Digital Rebar Provision does support installing Plugin Providers that implement IPMI control (power on/off/reboot) actions.  Some of these are available for free as a Registered user, some of these are Paid pieces.   Please see your UX ``Contents`` menu for the status of each plugin provider.   
+  Digital Rebar Provision does support installing Plugin Providers that implement IPMI control (power on/off/reboot) actions.  Some of these are available for free as a Registered user, some of these are Paid pieces.   Please see your UX ``Contents`` menu for the status of each plugin provider.
 
 Then wait for them to complete.  You can watch the Stage transitions via the Bulk Actions panel (which requires RackN Portal authentication to view).
 
@@ -297,7 +297,7 @@ Operating KRIB
 Who is my Master?
 =================
 
-If you have not specified who the Kubernetes Master should be; and the master was chosen by election - you will need to determine which Machine is the cluster Master. 
+If you have not specified who the Kubernetes Master should be; and the master was chosen by election - you will need to determine which Machine is the cluster Master.
   ::
 
     # returns the Kubernetes cluster Machine UUID
@@ -329,9 +329,9 @@ Once the Kubernetes cluster build has been completed, you may use the ``kubectl`
 Ingress/Egress Traffic and Dashboard Access
 ===========================================
 
-The Kubernetes dashboard is enabled within a default KRIB built cluster.  However no Ingress traffic rules are set up.  As such, you must access services from external connections by making changes to Kubernetes, or via the :ref:`rs_k8s_proxy`. 
+The Kubernetes dashboard is enabled within a default KRIB built cluster.  However no Ingress traffic rules are set up.  As such, you must access services from external connections by making changes to Kubernetes, or via the :ref:`rs_k8s_proxy`.
 
-These are all issues relating to managing, operating, and running a Kubernetes cluster, and not restrictions that are imposed by Digital Rebar Provision.  Please see the appropriate Kubernetes documentation on questions regarding operating, running, and administering Kubernetes (https://kubernetes.io/docs/home/). 
+These are all issues relating to managing, operating, and running a Kubernetes cluster, and not restrictions that are imposed by Digital Rebar Provision.  Please see the appropriate Kubernetes documentation on questions regarding operating, running, and administering Kubernetes (https://kubernetes.io/docs/home/).
 
 .. _rs_k8s_proxy:
 
@@ -340,8 +340,8 @@ Kubernetes Dashboard via Proxy
 
 Once you have obtained the ``admin.conf`` configuration file and security tokens, you may use ``kubectl`` in Proxy mode to the Master.  Simply open a separate terminal/console session to dedicate to the Proxy connection, and do:
   ::
-    
-    kubectl proxy 
+
+    kubectl proxy
 
 Now, in a local web browser (on the same machine you executed the Proxy command) open the following URL:
 
@@ -351,7 +351,7 @@ Now, in a local web browser (on the same machine you executed the Proxy command)
 Multiple Clusters
 -----------------
 
-It is absolutely possible to build multiple Kubernetes KRIB clusters with this process.  The only difference is each cluster should have a unique name and profile assigned to it.  A given Machine may only participate in a single Kubernetes cluster type at any one time.  You can install and operate both Live Boot/Immutable with install-to-disk cluster types in the same DRP Endpoint.  
+It is absolutely possible to build multiple Kubernetes KRIB clusters with this process.  The only difference is each cluster should have a unique name and profile assigned to it.  A given Machine may only participate in a single Kubernetes cluster type at any one time.  You can install and operate both Live Boot/Immutable with install-to-disk cluster types in the same DRP Endpoint.
 
 
 Footnotes
