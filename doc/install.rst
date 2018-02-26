@@ -72,7 +72,7 @@ Prerequisites
 -------------
 
 **dr-provision** requires two applications to operate correctly, **bsdtar** and **7z**.  These are used to extract the contents
-of iso and tar images to be served by the file server component of **dr-provision**.  The ``intall.sh`` script will attempt to insure these packages are installed by default.  However, if you are installing via manual process or baking your own installer, you must insure these prerequisistes are met. 
+of iso and tar images to be served by the file server component of **dr-provision**.  The ``intall.sh`` script will attempt to ensure these packages are installed by default.  However, if you are installing via manual process or baking your own installer, you must ensure these prerequisistes are met. 
 
 For Linux, the **bsdtar** and **p7zip** packages are required.
 
@@ -93,7 +93,7 @@ For Linux, the **bsdtar** and **p7zip** packages are required.
 
 At this point, the server can be started.
 
-.. note:: In a future release, the required packages may be removed, which will help insure cross-platform compatibility without relying on these external dependencies. 
+.. note:: In a future release, the required packages may be removed, which will help ensure cross-platform compatibility without relying on these external dependencies. 
 
 Running The Server
 ------------------
@@ -153,7 +153,7 @@ Start DRP Without Root (or sudo)
 
 If you are using DHCPD and TFTPD services of DRP, you will need to be able to bind to port 67 and 69 (respectively).  Typically Unix/Linux systems require root privileges to do this.  DRP doesn't start as root, and then drop privileges with a ``fork()`` to another less privileged user by default.
 
-To enable DRP endpoint to run as a non-privileged user and insure a higher level of security, it's possible to use the Linux "*setcap*" (Capabilities) system to assign rights for the *dr-provision* binary to open low numbered (privileged) ports.  The process is relatively simple, but does (clearly/obviously) require root permissions initially to enable the capabilities for the binary.  Once the capabilities have been set, the *dr-provision* binary can be run as a standard user.
+To enable DRP endpoint to run as a non-privileged user and ensure a higher level of security, it's possible to use the Linux "*setcap*" (Capabilities) system to assign rights for the *dr-provision* binary to open low numbered (privileged) ports.  The process is relatively simple, but does (clearly/obviously) require root permissions initially to enable the capabilities for the binary.  Once the capabilities have been set, the *dr-provision* binary can be run as a standard user.
 
 To enable any non-privileged user to start up the dr-provision binary and bind to privileged ports 67 and 69, do the following:
 
