@@ -349,7 +349,7 @@ If there already is a template present, then it can be replaced with the upload 
 Param Operations
 ++++++++++++++++
 
-:ref:`rs_model_param` are simply key/value pairs.  However, DRP provides a strong typing model to enforce a specific type to a given Param.  This insures that Param values are valid elements as designed by the operator.
+:ref:`rs_model_param` are simply key/value pairs.  However, DRP provides a strong typing model to enforce a specific type to a given Param.  This ensures that Param values are valid elements as designed by the operator.
 
 Creating a Param
 ----------------
@@ -572,7 +572,7 @@ Here is a single command example (using our ``$UUID`` variable above) that does 
 
     drpcli machines update $UUID '{ "Name": "barney" }' --ref "$(drpcli machines show $UUID)"
 
-You can update "unsafely", but if multiple updates occur, you can't guarantee that you're changing what you expected to (eg. someone/thing else beat you to the punch).  It is almost always a better pattern to insure you make a Machine name change with the use of the ``--ref`` Macine Object.   
+You can update "unsafely", but if multiple updates occur, you can't guarantee that you're changing what you expected to (eg. someone/thing else beat you to the punch).  It is almost always a better pattern to ensure you make a Machine name change with the use of the ``--ref`` Macine Object.   
   ::
 
     # this is a BAD way to do it - as it does not guarantee atomicity 

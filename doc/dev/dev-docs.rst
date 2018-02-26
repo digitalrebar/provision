@@ -25,7 +25,7 @@ Otherwise, try and find a good place for what needs to be added.  And Thanks!
 Documentation Tooling
 ---------------------
 
-There are a lot of ways to work with ReStructuredText...  Below is only one possible way of setting up a working environment to insure you are writing clean RST based documentation.  This method is designed to be as lightlweight as possible, while still being as accurate as possible with the final rendered doc changes.   There are a lot of editors tha will render RST formatted markup, but very few of them render it the same way, or similar enough to the final rendered documentation styles to be correct. 
+There are a lot of ways to work with ReStructuredText...  Below is only one possible way of setting up a working environment to ensure you are writing clean RST based documentation.  This method is designed to be as lightlweight as possible, while still being as accurate as possible with the final rendered doc changes.   There are a lot of editors tha will render RST formatted markup, but very few of them render it the same way, or similar enough to the final rendered documentation styles to be correct. 
 
 This process uses the following elements:
 

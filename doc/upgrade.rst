@@ -165,7 +165,7 @@ v3.0.5 to v3.1.0
 ----------------
 `Release Notes for v3.1.0 <https://github.com/digitalrebar/provision/releases/tag/v3.1.0>`_
 
-The v3.1.0 ``install.sh`` script now supports an ``--upgrade`` flag.  Depending on your installation method (eg ``isolated`` or ``production`` mode), the behavior of the flag will alter the installation process slightly.  Please insure you `Backup`_ your content and configurations first just in case. 
+The v3.1.0 ``install.sh`` script now supports an ``--upgrade`` flag.  Depending on your installation method (eg ``isolated`` or ``production`` mode), the behavior of the flag will alter the installation process slightly.  Please ensure you `Backup`_ your content and configurations first just in case. 
 
 For ``isolated`` mode:
 
@@ -339,7 +339,7 @@ Please read the steps through carefully, and make note of the current contents/p
         drpcli contents create -< $PLUGIN.json
       done
 
-      # insure the Stage, Default, and Unknown BootEnv are set to valid values
+      # Ensure the Stage, Default, and Unknown BootEnv are set to valid values
       # adjust these as appropriate
       drpcli prefs set defaultStage discover defaultBootEnv sledgehammer unknownBootEnv discovery
 

@@ -229,7 +229,7 @@ Get our new version (in this example, explicitly set version to ``v1.5.0``.  How
     export VER="v1.5.0"
     curl -sfL -o drp-cc.yaml https://github.com/digitalrebar/provision-content/releases/download/${VER}/drp-community-content.yaml
 
-It is suggested that you view this file and insure it contains the content/changes you are expecting.   
+It is suggested that you view this file and ensure it contains the content/changes you are expecting.   
 
 Now update the content.  
 
@@ -293,7 +293,7 @@ UEFI Boot Support - Option 67
 -----------------------------
 Starting with v3.7.0 and newer, a DHCP Subnet specification will try to automatically determine the correct values for the ``next-server`` and *DHCP Option 67* values.  In most cases, you shouldn't need to change this.  However, if you are using a VirtualBox environment, you will need to specify DHCP Option 67; as VirtualBox has a broken iPXE implementation.  Older versions of DRP may need the ``next-boot`` and/or the *DHCP Option 67* values set to work correctly. 
 
-The DHCP service in Digital Rebar Provision can support fairly complex boot file service.  You can use advanced logic to insure you send the right PXE boot file to a client, based on Legacy BIOS boot mode, or UEFI boot mode.  Note that UEFI boot mode can vary dramatically in implementations, and some (sadly; extensive) testing may be necessary to get it to work for your system.  We have several reports of field deployments with various UEFI implementations working with the new v3.7.0 and newer "magic" Option 67 values.   
+The DHCP service in Digital Rebar Provision can support fairly complex boot file service.  You can use advanced logic to ensure you send the right PXE boot file to a client, based on Legacy BIOS boot mode, or UEFI boot mode.  Note that UEFI boot mode can vary dramatically in implementations, and some (sadly; extensive) testing may be necessary to get it to work for your system.  We have several reports of field deployments with various UEFI implementations working with the new v3.7.0 and newer "magic" Option 67 values.   
 
 Here is an example of an advanced Option 67 parameter for a DHCP Subnet specification:
   ::

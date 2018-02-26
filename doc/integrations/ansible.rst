@@ -93,7 +93,7 @@ Be certain to export the `RS_ENDPOINT` and `RS_KEY` to match the DRP endpoint in
 
 You will need to set `RS_PROFILE` to match the profile that you are using as a target.  The default is `mycluster`
 
-For this example, please insure that *jq* is installed.
+For this example, please ensure that *jq* is installed.
 
 Download the inventory script to the local system to a convenient location and make it executable.  You can test the script by simply running it.  The script will output JSON in the required Ansible format.
 

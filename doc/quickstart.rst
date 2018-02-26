@@ -68,6 +68,8 @@ Once the installer is downloaded, you can execute it with the appropriate ``inst
 
 It is recommended that directory is used for this process.  The ``mkdir drp ; cd drp`` command does this as the ``drp`` directory.  The directory will contain all installed and operating files. The ``drp`` directory can be anything.
 
+Even for *production* installs (without ``--isolated``), it is recommended to run the ``install.sh`` script in a directory to contain all the install files for easy clean-up and removal if Digital Rebar Provision needs to be removed from the system.
+
 Start dr-provision
 ------------------
 
@@ -286,7 +288,17 @@ Clean Up
 
 Once you are finished exploring Digital Rebar Provision in isolated mode, the system can cleaned by removing the directory containing the isolated install.  In the previous sections, we used ''drp'' as the directory containing the isolated install.  Removing this directory will clean up the installed files.
 
-For production deployments, the ``install.sh`` script can be run with the ``remove`` argument instead of the ``install`` argument to clean up the system.  This will not remove the data files stored in ``/var/lib/dr-provision``, ``/etc/dr-provision``, or ``/usr/share/dr-provision``.  To remove those files, you will need to run ``sudo rm -rf /var/lib/dr-provision /etc/dr-provision /usr/share/dr-provision`` or add ``--remove-data`` to the ``remove`` script.
+For production deployments, the ``install.sh`` script can be run with the ``remove`` argument instead of the ``install`` argument to clean up the system.  This will not remove the data files stored in ``/var/lib/dr-provision``, ``/etc/dr-provision``, or ``/usr/share/dr-provision``.  The ``tools/install.sh`` script is in the directory where you ran the ``install.sh`` script the first time.  The script can be also redownloaded and run through curl | bash.
+
+  ::
+
+    tools/install.sh remove
+
+To additionally remove the data files, run instead:
+
+  ::
+
+    tools/install.sh --remove-data remove
 
 Ports
 -----

@@ -72,7 +72,7 @@ Prerequisites
 -------------
 
 **dr-provision** requires two applications to operate correctly, **bsdtar** and **7z**.  These are used to extract the contents
-of iso and tar images to be served by the file server component of **dr-provision**.  The ``intall.sh`` script will attempt to ensure these packages are installed by default.  However, if you are installing via manual process or baking your own installer, you must ensure these prerequisistes are met. 
+of iso and tar images to be served by the file server component of **dr-provision**.  The ``install.sh`` script will attempt to ensure these packages are installed by default.  However, if you are installing via manual process or baking your own installer, you must ensure these prerequisistes are met. 
 
 For Linux, the **bsdtar** and **p7zip** packages are required.
 
@@ -88,8 +88,8 @@ For Linux, the **bsdtar** and **p7zip** packages are required.
 
   The new package, **p7zip** is required, and **tar** must also be updated.  The **tar** program on Darwin is already **bsdtar**
 
-  * 7z - install from homebrew: brew install p7zip
-  * libarchive - update from homebrew to get a functional tar: brew install libarchive
+  * 7z - install from homebrew: ``brew install p7zip``
+  * libarchive - update from homebrew to get a functional tar: ``brew install libarchive --force ; brew link libarchive --force``
 
 At this point, the server can be started.
 
@@ -127,13 +127,13 @@ Once running, the following endpoints are available:
 * https://127.0.0.1:8092/swagger-ui - swagger-ui to explore the API
 * https://127.0.0.1:8092/swagger.json - API Swagger JSON file
 * https://127.0.0.1:8092/api/v3 - Raw api endpoint
-* https://127.0.0.1:8092/ui - User Configuration Pages (*3.0.x only, removed after 3.1.0*)
 * https://127.0.0.1:8092/ux - Redirects to Community Portal (maintained by RackN)
 * http://127.0.0.1:8091 - Static files served by http from the *test-data/tftpboot* directory
 * udp 69 - Static files served from the test-data/tftpboot directory through the tftp protocol
 * udp 67 - DHCP Server listening socket - will only serve addresses when once configured.  By default, silent.
+* udp 4011 - BINL Server listening socket - will only serve bootfiles when once configured.  By default, silent.
 
-The API, File Server, DHCP, and TFTP ports can be configured, but DHCP and TFTP may not function properly on non-standard ports.
+The API, File Server, DHCP, BINL,  and TFTP ports can be configured, but DHCP, BINL, and TFTP may not function properly on non-standard ports.
 
 If the SSL certificate is not valid, then follow the :ref:`rs_gen_cert` steps.
 
@@ -183,3 +183,25 @@ Job Log Rotation
 If you are using the jobs system, Digital Rebar Provision stores job logs based on the directory configuration of the system.  This data is considered compliance related information; consequently, the system does not automatically remove these records.
 
 Operators should set up a job log rotation mechanism to ensure that these logs to not exhaust available disk space.
+
+Removal of Digital Rebar Provision
+==================================
+
+To remove Digital Rebar Provision, you can use the *tools/install.sh* script to remove programs for a ``production`` installs.  The *tools/install.sh* script should be run as root or under sudo unless the ``setcap`` process was used.
+
+  ::
+
+    tools/install.sh remove
+
+To remove programs and data use.
+
+  ::
+
+    tools/install.sh --remove-data remove
+
+For *iolated* installs, remove the directory used to contain the isolated install.  In the example above, the directory *dr-provision-install* was used to isolate the install process.  A command like this would clean up the system.
+
+  ::
+
+    sudo rm -rf dr-provision-install
+

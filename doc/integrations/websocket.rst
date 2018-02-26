@@ -80,7 +80,7 @@ on how to interact with and use websockets.  This example was tested, using the
 
 We assume you have the DRP endpoint installed on your localhost in these examples. 
 You can adjust the IP address/hostname to point to a remote DRP Endpoint, just 
-insure you have access to Port 8092 (by default, or the API port you specify if
+ensure you have access to Port 8092 (by default, or the API port you specify if
 you changed the default).
 
   URL:  ``wss://127.0.0.1:8092/api/v3/ws?token=rocketskates:r0cketsk8ts``

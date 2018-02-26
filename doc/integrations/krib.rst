@@ -125,7 +125,7 @@ The configuration of the Cluster includes a *Stagemap* - and depending on which 
 
 You must create a *Profile* from YAML (or JSON if you prefer) with the stagemap and param required information. Modify the *Name* or other fields as appropriate - be sure you rename all subsequent fields appropriately.  This example uses CentOS 7 as the BootEnv for the install-to-local-disk option.  
 
-Additionally - insure you correctly modify the ``access-keys`` Param to inject your apprpriate SSH public key half or halves appropriately.
+Additionally - ensure you correctly modify the ``access-keys`` Param to inject your apprpriate SSH public key half or halves appropriately.
 
   ::
 
