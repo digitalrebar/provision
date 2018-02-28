@@ -19,6 +19,12 @@ type Interface struct {
 	// advertising or claiming access (CIDR)
 	//
 	ActiveAddress string
+	// Possible gateway for this interface
+	Gateway string
+	// Possible DNS for this interface
+	DnsServers []string
+	// Possible DNS for domain for this interface
+	DnsDomain string
 }
 
 func (i *Interface) Prefix() string  { return "interfaces" }
