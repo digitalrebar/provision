@@ -96,9 +96,13 @@ func (c *Client) BundleContent(src string, dst store.Store, params map[string]st
 			}
 			switch path.Ext(itemName) {
 			case ".yaml", ".yml":
-				err = store.YamlCodec.Decode(buf, item)
+				if err := store.YamlCodec.Decode(buf, item); err != nil {
+					return fmt.Errorf("Cannot parse item %s: %v", path.Join(prefix, itemName), err)
+				}
 			case ".json":
-				err = store.JsonCodec.Decode(buf, item)
+				if err := store.JsonCodec.Decode(buf, item); err != nil {
+					return fmt.Errorf("Cannot parse item %s: %v", path.Join(prefix, itemName), err)
+				}
 			default:
 				if tmpl, ok := item.(*models.Template); ok && prefix == "templates" {
 					tmpl.ID = itemName
