@@ -10,6 +10,7 @@ import (
 	"os"
 	"os/exec"
 	"path"
+	"path/filepath"
 	"strings"
 	"syscall"
 	"time"
@@ -130,6 +131,10 @@ func (r *TaskRunner) Expand(action *models.JobAction, taskDir string) error {
 		action.Path = path.Join(taskDir, path.Clean(action.Path))
 	}
 	r.Log("%s: Writing %s to %s", time.Now(), action.Name, action.Path)
+	if err := os.MkdirAll(filepath.Dir(action.Path), os.ModePerm); err != nil {
+		r.Log("Unable to mkdirs for %s: %v", action.Path, err)
+		return err
+	}
 	if err := ioutil.WriteFile(action.Path, []byte(action.Content), 0644); err != nil {
 		r.Log("Unable to write to %s: %v", action.Path, err)
 		return err
