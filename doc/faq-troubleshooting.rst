@@ -311,6 +311,31 @@ An example of adding this to your Subnet specification might look something like
     # drpcli subnets set eth1 option 67 to null # The setting to null is not needed with v3.7.1 and beyond.
     drpcli subnets set eth1 option 67 to '{{if (eq (index . 77) "iPXE") }}default.ipxe{{else if (eq (index . 93) "0")}}lpxelinux.0{{else}}bootx64.efi{{end}}'
 
+.. _rs_lpxelinux_no_such_file:
+
+lpxelinux.0 error: no such file or directory
+--------------------------------------------
+
+After TFTPing lpxelinux.0, logs (or network packet traces) may show an error similar to:
+  ::
+
+    477    0.378296662    10.10.20.76    10.10.31.96    TFTP    159    Error Code, Code: 
+    File not found, Message: open /var/lib/dr-provision/tftpboot/pxelinux.cfg/16089a59-9abd-48c2-850a-2ac3bc134935: no such file or directory``
+
+This is expected behavior that is standard PXE *waterfall* searching for a valid filename to boot from.  For full reference, please see the `syslinux <http://www.syslinux.org/>`_ reference documentation, at:
+
+    http://www.syslinux.org/wiki/index.php?title=PXELINUX#Configuration
+
+The expected behavior is for a client to attempt to download files in the following order:
+
+    #. client id (DRP does not use this option, which is what generates the error)
+    #. mac address (in the form of ``01-88-99-aa-bb-cc-dd``)
+    #. ip  address in uppercase Hexadecimal format, stepping through IP, subnet, and classful boundaries
+    #. fall back to the default defined file
+
+Due to this behavior, filenames will be specified that do not exist, and the error message related to that probe request is a normal message.  This is NOT an indicator that provisioning is broken in your environment.
+
+
 .. _rs_jq_examples:
 
 JQ Usage Examples
