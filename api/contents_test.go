@@ -360,7 +360,10 @@ Available: true
 Description: The boot environment you should use to have unknown machines boot off
   their local hard drive
 Meta:
+  color: green
   feature-flags: change-stage-v2
+  icon: circle thin
+  title: Digital Rebar Provision
 Name: ignoble
 OS:
   Name: ignore

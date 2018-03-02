@@ -6,7 +6,10 @@
   Initrds: []
   Kernel: ""
   Meta:
+    color: green
     feature-flags: change-stage-v2
+    icon: circle thin
+    title: Digital Rebar Provision
   Name: ignore
   OS:
     Codename: ""
@@ -47,7 +50,10 @@
   Initrds: []
   Kernel: ""
   Meta:
+    color: green
     feature-flags: change-stage-v2
+    icon: radio
+    title: Digital Rebar Provision
   Name: local
   OS:
     Codename: ""

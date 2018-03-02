@@ -7,7 +7,10 @@
     "Initrds": [],
     "Kernel": "",
     "Meta": {
-      "feature-flags": "change-stage-v2"
+      "color": "green",
+      "feature-flags": "change-stage-v2",
+      "icon": "circle thin",
+      "title": "Digital Rebar Provision"
     },
     "Name": "ignore",
     "OS": {
@@ -47,7 +50,10 @@
     "Initrds": [],
     "Kernel": "",
     "Meta": {
-      "feature-flags": "change-stage-v2"
+      "color": "green",
+      "feature-flags": "change-stage-v2",
+      "icon": "radio",
+      "title": "Digital Rebar Provision"
     },
     "Name": "local",
     "OS": {
