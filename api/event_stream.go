@@ -125,7 +125,7 @@ type EventStream struct {
 func (es *EventStream) processEvents(running chan struct{}) {
 	close(running)
 	for {
-		_, msg, err := es.conn.ReadMessage()
+		_, msg, err := es.conn.NextReader()
 		if err != nil {
 			es.conn.Close()
 			es.mux.Lock()
@@ -137,7 +137,7 @@ func (es *EventStream) processEvents(running chan struct{}) {
 			return
 		}
 		evt := RecievedEvent{}
-		evt.Err = json.Unmarshal(msg, &evt.E)
+		evt.Err = json.NewDecoder(msg).Decode(&evt.E)
 		toSend := map[int64]chan RecievedEvent{}
 		es.mux.Lock()
 		for reg, handles := range es.subscriptions {
