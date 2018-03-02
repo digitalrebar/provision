@@ -181,6 +181,18 @@ func (r *R) PatchTo(old, new models.Model) *R {
 	return r.PatchObj(old, new).UrlForM(old)
 }
 
+func (r *R) PatchToFull(old models.Model, new models.Model, paranoid bool) (models.Model, error) {
+	res := models.Clone(old)
+	if paranoid {
+		r = r.ParanoidPatch()
+	}
+	err := r.PatchTo(old, new).Do(&res)
+	if err != nil {
+		return old, err
+	}
+	return res, err
+}
+
 func (r *R) Fill(m models.Model) error {
 	r.err.Model = m.Prefix()
 	r.err.Model = m.Key()
@@ -685,16 +697,7 @@ func (c *Client) PatchTo(old models.Model, new models.Model) (models.Model, erro
 }
 
 func (c *Client) PatchToFull(old models.Model, new models.Model, paranoid bool) (models.Model, error) {
-	res := models.Clone(old)
-	r := c.Req()
-	if paranoid {
-		r = r.ParanoidPatch()
-	}
-	err := r.PatchTo(old, new).Do(&res)
-	if err != nil {
-		return old, err
-	}
-	return res, err
+	return c.Req().PatchToFull(old, new, paranoid)
 }
 
 // PutModel replaces the server-side object matching the passed-in

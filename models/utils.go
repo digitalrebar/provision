@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"regexp"
+	"time"
 )
 
 func copyMap(m map[string]interface{}) map[string]interface{} {
@@ -178,4 +179,21 @@ type TaskRunner interface {
 type Actor interface {
 	Model
 	CanHaveActions() bool
+}
+
+func FibBackoff(thunk func() error) {
+	timeouts := []time.Duration{
+		time.Second,
+		time.Second,
+		2 * time.Second,
+		3 * time.Second,
+		5 * time.Second,
+		8 * time.Second,
+	}
+	for _, d := range timeouts {
+		if thunk() == nil {
+			return
+		}
+		time.Sleep(d)
+	}
 }
