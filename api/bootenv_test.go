@@ -17,7 +17,10 @@ func TestBootEnvCrud(t *testing.T) {
 Description: "The boot environment you should use to have known machines boot off their local hard drive"
 Name: "local"
 Meta:
+  color: green
   feature-flags: change-stage-v2
+  icon: radio
+  title: Digital Rebar Provision
 OS:
   Name: "local"
 ReadOnly: true
@@ -57,7 +60,10 @@ Templates:
 Description: "The boot environment you should use to have unknown machines boot off their local hard drive"
 Name:        "ignore"
 Meta:
+  color: green
   feature-flags: change-stage-v2
+  icon: circle thin
+  title: Digital Rebar Provision
 OS:
   Name: "ignore"
 OnlyUnknown: true
