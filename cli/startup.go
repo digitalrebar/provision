@@ -39,7 +39,7 @@ func addRegistrar(rs registerSection) {
 	registrations = append(registrations, rs)
 }
 
-var ppr = func(c *cobra.Command, a []string) {
+var ppr = func(c *cobra.Command, a []string) error {
 	c.SilenceUsage = true
 	if session == nil {
 		var err error
@@ -49,12 +49,12 @@ var ppr = func(c *cobra.Command, a []string) {
 			session, err = api.UserSession(endpoint, username, password)
 		}
 		if err != nil {
-			log.Printf("Error creating session: %v", err)
-			os.Exit(1)
+			return fmt.Errorf("Error creating session: %v", err)
 		}
 	}
 	session.Trace(trace)
 	session.TraceToken(traceToken)
+	return nil
 }
 
 func NewApp() *cobra.Command {
@@ -119,11 +119,11 @@ func NewApp() *cobra.Command {
 		if c.Use == "contents" {
 			for _, sc := range c.Commands() {
 				if !strings.HasPrefix(sc.Use, "bundle") && !strings.HasPrefix(sc.Use, "unbundle") {
-					sc.PersistentPreRun = ppr
+					sc.PersistentPreRunE = ppr
 				}
 			}
 		} else {
-			c.PersistentPreRun = ppr
+			c.PersistentPreRunE = ppr
 		}
 	}
 
