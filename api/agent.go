@@ -141,6 +141,7 @@ func (a *MachineAgent) waitOn(m *models.Machine, cond TestFunc) {
 		a.initOrExit()
 		return
 	}
+	a.Logf("Wait: finished with %s\n", found)
 	switch found {
 	case "timeout":
 		if a.exitOnNotRunnable {
@@ -150,12 +151,16 @@ func (a *MachineAgent) waitOn(m *models.Machine, cond TestFunc) {
 	case "interrupt":
 		a.state = AGENT_EXIT
 	case "complete":
-		if m.BootEnv == a.machine.BootEnv {
+		if m.BootEnv != a.machine.BootEnv {
+			if strings.HasSuffix(a.machine.BootEnv, "-install") {
+				a.state = AGENT_EXIT
+			} else {
+				a.state = AGENT_REBOOT
+			}
+		} else if m.Runnable {
 			a.state = AGENT_RUN_TASK
-		} else if strings.HasSuffix(m.BootEnv, "-install") {
-			a.state = AGENT_EXIT
 		} else {
-			a.state = AGENT_REBOOT
+			a.state = AGENT_WAIT_FOR_RUNNABLE
 		}
 	default:
 		err := &models.Error{
@@ -172,6 +177,7 @@ func (a *MachineAgent) waitOn(m *models.Machine, cond TestFunc) {
 
 func (a *MachineAgent) WaitRunnable() {
 	m := models.Clone(a.machine).(*models.Machine)
+	a.Logf("Waiting on machine to become runnable\n")
 	a.waitOn(m, EqualItem("Runnable", m.Runnable))
 }
 
@@ -183,6 +189,7 @@ func (a *MachineAgent) RunTask() {
 		return
 	}
 	if runner == nil {
+		a.Logf("Current tasks finished, check to see if stage needs to change\n")
 		a.state = AGENT_CHANGE_STAGE
 		return
 	}
@@ -217,83 +224,92 @@ func (a *MachineAgent) RunTask() {
 
 func (a *MachineAgent) WaitChangeStage() {
 	m := models.Clone(a.machine).(*models.Machine)
+	a.Logf("Waiting for system to be runnable and for stage or current tasks to change\n")
 	a.waitOn(m,
-		AndItems(EqualItem("Runnable", m.Runnable),
-			OrItems(NotItem(EqualItem("CurrentTask", m.CurrentTask)),
-				NotItem(EqualItem("Tasks", m.Tasks)),
-				NotItem(EqualItem("Stage", m.Stage)))))
+		OrItems(NotItem(EqualItem("CurrentTask", m.CurrentTask)),
+			NotItem(EqualItem("Tasks", m.Tasks)),
+			NotItem(EqualItem("Runnable", m.Runnable)),
+			NotItem(EqualItem("BootEnv", m.BootEnv)),
+			NotItem(EqualItem("Stage", m.Stage))))
 }
 
 func (a *MachineAgent) ChangeStage() {
 	var cmObj interface{}
 	a.state = AGENT_WAIT_FOR_CHANGE_STAGE
+	inInstall := strings.HasSuffix(a.machine.BootEnv, "-install")
 	csMap := map[string]string{}
-	nextStage := ""
 	csErr := a.client.Req().Get().
 		UrlForM(a.machine, "params", "change-stage/map").
 		Params("aggregate", "true").Do(&cmObj)
-	if csErr != nil {
-		// No change stage map, see if we need to go to local
-		if strings.HasSuffix(a.machine.BootEnv, "-install") {
-			a.state = AGENT_EXIT
-			nextStage = "local"
-		}
-	} else {
+	if csErr == nil {
 		if err := utils.Remarshal(cmObj, &csMap); err != nil {
 			a.err = err
 			a.initOrExit()
 			return
 		}
-		ns, ok := csMap[a.machine.Stage]
-		if ok {
-			pieces := strings.SplitN(ns, ":", 2)
-			nextStage = pieces[0]
-			newStage := &models.Stage{}
-			if err := a.client.FillModel(newStage, nextStage); err != nil {
-				a.err = err
-				a.initOrExit()
-			}
-			// Default behaviour for what to do for the next state
-			if newStage.BootEnv == "" || newStage.BootEnv == a.machine.BootEnv {
-				// If the bootenv has not changed, the machine will get a new task list.
-				// Wait for the machine to be runnable if needed, and start running it.
-				a.state = AGENT_WAIT_FOR_RUNNABLE
-			} else if strings.HasSuffix(a.machine.BootEnv, "-install") {
-				// We are in an OS install boot environment.  Just exit since we are out of tasks,
-				// and we want to get into the next stage once the OS install process
-				// finishes its thing.
-				a.state = AGENT_EXIT
-			} else {
-				// We are not in an OS install bootenv, and the new stage wants a new bootenv.
-				// Reboot into it to continue processing.
-				a.state = AGENT_REBOOT
-			}
-			if len(pieces) == 2 {
-				// The change stage map is overriding our default behaviour.
-				switch pieces[1] {
-				case "Reboot":
-					a.state = AGENT_REBOOT
-				case "Stop":
-					a.state = AGENT_EXIT
-				case "Shutdown":
-					a.state = AGENT_POWEROFF
-				default:
-					a.state = AGENT_WAIT_FOR_RUNNABLE
-				}
-				if newStage.Reboot {
-					// A reboot flag on the next stage forces an unconditional reboot.
-					a.state = AGENT_REBOOT
-				}
-			}
+	}
+	var nextStage, targetState string
+	if ns, ok := csMap[a.machine.Stage]; ok {
+		pieces := strings.SplitN(ns, ":", 2)
+		nextStage = pieces[0]
+		if len(pieces) == 2 {
+			targetState = pieces[1]
 		}
 	}
-	if nextStage != "" {
-		newM := models.Clone(a.machine).(*models.Machine)
-		newM.Stage = nextStage
-		if _, err := a.client.PatchTo(a.machine, newM); err != nil {
-			a.err = err
-			a.initOrExit()
+	if nextStage == "" {
+		if inInstall {
+			nextStage = "local"
+		} else {
+			nextStage = a.machine.Stage
 		}
+	}
+	if nextStage == a.machine.Stage {
+		return
+	}
+	a.Logf("Changing stage from %s to %s\n", a.machine.Stage, nextStage)
+	newStage := &models.Stage{}
+	if err := a.client.FillModel(newStage, nextStage); err != nil {
+		a.err = err
+		a.initOrExit()
+		return
+	}
+	// Default behaviour for what to do for the next state
+	if newStage.BootEnv == "" || newStage.BootEnv == a.machine.BootEnv {
+		// If the bootenv has not changed, the machine will get a new task list.
+		// Wait for the machine to be runnable if needed, and start running it.
+		a.state = AGENT_WAIT_FOR_RUNNABLE
+	} else if inInstall {
+		// We are in an OS install boot environment.  Just exit since we are out of tasks,
+		// and we want to get into the next stage once the OS install process
+		// finishes its thing.
+		a.state = AGENT_EXIT
+	} else {
+		// We are not in an OS install bootenv, and the new stage wants a new bootenv.
+		// Reboot into it to continue processing.
+		a.state = AGENT_REBOOT
+	}
+	if targetState != "" {
+		// The change stage map is overriding our default behaviour.
+		switch targetState {
+		case "Reboot":
+			a.state = AGENT_REBOOT
+		case "Stop":
+			a.state = AGENT_EXIT
+		case "Shutdown":
+			a.state = AGENT_POWEROFF
+		default:
+			a.state = AGENT_WAIT_FOR_RUNNABLE
+		}
+	}
+	if newStage.Reboot {
+		// A reboot flag on the next stage forces an unconditional reboot.
+		a.state = AGENT_REBOOT
+	}
+	newM := models.Clone(a.machine).(*models.Machine)
+	newM.Stage = nextStage
+	if _, err := a.client.PatchTo(a.machine, newM); err != nil {
+		a.err = err
+		a.initOrExit()
 	}
 }
 
@@ -318,23 +334,31 @@ func (a *MachineAgent) Run() error {
 	for {
 		switch a.state {
 		case AGENT_INIT:
+			a.Logf("Agent in init\n")
 			a.Init()
 		case AGENT_WAIT_FOR_RUNNABLE:
+			a.Logf("Agent waiting for tasks\n")
 			a.WaitRunnable()
 		case AGENT_RUN_TASK:
+			a.Logf("Agent running task\n")
 			a.RunTask()
 		case AGENT_WAIT_FOR_CHANGE_STAGE:
+			a.Logf("Agent waiting stage change\n")
 			a.WaitChangeStage()
 		case AGENT_CHANGE_STAGE:
+			a.Logf("Agent changing stage\n")
 			a.ChangeStage()
 		case AGENT_EXIT:
+			a.Logf("Agent exiting\n")
 			return a.err
 		case AGENT_REBOOT:
+			a.Logf("Agent rebooting\n")
 			return a.power("reboot")
 		case AGENT_POWEROFF:
+			a.Logf("Agent powering off\n")
 			return a.power("poweroff")
 		default:
-			a.Logf("Unknown agent state %d", a.state)
+			a.Logf("Unknown agent state %d\n", a.state)
 			panic("unreachable")
 		}
 	}
