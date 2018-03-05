@@ -1,5 +1,6 @@
 [
   "drpcli.amd64.linux",
+  "drpcli.amd64.windows",
   "greg",
   "jq",
   "plugin_providers/"
