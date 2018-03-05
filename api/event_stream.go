@@ -129,9 +129,10 @@ func (es *EventStream) processEvents(running chan struct{}) {
 		if err != nil {
 			es.conn.Close()
 			es.mux.Lock()
-			for _, reciever := range es.recievers {
+			for h, reciever := range es.recievers {
 				reciever <- RecievedEvent{Err: err}
 				close(reciever)
+				es.recievers[h] = nil
 			}
 			es.mux.Unlock()
 			return
@@ -268,15 +269,10 @@ func (es *EventStream) Register(events ...string) (int64, <-chan RecievedEvent, 
 	return newID, ch, err
 }
 
-// Deregister directs the EventStream to unsubscribe from Events from
-// the digitalrebar provisioner.  It takes the same parameters as
-// Register.
-func (es *EventStream) Deregister(handle int64) error {
-	es.mux.Lock()
-	ch := es.recievers[handle]
-	if ch == nil {
-		es.mux.Unlock()
-		return fmt.Errorf("No such handle %d", handle)
+func (es *EventStream) deregister(handle int64) (int, error) {
+	ch, ok := es.recievers[handle]
+	if !ok {
+		return 0, fmt.Errorf("No such handle %d", handle)
 	}
 	count := 0
 	for evt, handles := range es.subscriptions {
@@ -295,14 +291,25 @@ func (es *EventStream) Deregister(handle int64) error {
 		}
 	}
 	delete(es.recievers, handle)
-	close(ch)
+	if ch != nil {
+		close(ch)
+	}
+	return count, nil
+}
+
+// Deregister directs the EventStream to unsubscribe from Events from
+// the digitalrebar provisioner.  It takes the same parameters as
+// Register.
+func (es *EventStream) Deregister(handle int64) error {
+	es.mux.Lock()
+	count, err := es.deregister(handle)
 	es.mux.Unlock()
 	// Really wait should be for my specific one, but ...
 	// Multi-threaded apps will have issues.
 	for i := 0; i < count; i++ {
 		<-es.rchan
 	}
-	return nil
+	return err
 }
 
 // WaitFor waits for an item to match test.  It subscribes to an
