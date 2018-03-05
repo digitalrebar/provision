@@ -59,7 +59,11 @@ func TestBootEnvCli(t *testing.T) {
 	cliTest(true, true, "bootenvs", "exists", "john", "john2").run(t)
 	cliTest(false, false, "bootenvs", "exists", "ignore").run(t)
 	cliTest(false, true, "bootenvs", "exists", "john").run(t)
-	cliTest(false, true, "bootenvs", "exists", "john", "john2").run(t)
+
+	cliTest(true, true, "bootenvs", "uploadiso").run(t)
+	cliTest(true, true, "bootenvs", "uploadiso", "john", "john2").run(t)
+	cliTest(false, false, "bootenvs", "uploadiso", "ignore").run(t)
+	cliTest(false, true, "bootenvs", "uploadiso", "john").run(t)
 
 	cliTest(true, true, "bootenvs", "create").run(t)
 	cliTest(true, true, "bootenvs", "create", "john", "john2").run(t)
@@ -146,6 +150,7 @@ func TestBootEnvCli(t *testing.T) {
 	cliTest(false, false, "bootenvs", "install", "bootenvs/local3.yml", "ic").run(t)
 	cliTest(false, false, "bootenvs", "destroy", "fredhammer").run(t)
 	cliTest(false, false, "bootenvs", "install", "bootenvs/fredhammer.yml").run(t)
+	cliTest(false, false, "bootenvs", "uploadiso", "fredhammer").run(t)
 
 	// Clean up
 	cliTest(false, false, "bootenvs", "destroy", "fredhammer").run(t)
