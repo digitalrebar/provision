@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"time"
 
 	"github.com/digitalrebar/provision/models"
 	"github.com/spf13/cobra"
@@ -68,7 +69,7 @@ are not accepted.`,
 					return fmt.Errorf("%v requires at least 3 arguments when specifying an offset", c.UseLine())
 				}
 				if _, err := strconv.Atoi(args[2]); err != nil {
-					return fmt.Errorf("%v: %s is not a number", args[2])
+					return fmt.Errorf("%v: %s is not a number", c.UseLine(), args[2])
 				}
 			}
 			return nil
@@ -126,6 +127,7 @@ pass in more than one task.`,
 	})
 	op.addCommand(tasks)
 	var exitOnFailure = false
+	var oneShot = false
 	processJobs := &cobra.Command{
 		Use:   "processjobs [id]",
 		Short: "For the given machine, process pending jobs until done.",
@@ -147,11 +149,18 @@ the stage runner wait flag.
 			if err := session.FillModel(m, uuid); err != nil {
 				return err
 			}
-
-			return session.Agent(m, false, exitOnFailure, actuallyPowerThings, os.Stdout)
+			agent, err := session.NewAgent(m, oneShot, exitOnFailure, actuallyPowerThings, os.Stdout)
+			if err != nil {
+				return err
+			}
+			if oneShot {
+				agent = agent.Timeout(time.Second)
+			}
+			return agent.Run()
 		},
 	}
 	processJobs.Flags().BoolVar(&exitOnFailure, "exit-on-failure", false, "Exit on failure of a task")
+	processJobs.Flags().BoolVar(&oneShot, "oneshot", false, "Do not wait for additional tasks to appear")
 	op.addCommand(processJobs)
 	op.command(app)
 }

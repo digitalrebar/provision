@@ -21,7 +21,7 @@ func blobCommands(bt string) *cobra.Command {
 			if len(args) <= 1 {
 				return nil
 			}
-			return fmt.Errorf("%v: Expected 0 or 1 argument")
+			return fmt.Errorf("%v: Expected 0 or 1 argument", c.UseLine())
 		},
 		RunE: func(c *cobra.Command, args []string) error {
 			req := session.Req().UrlFor(bt)

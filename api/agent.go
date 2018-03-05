@@ -248,7 +248,28 @@ func (a *MachineAgent) ChangeStage() {
 		if ok {
 			pieces := strings.SplitN(ns, ":", 2)
 			nextStage = pieces[0]
+			newStage := &models.Stage{}
+			if err := a.client.FillModel(newStage, nextStage); err != nil {
+				a.err = err
+				a.initOrExit()
+			}
+			// Default behaviour for what to do for the next state
+			if newStage.BootEnv == "" || newStage.BootEnv == a.machine.BootEnv {
+				// If the bootenv has not changed, the machine will get a new task list.
+				// Wait for the machine to be runnable if needed, and start running it.
+				a.state = AGENT_WAIT_FOR_RUNNABLE
+			} else if strings.HasSuffix(a.machine.BootEnv, "-install") {
+				// We are in an OS install boot environment.  Just exit since we are out of tasks,
+				// and we want to get into the next stage once the OS install process
+				// finishes its thing.
+				a.state = AGENT_EXIT
+			} else {
+				// We are not in an OS install bootenv, and the new stage wants a new bootenv.
+				// Reboot into it to continue processing.
+				a.state = AGENT_REBOOT
+			}
 			if len(pieces) == 2 {
+				// The change stage map is overriding our default behaviour.
 				switch pieces[1] {
 				case "Reboot":
 					a.state = AGENT_REBOOT
@@ -256,19 +277,17 @@ func (a *MachineAgent) ChangeStage() {
 					a.state = AGENT_EXIT
 				case "Shutdown":
 					a.state = AGENT_POWEROFF
+				default:
+					a.state = AGENT_WAIT_FOR_RUNNABLE
+				}
+				if newStage.Reboot {
+					// A reboot flag on the next stage forces an unconditional reboot.
+					a.state = AGENT_REBOOT
 				}
 			}
 		}
 	}
 	if nextStage != "" {
-		newStage := &models.Stage{}
-		if err := a.client.FillModel(newStage, nextStage); err != nil {
-			a.err = err
-			a.initOrExit()
-		}
-		if newStage.BootEnv == a.machine.BootEnv || newStage.BootEnv == "" {
-			a.state = AGENT_WAIT_FOR_RUNNABLE
-		}
 		newM := models.Clone(a.machine).(*models.Machine)
 		newM.Stage = nextStage
 		if _, err := a.client.PatchTo(a.machine, newM); err != nil {

@@ -427,7 +427,7 @@ func TestMain(m *testing.M) {
 
 	err = os.MkdirAll(tmpDir+"/plugins", 0755)
 	if err != nil {
-		log.Printf("Error creating required directory %s: %v", d, err)
+		log.Printf("Error creating required directory %s: %v", tmpDir, err)
 		os.Exit(1)
 	}
 

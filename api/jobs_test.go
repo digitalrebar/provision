@@ -55,6 +55,7 @@ func runAgent(t *testing.T, mi *models.Machine, lastTask, lastState, lastExitSta
 		t.Logf("Run for task %s finished with desired state %s:%s", job.Task, job.State, job.ExitState)
 	} else {
 		t.Errorf("ERROR: Run for task %s finished with unknown state %s:%s", job.Task, job.State, job.ExitState)
+		t.Errorf("ERROR: Expected task %s, %s:%s", lastTask, lastState, lastExitState)
 	}
 	return
 }
