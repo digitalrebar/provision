@@ -462,10 +462,7 @@ func (c *Client) changeStage(im *models.Machine, actuallyPowerThings bool, logge
 	return
 }
 
-// Agent runs the machine Agent on the current machine.
-// It assumes there is only one Agent, which is not actually a safe assumption.
-// We should make it safe someday.
-func (c *Client) Agent(m *models.Machine, exitOnNotRunnable, exitOnFailure, actuallyPowerThings bool, logger io.Writer) error {
+func (c *Client) oldAgent(m *models.Machine, exitOnNotRunnable, exitOnFailure, actuallyPowerThings bool, logger io.Writer) error {
 	fmt.Fprintf(logger, "Processing jobs for %s: %s\n", m.Key(), time.Now())
 
 	// Clear the current running job, if any
@@ -653,4 +650,19 @@ func (c *Client) Agent(m *models.Machine, exitOnNotRunnable, exitOnFailure, actu
 		runner.Log("Task signalled runner to stop")
 	}
 	return nil
+}
+
+// Agent runs the machine Agent on the current machine.
+// It assumes there is only one Agent, which is not actually a safe assumption.
+// We should make it safe someday.
+func (c *Client) Agent(m *models.Machine, exitOnNotRunnable, exitOnFailure, actuallyPowerThings bool, logger io.Writer) error {
+	if false {
+		return c.oldAgent(m, exitOnNotRunnable, exitOnFailure, actuallyPowerThings, logger)
+	} else {
+		a, err := c.NewAgent(m, exitOnNotRunnable, exitOnFailure, actuallyPowerThings, logger)
+		if err != nil {
+			return err
+		}
+		return a.Run()
+	}
 }

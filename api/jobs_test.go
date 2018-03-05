@@ -2,9 +2,11 @@ package api
 
 import (
 	"bytes"
+	"io"
 	"io/ioutil"
 	"os"
 	"testing"
+	"time"
 
 	"github.com/digitalrebar/provision/models"
 )
@@ -27,7 +29,11 @@ func runAgent(t *testing.T, mi *models.Machine, lastTask, lastState, lastExitSta
 	}
 
 	buf := &bytes.Buffer{}
-	err := session.Agent(m, true, true, false, buf)
+	agent, err := session.NewAgent(m, true, true, false, io.MultiWriter(buf, os.Stderr))
+	if err != nil {
+		t.Errorf("ERROR: Agent create failed: %v", err)
+	}
+	err = agent.Timeout(1 * time.Second).Run()
 	if err != nil {
 		t.Errorf("ERROR: Agent run failed: %v", err)
 		return

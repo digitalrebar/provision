@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"log"
 	"os"
 	"os/exec"
 	"strings"
@@ -29,6 +28,7 @@ const (
 
 type MachineAgent struct {
 	state                                     AgentState
+	waitTimeout                               time.Duration
 	client                                    *Client
 	events                                    *EventStream
 	machine                                   *models.Machine
@@ -49,6 +49,7 @@ func (c *Client) NewAgent(m *models.Machine,
 		exitOnFailure:     exitOnFailure,
 		exitOnNotRunnable: exitOnNotRunnable,
 		logger:            logger,
+		waitTimeout:       1 * time.Hour,
 	}
 	if res.logger == nil {
 		res.logger = os.Stderr
@@ -59,6 +60,15 @@ func (c *Client) NewAgent(m *models.Machine,
 	}
 	res.runnerDir = runnerDir
 	return res, nil
+}
+
+func (a *MachineAgent) Logf(f string, args ...interface{}) {
+	fmt.Fprintf(a.logger, f, args...)
+}
+
+func (a *MachineAgent) Timeout(t time.Duration) *MachineAgent {
+	a.waitTimeout = t
+	return a
 }
 
 func (a *MachineAgent) power(cmdLine string) error {
@@ -117,7 +127,7 @@ func (a *MachineAgent) Init() {
 	}
 	a.events, a.err = a.client.Events()
 	if a.err != nil {
-		log.Printf("MachineAgent: error attaching to event stream: %v", err)
+		a.Logf("MachineAgent: error attaching to event stream: %v", err)
 		a.exitOrSleep()
 		return
 	}
@@ -125,7 +135,7 @@ func (a *MachineAgent) Init() {
 }
 
 func (a *MachineAgent) waitOn(m *models.Machine, cond TestFunc) {
-	found, err := a.events.WaitFor(m, cond, 1*time.Hour)
+	found, err := a.events.WaitFor(m, cond, a.waitTimeout)
 	if err != nil {
 		a.err = err
 		a.initOrExit()
@@ -133,6 +143,10 @@ func (a *MachineAgent) waitOn(m *models.Machine, cond TestFunc) {
 	}
 	switch found {
 	case "timeout":
+		if a.exitOnNotRunnable {
+			a.state = AGENT_EXIT
+			return
+		}
 	case "interrupt":
 		a.state = AGENT_EXIT
 	case "complete":
@@ -190,10 +204,13 @@ func (a *MachineAgent) RunTask() {
 		a.state = AGENT_EXIT
 	} else if runner.failed {
 		runner.Log("Task signalled that it failed")
+		if a.exitOnFailure {
+			a.state = AGENT_EXIT
+		}
 	}
 	if runner.incomplete {
 		runner.Log("Task signalled that it was incomplete")
-	} else {
+	} else if !runner.failed {
 		runner.Log("Task signalled that it finished normally")
 	}
 }
@@ -209,10 +226,7 @@ func (a *MachineAgent) WaitChangeStage() {
 
 func (a *MachineAgent) ChangeStage() {
 	var cmObj interface{}
-	a.state = AGENT_WAIT_FOR_RUNNABLE
-	if strings.HasSuffix(a.machine.BootEnv, "-install") {
-		a.state = AGENT_EXIT
-	}
+	a.state = AGENT_WAIT_FOR_CHANGE_STAGE
 	csMap := map[string]string{}
 	nextStage := ""
 	csErr := a.client.Req().Get().
@@ -221,6 +235,7 @@ func (a *MachineAgent) ChangeStage() {
 	if csErr != nil {
 		// No change stage map, see if we need to go to local
 		if strings.HasSuffix(a.machine.BootEnv, "-install") {
+			a.state = AGENT_EXIT
 			nextStage = "local"
 		}
 	} else {
@@ -230,23 +245,30 @@ func (a *MachineAgent) ChangeStage() {
 			return
 		}
 		ns, ok := csMap[a.machine.Stage]
-		if !ok {
-			return
-		}
-		pieces := strings.SplitN(ns, ":", 2)
-		nextStage = pieces[0]
-		if len(pieces) == 2 {
-			switch pieces[1] {
-			case "Reboot":
-				a.state = AGENT_REBOOT
-			case "Stop":
-				a.state = AGENT_EXIT
-			case "Shutdown":
-				a.state = AGENT_POWEROFF
+		if ok {
+			pieces := strings.SplitN(ns, ":", 2)
+			nextStage = pieces[0]
+			if len(pieces) == 2 {
+				switch pieces[1] {
+				case "Reboot":
+					a.state = AGENT_REBOOT
+				case "Stop":
+					a.state = AGENT_EXIT
+				case "Shutdown":
+					a.state = AGENT_POWEROFF
+				}
 			}
 		}
 	}
 	if nextStage != "" {
+		newStage := &models.Stage{}
+		if err := a.client.FillModel(newStage, nextStage); err != nil {
+			a.err = err
+			a.initOrExit()
+		}
+		if newStage.BootEnv == a.machine.BootEnv || newStage.BootEnv == "" {
+			a.state = AGENT_WAIT_FOR_RUNNABLE
+		}
 		newM := models.Clone(a.machine).(*models.Machine)
 		newM.Stage = nextStage
 		if _, err := a.client.PatchTo(a.machine, newM); err != nil {
@@ -292,6 +314,9 @@ func (a *MachineAgent) Run() error {
 			return a.power("reboot")
 		case AGENT_POWEROFF:
 			return a.power("poweroff")
+		default:
+			a.Logf("Unknown agent state %d", a.state)
+			panic("unreachable")
 		}
 	}
 }
