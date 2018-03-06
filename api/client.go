@@ -431,7 +431,8 @@ func (r *R) Do(val interface{}) error {
 	var resp *http.Response
 	var err error
 	for _, waitFor := range timeouts {
-		req, err := http.NewRequest(r.method, r.uri.String(), r.body)
+		var req *http.Request
+		req, err = http.NewRequest(r.method, r.uri.String(), r.body)
 		if err != nil {
 			r.err.AddError(err)
 			return r.err
