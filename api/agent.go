@@ -13,6 +13,27 @@ import (
 	"github.com/digitalrebar/provision/models"
 )
 
+// This implements a new machine agent structured as a finite state
+// machine.  There is one important behavioural change to the
+// behaviour of the runner that may impact how workflows are built:
+//
+// The RunnerWait flag in stages is no longer honored.  Instead,
+// the agent will wait by default, unless overridden by the following conditions, in order
+// of priority:
+//
+// * The next stage has the Reboot flag set.
+//
+// * The change-stage/map entry for the next stage has a Stop, Reboot,
+//   or Poweroff clause.
+//
+// * The machine is currently in a bootenv that ends in -install and
+//   there is nothing else to do, in which case the runner will exit
+//
+//
+// Additionally, this agent will automatically reboot the system when
+// it detects that the machine's boot environment has changed, unless
+// the machine is in an OS install, in which case the agent will exit.
+
 type AgentState int
 
 const (
@@ -38,6 +59,8 @@ type MachineAgent struct {
 	err                                       error
 }
 
+// NewAgent creates a new FSM based Machine Agent that starts out in
+// the AGENT_INIT state.
 func (c *Client) NewAgent(m *models.Machine,
 	exitOnNotRunnable, exitOnFailure, actuallyPowerThings bool,
 	logger io.Writer) (*MachineAgent, error) {
@@ -62,10 +85,14 @@ func (c *Client) NewAgent(m *models.Machine,
 	return res, nil
 }
 
+// Logf is a helper function to make logging of Agent actions a bit
+// easier.
 func (a *MachineAgent) Logf(f string, args ...interface{}) {
 	fmt.Fprintf(a.logger, f, args...)
 }
 
+// Timeout allows you to change how long the Agent will wait for an
+// event from dr-provision from the default of 1 hour.
 func (a *MachineAgent) Timeout(t time.Duration) *MachineAgent {
 	a.waitTimeout = t
 	return a
@@ -108,6 +135,9 @@ func (a *MachineAgent) initOrExit() {
 	}
 }
 
+// Init resets the Machine Agent back to its initial state.  This
+// consists of marking any current running jobs as Failed and
+// repoening the event stream from dr-provision.
 func (a *MachineAgent) Init() {
 	if a.events != nil {
 		a.events.Close()
@@ -134,6 +164,18 @@ func (a *MachineAgent) Init() {
 	a.state = AGENT_WAIT_FOR_RUNNABLE
 }
 
+// waitOn waits for the machine to match the passed wait
+// conitions.  Once the conditions are met, the agent may transition
+// to the following states (in order of priority):
+//
+// * AGENT_EXIT if the machine wants to change from an -install
+//   bootenv to a different bootenv
+//
+// * AGENT_REBOOT if the machine wants to change bootenvs
+//
+// * AGENT_RUN_TASK if the machine is runnable.
+//
+// * AGENT_WAIT_FOR_RUNNABLE if the machine is not runnable.
 func (a *MachineAgent) waitOn(m *models.Machine, cond TestFunc) {
 	found, err := a.events.WaitFor(m, cond, a.waitTimeout)
 	if err != nil {
@@ -175,12 +217,25 @@ func (a *MachineAgent) waitOn(m *models.Machine, cond TestFunc) {
 	a.machine = m
 }
 
+// WaitRunnable has waitOn wait for the Machine to become runnable.
 func (a *MachineAgent) WaitRunnable() {
 	m := models.Clone(a.machine).(*models.Machine)
 	a.Logf("Waiting on machine to become runnable\n")
 	a.waitOn(m, EqualItem("Runnable", m.Runnable))
 }
 
+// RunTask attempts to run the next task on the Machine.  It may
+// transition to the following states:
+//
+// * AGENT_CHANGE_STAGE if there are no tasks to run.
+//
+// * AGENT_REBOOT if the task signalled that the machine should reboot
+//
+// * AGENT_POWEROFF if the task signalled that the machine should shut down
+//
+// * AGENT_EXIT if the task signalled that the agent should stop.
+//
+// * AGENT_WAIT_FOR_RUNNABLE if no other conditions were met.
 func (a *MachineAgent) RunTask() {
 	runner, err := NewTaskRunner(a.client, a.machine, a.runnerDir, a.logger)
 	if err != nil {
@@ -222,6 +277,14 @@ func (a *MachineAgent) RunTask() {
 	}
 }
 
+// WaitChangeStage has waitOn wait for any of the following on the
+// machine to change:
+//
+// * The CurrentTask index
+// * The task list
+// * The Runnable flag
+// * The boot environment
+// * The stage
 func (a *MachineAgent) WaitChangeStage() {
 	m := models.Clone(a.machine).(*models.Machine)
 	a.Logf("Waiting for system to be runnable and for stage or current tasks to change\n")
@@ -233,6 +296,29 @@ func (a *MachineAgent) WaitChangeStage() {
 			NotItem(EqualItem("Stage", m.Stage))))
 }
 
+// ChangeStage handles determining what to do when the Agent runs out
+// of tasks to run in the current Stage.  It may transition to the following states:
+//
+// * AGENT_WAIT_FOR_CHANGE_STAGE if there is no next stage for this
+//   machine in the change stage map and it is not in an -install
+//   bootenv.
+//
+// * AGENT_EXIT if there is no next stage in the change stage map and
+//   the machine is in an -install bootenv.  In this case, ChangeStage
+//   will set the machine stage to `local`.
+//
+// * AGENT_REBOOT if the next stage has the Reboot flag, the change
+//   stage map has a Reboot specifier, or the next stage has a different
+//   bootenv than the machine and the machine is not in an -install
+//   bootenv
+//
+// * AGENT_EXIT if the machine is in an -install bootenv and the next
+//   stage requires a different bootenv.
+//
+// * AGENT_POWEROFF if the change stage map wants to power the system
+//   off after changing the stage.
+//
+// * AGENT_WAIT_FOR_RUNNABLE if no other condition applies
 func (a *MachineAgent) ChangeStage() {
 	var cmObj interface{}
 	a.state = AGENT_WAIT_FOR_CHANGE_STAGE
@@ -313,6 +399,7 @@ func (a *MachineAgent) ChangeStage() {
 	}
 }
 
+// Run kicks off the state machine for this agent.
 func (a *MachineAgent) Run() error {
 	if a.machine.HasFeature("original-change-stage") ||
 		!a.machine.HasFeature("change-stage-v2") {
