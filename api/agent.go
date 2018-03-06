@@ -164,6 +164,14 @@ func (a *MachineAgent) Init() {
 	a.state = AGENT_WAIT_FOR_RUNNABLE
 }
 
+func (a *MachineAgent) rebootOrExit() {
+	if strings.HasSuffix(a.machine.BootEnv, "-install") {
+		a.state = AGENT_EXIT
+	} else {
+		a.state = AGENT_REBOOT
+	}
+}
+
 // waitOn waits for the machine to match the passed wait
 // conitions.  Once the conditions are met, the agent may transition
 // to the following states (in order of priority):
@@ -194,11 +202,7 @@ func (a *MachineAgent) waitOn(m *models.Machine, cond TestFunc) {
 		a.state = AGENT_EXIT
 	case "complete":
 		if m.BootEnv != a.machine.BootEnv {
-			if strings.HasSuffix(a.machine.BootEnv, "-install") {
-				a.state = AGENT_EXIT
-			} else {
-				a.state = AGENT_REBOOT
-			}
+			a.rebootOrExit()
 		} else if m.Runnable {
 			a.state = AGENT_RUN_TASK
 		} else {
@@ -257,7 +261,7 @@ func (a *MachineAgent) RunTask() {
 	defer runner.Close()
 	if runner.reboot {
 		runner.Log("Task signalled runner to reboot")
-		a.state = AGENT_REBOOT
+		a.rebootOrExit()
 	} else if runner.poweroff {
 		runner.Log("Task signalled runner to poweroff")
 		a.state = AGENT_POWEROFF
@@ -364,21 +368,16 @@ func (a *MachineAgent) ChangeStage() {
 		// If the bootenv has not changed, the machine will get a new task list.
 		// Wait for the machine to be runnable if needed, and start running it.
 		a.state = AGENT_WAIT_FOR_RUNNABLE
-	} else if inInstall {
-		// We are in an OS install boot environment.  Just exit since we are out of tasks,
-		// and we want to get into the next stage once the OS install process
-		// finishes its thing.
-		a.state = AGENT_EXIT
 	} else {
-		// We are not in an OS install bootenv, and the new stage wants a new bootenv.
-		// Reboot into it to continue processing.
-		a.state = AGENT_REBOOT
+		// The new stage wants a new bootenv.  Reboot into it to continue
+		// processing.
+		a.rebootOrExit()
 	}
 	if targetState != "" {
 		// The change stage map is overriding our default behaviour.
 		switch targetState {
 		case "Reboot":
-			a.state = AGENT_REBOOT
+			a.rebootOrExit()
 		case "Stop":
 			a.state = AGENT_EXIT
 		case "Shutdown":
@@ -387,7 +386,7 @@ func (a *MachineAgent) ChangeStage() {
 	}
 	if newStage.Reboot {
 		// A reboot flag on the next stage forces an unconditional reboot.
-		a.state = AGENT_REBOOT
+		a.rebootOrExit()
 	}
 	newM := models.Clone(a.machine).(*models.Machine)
 	newM.Stage = nextStage
