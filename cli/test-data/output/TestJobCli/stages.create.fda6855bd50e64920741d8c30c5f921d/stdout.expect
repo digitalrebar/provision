@@ -10,7 +10,7 @@
   "ReadOnly": false,
   "Reboot": false,
   "RequiredParams": [],
-  "RunnerWait": false,
+  "RunnerWait": true,
   "Tasks": [
     "task3",
     "task2",

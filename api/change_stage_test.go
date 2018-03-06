@@ -73,36 +73,43 @@ Templates:
 
 	stageGregInstall := mustDecode(&models.Stage{}, `
 Name: greg-install
+RunnerWait: true
 Tasks:
 - taskInstall
 `).(*models.Stage)
 	stageFredInstall := mustDecode(&models.Stage{}, `
 Name: fred-install
+RunnerWait: true
 Tasks:
 - taskInstall
 `).(*models.Stage)
 	stageRealReboot1 := mustDecode(&models.Stage{}, `
 Name: stageRealReboot1
+RunnerWait: true
 Tasks:
 - task1
 `).(*models.Stage)
 	stageRealReboot := mustDecode(&models.Stage{}, `
 Name: stageRealReboot
+RunnerWait: true
 Tasks:
 - task1
 `).(*models.Stage)
 	stageStop := mustDecode(&models.Stage{}, `
 Name: stageStop
+RunnerWait: true
 Tasks:
 - task1
 `).(*models.Stage)
 	stageReboot := mustDecode(&models.Stage{}, `
 Name: stageReboot
+RunnerWait: true
 Tasks:
 - task1
 `).(*models.Stage)
 	stageNoWait := mustDecode(&models.Stage{}, `
 Name: stageNoWait
+RunnerWait: true
 Tasks:
 - task1
 `).(*models.Stage)
@@ -114,6 +121,7 @@ Tasks:
 `).(*models.Stage)
 	stageNoWait1 := mustDecode(&models.Stage{}, `
 Name: stageNoWait1
+RunnerWait: true
 Tasks:
 - task1
 `).(*models.Stage)
@@ -125,6 +133,7 @@ Tasks:
 `).(*models.Stage)
 	stageDoneNoWait := mustDecode(&models.Stage{}, `
 Name: stageDoneNoWait
+RunnerWait: true
 Tasks:
 - taskDone
 `).(*models.Stage)

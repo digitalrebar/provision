@@ -17,7 +17,8 @@ RE:
       "package-repository-handling",
       "profileless-machine",
       "threaded-log-levels",
-      "plugin-v2"
+      "plugin-v2",
+      "fsm-runner"
     \],
     "file_port": 10002,
     "id": "Fred",

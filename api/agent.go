@@ -383,8 +383,6 @@ func (a *MachineAgent) ChangeStage() {
 			a.state = AGENT_EXIT
 		case "Shutdown":
 			a.state = AGENT_POWEROFF
-		default:
-			a.state = AGENT_WAIT_FOR_RUNNABLE
 		}
 	}
 	if newStage.Reboot {

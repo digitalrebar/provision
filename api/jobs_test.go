@@ -141,12 +141,14 @@ Templates:
 
 	stage1 := mustDecode(&models.Stage{}, `
 Name: stage1
+RunnerWait: true
 Tasks:
 - task1
 - task2
 `).(*models.Stage)
 	stage2 := mustDecode(&models.Stage{}, `
 Name: stage2
+RunnerWait: true
 Tasks:
 - task2
 - task1

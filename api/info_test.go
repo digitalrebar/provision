@@ -47,6 +47,7 @@ func TestInfo(t *testing.T) {
 				"profileless-machine",
 				"threaded-log-levels",
 				"plugin-v2",
+				"fsm-runner",
 			},
 		},
 		expectErr: nil,
