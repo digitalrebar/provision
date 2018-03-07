@@ -336,6 +336,32 @@ The expected behavior is for a client to attempt to download files in the follow
 Due to this behavior, filenames will be specified that do not exist, and the error message related to that probe request is a normal message.  This is NOT an indicator that provisioning is broken in your environment.
 
 
+.. _rs_render_kickstart_preseed:
+
+Render a Kickstart or Preseed
+-----------------------------
+
+Kickstart and Preseed files only created by request and are not stored on a filesystem that is viewable.  They are dynamically generated on the fly, and served from the virtual Filesystem space of the Digital Rebar HTTP server (on port 8091 by default).  However, it is possible to render a kickstart or preseed to evaluate how it is going to operate, or troubleshoot issues with your config files. 
+
+When a machine is in provisioning status, you can view the dynamically generated preseed or kickstart from the TFTP server (or via the HTTP gateway).  Provisioning status means the Machine has been plaed in to an installable BootEnv via a Stage.  If (for exaxmple) placed in to ``centos-7-install`` Stage, the ``compute.ks`` can be rendered for the machine.  Or, if placed in to ``ubuntu-16.04-install`` Stage, the ``seed`` can be rendered for the machine.  
+
+Get the Machine ID, then use the following constructed URL:
+  ::
+
+    MID="7f65279a-7e5c-4e69-af40-dd01af4c5667"
+    DRP="147.75.65.3"
+    TYPE="seed"   # seed for ubuntu, or compute.ks for centos
+
+    http://${DRP}:8091/machines/${MID}/${TYPE}
+
+
+Example URL:
+
+  http://147.75.65.3:8091/machines/7f65279a-7e5c-4e69-af40-dd01af4c5667/seed
+
+.. note:: A simple trick ... you can create a non-existent Machine, and place that machine in different BootEnvs to render provisioning files for testing purposes.  
+
+
 .. _rs_jq_examples:
 
 JQ Usage Examples
