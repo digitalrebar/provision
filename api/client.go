@@ -80,6 +80,7 @@ type R struct {
 	Resp                 *http.Response
 	err                  *models.Error
 	paranoid             bool
+	noRetry              bool
 	traceLvl, traceToken string
 }
 
@@ -178,6 +179,18 @@ func (r *R) PatchTo(old, new models.Model) *R {
 		return r
 	}
 	return r.PatchObj(old, new).UrlForM(old)
+}
+
+func (r *R) PatchToFull(old models.Model, new models.Model, paranoid bool) (models.Model, error) {
+	res := models.Clone(old)
+	if paranoid {
+		r = r.ParanoidPatch()
+	}
+	err := r.PatchTo(old, new).Do(&res)
+	if err != nil {
+		return old, err
+	}
+	return res, err
 }
 
 func (r *R) Fill(m models.Model) error {
@@ -353,16 +366,23 @@ func (r *R) Body(b interface{}) *R {
 		r.body = obj
 	case []byte:
 		r.Headers("Content-Type", "application/octet-stream")
-		r.body = bytes.NewBuffer(obj)
+		r.body = bytes.NewReader(obj)
 	default:
 		r.Headers("Content-Type", "application/json")
 		buf, err := json.Marshal(&obj)
 		if err != nil {
 			r.err.AddError(err)
 		} else {
-			r.body = bytes.NewBuffer(buf)
+			r.body = bytes.NewReader(buf)
 		}
 	}
+	return r
+}
+
+// FailFast skips the usual fibbonaci backoff retry in the case of
+// transient errors.
+func (r *R) FailFast() *R {
+	r.noRetry = true
 	return r
 }
 
@@ -371,9 +391,10 @@ func (r *R) Body(b interface{}) *R {
 // will be returned and no API interaction will actually take place.
 // Otherwise, Do will generate am http.Request, perform it, and
 // marshal the results to val.  If any errors occur while processing
-// the request, they will be reported in the returned error.
+// the request, fibbonaci based backoff will be performed up to 6
+// times.
 //
-// If val is an io.Writer, the body of the request will be copied
+// If val is an io.Writer, the body of the response will be copied
 // verbatim into val using io.Copy
 //
 // Otherwise, the response body will be unmarshalled into val as
@@ -399,15 +420,44 @@ func (r *R) Do(val interface{}) error {
 	case io.Writer:
 		r.Headers("Accept", "application/octet-stream")
 	}
-	req, err := http.NewRequest(r.method, r.uri.String(), r.body)
-	if err != nil {
-		r.err.AddError(err)
-		return r.err
+	timeouts := []time.Duration{
+		time.Second,
+		time.Second,
+		2 * time.Second,
+		3 * time.Second,
+		5 * time.Second,
+		8 * time.Second,
 	}
-	req.Header = r.header
-	r.Req = req
-	r.c.Authorize(req)
-	resp, err := r.c.Do(req)
+	var resp *http.Response
+	var err error
+	for _, waitFor := range timeouts {
+		var req *http.Request
+		req, err = http.NewRequest(r.method, r.uri.String(), r.body)
+		if err != nil {
+			r.err.AddError(err)
+			return r.err
+		}
+		req.Header = r.header
+		r.Req = req
+		r.c.Authorize(req)
+		resp, err = r.c.Do(req)
+		if err == nil || r.noRetry {
+			break
+		}
+		if r.body == nil {
+			time.Sleep(waitFor)
+			continue
+		}
+		seeker, ok := r.body.(io.ReadSeeker)
+		if r.body != nil && !ok {
+			// we cannot rewind the body, so don't even try.
+			break
+		}
+		if i, err := seeker.Seek(0, io.SeekStart); err != nil || i != 0 {
+			break
+		}
+		time.Sleep(waitFor)
+	}
 	if err != nil {
 		r.err.AddError(err)
 		return r.err
@@ -648,16 +698,7 @@ func (c *Client) PatchTo(old models.Model, new models.Model) (models.Model, erro
 }
 
 func (c *Client) PatchToFull(old models.Model, new models.Model, paranoid bool) (models.Model, error) {
-	res := models.Clone(old)
-	r := c.Req()
-	if paranoid {
-		r = r.ParanoidPatch()
-	}
-	err := r.PatchTo(old, new).Do(&res)
-	if err != nil {
-		return old, err
-	}
-	return res, err
+	return c.Req().PatchToFull(old, new, paranoid)
 }
 
 // PutModel replaces the server-side object matching the passed-in

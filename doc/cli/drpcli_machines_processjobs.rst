@@ -22,6 +22,7 @@ Options
 
           --exit-on-failure   Exit on failure of a task
       -h, --help              help for processjobs
+          --oneshot           Do not wait for additional tasks to appear
 
 Options inherited from parent commands
 --------------------------------------

@@ -447,7 +447,7 @@ Profiles: []
 ReadOnly: false
 Reboot: false
 RequiredParams: []
-RunnerWait: false
+RunnerWait: true
 Tasks: []
 Templates: []
 Validated: true`),
@@ -602,7 +602,7 @@ Profiles: []
 ReadOnly: false
 Reboot: false
 RequiredParams: []
-RunnerWait: false
+RunnerWait: true
 Tasks: []
 Templates: []
 Validated: true`),
