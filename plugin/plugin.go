@@ -143,7 +143,7 @@ func Run(toPath, fromPath string, pc PluginConfig) error {
 			},
 		},
 	}
-	pmux := mux.New(thelog.NoPublish())
+	pmux := mux.New(thelog)
 	pmux.Handle("/api-plugin/v3/config",
 		func(w http.ResponseWriter, r *http.Request) { configHandler(w, r, pc) })
 	if ps, ok := pc.(PluginStop); ok {
