@@ -116,13 +116,13 @@ func logWrap(bl logger.Logger, hf http.HandlerFunc) http.HandlerFunc {
 		if logLevel := r.Header.Get("X-Log-Request"); logLevel != "" {
 			lvl, err := logger.ParseLevel(logLevel)
 			if err != nil {
-				l.Errorf("Invalid requested log level %s", logLevel)
+				l.NoPublish().Errorf("Invalid requested log level %s", logLevel)
 			} else {
 				l = l.Trace(lvl)
 			}
 		}
 		if logToken := r.Header.Get("X-Log-Token"); logToken != "" {
-			l.Errorf("Log token: %s", logToken)
+			l.NoPublish().Errorf("Log token: %s", logToken)
 		}
 		start := time.Now()
 		path := r.URL.Path
@@ -154,7 +154,7 @@ func logWrap(bl logger.Logger, hf http.HandlerFunc) http.HandlerFunc {
 		if raw != "" {
 			path = path + "?" + raw
 		}
-		l.Debugf("API: st: %d lt: %13v m: %s %s",
+		l.NoPublish().Debugf("API: st: %d lt: %13v m: %s %s",
 			statusCode,
 			latency,
 			method,
