@@ -1,6 +1,9 @@
 package models
 
-import "net"
+import (
+	"math/big"
+	"net"
+)
 
 // Subnet represents a DHCP Subnet
 //
@@ -121,6 +124,46 @@ type Subnet struct {
 
 func (s *Subnet) Validate() {
 	s.AddError(ValidName("Invalid Name", s.Name))
+	_, subnet, err := net.ParseCIDR(s.Subnet)
+	if err != nil {
+		s.Errorf("Invalid subnet %s: %v", s.Subnet, err)
+		return
+	} else {
+		ValidateIP4(s, subnet.IP)
+	}
+	if s.Strategy == "" {
+		s.Errorf("Strategy must have a value")
+	}
+	if s.NextServer != nil {
+		ValidateMaybeZeroIP4(s, s.NextServer)
+	}
+	if s.Proxy && s.Unmanaged {
+		s.Errorf("Unmanaged and Proxy cannot both be true")
+	}
+	if !(s.OnlyReservations || s.Proxy) {
+		ValidateIP4(s, s.ActiveStart)
+		ValidateIP4(s, s.ActiveEnd)
+		if !subnet.Contains(s.ActiveStart) {
+			s.Errorf("ActiveStart %s not in subnet range %s", s.ActiveStart, subnet)
+		}
+		if !subnet.Contains(s.ActiveEnd) {
+			s.Errorf("ActiveEnd %s not in subnet range %s", s.ActiveEnd, subnet)
+		}
+		startBytes := big.NewInt(0)
+		endBytes := big.NewInt(0)
+		startBytes.SetBytes(s.ActiveStart)
+		endBytes.SetBytes(s.ActiveEnd)
+		if startBytes.Cmp(endBytes) != -1 {
+			s.Errorf("ActiveStart %s must be less than ActiveEnd %s", s.ActiveStart, s.ActiveEnd)
+		}
+		if s.ActiveLeaseTime < 60 {
+			s.Errorf("ActiveLeaseTime must be greater than or equal to 60 seconds, not %d", s.ActiveLeaseTime)
+		}
+	}
+	if s.ReservedLeaseTime < 7200 {
+		s.Errorf("ReservedLeaseTime must be greater than or equal to 7200 seconds, not %d", s.ReservedLeaseTime)
+	}
+
 }
 
 func (s *Subnet) Prefix() string {
@@ -142,6 +185,22 @@ func (s *Subnet) Fill() {
 	}
 	if s.Options == nil {
 		s.Options = []DhcpOption{}
+	}
+	if s.Strategy == "" {
+		s.Strategy = "MAC"
+	}
+	if s.Pickers == nil || len(s.Pickers) == 0 {
+		if s.OnlyReservations {
+			s.Pickers = []string{"none"}
+		} else {
+			s.Pickers = []string{"hint", "nextFree", "mostExpired"}
+		}
+	}
+	if s.ActiveLeaseTime == 0 {
+		s.ActiveLeaseTime = 60
+	}
+	if s.ReservedLeaseTime == 0 {
+		s.ReservedLeaseTime = 7200
 	}
 }
 
