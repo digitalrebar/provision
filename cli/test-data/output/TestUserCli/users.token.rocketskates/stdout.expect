@@ -18,7 +18,8 @@ RE:
       "profileless-machine",
       "threaded-log-levels",
       "plugin-v2",
-      "fsm-runner"
+      "fsm-runner",
+      "plugin-v2-safe-config"
     \],
     "file_port": 10002,
     "id": "Fred",

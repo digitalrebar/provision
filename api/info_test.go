@@ -48,6 +48,7 @@ func TestInfo(t *testing.T) {
 				"threaded-log-levels",
 				"plugin-v2",
 				"fsm-runner",
+				"plugin-v2-safe-config",
 			},
 		},
 		expectErr: nil,
