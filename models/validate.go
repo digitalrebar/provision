@@ -2,6 +2,7 @@ package models
 
 import (
 	"fmt"
+	"net"
 	"strings"
 )
 
@@ -139,4 +140,23 @@ func (v *Validation) MakeError(code int, errType string, obj Model) error {
 		Type:     errType,
 		Messages: v.Errors,
 	}
+}
+
+func ValidateIP4(e ErrorAdder, a net.IP) {
+	if a == nil {
+		e.Errorf("IP Address is nil")
+	} else if !a.IsGlobalUnicast() {
+		e.Errorf("%s is not a valid IP address for dr-provision", a)
+	}
+}
+
+func ValidateMaybeZeroIP4(e ErrorAdder, a net.IP) {
+	if len(a) != 0 && !a.IsUnspecified() {
+		ValidateIP4(e, a)
+	}
+}
+
+func ValidateMac(e ErrorAdder, mac string) {
+	_, err := net.ParseMAC(mac)
+	e.AddError(err)
 }
