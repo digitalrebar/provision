@@ -178,7 +178,7 @@ func Run(toPath, fromPath string, pc PluginConfig) error {
 func logToDRP(l *logger.Line) {
 	_, err := mux.Post(client, "/log", l)
 	if err != nil {
-		thelog.NoPublish().Errorf("Failed to log line! %v %v", l, err)
+		thelog.NoRepublish().Errorf("Failed to log line! %v %v", l, err)
 	}
 }
 
@@ -255,7 +255,7 @@ func publishHandler(w http.ResponseWriter, r *http.Request, pp PluginPublisher) 
 	}
 	l := w.(logger.Logger)
 	resp := models.Error{Code: http.StatusOK}
-	if err := pp.Publish(l.NoPublish(), &event); err != nil {
+	if err := pp.Publish(l.NoRepublish(), &event); err != nil {
 		resp.Code = err.Code
 		b, _ := json.Marshal(err)
 		resp.Messages = append(resp.Messages, string(b))
