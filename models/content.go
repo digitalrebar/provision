@@ -2,9 +2,8 @@ package models
 
 import "github.com/digitalrebar/store"
 
+// All fields must be strings
 type ContentMetaData struct {
-	Meta
-
 	// required: true
 	Name        string
 	Source      string
@@ -12,9 +11,9 @@ type ContentMetaData struct {
 	Version     string
 
 	// Informational Fields
-	Writable     bool
+	Writable     string
 	Type         string
-	Overwritable bool
+	Overwritable string
 }
 
 //
@@ -132,9 +131,6 @@ func (c *Content) KeyName() string {
 }
 
 func (c *Content) Fill() {
-	if c.Meta.Meta == nil {
-		c.Meta.Meta = Meta{}
-	}
 	if c.Sections == nil {
 		c.Sections = Sections(map[string]Section{})
 	}
@@ -152,9 +148,6 @@ type ContentSummary struct {
 }
 
 func (c *ContentSummary) Fill() {
-	if c.Meta.Meta == nil {
-		c.Meta.Meta = Meta{}
-	}
 	if c.Counts == nil {
 		c.Counts = map[string]int{}
 	}
@@ -194,28 +187,28 @@ func (c *ContentSummary) FromStore(src store.Store) {
 }
 
 // Return type, overwritable, writable
-func getExtraFields(n, t string) (string, bool, bool) {
-	writable := false
-	overwritable := false
+func getExtraFields(n, t string) (string, string, string) {
+	writable := "false"
+	overwritable := "false"
 	if t != "" {
 		if t == "default" {
-			overwritable = true
+			overwritable = "true"
 		}
 	} else {
 		t = "dynamic"
 	}
 	if n == "BackingStore" {
 		t = "writable"
-		writable = true
+		writable = "true"
 	} else if n == "LocalStore" {
 		t = "local"
-		overwritable = true
+		overwritable = "true"
 	} else if n == "BasicStore" {
 		t = "basic"
-		overwritable = true
+		overwritable = "true"
 	} else if n == "DefaultStore" {
 		t = "default"
-		overwritable = true
+		overwritable = "true"
 	}
 	return t, overwritable, writable
 }
