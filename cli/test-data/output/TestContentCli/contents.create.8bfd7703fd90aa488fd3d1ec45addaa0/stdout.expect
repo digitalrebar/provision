@@ -3,12 +3,11 @@
   "Warnings": [],
   "meta": {
     "Description": "",
-    "Meta": {},
     "Name": "john",
-    "Overwritable": false,
+    "Overwritable": "false",
     "Source": "",
     "Type": "dynamic",
     "Version": "",
-    "Writable": false
+    "Writable": "false"
   }
 }

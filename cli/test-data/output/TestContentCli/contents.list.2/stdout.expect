@@ -19,13 +19,12 @@
     "Warnings": [],
     "meta": {
       "Description": "Writable backing store",
-      "Meta": {},
       "Name": "BackingStore",
-      "Overwritable": false,
+      "Overwritable": "false",
       "Source": "",
       "Type": "writable",
       "Version": "user",
-      "Writable": true
+      "Writable": "true"
     }
   },
   {
@@ -35,13 +34,12 @@
     "Warnings": [],
     "meta": {
       "Description": "Local Override Store",
-      "Meta": {},
       "Name": "LocalStore",
-      "Overwritable": true,
+      "Overwritable": "true",
       "Source": "",
       "Type": "local",
       "Version": "user",
-      "Writable": false
+      "Writable": "false"
     }
   },
   {
@@ -49,13 +47,12 @@
     "Warnings": [],
     "meta": {
       "Description": "",
-      "Meta": {},
       "Name": "john",
-      "Overwritable": false,
+      "Overwritable": "false",
       "Source": "",
       "Type": "dynamic",
       "Version": "",
-      "Writable": false
+      "Writable": "false"
     }
   },
   {
@@ -65,13 +62,12 @@
     "Warnings": [],
     "meta": {
       "Description": "Initial Default Content",
-      "Meta": {},
       "Name": "DefaultStore",
-      "Overwritable": true,
+      "Overwritable": "true",
       "Source": "Unspecified",
       "Type": "default",
       "Version": "user",
-      "Writable": false
+      "Writable": "false"
     }
   },
   {
@@ -81,13 +77,12 @@
     "Warnings": [],
     "meta": {
       "Description": "Test Plugin for DRP",
-      "Meta": {},
       "Name": "incrementer",
-      "Overwritable": false,
+      "Overwritable": "false",
       "Source": "Digital Rebar",
       "Type": "plugin",
       "Version": "Internal",
-      "Writable": false
+      "Writable": "false"
     }
   },
   {
@@ -98,13 +93,12 @@
     "Warnings": [],
     "meta": {
       "Description": "Default objects that must be present",
-      "Meta": {},
       "Name": "BasicStore",
-      "Overwritable": true,
+      "Overwritable": "true",
       "Source": "",
       "Type": "basic",
       "Version": "Unversioned",
-      "Writable": false
+      "Writable": "false"
     }
   }
 ]
