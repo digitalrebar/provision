@@ -383,6 +383,27 @@ Some things that have worked in the past:
   * any other solutions, please let us know... we'll add them here 
 
 
+.. _rs_expand_templates:
+
+Expand Templates from Failed Job
+--------------------------------
+
+If you have a task/template that has failed, once it's been run by the Job system, you can collect the rendered template.  The rendered template will be in JSON format, so it may be hard to parse.   
+
+  ::
+
+    # set Endpoint and User/Pass appropriately for your environment
+    export RS_ENDPOINT="https://127.0.0.1:8092"
+    export RS_KEY="rocketskates:r0cketsk8ts"
+
+    # get your Job ID from the failed job, and set accordingly:
+    JOBID="abcdefghijklmnopqrstuvwxyz"
+    curl -k -u $RS_KEY $RS_ENDPOINT/api/v3/jobs/$JOBID/actions > $JOBID.json
+
+    # optional - if you have the remarshal tools installed:
+    json2yaml $JOBID.json > $JOBID.yaml
+
+
 .. _rs_jq_examples:
 
 JQ Usage Examples
