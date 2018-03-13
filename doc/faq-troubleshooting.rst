@@ -362,6 +362,27 @@ Example URL:
 .. note:: A simple trick ... you can create a non-existent Machine, and place that machine in different BootEnvs to render provisioning files for testing purposes.  
 
 
+.. _rs_kubernetes_dashboard:
+
+Kubernetes Dashboard
+--------------------
+
+The Ansible Kubespray and the Kubeadm deployments of Kubernetes are all maintained by the respective Kubernetes communities.  Digital Rebar simply implements a basic version of those configurations.  Access to the Kubernetes Dashboard is often changing, and being updated by the community.  Please check with the respective communities about how to correctly access the Dashboard.   
+
+Some things to note in general: 
+
+  * Access is restricted; as well it should
+  * You must configure/enable access to the Dashboard
+  * Our implmentations usually have a mechanism configured, but this changes over time
+  
+Some things that have worked in the past:
+
+  * ``kubectl proxy`` - enabled Proxy access to the Kubernetes Master to get to the Dashboard
+  * try stopping the Proxy container, and running ``kubectl proxy --address 0.0.0.0 --accept-hosts '.*'``
+     * carefully consider this implication - you are enable access from all hosts !!! 
+  * any other solutions, please let us know... we'll add them here 
+
+
 .. _rs_jq_examples:
 
 JQ Usage Examples
