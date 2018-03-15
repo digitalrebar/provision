@@ -87,6 +87,9 @@ template.  RenderData has the following fields:
     a unique file space for each machine by using it in a TemplateInfo
     Path field.
 
+  - **.Machine.Address** returns the IP address of the Machine as 
+    recorded in the Lease or Reservation.
+
   - **.Machine.HexAddress** returns the IP address of the Machine in hex
     format, suitable for use by anything expecting a hex encoded IP
     address.
