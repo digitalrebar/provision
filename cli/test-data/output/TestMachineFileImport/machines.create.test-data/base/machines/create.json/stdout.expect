@@ -30,5 +30,6 @@
   "Stage": "none",
   "Tasks": [],
   "Uuid": "b2d9b43a-b545-464b-8bc4-088daa7fa7c4",
-  "Validated": true
+  "Validated": true,
+  "Workflow": ""
 }
