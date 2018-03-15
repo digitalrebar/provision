@@ -79,6 +79,9 @@ type Machine struct {
 	//
 	//
 	HardwareAddrs []string
+	// Workflow is the workflow that is currently responsible for processing machine tasks.
+	//
+	Workflow string
 }
 
 func (n *Machine) Validate() {

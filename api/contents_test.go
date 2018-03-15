@@ -24,6 +24,7 @@ func TestContentCrud(t *testing.T) {
     tasks: 0
     templates: 0
     users: 1
+    workflows: 0
   Warnings: []
   meta:
     Description: Writable backing store
@@ -186,6 +187,7 @@ sections:
       ReadOnly: false
       Secret: elided
       Validated: false
+  workflows: {}
 `
 	bs := &models.Content{}
 	if err := DecodeYaml([]byte(backingStore), bs); err != nil {
