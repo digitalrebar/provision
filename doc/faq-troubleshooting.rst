@@ -349,17 +349,21 @@ Get the Machine ID, then use the following constructed URL:
   ::
 
     MID="7f65279a-7e5c-4e69-af40-dd01af4c5667"
-    DRP="147.75.65.3"
+    DRP="10.10.10.10"
     TYPE="seed"   # seed for ubuntu, or compute.ks for centos
 
     http://${DRP}:8091/machines/${MID}/${TYPE}
 
 
-Example URL:
+Example URLs:
 
-  http://147.75.65.3:8091/machines/7f65279a-7e5c-4e69-af40-dd01af4c5667/seed
+  ubuntu/debian:
+    http://10.10.10.10:8091/machines/7f65279a-7e5c-4e69-af40-dd01af4c5667/seed
 
-.. note:: A simple trick ... you can create a non-existent Machine, and place that machine in different BootEnvs to render provisioning files for testing purposes.  
+  centos/redhat:
+    http://10.10.10.10:8091/machines/7f65279a-7e5c-4e69-af40-dd01af4c5667/compute.ks
+
+.. note:: A simple trick ... you can create a non-existent Machine, and place that machine in different BootEnvs to render provisioning files for testing purposes.  For example, put the non-existent Machine in the ``centos-7-install`` Stage, then render the ``compute.ks`` kickstart URL above.
 
 
 .. _rs_kubernetes_dashboard:
