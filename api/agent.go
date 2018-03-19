@@ -185,7 +185,7 @@ func (a *MachineAgent) rebootOrExit() {
 //
 // * AGENT_WAIT_FOR_RUNNABLE if the machine is not runnable.
 func (a *MachineAgent) waitOn(m *models.Machine, cond TestFunc) {
-	found, err := a.events.WaitFor(m, cond, a.waitTimeout)
+	found, err := a.events.WaitFor(m, AndItems(EqualItem("Available", true), cond), a.waitTimeout)
 	if err != nil {
 		a.err = err
 		a.initOrExit()
