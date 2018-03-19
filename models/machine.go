@@ -1,9 +1,9 @@
 package models
 
 import (
-	"fmt"
 	"net"
 	"reflect"
+	"strings"
 
 	"github.com/pborman/uuid"
 )
@@ -81,6 +81,7 @@ type Machine struct {
 	HardwareAddrs []string
 	// Workflow is the workflow that is currently responsible for processing machine tasks.
 	//
+	// required: true
 	Workflow string
 }
 
@@ -92,7 +93,20 @@ func (n *Machine) Validate() {
 		n.AddError(ValidName("Invalid Profile", p))
 	}
 	for _, t := range n.Tasks {
-		n.AddError(ValidName("Invalid Task", t))
+		if n.Workflow == "" {
+			n.AddError(ValidName("Invalid Task", t))
+		} else {
+			parts := strings.SplitN(t, ":", 2)
+			if len(parts) == 2 {
+				if parts[0] != "stage" {
+					n.Errorf("Invalid Task Step %s", t)
+				} else {
+					n.AddError(ValidName("Invalid Stage", parts[1]))
+				}
+			} else {
+				n.AddError(ValidName("Invalid Task", t))
+			}
+		}
 	}
 	for _, m := range n.HardwareAddrs {
 		if _, err := net.ParseMAC(m); err != nil {
@@ -198,80 +212,90 @@ func (b *Machine) SetName(n string) {
 	b.Name = n
 }
 
-func (b *Machine) AddTasks(offset int, tasks ...string) error {
+func (b *Machine) SplitTasks() (thePast []string, thePresent []string, theFuture []string) {
+	thePast, thePresent, theFuture = []string{}, []string{}, []string{}
 	if len(b.Tasks) == 0 {
-		b.Tasks = tasks
-		return nil
+		return
 	}
-	var immutable, mutable []string
 	if b.CurrentTask == -1 {
-		mutable = b.Tasks[:]
+		thePresent = b.Tasks[:]
 	} else if b.CurrentTask == len(b.Tasks) {
-		immutable = b.Tasks[:]
+		thePast = b.Tasks[:]
 	} else {
-		immutable = b.Tasks[:b.CurrentTask+1]
-		mutable = b.Tasks[b.CurrentTask+1:]
+		thePast = b.Tasks[:b.CurrentTask+1]
+		thePresent = b.Tasks[b.CurrentTask+1:]
 	}
-	tgtOffset := offset
-	if tgtOffset < 0 {
-		tgtOffset += len(mutable) + 1
+	for i := 0; i < len(thePresent); i++ {
+		if strings.HasPrefix(thePresent[i], "stage:") {
+			theFuture = thePresent[i:]
+			thePresent = thePresent[:i]
+			break
+		}
 	}
-	if tgtOffset < 0 {
-		return fmt.Errorf("Offset %d too small", offset)
+	return
+}
+
+func (b *Machine) AddTasks(offset int, tasks ...string) error {
+	thePast, thePresent, theFuture := b.SplitTasks()
+	if offset < 0 {
+		offset += len(thePresent) + 1
+		if offset < 0 {
+			offset = len(thePresent)
+		}
 	}
-	if tgtOffset >= len(mutable) {
-		tgtOffset = len(mutable)
+	if offset >= len(thePresent) {
+		offset = len(thePresent)
 	}
-	if tgtOffset == 0 {
-		if len(mutable) >= len(tasks) && reflect.DeepEqual(tasks, mutable[:len(tasks)]) {
+	if offset == 0 {
+		if len(thePresent) >= (len(tasks)+offset) &&
+			reflect.DeepEqual(tasks, thePresent[offset:offset+len(tasks)]) {
 			// We are already in the desired task state.
 			return nil
 		}
-		mutable = append(tasks, mutable...)
-	} else if tgtOffset == len(mutable) {
-		if len(mutable) >= len(tasks) && reflect.DeepEqual(tasks, mutable[len(mutable)-len(tasks):]) {
+		thePresent = append(tasks, thePresent...)
+	} else if offset == len(thePresent) {
+		if len(thePresent) >= len(tasks) &&
+			reflect.DeepEqual(tasks, thePresent[len(thePresent)-len(tasks):]) {
 			// We are alredy in the desired state
 			return nil
 		}
-		mutable = append(mutable, tasks...)
+		thePresent = append(thePresent, tasks...)
 	} else {
-		if len(mutable[tgtOffset:]) >= len(tasks) && reflect.DeepEqual(tasks, mutable[tgtOffset:tgtOffset+len(tasks)]) {
+		if len(thePresent[offset:]) >= len(tasks) &&
+			reflect.DeepEqual(tasks, thePresent[offset:offset+len(tasks)]) {
 			// Already in the desired state
 			return nil
 		}
 		res := []string{}
-		res = append(res, mutable[:tgtOffset]...)
+		res = append(res, thePresent[:offset]...)
 		res = append(res, tasks...)
-		res = append(res, mutable[tgtOffset:]...)
-		mutable = res
+		res = append(res, thePresent[offset:]...)
+		thePresent = res
 	}
-	b.Tasks = append(immutable, mutable...)
+	thePresent = append(thePresent, theFuture...)
+	b.Tasks = append(thePast, thePresent...)
 	return nil
 }
 
 func (b *Machine) DelTasks(tasks ...string) {
-	if len(b.Tasks) == 0 || b.CurrentTask == len(b.Tasks) {
+	if len(tasks) == 0 {
 		return
 	}
-	var immutable, mutable []string
-	if b.CurrentTask == -1 {
-		mutable = b.Tasks[:]
-	} else if b.CurrentTask == len(b.Tasks) {
-		immutable = b.Tasks[:]
-	} else {
-		immutable = b.Tasks[:b.CurrentTask+1]
-		mutable = b.Tasks[b.CurrentTask+1:]
+	thePast, thePresent, theFuture := b.SplitTasks()
+	if len(thePresent) == 0 {
+		return
 	}
+	nextThePresent := []string{}
 	i := 0
-	nextMutable := []string{}
-	for _, c := range mutable {
+	for _, c := range thePresent {
 		if i < len(tasks) && tasks[i] == c {
 			i++
 		} else {
-			nextMutable = append(nextMutable, c)
+			nextThePresent = append(nextThePresent, c)
 		}
 	}
-	b.Tasks = append(immutable, nextMutable...)
+	nextThePresent = append(nextThePresent, theFuture...)
+	b.Tasks = append(thePast, nextThePresent...)
 }
 
 func (b *Machine) CanHaveActions() bool {
