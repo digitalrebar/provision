@@ -47,3 +47,10 @@ func (w *Workflow) ToModels(obj interface{}) []Model {
 	}
 	return res
 }
+
+func (w *Workflow) Validate() {
+	w.AddError(ValidName("Invalid Name", w.Name))
+	for _, stageName := range w.Stages {
+		w.AddError(ValidName("Invalid Stage Name", stageName))
+	}
+}
