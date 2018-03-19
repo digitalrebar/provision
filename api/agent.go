@@ -225,7 +225,7 @@ func (a *MachineAgent) waitOn(m *models.Machine, cond TestFunc) {
 func (a *MachineAgent) WaitRunnable() {
 	m := models.Clone(a.machine).(*models.Machine)
 	a.Logf("Waiting on machine to become runnable\n")
-	a.waitOn(m, EqualItem("Runnable", m.Runnable))
+	a.waitOn(m, EqualItem("Runnable", true))
 }
 
 // RunTask attempts to run the next task on the Machine.  It may
