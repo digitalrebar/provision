@@ -22,6 +22,7 @@ A couple of notes about consistency.
 
 Otherwise, try and find a good place for what needs to be added.  And Thanks!
 
+
 Documentation Tooling
 ---------------------
 
@@ -34,24 +35,69 @@ This process uses the following elements:
 #. Use a terminal window with a ``watch`` function to rebuild the HTML document tree
 #. Use a web browser with an auto-refresh extension to view the rendered HTML
 
-Install Sphinx
-~~~~~~~~~~~~~~
 
-Review the Sphinx website on how to install it, at:
+Install and Setup Sphinx and Swagger
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+These setup steps were tested and verified on a Mac platform.  However, they should be the same for Linux. 
+
+1. Pre-requirement is to have ``pip`` installed:
+
+  ::
+
+      sudo easy_install pip
+
+
+2. Install Sphinx:
+
+  :: 
+
+    pip install Sphinx
+
+.. note:: for more detailed information, please review the Sphinx website on how to install it, at:
   http://www.sphinx-doc.org/en/stable/tutorial.html#install-sphinx
+
+
+3. Install SwaggerDoc Library 
+
+  ::
+
+    sudo -H pip install -r requirements.txt 
+
+.. note:: If you receive an error message on your first HTML tree build (when you run ``make html``) similar to:
+    ::
+
+       sphinx-build -b html -d _build/doctrees   . _build/html
+       Running Sphinx v1.6.5
+       Extension error:
+       Could not import extension sphinxcontrib.swaggerdoc (exception: No module named swaggerdoc)
+       make: *** [html] Error 1
+
+
+  You will need to build and install the *swaggerdoc* components manually.  To do so, do the following:
+    ::
+
+      git clone https://github.com/galthaus/sphinx-swaggerdoc
+      cd sphinx-swaggerdoc/
+      sudo python setup.py  install
+      cd ..
+      rm -rf spinx-swaggerdoc/
+
 
 Edit the Docs
 ~~~~~~~~~~~~~
 
-  * Checkout/clone the Digital Rebar Provision process from Github
-  * Modify the doc as appropriate
+  * Checkout/clone the Digital Rebar Provision repo from Github
+  * Modify the doc(s) as appropriate
+  * Verify the modifications are rendered correctly 
   * Create a branch
   * Submit a pull request for your changes
+
 
 Rebuild the HTML Rendered Docs
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To assist with editing/reviewing your changes, you will want to rebuild the RST format documentation to rendered HTMl.  The Sphinx package is used to do this.  Generally, you simply change to the base Provision directory, and do:
+To assist with editing/reviewing your changes, you will want to rebuild the RST format documentation to rendered HTMl.  The Sphinx package is used to do this.  Generally, you simply change to the *base git cloned Provision* directory, and do:
 
   ::
 
@@ -75,6 +121,16 @@ An example use would be:
 Now, any time any changes are made to the files in the ``doc/`` directory, the ``make html`` process will be automatically kicked off for you.  You should run this in a separate terminal window.
 
 
+View Your Doc Edits Locally
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Once you've run ``make html`` as above, the _RSTr_ format files will be built into _HTML_ generated versions.  You can view the effects of your changes by opening your web browser up, and navigating to the _HTML_ generated docs on your local disk.  The below path example references my home directory, and github path location.  You'll have to modify this to your local User and location where you've stored your github clone.
+
+Point your browser to the on-disk rendered location (which is the ``_build/`` directory in the base git repo on disk).  For example:
+
+  ``file:///Users/shane/github/digitalrebar/provision/_build/html/doc/dev/dev-docs.html``
+
+
 Auto-Refresh Browser
 ~~~~~~~~~~~~~~~~~~~~
 
@@ -87,9 +143,4 @@ The last piece of the puzzle, you will want to set your web browser to auto-refr
     https://add0n.com/tab-reloader.html
 
 Simply set your browser tab to refresh every 5 or so seconds.
-
-You'll then point your browser to the on-disk rendered location (which is the ``_build/`` directory in the base git repo on disk).  For example:
-
-  ``file:///Users/shane/github/digitalrebar/provision/_build/html/doc/dev/dev-docs.html``
-
 
