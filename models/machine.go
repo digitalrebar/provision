@@ -101,10 +101,13 @@ func (n *Machine) Validate() {
 		} else {
 			parts := strings.SplitN(t, ":", 2)
 			if len(parts) == 2 {
-				if parts[0] != "stage" {
-					n.Errorf("Invalid Task Step %s", t)
-				} else {
+				switch parts[0] {
+				case "stage":
 					n.AddError(ValidName("Invalid Stage", parts[1]))
+				case "bootenv":
+					n.AddError(ValidName("Invalid BootEnv", parts[1]))
+				default:
+					n.Errorf("Invalid Task Step %s", t)
 				}
 			} else {
 				n.AddError(ValidName("Invalid Task", t))

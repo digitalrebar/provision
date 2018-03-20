@@ -59,6 +59,19 @@ type Job struct {
 	//
 	// required: true
 	Current bool
+	// The current index is the machine CurrentTask that created this job.
+	//
+	// required: true
+	// read only: true
+	CurrentIndex int
+
+	// The next task index that should be run when this job finishes.  It is used
+	// in conjunction with the machine CurrentTask to implement the server side of the
+	// machine agent state machine.
+	//
+	// required: true
+	// read only: true
+	NextIndex int
 }
 
 func (j *Job) Validate() {
