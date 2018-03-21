@@ -3,7 +3,7 @@
   "Available": true,
   "BootEnv": "mylocal",
   "CurrentJob": "",
-  "CurrentTask": 0,
+  "CurrentTask": -1,
   "Description": "",
   "Errors": [],
   "HardwareAddrs": [],

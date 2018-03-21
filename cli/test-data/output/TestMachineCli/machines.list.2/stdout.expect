@@ -4,7 +4,7 @@
     "Available": true,
     "BootEnv": "local",
     "CurrentJob": "",
-    "CurrentTask": 0,
+    "CurrentTask": -1,
     "Description": "",
     "Errors": [],
     "HardwareAddrs": [],
