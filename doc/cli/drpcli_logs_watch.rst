@@ -1,12 +1,12 @@
 drpcli logs watch
 =================
 
-Watch log entrys as theyt come in real time
+Watch log entrys as they come in real time
 
 Synopsis
 --------
 
-Watch log entrys as theyt come in real time
+Watch log entrys as they come in real time
 
 ::
 

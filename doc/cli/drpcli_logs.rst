@@ -39,4 +39,4 @@ SEE ALSO
 -  `drpcli logs get <drpcli_logs_get.html>`__ - Get the currently
    buffered log entries from dr-provision
 -  `drpcli logs watch <drpcli_logs_watch.html>`__ - Watch log entrys as
-   theyt come in real time
+   they come in real time
