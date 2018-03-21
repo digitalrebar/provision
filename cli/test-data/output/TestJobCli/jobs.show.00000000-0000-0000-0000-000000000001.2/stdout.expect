@@ -1,6 +1,7 @@
 {
   "Archived": false,
   "Available": true,
+  "BootEnv": "local",
   "Current": true,
   "CurrentIndex": 0,
   "EndTime": "0001-01-01T00:00:00Z",
@@ -16,5 +17,6 @@
   "State": "incomplete",
   "Task": "task1",
   "Uuid": "00000000-0000-0000-0000-000000000001",
-  "Validated": true
+  "Validated": true,
+  "Workflow": ""
 }
