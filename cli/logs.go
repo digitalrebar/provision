@@ -9,7 +9,7 @@ func registerLog(app *cobra.Command) {
 	}
 	cmd.AddCommand(&cobra.Command{
 		Use:   "watch",
-		Short: "Watch log entrys as theyt come in real time",
+		Short: "Watch log entrys as they come in real time",
 		Args:  cobra.NoArgs,
 		RunE: func(c *cobra.Command, args []string) error {
 			stream, err := session.Events()
