@@ -85,6 +85,7 @@ func NewTaskRunner(c *Client, m *models.Machine, agentDir string, logger io.Writ
 			Key:   job.Key(),
 		}
 		err.Errorf("Invalid job state returned: %v", job.State)
+		err.Errorf("Job: %#v", job)
 		return nil, err
 	}
 	t := &models.Task{Name: job.Task}

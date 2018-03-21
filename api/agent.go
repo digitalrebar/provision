@@ -139,6 +139,9 @@ func (a *MachineAgent) initOrExit() {
 // consists of marking any current running jobs as Failed and
 // repoening the event stream from dr-provision.
 func (a *MachineAgent) Init() {
+	if a.err != nil {
+		a.err = nil
+	}
 	if a.events != nil {
 		a.events.Close()
 		a.events = nil
@@ -248,10 +251,21 @@ func (a *MachineAgent) RunTask() {
 		return
 	}
 	if runner == nil {
-		a.Logf("Current tasks finished, check to see if stage needs to change\n")
-		a.state = AGENT_CHANGE_STAGE
-		return
+		if a.machine.Workflow == "" {
+			a.Logf("Current tasks finished, check to see if stage needs to change\n")
+			a.state = AGENT_CHANGE_STAGE
+			return
+		} else {
+			a.Logf("Current tasks finished, wait for stage or bootenv to change\n")
+			a.state = AGENT_WAIT_FOR_CHANGE_STAGE
+			return
+		}
 	}
+	a.Logf("Runner created for task %s:%s (%d:%d)",
+		runner.j.Uuid.String(),
+		runner.j.Task,
+		runner.j.CurrentIndex,
+		runner.j.NextIndex)
 	if err := runner.Run(); err != nil {
 		a.err = err
 		a.initOrExit()
@@ -444,6 +458,9 @@ func (a *MachineAgent) Run() error {
 		default:
 			a.Logf("Unknown agent state %d\n", a.state)
 			panic("unreachable")
+		}
+		if a.err != nil {
+			a.Logf("Error during run: %v\n", a.err)
 		}
 	}
 }
