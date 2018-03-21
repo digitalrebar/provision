@@ -5,7 +5,7 @@ Usage:
 
 Available Commands:
   get         Get the currently buffered log entries from dr-provision
-  watch       Watch log entrys as theyt come in real time
+  watch       Watch log entrys as they come in real time
 
 Flags:
   -h, --help   help for logs
