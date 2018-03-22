@@ -45,7 +45,7 @@ func TestEventDeadlock(t *testing.T) {
 		return
 	}
 	t.Logf("Listening for users events")
-	handle, ch, err := listener.Register("log.*.*")
+	handle, ch, err := listener.Register("users.*.*")
 	defer listener.Deregister(handle)
 	if err != nil {
 		t.Errorf("Failed to register for users events: %v", err)
