@@ -26,7 +26,11 @@ through a workflow is a :ref:`rs_data_task`.  Individual Tasks are
 executed against Machines by creating a Job for them.
 
 Tasks contain individual Templates that are expanded for a Machine
-whenever a Job is created.
+whenever a Job is created.  Each of these individual Templates can
+expand to either a script to be executed (if the Path parameter is
+empty or not present), or a file to be placed on the filesystem at the
+location indicated by template-expanding the Path parameter.(if the
+Path parameter is not empty).
 
 Jobs
 ----
@@ -57,8 +61,8 @@ Job exit status or the change stage map.  Unless directed to exit, the
 Machine Agent watches the event stream for the Machine it is running
 on and will execute new tasks as they come to be available.
 
-Change Stage Map
-----------------
+Change Stage Map (OLD AND BUSTED)
+---------------------------------
 
 The change-stage/map parameter defines what stage to change to when
 you finish all the tasks in the current stage.  The change stage map
@@ -66,6 +70,125 @@ is a map whose keys correspond to the stage the machine is currently
 in and whose values indicate the next stage to transition to and what
 to have the runner do on the stage transition.
 
+The change-stage/map mechanism has been replaced by the Workflow
+mechanism, but will be maintained for the forseeable future.  You are
+encouraged to migrate to using Workflows.
+
+Workflows (NEW HOTNESS)
+-----------------------
+
+A :ref:`rs_data_workflow` is used to provide a list of Stages that a
+Machine should run through to get to a desired end state.  When a
+Workflow is added to a Machine, it renders the BootEnv and Stage for
+the Machine read-only, replaces the task list on the Machine with one
+that will step through all the Stages, BootEnvs, and Tasks needed to
+drive the machine through the Workflow.
+
 How They Work Together
 ^^^^^^^^^^^^^^^^^^^^^^
 
+Machine Agent
+-------------
+
+The Machine Agent runs on the Client and is responsible for executing
+tasks and rebooting the Machine as needed.  The Machine Agent always
+starts in the AGENT_INIT state.
+
+
+- AGENT_INIT: Initializes the Agent with a fresh copy of the Machine
+  data and an event stream that recieves events for that Machine from
+  dr-provision.  If an error was recorded, the Agent prints it to
+  stderr and then clears it out.
+
+  If an error occurrs during this, the agent will sleep for a bit and
+  transition back to AGENT_INIT, otherwise it will transition to
+  AGENT_WAIT_FOR_RUNNABLE.
+
+- AGENT_WAIT_FOR_RUNNABLE: Waits for the Machine to be both Available
+  and Runnable. Once it is, the Agent transitions to AGENT_REBOOT if
+  the machine changed BootEnv, AGENT_EXIT if the Agent recieved a
+  termination signal, AGENT_INIT if there was an error waiting for the
+  state change, and AGENT_RUN_TASK otherwise.
+
+- AGENT_RUN_TASK: Tries to create a new Job to run on the machine.
+
+  If there was an error creating the Job, transitions back to
+  AGENT_INIT.
+
+  If there was no job created, the Agent transitions to
+  AGENT_CHANGE_STATE if the Machine does not have a Workflow, and
+  AGENT_WAIT_FOR_CHANGE_STAGE if it does.
+
+  If a Job was created, the Agent attempts to execute all the steps in
+  the Task for which the Job was created.
+
+  If there was an error executing the Job, the agent will transition
+  back to AGENT_INIT.
+
+  If the Job signalled that a reboot is needed, the Agent transitions
+  to AGENT_REBOOT.
+
+  If the Job signalled that the system should be powered off, the
+  Agent transitions to AGENT_POWEROFF.
+
+  If the Job signalled that the Agent should stop processing Jobs, the
+  Agent transitions to AGENT_EXIT.
+
+  Otherwise, the Agent transitions to AGENT_WAIT_FOR_RUNNABLE.
+
+- AGENT_WAIT_FOR_STAGE_CHANGE: Waits for the Machine to be Available,
+  and for any of the following fields on the Machine to change:
+
+  - CurrentTask
+  - Tasks
+  - Runnable
+  - BootEnv
+  - Stage
+
+  Once those conditions are met, follows the same rules as
+  AGENT_WAIT_FOR_RUNNABLE.
+
+- AGENT_CHANGE_STAGE: Checks the change-stage/map to determine what
+  (and how) to transition to the next Stage when AGENT_RUN_TASK does
+  not get a Job to run from dr-provision.
+
+  The Agent first tries to retrieve the change-stage/map Param for the
+  Machine from dr-provision.  If it fails due to connection issues,
+  the Agent will transition to AGENT_INIT.  If there is no
+  change-stage map, the Agent uses an empty one.
+
+  If there is a key in the change-stage/map for the current Stage, the
+  Agent saves the corresponding value as val for further processing.
+
+  If there is no next entry for the current Stage in the
+  change-stage/map and the Machine is in a BootEnv that ends in
+  -install, the Agent assumes that val is "local", otherwise the Agent
+  transitions to AGENT_WAIT_FOR_STAGE_CHANGE.
+
+  The Agent splits val into nextStage and targetState on the first ':'
+  character in val.
+
+  If targetState is empty, it is set according to the following rules:
+
+  - If the BootEnv for nextStage is not empty or different from the
+    current BootEnv, targetState is set to "Reboot"
+
+  - Otherwise targetState is set to "Success"
+
+  The Agent changes the machine Stage to the value indicated by
+  nextStage.  If an error occurs during that process, the Agent
+  transitions to AGENT_INIT.
+
+  If targetState is "Reboot", the agent transitions to AGENT_REBOOT.
+  if targetState is "Stop", the agent transitions to AGENT_EXIT.
+  If targetState is "Shutdown", the agent transitions to AGENT_POWEROFF.
+  If targetState is anything else, the agent transitions to AGENT_WAIT_FOR_RUNNABLE.
+
+- AGENT_EXIT:  Exits the Agent.
+
+- AGENT_REBOOT: Reboots the system.
+
+- AGENT_POWEROFF: Cleanly shuts the system down.
+
+dr-provision
+------------
