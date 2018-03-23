@@ -87,30 +87,35 @@ drive the machine through the Workflow.
 How They Work Together
 ^^^^^^^^^^^^^^^^^^^^^^
 
-Machine Agent
--------------
+Machine Agent (client side)
+---------------------------
 
 The Machine Agent runs on the Client and is responsible for executing
-tasks and rebooting the Machine as needed.  The Machine Agent always
-starts in the AGENT_INIT state.
+tasks and rebooting the Machine as needed. It is structured as a
+finite state machine for increased reliability and auditability.  The
+Machine Agent always starts in the AGENT_INIT state.
 
 
-- AGENT_INIT: Initializes the Agent with a fresh copy of the Machine
-  data and an event stream that recieves events for that Machine from
-  dr-provision.  If an error was recorded, the Agent prints it to
-  stderr and then clears it out.
+AGENT_INIT
+  Initializes the Agent with a fresh copy of the Machine
+  data, marks the current Job for the machine as `failed` if it is
+  `created` or `running`,and creates an event stream that recieves
+  events for that Machine from dr-provision.  If an error was recorded,
+  the Agent prints it to stderr and then clears it out.
 
   If an error occurrs during this, the agent will sleep for a bit and
   transition back to AGENT_INIT, otherwise it will transition to
   AGENT_WAIT_FOR_RUNNABLE.
 
-- AGENT_WAIT_FOR_RUNNABLE: Waits for the Machine to be both Available
+AGENT_WAIT_FOR_RUNNABLE
+  Waits for the Machine to be both Available
   and Runnable. Once it is, the Agent transitions to AGENT_REBOOT if
   the machine changed BootEnv, AGENT_EXIT if the Agent recieved a
   termination signal, AGENT_INIT if there was an error waiting for the
   state change, and AGENT_RUN_TASK otherwise.
 
-- AGENT_RUN_TASK: Tries to create a new Job to run on the machine.
+AGENT_RUN_TASK
+  Tries to create a new Job to run on the machine.
 
   If there was an error creating the Job, transitions back to
   AGENT_INIT.
@@ -120,7 +125,8 @@ starts in the AGENT_INIT state.
   AGENT_WAIT_FOR_CHANGE_STAGE if it does.
 
   If a Job was created, the Agent attempts to execute all the steps in
-  the Task for which the Job was created.
+  the Task for which the Job was created, and updates the Job
+  depending on the exit status of the steps.
 
   If there was an error executing the Job, the agent will transition
   back to AGENT_INIT.
@@ -136,7 +142,8 @@ starts in the AGENT_INIT state.
 
   Otherwise, the Agent transitions to AGENT_WAIT_FOR_RUNNABLE.
 
-- AGENT_WAIT_FOR_STAGE_CHANGE: Waits for the Machine to be Available,
+AGENT_WAIT_FOR_STAGE_CHANGE
+  Waits for the Machine to be Available,
   and for any of the following fields on the Machine to change:
 
   - CurrentTask
@@ -148,7 +155,8 @@ starts in the AGENT_INIT state.
   Once those conditions are met, follows the same rules as
   AGENT_WAIT_FOR_RUNNABLE.
 
-- AGENT_CHANGE_STAGE: Checks the change-stage/map to determine what
+AGENT_CHANGE_STAGE
+  Checks the change-stage/map to determine what
   (and how) to transition to the next Stage when AGENT_RUN_TASK does
   not get a Job to run from dr-provision.
 
@@ -184,11 +192,111 @@ starts in the AGENT_INIT state.
   If targetState is "Shutdown", the agent transitions to AGENT_POWEROFF.
   If targetState is anything else, the agent transitions to AGENT_WAIT_FOR_RUNNABLE.
 
-- AGENT_EXIT:  Exits the Agent.
+AGENT_EXIT
+  Exits the Agent.
 
-- AGENT_REBOOT: Reboots the system.
+AGENT_REBOOT
+  Reboots the system.
 
-- AGENT_POWEROFF: Cleanly shuts the system down.
+AGENT_POWEROFF
+  Cleanly shuts the system down.
 
-dr-provision
-------------
+dr-provision (server side)
+--------------------------
+
+In dr-provision, the machine Agent relies on these API endpoints to perform its work:
+
+- GET from `/api/v3/machines/<machine-uuid>` to get a fresh copy of
+  the Machine during AGENT_INIT.
+
+- PATCH to `/api/v3/machines/<machine-uuid>` to update the machine
+  Stage and BootEnv during the AGENT_CHANGE_STAGE.
+
+- GET from `/api/v3/machines/<machine-uuid>/params/change-stage/map`
+  to fetch the change-stage/map for the system during
+  AGENT_CHANGE_STAGE.
+
+- POST to `/api/v3/jobs` to retrieve the next Job to run during
+  AGENT_RUN_TASK.
+
+- PATCH to `/api/v3/jobs/<job-uuid>` to update Job status during
+  AGENT_RUN_TASK and during AGENT_INIT.
+
+- PUT to `/api/v3/jobs/<job-uuid>/log` to update the job log during
+  AGENT_RUN_TASK.
+
+- UPGRADE to `/api/v3/ws` to create the EventStream websocket that
+  recieves Events for the Machine from dr-provision.  Each Event
+  contains a copy of the Machine state at the point in time that the
+  event was created.
+
+Retrieving the next Job
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Out of all those endpoints, the one that does the most work is the
+`POST /api/v3/jobs` endpoint, which is responsible for figuring out
+what (if any) is the next Job that should be provided to the Machine
+Agent.  It encapsulates the following logic:
+
+#. dr-provision recieves an incoming POST on `/api/v3/jobs` that
+   contains a Job with just the Machine filled out.
+
+   If the Machine does not exist, the endpoint returns an
+   Unprocessable Entity HTTP status code.
+
+   If the Machine is not Runnable and Available, the endpoint returns
+   a Conflict status code.
+
+   If the Machine has no more runnable Tasks (as indicated by
+   CurrentTask being greater than or equal to the length of the
+   Machine Tasks list), the endpoint returns a No Content status code,
+   indicating to the Machine Agent that there are no more tasks to
+   run.
+
+#. dr-provision retrieves the CurrentJob for the Machine.  If the
+   Machine does not have a CurrentJob, we create a fake one in the
+   Failed state and use that as CurrentJob for the rest of this
+   process.
+
+#. dr-provision tentatively sets `nextTask` to CurrentTask + 1.
+
+#. If the CurrentTask is set to -1 or points to a `stage:` or
+   `bootenv:` entry in the machine Task list, we mark the CurrentTask
+   as `failed` if it is not already `failed` or `created`.
+
+#. If CurrentTask is set to -1, we update it to 0 and set `nextTask` to 0.
+
+#. If CurrentTask points to a `stage:` or a `bootenv:` entry in the
+   Tasks list, and the Machine is not already in the appropriate Stage
+   or BootEnv, we skip the next step. Otherwise we skip past these
+   entries in the Tasks list until we get to an entry that refers to a
+   Task and update CurrentTask and `nextTask` to point to that entry.
+
+#. Depending on the State of the CurrentJob, we take one of the following actions:
+
+   - "incomplete": This indicates that CurrentJob did not fail, but it
+     also did not finish.  dr-provision returns CurrentJob unchanged,
+     along with the Accepted status code.
+
+   - "finished": This indicates that the CurrentJob finished without
+     error, and dr-provision should create a new Job for the next Task in the
+     Tasks list.  dr-provision sets CurrentTask to `nextTask`.
+
+   - "failed": This indicates that the CurrentJob failed.  Since
+     updating a Job to the `failed` state automatically makes the
+     Machine not Runnable, something else has intervened to make the
+     machine Runnable again. dr-provision will create a new Job for
+     the current Task in the Tasks list.
+
+#. dr-provision creates a new Job for the Task in the Tasks list
+   pointed to by CurrentTask.  If CurrentTask points to a `stage:` or
+   a `bootenv:` task entry, the new Job is created in the `finished`
+   state, otherwise it is created in the `created` state. The Machine
+   CurrentJob is updated with the UUID of the new Job.  The new Job
+   and the Machine are saved.
+
+#. If the new Job is in the `created` state, it is returned along with
+   Created HTTP status code, otherwise nothing is returned along with
+   the NoContent status code.
+
+
