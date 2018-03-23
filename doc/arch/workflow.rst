@@ -299,4 +299,57 @@ Agent.  It encapsulates the following logic:
    Created HTTP status code, otherwise nothing is returned along with
    the NoContent status code.
 
+Changing the Workflow on a Machine
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Changing a Workflow on the Machine has the following effects:
+
+- The Stages in the Workflow are expanded to create a new Tasks list.
+  Each Stage gets expanded into a List as follows:
+
+  - `stage:<stageName>`
+  - `bootenv:<bootEnvName>` if the Stage specifies a non-empty BootEnv.
+  - The Tasks list in the Stage
+
+  The Tasks list on the Machine are replaced with the results of the
+  above expansion.
+
+- The CurrentTask index is set directly to -1.
+
+- The Stage and BootEnv fields become read-only from the API.
+  Instead, they will change in accordance with any `stage:` and
+  `bootenv:` elements in the Task list resulting from expanding the
+  Stages in the Workflow.  Any Stage changes that happen during
+  processing a Workflow do not affect the Tasks list or the
+  CurrentTask index.
+
+Removing a Workflow from a Machine
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To remove a workflow from a Machine, set the Workflow field to the
+empty string.  The Stage field on the Machine is set to `none`, the
+Tasks list is emptied, and the CurrentTask index is set back to -1.
+
+Changing the Stage on a Machine
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Changing a Stage on a Machine has the folowing effects when done via
+the API and the Machine does not have a Workflow:
+
+- The Tasks list on the Machine is replaced by the Tasks list on the
+  Stage.
+
+- If the BootEnv field on the Stage is not empty, it replaces the
+  BootEnv on the Machine.
+
+- The CurrentTask index is set to -1
+
+- If the Machine has a different BootEnv now, it is marked as not Runnable.
+
+Resetting the CurrentTask index to -1
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If the Machine does not have a Workflow, the CurrentTask index is
+simply set to -1.  Otherwise. it is set to the most recent entry that
+would not occur in a different BootEnv from the machine's current
+BootEnv.
