@@ -537,7 +537,7 @@ Machine objects have many fields used for different tasks:
 - **Tasks**: The list of tasks that the Machine should run or that
   have run.  You can add and remove Tasks from this list as long as
   they have not already run, they are not the current running Task, or
-  they are beyond the next Stage transiution present in the Tasks
+  they are beyond the next Stage transition present in the Tasks
   list.
 
 - **CurrentTask**: The index in Tasks of the current running task.  A
