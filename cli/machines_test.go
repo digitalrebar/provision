@@ -153,9 +153,7 @@ func TestMachineCli(t *testing.T) {
 	// bootenv tests
 	cliTest(true, true, "machines", "bootenv").run(t)
 	cliTest(false, true, "machines", "bootenv", "john", "john2").run(t)
-	cliTest(false, false, "machines", "bootenv", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "john2").run(t)
-	cliTest(false, false, "machines", "bootenv", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "local").run(t)
-	cliTest(false, false, "machines", "update", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "{ \"Runnable\": true }").run(t)
+	cliTest(false, true, "machines", "bootenv", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "john2").run(t)
 	// stage tests
 	cliTest(true, true, "machines", "stage").run(t)
 	cliTest(false, true, "machines", "stage", "john", "john2").run(t)

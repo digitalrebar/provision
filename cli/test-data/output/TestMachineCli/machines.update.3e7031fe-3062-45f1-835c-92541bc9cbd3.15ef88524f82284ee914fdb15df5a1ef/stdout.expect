@@ -3,7 +3,7 @@
   "Available": true,
   "BootEnv": "local",
   "CurrentJob": "",
-  "CurrentTask": 0,
+  "CurrentTask": -1,
   "Description": "lpxelinux.0",
   "Errors": [],
   "HardwareAddrs": [],
@@ -27,8 +27,12 @@
   "ReadOnly": false,
   "Runnable": true,
   "Secret": "secret1",
-  "Stage": "none",
-  "Tasks": [],
+  "Stage": "stage1",
+  "Tasks": [
+    "jamie",
+    "justine"
+  ],
   "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
-  "Validated": true
+  "Validated": true,
+  "Workflow": ""
 }

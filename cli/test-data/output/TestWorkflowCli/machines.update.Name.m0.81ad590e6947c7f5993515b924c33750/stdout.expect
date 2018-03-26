@@ -1,0 +1,39 @@
+RE:
+\{
+  "Address": "",
+  "Available": true,
+  "BootEnv": "local",
+  "CurrentJob": "",
+  "CurrentTask": -1,
+  "Description": "",
+  "Errors": \[\],
+  "HardwareAddrs": \[\],
+  "Meta": \{
+    "feature-flags": "change-stage-v2"
+  \},
+  "Name": "m0",
+  "OS": "",
+  "Params": \{\},
+  "Profile": \{
+    "Available": false,
+    "Description": "",
+    "Errors": null,
+    "Meta": null,
+    "Name": "",
+    "Params": null,
+    "ReadOnly": false,
+    "Validated": false
+  \},
+  "Profiles": \[\],
+  "ReadOnly": false,
+  "Runnable": true,
+  "Stage": "none",
+  "Tasks": \[
+    "stage:james",
+    "bootenv:Fred",
+    "stage:john",
+    "bootenv:local"
+  \],
+  "Validated": true,
+  "Workflow": "wf2"
+\}

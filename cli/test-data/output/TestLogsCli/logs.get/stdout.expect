@@ -7,20 +7,8 @@ RE:
     "IgnorePublish": false,
     "Level": "audit",
     "Line": .*,
-    "Message": "Authenticated rocketskates - users token rocketskates - 127.0.0.1",
+    "Message": "Authenticated user rocketskates from 127.0.0.1",
     "Seq": 1,
-    "Service": "frontend",
-    "Time": ".*"
-  },
-  {
-    "Data": \[\],
-    "File": "(.*/)?github.com/digitalrebar/provision/frontend/(_obj/)?frontend.go",
-    "Group": .*,
-    "IgnorePublish": false,
-    "Level": "audit",
-    "Line": .*,
-    "Message": "Authenticated rocketskates - logs get  - 127.0.0.1",
-    "Seq": 2,
     "Service": "frontend",
     "Time": ".*"
   }

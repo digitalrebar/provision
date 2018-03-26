@@ -257,9 +257,9 @@ objects have the following fields:
 Stage
 -----
 
-Stages are the primary mechanism (along with Tasks and Jobs) that
-*dr-provision* uses to manage workflows for Machines.  Stages contain
-the following fields:
+Stages are used to define a set of Tasks that must be run in a
+specific order, potentially in a specific BootEnv.  Stages contain the
+following fields:
 
 - **Name**: The unique name of the Stage.
 
@@ -288,15 +288,19 @@ the following fields:
 - **Tasks**: This is a list of Task names that will replace the Tasks list
   on a Machine whenever the Machine switches to using this Stage.
 
-- **Reboot**: This flag indicates whether or not the Machine must be
-  rebooted if a Machine switches to this Stage.  Generally, if this
-  flag is set the Stage will also have a specific BootEnv defined as
-  well.
+- **Reboot**: DEPRECATED. This flag indicates whether or not the
+  Machine must be rebooted if a Machine switches to this Stage.
+  Generally, if this flag is set the Stage will also have a specific
+  BootEnv defined as well.  While this flag is still honored, the
+  runner will automatically reboot the machine as needed to satisfy
+  the BootEnv of the Stage.
 
-- **RunnerWait**: This flag indicates that the machine agent should wait
-  for more Tasks to be added to the Machine once it finishes runnning
-  the Tasks for this Stage.  If it is not set, the Agent will exit
-  after it is finished running Tasks.
+- **RunnerWait**: DEPRECATED. This flag used to indicate that the
+  machine agent should wait for more Tasks to be added to the Machine
+  once it finishes runnning the Tasks for this Stage.  The runner will
+  currently always wait unless it is explicitly told to exit by an
+  entry in the change-stage/map (also deprecated), or by the exit
+  status of a Task.
 
 Rendering a Stage for a Machine
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -430,6 +434,51 @@ other by their ID (if referring to a Template object directly), or by
 the TemplateInfo Name (if the TemplateInfo object), in addition to all
 the Template objects by ID.
 
+.. _rs_data_workflow:
+
+Workflow
+--------
+
+A Workflow defines a series of Stages that a Machine should go
+through.  It replaces the old change-stage/map mechanism of
+orchestrating stage changes, which had the following drawbacks:
+
+- change-stage/map is implemented as a map of currentStage ->
+  nextStage:Action pairs.  This make it impossible for a machine to go
+  through the same stage twice when going through a workflow.
+
+- It was very easy to get the Action that the runner should perform
+  wrong, leading to unexpected reboots or apparent hangs while walking
+  through the Stages.  This has been replaced by making the Runner be
+  smart enough to know that it must reboot on BootEnv changes to a
+  machine, and by having the runner always wait for more tasks unless
+  it is in an OS install BootEnv, or the Runner is directed to exit by
+  a Task exit state.
+
+- The Machine Tasks field only contained tasks for the current Stage,
+  making it hard to see at a glance what Tasks will be executed for
+  the entire workflow.
+
+Workflows have the following fields:
+
+- **Name**: The unique Name of the workflow.
+
+- **Stages**: A list of Stages that any machine with this Workflow
+  must go through.
+
+When the Workflow field on a machine is set, the current task list on
+the machine is replaced with the results of expanding each Stage in
+the Workflow using the following items:
+
+- stage:stageName
+- bootenv:bootEnvName (if the stage has a non-empty BootEnv field)
+- task0...taskN (the content of the Stage Tasks field)
+
+Additionally, the Stage and BootEnv fields of the Machine become
+read-only, as Stage and BootEnv transitions will occurr as dictated by
+the machine Task list, and when the Stage changes it does not affect
+the Task list.
+
 .. _rs_data_machine:
 
 Machine
@@ -457,7 +506,8 @@ Machine objects have many fields used for different tasks:
   next time it reboots.  When you change the BootEnv field on a
   machine or change the BootEnv that a Machine wants to use, all
   relavent templates on the provisioner side are rerendered to reflect
-  the updates.
+  the updates.  The BootEnv field is read-only if the Workflow field
+  is set.
 
 - **Params**: A map containing parameter names and their associated
   values.  Params set directly on a machine override params from any
@@ -480,24 +530,37 @@ Machine objects have many fields used for different tasks:
 - **Runnable**: A flag that indicates whether the machine agent is allowed
   to create and execute Jobs against this Machine.
 
-- **Tasks**: The list of tasks that the Machine should run or that have
-  run.  You can add and remove Tasks from this list as long as they
-  have not already run or they are not the current running Task.
+- **Workflow**: The name of the Workflow that the Machine is going
+  through.  If the Workflow field is not empty, the Stage and BootEnv
+  fields are read-only.
+
+- **Tasks**: The list of tasks that the Machine should run or that
+  have run.  You can add and remove Tasks from this list as long as
+  they have not already run, they are not the current running Task, or
+  they are beyond the next Stage transition present in the Tasks
+  list.
 
 - **CurrentTask**: The index in Tasks of the current running task.  A
   CurrentTask of -1 indicates that none of the Tasks in the current
   Tasks list have run, and a CurrentTask that is equal to the length
   of the Tasks list indicates that all of the Tasks have run.  The
-  machine agent always creates Jobs based on the CurrentTask.
+  machine agent always creates Jobs based on the CurrentTask.  If the
+  Workflow field is non-empty, setting this field to -1 will instead
+  set this field to the most recent Stage in the Tasks list that did
+  not initiate a BootEnv change.
 
-- **Stage**: The current Stage the Machine is in.  Changing the Stage of a
-  Machine has the following effects:
+- **Stage**: The current Stage the Machine is in.  Changing the Stage
+  of a Machine has the following effects:
 
   - If the new Stage has a new BootEnv, the Machine Runnable flags
     will be set to False and the BootEnv on the Machine will change.
 
-  - The Machine Tasks list will be replaced by the task list from the
-    new Stage, and CurrentTask will be set back to -1.
+  - If the Machine Workflow field is empty, the Machine Tasks list
+    will be replaced by the task list from the new Stage, and
+    CurrentTask will be set back to -1.
+
+  Note that the Stage field is read-only when the Workflow field is
+  non-empty.
 
 .. _rs_data_job:
 
@@ -519,7 +582,11 @@ fields:
 
 - **Task**: The name of the Task that the job was created for.
 
+- **Workflow**: The name of the Workflow that the job was created in
+
 - **Stage**: The name of the Stage that the job was created in.
+
+- **BootEnv**: The name of the BootEnv that the job was created in.
 
 - **State**: The state of the Job.  State must be one of the following:
 
@@ -560,6 +627,10 @@ fields:
   generated while running.
 
 - **Current**: Whether this job is the most recent for a machine or not.
+
+- **CurrentIndex**: The value of the Machine CurrentTask field when this Job was created.
+
+- **NextIndex**: CurrentIndex++
 
 .. _rs_data_job_action:
 

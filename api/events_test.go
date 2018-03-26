@@ -45,7 +45,7 @@ func TestEventDeadlock(t *testing.T) {
 		return
 	}
 	t.Logf("Listening for users events")
-	handle, ch, err := listener.Register("log.*.*")
+	handle, ch, err := listener.Register("users.*.*")
 	defer listener.Deregister(handle)
 	if err != nil {
 		t.Errorf("Failed to register for users events: %v", err)
@@ -104,6 +104,7 @@ Validated: true
 	machineRes.Secret = ""
 	machineRes.Runnable = true
 	machineRes.Stage = "none"
+	machineRes.CurrentTask = -1
 	rt(t, "Make initial machine", machineRes, nil,
 		func() (interface{}, error) {
 			err := session.CreateModel(machine1)

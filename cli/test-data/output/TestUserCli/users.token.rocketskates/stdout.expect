@@ -19,7 +19,8 @@ RE:
       "threaded-log-levels",
       "plugin-v2",
       "fsm-runner",
-      "plugin-v2-safe-config"
+      "plugin-v2-safe-config",
+      "workflows"
     \],
     "file_port": 10002,
     "id": "Fred",

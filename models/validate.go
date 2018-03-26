@@ -91,7 +91,14 @@ func (v *Validation) AddError(err error) {
 		if v.Errors == nil {
 			v.Errors = []string{}
 		}
-		v.Errors = append(v.Errors, err.Error())
+		switch o := err.(type) {
+		case *Validation:
+			v.Errors = append(v.Errors, o.Errors...)
+		case *Error:
+			v.Errors = append(v.Errors, o.Messages...)
+		default:
+			v.Errors = append(v.Errors, err.Error())
+		}
 	}
 }
 

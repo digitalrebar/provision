@@ -14,7 +14,8 @@
       "subnets": 0,
       "tasks": 0,
       "templates": 0,
-      "users": 1
+      "users": 1,
+      "workflows": 0
     },
     "Warnings": [],
     "meta": {

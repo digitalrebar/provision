@@ -58,6 +58,7 @@ func All() []Model {
 		&Task{},
 		&Template{},
 		&User{},
+		&Workflow{},
 	}
 }
 
@@ -96,6 +97,8 @@ func New(kind string) (Slicer, error) {
 		res = &Template{}
 	case "users", "user":
 		res = &User{}
+	case "workflows", "workflow":
+		res = &Workflow{}
 	default:
 		return nil, fmt.Errorf("No such Model: %s", kind)
 	}

@@ -157,6 +157,7 @@ Tasks:
 	machineRes.Secret = ""
 	machineRes.Runnable = true
 	machineRes.Stage = "none"
+	machineRes.CurrentTask = -1
 	rt(t, "Make initial machine", machineRes, nil,
 		func() (interface{}, error) {
 			err := session.CreateModel(machine1)
