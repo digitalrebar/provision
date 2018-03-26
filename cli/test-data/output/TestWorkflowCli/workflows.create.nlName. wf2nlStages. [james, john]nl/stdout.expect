@@ -1,0 +1,13 @@
+{
+  "Available": true,
+  "Description": "",
+  "Errors": [],
+  "Meta": {},
+  "Name": "wf2",
+  "ReadOnly": false,
+  "Stages": [
+    "james",
+    "john"
+  ],
+  "Validated": true
+}

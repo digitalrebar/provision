@@ -1,0 +1,14 @@
+{
+  "Available": false,
+  "Description": "",
+  "Errors": [
+    "Stage missing does not exist"
+  ],
+  "Meta": {},
+  "Name": "wf4",
+  "ReadOnly": false,
+  "Stages": [
+    "missing"
+  ],
+  "Validated": true
+}
