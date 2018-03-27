@@ -4,11 +4,14 @@ Usage:
   drpcli workflows [command]
 
 Available Commands:
+  action      Display the action for this workflow
+  actions     Display actions for this workflow
   create      Create a new workflow with the passed-in JSON or string key
   destroy     Destroy workflow by id
   exists      See if a workflows exists by id
   indexes     Get indexes for workflows
   list        List all workflows
+  runaction   Run action on object from plugin
   show        Show a single workflows by id
   update      Unsafely update workflow by id with the passed-in JSON
   wait        Wait for a workflow's field to become a value within a number of seconds

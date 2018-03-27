@@ -180,6 +180,7 @@ sections:
   users:
     rocketskates:
       Available: false
+      Description: ""
       Errors: []
       Meta: {}
       Name: rocketskates

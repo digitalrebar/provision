@@ -79,3 +79,5 @@ SEE ALSO
    to users
 -  `drpcli version <drpcli_version.html>`__ - Digital Rebar Provision
    CLI Command Version
+-  `drpcli workflows <drpcli_workflows.html>`__ - Access CLI commands
+   relating to workflows
