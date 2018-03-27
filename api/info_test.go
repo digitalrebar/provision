@@ -50,6 +50,7 @@ func TestInfo(t *testing.T) {
 				"fsm-runner",
 				"plugin-v2-safe-config",
 				"workflows",
+				"default-workflow",
 			},
 		},
 		expectErr: nil,

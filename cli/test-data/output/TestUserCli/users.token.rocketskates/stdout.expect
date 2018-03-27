@@ -20,7 +20,8 @@ RE:
       "plugin-v2",
       "fsm-runner",
       "plugin-v2-safe-config",
-      "workflows"
+      "workflows",
+      "default-workflow"
     \],
     "file_port": 10002,
     "id": "Fred",
