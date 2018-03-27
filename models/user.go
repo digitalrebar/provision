@@ -14,6 +14,8 @@ type User struct {
 	//
 	// required: true
 	Name string
+	// Description of user
+	Description string
 	// PasswordHash is the scrypt-hashed version of the user's Password.
 	//
 	PasswordHash []byte `json:",omitempty"`

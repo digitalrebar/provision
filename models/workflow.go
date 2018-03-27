@@ -54,3 +54,7 @@ func (w *Workflow) Validate() {
 		w.AddError(ValidName("Invalid Stage Name", stageName))
 	}
 }
+
+func (w *Workflow) CanHaveActions() bool {
+	return true
+}
