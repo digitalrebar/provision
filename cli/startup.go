@@ -2,12 +2,15 @@ package cli
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
+	"path"
 	"strings"
 
 	"github.com/digitalrebar/provision"
 	"github.com/digitalrebar/provision/api"
+	"github.com/digitalrebar/provision/models"
 	"github.com/spf13/cobra"
 )
 
@@ -46,7 +49,34 @@ var ppr = func(c *cobra.Command, a []string) error {
 		if token != "" {
 			session, err = api.TokenSession(endpoint, token)
 		} else {
+			home := os.ExpandEnv("${HOME}")
+			tPath := path.Join(home, ".cache", "drpcli", "tokens")
+			tokenFile := path.Join(tPath, "."+username+".token")
+			if home != "" {
+				if err := os.MkdirAll(tPath, 0700); err == nil {
+					if tokenStr, err := ioutil.ReadFile(tokenFile); err == nil {
+						session, err = api.TokenSession(endpoint, string(tokenStr))
+						if err == nil {
+							if _, err := session.Info(); err == nil {
+								session.Trace(trace)
+								session.TraceToken(traceToken)
+								return nil
+							}
+						}
+					}
+				}
+			}
 			session, err = api.UserSession(endpoint, username, password)
+			if home != "" {
+				if err := os.MkdirAll(tPath, 700); err == nil {
+					tok := &models.UserToken{}
+					if err := session.
+						Req().UrlFor("users", username, "token").
+						Params("ttl", "7200").Do(&tok); err == nil {
+						ioutil.WriteFile(tokenFile, []byte(tok.Token), 0600)
+					}
+				}
+			}
 		}
 		if err != nil {
 			return fmt.Errorf("Error creating session: %v", err)
