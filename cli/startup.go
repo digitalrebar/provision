@@ -50,9 +50,12 @@ var ppr = func(c *cobra.Command, a []string) error {
 			session, err = api.TokenSession(endpoint, token)
 		} else {
 			home := os.ExpandEnv("${HOME}")
-			tPath := path.Join(home, ".cache", "drpcli", "tokens")
+			tPath := os.ExpandEnv("${RS_TOKEN_CACHE}")
+			if tPath == "" && home != "" {
+				tPath = path.Join(home, ".cache", "drpcli", "tokens")
+			}
 			tokenFile := path.Join(tPath, "."+username+".token")
-			if home != "" {
+			if tPath != "" {
 				if err := os.MkdirAll(tPath, 0700); err == nil {
 					if tokenStr, err := ioutil.ReadFile(tokenFile); err == nil {
 						session, err = api.TokenSession(endpoint, string(tokenStr))
@@ -67,7 +70,7 @@ var ppr = func(c *cobra.Command, a []string) error {
 				}
 			}
 			session, err = api.UserSession(endpoint, username, password)
-			if home != "" {
+			if tPath != "" && err == nil {
 				if err := os.MkdirAll(tPath, 700); err == nil {
 					tok := &models.UserToken{}
 					if err := session.
