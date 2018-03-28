@@ -405,6 +405,7 @@ func TestMain(m *testing.M) {
 		log.Printf("Creating temp dir for file root failed: %v", err)
 		os.Exit(1)
 	}
+	os.Setenv("RS_TOKEN_PATH", path.Join(tmpDir, "tokens"))
 
 	testArgs := []string{
 		"--base-root", tmpDir,
