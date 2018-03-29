@@ -488,9 +488,6 @@ func (r *R) Do(val interface{}) error {
 	default:
 		buf := &bytes.Buffer{}
 		io.Copy(buf, resp.Body)
-		log.Printf("Got %v: %v", ct, buf.String())
-		log.Printf("%v", resp.Request.URL)
-		log.Printf("%v", resp)
 		r.err.Errorf("Cannot handle content-type %s", ct)
 	}
 	if dec == nil {
