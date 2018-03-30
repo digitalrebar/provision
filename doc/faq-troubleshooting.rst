@@ -110,6 +110,14 @@ Once the autocomplete file has been created, either log out and log back in, or 
 
     source /etc/bash_completion.d/drpcli
 
+NOTE:  If you receive an error message when using autocomplete similar to:
+  ::
+
+    bash: _get_comp_words_by_ref: command not found 
+
+Then you will need to install the ``bash-completion`` package (eg. ``sudo yum -y install bash-completion`` or ``sudo apt -y install bash-completion``).
+
+
 .. _rs_more_debug:
 
 Turn Up the Debug
