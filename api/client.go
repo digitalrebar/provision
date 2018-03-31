@@ -43,6 +43,13 @@ type Client struct {
 	traceToken                   string
 }
 
+func (c *Client) Endpoint() string {
+	return c.endpoint
+}
+func (c *Client) Username() string {
+	return c.username
+}
+
 func (c *Client) UrlFor(args ...string) (*url.URL, error) {
 	return url.ParseRequestURI(c.endpoint + path.Join(APIPATH, path.Join(args...)))
 }
