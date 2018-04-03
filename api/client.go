@@ -783,7 +783,12 @@ func UserSession(endpoint, username, password string) (*Client, error) {
 			case <-ticker.C:
 				token := &models.UserToken{}
 				if err := c.reauth(token); err != nil {
-					log.Fatalf("Error reauthing token, aborting: %v", err)
+					if err := c.Req().
+						UrlFor("users", c.username, "token").
+						Headers("Authorization", "Basic "+basicAuth).
+						Do(&token); err != nil {
+						log.Fatalf("Error reauthing token, aborting: %v", err)
+					}
 				}
 				c.mux.Lock()
 				c.token = token
