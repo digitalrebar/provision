@@ -18,3 +18,4 @@ Digital Rebar Provision provides many growing integration points.
    integrations/ansible
    integrations/websocket
    integrations/krib
+   integrations/terraform
