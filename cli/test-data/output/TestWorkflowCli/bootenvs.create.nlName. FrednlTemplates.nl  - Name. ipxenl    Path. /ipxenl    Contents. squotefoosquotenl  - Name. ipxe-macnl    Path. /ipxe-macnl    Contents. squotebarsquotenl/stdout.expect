@@ -1,28 +1,38 @@
 {
-  "Available": false,
+  "Available": true,
   "BootParams": "",
   "Description": "",
-  "Errors": [
-    "bootenv: Missing elilo or pxelinux template",
-    "bootenv: john: missing kernel lpxelinux.0 (/johann/lpxelinux.0)"
-  ],
+  "Errors": [],
   "Initrds": [],
-  "Kernel": "lpxelinux.0",
+  "Kernel": "",
   "Meta": {},
-  "Name": "john",
+  "Name": "Fred",
   "OS": {
     "Codename": "",
     "Family": "",
     "IsoFile": "",
     "IsoSha256": "",
     "IsoUrl": "",
-    "Name": "johann",
+    "Name": "",
     "Version": ""
   },
   "OnlyUnknown": false,
   "OptionalParams": [],
   "ReadOnly": false,
   "RequiredParams": [],
-  "Templates": [],
+  "Templates": [
+    {
+      "Contents": "foo",
+      "ID": "",
+      "Name": "ipxe",
+      "Path": "/ipxe"
+    },
+    {
+      "Contents": "bar",
+      "ID": "",
+      "Name": "ipxe-mac",
+      "Path": "/ipxe-mac"
+    }
+  ],
   "Validated": true
 }

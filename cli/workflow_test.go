@@ -10,7 +10,6 @@ func TestWorkflowCli(t *testing.T) {
 `
 	bootEnvCreateInput := `
 Name: Fred
-Kernel: lpxelinux.0
 Templates:
   - Name: ipxe
     Path: /ipxe

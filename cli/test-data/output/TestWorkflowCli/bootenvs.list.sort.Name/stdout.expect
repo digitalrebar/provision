@@ -5,7 +5,7 @@
     "Description": "",
     "Errors": [],
     "Initrds": [],
-    "Kernel": "lpxelinux.0",
+    "Kernel": "",
     "Meta": {},
     "Name": "Fred",
     "OS": {

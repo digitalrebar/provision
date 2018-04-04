@@ -23,7 +23,8 @@ func TestBootEnvCli(t *testing.T) {
 		bootEnvUpdateBadJSONString          = "asdgasdg"
 
 		bootEnvUpdateInputString string = `{
-  "Kernel": "lpxelinux.0"
+  "Kernel": "lpxelinux.0",
+  "OS": {"Name":"johann"}
 }
 `
 	)
@@ -151,9 +152,11 @@ func TestBootEnvCli(t *testing.T) {
 	cliTest(false, false, "bootenvs", "destroy", "fredhammer").run(t)
 	cliTest(false, false, "bootenvs", "install", "bootenvs/fredhammer.yml").run(t)
 	cliTest(false, false, "bootenvs", "uploadiso", "fredhammer").run(t)
+	cliTest(false, false, "bootenvs", "install", "test-data/no-fredhammer.yml").run(t)
 
 	// Clean up
 	cliTest(false, false, "bootenvs", "destroy", "fredhammer").run(t)
+	cliTest(false, false, "bootenvs", "destroy", "no-fredhammer").run(t)
 	cliTest(false, false, "bootenvs", "destroy", "local3").run(t)
 	cliTest(false, false, "templates", "destroy", "local3-pxelinux.tmpl").run(t)
 	cliTest(false, false, "templates", "destroy", "local3-elilo.tmpl").run(t)
@@ -185,6 +188,7 @@ func TestBootEnvLookaside(t *testing.T) {
   installSource: true
   url: "http://127.0.0.1:10003/hammertime"
 `).run(t)
+	cliTest(false, false, "bootenvs", "install", "test-data/no-phredhammer.yml").run(t)
 	cliTest(false, false, "bootenvs", "install", "test-data/phredhammer.yml").run(t)
 	time.Sleep(5 * time.Second)
 	expected := "GREG-vmlinuz0\n"
@@ -228,6 +232,7 @@ func TestBootEnvLookaside(t *testing.T) {
 	}
 	cliTest(false, false, "profiles", "remove", "global", "param", "package-repositories").run(t)
 	cliTest(false, false, "bootenvs", "destroy", "phredhammer").run(t)
+	cliTest(false, false, "bootenvs", "destroy", "no-phredhammer").run(t)
 	cliTest(false, false, "templates", "destroy", "local3-pxelinux.tmpl").run(t)
 	cliTest(false, false, "templates", "destroy", "local3-elilo.tmpl").run(t)
 	cliTest(false, false, "templates", "destroy", "local3-ipxe.tmpl").run(t)
