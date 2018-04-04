@@ -18,6 +18,7 @@ import (
 	"github.com/digitalrebar/logger"
 	"github.com/digitalrebar/provision/api"
 	"github.com/digitalrebar/provision/backend"
+	"github.com/digitalrebar/provision/embedded"
 	"github.com/digitalrebar/provision/midlayer"
 	"github.com/digitalrebar/provision/server"
 	"github.com/jessevdk/go-flags"
@@ -443,6 +444,8 @@ func TestMain(m *testing.M) {
 		log.Printf("Failed to build incrementer plugin: %v, %s", err, string(out))
 		os.Exit(1)
 	}
+
+	embedded.IncludeMeFunction()
 
 	c_opts := generateArgs(testArgs)
 	go server.Server(c_opts)
