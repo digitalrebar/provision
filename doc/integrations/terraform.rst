@@ -44,6 +44,7 @@ Using the RackN `terraform-ready` stage will automatically set these two paramet
 
 The Terraform Provider can read additional fields when requesting inventory.  In this way, users can request machines with specific characteristics.
 
+.. _rs_terraform_machine:
 
 DRP Machine Configuration
 -------------------------
@@ -88,13 +89,51 @@ Once you have the provider block, you can name resource blocks using the normal 
 
 	resource "drp_machine" "one_random_node" {
 	  count = 1
-	  bootenv     = "ubuntu-16.04-install"
-	  description = "updated description"
-	  name        = "greg2"
+	  Workflow    = "centos-7"
+	  Description = "updated description"
+	  Name        = "greg2"
 	  userdata    = "yaml cloudinit file"
 	}
 
+You can set any Machine property by naming the property with correct capitalization.  You can use the Terraform syntax to create more complex models like Meta, Profiles.
+
+.. note:: If you set Profiles, Params or Meta you will override other existing information in the machine! The following helpers have been defined to avoid this:
+
+  * `add_profiles`: allows you to add profiles to the machine without override other profiles.
+
 There are many options to set including filters, parameters and profiles.  For a full example, please look at https://github.com/rackn/terraform-provider-drp/blob/master/test.tf.example
+
+Picking Machines with Filter
+----------------------------
+
+You can add a `filters` block into the plan that will select machines based on criteria.  This is helpful if you want to select specific types of machines based on gohai data.  Filters use the API filters definition.  See :ref:`rs_api_filters`.
+
+For example:
+
+  ::
+
+    filters = [{
+	    name = "Name"
+	    value = "greg2"
+	}]
+
+
+Special Complete and Decommissioning Fields
+-------------------------------------------
+
+The provider watches until the machine reaches the `complete` or `complete-no-wait` stages; however, you can customize this behavior by setting the `completion_stage` to the plan.
+
+You can override the default the decommissioning flow (set workflow or stage back to `discover`) by adding  `decommission_workflow = "my_decom_workflow"` to the plan.
+
+You can also override the return icon (`map outline`) and color ('black') by adding `decommission_icon` and `decommission_color` to the plan.  Machine icons are handy ways to quickly show status of a provisioning cycle.
+
+Users can set icons using
+
+  ::
+	  Meta {
+	      icon = "leaf"
+	      color = "green"
+	  }
 
 Running Terraform
 -----------------
@@ -115,7 +154,7 @@ To improve delivery time:
 1. Keep the machines running
 2. Use image based provisioning instead of netboot.
 
-If you are relying on the DRP Running workflow to start allocation and recovery, make sure that you have your tokens set to never expire!
+.. note:: If you are relying on the DRP Running workflow to start allocation and recovery, make sure that you have your tokens set to never expire!
 
 Summary
 -------
