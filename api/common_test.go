@@ -11,6 +11,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/digitalrebar/provision/embedded"
 	"github.com/digitalrebar/provision/models"
 	"github.com/digitalrebar/provision/server"
 	"github.com/ghodss/yaml"
@@ -168,6 +169,7 @@ func TestMain(m *testing.M) {
 		log.Printf("Creating temp dir for file root failed: %v", err)
 		os.Exit(1)
 	}
+	embedded.IncludeMeFunction()
 
 	testArgs := []string{
 		"--base-root", tmpDir,
