@@ -17,7 +17,9 @@ We recommend using both Workflow and IPMI based reboots to ensure that the syste
 
 Source Code: https://github.com/rackn/terraform-provider-drp 
 
-Video Demo: https://www.youtube.com/watch?v=6MLyUVgnVo4
+Video Demos: 
+  * v3.8 DRP https://youtu.be/RtuZQHKmd9U
+  * v3.2 DRP https://www.youtube.com/watch?v=6MLyUVgnVo4
 
 License
 -------
