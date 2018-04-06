@@ -71,6 +71,32 @@ Want the `Latest Quick Start <http://provision.readthedocs.io/en/tip/doc/quickst
 
 Regular `Install <http://provision.readthedocs.io/en/latest/doc/install.html>`_ for more details on the install steps.  These include production options. (`Previous Version Docs <http://provision.readthedocs.io/en/latest/doc/quickstart.html>`_)
 
+
+.. _rs_license:
+
+License
+-------
+DigitalRebar Provision code is available is available from multiple authors under the Apache 2 license.
+
+Digital Rebar Documentation is available from multiple authors under the `Creative Commons license <https://en.wikipedia.org/wiki/Creative_Commons_license>`_ with Attribution.
+
+::
+
+    Work licensed under a Creative Commons license is governed by applicable copyright law. 
+    This allows Creative Commons licenses to be applied to all work falling under copyright, 
+    including: books, plays, movies, music, articles, photographs, blogs, and websites. 
+    Creative Commons does not recommend the use of Creative Commons licenses for software.
+
+    However, application of a Creative Commons license may not modify the rights allowed by
+    fair use or fair dealing or exert restrictions which violate copyright exceptions. 
+    Furthermore, Creative Commons licenses are non-exclusive and non-revocable. 
+    Any work or copies of the work obtained under a Creative Commons license may continue
+    to be used under that license.
+
+    In the case of works protected by multiple Creative Common licenses, 
+    the user may choose either.
+
+
 .. _rs_toc:
 
 Table of Contents
