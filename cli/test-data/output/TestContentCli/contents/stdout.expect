@@ -12,6 +12,7 @@ Available Commands:
   show        Show a single content layer referenced by [id]
   unbundle    Expand the content bundle [file] into the current directory
   update      Replace a content layer in the system.
+  upload      Upload a content layer into the system, replacing the earlier one if needed.
 
 Flags:
   -h, --help   help for contents
