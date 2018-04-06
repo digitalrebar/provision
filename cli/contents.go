@@ -120,6 +120,30 @@ func registerContent(app *cobra.Command) {
 		},
 	})
 	content.AddCommand(&cobra.Command{
+		Use:   "upload [json]",
+		Short: "Upload a content layer into the system, replacing the earlier one if needed.",
+		Args: func(c *cobra.Command, args []string) error {
+			if len(args) != 1 {
+				return fmt.Errorf("%v requires 1 arguments", c.UseLine())
+			}
+			return nil
+		},
+		RunE: func(c *cobra.Command, args []string) error {
+			layer := &models.Content{}
+			if err := into(args[0], layer); err != nil {
+				return generateError(err, "Error parsing layer")
+			}
+			if res, err := session.ReplaceContent(layer); err == nil {
+				return prettyPrint(res)
+			}
+			if res, err := session.CreateContent(layer); err == nil {
+				return prettyPrint(res)
+			} else {
+				return generateError(err, "Error uploading layer")
+			}
+		},
+	})
+	content.AddCommand(&cobra.Command{
 		Use:   "destroy [id]",
 		Short: "Remove the content layer [id] from the system.",
 		Args: func(c *cobra.Command, args []string) error {
