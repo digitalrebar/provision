@@ -8,7 +8,7 @@
   "Errors": [],
   "HardwareAddrs": [],
   "Meta": {
-    "feature-flags": "original-change-stage"
+    "feature-flags": "change-stage-v2"
   },
   "Name": "greg",
   "OS": "",

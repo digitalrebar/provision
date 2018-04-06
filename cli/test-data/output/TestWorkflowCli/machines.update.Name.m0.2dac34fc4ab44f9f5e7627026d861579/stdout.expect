@@ -2,7 +2,7 @@ RE:
 \{
   "Address": "",
   "Available": true,
-  "BootEnv": "local",
+  "BootEnv": "Fred",
   "CurrentJob": "",
   "CurrentTask": -1,
   "Description": "",
@@ -26,8 +26,8 @@ RE:
   \},
   "Profiles": \[\],
   "ReadOnly": false,
-  "Runnable": true,
-  "Stage": "none",
+  "Runnable": false,
+  "Stage": "james",
   "Tasks": \[
     "stage:james",
     "bootenv:Fred",
