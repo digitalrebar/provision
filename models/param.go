@@ -20,8 +20,13 @@ type Param struct {
 	// Documentation details what the parameter does, what values it can
 	// take, what it is used for, etc.
 	Documentation string
-	// Schema must be a valid JSONSchema as of draft v4.
+	// Secure implies that any API interactions with this Param
+	// will deal with SecureData values.
 	//
+	// required: true
+	Secure bool
+	// Schema must be a valid JSONSchema as of draft v4.
+	//1
 	// required: true
 	Schema interface{}
 }
