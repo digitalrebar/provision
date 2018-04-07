@@ -10,9 +10,9 @@ Digital Rebar Provision
 
 *simple, fast and open API-driven server provisioning.*
 
-**DR Provision** is a APLv2 simple Golang executable that provides a simple yet complete API-driven DHCP/PXE/TFTP provisioning system. 
+**DR Provision** is a `APLv2 <https://raw.githubusercontent.com/digitalrebar/provision/master/LICENSE>`_ simple Golang executable that provides a simple yet complete API-driven DHCP/PXE/TFTP provisioning workflow system.
 
-Simply, Digital Rebar Provisioner acts as a Cobbler Replacement - with additional powerful per-Machine workflow provisioning capabilities.
+Simply, Digital Rebar Provisioner acts as a Cobbler replacement - with additional powerful per-machine workflow provisioning capabilities.
 
 .. figure::  doc/images/dr_provision.png
    :align:   right
@@ -71,32 +71,6 @@ Want the `Latest Quick Start <http://provision.readthedocs.io/en/tip/doc/quickst
 
 Regular `Install <http://provision.readthedocs.io/en/latest/doc/install.html>`_ for more details on the install steps.  These include production options. (`Previous Version Docs <http://provision.readthedocs.io/en/latest/doc/quickstart.html>`_)
 
-
-.. _rs_license:
-
-License
--------
-DigitalRebar Provision code is available is available from multiple authors under the Apache 2 license.
-
-Digital Rebar Documentation is available from multiple authors under the `Creative Commons license <https://en.wikipedia.org/wiki/Creative_Commons_license>`_ with Attribution.
-
-::
-
-    Work licensed under a Creative Commons license is governed by applicable copyright law. 
-    This allows Creative Commons licenses to be applied to all work falling under copyright, 
-    including: books, plays, movies, music, articles, photographs, blogs, and websites. 
-    Creative Commons does not recommend the use of Creative Commons licenses for software.
-
-    However, application of a Creative Commons license may not modify the rights allowed by
-    fair use or fair dealing or exert restrictions which violate copyright exceptions. 
-    Furthermore, Creative Commons licenses are non-exclusive and non-revocable. 
-    Any work or copies of the work obtained under a Creative Commons license may continue
-    to be used under that license.
-
-    In the case of works protected by multiple Creative Common licenses, 
-    the user may choose either.
-
-
 .. _rs_toc:
 
 Table of Contents
@@ -135,3 +109,26 @@ Table of Contents
    Trademark
    LICENSE
 
+.. _rs_license:
+
+License
+-------
+DigitalRebar Provision code is available is available from multiple authors under the `Apache 2 license <https://raw.githubusercontent.com/digitalrebar/provision/master/LICENSE>`_.
+
+Digital Rebar Provision Documentation is available from multiple authors under the `Creative Commons license <https://en.wikipedia.org/wiki/Creative_Commons_license>`_ with Attribution.
+
+::
+
+    Work licensed under a Creative Commons license is governed by applicable copyright law. 
+    This allows Creative Commons licenses to be applied to all work falling under copyright, 
+    including: books, plays, movies, music, articles, photographs, blogs, and websites. 
+    Creative Commons does not recommend the use of Creative Commons licenses for software.
+
+    However, application of a Creative Commons license may not modify the rights allowed by
+    fair use or fair dealing or exert restrictions which violate copyright exceptions. 
+    Furthermore, Creative Commons licenses are non-exclusive and non-revocable. 
+    Any work or copies of the work obtained under a Creative Commons license may continue
+    to be used under that license.
+
+    In the case of works protected by multiple Creative Common licenses, 
+    the user may choose either.
