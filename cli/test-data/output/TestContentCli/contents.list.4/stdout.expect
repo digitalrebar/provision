@@ -21,11 +21,11 @@
     "meta": {
       "Description": "Writable backing store",
       "Name": "BackingStore",
-      "Overwritable": "false",
+      "Overwritable": false,
       "Source": "",
       "Type": "writable",
       "Version": "user",
-      "Writable": "true"
+      "Writable": true
     }
   },
   {
@@ -36,11 +36,11 @@
     "meta": {
       "Description": "Local Override Store",
       "Name": "LocalStore",
-      "Overwritable": "true",
+      "Overwritable": true,
       "Source": "",
       "Type": "local",
       "Version": "user",
-      "Writable": "false"
+      "Writable": false
     }
   },
   {
@@ -49,11 +49,11 @@
     "meta": {
       "Description": "",
       "Name": "john",
-      "Overwritable": "false",
+      "Overwritable": false,
       "Source": "",
       "Type": "dynamic",
       "Version": "",
-      "Writable": "false"
+      "Writable": false
     }
   },
   {
@@ -64,11 +64,11 @@
     "meta": {
       "Description": "Initial Default Content",
       "Name": "DefaultStore",
-      "Overwritable": "true",
+      "Overwritable": true,
       "Source": "Unspecified",
       "Type": "default",
       "Version": "user",
-      "Writable": "false"
+      "Writable": false
     }
   },
   {
@@ -79,11 +79,11 @@
     "meta": {
       "Description": "Test Plugin for DRP",
       "Name": "incrementer",
-      "Overwritable": "false",
+      "Overwritable": false,
       "Source": "Digital Rebar",
       "Type": "plugin",
       "Version": "Internal",
-      "Writable": "false"
+      "Writable": false
     }
   },
   {
@@ -95,11 +95,11 @@
     "meta": {
       "Description": "Default objects that must be present",
       "Name": "BasicStore",
-      "Overwritable": "true",
+      "Overwritable": true,
       "Source": "",
       "Type": "basic",
       "Version": "Unversioned",
-      "Writable": "false"
+      "Writable": false
     }
   }
 ]
