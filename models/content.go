@@ -11,9 +11,9 @@ type ContentMetaData struct {
 	Version     string
 
 	// Informational Fields
-	Writable     string
+	Writable     bool
 	Type         string
-	Overwritable string
+	Overwritable bool
 }
 
 //
@@ -187,28 +187,28 @@ func (c *ContentSummary) FromStore(src store.Store) {
 }
 
 // Return type, overwritable, writable
-func getExtraFields(n, t string) (string, string, string) {
-	writable := "false"
-	overwritable := "false"
+func getExtraFields(n, t string) (string, bool, bool) {
+	writable := false
+	overwritable := false
 	if t != "" {
 		if t == "default" {
-			overwritable = "true"
+			overwritable = true
 		}
 	} else {
 		t = "dynamic"
 	}
 	if n == "BackingStore" {
 		t = "writable"
-		writable = "true"
+		writable = true
 	} else if n == "LocalStore" {
 		t = "local"
-		overwritable = "true"
+		overwritable = true
 	} else if n == "BasicStore" {
 		t = "basic"
-		overwritable = "true"
+		overwritable = true
 	} else if n == "DefaultStore" {
 		t = "default"
-		overwritable = "true"
+		overwritable = true
 	}
 	return t, overwritable, writable
 }

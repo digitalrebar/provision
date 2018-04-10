@@ -6,10 +6,10 @@
   "meta": {
     "Description": "",
     "Name": "Pack1",
-    "Overwritable": "false",
+    "Overwritable": false,
     "Source": "",
     "Type": "dynamic",
     "Version": "0.1",
-    "Writable": "false"
+    "Writable": false
   }
 }

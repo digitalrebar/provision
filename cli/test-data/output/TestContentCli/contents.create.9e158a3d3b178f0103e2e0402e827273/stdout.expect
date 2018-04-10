@@ -6,10 +6,10 @@
   "meta": {
     "Description": "",
     "Name": "withProfile",
-    "Overwritable": "false",
+    "Overwritable": false,
     "Source": "",
     "Type": "dynamic",
     "Version": "",
-    "Writable": "false"
+    "Writable": false
   }
 }
