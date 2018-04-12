@@ -51,6 +51,7 @@ func TestInfo(t *testing.T) {
 				"plugin-v2-safe-config",
 				"workflows",
 				"default-workflow",
+				"http-range-header",
 			},
 		},
 		expectErr: nil,

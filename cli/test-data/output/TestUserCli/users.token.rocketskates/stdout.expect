@@ -21,7 +21,8 @@ RE:
       "fsm-runner",
       "plugin-v2-safe-config",
       "workflows",
-      "default-workflow"
+      "default-workflow",
+      "http-range-header"
     \],
     "file_port": 10002,
     "id": "Fred",
