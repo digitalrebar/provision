@@ -38,6 +38,10 @@ type PluginActor interface {
 	Action(logger.Logger, *models.Action) (interface{}, *models.Error)
 }
 
+type PluginValidator interface {
+	Validate(logger.Logger) (interface{}, *models.Error)
+}
+
 type PluginUnpacker interface {
 	Unpack(logger.Logger, string) error
 }
@@ -96,7 +100,17 @@ func InitApp(use, short, version string, def *models.PluginProvider, pc PluginCo
 		Use:   "define",
 		Short: "Digital Rebar Provision CLI Command Define",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if buf, err := json.MarshalIndent(def, "", "  "); err == nil {
+			var theDef interface{}
+			if pv, ok := pc.(PluginValidator); ok {
+				ndef, err := pv.Validate(thelog)
+				if err != nil {
+					return err
+				}
+				theDef = ndef
+			} else {
+				theDef = def
+			}
+			if buf, err := json.MarshalIndent(theDef, "", "  "); err == nil {
 				fmt.Println(string(buf))
 				return nil
 			} else {
