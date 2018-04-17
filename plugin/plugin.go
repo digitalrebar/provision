@@ -191,7 +191,6 @@ func Run(toPath, fromPath string, pc PluginConfig) error {
 
 func logToDRP(l *logger.Line) {
 	if client == nil {
-		thelog.NoRepublish().Errorf("Remote log not setup yet: %v", l)
 		return
 	}
 	_, err := mux.Post(client, "/log", l)
