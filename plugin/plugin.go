@@ -205,6 +205,7 @@ func Run(toPath, fromPath string, pc PluginConfig) error {
 
 func logToDRP(l *logger.Line) {
 	if client == nil {
+		fmt.Fprintf(os.Stderr, "local log: %v\n", l)
 		return
 	}
 	_, err := mux.Post(client, "/log", l)
