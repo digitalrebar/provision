@@ -100,8 +100,9 @@ func InitApp(use, short, version string, def *models.PluginProvider, pc PluginCo
 		},
 	})
 	App.AddCommand(&cobra.Command{
-		Use:   "define",
-		Short: "Digital Rebar Provision CLI Command Define",
+		SilenceUsage: true,
+		Use:          "define",
+		Short:        "Digital Rebar Provision CLI Command Define",
 		Args: func(c *cobra.Command, args []string) error {
 			return nil
 		},
@@ -125,8 +126,9 @@ func InitApp(use, short, version string, def *models.PluginProvider, pc PluginCo
 		},
 	})
 	App.AddCommand(&cobra.Command{
-		Use:   "listen <socket path to plugin> <socket path from plugin>",
-		Short: "Digital Rebar Provision CLI Command Listen",
+		SilenceUsage: true,
+		Use:          "listen <socket path to plugin> <socket path from plugin>",
+		Short:        "Digital Rebar Provision CLI Command Listen",
 		Args: func(cmd *cobra.Command, args []string) error {
 			if len(args) != 2 {
 				fmt.Printf("Failed\n")
@@ -139,8 +141,9 @@ func InitApp(use, short, version string, def *models.PluginProvider, pc PluginCo
 		},
 	})
 	App.AddCommand(&cobra.Command{
-		Use:   "unpack [loc]",
-		Short: "Unpack embedded static content to [loc]",
+		SilenceUsage: true,
+		Use:          "unpack [loc]",
+		Short:        "Unpack embedded static content to [loc]",
 		Args: func(c *cobra.Command, args []string) error {
 			if args[0] == `` {
 				return fmt.Errorf("Not a valid location: `%s`", args[0])
