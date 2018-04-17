@@ -88,7 +88,7 @@ func InitApp(use, short, version string, def *models.PluginProvider, pc PluginCo
 		Use:   "autocomplete <filename>",
 		Short: "Digital Rebar Provision CLI Command Bash AutoCompletion File",
 		Long:  "Generate a bash autocomplete file as <filename>.\nPlace the generated file in /etc/bash_completion.d or /usr/local/etc/bash_completion.d.",
-		Args: func(c *cobra.Command, args []string) error {
+		Args: func(cmd *cobra.Command, args []string) error {
 			if len(args) != 1 {
 				return fmt.Errorf("%v requires 1  argument", cmd.UseLine())
 			}
@@ -127,7 +127,7 @@ func InitApp(use, short, version string, def *models.PluginProvider, pc PluginCo
 	App.AddCommand(&cobra.Command{
 		Use:   "listen <socket path to plugin> <socket path from plugin>",
 		Short: "Digital Rebar Provision CLI Command Listen",
-		Args: func(c *cobra.Command, args []string) error {
+		Args: func(cmd *cobra.Command, args []string) error {
 			if len(args) != 2 {
 				fmt.Printf("Failed\n")
 				return fmt.Errorf("%v requires 2 argument", cmd.UseLine())
