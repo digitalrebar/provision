@@ -88,10 +88,13 @@ func InitApp(use, short, version string, def *models.PluginProvider, pc PluginCo
 		Use:   "autocomplete <filename>",
 		Short: "Digital Rebar Provision CLI Command Bash AutoCompletion File",
 		Long:  "Generate a bash autocomplete file as <filename>.\nPlace the generated file in /etc/bash_completion.d or /usr/local/etc/bash_completion.d.",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		Args: func(c *cobra.Command, args []string) error {
 			if len(args) != 1 {
 				return fmt.Errorf("%v requires 1  argument", cmd.UseLine())
 			}
+			return nil
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
 			App.GenBashCompletionFile(args[0])
 			return nil
 		},
@@ -99,6 +102,9 @@ func InitApp(use, short, version string, def *models.PluginProvider, pc PluginCo
 	App.AddCommand(&cobra.Command{
 		Use:   "define",
 		Short: "Digital Rebar Provision CLI Command Define",
+		Args: func(c *cobra.Command, args []string) error {
+			return nil
+		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			var theDef interface{}
 			if pv, ok := pc.(PluginValidator); ok {
@@ -121,22 +127,27 @@ func InitApp(use, short, version string, def *models.PluginProvider, pc PluginCo
 	App.AddCommand(&cobra.Command{
 		Use:   "listen <socket path to plugin> <socket path from plugin>",
 		Short: "Digital Rebar Provision CLI Command Listen",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		Args: func(c *cobra.Command, args []string) error {
 			if len(args) != 2 {
 				fmt.Printf("Failed\n")
 				return fmt.Errorf("%v requires 2 argument", cmd.UseLine())
 			}
-
+			return nil
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
 			return Run(args[0], args[1], pc)
 		},
 	})
 	App.AddCommand(&cobra.Command{
 		Use:   "unpack [loc]",
 		Short: "Unpack embedded static content to [loc]",
-		RunE: func(c *cobra.Command, args []string) error {
+		Args: func(c *cobra.Command, args []string) error {
 			if args[0] == `` {
 				return fmt.Errorf("Not a valid location: `%s`", args[0])
 			}
+			return nil
+		},
+		RunE: func(c *cobra.Command, args []string) error {
 			if pu, ok := pc.(PluginUnpacker); ok {
 				if err := os.MkdirAll(args[0], 0755); err != nil {
 					return err
