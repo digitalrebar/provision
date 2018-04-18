@@ -39,7 +39,7 @@ type PluginActor interface {
 }
 
 type PluginValidator interface {
-	Validate(logger.Logger) (interface{}, *models.Error)
+	Validate(logger.Logger, *api.Client) (interface{}, *models.Error)
 }
 
 type PluginUnpacker interface {
@@ -62,6 +62,13 @@ func Publish(t, a, k string, o interface{}) {
 	_, err := mux.Post(client, "/publish", e)
 	if err != nil {
 		thelog.Errorf("Failed to publish event! %v %v", e, err)
+	}
+}
+
+func Leaving(e *models.Error) {
+	_, err := mux.Post(client, "/leaving", e)
+	if err != nil {
+		thelog.Errorf("Failed to send leaving event! %v %v", e, err)
 	}
 }
 
@@ -109,7 +116,11 @@ func InitApp(use, short, version string, def *models.PluginProvider, pc PluginCo
 		RunE: func(cmd *cobra.Command, args []string) error {
 			var theDef interface{}
 			if pv, ok := pc.(PluginValidator); ok {
-				ndef, err := pv.Validate(thelog)
+				session, err2 := buildSession()
+				if err2 != nil {
+					return err2
+				}
+				ndef, err := pv.Validate(thelog, session)
 				if err != nil {
 					return err
 				}
@@ -225,14 +236,7 @@ func stopHandler(w http.ResponseWriter, r *http.Request, ps PluginStop) {
 	os.Exit(0)
 }
 
-func configHandler(w http.ResponseWriter, r *http.Request, pc PluginConfig) {
-	var params map[string]interface{}
-	if !mux.AssureDecode(w, r, &params) {
-		return
-	}
-	l := w.(logger.Logger)
-	l.Infof("Setting API session\n")
-
+func buildSession() (*api.Client, error) {
 	default_endpoint := "https://127.0.0.1:8092"
 	if ep := os.Getenv("RS_ENDPOINT"); ep != "" {
 		default_endpoint = ep
@@ -242,14 +246,26 @@ func configHandler(w http.ResponseWriter, r *http.Request, pc PluginConfig) {
 		default_token = tk
 	}
 
+	var session *api.Client
 	var err2 error
 	if default_token != "" {
-		l.Infof("Starting session with endpoint and token: %s\n", default_endpoint)
 		session, err2 = api.TokenSession(default_endpoint, default_token)
 	} else {
 		err2 = fmt.Errorf("Must have a token specified\n")
 	}
 
+	return session, err2
+}
+
+func configHandler(w http.ResponseWriter, r *http.Request, pc PluginConfig) {
+	var params map[string]interface{}
+	if !mux.AssureDecode(w, r, &params) {
+		return
+	}
+	l := w.(logger.Logger)
+
+	l.Infof("Setting API session\n")
+	session, err2 := buildSession()
 	if err2 != nil {
 		err := &models.Error{Code: 400, Model: "plugin", Key: "incrementer", Type: "plugin", Messages: []string{}}
 		err.AddError(err2)
