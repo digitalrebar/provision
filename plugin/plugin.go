@@ -58,6 +58,9 @@ var (
 )
 
 func Publish(t, a, k string, o interface{}) {
+	if client == nil {
+		return
+	}
 	e := &models.Event{Time: time.Now(), Type: t, Action: a, Key: k, Object: o}
 	_, err := mux.Post(client, "/publish", e)
 	if err != nil {
@@ -66,6 +69,9 @@ func Publish(t, a, k string, o interface{}) {
 }
 
 func Leaving(e *models.Error) {
+	if client == nil {
+		return
+	}
 	_, err := mux.Post(client, "/leaving", e)
 	if err != nil {
 		thelog.Errorf("Failed to send leaving event! %v %v", e, err)
