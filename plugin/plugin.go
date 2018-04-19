@@ -38,6 +38,10 @@ type PluginActor interface {
 	Action(logger.Logger, *models.Action) (interface{}, *models.Error)
 }
 
+type PluginValidator interface {
+	Validate(logger.Logger, *api.Client) (interface{}, *models.Error)
+}
+
 type PluginUnpacker interface {
 	Unpack(logger.Logger, string) error
 }
@@ -54,10 +58,23 @@ var (
 )
 
 func Publish(t, a, k string, o interface{}) {
+	if client == nil {
+		return
+	}
 	e := &models.Event{Time: time.Now(), Type: t, Action: a, Key: k, Object: o}
 	_, err := mux.Post(client, "/publish", e)
 	if err != nil {
 		thelog.Errorf("Failed to publish event! %v %v", e, err)
+	}
+}
+
+func Leaving(e *models.Error) {
+	if client == nil {
+		return
+	}
+	_, err := mux.Post(client, "/leaving", e)
+	if err != nil {
+		thelog.Errorf("Failed to send leaving event! %v %v", e, err)
 	}
 }
 
@@ -84,19 +101,40 @@ func InitApp(use, short, version string, def *models.PluginProvider, pc PluginCo
 		Use:   "autocomplete <filename>",
 		Short: "Digital Rebar Provision CLI Command Bash AutoCompletion File",
 		Long:  "Generate a bash autocomplete file as <filename>.\nPlace the generated file in /etc/bash_completion.d or /usr/local/etc/bash_completion.d.",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		Args: func(cmd *cobra.Command, args []string) error {
 			if len(args) != 1 {
 				return fmt.Errorf("%v requires 1  argument", cmd.UseLine())
 			}
+			return nil
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
 			App.GenBashCompletionFile(args[0])
 			return nil
 		},
 	})
 	App.AddCommand(&cobra.Command{
-		Use:   "define",
-		Short: "Digital Rebar Provision CLI Command Define",
+		SilenceUsage: true,
+		Use:          "define",
+		Short:        "Digital Rebar Provision CLI Command Define",
+		Args: func(c *cobra.Command, args []string) error {
+			return nil
+		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if buf, err := json.MarshalIndent(def, "", "  "); err == nil {
+			var theDef interface{}
+			if pv, ok := pc.(PluginValidator); ok {
+				session, err2 := buildSession()
+				if err2 != nil {
+					return err2
+				}
+				ndef, err := pv.Validate(thelog, session)
+				if err != nil {
+					return err
+				}
+				theDef = ndef
+			} else {
+				theDef = def
+			}
+			if buf, err := json.MarshalIndent(theDef, "", "  "); err == nil {
 				fmt.Println(string(buf))
 				return nil
 			} else {
@@ -105,24 +143,31 @@ func InitApp(use, short, version string, def *models.PluginProvider, pc PluginCo
 		},
 	})
 	App.AddCommand(&cobra.Command{
-		Use:   "listen <socket path to plugin> <socket path from plugin>",
-		Short: "Digital Rebar Provision CLI Command Listen",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		SilenceUsage: true,
+		Use:          "listen <socket path to plugin> <socket path from plugin>",
+		Short:        "Digital Rebar Provision CLI Command Listen",
+		Args: func(cmd *cobra.Command, args []string) error {
 			if len(args) != 2 {
 				fmt.Printf("Failed\n")
 				return fmt.Errorf("%v requires 2 argument", cmd.UseLine())
 			}
-
+			return nil
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
 			return Run(args[0], args[1], pc)
 		},
 	})
 	App.AddCommand(&cobra.Command{
-		Use:   "unpack [loc]",
-		Short: "Unpack embedded static content to [loc]",
-		RunE: func(c *cobra.Command, args []string) error {
+		SilenceUsage: true,
+		Use:          "unpack [loc]",
+		Short:        "Unpack embedded static content to [loc]",
+		Args: func(c *cobra.Command, args []string) error {
 			if args[0] == `` {
 				return fmt.Errorf("Not a valid location: `%s`", args[0])
 			}
+			return nil
+		},
+		RunE: func(c *cobra.Command, args []string) error {
 			if pu, ok := pc.(PluginUnpacker); ok {
 				if err := os.MkdirAll(args[0], 0755); err != nil {
 					return err
@@ -176,6 +221,10 @@ func Run(toPath, fromPath string, pc PluginConfig) error {
 }
 
 func logToDRP(l *logger.Line) {
+	if client == nil {
+		fmt.Fprintf(os.Stderr, "local log: %v\n", l)
+		return
+	}
 	_, err := mux.Post(client, "/log", l)
 	if err != nil {
 		thelog.NoRepublish().Errorf("Failed to log line! %v %v", l, err)
@@ -193,14 +242,7 @@ func stopHandler(w http.ResponseWriter, r *http.Request, ps PluginStop) {
 	os.Exit(0)
 }
 
-func configHandler(w http.ResponseWriter, r *http.Request, pc PluginConfig) {
-	var params map[string]interface{}
-	if !mux.AssureDecode(w, r, &params) {
-		return
-	}
-	l := w.(logger.Logger)
-	l.Infof("Setting API session\n")
-
+func buildSession() (*api.Client, error) {
 	default_endpoint := "https://127.0.0.1:8092"
 	if ep := os.Getenv("RS_ENDPOINT"); ep != "" {
 		default_endpoint = ep
@@ -210,14 +252,26 @@ func configHandler(w http.ResponseWriter, r *http.Request, pc PluginConfig) {
 		default_token = tk
 	}
 
+	var session *api.Client
 	var err2 error
 	if default_token != "" {
-		l.Infof("Starting session with endpoint and token: %s\n", default_endpoint)
 		session, err2 = api.TokenSession(default_endpoint, default_token)
 	} else {
 		err2 = fmt.Errorf("Must have a token specified\n")
 	}
 
+	return session, err2
+}
+
+func configHandler(w http.ResponseWriter, r *http.Request, pc PluginConfig) {
+	var params map[string]interface{}
+	if !mux.AssureDecode(w, r, &params) {
+		return
+	}
+	l := w.(logger.Logger)
+
+	l.Infof("Setting API session\n")
+	session, err2 := buildSession()
 	if err2 != nil {
 		err := &models.Error{Code: 400, Model: "plugin", Key: "incrementer", Type: "plugin", Messages: []string{}}
 		err.AddError(err2)
