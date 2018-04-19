@@ -1,9 +1,9 @@
 RE:
-{
-  "Info": {
+\{
+  "Info": \{
     "address": "127.0.0.1",
     "api_port": 10001,
-    "arch": "[\s\S]*",
+    "arch": "amd64",
     "binl_enabled": true,
     "binl_port": 10005,
     "dhcp_enabled": true,
@@ -26,21 +26,20 @@ RE:
     \],
     "file_port": 10002,
     "id": "Fred",
-    "os": "[\s\S]*",
+    "os": "linux",
     "prov_enabled": true,
     "stats": \[
-      {
+      \{
         "count": 0,
         "name": "machines.count"
-      },
-      {
+      \},
+      \{
         "count": 0,
         "name": "subnets.count"
-      }
+      \}
     \],
     "tftp_enabled": true,
     "tftp_port": 10003,
-    "version": "[\s\S]*"
-  },
-  "Token": "[\s\S]*"
-}
+    "version": "v3.0.2-pre-alpha-NotSet"
+  \},
+\}

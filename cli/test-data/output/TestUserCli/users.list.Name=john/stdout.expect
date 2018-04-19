@@ -1,12 +1,13 @@
 RE:
 \[
-  {
+  \{
     "Available": true,
+    "Description": "",
     "Errors": \[\],
-    "Meta": {},
+    "Meta": \{\},
     "Name": "john",
     "ReadOnly": false,
-    "Secret": "[\s\S]*",
+    "Roles": \[\],
     "Validated": true
-  }
+  \}
 \]

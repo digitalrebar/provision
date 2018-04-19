@@ -1,21 +1,25 @@
 RE:
 \[
-  {
+  \{
     "Available": true,
+    "Description": "",
     "Errors": \[\],
-    "Meta": {},
+    "Meta": \{\},
     "Name": "john",
     "ReadOnly": false,
-    "Secret": "[\s\S]*",
+    "Roles": \[\],
     "Validated": true
-  },
-  {
+  \},
+  \{
     "Available": true,
+    "Description": "",
     "Errors": \[\],
-    "Meta": {},
+    "Meta": \{\},
     "Name": "rocketskates",
     "ReadOnly": false,
-    "Secret": "[\s\S]*",
+    "Roles": \[
+      "superuser"
+    \],
     "Validated": true
-  }
+  \}
 \]

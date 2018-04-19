@@ -1,2 +1,3 @@
-RE:
 Error: Error creating session: CLIENT_ERROR
+  Cannot handle content-type 
+  No decoder for content-type 
