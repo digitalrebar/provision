@@ -42,6 +42,7 @@ type Slicer interface {
 
 func All() []Model {
 	return []Model{
+		&Role{},
 		&BootEnv{},
 		&Interface{},
 		&Job{},
@@ -87,6 +88,8 @@ func New(kind string) (Slicer, error) {
 		res = &Profile{}
 	case "reservations", "reservation":
 		res = &Reservation{}
+	case "roles", "role":
+		res = &Role{}
 	case "stages", "stage":
 		res = &Stage{}
 	case "subnets", "subnet":

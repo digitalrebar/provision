@@ -19,6 +19,7 @@ func TestContentCrud(t *testing.T) {
     preferences: 13
     profiles: 1
     reservations: 0
+    roles: 0
     stages: 0
     subnets: 0
     tasks: 0
@@ -73,6 +74,7 @@ func TestContentCrud(t *testing.T) {
     Writable: false
 - Counts:
     bootenvs: 2
+    roles: 1
     stages: 2
   Warnings: []
   meta:
@@ -173,6 +175,7 @@ sections:
       ReadOnly: false
       Validated: false
   reservations: {}
+  roles: {}
   stages: {}
   subnets: {}
   tasks: {}
@@ -186,6 +189,8 @@ sections:
       Name: rocketskates
       PasswordHash: elided
       ReadOnly: false
+      Roles:
+      - superuser
       Secret: elided
       Validated: false
   workflows: {}

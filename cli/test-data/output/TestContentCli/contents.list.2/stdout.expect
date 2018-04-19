@@ -10,6 +10,7 @@
       "preferences": 0,
       "profiles": 1,
       "reservations": 0,
+      "roles": 0,
       "stages": 0,
       "subnets": 0,
       "tasks": 0,
@@ -89,6 +90,7 @@
   {
     "Counts": {
       "bootenvs": 2,
+      "roles": 1,
       "stages": 2
     },
     "Warnings": [],

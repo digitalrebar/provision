@@ -24,6 +24,9 @@ type User struct {
 	// will invalidate all existing tokens that have this user as a user
 	// or a grantor.
 	Secret string
+	// Roles is a list of Roles this User has.
+	//
+	Roles []string
 }
 
 func (u *User) Validate() {
@@ -46,6 +49,9 @@ func (u *User) Fill() {
 	u.Validation.fill()
 	if u.Meta == nil {
 		u.Meta = Meta{}
+	}
+	if u.Roles == nil {
+		u.Roles = []string{}
 	}
 }
 
