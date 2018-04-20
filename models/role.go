@@ -2,26 +2,92 @@ package models
 
 import "strings"
 
-func csp(v string) []string {
-	res := strings.Split(v, ",")
-	for i := range res {
-		res[i] = strings.TrimSpace(res[i])
+func csm(q string) map[string]struct{} {
+	res := map[string]struct{}{}
+	for _, p := range strings.Split(q, ",") {
+		res[strings.TrimSpace(p)] = struct{}{}
 	}
 	return res
 }
 
-var validActions = map[string]struct{}{
-	"actions":  struct{}{},
-	"create":   struct{}{},
-	"delete":   struct{}{},
-	"get":      struct{}{},
-	"list":     struct{}{},
-	"log":      struct{}{},
-	"password": struct{}{},
-	"patch":    struct{}{},
-	"post":     struct{}{},
-	"token":    struct{}{},
-	"update":   struct{}{},
+var (
+	basicActions = "list, get, create, update, delete, patch"
+
+	extraScopes = map[string]string{
+		"contents":   "list, get, create, update, delete",
+		"files":      "list, get, post, delete",
+		"interfaces": "list, get",
+		"info":       "get",
+		"isos":       "list, get, post, delete",
+		"indexes":    "list, get",
+	}
+
+	addedActions = map[string]string{
+		"users": "token, password",
+		"jobs":  "log",
+	}
+
+	overriddenActions = map[string]string{
+		"prefs":  "list, post",
+		"events": "post",
+	}
+
+	allScopes = func() map[string]map[string]struct{} {
+		res := map[string]map[string]struct{}{}
+		for k, v := range extraScopes {
+			res[k] = csm(v)
+		}
+		for _, k := range AllPrefixes() {
+			actions := csm(basicActions)
+			if v, ok := addedActions[k]; ok {
+				for i := range csm(v) {
+					actions[i] = struct{}{}
+				}
+			}
+			if v, ok := overriddenActions[k]; ok {
+				actions = csm(v)
+			}
+			res[k] = actions
+		}
+		return res
+	}()
+)
+
+type actionNode struct {
+	instances string
+}
+
+// actionNode A contains actionNode b if every instance in b is also in a
+func (a actionNode) contains(b actionNode) bool {
+	// Star case
+	if a.instances == "*" {
+		return true
+	}
+	ai, bi := csm(a.instances), csm(b.instances)
+	// Adding tenants will make this more complicated.
+	for key := range bi {
+		if _, ok := ai[key]; !ok {
+			return false
+		}
+	}
+	return true
+}
+
+type scopeNode struct {
+	actions map[string]actionNode
+}
+
+func (a scopeNode) contains(b scopeNode) bool {
+	for key, ba := range b.actions {
+		aa, ok := a.actions[key]
+		if !ok {
+			return false
+		}
+		if !aa.contains(ba) {
+			return false
+		}
+	}
+	return true
 }
 
 // Claim is an individial specifier for something we are allowed access to.
@@ -29,60 +95,66 @@ type Claim struct {
 	Scope    string `json:"scope"`
 	Action   string `json:"action"`
 	Specific string `json:"specific"`
+	scopes   map[string]scopeNode
+}
+
+func (a *Claim) Contains(b *Claim) bool {
+	for key, bs := range b.scopes {
+		as, ok := a.scopes[key]
+		if !ok {
+			return false
+		}
+		if !as.contains(bs) {
+			return false
+		}
+	}
+	return true
+}
+
+func (c *Claim) compile(e ErrorAdder) {
+	c.scopes = map[string]scopeNode{}
+	if c.Scope == "*" {
+		for k := range allScopes {
+			c.scopes[k] = scopeNode{actions: map[string]actionNode{}}
+		}
+	} else {
+		for k := range csm(c.Scope) {
+			if _, ok := allScopes[k]; !ok {
+				e.Errorf("No such scope %s", k)
+			} else {
+				c.scopes[k] = scopeNode{actions: map[string]actionNode{}}
+			}
+		}
+	}
+	for k := range c.scopes {
+		if c.Action == "*" {
+			for k2 := range allScopes[k] {
+				c.scopes[k].actions[k2] = actionNode{instances: c.Specific}
+			}
+		} else {
+			for k2 := range csm(c.Action) {
+				if _, ok := allScopes[k][k2]; ok {
+					c.scopes[k].actions[k2] = actionNode{instances: c.Specific}
+				}
+			}
+		}
+	}
 }
 
 // Match tests to see if this claim allows access for the specified
 // scope, action, and specific item.
-//
-// If the Claim has `*` for any field, it matches all possible values
-// for that field.
 func (c *Claim) Match(scope, action, specific string) bool {
-	scopeMatch, actionMatch, specificMatch := c.Scope == "*", c.Action == "*", c.Specific == "*"
-	if !scopeMatch {
-		for _, sc := range csp(c.Scope) {
-			scopeMatch = sc == scope
-			if scopeMatch {
-				break
-			}
-		}
+	err := &Error{}
+	if c.scopes == nil {
+		c.compile(err)
 	}
-	if !actionMatch {
-		for _, ac := range csp(c.Action) {
-			actionMatch = ac == action
-			if actionMatch {
-				break
-			}
-		}
-	}
-	if !specificMatch {
-		for _, sc := range csp(c.Specific) {
-			specificMatch = sc == specific
-			if specificMatch {
-				break
-			}
-		}
-	}
-	return scopeMatch && actionMatch && specificMatch
+	c2 := &Claim{Scope: scope, Action: action, Specific: specific}
+	c2.compile(err)
+	return c.Contains(c2)
 }
 
-func (c *Claim) Validate(r *Role) {
-	if c.Scope != "*" {
-		for _, sc := range csp(c.Scope) {
-			r.AddError(ValidName("Invalid Scope", sc))
-		}
-	}
-	if c.Action != "*" {
-		for _, sc := range csp(c.Action) {
-			if _, ok := validActions[sc]; !ok {
-				r.Errorf("Invalid Action %s for claim scope %s", sc, c.Scope)
-			}
-		}
-	}
-	if c.Specific != "*" {
-		for _, sc := range csp(c.Specific) {
-			r.AddError(ValidName("Invalid Specific", sc))
-		}
-	}
+func (c *Claim) Validate(e ErrorAdder) {
+	c.compile(e)
 }
 
 type Role struct {
