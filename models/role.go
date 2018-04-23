@@ -98,19 +98,6 @@ type Claim struct {
 	scopes   map[string]scopeNode
 }
 
-func (a *Claim) Contains(b *Claim) bool {
-	for key, bs := range b.scopes {
-		as, ok := a.scopes[key]
-		if !ok {
-			return false
-		}
-		if !as.contains(bs) {
-			return false
-		}
-	}
-	return true
-}
-
 func (c *Claim) compile(e ErrorAdder) {
 	c.scopes = map[string]scopeNode{}
 	if c.Scope == "*" {
@@ -120,7 +107,9 @@ func (c *Claim) compile(e ErrorAdder) {
 	} else {
 		for k := range csm(c.Scope) {
 			if _, ok := allScopes[k]; !ok {
-				e.Errorf("No such scope %s", k)
+				if e != nil {
+					e.Errorf("No such scope %s", k)
+				}
 			} else {
 				c.scopes[k] = scopeNode{actions: map[string]actionNode{}}
 			}
@@ -141,15 +130,33 @@ func (c *Claim) compile(e ErrorAdder) {
 	}
 }
 
+func (a *Claim) Contains(b *Claim) bool {
+	if a.scopes == nil {
+		a.compile(nil)
+	}
+	if b.scopes == nil {
+		b.compile(nil)
+	}
+	for key, bs := range b.scopes {
+		as, ok := a.scopes[key]
+		if !ok {
+			return false
+		}
+		if !as.contains(bs) {
+			return false
+		}
+	}
+	return true
+}
+
 // Match tests to see if this claim allows access for the specified
 // scope, action, and specific item.
 func (c *Claim) Match(scope, action, specific string) bool {
-	err := &Error{}
 	if c.scopes == nil {
-		c.compile(err)
+		c.compile(nil)
 	}
 	c2 := &Claim{Scope: scope, Action: action, Specific: specific}
-	c2.compile(err)
+	c2.compile(nil)
 	return c.Contains(c2)
 }
 
@@ -173,6 +180,25 @@ func (r *Role) Fill() {
 	if r.Claims == nil {
 		r.Claims = []Claim{}
 	}
+}
+
+// Role a contains role b if a can be used to satisfy all requests b can satisfy
+func (a *Role) Contains(b *Role) bool {
+	finalRes := true
+	res := false
+	for _, bClaim := range b.Claims {
+		for _, aClaim := range a.Claims {
+			res = aClaim.Contains(bClaim)
+			if res {
+				break
+			}
+		}
+		finalRes = res
+		if !finalRes {
+			break
+		}
+	}
+	return finalRes
 }
 
 func (r *Role) Validate() {
