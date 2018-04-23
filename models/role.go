@@ -11,7 +11,7 @@ func csm(q string) map[string]struct{} {
 }
 
 var (
-	basicActions = "list, get, create, update, delete, patch"
+	basicActions = "list, get, create, update, delete, patch, action"
 
 	extraScopes = map[string]string{
 		"contents":   "list, get, create, update, delete",
@@ -188,7 +188,7 @@ func (a *Role) Contains(b *Role) bool {
 	res := false
 	for _, bClaim := range b.Claims {
 		for _, aClaim := range a.Claims {
-			res = aClaim.Contains(bClaim)
+			res = aClaim.Contains(&bClaim)
 			if res {
 				break
 			}
