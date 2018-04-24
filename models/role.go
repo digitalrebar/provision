@@ -1,6 +1,12 @@
 package models
 
-import "strings"
+import (
+	"fmt"
+	"log"
+	"strings"
+
+	"github.com/VictorLowther/jsonpatch2"
+)
 
 func csm(q string) map[string]struct{} {
 	res := map[string]struct{}{}
@@ -11,7 +17,8 @@ func csm(q string) map[string]struct{} {
 }
 
 var (
-	basicActions = "list, get, create, update, delete, patch, action"
+	valScopedActions = csm("update, action")
+	basicActions     = csm("list, get, create, delete, actions")
 
 	extraScopes = map[string]string{
 		"contents":   "list, get, create, update, delete",
@@ -38,7 +45,13 @@ var (
 			res[k] = csm(v)
 		}
 		for _, k := range AllPrefixes() {
-			actions := csm(basicActions)
+			actions := map[string]struct{}{}
+			for k2, v2 := range basicActions {
+				actions[k2] = v2
+			}
+			for k2, v2 := range valScopedActions {
+				actions[k2] = v2
+			}
 			if v, ok := addedActions[k]; ok {
 				for i := range csm(v) {
 					actions[i] = struct{}{}
@@ -81,9 +94,30 @@ func (a scopeNode) contains(b scopeNode) bool {
 	for key, ba := range b.actions {
 		aa, ok := a.actions[key]
 		if !ok {
-			return false
+			parts := strings.SplitN(key, ":", 2)
+			if len(parts) == 2 {
+				switch parts[0] {
+				case "action":
+					aa, ok = a.actions[parts[0]]
+				case "update":
+					ptr, err := jsonpatch2.NewPointer(parts[1])
+					for err == nil {
+						_, ptr2 := ptr.Chop()
+						if len(ptr) == len(ptr2) {
+							aa, ok = a.actions[parts[0]]
+							break
+						}
+						frag := parts[0] + ":" + ptr2.String()
+						aa, ok = a.actions[frag]
+						if ok {
+							break
+						}
+						ptr = ptr2
+					}
+				}
+			}
 		}
-		if !aa.contains(ba) {
+		if !(ok && aa.contains(ba)) {
 			return false
 		}
 	}
@@ -122,7 +156,8 @@ func (c *Claim) compile(e ErrorAdder) {
 			}
 		} else {
 			for k2 := range csm(c.Action) {
-				if _, ok := allScopes[k][k2]; ok {
+				parts := strings.SplitN(k2, ":", 2)
+				if _, ok := allScopes[k][parts[0]]; ok {
 					c.scopes[k].actions[k2] = actionNode{instances: c.Specific}
 				}
 			}
@@ -164,12 +199,29 @@ func (c *Claim) Validate(e ErrorAdder) {
 	c.compile(e)
 }
 
+func (c *Claim) String() string {
+	return fmt.Sprintf("%s %s %s", c.Scope, c.Action, c.Specific)
+}
+
+func MakeClaims(things ...string) []*Claim {
+	if len(things)%3 != 0 {
+		log.Printf("Bad claim %v", things)
+		panic("Strings passed to claims must be a multiple of 3")
+	}
+	res := make([]*Claim, 0, len(things)/3)
+	for len(things) > 0 {
+		res = append(res, &Claim{Scope: things[0], Action: things[1], Specific: things[2]})
+		things = things[3:]
+	}
+	return res
+}
+
 type Role struct {
 	Validation
 	Access
 	Meta
 	Name   string
-	Claims []Claim
+	Claims []*Claim
 }
 
 func (r *Role) Fill() {
@@ -178,7 +230,7 @@ func (r *Role) Fill() {
 		r.Meta = Meta{}
 	}
 	if r.Claims == nil {
-		r.Claims = []Claim{}
+		r.Claims = []*Claim{}
 	}
 }
 
@@ -188,7 +240,7 @@ func (a *Role) Contains(b *Role) bool {
 	res := false
 	for _, bClaim := range b.Claims {
 		for _, aClaim := range a.Claims {
-			res = aClaim.Contains(&bClaim)
+			res = aClaim.Contains(bClaim)
 			if res {
 				break
 			}
@@ -245,4 +297,11 @@ func (r *Role) Match(scope, action, specific string) bool {
 		}
 	}
 	return false
+}
+
+func MakeRole(name string, claims ...string) *Role {
+	return &Role{
+		Name:   name,
+		Claims: MakeClaims(claims...),
+	}
 }

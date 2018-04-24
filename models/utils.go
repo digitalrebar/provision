@@ -8,6 +8,8 @@ import (
 	"regexp"
 	"strings"
 	"time"
+
+	"github.com/VictorLowther/jsonpatch2"
 )
 
 func copyMap(m map[string]interface{}) map[string]interface{} {
@@ -178,4 +180,18 @@ func FibBackoff(thunk func() error) {
 		}
 		time.Sleep(d)
 	}
+}
+
+// GenPatch generates a JSON patch that will transform source into target.
+// The generated patch will have all the applicable test clauses.
+func GenPatch(source, target interface{}, paranoid bool) (jsonpatch2.Patch, error) {
+	srcBuf, err := json.Marshal(source)
+	if err != nil {
+		return nil, err
+	}
+	tgtBuf, err := json.Marshal(target)
+	if err != nil {
+		return nil, err
+	}
+	return jsonpatch2.GenerateFull(srcBuf, tgtBuf, true, paranoid)
 }
