@@ -34,6 +34,8 @@ dr-provision-hash.*
 server.key
 server.crt
 cmds/incrementer/content.go
+# ignore Mac vomit 
+.DS_Store
 # Pip stuff for docs
 src
 test-data/etc/dr-provision/._Description.meta
