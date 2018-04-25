@@ -1,0 +1,15 @@
+{
+  "Available": true,
+  "Claims": [
+    {
+      "action": "*",
+      "scope": "*",
+      "specific": "*"
+    }
+  ],
+  "Errors": [],
+  "Meta": {},
+  "Name": "superuser",
+  "ReadOnly": false,
+  "Validated": true
+}

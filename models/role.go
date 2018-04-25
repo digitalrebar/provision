@@ -140,12 +140,10 @@ func (c *Claim) compile(e ErrorAdder) {
 		}
 	} else {
 		for k := range csm(c.Scope) {
-			if _, ok := allScopes[k]; !ok {
-				if e != nil {
-					e.Errorf("No such scope %s", k)
-				}
-			} else {
+			if _, ok := allScopes[k]; ok {
 				c.scopes[k] = scopeNode{actions: map[string]actionNode{}}
+			} else if e != nil {
+				e.Errorf("No such scope '%s'", k)
 			}
 		}
 	}
@@ -159,6 +157,8 @@ func (c *Claim) compile(e ErrorAdder) {
 				parts := strings.SplitN(k2, ":", 2)
 				if _, ok := allScopes[k][parts[0]]; ok {
 					c.scopes[k].actions[k2] = actionNode{instances: c.Specific}
+				} else if e != nil {
+					e.Errorf("No such action '%s'", k2)
 				}
 			}
 		}
