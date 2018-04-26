@@ -13,6 +13,7 @@ import (
 	"mime"
 	"net"
 	"net/http"
+	"net/http/httputil"
 	"net/url"
 	"path"
 	"strings"
@@ -493,9 +494,9 @@ func (r *R) Do(val interface{}) error {
 	case "application/json":
 		dec = json.NewDecoder(resp.Body)
 	default:
-		buf := &bytes.Buffer{}
-		io.Copy(buf, resp.Body)
 		r.err.Errorf("Cannot handle content-type %s", ct)
+		dump, _ := httputil.DumpResponse(resp, true)
+		r.err.Errorf("Resp: \n%s", string(dump))
 	}
 	if dec == nil {
 		r.err.Errorf("No decoder for content-type %s", ct)

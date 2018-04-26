@@ -120,4 +120,14 @@ Watch this space for further developments.
 How Authentication Works
 <<<<<<<<<<<<<<<<<<<<<<<<
 
-Ditto
+1. GET /api/v3/users/:username/token with `Authorization: Basic` This
+   will fetch a JWT token that can be used for further interaction
+   without needing basic auth, which is deliberately expensive due to
+   password checking.  All our JWT tokens are encrypted using AES in
+   CFB mode and SHA256 signatures, and carry information about the
+   Roles the user generating the Token has.
+
+2. Include an `Authorization: Token` header with the token you got
+   back until you get a StatusUnauthorized or StatusForbidden back, at
+   which point you should fetch a new Token.
+
