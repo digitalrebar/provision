@@ -52,6 +52,7 @@ func TestInfo(t *testing.T) {
 				"workflows",
 				"default-workflow",
 				"http-range-header",
+				"roles",
 			},
 		},
 		expectErr: nil,
