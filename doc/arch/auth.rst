@@ -29,6 +29,10 @@ following fields:
   and replace Secret with a new random value.
 - **Roles**: A list of Role names that the User has been assigned.
 
+In addition to the roles asigned to the User, all Users also get a
+claim that allows them to get themself, change their passwords, and
+get a Token for themselves.
+
 .. _rs_data_claim:
 
 Claim
@@ -120,14 +124,53 @@ Watch this space for further developments.
 How Authentication Works
 <<<<<<<<<<<<<<<<<<<<<<<<
 
+Getting a User Token
+--------------------
+
 1. GET /api/v3/users/:username/token with `Authorization: Basic` This
    will fetch a JWT token that can be used for further interaction
    without needing basic auth, which is deliberately expensive due to
    password checking.  All our JWT tokens are encrypted using AES in
    CFB mode and SHA256 signatures, and carry information about the
-   Roles the user generating the Token has.
+   Claims and Roles the user generating the Token has.
 
-2. Include an `Authorization: Token` header with the token you got
+2. Include an `Authorization: Bearer` header with the token you got
    back until you get a StatusUnauthorized or StatusForbidden back, at
    which point you should fetch a new Token.
 
+Getting a Machine Token
+-----------------------
+
+More to come.
+
+How Tokens Are Checked
+----------------------
+
+1. A request is made to the API. If the request contains
+   `Authorization: Bearer`, that token is used.  If the request
+   contains `Authorization: Basic`, the contained username/password is
+   checked and used to create a one-use Token.
+
+2. Claims are created based on the API path requested and the HTTP
+   method.  For example, a `GET /api/v3/users` request creates a Claim
+   of ```{Scope: "users",Action:"list",Specific: ""}```, a `GET
+   /api/v3/users/bob` creates a Claim of ```{Scope: "users", Action:
+   "get" ,Specific: "bob"}```, a `PATCH /api/v3/bootenvs/fred` that
+   wants to patch OS.Name and OS.IsoName generates ```{Scope:
+   "bootenvs", Action: "update:/OS/Name", Specific: "fred"}``` and
+   ```{Scope: "bootenvs", Action: "update:/OS/IsoName", Specific:
+   "fred"}```, and so on.
+
+3. The token is checked to make sure it is still valid based on the
+   system Secret, the user Secret, and the grantor Secret. If any of
+   these have changed, or the token has expired, the API will return
+   a 403.
+
+4. The list of created Claims is tested to see if it is contained by
+   any one of the Roles contained in the Token, or by any direct
+   Claims contained in the Token.  If all of the created Claims are
+   satisfied, the request is considered to be authorized, otherwise
+   the API will return a 403.
+
+5. The API carries out the request and returns an appropriate
+   response.
