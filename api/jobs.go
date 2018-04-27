@@ -3,7 +3,6 @@ package api
 // Come back to processJobs later
 
 import (
-	"bufio"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -219,19 +218,28 @@ func (r *TaskRunner) Run() error {
 	if err != nil {
 		return err
 	}
+	if err := reader.SetReadDeadline(time.Now().Add(1 * time.Second)); err != nil {
+		return err
+	}
 	r.in = io.MultiWriter(writer, r.logger)
 	r.pipeWriter = writer
 	helperWritten := false
 	go func() {
 		key := r.j.Key()
 		defer reader.Close()
-		scanner := bufio.NewScanner(reader)
-		for scanner.Scan() {
-			if scanner.Err() != nil {
-				return
+		buf := make([]byte, 2<<16)
+		for {
+			reader.SetReadDeadline(time.Now().Add(1 * time.Second))
+			count, err := reader.Read(buf)
+			if count > 0 {
+				if r.c.Req().Put(buf[:count]).UrlFor("jobs", key, "log").Do(nil) != nil {
+					return
+				}
 			}
-			line := scanner.Text() + "\n"
-			if r.c.Req().Put([]byte(line)).UrlFor("jobs", key, "log").Do(nil) != nil {
+			if err != nil {
+				if os.IsTimeout(err) {
+					continue
+				}
 				return
 			}
 		}
