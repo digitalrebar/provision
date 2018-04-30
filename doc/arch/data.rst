@@ -508,6 +508,15 @@ An example of a "package-repositories" parameter in YAML format:
         - main
         - contrib
         - non-free
+    - tag: "debian-9-backports"
+      os:
+        - "debian-9"
+      url: "http://mirrors.kernel.org/debian"
+      distribution: stretch-updates
+      components:
+        - main
+        - contrib
+        - non-free
     - tag: "debian-9-security"
       os:
         - "debian-9"
