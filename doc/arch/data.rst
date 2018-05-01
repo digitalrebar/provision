@@ -512,7 +512,7 @@ An example of a "package-repositories" parameter in YAML format:
       os:
         - "debian-9"
       url: "http://mirrors.kernel.org/debian"
-      distribution: stretch-updates
+      distribution: stretch-backports
       components:
         - main
         - contrib
@@ -527,6 +527,59 @@ An example of a "package-repositories" parameter in YAML format:
         - contrib
         - main
         - non-free
+
+
+Here is an example profile for ubuntu-16.04.
+
+  ::
+
+    ---
+    Name: package-repositories
+    Params:
+      package-repositories:
+        - tag: "ubuntu-16.04-install"
+          os:
+            - "ubuntu-16.04"
+          installSource: true
+          # Debian URLs always follow the same rules, no matter
+          # whether the OS install flag is set.  As such,
+          # you must always also specify the distribution and
+          # at least the main component, although you can also
+          # specify other components.
+          url: "http://us.archive.ubuntu.com/ubuntu"
+          distribution: xenial
+          components:
+            - main
+            - contrib
+            - non-free
+        - tag: "ubuntu-16.04-updates"
+          os:
+            - "ubuntu-16.04"
+          url: "http://us.archive.ubuntu.com/ubuntu"
+          distribution: xenial-updates
+          components:
+            - main
+            - contrib
+            - non-free
+        - tag: "ubuntu-16.04-backports"
+          os:
+            - "ubuntu-16.04"
+          url: "http://us.archive.ubuntu.com/ubuntu"
+          distribution: xenial-backports
+          components:
+            - main
+            - contrib
+            - non-free
+        - tag: "ubuntu-16.04-security"
+          os:
+            - "ubuntu-16.04"
+          securitySource: true
+          url: "http://us.archive.ubuntu.com/ubuntu"
+          distribution: xenial-security
+          components:
+            - contrib
+            - main
+            - non-free
 
 
 Repo Object
