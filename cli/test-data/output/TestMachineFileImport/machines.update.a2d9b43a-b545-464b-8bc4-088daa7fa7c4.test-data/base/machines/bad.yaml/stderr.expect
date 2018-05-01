@@ -1,2 +1,2 @@
-Error: Failed to generate changed machines:a2d9b43a-b545-464b-8bc4-088daa7fa7c4 object: Unable to unmarshal reference object: error converting YAML to JSON: yaml: line 1: mapping values are not allowed in this context
+Error: Failed to generate changed machines:a2d9b43a-b545-464b-8bc4-088daa7fa7c4 object: Unable to unmarshal reference object: error converting YAML to JSON: yaml: line 2: mapping values are not allowed in this context
 
