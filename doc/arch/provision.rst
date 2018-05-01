@@ -144,6 +144,25 @@ template.  RenderData has the following fields:
   - **.BootParams** returns a rendered version of .Env.BootParams.  It will be rendered
     against the current RenderData.
 
+  - **.Env.OS.FamilyName**: The contents of .Env.OS.Family if present,
+    otherwise the result of splitting .Env.OS.Name by hyphens and
+    taking the first part.
+
+  - **.Env.OS.FamilyVersion**: The contents of .Env.OS.Version if
+    present, otherwise the result of splitting .Env.OS.Name by hyphens
+    and taking the second part.
+
+  - **.Env.OS.FamilyType**: The type of .Env.OS.FamilyName. rhel for
+    distros based on RHEL, debian for distros based on Debian,
+    otherwise the same as .Env.OS.FamilyName.  More return types will
+    be added upon request.
+
+  - **.Env.OS.VersionEq <testVersion>**: Splits testVersion and
+    .Env.OS.FamilyVersion into pieces seperated by a period.  Returns
+    true if .Env.OS.FamilyVersion has at least as many pieces as
+    testVersion and all the pieces they have in common are numerically
+    equal.
+
 - **Task**: the Task we are rendering templates for, if applicable.
   RenderData will include a Machine.
 

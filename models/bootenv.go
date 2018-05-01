@@ -1,5 +1,10 @@
 package models
 
+import (
+	"strconv"
+	"strings"
+)
+
 // OsInfo holds information about the operating system this BootEnv
 // maps to.  Most of this information is optional for now.
 // swagger:model
@@ -22,6 +27,58 @@ type OsInfo struct {
 	//
 	// swagger:strfmt uri
 	IsoUrl string
+}
+
+func (o OsInfo) FamilyName() string {
+	if o.Family != "" {
+		return o.Family
+	}
+	return strings.Split(o.Name, "-")[0]
+}
+
+func (o OsInfo) FamilyType() string {
+	switch o.FamilyName() {
+	case "centos", "redhat", "fedora", "scientificlinux":
+		return "rhel"
+	case "debian", "ubuntu":
+		return "debian"
+	default:
+		return o.FamilyName()
+	}
+}
+
+func (o OsInfo) FamilyVersion() string {
+	if o.Version != "" {
+		return o.Version
+	}
+	parts := strings.Split(o.Name, "-")
+	if len(parts) > 1 {
+		return parts[1]
+	}
+	return ""
+}
+
+func (o OsInfo) VersionEq(other string) bool {
+	partCmp := func(a, b string) bool {
+		ai, aerr := strconv.ParseInt(a, 10, 64)
+		bi, berr := strconv.ParseInt(b, 10, 64)
+		if aerr == nil && berr == nil {
+			return ai == bi
+		}
+		return a == b
+	}
+	myParts := strings.Split(o.FamilyVersion(), ".")
+	otherParts := strings.Split(other, ".")
+	if len(myParts) < len(otherParts) {
+		return false
+	}
+
+	for i := 0; i < len(otherParts); i++ {
+		if !partCmp(myParts[i], otherParts[i]) {
+			return false
+		}
+	}
+	return true
 }
 
 // BootEnv encapsulates the machine-agnostic information needed by the
