@@ -12,6 +12,16 @@ import (
 	"github.com/VictorLowther/jsonpatch2"
 )
 
+var (
+	modelPrefixes = func() map[string]Model {
+		res := map[string]Model{}
+		for _, m := range All() {
+			res[m.Prefix()] = m
+		}
+		return res
+	}()
+)
+
 func copyMap(m map[string]interface{}) map[string]interface{} {
 	res := map[string]interface{}{}
 	for k, v := range m {
@@ -63,6 +73,7 @@ func All() []Model {
 		&Template{},
 		&User{},
 		&Workflow{},
+		&Tenant{},
 	}
 }
 

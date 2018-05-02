@@ -1,0 +1,15 @@
+{
+  "Available": true,
+  "Claims": [
+    {
+      "action": "*",
+      "scope": "tasks",
+      "specific": "*"
+    }
+  ],
+  "Errors": [],
+  "Meta": {},
+  "Name": "task",
+  "ReadOnly": false,
+  "Validated": true
+}

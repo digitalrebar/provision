@@ -23,7 +23,8 @@ RE:
       "workflows",
       "default-workflow",
       "http-range-header",
-      "roles"
+      "roles",
+      "tenants"
     \],
     "file_port": 10002,
     "id": "Fred",

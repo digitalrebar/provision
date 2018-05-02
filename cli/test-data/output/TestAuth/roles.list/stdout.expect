@@ -1,0 +1,47 @@
+[
+  {
+    "Available": true,
+    "Claims": [
+      {
+        "action": "*",
+        "scope": "stages",
+        "specific": "*"
+      }
+    ],
+    "Errors": [],
+    "Meta": {},
+    "Name": "stage",
+    "ReadOnly": false,
+    "Validated": true
+  },
+  {
+    "Available": true,
+    "Claims": [
+      {
+        "action": "*",
+        "scope": "*",
+        "specific": "*"
+      }
+    ],
+    "Errors": [],
+    "Meta": {},
+    "Name": "superuser",
+    "ReadOnly": false,
+    "Validated": true
+  },
+  {
+    "Available": true,
+    "Claims": [
+      {
+        "action": "*",
+        "scope": "tasks",
+        "specific": "*"
+      }
+    ],
+    "Errors": [],
+    "Meta": {},
+    "Name": "task",
+    "ReadOnly": false,
+    "Validated": true
+  }
+]

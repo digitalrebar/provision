@@ -9,6 +9,9 @@ import (
 )
 
 func csm(q string) map[string]struct{} {
+	if q == "*" {
+		return nil
+	}
 	res := map[string]struct{}{}
 	for _, p := range strings.Split(q, ",") {
 		res[strings.TrimSpace(p)] = struct{}{}
@@ -67,19 +70,21 @@ var (
 )
 
 type actionNode struct {
-	instances string
+	items map[string]struct{}
 }
 
 // actionNode A contains actionNode b if every instance in b is also in a
 func (a actionNode) contains(b actionNode) bool {
-	// Star case
-	if a.instances == "*" {
+	// a Star case
+	if a.items == nil {
 		return true
 	}
-	ai, bi := csm(a.instances), csm(b.instances)
-	// Adding tenants will make this more complicated.
-	for key := range bi {
-		if _, ok := ai[key]; !ok {
+	// b Star case -- b items are never overridden
+	if b.items == nil {
+		return false
+	}
+	for key := range b.items {
+		if _, ok := a.items[key]; !ok {
 			return false
 		}
 	}
@@ -124,6 +129,39 @@ func (a scopeNode) contains(b scopeNode) bool {
 	return true
 }
 
+type claim map[string]scopeNode
+
+func (a claim) contains(b claim) bool {
+	for key, bs := range b {
+		as, ok := a[key]
+		if !(ok && as.contains(bs)) {
+			return false
+		}
+	}
+	return true
+}
+
+// Claims is a compiled list of claims from a Role.
+type Claims []claim
+
+func (a Claims) Contains(b Claims) bool {
+	finalRes := true
+	res := false
+	for _, bc := range b {
+		for _, ac := range a {
+			res = ac.contains(bc)
+			if res {
+				break
+			}
+		}
+		finalRes = res
+		if !finalRes {
+			break
+		}
+	}
+	return finalRes
+}
+
 // Claim is an individial specifier for something we are allowed access to.
 // User is an API user of DigitalRebar Provision
 // swagger:model
@@ -131,69 +169,51 @@ type Claim struct {
 	Scope    string `json:"scope"`
 	Action   string `json:"action"`
 	Specific string `json:"specific"`
-	scopes   map[string]scopeNode
 }
 
-func (c *Claim) compile(e ErrorAdder) {
-	c.scopes = map[string]scopeNode{}
+func (c *Claim) compile(e ErrorAdder) claim {
+	res := map[string]scopeNode{}
 	if c.Scope == "*" {
 		for k := range allScopes {
-			c.scopes[k] = scopeNode{actions: map[string]actionNode{}}
+			res[k] = scopeNode{actions: map[string]actionNode{}}
 		}
 	} else {
 		for k := range csm(c.Scope) {
 			if _, ok := allScopes[k]; ok {
-				c.scopes[k] = scopeNode{actions: map[string]actionNode{}}
+				res[k] = scopeNode{actions: map[string]actionNode{}}
 			} else if e != nil {
 				e.Errorf("No such scope '%s'", k)
 			}
 		}
 	}
-	for k := range c.scopes {
+	for k := range res {
 		if c.Action == "*" {
 			for k2 := range allScopes[k] {
-				c.scopes[k].actions[k2] = actionNode{instances: c.Specific}
+				res[k].actions[k2] = actionNode{items: csm(c.Specific)}
 			}
 		} else {
 			for k2 := range csm(c.Action) {
 				parts := strings.SplitN(k2, ":", 2)
 				if _, ok := allScopes[k][parts[0]]; ok {
-					c.scopes[k].actions[k2] = actionNode{instances: c.Specific}
+					res[k].actions[k2] = actionNode{items: csm(c.Specific)}
 				} else if e != nil {
 					e.Errorf("No such action '%s'", k2)
 				}
 			}
 		}
 	}
+	return claim(res)
 }
 
 func (a *Claim) Contains(b *Claim) bool {
-	if a.scopes == nil {
-		a.compile(nil)
-	}
-	if b.scopes == nil {
-		b.compile(nil)
-	}
-	for key, bs := range b.scopes {
-		as, ok := a.scopes[key]
-		if !ok {
-			return false
-		}
-		if !as.contains(bs) {
-			return false
-		}
-	}
-	return true
+	ac, bc := a.compile(nil), b.compile(nil)
+	return ac.contains(bc)
 }
 
 // Match tests to see if this claim allows access for the specified
 // scope, action, and specific item.
 func (c *Claim) Match(scope, action, specific string) bool {
-	if c.scopes == nil {
-		c.compile(nil)
-	}
 	c2 := &Claim{Scope: scope, Action: action, Specific: specific}
-	c2.compile(nil)
 	return c.Contains(c2)
 }
 
@@ -205,7 +225,7 @@ func (c *Claim) String() string {
 	return fmt.Sprintf("%s %s %s", c.Scope, c.Action, c.Specific)
 }
 
-func MakeClaims(things ...string) []*Claim {
+func makeClaims(things ...string) []*Claim {
 	if len(things)%3 != 0 {
 		log.Printf("Bad claim %v", things)
 		panic("Strings passed to claims must be a multiple of 3")
@@ -244,23 +264,18 @@ func (r *Role) Fill() {
 	}
 }
 
+func (r *Role) Compile() Claims {
+	res := make(Claims, len(r.Claims))
+	for i := range r.Claims {
+		res[i] = r.Claims[i].compile(nil)
+	}
+	return res
+}
+
 // Role a contains role b if a can be used to satisfy all requests b can satisfy
 func (a *Role) Contains(b *Role) bool {
-	finalRes := true
-	res := false
-	for _, bClaim := range b.Claims {
-		for _, aClaim := range a.Claims {
-			res = aClaim.Contains(bClaim)
-			if res {
-				break
-			}
-		}
-		finalRes = res
-		if !finalRes {
-			break
-		}
-	}
-	return finalRes
+	ac, bc := a.Compile(), b.Compile()
+	return ac.Contains(bc)
 }
 
 func (r *Role) Validate() {
@@ -312,6 +327,6 @@ func (r *Role) Match(scope, action, specific string) bool {
 func MakeRole(name string, claims ...string) *Role {
 	return &Role{
 		Name:   name,
-		Claims: MakeClaims(claims...),
+		Claims: makeClaims(claims...),
 	}
 }

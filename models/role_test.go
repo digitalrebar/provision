@@ -1,12 +1,16 @@
 package models
 
-import "testing"
+import (
+	"log"
+	"testing"
+)
 
 func twoClaims(frags ...string) []*Claim {
 	if len(frags) != 6 {
 		panic("Need 6 args")
 	}
-	return MakeClaims(frags...)
+	log.Printf("Making %v and %v", frags[0:3], frags[3:6])
+	return makeClaims(frags...)
 }
 
 func claimContains(t *testing.T, c []*Claim) {
@@ -70,6 +74,7 @@ func TestRoleClaims(t *testing.T) {
 	claimsAreDisjoint(t, twoClaims("machines", "*", "*", "bootenvs", "*", "*"))
 	claimsAreOrdered(t, twoClaims("*", "*", "*", "machines", "delete", "foo"))
 	claimsAreOrdered(t, twoClaims("machines", "*", "*", "machines", "delete", "foo"))
+
 	claimsAreOrdered(t, twoClaims("machines", "delete", "*", "machines", "delete", "foo"))
 	claimsAreOrdered(t, twoClaims("machines", "delete", "foo,bar", "machines", "delete", "foo"))
 	claimsAreEqual(t, twoClaims("machines", "delete", "foo", "machines", "delete", "foo"))

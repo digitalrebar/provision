@@ -1,0 +1,46 @@
+[
+  {
+    "Available": true,
+    "Errors": [],
+    "Members": {
+      "stages": [
+        "stage1",
+        "stage3"
+      ],
+      "tasks": [
+        "task1"
+      ]
+    },
+    "Meta": {},
+    "Name": "tenant1",
+    "ReadOnly": false,
+    "Users": [
+      "t1-0",
+      "t1-1",
+      "t1-2"
+    ],
+    "Validated": true
+  },
+  {
+    "Available": true,
+    "Errors": [],
+    "Members": {
+      "stages": [
+        "stage2"
+      ],
+      "tasks": [
+        "task2",
+        "task3"
+      ]
+    },
+    "Meta": {},
+    "Name": "tenant2",
+    "ReadOnly": false,
+    "Users": [
+      "t2-0",
+      "t2-1",
+      "t2-2"
+    ],
+    "Validated": true
+  }
+]
