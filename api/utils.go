@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/VictorLowther/jsonpatch2"
+	"github.com/digitalrebar/provision/models"
 	yaml "github.com/ghodss/yaml"
 )
 
@@ -51,13 +52,5 @@ func Pretty(f string, obj interface{}) ([]byte, error) {
 // GenPatch generates a JSON patch that will transform source into target.
 // The generated patch will have all the applicable test clauses.
 func GenPatch(source, target interface{}, paranoid bool) (jsonpatch2.Patch, error) {
-	srcBuf, err := json.Marshal(source)
-	if err != nil {
-		return nil, err
-	}
-	tgtBuf, err := json.Marshal(target)
-	if err != nil {
-		return nil, err
-	}
-	return jsonpatch2.GenerateFull(srcBuf, tgtBuf, true, paranoid)
+	return models.GenPatch(source, target, paranoid)
 }

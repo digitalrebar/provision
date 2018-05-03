@@ -6,7 +6,10 @@ import (
 	"fmt"
 	"log"
 	"regexp"
+	"strings"
 	"time"
+
+	"github.com/VictorLowther/jsonpatch2"
 )
 
 func copyMap(m map[string]interface{}) map[string]interface{} {
@@ -48,11 +51,12 @@ func All() []Model {
 		&Lease{},
 		&Machine{},
 		&Param{},
-		&Plugin{},
 		&PluginProvider{},
+		&Plugin{},
 		&Pref{},
 		&Profile{},
 		&Reservation{},
+		&Role{},
 		&Stage{},
 		&Subnet{},
 		&Task{},
@@ -62,48 +66,25 @@ func All() []Model {
 	}
 }
 
-func New(kind string) (Slicer, error) {
-	var res Slicer
-	switch kind {
-	case "bootenvs", "bootenv":
-		res = &BootEnv{}
-	case "interfaces":
-		res = &Interface{}
-	case "jobs", "job":
-		res = &Job{}
-	case "leases", "lease":
-		res = &Lease{}
-	case "machines", "machine":
-		res = &Machine{}
-	case "params", "param":
-		res = &Param{}
-	case "plugins", "plugin":
-		res = &Plugin{}
-	case "plugin_providers", "plugin_provider":
-		res = &PluginProvider{}
-	case "preferences", "preference":
-		res = &Pref{}
-	case "profiles", "profile":
-		res = &Profile{}
-	case "reservations", "reservation":
-		res = &Reservation{}
-	case "stages", "stage":
-		res = &Stage{}
-	case "subnets", "subnet":
-		res = &Subnet{}
-	case "tasks", "task":
-		res = &Task{}
-	case "templates", "template":
-		res = &Template{}
-	case "users", "user":
-		res = &User{}
-	case "workflows", "workflow":
-		res = &Workflow{}
-	default:
-		return nil, fmt.Errorf("No such Model: %s", kind)
+func AllPrefixes() []string {
+	all := All()
+	res := make([]string, len(all))
+	for i := range all {
+		res[i] = all[i].Prefix()
 	}
-	res.Fill()
-	return res, nil
+	return res
+}
+
+func New(kind string) (Slicer, error) {
+	for _, i := range All() {
+		key := i.Prefix()
+		if key == kind || kind == strings.TrimSuffix(key, "s") {
+			res := i.(Slicer)
+			res.Fill()
+			return res, nil
+		}
+	}
+	return nil, fmt.Errorf("No such Model: %s", kind)
 }
 
 func Clone(m Model) Model {
@@ -199,4 +180,18 @@ func FibBackoff(thunk func() error) {
 		}
 		time.Sleep(d)
 	}
+}
+
+// GenPatch generates a JSON patch that will transform source into target.
+// The generated patch will have all the applicable test clauses.
+func GenPatch(source, target interface{}, paranoid bool) (jsonpatch2.Patch, error) {
+	srcBuf, err := json.Marshal(source)
+	if err != nil {
+		return nil, err
+	}
+	tgtBuf, err := json.Marshal(target)
+	if err != nil {
+		return nil, err
+	}
+	return jsonpatch2.GenerateFull(srcBuf, tgtBuf, true, paranoid)
 }

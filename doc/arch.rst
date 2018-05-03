@@ -16,6 +16,7 @@ dr-provision for developers and power users.
 
    arch/design
    arch/models
+   arch/auth
    arch/provision
    arch/dhcp
    arch/sledgehammer
