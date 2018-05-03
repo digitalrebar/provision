@@ -1,2 +1,2 @@
-Error: Failed to generate changed profiles:yamltest object: Unable to unmarshal reference object: error converting YAML to JSON: yaml: line 1: mapping values are not allowed in this context
+Error: Failed to generate changed profiles:yamltest object: Unable to unmarshal reference object: error converting YAML to JSON: yaml: line 2: mapping values are not allowed in this context
 
