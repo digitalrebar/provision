@@ -18,8 +18,8 @@ Two separate tables are shown containing the following information:
 
 Content Package Information
 
-* Preview - Provide a complete look into the Content Packag including its Boot Envs, Params, Profiles, Stages, Tasks, and Templates. An option to see the raw JSON is also availabile
-* Diff - Show the latest chnages between the current and most recent version of the Content Package
+* Preview - Provide a complete look into the Content Packag including its Boot Envs, Params, Profiles, Stages, Tasks, and Templates. An option to see the raw JSON is also available
+* Diff - Show the latest changes between the current and most recent version of the Content Package
 * Upgrade - Upgrade the Content Package to its latest version
 * Remove - Remove the Content Package from the current DRP endpoint
 
@@ -41,7 +41,7 @@ The top of the page has a set of blue boxes for additional information:
 
 Plugin Providers
 ----------------
-This section contains two separate tables showing Plugins avaialble for the DRP endpoint.
+This section contains two separate tables showing Plugins available for the DRP endpoint.
 
 * Endpoint Plugin Providers - Manage all the installed Plugins on the DRP endpoint.
 * Organization Plugin Providers - Additional Plugins my organization can run however are not yet installed on my DRP endpoint
@@ -51,7 +51,7 @@ Plugin Information
 * Plugin Name
 * Upgrade - Get the latest code for a specific Plugin on the DRP endpoint
 * Remove - Remove the Plugin from the DRP endpoint which will have it appear on the Organization Plugin Providers list
-* Transer - Move the Plugin to the DRP endpoint from the Organization Plugin Providers list
+* Transfer - Move the Plugin to the DRP endpoint from the Organization Plugin Providers list
 
 The top of the page has a set of blue boxes for additional information:
 

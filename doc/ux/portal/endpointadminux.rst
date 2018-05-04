@@ -22,7 +22,7 @@ Additional functionality is available from a series of blue boxes on the top of 
 * Filter - List the Users based on the following options: Available, Key, Name, ReadOnly, and Valid
 * Add - Add a new User to the DRP endpoint
 * Clone - Clone an existing User on the DRP endpoint
-* Delete - Delte an existing User on the DRP endpoint
+* Delete - Delete an existing User on the DRP endpoint
 
 Logs
 ----

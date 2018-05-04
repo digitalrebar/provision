@@ -54,7 +54,7 @@ Subscriptions
 
 This section provides a list of all community (free) and RackN paid services actively used by the User.
 
-The following three types of feautures are listed:
+The following three types of features are listed:
 
 * Content - YAML or JSON processes for Digital Rebar Provision to execute during the provisioning process  
 * Plugin - Binary packages extending the basic functionality of Digital Rebar Provision. These are installed via the UX and then configured by the user. 
@@ -63,9 +63,9 @@ The following three types of feautures are listed:
 Endpoints
 ~~~~~~~~~
 
-This section provides a list of Endpoints avaialble to the user from the membership organization (Group) the user is connect to. 
+This section provides a list of Endpoints available to the user from the membership organization (Group) the user is connect to. 
 
-There is an option to chnage the Icons used in the RackN Portal WHAT IS THIS?
+There is an option to change the Icons used in the RackN Portal WHAT IS THIS?
 
 For each Endpoint listed the following data is shown:
 
@@ -87,10 +87,10 @@ This is a list of content packages currently available to your Digital Rebar Pro
 Plugins
 ~~~~~~~
 
-This is a list of Plugins currently available to your Digital Rebar Provision service. These packages enable DRP to provide additional provisioning offerings such as immutable inmage deployment or Windows provisioning. Some of these Plugins are freely avaialable to all community members and some are only available from RackN for a fee. 
+This is a list of Plugins currently available to your Digital Rebar Provision service. These packages enable DRP to provide additional provisioning offerings such as immutable image deployment or Windows provisioning. Some of these Plugins are freely available to all community members and some are only available from RackN for a fee. 
 
 Interface Features
 ~~~~~~~~~~~~~~~~~~
 
-This is a list of UX technology avaialble for purchase from RackN.  
+This is a list of UX technology available for purchase from RackN.  
 

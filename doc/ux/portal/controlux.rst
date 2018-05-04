@@ -18,7 +18,7 @@ This section lists all available Workflows currently available to execute. Each 
 * Description
 * Stages 
 
-To the right is a list of ALL avaialble stages that can be used to build a new Workflow. 
+To the right is a list of ALL available stages that can be used to build a new Workflow. 
 
 At the top of the screen are a series of blue boxes offering additional functionality:
 
@@ -98,7 +98,7 @@ Job Details
 -----------
 A job defines a machine’s current step in its boot process. After completing a job, the machine creates a new job from the next instruction in the machine’s task list.
 
-Machines will only process one job at a time, and jobs aren’t created until the instant they are required.
+Machines will only process one job at a time, and jobs are not created until the instant they are required.
 
 
 For more details :ref:`rs_data_job`

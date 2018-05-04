@@ -52,7 +52,7 @@ The top of the page offers the following services via a single button for each a
 * Filter - Allows the user to show a specific set of machines based on a variety of filters including IP Address, BootEnv, Key, Name, Stage, UUID, Workflow,etc
 * Add - Add a new machine via the RackN Portal 
 * Clone - Clone a machine by selecting a machine listed 
-* Delete  - Delete a machine by selectine a machine listed
+* Delete  - Delete a machine by selecting a machine listed
 * Show - This will show additional features for each machine including Plugin, RAM, NICs, CPUs, Make, and Family
 
 Bulk Actions
@@ -69,13 +69,13 @@ The top of the page offers the following services via a single button for each a
 
 * Refresh - Refresh the content on the page 
 * Filter - Allows the user to show a specific set of machines based on a variety of filters including IP Address, BootEnv, Key, Name, Stage, UUID, Workflow,etc
-* Delete - Delete a machine by slecting a machine listed
+* Delete - Delete a machine by selecting a machine listed
 * Bulk Actions - *** ADD ***
 * Force - *** ADD ***
 
 Plugins
 -------
-The Plugin page lists all currently avaialble plugins in the RackN Portal. For each plugin listed the following is included:
+The Plugin page lists all currently available plugins in the RackN Portal. For each plugin listed the following is included:
 
 * Lock - The plugin is available or disabled/locked for your use
 * Name - The name of the plugin
@@ -85,14 +85,14 @@ The Plugin page lists all currently avaialble plugins in the RackN Portal. For e
 The top of the page offers the following services via a single button for each action:
 
 * Refresh - Refresh the content on the page 
-* Filter - Allows the user to show a specific set of plugins based on a variety of filters including Available, Key, Name, Provider, Read Only and Vaild
+* Filter - Allows the user to show a specific set of plugins based on a variety of filters including Available, Key, Name, Provider, Read Only and Valid
 * Add - Select a new plugin to add from the Select Plugin Provider page 
 * Clone - Make a duplicate of a specific plugin or set of plugins 
 * Delete - Remove a plugin or set of plugins from the RackN Portal
 
 Info & Preferences 
 ------------------
-The System Info and Preferences page gives a complete high level overview of all activiites in the RackN Portal. It is divided into four sections:
+The System Info and Preferences page gives a complete high level overview of all activities in the RackN Portal. It is divided into four sections:
 
 * System Wizard
 * Version Inspection
@@ -100,7 +100,7 @@ The System Info and Preferences page gives a complete high level overview of all
 * System Diagnostics
 
 **System Wizard**
-This section contains status information on the avialability of the RackN Portal to function. All sections should have a green checkmark unless you are working with a Packet.net or other external environment where a network is not required in which case Subnets will have a red X. 
+This section contains status information on the availability of the RackN Portal to function. All sections should have a green checkmark unless you are working with a Packet.net or other external environment where a network is not required in which case Subnets will have a red X. 
 
 These items are given status for availability:
 
@@ -113,7 +113,7 @@ These items are given status for availability:
 * Machines
 
 **Version Inspection**
-This section contains a list of plugins currently available to the RackN Portal for usage. A Refresh button is avaialable to have the system recheck this informaiton. 
+This section contains a list of plugins currently available to the RackN Portal for usage. A Refresh button is available to have the system recheck this information. 
 
 **System Preferences**
 This section allows the operator to set a variety of global properties for the RackN Portal. A Save button is available to ensure all changes are saved to the system. 
@@ -136,10 +136,10 @@ These are the properties available for updates:
 **System Diagnostics**
 This section contains information the system itself including:
 
-* Version tip - Buid # of the Digital Rebar Provision being operated by the RackN Portal 
+* Version tip - Build # of the Digital Rebar Provision being operated by the RackN Portal 
 * Feature Flags - ** WHAT IS THIS **
 * Endpoint MAC Address and API Port - Machine information on the DRP Endpoint the RackN Portal is connected to
-* OS and Architecture - The Operating Sytsem and Processor of the Endpoint machine  
+* OS and Architecture - The Operating System and Processor of the Endpoint machine  
 
 The top of the page offers the following services via a single button for each action:
 

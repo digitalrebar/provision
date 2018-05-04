@@ -34,7 +34,7 @@ The top of the page contains a series of blue buttons for additional actions:
 * Refresh - Refresh the list of Subnets should a new Subnet be in the system
 * Filter - Select a specific set of Subnets based on the following options: Active Address, Address Available, Enabled, Key, Name, NextServer, Proxy, ReadOnly, Strategy, Subnet CIDR Address, Valid Subnet 
 * Add - Add a new Subnet to the system 
-* Clone - Clone a selected Subnet to add to the sytsem 
+* Clone - Clone a selected Subnet to add to the system 
 * Delete - Remove all the selected Subnets
 
 Configure Subnets
@@ -64,6 +64,6 @@ This page shows a list of Leases available in the system.
 
 Reservations
 ------------
-Reservations link tokens to specific IP addresses. This view shows a list of existing reservations along with tokens and strategies asociated with each. Currently, MAC is the only available strategy. Reservations may contain options to be applied to connected servers, which are also visible through the UI.
+Reservations link tokens to specific IP addresses. This view shows a list of existing reservations along with tokens and strategies associated with each. Currently, MAC is the only available strategy. Reservations may contain options to be applied to connected servers, which are also visible through the UI.
 
 This page shows a list of Reservations available in the system. 
