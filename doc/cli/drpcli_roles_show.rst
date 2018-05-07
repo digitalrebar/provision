@@ -1,27 +1,24 @@
-drpcli autocomplete
-===================
+drpcli roles show
+=================
 
-Generate CLI Command Bash AutoCompletion File (may require
-'bash-completion' pkg be installed)
+Show a single roles by id
 
 Synopsis
 --------
 
-Generate a bash autocomplete file as *filename*. Place the generated
-file in /etc/bash\_completion.d or /usr/local/etc/bash\_completion.d.
-May require the 'bash-completion' package is installed to work
-correctly.
+This will show a role by ID. You may also show a single item using a
+unique index. In that case, format id as *index*:*value*
 
 ::
 
-    drpcli autocomplete [filename] [flags]
+    drpcli roles show [id] [flags]
 
 Options
 -------
 
 ::
 
-      -h, --help   help for autocomplete
+      -h, --help   help for show
 
 Options inherited from parent commands
 --------------------------------------
@@ -42,5 +39,5 @@ Options inherited from parent commands
 SEE ALSO
 --------
 
--  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
-   DigitalRebar Provision API
+-  `drpcli roles <drpcli_roles.html>`__ - Access CLI commands relating
+   to roles

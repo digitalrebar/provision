@@ -1,27 +1,28 @@
-drpcli autocomplete
-===================
+drpcli roles wait
+=================
 
-Generate CLI Command Bash AutoCompletion File (may require
-'bash-completion' pkg be installed)
+Wait for a role's field to become a value within a number of seconds
 
 Synopsis
 --------
 
-Generate a bash autocomplete file as *filename*. Place the generated
-file in /etc/bash\_completion.d or /usr/local/etc/bash\_completion.d.
-May require the 'bash-completion' package is installed to work
-correctly.
+This function waits for the value to become the new value.
+
+Timeout is optional, defaults to 1 day, and is measured in seconds.
+
+Returns the following strings: complete - field is equal to value
+interrupt - user interrupted the command timeout - timeout has exceeded
 
 ::
 
-    drpcli autocomplete [filename] [flags]
+    drpcli roles wait [id] [field] [value] [timeout] [flags]
 
 Options
 -------
 
 ::
 
-      -h, --help   help for autocomplete
+      -h, --help   help for wait
 
 Options inherited from parent commands
 --------------------------------------
@@ -42,5 +43,5 @@ Options inherited from parent commands
 SEE ALSO
 --------
 
--  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
-   DigitalRebar Provision API
+-  `drpcli roles <drpcli_roles.html>`__ - Access CLI commands relating
+   to roles

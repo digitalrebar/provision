@@ -1,27 +1,23 @@
-drpcli autocomplete
+drpcli roles exists
 ===================
 
-Generate CLI Command Bash AutoCompletion File (may require
-'bash-completion' pkg be installed)
+See if a roles exists by id
 
 Synopsis
 --------
 
-Generate a bash autocomplete file as *filename*. Place the generated
-file in /etc/bash\_completion.d or /usr/local/etc/bash\_completion.d.
-May require the 'bash-completion' package is installed to work
-correctly.
+This will detect if a role exists.
 
 ::
 
-    drpcli autocomplete [filename] [flags]
+    drpcli roles exists [id] [flags]
 
 Options
 -------
 
 ::
 
-      -h, --help   help for autocomplete
+      -h, --help   help for exists
 
 Options inherited from parent commands
 --------------------------------------
@@ -42,5 +38,5 @@ Options inherited from parent commands
 SEE ALSO
 --------
 
--  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
-   DigitalRebar Provision API
+-  `drpcli roles <drpcli_roles.html>`__ - Access CLI commands relating
+   to roles

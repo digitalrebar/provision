@@ -1,27 +1,23 @@
-drpcli autocomplete
-===================
+drpcli roles indexes
+====================
 
-Generate CLI Command Bash AutoCompletion File (may require
-'bash-completion' pkg be installed)
+Get indexes for roles
 
 Synopsis
 --------
 
-Generate a bash autocomplete file as *filename*. Place the generated
-file in /etc/bash\_completion.d or /usr/local/etc/bash\_completion.d.
-May require the 'bash-completion' package is installed to work
-correctly.
+Different object types can have indexes on various fields.
 
 ::
 
-    drpcli autocomplete [filename] [flags]
+    drpcli roles indexes [flags]
 
 Options
 -------
 
 ::
 
-      -h, --help   help for autocomplete
+      -h, --help   help for indexes
 
 Options inherited from parent commands
 --------------------------------------
@@ -42,5 +38,5 @@ Options inherited from parent commands
 SEE ALSO
 --------
 
--  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
-   DigitalRebar Provision API
+-  `drpcli roles <drpcli_roles.html>`__ - Access CLI commands relating
+   to roles

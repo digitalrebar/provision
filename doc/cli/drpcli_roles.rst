@@ -1,19 +1,19 @@
-drpcli contents
-===============
+drpcli roles
+============
 
-Access CLI commands relating to content
+Access CLI commands relating to roles
 
 Synopsis
 --------
 
-Access CLI commands relating to content
+Access CLI commands relating to roles
 
 Options
 -------
 
 ::
 
-      -h, --help   help for contents
+      -h, --help   help for roles
 
 Options inherited from parent commands
 --------------------------------------
@@ -36,22 +36,18 @@ SEE ALSO
 
 -  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
    DigitalRebar Provision API
--  `drpcli contents bundle <drpcli_contents_bundle.html>`__ - Bundle the
-   current directory into [file]. [meta fields] allows for the
-   specification of the meta data.
--  `drpcli contents create <drpcli_contents_create.html>`__ - Add a new
-   content layer to the system
--  `drpcli contents destroy <drpcli_contents_destroy.html>`__ - Remove
-   the content layer [id] from the system.
--  `drpcli contents exists <drpcli_contents_exists.html>`__ - See if
-   content layer referenced by [id] exists
--  `drpcli contents list <drpcli_contents_list.html>`__ - List the
-   installed content bundles
--  `drpcli contents show <drpcli_contents_show.html>`__ - Show a single
-   content layer referenced by [id]
--  `drpcli contents unbundle <drpcli_contents_unbundle.html>`__ - Expand
-   the content bundle [file] into the current directory
--  `drpcli contents update <drpcli_contents_update.html>`__ - Replace a
-   content layer in the system.
--  `drpcli contents upload <drpcli_contents_upload.html>`__ - Upload a
-   content layer into the system, replacing the earlier one if needed.
+-  `drpcli roles create <drpcli_roles_create.html>`__ - Create a new
+   role with the passed-in JSON or string key
+-  `drpcli roles destroy <drpcli_roles_destroy.html>`__ - Destroy role
+   by id
+-  `drpcli roles exists <drpcli_roles_exists.html>`__ - See if a roles
+   exists by id
+-  `drpcli roles indexes <drpcli_roles_indexes.html>`__ - Get indexes
+   for roles
+-  `drpcli roles list <drpcli_roles_list.html>`__ - List all roles
+-  `drpcli roles show <drpcli_roles_show.html>`__ - Show a single roles
+   by id
+-  `drpcli roles update <drpcli_roles_update.html>`__ - Unsafely update
+   role by id with the passed-in JSON
+-  `drpcli roles wait <drpcli_roles_wait.html>`__ - Wait for a role's
+   field to become a value within a number of seconds
