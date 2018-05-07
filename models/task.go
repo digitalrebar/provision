@@ -41,7 +41,9 @@ func (t *Task) Validate() {
 		t.AddError(ValidParamName("Invalid Optional Param", p))
 	}
 	for _, tt := range t.Templates {
-		t.AddError(ValidName("Invalid Template Name", tt.Name))
+		if tt.ID != "" {
+			t.AddError(ValidName("Invalid Template ID", tt.ID))
+		}
 	}
 }
 
