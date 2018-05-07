@@ -1,27 +1,25 @@
-drpcli autocomplete
-===================
+drpcli contents upload
+======================
 
-Generate CLI Command Bash AutoCompletion File (may require
-'bash-completion' pkg be installed)
+Upload a content layer into the system, replacing the earlier one if
+needed.
 
 Synopsis
 --------
 
-Generate a bash autocomplete file as *filename*. Place the generated
-file in /etc/bash\_completion.d or /usr/local/etc/bash\_completion.d.
-May require the 'bash-completion' package is installed to work
-correctly.
+Upload a content layer into the system, replacing the earlier one if
+needed.
 
 ::
 
-    drpcli autocomplete [filename] [flags]
+    drpcli contents upload [json] [flags]
 
 Options
 -------
 
 ::
 
-      -h, --help   help for autocomplete
+      -h, --help   help for upload
 
 Options inherited from parent commands
 --------------------------------------
@@ -42,5 +40,5 @@ Options inherited from parent commands
 SEE ALSO
 --------
 
--  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
-   DigitalRebar Provision API
+-  `drpcli contents <drpcli_contents.html>`__ - Access CLI commands
+   relating to content

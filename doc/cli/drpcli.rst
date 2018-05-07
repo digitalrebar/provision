@@ -28,8 +28,9 @@ Options
 SEE ALSO
 --------
 
--  `drpcli autocomplete <drpcli_autocomplete.html>`__ - Digital Rebar
-   Provision CLI Command Bash AutoCompletion File
+-  `drpcli autocomplete <drpcli_autocomplete.html>`__ - Generate CLI
+   Command Bash AutoCompletion File (may require 'bash-completion' pkg
+   be installed)
 -  `drpcli bootenvs <drpcli_bootenvs.html>`__ - Access CLI commands
    relating to bootenvs
 -  `drpcli contents <drpcli_contents.html>`__ - Access CLI commands
@@ -65,6 +66,8 @@ SEE ALSO
    relating to profiles
 -  `drpcli reservations <drpcli_reservations.html>`__ - Access CLI
    commands relating to reservations
+-  `drpcli roles <drpcli_roles.html>`__ - Access CLI commands relating
+   to roles
 -  `drpcli stages <drpcli_stages.html>`__ - Access CLI commands relating
    to stages
 -  `drpcli subnets <drpcli_subnets.html>`__ - Access CLI commands

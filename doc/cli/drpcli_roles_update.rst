@@ -1,27 +1,24 @@
-drpcli autocomplete
+drpcli roles update
 ===================
 
-Generate CLI Command Bash AutoCompletion File (may require
-'bash-completion' pkg be installed)
+Unsafely update role by id with the passed-in JSON
 
 Synopsis
 --------
 
-Generate a bash autocomplete file as *filename*. Place the generated
-file in /etc/bash\_completion.d or /usr/local/etc/bash\_completion.d.
-May require the 'bash-completion' package is installed to work
-correctly.
+As a useful shortcut, '-' can be passed to indicate that the JSON should
+be read from stdin
 
 ::
 
-    drpcli autocomplete [filename] [flags]
+    drpcli roles update [id] [json] [flags]
 
 Options
 -------
 
 ::
 
-      -h, --help   help for autocomplete
+      -h, --help   help for update
 
 Options inherited from parent commands
 --------------------------------------
@@ -42,5 +39,5 @@ Options inherited from parent commands
 SEE ALSO
 --------
 
--  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
-   DigitalRebar Provision API
+-  `drpcli roles <drpcli_roles.html>`__ - Access CLI commands relating
+   to roles
