@@ -3,7 +3,7 @@ RE:
   "Info": \{
     "address": "127.0.0.1",
     "api_port": 10001,
-    "arch": "amd64",
+    "arch": "[\s\S]*",
     "binl_enabled": true,
     "binl_port": 10005,
     "dhcp_enabled": true,
@@ -27,8 +27,201 @@ RE:
     \],
     "file_port": 10002,
     "id": "Fred",
-    "os": "linux",
+    "os": "[\s\S]*",
     "prov_enabled": true,
+    "scopes": {
+      "bootenvs": {
+        "action": {},
+        "actions": {},
+        "create": {},
+        "delete": {},
+        "get": {},
+        "list": {},
+        "update": {}
+      },
+      "contents": {
+        "create": {},
+        "delete": {},
+        "get": {},
+        "list": {},
+        "update": {}
+      },
+      "files": {
+        "delete": {},
+        "get": {},
+        "list": {},
+        "post": {}
+      },
+      "indexes": {
+        "get": {},
+        "list": {}
+      },
+      "info": {
+        "get": {}
+      },
+      "interfaces": {
+        "action": {},
+        "actions": {},
+        "create": {},
+        "delete": {},
+        "get": {},
+        "list": {},
+        "update": {}
+      },
+      "isos": {
+        "delete": {},
+        "get": {},
+        "list": {},
+        "post": {}
+      },
+      "jobs": {
+        "action": {},
+        "actions": {},
+        "create": {},
+        "delete": {},
+        "get": {},
+        "list": {},
+        "log": {},
+        "update": {}
+      },
+      "leases": {
+        "action": {},
+        "actions": {},
+        "create": {},
+        "delete": {},
+        "get": {},
+        "list": {},
+        "update": {}
+      },
+      "machines": {
+        "action": {},
+        "actions": {},
+        "create": {},
+        "delete": {},
+        "get": {},
+        "list": {},
+        "update": {}
+      },
+      "params": {
+        "action": {},
+        "actions": {},
+        "create": {},
+        "delete": {},
+        "get": {},
+        "list": {},
+        "update": {}
+      },
+      "plugin_providers": {
+        "action": {},
+        "actions": {},
+        "create": {},
+        "delete": {},
+        "get": {},
+        "list": {},
+        "update": {}
+      },
+      "plugins": {
+        "action": {},
+        "actions": {},
+        "create": {},
+        "delete": {},
+        "get": {},
+        "list": {},
+        "update": {}
+      },
+      "preferences": {
+        "action": {},
+        "actions": {},
+        "create": {},
+        "delete": {},
+        "get": {},
+        "list": {},
+        "update": {}
+      },
+      "profiles": {
+        "action": {},
+        "actions": {},
+        "create": {},
+        "delete": {},
+        "get": {},
+        "list": {},
+        "update": {}
+      },
+      "reservations": {
+        "action": {},
+        "actions": {},
+        "create": {},
+        "delete": {},
+        "get": {},
+        "list": {},
+        "update": {}
+      },
+      "roles": {
+        "action": {},
+        "actions": {},
+        "create": {},
+        "delete": {},
+        "get": {},
+        "list": {},
+        "update": {}
+      },
+      "stages": {
+        "action": {},
+        "actions": {},
+        "create": {},
+        "delete": {},
+        "get": {},
+        "list": {},
+        "update": {}
+      },
+      "subnets": {
+        "action": {},
+        "actions": {},
+        "create": {},
+        "delete": {},
+        "get": {},
+        "list": {},
+        "update": {}
+      },
+      "tasks": {
+        "action": {},
+        "actions": {},
+        "create": {},
+        "delete": {},
+        "get": {},
+        "list": {},
+        "update": {}
+      },
+      "templates": {
+        "action": {},
+        "actions": {},
+        "create": {},
+        "delete": {},
+        "get": {},
+        "list": {},
+        "update": {}
+      },
+      "users": {
+        "action": {},
+        "actions": {},
+        "create": {},
+        "delete": {},
+        "get": {},
+        "list": {},
+        "password": {},
+        "token": {},
+        "update": {}
+      },
+      "workflows": {
+        "action": {},
+        "actions": {},
+        "create": {},
+        "delete": {},
+        "get": {},
+        "list": {},
+        "update": {}
+      }
+    },
     "stats": \[
       \{
         "count": 0,
