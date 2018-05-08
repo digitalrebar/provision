@@ -116,10 +116,34 @@ the superuser claim.  By default, the rocketskates user will be
 assigned this role.
 
 
+Collectively, Roles and Claims control what a caller can do with the
+API.
+
 Tenants
 -------
 
-Watch this space for further developments.
+Tenants control what objects a user can see via the dr-provision API.
+Tenants have the following fields:
+
+- **Name**: The unique name of the Tenant.
+
+- **Users**: The list of Users that are in this Tenant. Users can be
+  in at most one Tenant at a time.
+
+- **Members**: The objects that are in the Tenant.  This field is
+  structured as a JSON object whose keys specify the Scope of the
+  objects, and whose values are lists of object indentifiers.  Access
+  is only restricted if the Scope of the object is present in the
+  Members field of the tenant -- objects whose Scope is not present do
+  not have restricted visibility.
+
+Object visibility restrictions based on a Tenant are processed before
+Roles are processsed, which means that a Role granting access to an
+object that is not allowed by the Tenant will be ignored.
+
+By default, Users are not members of a Tenant, and can therefore
+potentially see everything via the API (subject to Role based
+restrictions, of course.)
 
 How Authentication Works
 <<<<<<<<<<<<<<<<<<<<<<<<
