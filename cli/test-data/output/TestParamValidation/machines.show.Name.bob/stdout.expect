@@ -1,0 +1,24 @@
+RE:
+\{
+  "Address": "",
+  "Available": true,
+  "BootEnv": "local",
+  "CurrentJob": "",
+  "CurrentTask": -1,
+  "Description": "",
+  "Errors": \[\],
+  "HardwareAddrs": \[\],
+  "Meta": \{
+    "feature-flags": "change-stage-v2"
+  \},
+  "Name": "bob",
+  "OS": "",
+  "Params": \{\},
+  "Profiles": \[\],
+  "ReadOnly": false,
+  "Runnable": true,
+  "Stage": "none",
+  "Tasks": \[\],
+  "Validated": true,
+  "Workflow": ""
+\}

@@ -1,0 +1,1 @@
+Error: ValidationError: profiles/bob: Key 'goodDefault': invalid val '[5]': : (root): Invalid type. Expected: string, given: array

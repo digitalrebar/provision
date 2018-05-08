@@ -96,3 +96,17 @@ func TestParamsDefaultGet(t *testing.T) {
 	cliTest(false, false, "params", "destroy", "goodDefault").run(t)
 	verifyClean(t)
 }
+
+func TestParamValidation(t *testing.T) {
+	cliTest(false, false, "params", "create", paramCreateInputWithGoodDefaultString).run(t)
+	cliTest(false, false, "profiles", "create", "bob").run(t)
+	cliTest(false, false, "machines", "create", "bob").run(t)
+	cliTest(false, true, "profiles", "set", "bob", "param", "goodDefault", "to", "[5]").run(t)
+	cliTest(false, false, "profiles", "show", "bob").run(t)
+	cliTest(false, true, "machines", "set", "Name:bob", "param", "goodDefault", "to", "[5]").run(t)
+	cliTest(false, false, "machines", "show", "Name:bob").run(t)
+	cliTest(false, false, "machines", "destroy", "Name:bob").run(t)
+	cliTest(false, false, "profiles", "destroy", "bob").run(t)
+	cliTest(false, false, "params", "destroy", "goodDefault").run(t)
+	verifyClean(t)
+}
