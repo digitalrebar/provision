@@ -1,6 +1,9 @@
 package models
 
-import "net"
+import (
+	"net"
+	"runtime"
+)
 
 // swagger:model
 type Stat struct {
@@ -41,6 +44,37 @@ type Info struct {
 	// required: true
 	Address net.IP `json:"address"`
 	// required: true
-	Stats    []Stat   `json:"stats"`
-	Features []string `json:"features"`
+	Stats    []Stat                         `json:"stats"`
+	Features []string                       `json:"features"`
+	Scopes   map[string]map[string]struct{} `json:"scopes"`
+}
+
+func (i *Info) Fill() {
+	i.Arch = runtime.GOARCH
+	i.Os = runtime.GOOS
+	if i.Stats == nil {
+		i.Stats = make([]Stat, 0, 0)
+	}
+	if i.Scopes == nil {
+		i.Scopes = allScopes
+	}
+	if i.Features == nil {
+		i.Features = []string{
+			"api-v3",
+			"sane-exit-codes",
+			"common-blob-size",
+			"change-stage-map",
+			"job-exit-states",
+			"package-repository-handling",
+			"profileless-machine",
+			"threaded-log-levels",
+			"plugin-v2",
+			"fsm-runner",
+			"plugin-v2-safe-config",
+			"workflows",
+			"default-workflow",
+			"http-range-header",
+			"roles",
+		}
+	}
 }
