@@ -593,14 +593,14 @@ func (c *Client) DeleteBlob(at ...string) error {
 // types on the server.
 func (c *Client) AllIndexes() (map[string]map[string]models.Index, error) {
 	res := map[string]map[string]models.Index{}
-	return res, c.Req().UrlFor("indexes").Do(res)
+	return res, c.Req().UrlFor("indexes").Do(&res)
 }
 
 // Indexes returns all the static indexes available for a given type
 // of object on the server.
 func (c *Client) Indexes(prefix string) (map[string]models.Index, error) {
 	res := map[string]models.Index{}
-	return res, c.Req().UrlFor("indexes", prefix).Do(res)
+	return res, c.Req().UrlFor("indexes", prefix).Do(&res)
 }
 
 // OneIndex tests to see if there is an index on the object type

@@ -20,6 +20,7 @@ import (
 	"github.com/digitalrebar/provision/backend"
 	"github.com/digitalrebar/provision/embedded"
 	"github.com/digitalrebar/provision/midlayer"
+	"github.com/digitalrebar/provision/models"
 	"github.com/digitalrebar/provision/server"
 	"github.com/jessevdk/go-flags"
 )
@@ -395,6 +396,9 @@ func TestCorePieces(t *testing.T) {
 	cliTest(false, true, "-F", "cow", "bootenvs", "list").run(t)
 	cliTest(false, false, "-F", "yaml", "bootenvs", "list").run(t)
 	cliTest(false, false, "-F", "json", "bootenvs", "list").run(t)
+	for _, p := range models.AllPrefixes() {
+		cliTest(false, false, p, "indexes").run(t)
+	}
 	verifyClean(t)
 }
 
