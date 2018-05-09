@@ -1,5 +1,6 @@
 package models
 
+// swagger:model
 type Tenant struct {
 	Validation
 	Access
