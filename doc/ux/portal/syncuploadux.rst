@@ -61,5 +61,4 @@ The top of the page has a set of blue boxes for additional information:
 
 Support Files
 -------------
-*** WHAT IS THIS***
-
+These files are located on the DRP webserver and are available via TFTP to start the PXE boot on new machines.  

@@ -14,7 +14,7 @@ Video: Why RackN built the Portal https://youtu.be/levzBw5t7gc.
 
 Overview
 -------
-The Overview page shows a live view of all the active machine stages running via the RackN Portal including their State and BootEnv settings. The page also shows the active machines activity ***** WHAT IS THIS***   
+The Overview page shows a live view of all the active machine stages running via the RackN Portal including their State and BootEnv settings. The page also shows the running machines activity.    
 
 The top of the page offers the following services via a single blue button for each action:
 
@@ -70,8 +70,8 @@ The top of the page offers the following services via a single button for each a
 * Refresh - Refresh the content on the page 
 * Filter - Allows the user to show a specific set of machines based on a variety of filters including IP Address, BootEnv, Key, Name, Stage, UUID, Workflow,etc
 * Delete - Delete a machine by selecting a machine listed
-* Bulk Actions - *** ADD ***
-* Force - *** ADD ***
+* Bulk Actions 
+* Force 
 
 Plugins
 -------
@@ -137,7 +137,7 @@ These are the properties available for updates:
 This section contains information the system itself including:
 
 * Version tip - Build # of the Digital Rebar Provision being operated by the RackN Portal 
-* Feature Flags - ** WHAT IS THIS **
+* Feature Flags - The list of features supported in the RackN Portal for the connected Digital Rebar Provision instance.  
 * Endpoint MAC Address and API Port - Machine information on the DRP Endpoint the RackN Portal is connected to
 * OS and Architecture - The Operating System and Processor of the Endpoint machine  
 

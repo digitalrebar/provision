@@ -64,8 +64,7 @@ Endpoints
 ~~~~~~~~~
 
 This section provides a list of Endpoints available to the user from the membership organization (Group) the user is connect to. 
-
-There is an option to change the Icons used in the RackN Portal WHAT IS THIS?
+There is an option to change the Icons used in the RackN Portal.
 
 For each Endpoint listed the following data is shown:
 

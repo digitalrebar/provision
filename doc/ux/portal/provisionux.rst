@@ -7,8 +7,7 @@
 
 Provision
 =========
-This section contains the
-
+This section contains the setup information to provision a machine. The workflow process uses this information when configuring and deploying a new machine.
 
 Boot Environments
 -----------------
@@ -18,7 +17,7 @@ The UI will show a complete list of potential Boot Environments with the followi
 
 * Locked or Unlocked 
 * Name - The name of the Boot Environment. 
-* D/L - **WHAT IS THIS**
+* D/L 
 * ISO - ISO or TAR Image involved with the named Boot Environment  
 * Description - More information about the specific Boot Environment 
 
