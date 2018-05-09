@@ -228,10 +228,10 @@ type Role struct {
 	//
 	// required: true
 	Name string
-	// Description of user
-	Description string
 	// Claims that the role support.
 	Claims []*Claim
+	// Description of user
+	Description string
 }
 
 func (r *Role) Fill() {
