@@ -1,0 +1,75 @@
+RE:
+\[
+  \{
+    "Available": true,
+    "Description": "",
+    "Name": "rocketskates",
+    "ReadOnly": false,
+    "Roles": \[
+      "superuser"
+    \],
+    "Validated": true
+  \},
+  \{
+    "Available": true,
+    "Description": "",
+    "Name": "t1-0",
+    "ReadOnly": false,
+    "Roles": \[
+      "stage"
+    \],
+    "Validated": true
+  \},
+  \{
+    "Available": true,
+    "Description": "",
+    "Name": "t1-1",
+    "ReadOnly": false,
+    "Roles": \[
+      "stage",
+      "task"
+    \],
+    "Validated": true
+  \},
+  \{
+    "Available": true,
+    "Description": "",
+    "Name": "t1-2",
+    "ReadOnly": false,
+    "Roles": \[
+      "task"
+    \],
+    "Validated": true
+  \},
+  \{
+    "Available": true,
+    "Description": "",
+    "Name": "t2-0",
+    "ReadOnly": false,
+    "Roles": \[
+      "stage"
+    \],
+    "Validated": true
+  \},
+  \{
+    "Available": true,
+    "Description": "",
+    "Name": "t2-1",
+    "ReadOnly": false,
+    "Roles": \[
+      "stage",
+      "task"
+    \],
+    "Validated": true
+  \},
+  \{
+    "Available": true,
+    "Description": "",
+    "Name": "t2-2",
+    "ReadOnly": false,
+    "Roles": \[
+      "task"
+    \],
+    "Validated": true
+  \}
+\]

@@ -1,0 +1,12 @@
+RE:
+\{
+  "Available": true,
+  "Description": "",
+  "Name": "t1-1",
+  "ReadOnly": false,
+  "Roles": \[
+    "stage",
+    "task"
+  \],
+  "Validated": true
+\}

@@ -9,7 +9,8 @@ import (
 // maps to.  Most of this information is optional for now.
 // swagger:model
 type OsInfo struct {
-	// The name of the OS this BootEnv has.
+	// The name of the OS this BootEnv has.  It should be formatted as
+	// family-version.
 	//
 	// required: true
 	Name string
@@ -29,6 +30,9 @@ type OsInfo struct {
 	IsoUrl string
 }
 
+// FamilyName is a helper that figures out the family (read: distro
+// name) of the OS.  It uses Family if set, the first part of the Name
+// otherwise.
 func (o OsInfo) FamilyName() string {
 	if o.Family != "" {
 		return o.Family
@@ -36,6 +40,11 @@ func (o OsInfo) FamilyName() string {
 	return strings.Split(o.Name, "-")[0]
 }
 
+// FamilyType figures out the lineage of the OS.  If the OS is
+// descended from RHEL, then "rhel" is returned.  If the OS is
+// descended from Debian, then "debian" is returned, otherwise
+// FamilyName() is returned.  Return values of this function are
+// subject to change as support for new distros is brought onboard.
 func (o OsInfo) FamilyType() string {
 	switch o.FamilyName() {
 	case "centos", "redhat", "fedora", "scientificlinux":
@@ -47,6 +56,10 @@ func (o OsInfo) FamilyType() string {
 	}
 }
 
+// FamilyVersion figures out the version of the OS.  It returns the
+// Version field if set, and the second part of the OS name if not
+// set.  THis should be a Semver-ish version string, not a codename,
+// release name, or similar item.
 func (o OsInfo) FamilyVersion() string {
 	if o.Version != "" {
 		return o.Version
@@ -58,6 +71,9 @@ func (o OsInfo) FamilyVersion() string {
 	return ""
 }
 
+// VersionEq returns true of this OS version is equal to the degree of
+// accuracy implied by other -- o.Version(7.3) is VersionEq to 7 and
+// 7.3, but not 7.3.11
 func (o OsInfo) VersionEq(other string) bool {
 	partCmp := func(a, b string) bool {
 		ai, aerr := strconv.ParseInt(a, 10, 64)

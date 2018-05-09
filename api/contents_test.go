@@ -24,6 +24,7 @@ func TestContentCrud(t *testing.T) {
     subnets: 0
     tasks: 0
     templates: 0
+    tenants: 0
     users: 1
     workflows: 0
   Warnings: []
@@ -180,6 +181,7 @@ sections:
   subnets: {}
   tasks: {}
   templates: {}
+  tenants: {}
   users:
     rocketskates:
       Available: false

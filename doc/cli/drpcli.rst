@@ -78,6 +78,8 @@ SEE ALSO
    to tasks
 -  `drpcli templates <drpcli_templates.html>`__ - Access CLI commands
    relating to templates
+-  `drpcli tenants <drpcli_tenants.html>`__ - Access CLI commands
+   relating to tenants
 -  `drpcli users <drpcli_users.html>`__ - Access CLI commands relating
    to users
 -  `drpcli version <drpcli_version.html>`__ - Digital Rebar Provision

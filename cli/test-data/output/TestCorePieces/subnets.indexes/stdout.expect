@@ -1,0 +1,50 @@
+{
+  "ActiveAddress": {
+    "Type": "IP Address",
+    "Unique": false
+  },
+  "Address": {
+    "Type": "IP Address",
+    "Unique": false
+  },
+  "Available": {
+    "Type": "boolean",
+    "Unique": false
+  },
+  "Enabled": {
+    "Type": "boolean",
+    "Unique": false
+  },
+  "Key": {
+    "Type": "string",
+    "Unique": true
+  },
+  "Name": {
+    "Type": "string",
+    "Unique": true
+  },
+  "NextServer": {
+    "Type": "IP Address",
+    "Unique": false
+  },
+  "Proxy": {
+    "Type": "boolean",
+    "Unique": false
+  },
+  "ReadOnly": {
+    "Type": "boolean",
+    "Unique": false
+  },
+  "Strategy": {
+    "Type": "string",
+    "Unique": false
+  },
+  "Subnet": {
+    "Type": "CIDR Address",
+    "Unique": true
+  },
+  "Valid": {
+    "Type": "boolean",
+    "Unique": false
+  }
+}

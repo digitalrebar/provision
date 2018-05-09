@@ -53,6 +53,7 @@ func TestInfo(t *testing.T) {
 				"default-workflow",
 				"http-range-header",
 				"roles",
+				"tenants",
 			},
 			Scopes: map[string]map[string]struct{}{
 				"bootenvs": map[string]struct{}{
@@ -209,6 +210,15 @@ func TestInfo(t *testing.T) {
 					"update":  struct{}{},
 				},
 				"tasks": map[string]struct{}{
+					"action":  struct{}{},
+					"actions": struct{}{},
+					"create":  struct{}{},
+					"delete":  struct{}{},
+					"get":     struct{}{},
+					"list":    struct{}{},
+					"update":  struct{}{},
+				},
+				"tenants": map[string]struct{}{
 					"action":  struct{}{},
 					"actions": struct{}{},
 					"create":  struct{}{},

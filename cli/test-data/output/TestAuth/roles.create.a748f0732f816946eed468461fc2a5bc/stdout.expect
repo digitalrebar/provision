@@ -1,0 +1,16 @@
+{
+  "Available": true,
+  "Claims": [
+    {
+      "action": "*",
+      "scope": "stages",
+      "specific": "*"
+    }
+  ],
+  "Description": "",
+  "Errors": [],
+  "Meta": {},
+  "Name": "stage",
+  "ReadOnly": false,
+  "Validated": true
+}

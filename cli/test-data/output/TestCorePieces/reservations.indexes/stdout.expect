@@ -1,0 +1,34 @@
+{
+  "Addr": {
+    "Type": "IP Address",
+    "Unique": false
+  },
+  "Available": {
+    "Type": "boolean",
+    "Unique": false
+  },
+  "Key": {
+    "Type": "string",
+    "Unique": true
+  },
+  "NextServer": {
+    "Type": "IP Address",
+    "Unique": false
+  },
+  "ReadOnly": {
+    "Type": "boolean",
+    "Unique": false
+  },
+  "Strategy": {
+    "Type": "string",
+    "Unique": false
+  },
+  "Token": {
+    "Type": "string",
+    "Unique": false
+  },
+  "Valid": {
+    "Type": "boolean",
+    "Unique": false
+  }
+}

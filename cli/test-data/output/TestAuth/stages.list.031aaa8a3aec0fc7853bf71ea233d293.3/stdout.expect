@@ -1,0 +1,19 @@
+[
+  {
+    "Available": true,
+    "BootEnv": "",
+    "Description": "",
+    "Errors": [],
+    "Meta": {},
+    "Name": "stage2",
+    "OptionalParams": [],
+    "Profiles": [],
+    "ReadOnly": false,
+    "Reboot": false,
+    "RequiredParams": [],
+    "RunnerWait": true,
+    "Tasks": [],
+    "Templates": [],
+    "Validated": true
+  }
+]

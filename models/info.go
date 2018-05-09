@@ -75,6 +75,7 @@ func (i *Info) Fill() {
 			"default-workflow",
 			"http-range-header",
 			"roles",
+			"tenants",
 		}
 	}
 }

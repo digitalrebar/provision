@@ -1,0 +1,26 @@
+{
+  "Available": {
+    "Type": "boolean",
+    "Unique": false
+  },
+  "Key": {
+    "Type": "string",
+    "Unique": true
+  },
+  "Name": {
+    "Type": "string",
+    "Unique": true
+  },
+  "Provider": {
+    "Type": "string",
+    "Unique": false
+  },
+  "ReadOnly": {
+    "Type": "boolean",
+    "Unique": false
+  },
+  "Valid": {
+    "Type": "boolean",
+    "Unique": false
+  }
+}

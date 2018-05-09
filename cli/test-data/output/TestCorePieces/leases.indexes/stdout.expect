@@ -1,0 +1,38 @@
+{
+  "Addr": {
+    "Type": "IP Address",
+    "Unique": false
+  },
+  "Available": {
+    "Type": "boolean",
+    "Unique": false
+  },
+  "ExpireTime": {
+    "Type": "Date/Time string",
+    "Unique": false
+  },
+  "Key": {
+    "Type": "string",
+    "Unique": true
+  },
+  "ReadOnly": {
+    "Type": "boolean",
+    "Unique": false
+  },
+  "State": {
+    "Type": "string",
+    "Unique": false
+  },
+  "Strategy": {
+    "Type": "string",
+    "Unique": false
+  },
+  "Token": {
+    "Type": "string",
+    "Unique": false
+  },
+  "Valid": {
+    "Type": "boolean",
+    "Unique": false
+  }
+}

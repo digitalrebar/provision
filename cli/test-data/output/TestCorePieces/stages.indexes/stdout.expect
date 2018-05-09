@@ -1,0 +1,30 @@
+{
+  "Available": {
+    "Type": "boolean",
+    "Unique": false
+  },
+  "BootEnv": {
+    "Type": "string",
+    "Unique": false
+  },
+  "Key": {
+    "Type": "string",
+    "Unique": true
+  },
+  "Name": {
+    "Type": "string",
+    "Unique": true
+  },
+  "ReadOnly": {
+    "Type": "boolean",
+    "Unique": false
+  },
+  "Reboot": {
+    "Type": "boolean",
+    "Unique": false
+  },
+  "Valid": {
+    "Type": "boolean",
+    "Unique": false
+  }
+}
