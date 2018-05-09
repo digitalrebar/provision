@@ -8,6 +8,7 @@
         "specific": "*"
       }
     ],
+    "Description": "",
     "Errors": [],
     "Meta": {},
     "Name": "stage",
@@ -23,6 +24,7 @@
         "specific": "*"
       }
     ],
+    "Description": "",
     "Errors": [],
     "Meta": {},
     "Name": "superuser",
@@ -38,6 +40,7 @@
         "specific": "*"
       }
     ],
+    "Description": "",
     "Errors": [],
     "Meta": {},
     "Name": "task",
