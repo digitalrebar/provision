@@ -4,9 +4,10 @@ type Tenant struct {
 	Validation
 	Access
 	Meta
-	Name    string
-	Members map[string][]string
-	Users   []string
+	Name        string
+	Description string
+	Members     map[string][]string
+	Users       []string
 }
 
 func (t *Tenant) Fill() {
