@@ -8,6 +8,7 @@
         "specific": "*"
       }
     ],
+    "Description": "",
     "Errors": [],
     "Meta": {},
     "Name": "superuser",
@@ -23,6 +24,7 @@
         "specific": ""
       }
     ],
+    "Description": "",
     "Errors": [],
     "Meta": {},
     "Name": "validButUseless",
