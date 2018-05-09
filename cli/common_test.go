@@ -397,7 +397,12 @@ func TestCorePieces(t *testing.T) {
 	cliTest(false, false, "-F", "yaml", "bootenvs", "list").run(t)
 	cliTest(false, false, "-F", "json", "bootenvs", "list").run(t)
 	for _, p := range models.AllPrefixes() {
-		cliTest(false, false, p, "indexes").run(t)
+		switch p {
+		case "interfaces", "plugin_providers", "preferences":
+			continue
+		default:
+			cliTest(false, false, p, "indexes").run(t)
+		}
 	}
 	verifyClean(t)
 }
