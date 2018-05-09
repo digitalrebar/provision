@@ -53,10 +53,6 @@ RE:
         "list": {},
         "post": {}
       },
-      "indexes": {
-        "get": {},
-        "list": {}
-      },
       "info": {
         "get": {}
       },

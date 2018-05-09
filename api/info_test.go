@@ -78,10 +78,6 @@ func TestInfo(t *testing.T) {
 					"list":   struct{}{},
 					"post":   struct{}{},
 				},
-				"indexes": map[string]struct{}{
-					"get":  struct{}{},
-					"list": struct{}{},
-				},
 				"info": map[string]struct{}{
 					"get": struct{}{},
 				},

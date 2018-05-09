@@ -29,7 +29,6 @@ var (
 		"interfaces": "list, get",
 		"info":       "get",
 		"isos":       "list, get, post, delete",
-		"indexes":    "list, get",
 	}
 
 	addedActions = map[string]string{
