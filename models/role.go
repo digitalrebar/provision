@@ -125,6 +125,8 @@ func (a scopeNode) contains(b scopeNode) bool {
 }
 
 // Claim is an individial specifier for something we are allowed access to.
+// User is an API user of DigitalRebar Provision
+// swagger:model
 type Claim struct {
 	Scope    string `json:"scope"`
 	Action   string `json:"action"`
@@ -216,11 +218,19 @@ func MakeClaims(things ...string) []*Claim {
 	return res
 }
 
+// User is an API user of DigitalRebar Provision
+// swagger:model
 type Role struct {
 	Validation
 	Access
 	Meta
-	Name   string
+	// Name is the name of the user
+	//
+	// required: true
+	Name string
+	// Description of user
+	Description string
+	// Claims that the role support.
 	Claims []*Claim
 }
 

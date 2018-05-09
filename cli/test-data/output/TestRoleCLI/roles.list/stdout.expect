@@ -8,6 +8,7 @@
         "specific": "*"
       }
     ],
+    "Description": "",
     "Errors": [],
     "Meta": {},
     "Name": "superuser",
