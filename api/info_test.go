@@ -218,6 +218,15 @@ func TestInfo(t *testing.T) {
 					"list":    struct{}{},
 					"update":  struct{}{},
 				},
+				"tenants": map[string]struct{}{
+					"action":  struct{}{},
+					"actions": struct{}{},
+					"create":  struct{}{},
+					"delete":  struct{}{},
+					"get":     struct{}{},
+					"list":    struct{}{},
+					"update":  struct{}{},
+				},
 				"templates": map[string]struct{}{
 					"action":  struct{}{},
 					"actions": struct{}{},
