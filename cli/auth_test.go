@@ -22,7 +22,7 @@ func TestAuth(t *testing.T) {
 	cliTest(false, false, "users", "list").run(t)
 	// user list is not in a role, so no dice.
 	for u := range uMap {
-		cliTest(false, true, "users", "list", "-T", "", "-U", u, "-P", "foo").run(t)
+		cliTest(false, false, "users", "list", "-T", "", "-U", u, "-P", "foo").run(t)
 	}
 	// Make some stages and tasks
 	cliTest(false, false, "tasks", "create", "task1").run(t)
@@ -33,16 +33,16 @@ func TestAuth(t *testing.T) {
 	cliTest(false, false, "stages", "create", "stage3").run(t)
 	// Test to make sure auth restrictions are parsing properly
 	cliTest(false, false, "stages", "list", "-T", "", "-U", "t1-0", "-P", "foo").run(t)
-	cliTest(false, true, "tasks", "list", "-T", "", "-U", "t1-0", "-P", "foo").run(t)
+	cliTest(false, false, "tasks", "list", "-T", "", "-U", "t1-0", "-P", "foo").run(t)
 	cliTest(false, false, "stages", "list", "-T", "", "-U", "t1-1", "-P", "foo").run(t)
 	cliTest(false, false, "tasks", "list", "-T", "", "-U", "t1-1", "-P", "foo").run(t)
-	cliTest(false, true, "stages", "list", "-T", "", "-U", "t1-2", "-P", "foo").run(t)
+	cliTest(false, false, "stages", "list", "-T", "", "-U", "t1-2", "-P", "foo").run(t)
 	cliTest(false, false, "tasks", "list", "-T", "", "-U", "t1-2", "-P", "foo").run(t)
 	cliTest(false, false, "stages", "list", "-T", "", "-U", "t2-0", "-P", "foo").run(t)
-	cliTest(false, true, "tasks", "list", "-T", "", "-U", "t2-0", "-P", "foo").run(t)
+	cliTest(false, false, "tasks", "list", "-T", "", "-U", "t2-0", "-P", "foo").run(t)
 	cliTest(false, false, "stages", "list", "-T", "", "-U", "t2-1", "-P", "foo").run(t)
 	cliTest(false, false, "tasks", "list", "-T", "", "-U", "t2-1", "-P", "foo").run(t)
-	cliTest(false, true, "stages", "list", "-T", "", "-U", "t2-2", "-P", "foo").run(t)
+	cliTest(false, false, "stages", "list", "-T", "", "-U", "t2-2", "-P", "foo").run(t)
 	cliTest(false, false, "tasks", "list", "-T", "", "-U", "t2-2", "-P", "foo").run(t)
 	// Make a couple of tenants with the existing data
 	cliTest(false, false, "tenants", "create", `
@@ -62,17 +62,23 @@ Users: [t2-0, t2-1, t2-2]
 	cliTest(false, false, "tenants", "list").run(t)
 	// Test to make sure users in tenants can only see what they are allowed to see
 	cliTest(false, false, "stages", "list", "-T", "", "-U", "t1-0", "-P", "foo").run(t)
-	cliTest(false, true, "tasks", "list", "-T", "", "-U", "t1-0", "-P", "foo").run(t)
+	cliTest(false, false, "tasks", "list", "-T", "", "-U", "t1-0", "-P", "foo").run(t)
 	cliTest(false, false, "stages", "list", "-T", "", "-U", "t1-1", "-P", "foo").run(t)
 	cliTest(false, false, "tasks", "list", "-T", "", "-U", "t1-1", "-P", "foo").run(t)
-	cliTest(false, true, "stages", "list", "-T", "", "-U", "t1-2", "-P", "foo").run(t)
+	cliTest(false, false, "stages", "list", "-T", "", "-U", "t1-2", "-P", "foo").run(t)
 	cliTest(false, false, "tasks", "list", "-T", "", "-U", "t1-2", "-P", "foo").run(t)
 	cliTest(false, false, "stages", "list", "-T", "", "-U", "t2-0", "-P", "foo").run(t)
-	cliTest(false, true, "tasks", "list", "-T", "", "-U", "t2-0", "-P", "foo").run(t)
+	cliTest(false, false, "tasks", "list", "-T", "", "-U", "t2-0", "-P", "foo").run(t)
 	cliTest(false, false, "stages", "list", "-T", "", "-U", "t2-1", "-P", "foo").run(t)
 	cliTest(false, false, "tasks", "list", "-T", "", "-U", "t2-1", "-P", "foo").run(t)
-	cliTest(false, true, "stages", "list", "-T", "", "-U", "t2-2", "-P", "foo").run(t)
+	cliTest(false, false, "stages", "list", "-T", "", "-U", "t2-2", "-P", "foo").run(t)
 	cliTest(false, false, "tasks", "list", "-T", "", "-U", "t2-2", "-P", "foo").run(t)
+	cliTest(false, true, "tasks", "show", "task1", "-T", "", "-U", "t1-0", "-P", "foo").run(t)
+	cliTest(false, true, "tasks", "show", "task2", "-T", "", "-U", "t1-0", "-P", "foo").run(t)
+	cliTest(false, true, "tasks", "show", "task3", "-T", "", "-U", "t1-0", "-P", "foo").run(t)
+	cliTest(false, false, "tasks", "show", "task1", "-T", "", "-U", "t1-1", "-P", "foo").run(t)
+	cliTest(false, true, "tasks", "show", "task2", "-T", "", "-U", "t1-1", "-P", "foo").run(t)
+	cliTest(false, false, "tasks", "show", "task3", "-T", "", "-U", "t1-1", "-P", "foo").run(t)
 	// Refuse to delete tenants with occupants
 	cliTest(false, true, "tenants", "destroy", "tenant1").run(t)
 	cliTest(false, true, "tenants", "destroy", "tenant2").run(t)
