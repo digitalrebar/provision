@@ -1,0 +1,13 @@
+RE:
+\{
+  "Available": true,
+  "Description": "",
+  "Errors": \[\],
+  "Meta": \{\},
+  "Name": "t2-3",
+  "ReadOnly": false,
+  "Roles": \[
+    "superuser"
+  \],
+  "Validated": true
+\}
