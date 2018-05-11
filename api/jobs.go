@@ -212,6 +212,7 @@ func (r *TaskRunner) Run() error {
 		Model: r.j.Prefix(),
 		Key:   r.j.Key(),
 	}
+	jKey := r.j.Key()
 	// Arrange to log everything to the job log and stderr at the same time.
 	// Due to how io.Pipe works, this should wind up being fairly synchronous.
 	reader, writer, err := os.Pipe()
@@ -225,14 +226,13 @@ func (r *TaskRunner) Run() error {
 	r.pipeWriter = writer
 	helperWritten := false
 	go func() {
-		key := r.j.Key()
 		defer reader.Close()
 		buf := make([]byte, 2<<16)
 		for {
 			reader.SetReadDeadline(time.Now().Add(1 * time.Second))
 			count, err := reader.Read(buf)
 			if count > 0 {
-				if r.c.Req().Put(buf[:count]).UrlFor("jobs", key, "log").Do(nil) != nil {
+				if r.c.Req().Put(buf[:count]).UrlFor("jobs", jKey, "log").Do(nil) != nil {
 					return
 				}
 			}
