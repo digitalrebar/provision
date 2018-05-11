@@ -47,6 +47,7 @@ type Info struct {
 	Stats    []Stat                         `json:"stats"`
 	Features []string                       `json:"features"`
 	Scopes   map[string]map[string]struct{} `json:"scopes"`
+	License  LicenseBundle
 }
 
 func (i *Info) Fill() {
