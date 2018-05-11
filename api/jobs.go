@@ -150,7 +150,14 @@ func (r *TaskRunner) Perform(action *models.JobAction, taskDir string) error {
 		r.Log("Unable to write to script %s: %v", taskFile, err)
 		return err
 	}
-	cmd := exec.Command("./" + path.Base(taskFile))
+
+	cmdArray := []string{}
+	if strings.HasSuffix(taskFile, "ps1") {
+		cmdArray = append(cmdArray, "powershell")
+	}
+	cmdArray = append(cmdArray, "./"+path.Base(taskFile))
+	cmd := exec.Command(cmdArray[0], cmdArray[1:]...)
+
 	cmd.Dir = taskDir
 	cmd.Env = append(os.Environ(), "RS_TASK_DIR="+taskDir, "RS_RUNNER_DIR="+r.agentDir)
 	cmd.Stdout = r.in
@@ -348,7 +355,10 @@ func (r *TaskRunner) Run() error {
 			// Contents is a script to run, run it.
 		}
 		if err != nil {
+			r.failed = true
+			finalState = "failed"
 			finalErr.AddError(err)
+			r.Log("Task %s %s", r.j.Task, finalState)
 			return finalErr
 		}
 		r.Log("Action %s finished", action.Name)
