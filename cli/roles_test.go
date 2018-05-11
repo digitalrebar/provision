@@ -14,6 +14,7 @@ func mkr(name string, args ...string) string {
 }
 
 func TestRoleCLI(t *testing.T) {
+	cliTest(false, false, "contents", "upload", "-").Stdin(licenseLayer).run(t)
 	cliTest(true, false, "roles").run(t)
 	cliTest(false, false, "roles", "list").run(t)
 	cliTest(true, true, "roles", "create").run(t)
@@ -35,5 +36,6 @@ func TestRoleCLI(t *testing.T) {
 	cliTest(false, true, "roles", "destroy", "superuser").run(t)
 	cliTest(false, false, "roles", "destroy", "validButUseless").run(t)
 	cliTest(false, false, "roles", "list").run(t)
+	cliTest(false, false, "contents", "destroy", "rackn-license").run(t)
 	verifyClean(t)
 }

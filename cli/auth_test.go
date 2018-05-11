@@ -8,6 +8,10 @@ import (
 )
 
 func TestAuth(t *testing.T) {
+	cliTest(false, true, "roles", "create", `{"Name":"foo","Claims":[{"Scope":"stages", "Action":"*","Specific":"*"}]}`).run(t)
+	cliTest(false, true, "tenants", "create", `{"Name":"foo"}`).run(t)
+	cliTest(false, false, "contents", "upload", "-").Stdin(licenseLayer).run(t)
+	cliTest(false, false, "info", "get").run(t)
 	cliTest(false, false, "roles", "create", `{"Name":"stage","Claims":[{"Scope":"stages", "Action":"*","Specific":"*"}]}`).run(t)
 	cliTest(false, false, "roles", "create", `{"Name":"task","Claims":[{"Scope":"tasks", "Action":"*","Specific":"*"}]}`).run(t)
 	uMap := map[string]string{
@@ -158,5 +162,6 @@ Users: [t2-0, t2-1, t2-2, t2-3]
 	cliTest(false, false, "tasks", "destroy", "task1").run(t)
 	cliTest(false, false, "roles", "destroy", "task").run(t)
 	cliTest(false, false, "roles", "destroy", "stage").run(t)
+	cliTest(false, false, "contents", "destroy", "rackn-license").run(t)
 	verifyClean(t)
 }

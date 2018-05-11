@@ -1,0 +1,3 @@
+Error: AUTH
+  Cannot access /api/v3/tenants
+  tenants create is a licensed enterprise feature.  Contact support@rackn.com

@@ -55,6 +55,7 @@ func TestInfo(t *testing.T) {
 				"roles",
 				"tenants",
 			},
+			License: models.LicenseBundle{Licenses: []models.License{}},
 			Scopes: map[string]map[string]struct{}{
 				"bootenvs": map[string]struct{}{
 					"action":  struct{}{},

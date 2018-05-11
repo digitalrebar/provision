@@ -35,6 +35,31 @@ var (
 var noErrorString string = ``
 var noContentString string = ``
 var noStdinString string = ``
+var licenseLayer = `---
+meta:
+  Description: License Data for RackN
+  Name: rackn-license
+  Overwritable: false
+  Source: RackN
+  Type: dynamic
+  Version: v0.0.1-tip-victor-dev-24-3a9ac1523e674e05ee91d1184feb007fba7cbe96
+  Writable: false
+sections:
+  profiles:
+    rackn-license:
+      Available: false
+      Description: RackN License Holder
+      Errors: []
+      Meta:
+        color: blue
+        icon: key
+        title: RackN Content
+      Name: rackn-license
+      Params:
+        rackn/license: efR8LjAkmevyUCOiNcJxgqOGrCDPLv6azOcdQr5yQ+BYu/1wVzAKkdp/cKijVVKb9D+1FeyXzSjeWhmnWTouBXsKICAiQ29udGFjdCI6ICJVbml0IFRlc3QiLAogICJDb250YWN0RW1haWwiOiAic3VwcG9ydEByYWNrbi5jb20iLAogICJDb250YWN0SWQiOiAiMmE0NGU4MDctZmNjYS00NzJjLTg4MzItZTQ0ZDMzZjVjMTQ5IiwKICAiR2VuZXJhdGlvblZlcnNpb24iOiAiIiwKICAiR3JhbnRvciI6ICJSYWNrTiBJbmMiLAogICJHcmFudG9yRW1haWwiOiAic3VwcG9ydEByYWNrbi5jb20iLAogICJMaWNlbnNlcyI6IFsKICAgIHsKICAgICAgIkRhdGEiOiBbXSwKICAgICAgIkhhcmRFeHBpcmVEYXRlIjogIjIwMzItMDEtMDFUMDA6MDA6MDAuODkyWiIsCiAgICAgICJMb25nTGljZW5zZSI6ICJSYWNrTiBTcGVjaWFsIExpbWl0ZWQgVXNlIExpY2Vuc2UiLAogICAgICAiTmFtZSI6ICJyYmFjIiwKICAgICAgIlB1cmNoYXNlRGF0ZSI6ICIyMDE3LTAxLTAxVDAwOjAwOjAwLjg5MloiLAogICAgICAiU2hvcnRMaWNlbnNlIjogIlJhY2tOX1RyaWFsIiwKICAgICAgIlNvZnRFeHBpcmVEYXRlIjogIjIwMzItMDEtMDFUMDA6MDA6MDAuODkyWiIsCiAgICAgICJTdGFydERhdGUiOiAiMjAxNy0wMS0wMVQwMDowMDowMC44OTJaIiwKICAgICAgIlZlcnNpb24iOiAidjIuKiIKICAgIH0KICBdLAogICJPd25lciI6ICJVbml0IFRlc3QiLAogICJPd25lckVtYWlsIjogInN1cHBvcnRAcmFja24uY29tIiwKICAiT3duZXJJZCI6ICJ1bml0Igp9Cg==
+      ReadOnly: false
+      Validated: false
+`
 
 // Runs the args against a server and return stdout and stderr.
 func runCliCommand(t *testing.T, args []string, stdin, realOut, realErr string, curl bool) error {

@@ -1,0 +1,3 @@
+Error: AUTH
+  Cannot access /api/v3/roles
+  roles create is a licensed enterprise feature.  Contact support@rackn.com
