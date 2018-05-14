@@ -1,4 +1,4 @@
-Error: Invalid prefs: error unmarshaling JSON: json: cannot unmarshal string into Go value of type map[string]string
+Error: Invalid prefs: error unmarshaling JSON: while decoding JSON: json: cannot unmarshal string into Go value of type map[string]string
 
 Usage:
   drpcli prefs set [- | JSON or YAML Map of strings | pairs of string args] [flags]
