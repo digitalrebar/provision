@@ -295,6 +295,28 @@ If you wish to update/change a Machine Name, you can do:
 
 .. note:: Note that you can NOT use the ``drpcli machines set ...`` construct as it only sets Param values.  The Machines name is a Field, not a Parameter.  This will NOT work: ``drpcli machines set $UUID param Name to foobar``.
 
+.. _rs_reservation_set_hostname:
+
+Set `hostname` in a DHCP Reservation
+------------------------------------
+
+If you create a DHCP Reservation for a system (or convert an active Lease to Reservation), you can also set the Hostname for the Machine.  If you are pre-creating Reservations, this will allow you to have a pre-set hostname when the Machine first comes up.  Additionally, if you create/destroy your machine objects, but would like a hostname to persist with the Machine Reservation when the machine returns, you can do this. 
+
+.. note:: The UX version (at least as of v1.2.1 and older) does not support setting DHCP options to the Reservation.  You will have to perform these actions using either the CLI or API.  The CLI method is outlined below.
+
+This procedure assumes you have a Reservation created already, and we are going to update the existing Reservation.  You can combine this procedure with creating a new Reservation, but only if you perform the operation via the CLI or API.
+
+  ::
+
+    # show the current Reservation:
+    drpcli reservations show 192.168.8.100
+
+    # create a Hostname specification in the DHCP Options section of the reservation:
+    drpcli reservations update 192.168.8.100 '{ "Options": [ { "Code": 12, "Value": "pxe-client-8-100" } ] }'
+
+In the above exmaple, we are assuming our DHCP Reservation is for a Reservation identified by the IP Address ``192.168.8.100``, and that we are setting the hostname (DHCP Option 12) to ``pxe-client-8-100``.
+
+
 .. _rs_uefi_boot_option:
 
 UEFI Boot Support - Option 67
