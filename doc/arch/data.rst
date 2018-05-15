@@ -434,7 +434,7 @@ either in the global profile, a profile attached to the machine's
 current Stage,a profile attached to a machine, or directly on the
 machine as a machine parameter.
 
-An example of a "package-repositories" parameter in YAML format:
+A commented example of a "package-repositories" parameter in YAML format:
 
   ::
 
@@ -471,18 +471,14 @@ An example of a "package-repositories" parameter in YAML format:
       components:
         - atomic
         - centosplus
-        - cloud
         - configmanagement
         - cr
         - dotnet
         - extras
         - fasttrack
-        - opstools
         - os
-        - paas
         - rt
         - sclo
-        - storage
         - updates
     - tag: "debian-9-install"
       os:
@@ -495,6 +491,12 @@ An example of a "package-repositories" parameter in YAML format:
       # specify other components.
       url: "http://mirrors.kernel.org/debian"
       distribution: stretch
+      # If the location of the remote kernel and initrd files cannot be found
+      # at the location you would get by appending url and the kernel/initd
+      # filenames from the BootEnv, you need to use the bootloc field to
+      # override where dr-provision should try to get them from.
+      # Kernels and initrds must be located directly at this path.
+      bootloc: "http://mirrors.kernel.org/debian/dists/stretch/main/installer-amd64/current/images/netboot/debian-installer/amd64/"
       components:
         - main
         - contrib
@@ -528,59 +530,9 @@ An example of a "package-repositories" parameter in YAML format:
         - main
         - non-free
 
-
-Here is an example profile for ubuntu-16.04.
-
-  ::
-
-    ---
-    Name: package-repositories
-    Params:
-      package-repositories:
-        - tag: "ubuntu-16.04-install"
-          os:
-            - "ubuntu-16.04"
-          installSource: true
-          # Debian URLs always follow the same rules, no matter
-          # whether the OS install flag is set.  As such,
-          # you must always also specify the distribution and
-          # at least the main component, although you can also
-          # specify other components.
-          url: "http://us.archive.ubuntu.com/ubuntu"
-          distribution: xenial
-          components:
-            - main
-            - contrib
-            - non-free
-        - tag: "ubuntu-16.04-updates"
-          os:
-            - "ubuntu-16.04"
-          url: "http://us.archive.ubuntu.com/ubuntu"
-          distribution: xenial-updates
-          components:
-            - main
-            - contrib
-            - non-free
-        - tag: "ubuntu-16.04-backports"
-          os:
-            - "ubuntu-16.04"
-          url: "http://us.archive.ubuntu.com/ubuntu"
-          distribution: xenial-backports
-          components:
-            - main
-            - contrib
-            - non-free
-        - tag: "ubuntu-16.04-security"
-          os:
-            - "ubuntu-16.04"
-          securitySource: true
-          url: "http://us.archive.ubuntu.com/ubuntu"
-          distribution: xenial-security
-          components:
-            - contrib
-            - main
-            - non-free
-
+The default package-repositories param in drp-community-content
+contains working examples for every boot environment supported by
+drp-community-content.
 
 Repo Object
 ^^^^^^^^^^^
