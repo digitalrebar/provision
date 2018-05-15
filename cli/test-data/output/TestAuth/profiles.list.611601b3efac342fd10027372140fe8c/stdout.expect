@@ -12,5 +12,21 @@
     "Params": {},
     "ReadOnly": false,
     "Validated": true
+  },
+  {
+    "Available": true,
+    "Description": "RackN License Holder",
+    "Errors": [],
+    "Meta": {
+      "color": "blue",
+      "icon": "key",
+      "title": "RackN Content"
+    },
+    "Name": "rackn-license",
+    "Params": {
+      "rackn/license": "efR8LjAkmevyUCOiNcJxgqOGrCDPLv6azOcdQr5yQ+BYu/1wVzAKkdp/cKijVVKb9D+1FeyXzSjeWhmnWTouBXsKICAiQ29udGFjdCI6ICJVbml0IFRlc3QiLAogICJDb250YWN0RW1haWwiOiAic3VwcG9ydEByYWNrbi5jb20iLAogICJDb250YWN0SWQiOiAiMmE0NGU4MDctZmNjYS00NzJjLTg4MzItZTQ0ZDMzZjVjMTQ5IiwKICAiR2VuZXJhdGlvblZlcnNpb24iOiAiIiwKICAiR3JhbnRvciI6ICJSYWNrTiBJbmMiLAogICJHcmFudG9yRW1haWwiOiAic3VwcG9ydEByYWNrbi5jb20iLAogICJMaWNlbnNlcyI6IFsKICAgIHsKICAgICAgIkRhdGEiOiBbXSwKICAgICAgIkhhcmRFeHBpcmVEYXRlIjogIjIwMzItMDEtMDFUMDA6MDA6MDAuODkyWiIsCiAgICAgICJMb25nTGljZW5zZSI6ICJSYWNrTiBTcGVjaWFsIExpbWl0ZWQgVXNlIExpY2Vuc2UiLAogICAgICAiTmFtZSI6ICJyYmFjIiwKICAgICAgIlB1cmNoYXNlRGF0ZSI6ICIyMDE3LTAxLTAxVDAwOjAwOjAwLjg5MloiLAogICAgICAiU2hvcnRMaWNlbnNlIjogIlJhY2tOX1RyaWFsIiwKICAgICAgIlNvZnRFeHBpcmVEYXRlIjogIjIwMzItMDEtMDFUMDA6MDA6MDAuODkyWiIsCiAgICAgICJTdGFydERhdGUiOiAiMjAxNy0wMS0wMVQwMDowMDowMC44OTJaIiwKICAgICAgIlZlcnNpb24iOiAidjIuKiIKICAgIH0KICBdLAogICJPd25lciI6ICJVbml0IFRlc3QiLAogICJPd25lckVtYWlsIjogInN1cHBvcnRAcmFja24uY29tIiwKICAiT3duZXJJZCI6ICJ1bml0Igp9Cg=="
+    },
+    "ReadOnly": true,
+    "Validated": true
   }
 ]

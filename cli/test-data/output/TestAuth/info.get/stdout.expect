@@ -1,0 +1,268 @@
+{
+  "License": {
+    "Contact": "Unit Test",
+    "ContactEmail": "support@rackn.com",
+    "ContactId": "2a44e807-fcca-472c-8832-e44d33f5c149",
+    "GenerationVersion": "",
+    "Grantor": "RackN Inc",
+    "GrantorEmail": "support@rackn.com",
+    "Licenses": [
+      {
+        "Active": true,
+        "Data": [],
+        "Expired": false,
+        "HardExpireDate": "2032-01-01T00:00:00.892Z",
+        "LongLicense": "RackN Special Limited Use License",
+        "Name": "rbac",
+        "PurchaseDate": "2017-01-01T00:00:00.892Z",
+        "ShortLicense": "RackN_Trial",
+        "SoftExpireDate": "2032-01-01T00:00:00.892Z",
+        "StartDate": "2017-01-01T00:00:00.892Z",
+        "Version": "v2.*"
+      }
+    ],
+    "Owner": "Unit Test",
+    "OwnerEmail": "support@rackn.com",
+    "OwnerId": "unit"
+  },
+  "address": "127.0.0.1",
+  "api_port": 10001,
+  "arch": "amd64",
+  "binl_enabled": true,
+  "binl_port": 10005,
+  "dhcp_enabled": true,
+  "dhcp_port": 10004,
+  "features": [
+    "api-v3",
+    "sane-exit-codes",
+    "common-blob-size",
+    "change-stage-map",
+    "job-exit-states",
+    "package-repository-handling",
+    "profileless-machine",
+    "threaded-log-levels",
+    "plugin-v2",
+    "fsm-runner",
+    "plugin-v2-safe-config",
+    "workflows",
+    "default-workflow",
+    "http-range-header",
+    "roles",
+    "tenants"
+  ],
+  "file_port": 10002,
+  "id": "Fred",
+  "os": "linux",
+  "prov_enabled": true,
+  "scopes": {
+    "bootenvs": {
+      "action": {},
+      "actions": {},
+      "create": {},
+      "delete": {},
+      "get": {},
+      "list": {},
+      "update": {}
+    },
+    "contents": {
+      "create": {},
+      "delete": {},
+      "get": {},
+      "list": {},
+      "update": {}
+    },
+    "files": {
+      "delete": {},
+      "get": {},
+      "list": {},
+      "post": {}
+    },
+    "info": {
+      "get": {}
+    },
+    "interfaces": {
+      "action": {},
+      "actions": {},
+      "create": {},
+      "delete": {},
+      "get": {},
+      "list": {},
+      "update": {}
+    },
+    "isos": {
+      "delete": {},
+      "get": {},
+      "list": {},
+      "post": {}
+    },
+    "jobs": {
+      "action": {},
+      "actions": {},
+      "create": {},
+      "delete": {},
+      "get": {},
+      "list": {},
+      "log": {},
+      "update": {}
+    },
+    "leases": {
+      "action": {},
+      "actions": {},
+      "create": {},
+      "delete": {},
+      "get": {},
+      "list": {},
+      "update": {}
+    },
+    "machines": {
+      "action": {},
+      "actions": {},
+      "create": {},
+      "delete": {},
+      "get": {},
+      "list": {},
+      "update": {}
+    },
+    "params": {
+      "action": {},
+      "actions": {},
+      "create": {},
+      "delete": {},
+      "get": {},
+      "list": {},
+      "update": {}
+    },
+    "plugin_providers": {
+      "action": {},
+      "actions": {},
+      "create": {},
+      "delete": {},
+      "get": {},
+      "list": {},
+      "update": {}
+    },
+    "plugins": {
+      "action": {},
+      "actions": {},
+      "create": {},
+      "delete": {},
+      "get": {},
+      "list": {},
+      "update": {}
+    },
+    "preferences": {
+      "action": {},
+      "actions": {},
+      "create": {},
+      "delete": {},
+      "get": {},
+      "list": {},
+      "update": {}
+    },
+    "profiles": {
+      "action": {},
+      "actions": {},
+      "create": {},
+      "delete": {},
+      "get": {},
+      "list": {},
+      "update": {}
+    },
+    "reservations": {
+      "action": {},
+      "actions": {},
+      "create": {},
+      "delete": {},
+      "get": {},
+      "list": {},
+      "update": {}
+    },
+    "roles": {
+      "action": {},
+      "actions": {},
+      "create": {},
+      "delete": {},
+      "get": {},
+      "list": {},
+      "update": {}
+    },
+    "stages": {
+      "action": {},
+      "actions": {},
+      "create": {},
+      "delete": {},
+      "get": {},
+      "list": {},
+      "update": {}
+    },
+    "subnets": {
+      "action": {},
+      "actions": {},
+      "create": {},
+      "delete": {},
+      "get": {},
+      "list": {},
+      "update": {}
+    },
+    "tasks": {
+      "action": {},
+      "actions": {},
+      "create": {},
+      "delete": {},
+      "get": {},
+      "list": {},
+      "update": {}
+    },
+    "templates": {
+      "action": {},
+      "actions": {},
+      "create": {},
+      "delete": {},
+      "get": {},
+      "list": {},
+      "update": {}
+    },
+    "tenants": {
+      "action": {},
+      "actions": {},
+      "create": {},
+      "delete": {},
+      "get": {},
+      "list": {},
+      "update": {}
+    },
+    "users": {
+      "action": {},
+      "actions": {},
+      "create": {},
+      "delete": {},
+      "get": {},
+      "list": {},
+      "password": {},
+      "token": {},
+      "update": {}
+    },
+    "workflows": {
+      "action": {},
+      "actions": {},
+      "create": {},
+      "delete": {},
+      "get": {},
+      "list": {},
+      "update": {}
+    }
+  },
+  "stats": [
+    {
+      "count": 0,
+      "name": "machines.count"
+    },
+    {
+      "count": 0,
+      "name": "subnets.count"
+    }
+  ],
+  "tftp_enabled": true,
+  "tftp_port": 10003,
+  "version": "v3.0.2-pre-alpha-NotSet"
+}

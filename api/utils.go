@@ -27,7 +27,7 @@ type Encoder interface {
 // this function should never be used to decode data coming from the
 // provision service.
 func DecodeYaml(buf []byte, ref interface{}) error {
-	return yaml.Unmarshal(buf, ref)
+	return models.DecodeYaml(buf, ref)
 }
 
 // Pretty marshals object acciording to the the fmt, in whatever
