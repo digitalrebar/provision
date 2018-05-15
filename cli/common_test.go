@@ -6,6 +6,7 @@ import (
 	"io"
 	"io/ioutil"
 	"log"
+	"net/http"
 	"os"
 	"os/exec"
 	"path"
@@ -36,7 +37,7 @@ var noContentString string = ``
 var noStdinString string = ``
 
 // Runs the args against a server and return stdout and stderr.
-func runCliCommand(t *testing.T, args []string, stdin, realOut, realErr string) error {
+func runCliCommand(t *testing.T, args []string, stdin, realOut, realErr string, curl bool) error {
 	t.Helper()
 	oldOut := os.Stdout
 	oldErr := os.Stderr
@@ -68,11 +69,22 @@ func runCliCommand(t *testing.T, args []string, stdin, realOut, realErr string) 
 	}
 	os.Stdout = so
 	os.Stderr = se
-
-	app := NewApp()
-	app.SilenceUsage = false
-	app.SetArgs(args)
-	return app.Execute()
+	if !curl {
+		app := NewApp()
+		app.SilenceUsage = false
+		app.SetArgs(args)
+		return app.Execute()
+	} else {
+		uri := "http://127.0.0.1:10002/" + strings.Join(args, "/")
+		resp, err := http.Get(uri)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "%v", err)
+			return err
+		}
+		defer resp.Body.Close()
+		io.Copy(os.Stdout, resp.Body)
+		return nil
+	}
 }
 
 var tnm = map[string]int{}
@@ -86,12 +98,20 @@ type CliTest struct {
 	expectedStdOut string
 	expectedStdErr string
 	trace          string
+	curl           bool
 }
 
 func (c CliTest) run(t *testing.T) {
 	t.Helper()
 	testCli(t, c)
 }
+
+func (c CliTest) get(t *testing.T) {
+	c.curl = true
+	t.Helper()
+	testCli(t, c)
+}
+
 func (c *CliTest) Stdin(s string) *CliTest {
 	c.stdin = s
 	return c
@@ -253,30 +273,31 @@ func testCli(t *testing.T, test CliTest) {
 	err = nil
 	hasE := false
 	// Add access args
-	for _, a := range test.args {
-		if a == "-E" {
-			hasE = true
-			break
-		}
-	}
-
-	// Add access args
 	args := test.args
-	if !hasE {
-		args = []string{"-E", "https://127.0.0.1:10001", "-T", myToken}
+	if !test.curl {
 		for _, a := range test.args {
-			args = append(args, a)
+			if a == "-E" {
+				hasE = true
+				break
+			}
+		}
+		// Add access args
+		if !hasE {
+			args = []string{"-E", "https://127.0.0.1:10001", "-T", myToken}
+			for _, a := range test.args {
+				args = append(args, a)
+			}
+		}
+		if test.trace != "" {
+			args = append(args, "--trace", test.trace, "--traceToken", loc)
+		}
+		if session != nil {
+			session.Close()
+			session = nil
 		}
 	}
-	if test.trace != "" {
-		args = append(args, "--trace", test.trace, "--traceToken", loc)
-	}
-	if session != nil {
-		session.Close()
-		session = nil
-	}
 
-	err = runCliCommand(t, args, test.stdin, realOut, realErr)
+	err = runCliCommand(t, args, test.stdin, realOut, realErr, test.curl)
 	var so, se string
 	if buf, err := ioutil.ReadFile(realOut); err == nil {
 		so = string(buf)

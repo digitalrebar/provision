@@ -1,0 +1,4 @@
+deb https://this.url.is.a.mirror/sweet-debs sweet on-fire
+deb https://this.url.is.fake/ubuntu 6 main contrib non-free
+deb https://this.url.is.secure/ubuntu-security 6 main contrib non-free
+

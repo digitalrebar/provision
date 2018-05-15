@@ -63,7 +63,7 @@ func TestBootEnvCli(t *testing.T) {
 
 	cliTest(true, true, "bootenvs", "uploadiso").run(t)
 	cliTest(true, true, "bootenvs", "uploadiso", "john", "john2").run(t)
-	cliTest(false, false, "bootenvs", "uploadiso", "ignore").run(t)
+	cliTest(false, true, "bootenvs", "uploadiso", "ignore").run(t)
 	cliTest(false, true, "bootenvs", "uploadiso", "john").run(t)
 
 	cliTest(true, true, "bootenvs", "create").run(t)
