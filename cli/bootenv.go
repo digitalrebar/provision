@@ -90,10 +90,6 @@ It will attempt to perform a direct copy without saving the ISO locally.`,
 			if err := session.FillModel(bootEnv, args[0]); err != nil {
 				return generateError(err, "Failed to fetch %v: %v", op.singleName, args[0])
 			}
-			if bootEnv.Available {
-				fmt.Printf("BootEnv %s is already available, skipping download of iso ...\n", bootEnv.Name)
-				return nil
-			}
 			if bootEnv.OS.IsoFile == "" {
 				return fmt.Errorf("BootEnv %s does not require an iso", bootEnv.Name)
 			}
