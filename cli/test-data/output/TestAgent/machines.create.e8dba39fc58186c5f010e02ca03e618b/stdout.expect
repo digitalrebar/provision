@@ -1,0 +1,13 @@
+RE:
+  "Available": true,
+  "BootEnv": "local",
+  "CurrentJob": "",
+  "CurrentTask": -1,
+  "Name": "phred",
+  "Runnable": true,
+  "Stage": "noisyStage",
+  "Tasks": \[
+    "noisyTask"
+  \],
+  "Uuid": "c9196b77-deef-4c8e-8130-299b3e3d9a10",
+  "Validated": true,
