@@ -1,0 +1,31 @@
+
+[scientificlinux-6-install]
+name=scientificlinux-6 - scientificlinux-6-install
+baseurl=https://this.url.is.fake/scientificlinux/6/x86_64/os
+gpgcheck=0
+
+[scientificlinux-6-security]
+name=scientificlinux-6 - scientificlinux-6-security
+baseurl=https://this.url.is.secure/scientificlinux/6/x86_64/updates
+gpgcheck=0
+
+[scientificlinux-6-extras-extras]
+name=scientificlinux-6-extras - extras
+baseurl=https://this.url.is.fake/scientificlinux/6/$basearch/extras
+gpgcheck=0
+
+[scientificlinux-6-extras-cluster-stuff]
+name=scientificlinux-6-extras - cluster-stuff
+baseurl=https://this.url.is.fake/scientificlinux/6/$basearch/cluster-stuff
+gpgcheck=0
+
+[scientificlinux-6-extras-atomic]
+name=scientificlinux-6-extras - atomic
+baseurl=https://this.url.is.fake/scientificlinux/6/$basearch/atomic
+gpgcheck=0
+
+[epel-6]
+name=scientificlinux-6 - epel-6
+baseurl=https://this.url.is.a.mirror/epel/7/$basearch
+gpgcheck=0
+

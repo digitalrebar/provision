@@ -1,0 +1,46 @@
+{
+  "Available": true,
+  "BootParams": "Acounted for",
+  "Description": "",
+  "Errors": [],
+  "Initrds": [
+    "fakeinitrd"
+  ],
+  "Kernel": "fakelinuz",
+  "Meta": {},
+  "Name": "fake-centos-install",
+  "OS": {
+    "Codename": "",
+    "Family": "",
+    "IsoFile": "fake-install.tgz",
+    "IsoSha256": "c82f6dd8270013d0a7dd47ed09563afe7c80a756fcefb885f74ef52d854711e1",
+    "IsoUrl": "",
+    "Name": "centos-6",
+    "Version": ""
+  },
+  "OnlyUnknown": false,
+  "OptionalParams": [],
+  "ReadOnly": false,
+  "RequiredParams": [],
+  "Templates": [
+    {
+      "Contents": "{{.Env.InstallUrl}}",
+      "ID": "",
+      "Name": "ipxe",
+      "Path": "{{.Machine.Path}}/url"
+    },
+    {
+      "Contents": "{{range $repo := .InstallRepos}}{{$repo.Install}}{{end}}\n",
+      "ID": "",
+      "Name": "install",
+      "Path": "{{.Machine.Path}}/install"
+    },
+    {
+      "Contents": "{{range $repo := .MachineRepos}}{{$repo.Lines}}{{end}}\n",
+      "ID": "",
+      "Name": "lines",
+      "Path": "{{.Machine.Path}}/lines"
+    }
+  ],
+  "Validated": true
+}
