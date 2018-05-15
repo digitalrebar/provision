@@ -12,6 +12,7 @@ import (
 )
 
 func testRepoGen(t *testing.T, env *models.BootEnv, items map[string]string) {
+	t.Helper()
 	fakeMachine := &models.Machine{Name: "phred", BootEnv: env.Name}
 	fakeMachine.Fill()
 	rt(t, fmt.Sprintf("Create machine to test %s", env.Name), nil, nil,
@@ -77,6 +78,8 @@ Schema:
         type: boolean
       securitySource:
         type: boolean
+      bootloc:
+        type: string
       distribution:
         type: string
       components:
