@@ -89,7 +89,7 @@ func addInfoCommands() (res *cobra.Command) {
 					if d.DhcpEnabled {
 						xid := make([]byte, 4)
 						rand.Read(xid)
-						dest := &net.UDPAddr{d.Address, d.DhcpPort, ""}
+						dest := &net.UDPAddr{IP: d.Address, Port: d.DhcpPort, Zone: ""}
 						packet := dhcp.RequestPacket(dhcp.Request, nil, net.IPv4(0, 0, 0, 0), xid, false, nil)
 						conn, err := net.ListenUDP("udp", &net.UDPAddr{Port: 0})
 						if err == nil {
@@ -113,7 +113,7 @@ func addInfoCommands() (res *cobra.Command) {
 					if d.BinlEnabled {
 						xid := make([]byte, 4)
 						rand.Read(xid)
-						dest := &net.UDPAddr{d.Address, d.BinlPort, ""}
+						dest := &net.UDPAddr{IP: d.Address, Port: d.BinlPort, Zone: ""}
 						packet := dhcp.RequestPacket(dhcp.Request, nil, net.IPv4(0, 0, 0, 0), xid, false, nil)
 						conn, err := net.ListenUDP("udp", &net.UDPAddr{Port: 0})
 						if err == nil {

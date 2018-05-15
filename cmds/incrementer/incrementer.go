@@ -24,15 +24,15 @@ var (
 		PluginVersion: 2,
 		HasPublish:    true,
 		AvailableActions: []models.AvailableAction{
-			models.AvailableAction{Command: "increment",
+			{Command: "increment",
 				Model:          "machines",
 				OptionalParams: []string{"incrementer/step", "incrementer/parameter"},
 			},
-			models.AvailableAction{Command: "reset_count",
+			{Command: "reset_count",
 				Model:          "machines",
 				RequiredParams: []string{"incrementer/touched"},
 			},
-			models.AvailableAction{Command: "incrstatus"},
+			{Command: "incrstatus"},
 		},
 		Content: contentYamlString,
 	}
