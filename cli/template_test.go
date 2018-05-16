@@ -1,9 +1,6 @@
 package cli
 
 import (
-	"encoding/json"
-	"io/ioutil"
-	"strings"
 	"testing"
 )
 
@@ -21,34 +18,6 @@ func TestTemplateCli(t *testing.T) {
   "Description": "NewStrat"
 }
 `
-
-	var templatesUploadSuccessString string = `{
-  "Available": true,
-  "Contents": *REPLACE_WITH_TEMPLATE_GO_CONTENT*,
-  "Errors": [],
-  "ID": "greg",
-  "ReadOnly": false,
-  "Validated": true
-}
-`
-	var templatesUploadReplaceSuccessString string = `{
-  "Available": true,
-  "Contents": *REPLACE_WITH_LEASE_GO_CONTENT*,
-  "Errors": [],
-  "ID": "greg",
-  "ReadOnly": false,
-  "Validated": true
-}
-`
-
-	templateContent, _ := ioutil.ReadFile("template.go")
-	sb, _ := json.Marshal(string(templateContent))
-	templatesUploadSuccessString = strings.Replace(templatesUploadSuccessString, "*REPLACE_WITH_TEMPLATE_GO_CONTENT*", string(sb), 1)
-
-	templateContent, _ = ioutil.ReadFile("lease.go")
-	sb, _ = json.Marshal(string(templateContent))
-	templatesUploadReplaceSuccessString = strings.Replace(templatesUploadReplaceSuccessString, "*REPLACE_WITH_LEASE_GO_CONTENT*", string(sb), 1)
-
 	cliTest(true, false, "templates").run(t)
 	cliTest(false, false, "templates", "list").run(t)
 	cliTest(true, true, "templates", "create").run(t)
