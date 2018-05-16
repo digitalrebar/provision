@@ -11,6 +11,6 @@
   "Errors": [],
   "Meta": {},
   "Name": "superuser",
-  "ReadOnly": false,
+  "ReadOnly": true,
   "Validated": true
 }
