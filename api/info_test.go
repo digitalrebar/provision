@@ -35,7 +35,7 @@ func TestInfo(t *testing.T) {
 			},
 			Arch:    runtime.GOARCH,
 			Os:      runtime.GOOS,
-			Version: provision.RS_VERSION,
+			Version: provision.RSVersion,
 			Id:      "Fred",
 			Features: []string{
 				"api-v3",

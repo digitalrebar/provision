@@ -17,7 +17,7 @@ import (
 )
 
 var (
-	version = provision.RS_VERSION
+	version = provision.RSVersion
 	def     = models.PluginProvider{
 		Name:          "incrementer",
 		Version:       version,

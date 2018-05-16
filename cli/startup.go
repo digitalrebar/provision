@@ -17,7 +17,7 @@ import (
 type registerSection func(*cobra.Command)
 
 var (
-	version          = provision.RS_VERSION
+	version          = provision.RSVersion
 	debug            = false
 	endpoint         = "https://127.0.0.1:8092"
 	default_endpoint = "https://127.0.0.1:8092"
