@@ -58,7 +58,7 @@ type TaskRunner struct {
 
 // NewTaskRunner creates a new TaskRunner for the passed-in machine.
 // It creates the matching Job (or resumes the previous incomplete
-// one), and handles making sure that all relavent output is written
+// one), and handles making sure that all relevant output is written
 // to the job log as well as local stderr
 func NewTaskRunner(c *Client, m *models.Machine, agentDir string, logger io.Writer) (*TaskRunner, error) {
 	if logger == nil {

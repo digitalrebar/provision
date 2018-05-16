@@ -163,7 +163,7 @@ Uuid: c9196b77-deef-4c8e-8130-299b3e3d9a10`).run(t)
 	// This ISO provides fake local kernels, but no install repos.  It is not the most accurate
 	// standin for a real install iso, but you get the idea.
 	cliTest(false, false, "isos", "upload", "../api/test-data/fake-install.tgz", "as", "fake-install.tgz").run(t)
-	// centos and scientificlinux shoudl refer to local repos that are now "present",
+	// centos and scientificlinux should refer to local repos that are now "present",
 	// debian and ubuntu will still refer to upstream.
 	for _, fake := range fakes {
 		cliTest(false, false,

@@ -97,8 +97,8 @@ type Subnet struct {
 	// "hint", which will try to reuse the address that the DHCP
 	// packet is requesting, if it has one.  If the request does
 	// not have a requested address, "hint" will fall through to
-	// the next strategy. Otherwise, it will refuse to try ant
-	// reamining strategies whether or not it can satisfy the
+	// the next strategy. Otherwise, it will refuse to try any
+	// remaining strategies whether or not it can satisfy the
 	// request.  This should force the client to fall back to
 	// DHCPDISCOVER with no requsted IP address. "hint" will reuse
 	// expired leases and unexpired leases that match on the

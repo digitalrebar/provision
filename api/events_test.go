@@ -33,8 +33,8 @@ func TestEvents(t *testing.T) {
 		return
 	}
 	t.Logf("Waiting for event from server")
-	recieved := <-ch
-	t.Logf("Recieved event: %#v", recieved)
+	received := <-ch
+	t.Logf("Received event: %#v", received)
 }
 
 func TestEventDeadlock(t *testing.T) {
@@ -80,10 +80,10 @@ func TestEventDeadlock(t *testing.T) {
 	}
 
 	t.Logf("Waiting for event from server")
-	recieved := <-ch
-	t.Logf("Recieved event: %#v", recieved)
-	recieved = <-ch
-	t.Logf("Recieved event: %#v", recieved)
+	received := <-ch
+	t.Logf("Received event: %#v", received)
+	received = <-ch
+	t.Logf("Received event: %#v", received)
 
 	done <- true
 	<-finished

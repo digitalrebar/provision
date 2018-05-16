@@ -13,7 +13,7 @@ type Stage struct {
 	// required: true
 	Name string
 	// A description of this stage.  This should tell what it is for,
-	// any special considerations that shoudl be taken into account when
+	// any special considerations that should be taken into account when
 	// using it, etc.
 	Description string
 	// The templates that should be expanded into files for the stage.

@@ -112,7 +112,7 @@ type BootEnv struct {
 	Name string
 	// A description of this boot environment.  This should tell what
 	// the boot environment is for, any special considerations that
-	// shoudl be taken into account when using it, etc.
+	// should be taken into account when using it, etc.
 	Description string
 	// The OS specific information for the boot environment.
 	OS OsInfo
