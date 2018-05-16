@@ -1,10 +1,30 @@
 package provision
 
-var RS_PREPART = "v"
-var RS_MAJOR_VERSION = "3"
-var RS_MINOR_VERSION = "0"
-var RS_PATCH_VERSION = "2"
-var RS_EXTRA = "-pre-alpha"
+// All of these fields are injected as part of the
+// build.sh script.
+
+// RSPrePart is 'v' place holder
+var RSPrePart = "v"
+
+// RSMajorVersion is the first number of SemVer
+var RSMajorVersion = "3"
+
+// RSMinorVersion is the second number of SemVer
+var RSMinorVersion = "0"
+
+// RSPatchVersion is the third number of SemVer
+var RSPatchVersion = "2"
+
+// RSExtra is a mostly free form field that must
+// start with a dash, but an be anything else.
+var RSExtra = "-pre-alpha"
+
+// GitHash is the injected GIT Hash for the current commit
+// for this built program.
 var GitHash = "NotSet"
+
+// BuildStamp is the time the build occurred.
 var BuildStamp = "Not Set"
-var RS_VERSION = RS_PREPART + RS_MAJOR_VERSION + "." + RS_MINOR_VERSION + "." + RS_PATCH_VERSION + RS_EXTRA + "-" + GitHash
+
+// RSVersion is the aggregated SemVer String
+var RSVersion = RSPrePart + RSMajorVersion + "." + RSMinorVersion + "." + RSPatchVersion + RSExtra + "-" + GitHash
