@@ -1,3 +1,4 @@
+RE:
 {
   "License": {
     "Contact": "Unit Test",
@@ -6,10 +7,10 @@
     "GenerationVersion": "",
     "Grantor": "RackN Inc",
     "GrantorEmail": "support@rackn.com",
-    "Licenses": [
+    "Licenses": \[
       {
         "Active": true,
-        "Data": [],
+        "Data": \[\],
         "Expired": false,
         "HardExpireDate": "2032-01-01T00:00:00.892Z",
         "LongLicense": "RackN Special Limited Use License",
@@ -20,7 +21,7 @@
         "StartDate": "2017-01-01T00:00:00.892Z",
         "Version": "v2.*"
       }
-    ],
+    \],
     "Owner": "Unit Test",
     "OwnerEmail": "support@rackn.com",
     "OwnerId": "unit"
@@ -32,7 +33,7 @@
   "binl_port": 10005,
   "dhcp_enabled": true,
   "dhcp_port": 10004,
-  "features": [
+  "features": \[
     "api-v3",
     "sane-exit-codes",
     "common-blob-size",
@@ -49,10 +50,10 @@
     "http-range-header",
     "roles",
     "tenants"
-  ],
+  \],
   "file_port": 10002,
   "id": "Fred",
-  "os": "linux",
+  "os": "[\s\S]*",
   "prov_enabled": true,
   "scopes": {
     "bootenvs": {
@@ -252,7 +253,7 @@
       "update": {}
     }
   },
-  "stats": [
+  "stats": \[
     {
       "count": 0,
       "name": "machines.count"
@@ -261,7 +262,7 @@
       "count": 0,
       "name": "subnets.count"
     }
-  ],
+  \],
   "tftp_enabled": true,
   "tftp_port": 10003,
   "version": "v3.0.2-pre-alpha-NotSet"

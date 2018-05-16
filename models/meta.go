@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-// Meta holds information about arbritary things.
+// Meta holds information about arbitrary things.
 // Initial usage will be for UX elements.
 //
 // swagger: model

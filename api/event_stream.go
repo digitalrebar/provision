@@ -93,9 +93,9 @@ func (c *Client) ws() (*websocket.Conn, error) {
 	return res, err
 }
 
-// RecievedEvent contains an event recieved from the digitalrebar
+// RecievedEvent contains an event received from the digitalrebar
 // provision server along with any errors that occurred while
-// recieving the event.
+// receiving the event.
 type RecievedEvent struct {
 	E   models.Event
 	Err error
@@ -111,13 +111,13 @@ func (r *RecievedEvent) matches(registration string) bool {
 		(tak[2] == r.E.Key || tak[2] == "*")
 }
 
-// EventStream recieves events from the digitalrebar provider.  You can read recieved events by reading from its Events channel.
+// EventStream receives events from the digitalrebar provider.  You can read received events by reading from its Events channel.
 type EventStream struct {
 	client        *Client
 	handleId      int64
 	conn          *websocket.Conn
 	subscriptions map[string][]int64
-	recievers     map[int64]chan RecievedEvent
+	receivers     map[int64]chan RecievedEvent
 	mux           *sync.Mutex
 	rchan         chan RecievedEvent
 }
@@ -129,10 +129,10 @@ func (es *EventStream) processEvents(running chan struct{}) {
 		if err != nil {
 			es.conn.Close()
 			es.mux.Lock()
-			for h, reciever := range es.recievers {
-				reciever <- RecievedEvent{Err: err}
-				close(reciever)
-				es.recievers[h] = nil
+			for h, receiver := range es.receivers {
+				receiver <- RecievedEvent{Err: err}
+				close(receiver)
+				es.receivers[h] = nil
 			}
 			es.mux.Unlock()
 			return
@@ -147,7 +147,7 @@ func (es *EventStream) processEvents(running chan struct{}) {
 			}
 			for _, i := range handles {
 				if toSend[i] == nil {
-					toSend[i] = es.recievers[i]
+					toSend[i] = es.receivers[i]
 				}
 			}
 		}
@@ -172,13 +172,13 @@ func (c *Client) Events() (*EventStream, error) {
 		client:        c,
 		conn:          conn,
 		subscriptions: map[string][]int64{},
-		recievers:     map[int64]chan RecievedEvent{},
+		receivers:     map[int64]chan RecievedEvent{},
 		mux:           &sync.Mutex{},
 	}
 	newID := atomic.AddInt64(&res.handleId, 1)
 	res.rchan = make(chan RecievedEvent, 100)
 	res.subscriptions["websocket.*.*"] = []int64{newID}
-	res.recievers[newID] = res.rchan
+	res.receivers[newID] = res.rchan
 	running := make(chan struct{})
 	go res.processEvents(running)
 	<-running
@@ -194,7 +194,7 @@ func (es *EventStream) Close() error {
 }
 
 func (es *EventStream) subscribe(handle int64, events ...string) (int, error) {
-	if es.recievers[handle] == nil {
+	if es.receivers[handle] == nil {
 		return 0, fmt.Errorf("No such handle %d", handle)
 	}
 	count := 0
@@ -256,7 +256,7 @@ func (es *EventStream) Register(events ...string) (int64, <-chan RecievedEvent, 
 	newID := atomic.AddInt64(&es.handleId, 1)
 	es.mux.Lock()
 	ch := make(chan RecievedEvent, 100)
-	es.recievers[newID] = ch
+	es.receivers[newID] = ch
 	count, err := es.subscribe(newID, events...)
 	es.mux.Unlock()
 	if err == nil {
@@ -270,7 +270,7 @@ func (es *EventStream) Register(events ...string) (int64, <-chan RecievedEvent, 
 }
 
 func (es *EventStream) deregister(handle int64) (int, error) {
-	ch, ok := es.recievers[handle]
+	ch, ok := es.receivers[handle]
 	if !ok {
 		return 0, fmt.Errorf("No such handle %d", handle)
 	}
@@ -290,7 +290,7 @@ func (es *EventStream) deregister(handle int64) (int, error) {
 			delete(es.subscriptions, evt)
 		}
 	}
-	delete(es.recievers, handle)
+	delete(es.receivers, handle)
 	if ch != nil {
 		close(ch)
 	}
