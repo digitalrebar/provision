@@ -49,6 +49,54 @@ func registerMachine(app *cobra.Command) {
 			return prettyPrint(clone)
 		},
 	})
+	op.addCommand(&cobra.Command{
+		Use:   "currentlog [id]",
+		Short: "Get the log for the most recent job run on the machine",
+		Args: func(c *cobra.Command, args []string) error {
+			if len(args) != 1 {
+				return fmt.Errorf("%v requires 1 argument", c.UseLine())
+			}
+			return nil
+		},
+		RunE: func(c *cobra.Command, args []string) error {
+			m, err := op.refOrFill(args[0])
+			if err != nil {
+				return generateError(err, "Failed to fetch %v: %v", op.singleName, args[0])
+			}
+			return session.Req().UrlFor("jobs", m.(*models.Machine).CurrentJob.String(), "log").Do(os.Stdout)
+		},
+	})
+	op.addCommand(&cobra.Command{
+		Use:   "deletejobs [id]",
+		Short: "Delete all jobs associated with machine",
+		Args: func(c *cobra.Command, args []string) error {
+			if len(args) != 1 {
+				return fmt.Errorf("%v requires 1 argument", c.UseLine())
+			}
+			return nil
+		},
+		RunE: func(c *cobra.Command, args []string) error {
+			m, err := op.refOrFill(args[0])
+			if err != nil {
+				return generateError(err, "Failed to fetch %v: %v", op.singleName, args[0])
+			}
+			jobs := []*models.Job{}
+			if err := session.Req().Filter("jobs",
+				"Machine", "Eq", m.Key(),
+				"sort", "StartTime",
+				"reverse").Do(&jobs); err != nil {
+				return generateError(err, "Failed to fetch jobs for %s: %v", op.singleName, args[0])
+			}
+			for _, job := range jobs {
+				if _, err := session.DeleteModel("jobs", job.Key()); err != nil {
+					return generateError(err, "Failed to delete Job %s", job.Key())
+				} else {
+					fmt.Printf("Deleted Job %s", job.Key())
+				}
+			}
+			return nil
+		},
+	})
 	tasks := &cobra.Command{
 		Use:   "tasks",
 		Short: "Access task manipulation for machines",

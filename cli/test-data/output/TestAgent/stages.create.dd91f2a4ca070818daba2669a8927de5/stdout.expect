@@ -1,0 +1,19 @@
+{
+  "Available": true,
+  "BootEnv": "",
+  "Description": "",
+  "Errors": [],
+  "Meta": {},
+  "Name": "noisyStage",
+  "OptionalParams": [],
+  "Profiles": [],
+  "ReadOnly": false,
+  "Reboot": false,
+  "RequiredParams": [],
+  "RunnerWait": true,
+  "Tasks": [
+    "noisyTask"
+  ],
+  "Templates": [],
+  "Validated": true
+}

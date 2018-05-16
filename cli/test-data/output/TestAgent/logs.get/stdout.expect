@@ -1,0 +1,7 @@
+RE:
+    "Message": "Job .*: 50 bytes appended to log",
+    "Message": "Job .*: 65536 bytes appended to log",
+    "Message": "Job .*: 251 bytes appended to log",
+    "Message": "Job .*: 65536 bytes appended to log",
+    "Message": "Job .*: 128 bytes appended to log",
+    "Message": "Job .*: 281 bytes appended to log",

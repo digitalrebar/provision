@@ -11,6 +11,8 @@ Available Commands:
   addtask       Add task to the machine's task list
   bootenv       Set the machine's bootenv
   create        Create a new machine with the passed-in JSON or string key
+  currentlog    Get the log for the most recent job run on the machine
+  deletejobs    Delete all jobs associated with machine
   destroy       Destroy machine by id
   exists        See if a machines exists by id
   get           Get a parameter from the machine
