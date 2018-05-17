@@ -151,7 +151,8 @@ func InitApp(use, short, version string, def *models.PluginProvider, pc PluginCo
 			} else {
 				theDef = def
 			}
-			if buf, err := json.MarshalIndent(theDef, "", "  "); err == nil {
+			buf, err := json.MarshalIndent(theDef, "", "  ")
+			if err == nil {
 				fmt.Println(string(buf))
 				return nil
 			}
