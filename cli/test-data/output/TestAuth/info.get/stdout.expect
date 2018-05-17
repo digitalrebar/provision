@@ -121,8 +121,10 @@ RE:
       "create": {},
       "delete": {},
       "get": {},
+      "getSecure": {},
       "list": {},
-      "update": {}
+      "update": {},
+      "updateSecure": {}
     },
     "params": {
       "action": {},
@@ -148,8 +150,10 @@ RE:
       "create": {},
       "delete": {},
       "get": {},
+      "getSecure": {},
       "list": {},
-      "update": {}
+      "update": {},
+      "updateSecure": {}
     },
     "preferences": {
       "action": {},
@@ -166,8 +170,10 @@ RE:
       "create": {},
       "delete": {},
       "get": {},
+      "getSecure": {},
       "list": {},
-      "update": {}
+      "update": {},
+      "updateSecure": {}
     },
     "reservations": {
       "action": {},

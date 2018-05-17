@@ -364,6 +364,7 @@ Returns the following strings:
 
 func (o *ops) params() {
 	aggregate := false
+	decode := false
 	getParams := &cobra.Command{
 		Use:   "params [id] [json]",
 		Short: fmt.Sprintf("Gets/sets all parameters for the %s", o.singleName),
@@ -380,6 +381,9 @@ func (o *ops) params() {
 				req := session.Req().UrlFor(o.name, args[0], "params")
 				if aggregate {
 					req.Params("aggregate", "true")
+				}
+				if decode {
+					req.Params("decode", "true")
 				}
 				res := map[string]interface{}{}
 				if err := req.Do(&res); err != nil {
@@ -408,7 +412,8 @@ func (o *ops) params() {
 			return prettyPrint(res)
 		},
 	}
-	getParams.Flags().BoolVar(&aggregate, "aggregate", false, "Should machine return aggregated view")
+	getParams.Flags().BoolVar(&aggregate, "aggregate", false, "Should return aggregated view")
+	getParams.Flags().BoolVar(&decode, "decode", false, "Should return decoded secure params")
 	o.addCommand(getParams)
 	getParam := &cobra.Command{
 		Use:   "get [id] param [key]",
@@ -428,13 +433,17 @@ func (o *ops) params() {
 			if aggregate {
 				req.Params("aggregate", "true")
 			}
+			if decode {
+				req.Params("decode", "true")
+			}
 			if err := req.Do(&res); err != nil {
 				return generateError(err, "Failed to fetch params %v: %v", o.singleName, uuid)
 			}
 			return prettyPrint(res)
 		},
 	}
-	getParam.Flags().BoolVar(&aggregate, "aggregate", false, "Should machine return aggregated view")
+	getParam.Flags().BoolVar(&aggregate, "aggregate", false, "Should return aggregated view")
+	getParam.Flags().BoolVar(&decode, "decode", false, "Should return decoded secure params")
 	o.addCommand(getParam)
 	o.addCommand(&cobra.Command{
 		Use:   "add [id] param [key] to [json blob]",

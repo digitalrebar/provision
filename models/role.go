@@ -32,8 +32,11 @@ var (
 	}
 
 	addedActions = map[string]string{
-		"users": "token, password",
-		"jobs":  "log",
+		"users":    "token, password",
+		"jobs":     "log",
+		"machines": "getSecure, updateSecure",
+		"plugins":  "getSecure, updateSecure",
+		"profiles": "getSecure, updateSecure",
 	}
 
 	overriddenActions = map[string]string{
