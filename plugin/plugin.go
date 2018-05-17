@@ -22,33 +22,46 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// PluginStop defines the Stop routine used to inform a plugin
+// that it should stop.
 type PluginStop interface {
 	Stop(logger.Logger)
 }
 
+// PluginConfig defines the Config routine used to configure a
+// specific instance of a plugin.
 type PluginConfig interface {
 	Config(logger.Logger, *api.Client, map[string]interface{}) *models.Error
 }
 
+// PluginPublisher defines the Publish routine used to send events
+// to a plugin.
 type PluginPublisher interface {
 	Publish(logger.Logger, *models.Event) *models.Error
 }
 
+// PluginActor defines the Action routine used to invoke actions
+// by the plugin.
 type PluginActor interface {
 	Action(logger.Logger, *models.Action) (interface{}, *models.Error)
 }
 
+// PluginValidator defines the Validate routine used to ensure that
+// the environment is valid around the define timeframe.
 type PluginValidator interface {
 	Validate(logger.Logger, *api.Client) (interface{}, *models.Error)
 }
 
+// PluginUnpacker defines the Unpack routine used to unpack embedded
+// assets to the specified path.
 type PluginUnpacker interface {
 	Unpack(logger.Logger, string) error
 }
 
 var (
 	thelog logger.Logger
-	App    = &cobra.Command{
+	// App is the global cobra command structure.
+	App = &cobra.Command{
 		Use:   "replaceme",
 		Short: "Replace ME!",
 	}
@@ -57,6 +70,7 @@ var (
 	session *api.Client
 )
 
+// Publish allows the plugin to generate events back to DRP.
 func Publish(t, a, k string, o interface{}) {
 	if client == nil {
 		return
@@ -68,6 +82,7 @@ func Publish(t, a, k string, o interface{}) {
 	}
 }
 
+// Leaving allows the plugin to inform DRP that it is about to exit.
 func Leaving(e *models.Error) {
 	if client == nil {
 		return
@@ -78,6 +93,8 @@ func Leaving(e *models.Error) {
 	}
 }
 
+// InitApp initializes the plugin system and makes the base actions
+// available in cobra CLI.
 func InitApp(use, short, version string, def *models.PluginProvider, pc PluginConfig) {
 	App.Use = use
 	App.Short = short
@@ -134,12 +151,12 @@ func InitApp(use, short, version string, def *models.PluginProvider, pc PluginCo
 			} else {
 				theDef = def
 			}
-			if buf, err := json.MarshalIndent(theDef, "", "  "); err == nil {
+			buf, err := json.MarshalIndent(theDef, "", "  ")
+			if err == nil {
 				fmt.Println(string(buf))
 				return nil
-			} else {
-				return err
 			}
+			return err
 		},
 	})
 	App.AddCommand(&cobra.Command{
@@ -154,7 +171,7 @@ func InitApp(use, short, version string, def *models.PluginProvider, pc PluginCo
 			return nil
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return Run(args[0], args[1], pc)
+			return run(args[0], args[1], pc)
 		},
 	})
 	App.AddCommand(&cobra.Command{
@@ -179,7 +196,8 @@ func InitApp(use, short, version string, def *models.PluginProvider, pc PluginCo
 	})
 }
 
-func Run(toPath, fromPath string, pc PluginConfig) error {
+// run implements the listen part of the CLI.
+func run(toPath, fromPath string, pc PluginConfig) error {
 	// Get HTTP2 client on our socket.
 	client = &http.Client{
 		Transport: &http.Transport{
@@ -243,21 +261,21 @@ func stopHandler(w http.ResponseWriter, r *http.Request, ps PluginStop) {
 }
 
 func buildSession() (*api.Client, error) {
-	default_endpoint := "https://127.0.0.1:8092"
+	defaultEndpoint := "https://127.0.0.1:8092"
 	if ep := os.Getenv("RS_ENDPOINT"); ep != "" {
-		default_endpoint = ep
+		defaultEndpoint = ep
 	}
-	default_token := ""
+	defaultToken := ""
 	if tk := os.Getenv("RS_TOKEN"); tk != "" {
-		default_token = tk
+		defaultToken = tk
 	}
 
 	var session *api.Client
 	var err2 error
-	if default_token != "" {
-		session, err2 = api.TokenSession(default_endpoint, default_token)
+	if defaultToken != "" {
+		session, err2 = api.TokenSession(defaultEndpoint, defaultToken)
 	} else {
-		err2 = fmt.Errorf("Must have a token specified\n")
+		err2 = fmt.Errorf("Must have a token specified")
 	}
 
 	return session, err2

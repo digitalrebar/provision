@@ -16,6 +16,8 @@ import (
 	"github.com/digitalrebar/provision/models"
 )
 
+// JsonResponse returns a JSON object on the http writer.
+// Setting the code and encoding the provided object.
 func JsonResponse(w http.ResponseWriter, code int, obj interface{}) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
@@ -23,6 +25,8 @@ func JsonResponse(w http.ResponseWriter, code int, obj interface{}) error {
 	return enc.Encode(obj)
 }
 
+// TestContentType tests to ensure that requested content type is
+// in the header.
 func TestContentType(r *http.Request, ct string) (string, bool) {
 	rct := r.Header.Get("Content-Type")
 	return rct, strings.Contains(
@@ -30,6 +34,9 @@ func TestContentType(r *http.Request, ct string) (string, bool) {
 		strings.ToUpper(ct))
 }
 
+// AssureContentType returns true if the requested content-type is
+// present in the request header and returns a JSON encoded models.Error
+// on the http stream and false value if it is not.
 func AssureContentType(w http.ResponseWriter, r *http.Request, ct string) bool {
 	rct, ok := TestContentType(r, ct)
 	if ok {
@@ -41,6 +48,9 @@ func AssureContentType(w http.ResponseWriter, r *http.Request, ct string) bool {
 	return false
 }
 
+// AssureDecode returns true if can successfully decode the incoming JSON
+// object into the provided interface.  It will return false and generate
+// a JSON encoded error message upon failure.
 func AssureDecode(w http.ResponseWriter, r *http.Request, val interface{}) bool {
 	if !AssureContentType(w, r, "application/json") {
 		return false
@@ -60,6 +70,8 @@ func AssureDecode(w http.ResponseWriter, r *http.Request, val interface{}) bool 
 	return false
 }
 
+// Post provides a path for the Plugin to send messages to
+// DRP over the Plugin Server RestFUL API.
 func Post(client *http.Client, path string, indata interface{}) ([]byte, error) {
 	data, err := json.Marshal(indata)
 	if err != nil {
@@ -88,16 +100,21 @@ func Post(client *http.Client, path string, indata interface{}) ([]byte, error) 
 	return b, nil
 }
 
+// ResponseWriter wraps a normal http.ResponseWriter with
+// a logger and a status value.
 type ResponseWriter struct {
 	http.ResponseWriter
 	logger.Logger
 	status int
 }
 
+// Status returns the current status ofthe ResponseWriter.
 func (rw *ResponseWriter) Status() int {
 	return rw.status
 }
 
+// Write sends the specified buf after setting StatusOK
+// if no other status has been written.
 func (rw *ResponseWriter) Write(buf []byte) (int, error) {
 	if rw.status == 0 {
 		rw.WriteHeader(http.StatusOK)
@@ -105,6 +122,8 @@ func (rw *ResponseWriter) Write(buf []byte) (int, error) {
 	return rw.ResponseWriter.Write(buf)
 }
 
+// WriteHeader takes the status code and writes the header
+// out the http stream after recording the status.
 func (rw *ResponseWriter) WriteHeader(s int) {
 	rw.status = s
 	rw.ResponseWriter.WriteHeader(s)
@@ -163,6 +182,8 @@ func logWrap(bl logger.Logger, hf http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
+// Mux provides a logger wrapper http.ServeMux
+// to provide integration with the logger system.
 type Mux struct {
 	logger.Logger
 	*http.ServeMux
@@ -177,6 +198,7 @@ func nf(w http.ResponseWriter, r *http.Request) {
 	JsonResponse(w, res.Code, res)
 }
 
+// Handle registers a handler at the path on the provided Mux.
 func (m *Mux) Handle(path string, h http.HandlerFunc) {
 	vh := func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != "POST" {
@@ -188,6 +210,7 @@ func (m *Mux) Handle(path string, h http.HandlerFunc) {
 	m.ServeMux.Handle(path, logWrap(m, vh))
 }
 
+// New creates a new Mux structure with the provided logger.
 func New(bl logger.Logger) *Mux {
 	res := &Mux{
 		Logger:   bl,
