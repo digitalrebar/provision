@@ -26,7 +26,7 @@ type Param struct {
 	// required: true
 	Secure bool
 	// Schema must be a valid JSONSchema as of draft v4.
-	//1
+	//
 	// required: true
 	Schema interface{}
 }

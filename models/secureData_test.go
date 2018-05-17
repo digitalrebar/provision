@@ -26,13 +26,13 @@ func TestSecureData(t *testing.T) {
 	}
 	payload := []byte("Hello, World")
 	msg := &SecureData{}
-	if err := msg.Seal(*ourPublicKey, payload); err != nil {
+	if err := msg.Seal(ourPublicKey, payload); err != nil {
 		t.Errorf("%v", err)
 		return
 	} else {
 		t.Logf("Sealed message `Hello, World`")
 	}
-	out, err := msg.Open(*ourPrivateKey)
+	out, err := msg.Open(ourPrivateKey)
 	if err != nil {
 		t.Errorf("%v", err)
 		return
@@ -44,8 +44,27 @@ func TestSecureData(t *testing.T) {
 	} else {
 		t.Logf("Sealed message intact")
 	}
+	mMsg := &SecureData{}
+	if err := mMsg.Marshal(ourPublicKey[:], string(payload)); err != nil {
+		t.Errorf("%v", err)
+		return
+	} else {
+		t.Logf("Marshalled message `Hello, World`")
+	}
+	outPayload := ""
+	if err := mMsg.Unmarshal(ourPrivateKey[:], &outPayload); err != nil {
+		t.Errorf("%v", err)
+		return
+	} else {
+		t.Logf("Unmarshalled message")
+	}
+	if string(payload) != outPayload {
+		t.Errorf("Expected %s, got %s", string(payload), outPayload)
+	} else {
+		t.Logf("Marshalled message intact")
+	}
 	msg.Nonce[0] = msg.Nonce[0] ^ byte(0)
-	_, err = msg.Open(*ourPrivateKey)
+	_, err = msg.Open(ourPrivateKey)
 	if err != Corrupt {
 		t.Errorf("corruptViaNonce: Expected error %v, not %v", Corrupt, err)
 	} else {
@@ -53,7 +72,7 @@ func TestSecureData(t *testing.T) {
 	}
 	msg.Nonce[0] = msg.Nonce[0] ^ byte(0)
 	msg.Key[0] = msg.Key[0] ^ byte(0)
-	_, err = msg.Open(*ourPrivateKey)
+	_, err = msg.Open(ourPrivateKey)
 	if err != Corrupt {
 		t.Errorf("corruptViaKey: Expected error %v, not %v", Corrupt, err)
 	} else {
@@ -61,7 +80,7 @@ func TestSecureData(t *testing.T) {
 	}
 	msg.Key[0] = msg.Key[0] ^ byte(0)
 	msg.Payload[0] = msg.Payload[0] ^ byte(0)
-	_, err = msg.Open(*ourPrivateKey)
+	_, err = msg.Open(ourPrivateKey)
 	if err != Corrupt {
 		t.Errorf("corruptViaPayload: Expected error %v, not %v", Corrupt, err)
 	} else {
@@ -69,7 +88,7 @@ func TestSecureData(t *testing.T) {
 	}
 	msg.Payload[0] = msg.Payload[0] ^ byte(0)
 	msg.Payload = msg.Payload[1:]
-	_, err = msg.Open(*ourPrivateKey)
+	_, err = msg.Open(ourPrivateKey)
 	if err != Corrupt {
 		t.Errorf("corruptViaPayload: Expected error %v, not %v", Corrupt, err)
 	} else {
@@ -77,14 +96,14 @@ func TestSecureData(t *testing.T) {
 	}
 	var nonce []byte
 	nonce, msg.Nonce = msg.Nonce, msg.Nonce[1:]
-	_, err = msg.Open(*ourPrivateKey)
+	_, err = msg.Open(ourPrivateKey)
 	if err != BadNonce {
 		t.Errorf("badNonce: Expected error %v, not %v", BadNonce, err)
 	} else {
 		t.Logf("badNonce: Got expected error %v", err)
 	}
 	msg.Nonce, msg.Key = nonce, msg.Key[1:]
-	_, err = msg.Open(*ourPrivateKey)
+	_, err = msg.Open(ourPrivateKey)
 	if err != BadKey {
 		t.Errorf("badKey: Expected error %v, not %v", BadKey, err)
 	} else {

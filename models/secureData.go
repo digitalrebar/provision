@@ -2,6 +2,7 @@ package models
 
 import (
 	"crypto/rand"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
@@ -37,13 +38,16 @@ func (s *SecureData) Validate() error {
 	if len(s.Nonce) != 24 {
 		return BadNonce
 	}
+	if len(s.Payload) < box.Overhead {
+		return Corrupt
+	}
 	return nil
 }
 
 // Seal takes curve25519 public key advertised by where the payload
 // should be stored, and fills in the SecureData with the data
 // required for the Open operation to succeed.
-func (s *SecureData) Seal(peerPublicKey [32]byte, data []byte) error {
+func (s *SecureData) Seal(peerPublicKey *[32]byte, data []byte) error {
 	ourPublicKey, ourPrivateKey, err := box.GenerateKey(rand.Reader)
 	if err != nil {
 		return fmt.Errorf("Error generating ephemeral local keys: %v", err)
@@ -55,12 +59,25 @@ func (s *SecureData) Seal(peerPublicKey [32]byte, data []byte) error {
 		return fmt.Errorf("Error generating nonce: %v", err)
 	}
 	s.Nonce = nonce[:]
-	box.Seal(s.Payload, data, &nonce, &peerPublicKey, ourPrivateKey)
+	box.Seal(s.Payload, data, &nonce, peerPublicKey, ourPrivateKey)
 	return nil
 }
 
+func (s *SecureData) Marshal(peerPublicKey []byte, data interface{}) error {
+	if len(peerPublicKey) != 32 {
+		return BadKey
+	}
+	buf, err := json.Marshal(data)
+	if err != nil {
+		return err
+	}
+	ppk := [32]byte{}
+	copy(ppk[:], peerPublicKey)
+	return s.Seal(&ppk, buf)
+}
+
 // Open opens a sealed SecureData item.
-func (s *SecureData) Open(targetPrivateKey [32]byte) ([]byte, error) {
+func (s *SecureData) Open(targetPrivateKey *[32]byte) ([]byte, error) {
 	err := s.Validate()
 	if err != nil {
 		return nil, err
@@ -70,9 +87,22 @@ func (s *SecureData) Open(targetPrivateKey [32]byte) ([]byte, error) {
 	nonce := [24]byte{}
 	copy(nonce[:], s.Nonce)
 	res := []byte{}
-	_, opened := box.Open(res, s.Payload, &nonce, &peerPublicKey, &targetPrivateKey)
+	_, opened := box.Open(res, s.Payload, &nonce, &peerPublicKey, targetPrivateKey)
 	if !opened {
 		return nil, Corrupt
 	}
 	return res, nil
+}
+
+func (s *SecureData) Unmarshal(targetPrivateKey []byte, res interface{}) error {
+	if len(targetPrivateKey) != 32 {
+		return BadKey
+	}
+	tpk := [32]byte{}
+	copy(tpk[:], targetPrivateKey)
+	buf, err := s.Open(&tpk)
+	if err != nil {
+		return err
+	}
+	return json.Unmarshal(buf, res)
 }
