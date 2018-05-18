@@ -25,6 +25,25 @@ type ops struct {
 	actionName    string
 }
 
+func maybeEncryptParam(param string,
+	prefix, key string,
+	val interface{}) (interface{}, error) {
+	p := &models.Param{}
+	if err := session.FillModel(p, param); err != nil {
+		return val, nil
+	}
+	if !p.Secure {
+		return val, nil
+	}
+	k := []byte{}
+	if err := session.Req().UrlFor(prefix, key, "pubkey").Do(&k); err != nil {
+		return nil, err
+	}
+
+	sv := &models.SecureData{}
+	return sv, sv.Marshal(k, val)
+}
+
 func (o *ops) refOrFill(key string) (data models.Model, err error) {
 	data = o.example()
 
@@ -460,8 +479,13 @@ func (o *ops) params() {
 			key := args[2]
 			newValue := args[4]
 			var value interface{}
-			if err := into(newValue, &value); err != nil {
+			err := into(newValue, &value)
+			if err != nil {
 				return fmt.Errorf("Unable to unmarshal input stream: %v\n", err)
+			}
+			value, err = maybeEncryptParam(key, o.name, uuid, value)
+			if err != nil {
+				return generateError(err, "Cannot set secure parameter %s", key)
 			}
 
 			res := map[string]interface{}{}
@@ -514,8 +538,13 @@ func (o *ops) params() {
 			key := args[2]
 			newValue := args[4]
 			var value interface{}
-			if err := into(newValue, &value); err != nil {
+			err := into(newValue, &value)
+			if err != nil {
 				return fmt.Errorf("Unable to unmarshal input stream: %v\n", err)
+			}
+			value, err = maybeEncryptParam(key, o.name, uuid, value)
+			if err != nil {
+				return generateError(err, "Cannot set secure parameter %s", key)
 			}
 			var params interface{}
 			if ref == "" {
