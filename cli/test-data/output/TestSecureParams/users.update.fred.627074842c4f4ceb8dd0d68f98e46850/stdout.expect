@@ -1,0 +1,7 @@
+RE:
+  "Available": true,
+  "Name": "fred",
+  "Roles": \[
+    "secretSetter"
+  \],
+  "Validated": true

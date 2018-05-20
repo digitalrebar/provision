@@ -8,10 +8,11 @@ import (
 	"golang.org/x/crypto/nacl/box"
 )
 
-func mustKey(t *testing.T) (privkey, pubkey *[32]byte, valid bool) {
+func mustKey(t *testing.T) (pubkey, privkey *[32]byte, valid bool) {
 	t.Helper()
 	var err error
-	privkey, pubkey, err = box.GenerateKey(rand.Reader)
+	valid = true
+	pubkey, privkey, err = box.GenerateKey(rand.Reader)
 	if err != nil {
 		t.Errorf("Error generating keys: %v", err)
 		valid = false
@@ -20,7 +21,7 @@ func mustKey(t *testing.T) (privkey, pubkey *[32]byte, valid bool) {
 }
 
 func TestSecureData(t *testing.T) {
-	ourPrivateKey, ourPublicKey, valid := mustKey(t)
+	ourPublicKey, ourPrivateKey, valid := mustKey(t)
 	if !valid {
 		return
 	}
@@ -63,30 +64,31 @@ func TestSecureData(t *testing.T) {
 	} else {
 		t.Logf("Marshalled message intact")
 	}
-	msg.Nonce[0] = msg.Nonce[0] ^ byte(0)
-	_, err = msg.Open(ourPrivateKey)
+	decrypted := []byte{}
+	msg.Nonce[0] = msg.Nonce[0] ^ byte(0xff)
+	decrypted, err = msg.Open(ourPrivateKey)
 	if err != Corrupt {
-		t.Errorf("corruptViaNonce: Expected error %v, not %v", Corrupt, err)
+		t.Errorf("corruptViaNonce: Expected error %v, not %v(%v)", Corrupt, err, string(decrypted))
 	} else {
 		t.Logf("corruptViaNonce: Got expected error %v", err)
 	}
-	msg.Nonce[0] = msg.Nonce[0] ^ byte(0)
-	msg.Key[0] = msg.Key[0] ^ byte(0)
-	_, err = msg.Open(ourPrivateKey)
+	msg.Nonce[0] = msg.Nonce[0] ^ byte(0xff)
+	msg.Key[0] = msg.Key[0] ^ byte(0xff)
+	decrypted, err = msg.Open(ourPrivateKey)
 	if err != Corrupt {
-		t.Errorf("corruptViaKey: Expected error %v, not %v", Corrupt, err)
+		t.Errorf("corruptViaKey: Expected error %v, not %v(%v)", Corrupt, err, string(decrypted))
 	} else {
 		t.Logf("corruptViaKey: Got expected error %v", err)
 	}
-	msg.Key[0] = msg.Key[0] ^ byte(0)
-	msg.Payload[0] = msg.Payload[0] ^ byte(0)
-	_, err = msg.Open(ourPrivateKey)
+	msg.Key[0] = msg.Key[0] ^ byte(0xff)
+	msg.Payload[0] = msg.Payload[0] ^ byte(0xff)
+	decrypted, err = msg.Open(ourPrivateKey)
 	if err != Corrupt {
-		t.Errorf("corruptViaPayload: Expected error %v, not %v", Corrupt, err)
+		t.Errorf("corruptViaPayload: Expected error %v, not %v(%v)", Corrupt, err, string(decrypted))
 	} else {
 		t.Logf("corruptViaPayload: Got expected error %v", err)
 	}
-	msg.Payload[0] = msg.Payload[0] ^ byte(0)
+	msg.Payload[0] = msg.Payload[0] ^ byte(0xff)
 	msg.Payload = msg.Payload[1:]
 	_, err = msg.Open(ourPrivateKey)
 	if err != Corrupt {

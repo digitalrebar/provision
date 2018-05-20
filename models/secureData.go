@@ -59,7 +59,7 @@ func (s *SecureData) Seal(peerPublicKey *[32]byte, data []byte) error {
 		return fmt.Errorf("Error generating nonce: %v", err)
 	}
 	s.Nonce = nonce[:]
-	box.Seal(s.Payload, data, &nonce, peerPublicKey, ourPrivateKey)
+	s.Payload = box.Seal(nil, data, &nonce, peerPublicKey, ourPrivateKey)
 	return nil
 }
 
@@ -83,11 +83,10 @@ func (s *SecureData) Open(targetPrivateKey *[32]byte) ([]byte, error) {
 		return nil, err
 	}
 	peerPublicKey := [32]byte{}
-	copy(peerPublicKey[:], s.Key)
+	copy(peerPublicKey[:], s.Key[:])
 	nonce := [24]byte{}
-	copy(nonce[:], s.Nonce)
-	res := []byte{}
-	_, opened := box.Open(res, s.Payload, &nonce, &peerPublicKey, targetPrivateKey)
+	copy(nonce[:], s.Nonce[:])
+	res, opened := box.Open(nil, s.Payload, &nonce, &peerPublicKey, targetPrivateKey)
 	if !opened {
 		return nil, Corrupt
 	}

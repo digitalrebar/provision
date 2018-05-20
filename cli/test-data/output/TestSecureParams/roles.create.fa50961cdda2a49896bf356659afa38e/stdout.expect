@@ -1,0 +1,21 @@
+{
+  "Available": true,
+  "Claims": [
+    {
+      "action": "get",
+      "scope": "params",
+      "specific": "*"
+    },
+    {
+      "action": "get,getSecure",
+      "scope": "machines,profiles,plugins",
+      "specific": "*"
+    }
+  ],
+  "Description": "",
+  "Errors": [],
+  "Meta": {},
+  "Name": "secretGetter",
+  "ReadOnly": false,
+  "Validated": true
+}
