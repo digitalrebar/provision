@@ -1,0 +1,15 @@
+{
+  "Counts": {
+    "profiles": 1
+  },
+  "Warnings": [],
+  "meta": {
+    "Description": "License Data for RackN",
+    "Name": "rackn-license",
+    "Overwritable": false,
+    "Source": "RackN",
+    "Type": "dynamic",
+    "Version": "v0.0.1-tip-victor-dev-24-3a9ac1523e674e05ee91d1184feb007fba7cbe96",
+    "Writable": false
+  }
+}
