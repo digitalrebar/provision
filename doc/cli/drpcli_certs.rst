@@ -1,25 +1,19 @@
-drpcli profiles params
-======================
+drpcli certs
+============
 
-Gets/sets all parameters for the profile
+Access CLI commands relating to certs
 
 Synopsis
 --------
 
-A helper function to return all or set all the parameters on the profile
-
-::
-
-    drpcli profiles params [id] [json] [flags]
+Access CLI commands relating to certs
 
 Options
 -------
 
 ::
 
-          --aggregate   Should return aggregated view
-          --decode      Should return decoded secure params
-      -h, --help        help for params
+      -h, --help   help for certs
 
 Options inherited from parent commands
 --------------------------------------
@@ -40,5 +34,7 @@ Options inherited from parent commands
 SEE ALSO
 --------
 
--  `drpcli profiles <drpcli_profiles.html>`__ - Access CLI commands
-   relating to profiles
+-  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
+   DigitalRebar Provision API
+-  `drpcli certs csr <drpcli_certs_csr.html>`__ - Create a CSR and
+   private key

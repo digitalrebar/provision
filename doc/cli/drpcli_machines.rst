@@ -50,6 +50,10 @@ SEE ALSO
    machine's bootenv
 -  `drpcli machines create <drpcli_machines_create.html>`__ - Create a
    new machine with the passed-in JSON or string key
+-  `drpcli machines currentlog <drpcli_machines_currentlog.html>`__ -
+   Get the log for the most recent job run on the machine
+-  `drpcli machines deletejobs <drpcli_machines_deletejobs.html>`__ -
+   Delete all jobs associated with machine
 -  `drpcli machines destroy <drpcli_machines_destroy.html>`__ - Destroy
    machine by id
 -  `drpcli machines exists <drpcli_machines_exists.html>`__ - See if a

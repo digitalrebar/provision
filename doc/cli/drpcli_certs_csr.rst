@@ -1,25 +1,24 @@
-drpcli profiles params
-======================
+drpcli certs csr
+================
 
-Gets/sets all parameters for the profile
+Create a CSR and private key
 
 Synopsis
 --------
 
-A helper function to return all or set all the parameters on the profile
+You must pass the root CA name, the common name, and may add additional
+hosts
 
 ::
 
-    drpcli profiles params [id] [json] [flags]
+    drpcli certs csr [root] [cn] [hosts...] [flags]
 
 Options
 -------
 
 ::
 
-          --aggregate   Should return aggregated view
-          --decode      Should return decoded secure params
-      -h, --help        help for params
+      -h, --help   help for csr
 
 Options inherited from parent commands
 --------------------------------------
@@ -40,5 +39,5 @@ Options inherited from parent commands
 SEE ALSO
 --------
 
--  `drpcli profiles <drpcli_profiles.html>`__ - Access CLI commands
-   relating to profiles
+-  `drpcli certs <drpcli_certs.html>`__ - Access CLI commands relating
+   to certs

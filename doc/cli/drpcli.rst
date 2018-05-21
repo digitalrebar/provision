@@ -33,6 +33,8 @@ SEE ALSO
    be installed)
 -  `drpcli bootenvs <drpcli_bootenvs.html>`__ - Access CLI commands
    relating to bootenvs
+-  `drpcli certs <drpcli_certs.html>`__ - Access CLI commands relating
+   to certs
 -  `drpcli contents <drpcli_contents.html>`__ - Access CLI commands
    relating to content
 -  `drpcli events <drpcli_events.html>`__ - DigitalRebar Provision Event

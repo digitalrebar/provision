@@ -1,25 +1,23 @@
-drpcli profiles params
-======================
+drpcli machines deletejobs
+==========================
 
-Gets/sets all parameters for the profile
+Delete all jobs associated with machine
 
 Synopsis
 --------
 
-A helper function to return all or set all the parameters on the profile
+Delete all jobs associated with machine
 
 ::
 
-    drpcli profiles params [id] [json] [flags]
+    drpcli machines deletejobs [id] [flags]
 
 Options
 -------
 
 ::
 
-          --aggregate   Should return aggregated view
-          --decode      Should return decoded secure params
-      -h, --help        help for params
+      -h, --help   help for deletejobs
 
 Options inherited from parent commands
 --------------------------------------
@@ -40,5 +38,5 @@ Options inherited from parent commands
 SEE ALSO
 --------
 
--  `drpcli profiles <drpcli_profiles.html>`__ - Access CLI commands
-   relating to profiles
+-  `drpcli machines <drpcli_machines.html>`__ - Access CLI commands
+   relating to machines
