@@ -54,6 +54,7 @@ func TestInfo(t *testing.T) {
 				"http-range-header",
 				"roles",
 				"tenants",
+				"secure-params",
 			},
 			License: models.LicenseBundle{Licenses: []models.License{}},
 			Scopes: map[string]map[string]struct{}{

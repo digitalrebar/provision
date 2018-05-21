@@ -63,7 +63,8 @@ RE:
     "default-workflow",
     "http-range-header",
     "roles",
-    "tenants"
+    "tenants",
+    "secure-params"
   \],
   "file_port": 10002,
   "id": "Fred",
