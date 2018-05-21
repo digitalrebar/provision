@@ -17,7 +17,8 @@ Options
 
 ::
 
-          --aggregate   Should machine return aggregated view
+          --aggregate   Should return aggregated view
+          --decode      Should return decoded secure params
       -h, --help        help for params
 
 Options inherited from parent commands
