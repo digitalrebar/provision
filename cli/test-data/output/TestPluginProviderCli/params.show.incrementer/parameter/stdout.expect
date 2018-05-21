@@ -9,5 +9,6 @@
   "Schema": {
     "type": "string"
   },
+  "Secure": false,
   "Validated": true
 }

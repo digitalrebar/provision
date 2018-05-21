@@ -77,6 +77,7 @@ func (i *Info) Fill() {
 			"http-range-header",
 			"roles",
 			"tenants",
+			"secure-params",
 		}
 	}
 }

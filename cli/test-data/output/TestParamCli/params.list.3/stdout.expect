@@ -11,6 +11,7 @@
       "default": "goodDefault",
       "type": "string"
     },
+    "Secure": false,
     "Validated": true
   },
   {
@@ -24,6 +25,7 @@
     "Schema": {
       "type": "string"
     },
+    "Secure": false,
     "Validated": true
   },
   {
@@ -37,6 +39,7 @@
     "Schema": {
       "type": "integer"
     },
+    "Secure": false,
     "Validated": true
   },
   {
@@ -50,6 +53,7 @@
     "Schema": {
       "type": "integer"
     },
+    "Secure": false,
     "Validated": true
   }
 ]

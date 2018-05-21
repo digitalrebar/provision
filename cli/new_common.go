@@ -25,6 +25,25 @@ type ops struct {
 	actionName    string
 }
 
+func maybeEncryptParam(param string,
+	prefix, key string,
+	val interface{}) (interface{}, error) {
+	p := &models.Param{}
+	if err := session.FillModel(p, param); err != nil {
+		return val, nil
+	}
+	if !p.Secure {
+		return val, nil
+	}
+	k := []byte{}
+	if err := session.Req().UrlFor(prefix, key, "pubkey").Do(&k); err != nil {
+		return nil, err
+	}
+
+	sv := &models.SecureData{}
+	return sv, sv.Marshal(k, val)
+}
+
 func (o *ops) refOrFill(key string) (data models.Model, err error) {
 	data = o.example()
 
@@ -364,6 +383,7 @@ Returns the following strings:
 
 func (o *ops) params() {
 	aggregate := false
+	decode := false
 	getParams := &cobra.Command{
 		Use:   "params [id] [json]",
 		Short: fmt.Sprintf("Gets/sets all parameters for the %s", o.singleName),
@@ -380,6 +400,9 @@ func (o *ops) params() {
 				req := session.Req().UrlFor(o.name, args[0], "params")
 				if aggregate {
 					req.Params("aggregate", "true")
+				}
+				if decode {
+					req.Params("decode", "true")
 				}
 				res := map[string]interface{}{}
 				if err := req.Do(&res); err != nil {
@@ -408,7 +431,8 @@ func (o *ops) params() {
 			return prettyPrint(res)
 		},
 	}
-	getParams.Flags().BoolVar(&aggregate, "aggregate", false, "Should machine return aggregated view")
+	getParams.Flags().BoolVar(&aggregate, "aggregate", false, "Should return aggregated view")
+	getParams.Flags().BoolVar(&decode, "decode", false, "Should return decoded secure params")
 	o.addCommand(getParams)
 	getParam := &cobra.Command{
 		Use:   "get [id] param [key]",
@@ -428,13 +452,17 @@ func (o *ops) params() {
 			if aggregate {
 				req.Params("aggregate", "true")
 			}
+			if decode {
+				req.Params("decode", "true")
+			}
 			if err := req.Do(&res); err != nil {
 				return generateError(err, "Failed to fetch params %v: %v", o.singleName, uuid)
 			}
 			return prettyPrint(res)
 		},
 	}
-	getParam.Flags().BoolVar(&aggregate, "aggregate", false, "Should machine return aggregated view")
+	getParam.Flags().BoolVar(&aggregate, "aggregate", false, "Should return aggregated view")
+	getParam.Flags().BoolVar(&decode, "decode", false, "Should return decoded secure params")
 	o.addCommand(getParam)
 	o.addCommand(&cobra.Command{
 		Use:   "add [id] param [key] to [json blob]",
@@ -451,8 +479,13 @@ func (o *ops) params() {
 			key := args[2]
 			newValue := args[4]
 			var value interface{}
-			if err := into(newValue, &value); err != nil {
+			err := into(newValue, &value)
+			if err != nil {
 				return fmt.Errorf("Unable to unmarshal input stream: %v\n", err)
+			}
+			value, err = maybeEncryptParam(key, o.name, uuid, value)
+			if err != nil {
+				return generateError(err, "Cannot set secure parameter %s", key)
 			}
 
 			res := map[string]interface{}{}
@@ -505,8 +538,13 @@ func (o *ops) params() {
 			key := args[2]
 			newValue := args[4]
 			var value interface{}
-			if err := into(newValue, &value); err != nil {
+			err := into(newValue, &value)
+			if err != nil {
 				return fmt.Errorf("Unable to unmarshal input stream: %v\n", err)
+			}
+			value, err = maybeEncryptParam(key, o.name, uuid, value)
+			if err != nil {
+				return generateError(err, "Cannot set secure parameter %s", key)
 			}
 			var params interface{}
 			if ref == "" {

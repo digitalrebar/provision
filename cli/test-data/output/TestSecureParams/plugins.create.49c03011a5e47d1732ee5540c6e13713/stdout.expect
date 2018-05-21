@@ -1,0 +1,12 @@
+{
+  "Available": true,
+  "Description": "",
+  "Errors": [],
+  "Meta": {},
+  "Name": "bob",
+  "Params": {},
+  "PluginErrors": [],
+  "Provider": "incrementer",
+  "ReadOnly": false,
+  "Validated": true
+}

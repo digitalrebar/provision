@@ -1,0 +1,8 @@
+RE:
+  "Available": true,
+  "Name": "fred2",
+  "ReadOnly": false,
+  "Roles": \[
+    "secretGetter"
+  \],
+  "Validated": true

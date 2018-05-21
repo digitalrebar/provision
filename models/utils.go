@@ -220,3 +220,12 @@ func GenPatch(source, target interface{}, paranoid bool) (jsonpatch2.Patch, erro
 func DecodeYaml(buf []byte, ref interface{}) error {
 	return yaml.Unmarshal(buf, ref)
 }
+
+// Remarshal remarshals src onto dest.
+func Remarshal(src, dest interface{}) error {
+	buf, err := json.Marshal(src)
+	if err == nil {
+		err = json.Unmarshal(buf, dest)
+	}
+	return err
+}

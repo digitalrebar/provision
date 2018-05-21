@@ -192,5 +192,6 @@
     },
     "type": "array"
   },
+  "Secure": false,
   "Validated": true
 }

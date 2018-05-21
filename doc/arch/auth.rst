@@ -100,6 +100,10 @@ of satisfying every authentication request `b` is.
 Role
 ----
 
+Roles are licensed features -- to perform any interaction with a Role
+besides listing them and getting them, you must have a license with
+the **rbac** feature enabled.
+
 Roles are named lists of Claims that can be assigned to a User.  Roles
 have the following fields:
 
@@ -121,6 +125,10 @@ API.
 
 Tenants
 -------
+
+Tenants are licensed features -- to perform any interaction with a
+Tenant besides listing them and getting them, you must have a license
+with the **rbac** feature enabled.
 
 Tenants control what objects a user can see via the dr-provision API.
 Tenants have the following fields:

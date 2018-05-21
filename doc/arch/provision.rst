@@ -224,6 +224,79 @@ the following fields:
   provide a default value for the Param using the `default` stanza in
   the JSON schema.
 
+- **Secure**: Data managed in this param must be handled in a secure
+  fashion.  It will never be passed in cleartext over the API without
+  proper Role based authorization, will be stored in an encrypted
+  wrapper, and will only be made available in an unencrypted form for
+  schema validation on the server, performing plugin actions, and
+  running Tasks on a machine.
+
+Secure Params
+~~~~~~~~~~~~~
+
+Secure param management is a licensed feature.  You must have a
+license with the **secure-params** feature enabled to be able to
+create and retrieve secure param values.  SecureData uses a simple
+encryption mechanism based on the NACL Box API (as implemented by
+libsodium, golang.org/x/crypto/nacl/box, tweetnacl-js, PyNaCl, and
+many others), using curve25519 and xsalsa20 for crypto, and poly1305
+for message verification.
+
+
+Secure params are handled by
+the API and stored on the backend using a SecureData struct, which has
+the following fields:
+
+- **Payload**: The encrypted payload.  When marshalled to JSON, this
+  should be converted to a base64 encoded string.
+
+- **Nonce**: 24 cryptographically random bytes.  When marshalled to
+  JSON, this should be converted into a base64 encoded string.
+
+- **Key**: a 32 byte curve25519 ephemeral public key.  When marshalled
+  to JSON, this should be converted to a base64 encoded string.
+
+When a Param has the Secure flag, the following additional steps must be
+taken to set and get values for this param on objects that hold params.
+
+Setting Secure Param Values
+===========================
+
+1. Get the peer public key for the object you want to set a secure param on
+   from its `pubkey` endpoint.  These endpoints are at
+   `/api/v3/<objectType>/<objectID>/pubkey` -- as an example, the
+   pubkey endpoint for the global profile is
+   `/api/v3/profiles/global/pubkey`.  Access to these API endpoints
+   requires an appropriate Claim with the **updateSecure** action.
+   These API endpoints return a JSON string containing the base64
+   encoding of an array containing 32 bytes.
+
+2. Generate local ephemeral curve25519 public and private keys using a
+   cryptographically secure random number source.
+
+3. Generate a 24 byte nonce using a cryptographically secure random
+   number source.
+
+4. Encrypt the JSON-marshalled param using the nonce, the peer public
+   key, and the ephemeral private key.
+
+5. Generate a SecureData struct with **Key** set to the ephemeral
+   public key, **Nonce** set to the generated nonce, and **Payload**
+   set to the encrypted data.
+
+6. Use the SecureData struct in place of the raw param value when
+   making API calls to add, set, or update params.
+
+Retrieving Decrypted Secure Data Values
+=======================================
+
+In order to retrieve decrypted secure data values, you must have an
+appropriate Claim with the **getSecure** action.  That will allow you
+to make GET requests to the params API endpoints for param-carrying
+objects with the `decode=true` query parameter.  That will cause the
+frontend to decrypt any encryped parameter values before returning
+from the API call.
+
 .. _rs_data_task:
 
 Task

@@ -3,8 +3,8 @@ RE:
   "License": {
     "Contact": "Unit Test",
     "ContactEmail": "support@rackn.com",
-    "ContactId": "2a44e807-fcca-472c-8832-e44d33f5c149",
-    "GenerationVersion": "",
+    "ContactId": "2a44e807-fcca-472c-8832-e44d33f5c140",
+    "GenerationVersion": "v0.0.1-tip-6-63616148be9e2feae0aa4006734e7375f80ee7ff",
     "Grantor": "RackN Inc",
     "GrantorEmail": "support@rackn.com",
     "Licenses": \[
@@ -12,20 +12,34 @@ RE:
         "Active": true,
         "Data": \[\],
         "Expired": false,
-        "HardExpireDate": "2032-01-01T00:00:00.892Z",
-        "LongLicense": "RackN Special Limited Use License",
+        "HardExpireDate": "2018-06-15T20:50:52.68Z",
+        "LongLicense": "RackN Internal Use License",
         "Name": "rbac",
-        "PurchaseDate": "2017-01-01T00:00:00.892Z",
-        "ShortLicense": "RackN_Trial",
-        "SoftExpireDate": "2032-01-01T00:00:00.892Z",
-        "StartDate": "2017-01-01T00:00:00.892Z",
+        "PurchaseDate": "2018-05-15T20:50:52.68Z",
+        "ShortLicense": "RackN_Internal",
+        "SoftExpireDate": "2018-06-05T20:50:52.68Z",
+        "StartDate": "2018-05-15T20:50:52.68Z",
+        "Version": "v2.*"
+      },
+      {
+        "Active": true,
+        "Data": \[\],
+        "Expired": false,
+        "HardExpireDate": "2018-06-20T21:20:20.601Z",
+        "LongLicense": "RackN Internal Use License",
+        "Name": "secure-params",
+        "PurchaseDate": "2018-05-20T21:20:20.601Z",
+        "ShortLicense": "RackN_Internal",
+        "SoftExpireDate": "2018-06-10T21:20:20.601Z",
+        "StartDate": "2018-05-20T21:20:20.601Z",
         "Version": "v2.*"
       }
     \],
-    "Owner": "Unit Test",
+    "Owner": "RackN Team",
     "OwnerEmail": "support@rackn.com",
-    "OwnerId": "unit"
+    "OwnerId": "rackn"
   },
+
   "address": "127.0.0.1",
   "api_port": 10001,
   "arch": "amd64",
@@ -49,7 +63,8 @@ RE:
     "default-workflow",
     "http-range-header",
     "roles",
-    "tenants"
+    "tenants",
+    "secure-params"
   \],
   "file_port": 10002,
   "id": "Fred",
@@ -121,8 +136,10 @@ RE:
       "create": {},
       "delete": {},
       "get": {},
+      "getSecure": {},
       "list": {},
-      "update": {}
+      "update": {},
+      "updateSecure": {}
     },
     "params": {
       "action": {},
@@ -148,8 +165,10 @@ RE:
       "create": {},
       "delete": {},
       "get": {},
+      "getSecure": {},
       "list": {},
-      "update": {}
+      "update": {},
+      "updateSecure": {}
     },
     "preferences": {
       "action": {},
@@ -166,8 +185,10 @@ RE:
       "create": {},
       "delete": {},
       "get": {},
+      "getSecure": {},
       "list": {},
-      "update": {}
+      "update": {},
+      "updateSecure": {}
     },
     "reservations": {
       "action": {},

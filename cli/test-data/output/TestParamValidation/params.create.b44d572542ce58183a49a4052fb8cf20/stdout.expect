@@ -10,5 +10,6 @@
     "default": "goodDefault",
     "type": "string"
   },
+  "Secure": false,
   "Validated": true
 }
