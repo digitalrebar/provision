@@ -30,6 +30,29 @@ Digital Rebar Provision will fail if it cannot attach to one of the required por
 
 See the port mapping list on start-up for a complete list.
 
+.. _rs_tftp_error
+
+TFTP Error 
+----------
+
+In the dr-provision logfiles you may occassionally see error messages relating to ``TFTP Aborted``.  These
+errors are (typically) benign and expected behavior.  The TFTP protocol does not specify a mechanism to 
+obtain the size of a file to transfer for calculating completed transfer; without first requesting the file.
+Digital Rebar Provision initiates the transfer request an then immediately aborts it.  This obtains the
+file size for the next transfer to validate the file was served correctly.  
+
+Simply ignore these errors.  If you receive these errors and you believe you should be provisioning correctly,
+check that you have correctly specified the default/unknown BootEnv, default Stage, and default Workflow 
+are set correctly. 
+
+error messages may appear similarly to: 
+
+  ::
+
+    May 24 13:48:22 ubuntu dr-provision[7092]: dr-provision2018/05/24 20:48:22.006224 [280:13]static [error]: /home/travis/gopath/src/github.com/digitalrebar/provision/midlayer/tftp.go:82
+    May 24 13:48:22 ubuntu dr-provision[7092]: [280:13]TFTP: lpxelinux.0: transfer error: sending block 0: code=0, error: TFTP Aborted
+
+
 .. _rs_gen_cert:
 
 Generate Certificate
