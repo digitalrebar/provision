@@ -9,8 +9,7 @@
 Upgrade
 ~~~~~~~
 
-While not glamorous, existing code can be overwritten by a new install and 
-restart.  That is about it.  Here are a few more details.
+While not glamorous, existing code can be overwritten by a new install and restart.  That is about it.  Here are a few more details.
 
 We recommend that you backup your existing install as a safey measure.
 
@@ -18,15 +17,12 @@ We recommend that you backup your existing install as a safey measure.
 Backup
 ======
 
-It's always a good policy to backup any important data, configuration, and 
-content information that may be related to an application before an upgrade.  
-We strongly encourage you to backup your content prior to doing any upgrade activity.
+It's always a good policy to backup any important data, configuration, and content information that may be related to an application before an upgrade.  We strongly encourage you to backup your content prior to doing any upgrade activity.
 
 Isolated Install
 ----------------
 
-For "isolated" modes (eg. originally installed with something like
-``install.sh | bash -s -- install --isolated``) , perform the following tasks:
+For "isolated" install modes (eg. ``install.sh | bash -s -- install --isolated``), perform the following tasks
 
 #. log in to your Provision server as the user you performed the original install as
 #. copy the drp-data directory to a backup location:
@@ -82,7 +78,7 @@ For isolated :ref:`rs_install`, update this way:
 
      # Remember to use --drp-version to set a version other than stable if desired
      # Curl/Bash from quickstart if desired, or this:
-     tools/install.sh upgrade --isolated 
+     tools/install.sh --isolated --upgrade install
 
 #. Restart *dr-provision*, as stated by the ``tools/install.sh`` output.
 
@@ -102,10 +98,10 @@ For non-isolated (aka "production mode") :ref:`rs_install`, update this way:
 
      service dr-provision stop
 
-#. Install new code - Use the same install technique as the first install, but change ``install`` to ``upgrade`` option.  :ref:`rs_install`
+#. Install new code - Use the same install technique as the first install, adding the ``--upgrade`` option.  :ref:`rs_install`
    ::
 
-     tools/install.sh upgrade --isolated
+     tools/install.sh --isolated --upgrade install
 
 #. Start up dr-provision
 
@@ -242,7 +238,7 @@ Please read the steps through carefully, and make note of the current contents/p
 
     ::
 
-      curl -fsSL get.rebar.digital/stable | bash -s -- upgrade --isolated
+      curl -fsSL get.rebar.digital/stable | bash -s -- install --isolated --upgrade=true
 
     This will force the update of the local binaries to v3.2.0 stable.  Make sure you stop DRP process (``sudo killall dr-provision``, or ``sudo systemctl stop dr-provision.service``).
 
