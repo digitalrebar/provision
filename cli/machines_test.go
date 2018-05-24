@@ -278,6 +278,8 @@ func TestMachineCli(t *testing.T) {
 	cliTest(false, false, "prefs", "set", "defaultStage", "stage1").run(t)
 	cliTest(false, false, "machines", "create", machineCreateInputString).run(t)
 	cliTest(false, false, "machines", "destroy", "3e7031fe-3062-45f1-835c-92541bc9cbd3").run(t)
+	cliTest(false, false, "machines", "create", "1name").run(t)
+	cliTest(false, false, "machines", "destroy", "Name:1name").run(t)
 	cliTest(false, false, "machines", "list").run(t)
 	cliTest(false, false, "prefs", "set", "defaultStage", "none").run(t)
 	cliTest(false, false, "plugins", "destroy", "incr").run(t)

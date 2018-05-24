@@ -86,7 +86,7 @@ type Machine struct {
 }
 
 func (n *Machine) Validate() {
-	n.AddError(ValidName("Invalid Name", n.Name))
+	n.AddError(ValidMachineName("Invalid Name", n.Name))
 	n.AddError(ValidName("Invalid Stage", n.Stage))
 	n.AddError(ValidName("Invalid BootEnv", n.BootEnv))
 	if n.Workflow != "" {

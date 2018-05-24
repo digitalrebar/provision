@@ -119,22 +119,28 @@ func Clone(m Model) Model {
 }
 
 var (
-	validName      = regexp.MustCompile(`^\pL+([- _.]+|\pN+|\pL+)+$`)
-	validParamName = regexp.MustCompile(`^\pL+([- _./]+|\pN+|\pL+)+$`)
+	validMachineName = regexp.MustCompile(`^(\pL|\pN)+([- _.]+|\pN+|\pL+)+$`)
+	validName        = regexp.MustCompile(`^\pL+([- _.]+|\pN+|\pL+)+$`)
+	validParamName   = regexp.MustCompile(`^\pL+([- _./]+|\pN+|\pL+)+$`)
 )
 
-func ValidName(msg, s string) error {
-	if validName.MatchString(s) {
+func validMatch(msg, s string, re *regexp.Regexp) error {
+	if re.MatchString(s) {
 		return nil
 	}
 	return fmt.Errorf("%s `%s`", msg, s)
 }
 
+func ValidMachineName(msg, s string) error {
+	return validMatch(msg, s, validMachineName)
+}
+
+func ValidName(msg, s string) error {
+	return validMatch(msg, s, validName)
+}
+
 func ValidParamName(msg, s string) error {
-	if validParamName.MatchString(s) {
-		return nil
-	}
-	return fmt.Errorf("%s `%s`", msg, s)
+	return validMatch(msg, s, validParamName)
 }
 
 type NameSetter interface {
