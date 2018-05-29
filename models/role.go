@@ -40,8 +40,8 @@ var (
 	}
 
 	overriddenActions = map[string]string{
-		"prefs":  "list, post",
-		"events": "post",
+		"preferences": "list, post",
+		"events":      "post",
 	}
 
 	allScopes = func() map[string]map[string]struct{} {

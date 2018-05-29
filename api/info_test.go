@@ -158,13 +158,8 @@ func TestInfo(t *testing.T) {
 					"updateSecure": {},
 				},
 				"preferences": {
-					"action":  {},
-					"actions": {},
-					"create":  {},
-					"delete":  {},
-					"get":     {},
-					"list":    {},
-					"update":  {},
+					"list": {},
+					"post": {},
 				},
 				"profiles": {
 					"action":       {},
