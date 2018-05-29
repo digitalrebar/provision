@@ -132,13 +132,8 @@ RE:
         "updateSecure": {}
       },
       "preferences": {
-        "action": {},
-        "actions": {},
-        "create": {},
-        "delete": {},
-        "get": {},
         "list": {},
-        "update": {}
+        "post": {}
       },
       "profiles": {
         "action": {},
