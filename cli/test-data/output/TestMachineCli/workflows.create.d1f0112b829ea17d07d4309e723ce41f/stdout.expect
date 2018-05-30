@@ -1,0 +1,14 @@
+{
+  "Available": false,
+  "Description": "",
+  "Errors": [
+    "Stage nonexistent-workflow does not exist"
+  ],
+  "Meta": {},
+  "Name": "Workflow2Bad",
+  "ReadOnly": false,
+  "Stages": [
+    "nonexistent-workflow"
+  ],
+  "Validated": true
+}

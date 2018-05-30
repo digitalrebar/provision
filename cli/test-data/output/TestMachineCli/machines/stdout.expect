@@ -31,6 +31,7 @@ Available Commands:
   tasks         Access task manipulation for machines
   update        Unsafely update machine by id with the passed-in JSON
   wait          Wait for a machine's field to become a value within a number of seconds
+  workflow      Set the machine's workflow
 
 Flags:
   -h, --help   help for machines

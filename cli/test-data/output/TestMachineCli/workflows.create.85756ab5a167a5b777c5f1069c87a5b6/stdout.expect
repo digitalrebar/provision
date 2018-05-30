@@ -1,0 +1,12 @@
+{
+  "Available": true,
+  "Description": "",
+  "Errors": [],
+  "Meta": {},
+  "Name": "Workflow1Good",
+  "ReadOnly": false,
+  "Stages": [
+    "none"
+  ],
+  "Validated": true
+}

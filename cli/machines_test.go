@@ -100,9 +100,9 @@ func TestMachineCli(t *testing.T) {
 }
 `
 	var machineWorkflow2SetBad = `{
-	"Name": "Workflow1Bad",
+	"Name": "Workflow2Bad",
 	"Stages": [
-		"nonexistent-workflow"
+		"nonexistent-stage"
 	]
 }
 `
@@ -179,8 +179,13 @@ func TestMachineCli(t *testing.T) {
 	cliTest(false, false, "machines", "stage", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "", "--force").run(t)
 	// workflow tests
 	cliTest(true, true, "machines", "workflow").run(t)
-	cliTest(false, false, "machines", "workflow", "3e7031fe-3062-45f1-835c-92541bc9cbd3", machineWorkflow1SetGood).run(t)
-	cliTest(false, true, "machines", "workflow", "3e7031fe-3062-45f1-835c-92541bc9cbd3", machineWorkflow2SetBad).run(t)
+	cliTest(false, false, "workflows", "create", "-").Stdin(machineWorkflow1SetGood).run(t)
+	cliTest(false, false, "workflows", "create", "-").Stdin(machineWorkflow2SetBad).run(t)
+	cliTest(false, false, "machines", "workflow", "Name:john", "Workflow1Good").run(t)
+	cliTest(false, true, "machines", "workflow", "Name:john", "Workflow2Bad").run(t)
+	cliTest(false, false, "machines", "workflow", "Name:john", "").run(t)
+	cliTest(false, false, "workflows", "destroy", "Workflow1Good").run(t)
+	cliTest(false, false, "workflows", "destroy", "Workflow2Bad").run(t)
 	// Add/Remove Profile tests
 	cliTest(true, true, "machines", "addprofile").run(t)
 	cliTest(false, false, "machines", "addprofile", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "jill").run(t)
