@@ -23,6 +23,33 @@ func registerMachine(app *cobra.Command) {
 		example:    func() models.Model { return &models.Machine{} },
 	}
 	op.addCommand(&cobra.Command{
+		Use:   "workflow [id] [workflow]",
+		Short: fmt.Sprintf("Set the machine's workflow"),
+		Long:  `Helper function to update the machine's workflow.`,
+		Args: func(c *cobra.Command, args []string) error {
+			if len(args) != 2 {
+				return fmt.Errorf("%v requires 2 arguments", c.UseLine())
+			}
+			return nil
+		},
+		RunE: func(c *cobra.Command, args []string) error {
+			m, err := op.refOrFill(args[0])
+			if err != nil {
+				return generateError(err, "Failed to fetch %v: %v", op.singleName, args[0])
+			}
+			clone := models.Clone(m).(*models.Machine)
+			clone.Workflow = args[1]
+			req := session.Req().ParanoidPatch().PatchTo(m, clone)
+			if force {
+				req.Params("force", "true")
+			}
+			if err := req.Do(&clone); err != nil {
+				return err
+			}
+			return prettyPrint(clone)
+		},
+	})
+	op.addCommand(&cobra.Command{
 		Use:   "stage [id] [stage]",
 		Short: fmt.Sprintf("Set the machine's stage"),
 		Long:  `Helper function to update the machine's stage.`,
