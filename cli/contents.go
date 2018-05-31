@@ -2,6 +2,7 @@ package cli
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 	"path"
 	"strings"
@@ -218,18 +219,21 @@ func registerContent(app *cobra.Command) {
 		RunE: func(c *cobra.Command, args []string) error {
 			src := args[0]
 			ext := path.Ext(src)
-			codec := ""
 			switch ext {
-			case ".yaml", ".yml":
-				codec = "yaml"
-			case ".json":
-				codec = "json"
+			case ".yaml", ".yml", ".json":
 			default:
 				return fmt.Errorf("Unknown store extension %s", ext)
 			}
-			storeURI := fmt.Sprintf("file:%s?codec=%s", src, codec)
-			s, err := store.Open(storeURI)
+			buf, err := ioutil.ReadFile(src)
 			if err != nil {
+				return fmt.Errorf("Failed to open store %s: %v", src, err)
+			}
+			content := &models.Content{}
+			if err := api.DecodeYaml(buf, content); err != nil {
+				return fmt.Errorf("Failed to unmarshal store content: %v", err)
+			}
+			s, _ := store.Open("memory:///")
+			if err := content.ToStore(s); err != nil {
 				return fmt.Errorf("Failed to open store %s: %v", src, err)
 			}
 			cc := &api.Client{}
