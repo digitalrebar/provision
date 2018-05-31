@@ -20,15 +20,20 @@ For a full install, please see :ref:`rs_install`
 Overview
 --------
 
-  * read Preparation steps below
-  * install DRP Endpoint (in "isolated" mode)
-  * start DRP Endpoint daemon
-  * install BootEnvs (OS media for installation)
-  * set the defaultBootEnv, defaultStage, and unknownBootEnv
-  * configure a Subnet to answer DHCP requests
-  * boot your first Machine and install an OS on it
+  * Read :ref:`rs_qs_preparation` steps below
+  * :ref:`rs_qs_install` DRP Endpoint (in "isolated" mode)
+  * :ref:`rs_qs_start` daemon
+  * :ref:`rs_qs_bootenvs` (OS media for installation)
+  * :ref:`rs_qs_subnet` to answer DHCP requests
+  * :ref:`rs_qs_workflow`
+  * :ref:`rs_qs_defaults` for defaultBootEnv, defaultStage, unknownBootEnv, and defaultWorkflow
+  * boot your first Machine and :ref:`rs_qs_first_machine` an OS on it
 
 This document refers to the ``drpcli`` command line tool for manipulating the ``dr-provision`` service.  We do not specify any paths in the documentation.  However, in our default quickstart for *isolated* mode, the ``drpcli`` tool will NOT be installed in any system PATH locations.  You must do this, or you may use the local setup symbolic link.  For example - simply change ``drpcli`` to ``./drpcli`` in the documentation below.  Or ... copy the binary to a PATH location.
+
+You can perform all of the actions outlined in this document via the hosted web UX Portal.  If you choose to use the web Portal, please ensure the setup is completed by reviewing the output of the ``Info & Preferences`` panel named *System Wizard* are completed successfully.  Basic `documentation on the Web Portal <http://provision.readthedocs.io/en/tip/doc/ux/portal/systemux.html#machines>`_ UX is available. 
+
+.. _rs_qs_preparation:
 
 Preparation
 -----------
@@ -41,6 +46,8 @@ Please make sure your environment doesn't have any conflicts or issues that migh
   * you need the network information for the subnet that your target Machines will be on
   * Mac OSX may require additional setup (see notes below)
   * we rely heavily on the ``jq`` tool for use with the Command Line tool (``drpcli``) - install it if you don't have it already
+
+.. _rs_qs_install:
 
 Install
 -------
@@ -70,8 +77,10 @@ It is recommended that directory is used for this process.  The ``mkdir drp ; cd
 
 Even for *production* installs (without ``--isolated``), it is recommended to run the ``install.sh`` script in a directory to contain all the install files for easy clean-up and removal if Digital Rebar Provision needs to be removed from the system.
 
-Start dr-provision
-------------------
+.. _rs_qs_start:
+
+Start Digital Rebar Provision service
+-------------------------------------
 
 Our quickstart uses *isolated* mode install, and the ``dr-provision`` service is not installed in the system path.  You need to manually start ``dr-provision`` each time the system is booted up.  The *production* mode installation (do not specify the ``--isolated`` install flag) will install in to system directories, and provide helpers to setup ``init``, ``systemd``, etc. start up scripts for the service.
 
@@ -105,9 +114,10 @@ The default username & password used for administering the *dr-provision* servic
     username: rocketskates
     password: r0cketsk8ts
 
+.. _rs_qs_bootenvs:
 
-Add Boot Environments (bootenvs)
---------------------------------
+Install Boot Environments (bootenvs)
+------------------------------------
 
 With Digital Rebar Provision running; it is now time to install the specialized Digital Rebar Provision content, and the required boot environments (BootEnvs).  We generally refer to this as "content".
 
@@ -133,6 +143,8 @@ These steps should be performed from the newly installed *dr-provision* endpoint
 The ``uploadiso`` command will fetch the ISO image as specified in the BootEnv JSON spec, download it, and then "explode" it in to the ``drp-data/tftpboot/`` directory for installation use.  You may optionally choose one or both of the CentOS and Ubuntu BootEnvs (or any other Community Content supported BootEnv) to install; depending on which Operating System and Version you wish to test or use.
 
 
+.. _rs_qs_subnet:
+
 Configure a Subnet
 ------------------
 
@@ -150,14 +162,14 @@ supports "magic" DHCP Boot Options for `next-server` and `bootfile`
 (option code 67).  This means that these options should work "magically"
 for you without needing to be set.
 
-HOWEVER - VirtualBox has a broken iPXE implementation.
+_HOWEVER_ - VirtualBox has a broken iPXE implementation.
 
-If you are creating a subnet for an older version of Digital Rebar
+If you are creating a subnet for an older version (before v3.7.0) of Digital Rebar
 Provision, you must set the `next-server` to your DRP Endpoint IP Address,
 and set the Option 67 value to ``lpxelinux.0`` for Legacy BIOS mode
 Machines.
 
-If you are using VirtualBox, you set the `next-server` value to the DRP
+If you are *using VirtualBox*, you must set the `next-server` value to the DRP
 Endpoint IP address _and_ the DHCP Option 67 value to ``lpxelinux.0``
 
 .. note:: The UX will create a Subnet based on an interface of the DRP Endpoint with sane defaults - it is easier to create a subnet via the UX.
@@ -167,12 +179,16 @@ Endpoint IP address _and_ the DHCP Option 67 value to ``lpxelinux.0``
   You must still set all of the remaining network values correctly in your Subnet specification, even in the UX.
 
 To create a basic Subnet from command line we must create a JSON blob that
-contains the Subnet and DHCP definitions.  Below is a sample you can
+contains the Subnet and DHCP definitions.  Below is a _sample_ you can
 use.  *PLEASE ENSURE* you modify the network parameters accordingly.
 Ensure you change the network parameters according to your
 environment.
 
   ::
+
+    ###
+    #  EXAMPLE - please modify the below values according to your environment  !!!
+    ###
 
     echo '{
       "Name": "local_subnet",
@@ -206,35 +222,132 @@ environment.
 
 .. note:: Option 67 (bootfile name) specifies the PXE boot file.  The `lpxelinux.0` boot file is for Legacy BIOS machines.  If you are booting a UEFI system, you will need to make more advanced changes to support UEFI boot mode. Please see the FAQ on :ref:`rs_uefi_boot_option`.  DRP v3.7.0 and newer has magic helpers to try and set the Legacy/UEFI bootfile for you, but custom usage or custom/unique PXE implementations may require changes.
 
+.. _rs_qs_workflow:
+
+Create a Workflow
+-----------------
+
+*Workflows* define a series of *Stages* that a Machine transitions through, driven
+by Digital Rebar Provision.  Not only do the drive basic Operating System 
+installation, but they also allow for advanced application installation and
+configuration if desired.  *Workflows* also allow for some basic power management
+functions for hardware that does not support IPMI-like functions.  
+
+For our QuickStart use case, we'll create two simple *Workflows*:
+
+  #. Discovery
+  #. Operating System Install
+
+1. Create the Discovery Workflow 
+
+  ::
+
+    # you must have installed the 'sledgehammer' ISO (see steps above)
+    drpcli workflows create '{ "Name": "discovery", "Stages": [ "discover", "sledgehammer-wait" ] } '
+
+    # for packet.net environment, insert:     "packet-discover", 
+    # between discover and sledgehammer-wait stages
+    # requires 'packet-ipmi' plugin provider installed and plugin configured
+
+2. Now we will create the Installation workflow.   You can select any OS that is 
+supported in the ``drp-community-content`` package.  Simply change the ``Name``
+and the initial install Stage accordingly - use the following ``jq`` command
+to filter the list of Available BootEnvs for installation:
+
+  ::
+
+    drpcli stages list | jq '.[] | select(.Available==true) | .Name' | grep "\-install"
+
+Using one of the *Available* BootEnvs as listed above, create, the OS install
+Workflow:
+
+  ::
+
+    # example for CentOS 7
+    drpcli workflows create '{ "Name": "centos7", "Stages": [ "centos-7-install", "complete" ] } '
+
+    # example for Ubuntu 18.04
+    drpcli workflows create '{ "Name": "ubuntu18", "Stages": [ "ubuntu-18.04-install", "complete" ] } '
+
+    # example for Debian 8
+    drpcli workflows create '{ "Name": "debian9", "Stages": [ "debian-9-install", "complete" ] } '
+
+    # in all cases for packet.net environemnt, insert:   "packet-ssh-keys",
+    # between the "install" and "complete" stages
+    # requires 'packet-ipmi' plugin provider installed and plugin configured
+
+.. note::
+
+  You should receive a JSON blob back with the results of the command.  It is important you check
+  the *Errors* field for any messages.  For example, if you see:
+
+  ``"Stage debian-9-install is not available"``
+
+  Then the BootEnv `debian-9-install` is not installed or available, and
+  this Workflow will not install an Operating System.  Verify you successfully
+  completed the ``drpcli bootenvs uploadiso ...`` steps outlined above.
+
+.. _rs_qs_defaults:
+
+Set The Defaults 
+----------------
+
+One of the basic safety mechanisms for newly installed DRP Endpoints, is to
+prevent accidental Installation of a Machine, if it should PXE boot against 
+a DRP Endpoint ... **before** you are ready for that to happen!!  So we must
+first set the default actions for a few system wide preferences.  One of those
+defaults will point to our Discovery Workflow (see :ref:`rs_qs_workflow`).
+
+Any Machine that boots will by default be placed in to the Discovery Workflow,
+which will NOT install an Operating System, but will enroll the machine for
+management by Digital Rebar Provision
+
+Define the default Workflow, Default Stage, Default BootEnv, and the Unknown BootEnv:
+
+  ::
+
+    # make sure you use the 'Name' specified in the Discovery Workflow,
+    # if you changed it from the default we specified
+    drpcli prefs set defaultWorkflow discovery unknownBootEnv discovery defaultBootEnv sledgehammer defaultStage discover
+
+Now any "unknown" or new Machines that boot against the DRP Endpoint will
+be *discovered* and sit idly by waiting (`sledgehammer-wait`) for your 
+next commands (eg. install an operating system).
+
+.. _rs_qs_first_machine:
 
 Install your first Machine
 --------------------------
 
-Content configuration is the most complex topic with Digital Rebar Provision.  The basic provisioning setup with the above "ISO" uploads will allow you to install a CentOS or Ubuntu Machine with manual power management (on/off/reboot etc) transitions.  More advanced workflows and plugin_providers will allow for complete automation workflows with complex stages and state transitions.  To keep things "quick", the below are just bare basics, for more details and information, please see the Content documentation section.
+Content configuration is the most complex topic with Digital Rebar Provision.
+The basic provisioning setup with the above "ISO" uploads, default preferences,
+and simple workflows will allow you to install an operating system on the Machine
+with *manual power management* (on/off/reboot etc) transitions.  
 
-  1. Set default BootEnvs and Stages
+More advanced workflows and plugin_providers will allow for complete automation
+workflows with complex stages and state transitions.  To keep things "quick", the
+below are just bare basics, for more details and information, please see the
+Content documentation section.
 
-    BootEnvs are operating system installable definitions.  You need to specify **what** the DRP endpoint should do when it sees an unknown Machine, and what the default behavior is. To do this, Digital Rebar Provision uses a *discovery* image provisioning method (sometimes referred to as *ready state* infrastructure), and you must first set up these steps.
-
-    Stages allow you to create per-Machine `workflow`, where you can transition from one stage to the next to complete more comlex provisioning activities.
-
-    .. note:: In the below *Prefs* example, we set both BootEnvs and Stages.  This means that the "Stage" workflow system is activated, and you must change a Machine install definition (eg CentOS or Ubuntu), via the use of Stage changes.  If you do NOT set the ``defaultStage`` value, then you would change a Machine by the use of only setting the BootEnv on a Machine.  We will use the Stages method for this quickstart.
-
-    Define the Default Stage, Default BootEnv, and the Unknown BootEnv:
-
-    ::
-
-      drpcli prefs set unknownBootEnv discovery defaultBootEnv sledgehammer defaultStage discover
-
-  2. PXE Boot your Machine
+  1. PXE Boot your Machine
 
     * ensure your test Machine is on the same Layer 2 subnet as your DRP endpoint, or that you've configured your networks *IP Helper* to forward your DHCP requests to your DRP Endpoint
     * the Machine should be in the same subnet as defined in the Subnets section above (not strictly required, but this is a simplified quickstart environment!)
     * set your test machine or VM instance to PXE boot
-    * power the Machine on, or reboot it, and verify that the NIC begins the PXE boot process
+    * power the Machine on (or reboot it) and verify from the console that the NIC begins the PXE boot process
     * verify that the DRP Endpoint responds with a DHCP lease to the Machine
 
-  3. Set your Machine to a desired Stage to install an Operating System
+    The Machine should boot in to the Sledgehammer BootEnv - which will bring
+    the console to a prompt that looks like (the version signature may differ):
+
+      ::
+
+        Digital Rebar: Sledgehammer 6122f34b46b5b74b668d6779e33f5fcd0f44a8cc
+        Kernel 3.10.0-693.21.1.el7.x86_64 on an x86_64
+
+        d0c-c4-7a-e5-48-b6 login:
+
+  2. Get your Machines UUID so you can set the Workflow for it
 
     * once your machine has booted, and received DHCP from the DRP Endpoint, it will now be "registered" with the Endpoint for installation
     * by default, DRP will NOT attempt an OS install unless you explicitly direct it to (for safety's sake!)
@@ -244,18 +357,26 @@ Content configuration is the most complex topic with Digital Rebar Provision.  T
 
       drpcli machines list | jq '.[].Uuid'
 
-  4. Set the Stage to either ``centos-7-install`` or ``ubuntu-16.04-install`` (or other Stage if previously installed and desired) replace *<UUID>* with your machines ID from the above command:
+  3. Set the Workflow to to your Operating System Workflow you defined above;
+     replace *<UUID>* with your machines ID from the above command:
 
     ::
 
-      drpcli machines stage <UUID> ubuntu-16.04-install
+      # example for CentOS 7 workflow
+      drpcli machines update <UUID> '{ "Workflow": "centos7" }'
 
-  5. Reboot your Machine - it should now kick off a BootEnv install as you specified above.
+      # example for Debian 9 workflow
+      drpcli machines update <UUID> '{ "Workflow": "debian9" }'
+
+      # example for Ubuntu 18.04 workflow
+      drpcli machines update <UUID> '{ "Workflow": "ubuntu18" }'
+
+  4. Reboot your Machine - it should now kick off a BootEnv install as you specified above.
 
     * watch the console, and you should see the appropriate installer running
     * the machine should reboot in to the Operating System you specified once install is completed
 
-.. note:: Digital Rebar Provision is capable of automated workflow management of the boot process, power control, and much more.  This quickstart walks through the simplest process to get you up and running with a single test install.  Please review the rest of the documentation for futher configuration details and information on automation of your provisioning environment.
+.. note:: Digital Rebar Provision is capable of automated workflow management of the boot process, power control, and much more.  This quickstart walks through the simplest process to get you up and running with a single test install.  Please review the rest of the documentation for further configuration details and information on automation of your provisioning environment.
 
 More Advanced Workflow
 ----------------------
