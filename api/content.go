@@ -124,7 +124,6 @@ func writeMetaFile(dst, field, data string) error {
 		return nil
 	}
 	fname := fmt.Sprintf("._%s.meta", field)
-	fmt.Printf("Writing Meta: %s\n", fname)
 	return ioutil.WriteFile(path.Join(dst, fname), []byte(data), 0640)
 }
 
