@@ -10,9 +10,18 @@ Digital Rebar Provision
 
 *simple, fast and open API-driven server provisioning.*
 
-**DR Provision** is a `APLv2 <https://raw.githubusercontent.com/digitalrebar/provision/master/LICENSE>`_ simple Golang executable that provides a simple yet complete API-driven DHCP/PXE/TFTP provisioning workflow system.
+`Digital Rebar Provision (DRP) <https://rebar.digital>`_ is a `APLv2 <https://raw.githubusercontent.com/digitalrebar/provision/master/LICENSE>`_ simple Golang executable that provides a simple yet complete API-driven DHCP/PXE/TFTP provisioning and workflow system.
 
-Simply, Digital Rebar Provisioner acts as a Cobbler replacement - with additional powerful per-machine workflow provisioning capabilities.
+DRP is designed to be a complete data center provisioning, content scaffolding and infrastructure workflow platform with a cloud native architecture that completely replaces Cobblerm Foreman, MaaS or similar technologies. DRP offers a single golang binary (less than 30MB) with no dependencies capable of installation on a laptop, RPi or switch supporting both bare metal and virtualized infrastructure.
+
+Key Features:
+
+   * API-driven infrastructure-as-code automation
+   * Multi-boot workflows using composable and reusable building blocks 
+   * Event driven actions via Websockets API
+   * Extensible Plug-in Model for public, vendor and internal enhancements
+   * Supports ALL orchestration tools including Chef, Puppet, Ansible, SaltStack, Bosh, Teraform, etc
+   * RAID, IPMI, and BIOS Configuration (via commercial plugins)
 
 .. figure::  doc/images/dr_provision.png
    :align:   right
@@ -20,12 +29,10 @@ Simply, Digital Rebar Provisioner acts as a Cobbler replacement - with additiona
    :alt: Digital Rebar Provision
    :target: https://github.com/digitalrebar/provision
 
-.. note::  We HIGHLY recommend using the ``latest`` version of the documentation, as it contains the most up to date information.  Use the version selector in the lower     right corner of your browser.
-
 .. _rs_community:
 
-Community Resources
--------------------
+Community Resources from https://rebar.digital
+----------------------------------------------
 
 .. image:: https://travis-ci.org/digitalrebar/provision.svg?branch=master
   :target: https://travis-ci.org/digitalrebar/provision
@@ -64,6 +71,8 @@ Community Resources
 
 Install & Quick Start
 ---------------------
+
+.. note::  We HIGHLY recommend using the ``latest`` version of the documentation, as it contains the most up to date information.  Use the version selector in the lower right corner of your browser.
 
 Our `Stable Quick Start <http://provision.readthedocs.io/en/stable/doc/quickstart.html>`_ has fast play-with-it steps.  Don't worry, they are very simple and take 10 to 20 minutes.
 
