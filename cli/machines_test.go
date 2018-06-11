@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/digitalrebar/provision/api"
 	"github.com/digitalrebar/provision/models"
 	"github.com/pborman/uuid"
 )
@@ -92,6 +93,20 @@ func TestMachineCli(t *testing.T) {
   ]
 }
 `
+	var machineWorkflow1SetGood = `{
+	"Name": "Workflow1Good",
+	"Stages": [
+		"none"
+	]
+}
+`
+	var machineWorkflow2SetBad = `{
+	"Name": "Workflow2Bad",
+	"Stages": [
+		"nonexistent-stage"
+	]
+}
+`
 	cliTest(false, false, "profiles", "create", "jill").run(t)
 	cliTest(false, false, "profiles", "create", "jean").run(t)
 	cliTest(false, false, "profiles", "create", "stage-prof").run(t)
@@ -163,6 +178,15 @@ func TestMachineCli(t *testing.T) {
 	cliTest(false, true, "machines", "stage", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "stage2").run(t)
 	cliTest(false, false, "machines", "stage", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "stage2", "--force").run(t)
 	cliTest(false, false, "machines", "stage", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "", "--force").run(t)
+	// workflow tests
+	cliTest(true, true, "machines", "workflow").run(t)
+	cliTest(false, false, "workflows", "create", "-").Stdin(machineWorkflow1SetGood).run(t)
+	cliTest(false, false, "workflows", "create", "-").Stdin(machineWorkflow2SetBad).run(t)
+	cliTest(false, false, "machines", "workflow", "Name:john", "Workflow1Good").run(t)
+	cliTest(false, true, "machines", "workflow", "Name:john", "Workflow2Bad").run(t)
+	cliTest(false, false, "machines", "workflow", "Name:john", "").run(t)
+	cliTest(false, false, "workflows", "destroy", "Workflow1Good").run(t)
+	cliTest(false, false, "workflows", "destroy", "Workflow2Bad").run(t)
 	// Add/Remove Profile tests
 	cliTest(true, true, "machines", "addprofile").run(t)
 	cliTest(false, false, "machines", "addprofile", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "jill").run(t)
@@ -308,12 +332,18 @@ func rta(usage, err bool, tasks ...string) *CliTest {
 func fakeJob(t *testing.T, mUuid, state string) {
 	t.Helper()
 	j := &models.Job{Machine: uuid.Parse(mUuid)}
-	if err := session.CreateModel(j); err != nil {
+	lsession, apierr := api.UserSession("https://127.0.0.1:10001", "rocketskates", "r0cketsk8ts")
+	if apierr != nil {
+		t.Fatalf("Error getting session: %v", apierr)
+		return
+	}
+	defer lsession.Close()
+	if err := lsession.CreateModel(j); err != nil {
 		t.Errorf("Error creating job :%v", err)
 		return
 	}
 	j.State = state
-	if err := session.PutModel(j); err != nil {
+	if err := lsession.PutModel(j); err != nil {
 		t.Errorf("Error updating state to %s: %v", state, err)
 		return
 	}
@@ -356,9 +386,15 @@ func TestMachineTaskCli(t *testing.T) {
 		cliTest(false, false, "tasks", "destroy", task).run(t)
 	}
 	jobs := []*models.Job{}
-	if err := session.Req().List("jobs").Do(&jobs); err == nil {
+	lsession, apierr := api.UserSession("https://127.0.0.1:10001", "rocketskates", "r0cketsk8ts")
+	if apierr != nil {
+		t.Fatalf("Error getting session: %v", apierr)
+		return
+	}
+	defer lsession.Close()
+	if err := lsession.Req().List("jobs").Do(&jobs); err == nil {
 		for _, j := range jobs {
-			session.DeleteModel("jobs", j.Uuid.String())
+			lsession.DeleteModel("jobs", j.Uuid.String())
 		}
 	}
 	verifyClean(t)

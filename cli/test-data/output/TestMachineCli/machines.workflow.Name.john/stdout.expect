@@ -1,18 +1,17 @@
-RE:
 {
-  "Address": "",
+  "Address": "192.168.100.110",
   "Available": true,
-  "BootEnv": "fake-centos-install",
+  "BootEnv": "local",
   "CurrentJob": "",
   "CurrentTask": -1,
-  "Description": "",
-  "Errors": \[\],
-  "HardwareAddrs": \[\],
+  "Description": "lpxelinux.0",
+  "Errors": [],
+  "HardwareAddrs": [],
   "Meta": {
     "feature-flags": "change-stage-v2"
   },
-  "Name": "phred",
-  "OS": "centos-6",
+  "Name": "john",
+  "OS": "",
   "Params": {},
   "Profile": {
     "Available": false,
@@ -24,12 +23,13 @@ RE:
     "ReadOnly": false,
     "Validated": false
   },
-  "Profiles": \[\],
+  "Profiles": [],
   "ReadOnly": false,
-  "Runnable": false,
+  "Runnable": true,
+  "Secret": "secret1",
   "Stage": "none",
-  "Tasks": \[\],
-  "Uuid": "c9196b77-deef-4c8e-8130-299b3e3d9a10",
+  "Tasks": [],
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
   "Validated": true,
   "Workflow": ""
 }

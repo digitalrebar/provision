@@ -82,6 +82,7 @@ func blobCommands(bt string) *cobra.Command {
 			if err != nil {
 				return fmt.Errorf("Error opening src file %s: %v", item, err)
 			}
+			defer data.Close()
 			if info, err := session.PostBlob(data, bt, dest); err != nil {
 				return generateError(err, "Failed to post %v: %v", bt, dest)
 			} else {

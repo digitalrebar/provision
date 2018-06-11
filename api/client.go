@@ -412,10 +412,13 @@ func (r *R) Do(val interface{}) error {
 		r.err.Errorf("No URL to talk to")
 		return r.err
 	}
+	r.c.mux.Lock()
 	if r.c.closed {
+		r.c.mux.Unlock()
 		r.err.Errorf("Connection Closed")
 		return r.err
 	}
+	r.c.mux.Unlock()
 	if r.err.ContainsError() {
 		return r.err
 	}
@@ -527,7 +530,9 @@ func (r *R) Do(val interface{}) error {
 func (c *Client) Close() {
 	c.closer <- struct{}{}
 	close(c.closer)
+	c.mux.Lock()
 	c.closed = true
+	c.mux.Unlock()
 }
 
 // Token returns the current authentication token associated with the
@@ -733,6 +738,7 @@ func TokenSession(endpoint, token string) (*Client, error) {
 	}
 	go func() {
 		<-c.closer
+		tr.CloseIdleConnections()
 	}()
 	return c, nil
 }
@@ -780,6 +786,7 @@ func UserSession(endpoint, username, password string) (*Client, error) {
 			select {
 			case <-c.closer:
 				ticker.Stop()
+				tr.CloseIdleConnections()
 				return
 			case <-ticker.C:
 				token := &models.UserToken{}
