@@ -1,7 +1,35 @@
 RE:
+{
+  "Address": "",
   "Available": true,
   "BootEnv": "fake-centos-install",
+  "CurrentJob": "",
+  "CurrentTask": -1,
+  "Description": "",
+  "Errors": \[\],
+  "HardwareAddrs": \[\],
+  "Meta": {
+    "feature-flags": "change-stage-v2"
+  },
   "Name": "phred",
   "OS": "centos-6",
+  "Params": {},
+  "Profile": {
+    "Available": false,
+    "Description": "",
+    "Errors": null,
+    "Meta": null,
+    "Name": "",
+    "Params": null,
+    "ReadOnly": false,
+    "Validated": false
+  },
+  "Profiles": \[\],
+  "ReadOnly": false,
+  "Runnable": false,
+  "Stage": "none",
+  "Tasks": \[\],
   "Uuid": "c9196b77-deef-4c8e-8130-299b3e3d9a10",
   "Validated": true,
+  "Workflow": ""
+}
