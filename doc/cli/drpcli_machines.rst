@@ -91,3 +91,5 @@ SEE ALSO
    update machine by id with the passed-in JSON
 -  `drpcli machines wait <drpcli_machines_wait.html>`__ - Wait for a
    machine's field to become a value within a number of seconds
+-  `drpcli machines workflow <drpcli_machines_workflow.html>`__ - Set
+   the machine's workflow
