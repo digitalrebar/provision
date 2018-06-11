@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/digitalrebar/provision/api"
 	"github.com/digitalrebar/provision/models"
 	"github.com/pborman/uuid"
 )
@@ -331,12 +332,18 @@ func rta(usage, err bool, tasks ...string) *CliTest {
 func fakeJob(t *testing.T, mUuid, state string) {
 	t.Helper()
 	j := &models.Job{Machine: uuid.Parse(mUuid)}
-	if err := session.CreateModel(j); err != nil {
+	lsession, apierr := api.UserSession("https://127.0.0.1:10001", "rocketskates", "r0cketsk8ts")
+	if apierr != nil {
+		t.Fatalf("Error getting session: %v", apierr)
+		return
+	}
+	defer lsession.Close()
+	if err := lsession.CreateModel(j); err != nil {
 		t.Errorf("Error creating job :%v", err)
 		return
 	}
 	j.State = state
-	if err := session.PutModel(j); err != nil {
+	if err := lsession.PutModel(j); err != nil {
 		t.Errorf("Error updating state to %s: %v", state, err)
 		return
 	}
@@ -379,9 +386,15 @@ func TestMachineTaskCli(t *testing.T) {
 		cliTest(false, false, "tasks", "destroy", task).run(t)
 	}
 	jobs := []*models.Job{}
-	if err := session.Req().List("jobs").Do(&jobs); err == nil {
+	lsession, apierr := api.UserSession("https://127.0.0.1:10001", "rocketskates", "r0cketsk8ts")
+	if apierr != nil {
+		t.Fatalf("Error getting session: %v", apierr)
+		return
+	}
+	defer lsession.Close()
+	if err := lsession.Req().List("jobs").Do(&jobs); err == nil {
 		for _, j := range jobs {
-			session.DeleteModel("jobs", j.Uuid.String())
+			lsession.DeleteModel("jobs", j.Uuid.String())
 		}
 	}
 	verifyClean(t)

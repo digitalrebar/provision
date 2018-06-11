@@ -65,6 +65,8 @@ var ppr = func(c *cobra.Command, a []string) error {
 								session.TraceToken(traceToken)
 								return nil
 							}
+							session.Close()
+							session = nil
 						}
 					}
 				}
