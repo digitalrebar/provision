@@ -433,5 +433,5 @@ Videos
 ------
 
 We constantly update and add videos to the
-`DR Provision 3 Playlist <https://www.youtube.com/playlist?list=PLXPBeIrpXjfj5_8Joyehwq1nnaYSPCnmw>`_
+`DR Provision Playlist <https://www.youtube.com/playlist?list=PLXPBeIrpXjfilUi7Qj1Sl0UhjxNRSC7nx>`_
 so please check to make sure you have the right version!
