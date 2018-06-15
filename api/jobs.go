@@ -41,7 +41,7 @@ func (c *Client) JobActions(j *models.Job, targetOS string) (models.JobActions, 
 // scripts for a single task.
 type TaskRunner struct {
 	// Status codes that may be returned when a script exits.
-	failed, incomplete, reboot, poweroff, stop bool
+	failed, incomplete, reboot, poweroff, stop, wantChroot bool
 	// Client that the TaskRunner will use to communicate with the API
 	c *Client
 	// The Job that the TaskRunner will log to and update the status of.
@@ -55,16 +55,16 @@ type TaskRunner struct {
 	in io.Writer
 	// The write side of the pipe that communicates to the servver.
 	// Closing this will flush any data left in the pipe.
-	pipeWriter       net.Conn
-	agentDir, jobDir string
-	logger           io.Writer
+	pipeWriter                  net.Conn
+	agentDir, jobDir, chrootDir string
+	logger                      io.Writer
 }
 
 // NewTaskRunner creates a new TaskRunner for the passed-in machine.
 // It creates the matching Job (or resumes the previous incomplete
 // one), and handles making sure that all relevant output is written
 // to the job log as well as local stderr
-func NewTaskRunner(c *Client, m *models.Machine, agentDir string, logger io.Writer) (*TaskRunner, error) {
+func NewTaskRunner(c *Client, m *models.Machine, agentDir, chrootDir string, logger io.Writer) (*TaskRunner, error) {
 	if logger == nil {
 		logger = ioutil.Discard
 	}
@@ -82,6 +82,12 @@ func NewTaskRunner(c *Client, m *models.Machine, agentDir string, logger io.Writ
 		// Nothing to do.  Not an error
 		return nil, nil
 	}
+	res.j = job
+	if strings.HasPrefix(job.Task, "chroot:") {
+		res.jobDir = strings.TrimPrefix(job.Task, "chroot:")
+		res.wantChroot = true
+		return res, nil
+	}
 	if !strings.Contains(job.Task, ":") {
 		t := &models.Task{Name: job.Task}
 		if err := c.Req().Fill(t); err != nil {
@@ -89,7 +95,6 @@ func NewTaskRunner(c *Client, m *models.Machine, agentDir string, logger io.Writ
 		}
 		res.t = t
 	}
-	res.j = job
 	return res, nil
 }
 
@@ -126,6 +131,9 @@ func (r *TaskRunner) Expand(action *models.JobAction, taskDir string) error {
 	// Write the Contents of this template to the passed Path
 	if !strings.HasPrefix(action.Path, "/") {
 		action.Path = path.Join(taskDir, path.Clean(action.Path))
+		if r.chrootDir != "" {
+			action.Path = path.Join(r.chrootDir, action.Path)
+		}
 	}
 	r.Log("%s: Writing %s to %s", time.Now(), action.Name, action.Path)
 	if err := os.MkdirAll(filepath.Dir(action.Path), os.ModePerm); err != nil {
@@ -159,7 +167,6 @@ func (r *TaskRunner) Perform(action *models.JobAction, taskDir string) error {
 	}
 	cmdArray = append(cmdArray, "./"+path.Base(taskFile))
 	cmd := exec.Command(cmdArray[0], cmdArray[1:]...)
-
 	cmd.Dir = taskDir
 	cmd.Env = append(os.Environ(), "RS_TASK_DIR="+taskDir, "RS_RUNNER_DIR="+r.agentDir)
 	for _, e := range []string{"RS_UUID", "RS_ENDPOINT", "RS_TOKEN"} {
@@ -169,6 +176,10 @@ func (r *TaskRunner) Perform(action *models.JobAction, taskDir string) error {
 	}
 	cmd.Stdout = r.in
 	cmd.Stderr = r.in
+	if err := r.enterChroot(cmd); err != nil {
+		r.Log("Command failed to set up chroot: %v", err)
+		return err
+	}
 	r.Log("Starting command %s\n\n", cmd.Path)
 	if err := cmd.Start(); err != nil {
 		r.Log("Command failed to start: %v", err)
@@ -179,6 +190,7 @@ func (r *TaskRunner) Perform(action *models.JobAction, taskDir string) error {
 	// as we will continue to use them.
 	r.Log("Command running")
 	pState, _ := cmd.Process.Wait()
+	r.exitChroot()
 	status := pState.Sys().(syscall.WaitStatus)
 	sane := r.t.HasFeature("sane-exit-codes")
 	if !sane {
