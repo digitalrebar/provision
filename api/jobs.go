@@ -131,9 +131,8 @@ func (r *TaskRunner) Expand(action *models.JobAction, taskDir string) error {
 	// Write the Contents of this template to the passed Path
 	if !strings.HasPrefix(action.Path, "/") {
 		action.Path = path.Join(taskDir, path.Clean(action.Path))
-		if r.chrootDir != "" {
-			action.Path = path.Join(r.chrootDir, action.Path)
-		}
+	} else if r.chrootDir != "" {
+		action.Path = path.Join(r.chrootDir, action.Path)
 	}
 	r.Log("%s: Writing %s to %s", time.Now(), action.Name, action.Path)
 	if err := os.MkdirAll(filepath.Dir(action.Path), os.ModePerm); err != nil {
