@@ -24,6 +24,14 @@ func (t *Tenant) Fill() {
 	}
 }
 
+func (t *Tenant) GetMeta() Meta {
+	return t.Meta
+}
+
+func (t *Tenant) SetMeta(d Meta) {
+	t.Meta = d
+}
+
 func (t *Tenant) Validate() {
 	t.AddError(ValidName("Invalid Name", t.Name))
 	for k := range t.Members {

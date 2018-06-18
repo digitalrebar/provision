@@ -160,6 +160,14 @@ type BootEnv struct {
 	OnlyUnknown bool
 }
 
+func (b *BootEnv) GetMeta() Meta {
+	return b.Meta
+}
+
+func (b *BootEnv) SetMeta(d Meta) {
+	b.Meta = d
+}
+
 func (b *BootEnv) Validate() {
 	b.AddError(ValidName("Invalid Name", b.Name))
 	for _, p := range b.RequiredParams {

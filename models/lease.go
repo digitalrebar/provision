@@ -51,6 +51,14 @@ type Lease struct {
 	State string
 }
 
+func (l *Lease) GetMeta() Meta {
+	return l.Meta
+}
+
+func (l *Lease) SetMeta(d Meta) {
+	l.Meta = d
+}
+
 func (l *Lease) Prefix() string {
 	return "leases"
 }

@@ -122,6 +122,14 @@ type Subnet struct {
 	Pickers []string
 }
 
+func (s *Subnet) GetMeta() Meta {
+	return s.Meta
+}
+
+func (s *Subnet) SetMeta(d Meta) {
+	s.Meta = d
+}
+
 func (s *Subnet) Validate() {
 	s.AddError(ValidName("Invalid Name", s.Name))
 	_, subnet, err := net.ParseCIDR(s.Subnet)

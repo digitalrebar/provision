@@ -29,6 +29,14 @@ type User struct {
 	Roles []string
 }
 
+func (u *User) GetMeta() Meta {
+	return u.Meta
+}
+
+func (u *User) SetMeta(d Meta) {
+	u.Meta = d
+}
+
 func (u *User) Validate() {
 	u.AddError(ValidName("Invalid Name", u.Name))
 }

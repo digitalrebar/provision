@@ -80,6 +80,14 @@ type Job struct {
 	BootEnv string
 }
 
+func (j *Job) GetMeta() Meta {
+	return j.Meta
+}
+
+func (j *Job) SetMeta(d Meta) {
+	j.Meta = d
+}
+
 func (j *Job) Validate() {
 	if !strings.Contains(j.Task, ":") {
 		j.AddError(ValidName("Invalid Task", j.Task))

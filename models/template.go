@@ -21,6 +21,14 @@ type Template struct {
 	Contents string
 }
 
+func (t *Template) GetMeta() Meta {
+	return t.Meta
+}
+
+func (t *Template) SetMeta(d Meta) {
+	t.Meta = d
+}
+
 func (t *Template) Validate() {
 	t.AddError(ValidName("Invalid ID", t.ID))
 }

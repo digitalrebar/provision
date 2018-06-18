@@ -38,6 +38,14 @@ type Reservation struct {
 	Strategy string
 }
 
+func (r *Reservation) GetMeta() Meta {
+	return r.Meta
+}
+
+func (r *Reservation) SetMeta(d Meta) {
+	r.Meta = d
+}
+
 func (r *Reservation) Prefix() string {
 	return "reservations"
 }
@@ -64,12 +72,12 @@ func (r *Reservation) AuthKey() string {
 	return r.Key()
 }
 
-func (b *Reservation) SliceOf() interface{} {
+func (r *Reservation) SliceOf() interface{} {
 	s := []*Reservation{}
 	return &s
 }
 
-func (b *Reservation) ToModels(obj interface{}) []Model {
+func (r *Reservation) ToModels(obj interface{}) []Model {
 	items := obj.(*[]*Reservation)
 	res := make([]Model, len(*items))
 	for i, item := range *items {
@@ -78,6 +86,6 @@ func (b *Reservation) ToModels(obj interface{}) []Model {
 	return res
 }
 
-func (b *Reservation) CanHaveActions() bool {
+func (r *Reservation) CanHaveActions() bool {
 	return true
 }

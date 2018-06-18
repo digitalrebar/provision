@@ -11,6 +11,12 @@ import (
 // swagger: model
 type Meta map[string]string
 
+type MetaHaver interface {
+	Model
+	GetMeta() Meta
+	SetMeta(Meta)
+}
+
 func (m Meta) ClearFeatures() {
 	m["feature-flags"] = ""
 }
