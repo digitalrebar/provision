@@ -78,6 +78,9 @@ func (o *ops) command(app *cobra.Command) {
 		if _, ok := ref.(models.Actor); ok {
 			o.actions()
 		}
+		if _, ok := ref.(models.MetaHaver); ok {
+			o.meta()
+		}
 		res.AddCommand(o.commands()...)
 	}
 	app.AddCommand(res)
