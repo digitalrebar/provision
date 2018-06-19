@@ -11,6 +11,7 @@ Available Commands:
   exists      See if a tasks exists by id
   indexes     Get indexes for tasks
   list        List all tasks
+  meta        Gets metadata for the task
   runaction   Run action on object from plugin
   show        Show a single tasks by id
   update      Unsafely update task by id with the passed-in JSON

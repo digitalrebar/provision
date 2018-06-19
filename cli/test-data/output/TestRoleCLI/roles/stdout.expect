@@ -9,6 +9,7 @@ Available Commands:
   exists      See if a roles exists by id
   indexes     Get indexes for roles
   list        List all roles
+  meta        Gets metadata for the role
   show        Show a single roles by id
   update      Unsafely update role by id with the passed-in JSON
   wait        Wait for a role's field to become a value within a number of seconds

@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/VictorLowther/jsonpatch2"
+	"github.com/digitalrebar/provision/models"
 	"github.com/spf13/cobra"
 )
 
@@ -75,7 +76,7 @@ func (o *ops) meta() {
 			if err != nil {
 				return fmt.Errorf("Unable to unmarshal input stream: %v\n", err)
 			}
-			res := map[string]string{}
+			res := models.Meta{}
 			if ref == "" {
 				res, err = getMeta(o.name, id)
 				if err != nil {
@@ -93,16 +94,8 @@ func (o *ops) meta() {
 			var meta interface{}
 			path := fmt.Sprintf("/%s", makeJsonPtr(key))
 			patch := jsonpatch2.Patch{
-				{
-					Op:    "test",
-					Path:  "",
-					Value: res,
-				},
-				{
-					Op:    "add",
-					Path:  path,
-					Value: value,
-				},
+				{Op: "test", Path: "", Value: res},
+				{Op: "add", Path: path, Value: value},
 			}
 			if err := session.Req().Patch(patch).UrlFor("meta", o.name, id).Do(&meta); err != nil {
 				return generateError(err, "Failed to fetch meta %v: %v", o.singleName, id)
@@ -128,31 +121,26 @@ func (o *ops) meta() {
 			if err != nil {
 				return fmt.Errorf("Unable to unmarshal input stream: %v\n", err)
 			}
-			var meta string
+			patch := jsonpatch2.Patch{}
+			path := fmt.Sprintf("/%s", makeJsonPtr(key))
 			if ref == "" {
-				md, err := getMeta(id, key)
+				md, err := getMeta(o.name, id)
 				if err != nil {
 					return err
 				}
-				meta = md[key]
+				if meta, ok := md[key]; !ok {
+					patch = append(patch, jsonpatch2.Operation{Op: "test", Path: "", Value: md})
+				} else {
+					patch = append(patch, jsonpatch2.Operation{Op: "test", Path: path, Value: meta})
+				}
 			} else {
+				var meta string
 				if err := bufOrFileDecode(ref, &meta); err != nil {
 					return generateError(err, "Failed to parse ref %s: %v", o.singleName, err)
 				}
+				patch = append(patch, jsonpatch2.Operation{Op: "test", Path: path, Value: meta})
 			}
-			path := fmt.Sprintf("/%s", makeJsonPtr(key))
-			patch := jsonpatch2.Patch{
-				{
-					Op:    "test",
-					Path:  path,
-					Value: meta,
-				},
-				{
-					Op:    "replace",
-					Path:  path,
-					Value: value,
-				},
-			}
+			patch = append(patch, jsonpatch2.Operation{Op: "add", Path: path, Value: value})
 			if err := session.Req().Patch(patch).UrlFor("meta", o.name, id).Do(nil); err != nil {
 				return generateError(err, "Failed to fetch meta %v: %v", o.singleName, id)
 			}
@@ -181,7 +169,7 @@ func (o *ops) meta() {
 					},
 				}
 			} else {
-				var data interface{}
+				var data string
 				if err := bufOrFileDecode(ref, &data); err != nil {
 					return generateError(err, "Failed to parse ref %s: %v", o.singleName, err)
 				}
@@ -197,11 +185,10 @@ func (o *ops) meta() {
 					},
 				}
 			}
-			var meta string
-			if err := session.Req().Patch(patch).UrlFor(o.name, id, "meta").Do(&meta); err != nil {
+			if err := session.Req().Patch(patch).UrlFor("meta", o.name, id).Do(nil); err != nil {
 				return generateError(err, "Failed to fetch meta %v: %v", o.singleName, id)
 			}
-			return prettyPrint(meta)
+			return nil
 		},
 	})
 }

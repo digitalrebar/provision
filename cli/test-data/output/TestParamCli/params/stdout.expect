@@ -9,6 +9,7 @@ Available Commands:
   exists      See if a params exists by id
   indexes     Get indexes for params
   list        List all params
+  meta        Gets metadata for the param
   show        Show a single params by id
   update      Unsafely update param by id with the passed-in JSON
   wait        Wait for a param's field to become a value within a number of seconds

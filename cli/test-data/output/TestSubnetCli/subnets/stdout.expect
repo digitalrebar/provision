@@ -13,6 +13,7 @@ Available Commands:
   indexes     Get indexes for subnets
   leasetimes  Set the leasetimes of a subnet
   list        List all subnets
+  meta        Gets metadata for the subnet
   nextserver  Set next non-reserved IP
   pickers     assigns IP allocation methods to a subnet
   range       set the range of a subnet

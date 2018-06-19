@@ -11,6 +11,7 @@ Available Commands:
   exists      See if a templates exists by id
   indexes     Get indexes for templates
   list        List all templates
+  meta        Gets metadata for the template
   runaction   Run action on object from plugin
   show        Show a single templates by id
   update      Unsafely update template by id with the passed-in JSON

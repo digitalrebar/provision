@@ -10,6 +10,7 @@ Available Commands:
   exists      See if a leases exists by id
   indexes     Get indexes for leases
   list        List all leases
+  meta        Gets metadata for the lease
   runaction   Run action on object from plugin
   show        Show a single leases by id
   wait        Wait for a lease's field to become a value within a number of seconds
