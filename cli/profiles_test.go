@@ -103,6 +103,8 @@ func TestProfileCli(t *testing.T) {
 	cliTest(false, false, "profiles", "set", "john", "param", "john2", "to", "null").run(t)
 	cliTest(false, false, "profiles", "get", "john", "param", "john2").run(t)
 	cliTest(false, false, "profiles", "get", "john", "param", "john3").run(t)
+	cliTest(false, false, "profiles", "show", "john", "--slim").run(t)
+	cliTest(false, false, "profiles", "list", "--slim").run(t)
 	cliTest(true, true, "profiles", "params").run(t)
 	cliTest(false, true, "profiles", "params", "john2").run(t)
 	cliTest(false, false, "profiles", "params", "john").run(t)

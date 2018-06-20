@@ -12,6 +12,14 @@ import (
 )
 
 func (o *ops) commands() []*cobra.Command {
+	canSlim := false
+	if _, ok := o.example().(models.MetaHaver); ok {
+		canSlim = true
+	}
+	if _, ok := o.example().(models.Paramer); ok {
+		canSlim = true
+	}
+	slim := false
 	cmds := []*cobra.Command{}
 	listCmd := &cobra.Command{
 		Use:   "list [filters...]",
@@ -74,6 +82,9 @@ further tweak how the results are returned using the following meta-filters:
 				if listOffset != -1 {
 					args = append(args, fmt.Sprintf("offset=%d", listOffset))
 				}
+				if slim {
+					args = append(args, "slim=true")
+				}
 				pargs := []string{}
 				for _, arg := range args {
 					a := strings.SplitN(arg, "=", 2)
@@ -87,6 +98,9 @@ further tweak how the results are returned using the following meta-filters:
 				}
 				if listOffset != -1 {
 					args = append(args, "offset", fmt.Sprintf("%d", listOffset))
+				}
+				if slim {
+					args = append(args, "slim", "true")
 				}
 				if len(args) > 0 {
 					req = session.Req().Filter(o.name, args...)
@@ -104,6 +118,9 @@ further tweak how the results are returned using the following meta-filters:
 	cmds = append(cmds, listCmd)
 	listCmd.Flags().IntVar(&listLimit, "limit", -1, "Maximum number of items to return")
 	listCmd.Flags().IntVar(&listOffset, "offset", -1, "Number of items to skip before starting to return data")
+	if canSlim {
+		listCmd.Flags().BoolVar(&slim, "slim", false, "Should strip Meta and Params fields out of returned objects")
+	}
 	cmds = append(cmds, &cobra.Command{
 		Use:   "indexes",
 		Short: fmt.Sprintf("Get indexes for %s", o.name),
@@ -117,7 +134,7 @@ further tweak how the results are returned using the following meta-filters:
 			return prettyPrint(indexes)
 		},
 	})
-	cmds = append(cmds, &cobra.Command{
+	showCmd := &cobra.Command{
 		Use:   "show [id]",
 		Short: fmt.Sprintf("Show a single %v by id", o.name),
 		Long: fmt.Sprintf(`This will show a %v by ID.
@@ -132,13 +149,21 @@ format id as *index*:*value*
 		},
 		RunE: func(c *cobra.Command, args []string) error {
 			data := o.example()
-			if err := session.FillModel(data, args[0]); err != nil {
+			req := session.Req().UrlFor(data.Prefix(), args[0])
+			if slim {
+				req = req.Params("slim", "true")
+			}
+			if err := req.Do(&data); err != nil {
 				return generateError(err, "Failed to fetch %v: %v", o.singleName, args[0])
 			} else {
 				return prettyPrint(data)
 			}
 		},
-	})
+	}
+	if canSlim {
+		showCmd.Flags().BoolVar(&slim, "slim", false, "Should strip Meta and Params fields out of returned object")
+	}
+	cmds = append(cmds, showCmd)
 	cmds = append(cmds, &cobra.Command{
 		Use:   "exists [id]",
 		Short: fmt.Sprintf("See if a %v exists by id", o.name),

@@ -302,7 +302,7 @@ func (r *R) Filter(prefix string, filterArgs ...string) *R {
 		case "reverse":
 			finalParams = append(finalParams, filter, "true")
 			i++
-		case "sort", "limit", "offset":
+		case "sort", "limit", "offset", "slim":
 			if len(filterArgs)-i < 2 {
 				r.err.Errorf("Invalid Filter: %s requires exactly one parameter", filter)
 				return r
