@@ -64,7 +64,9 @@ RE:
     "http-range-header",
     "roles",
     "tenants",
-    "secure-params"
+    "secure-params",
+    "seperate-meta-api",
+    "slim-objects"
   \],
   "file_port": 10002,
   "id": "Fred",

@@ -19,7 +19,7 @@ func (o *ops) commands() []*cobra.Command {
 	if _, ok := o.example().(models.Paramer); ok {
 		canSlim = true
 	}
-	slim := false
+	slim := ""
 	cmds := []*cobra.Command{}
 	listCmd := &cobra.Command{
 		Use:   "list [filters...]",
@@ -82,8 +82,8 @@ further tweak how the results are returned using the following meta-filters:
 				if listOffset != -1 {
 					args = append(args, fmt.Sprintf("offset=%d", listOffset))
 				}
-				if slim {
-					args = append(args, "slim=true")
+				if slim != "" {
+					args = append(args, fmt.Sprintf("slim=%s", slim))
 				}
 				pargs := []string{}
 				for _, arg := range args {
@@ -99,8 +99,8 @@ further tweak how the results are returned using the following meta-filters:
 				if listOffset != -1 {
 					args = append(args, "offset", fmt.Sprintf("%d", listOffset))
 				}
-				if slim {
-					args = append(args, "slim", "true")
+				if slim != "" {
+					args = append(args, "slim", slim)
 				}
 				if len(args) > 0 {
 					req = session.Req().Filter(o.name, args...)
@@ -119,7 +119,10 @@ further tweak how the results are returned using the following meta-filters:
 	listCmd.Flags().IntVar(&listLimit, "limit", -1, "Maximum number of items to return")
 	listCmd.Flags().IntVar(&listOffset, "offset", -1, "Number of items to skip before starting to return data")
 	if canSlim {
-		listCmd.Flags().BoolVar(&slim, "slim", false, "Should strip Meta and Params fields out of returned objects")
+		listCmd.Flags().StringVar(&slim,
+			"slim",
+			"",
+			"Should elide certain fields.  Can be 'Params', 'Meta', or a comma-seperated list of both.")
 	}
 	cmds = append(cmds, &cobra.Command{
 		Use:   "indexes",
@@ -150,8 +153,8 @@ format id as *index*:*value*
 		RunE: func(c *cobra.Command, args []string) error {
 			data := o.example()
 			req := session.Req().UrlFor(data.Prefix(), args[0])
-			if slim {
-				req = req.Params("slim", "true")
+			if slim != "" {
+				req = req.Params("slim", slim)
 			}
 			if err := req.Do(&data); err != nil {
 				return generateError(err, "Failed to fetch %v: %v", o.singleName, args[0])
@@ -161,7 +164,10 @@ format id as *index*:*value*
 		},
 	}
 	if canSlim {
-		showCmd.Flags().BoolVar(&slim, "slim", false, "Should strip Meta and Params fields out of returned object")
+		showCmd.Flags().StringVar(&slim,
+			"slim",
+			"",
+			"Should elide certain fields.  Can be 'Params', 'Meta', or a comma-seperated list of both.")
 	}
 	cmds = append(cmds, showCmd)
 	cmds = append(cmds, &cobra.Command{

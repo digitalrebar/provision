@@ -3,8 +3,8 @@ Usage:
   drpcli jobs show [id] [flags]
 
 Flags:
-  -h, --help   help for show
-      --slim   Should strip Meta and Params fields out of returned object
+  -h, --help          help for show
+      --slim string   Should elide certain fields.  Can be 'Params', 'Meta', or a comma-seperated list of both.
 
 Global Flags:
   -d, --debug               Whether the CLI should run in debug mode
