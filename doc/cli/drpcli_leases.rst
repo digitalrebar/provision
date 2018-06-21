@@ -47,6 +47,8 @@ SEE ALSO
 -  `drpcli leases indexes <drpcli_leases_indexes.html>`__ - Get indexes
    for leases
 -  `drpcli leases list <drpcli_leases_list.html>`__ - List all leases
+-  `drpcli leases meta <drpcli_leases_meta.html>`__ - Gets metadata for
+   the lease
 -  `drpcli leases runaction <drpcli_leases_runaction.html>`__ - Run
    action on object from plugin
 -  `drpcli leases show <drpcli_leases_show.html>`__ - Show a single

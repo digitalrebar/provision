@@ -39,6 +39,10 @@ func (t *Task) SetMeta(d Meta) {
 	t.Meta = d
 }
 
+func (t *Task) GetDocumentation() string {
+	return t.Documentation
+}
+
 func (t *Task) Validate() {
 	t.AddError(ValidName("Invalid Name", t.Name))
 

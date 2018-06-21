@@ -18,6 +18,11 @@ type PluginProvider struct {
 	RequiredParams []string
 	OptionalParams []string
 
+	// Documentation of this plugin provider.  This should tell what
+	// the plugin provider is for, any special considerations that
+	// should be taken into account when using it, etc. in rich structured text (rst).
+	Documentation string
+
 	// Content Bundle Yaml string - can be optional or empty
 	Content string
 }
@@ -28,6 +33,10 @@ func (p *PluginProvider) GetMeta() Meta {
 
 func (p *PluginProvider) SetMeta(d Meta) {
 	p.Meta = d
+}
+
+func (p *PluginProvider) GetDocumentation() string {
+	return p.Documentation
 }
 
 func (p *PluginProvider) Prefix() string  { return "plugin_providers" }

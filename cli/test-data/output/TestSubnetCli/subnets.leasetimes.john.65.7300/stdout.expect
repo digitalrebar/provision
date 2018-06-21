@@ -4,6 +4,7 @@
   "ActiveStart": "192.168.100.10",
   "Available": true,
   "Description": "",
+  "Documentation": "",
   "Enabled": false,
   "Errors": [],
   "Meta": {},

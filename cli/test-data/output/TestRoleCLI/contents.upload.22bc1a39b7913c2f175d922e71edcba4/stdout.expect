@@ -5,6 +5,7 @@
   "Warnings": [],
   "meta": {
     "Description": "License Data for RackN",
+    "Documentation": "",
     "Name": "rackn-license",
     "Overwritable": false,
     "Source": "RackN",

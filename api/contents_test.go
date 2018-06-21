@@ -166,6 +166,7 @@ sections:
     global:
       Available: false
       Description: Global profile attached automatically to all machines.
+      Documentation: ""
       Errors: []
       Meta:
         color: blue

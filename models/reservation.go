@@ -18,6 +18,10 @@ type Reservation struct {
 	// any special considerations that should be taken into account when
 	// using it, etc.
 	Description string
+	// Documentation of this reservation.  This should tell what
+	// the reservation is for, any special considerations that
+	// should be taken into account when using it, etc. in rich structured text (rst).
+	Documentation string
 	// Token is the unique identifier that the strategy for this Reservation should use.
 	//
 	// required: true
@@ -44,6 +48,10 @@ func (r *Reservation) GetMeta() Meta {
 
 func (r *Reservation) SetMeta(d Meta) {
 	r.Meta = d
+}
+
+func (r *Reservation) GetDocumentation() string {
+	return r.Documentation
 }
 
 func (r *Reservation) Prefix() string {

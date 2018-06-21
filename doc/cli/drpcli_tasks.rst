@@ -49,6 +49,8 @@ SEE ALSO
 -  `drpcli tasks indexes <drpcli_tasks_indexes.html>`__ - Get indexes
    for tasks
 -  `drpcli tasks list <drpcli_tasks_list.html>`__ - List all tasks
+-  `drpcli tasks meta <drpcli_tasks_meta.html>`__ - Gets metadata for
+   the task
 -  `drpcli tasks runaction <drpcli_tasks_runaction.html>`__ - Run action
    on object from plugin
 -  `drpcli tasks show <drpcli_tasks_show.html>`__ - Show a single tasks

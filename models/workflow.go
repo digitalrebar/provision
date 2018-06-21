@@ -4,9 +4,10 @@ type Workflow struct {
 	Validation
 	Access
 	Meta
-	Name        string
-	Description string
-	Stages      []string
+	Name          string
+	Description   string
+	Documentation string
+	Stages        []string
 }
 
 func (w *Workflow) GetMeta() Meta {
@@ -15,6 +16,10 @@ func (w *Workflow) GetMeta() Meta {
 
 func (w *Workflow) SetMeta(d Meta) {
 	w.Meta = d
+}
+
+func (w *Workflow) GetDocumentation() string {
+	return w.Documentation
 }
 
 func (w *Workflow) Prefix() string {

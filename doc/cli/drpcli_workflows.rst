@@ -50,6 +50,8 @@ SEE ALSO
    indexes for workflows
 -  `drpcli workflows list <drpcli_workflows_list.html>`__ - List all
    workflows
+-  `drpcli workflows meta <drpcli_workflows_meta.html>`__ - Gets
+   metadata for the workflow
 -  `drpcli workflows runaction <drpcli_workflows_runaction.html>`__ -
    Run action on object from plugin
 -  `drpcli workflows show <drpcli_workflows_show.html>`__ - Show a

@@ -1,6 +1,7 @@
 {
   "Available": true,
   "Description": "Cow's drool",
+  "Documentation": "",
   "Errors": [],
   "Meta": {},
   "Name": "yamltest",

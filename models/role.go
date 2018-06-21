@@ -252,8 +252,12 @@ type Role struct {
 	Name string
 	// Claims that the role support.
 	Claims []*Claim
-	// Description of user
+	// Description of role
 	Description string
+	// Documentation of this role.  This should tell what
+	// the role is for, any special considerations that
+	// should be taken into account when using it, etc. in rich structured text (rst).
+	Documentation string
 }
 
 func (r *Role) GetMeta() Meta {
@@ -262,6 +266,10 @@ func (r *Role) GetMeta() Meta {
 
 func (r *Role) SetMeta(d Meta) {
 	r.Meta = d
+}
+
+func (r *Role) GetDocumentation() string {
+	return r.Documentation
 }
 
 func (r *Role) Fill() {

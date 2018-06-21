@@ -10,6 +10,9 @@ type ContentMetaData struct {
 	Description string
 	Version     string
 
+	// Optional fields
+	Documentation string
+
 	// Informational Fields
 	Writable     bool
 	Type         string
@@ -48,11 +51,12 @@ func (c *Content) ToStore(dest store.Store) error {
 	c.Fill()
 	if dmeta, ok := dest.(store.MetaSaver); ok {
 		meta := map[string]string{
-			"Name":        c.Meta.Name,
-			"Source":      c.Meta.Source,
-			"Description": c.Meta.Description,
-			"Version":     c.Meta.Version,
-			"Type":        c.Meta.Type,
+			"Name":          c.Meta.Name,
+			"Source":        c.Meta.Source,
+			"Description":   c.Meta.Description,
+			"Version":       c.Meta.Version,
+			"Type":          c.Meta.Type,
+			"Documentation": c.Meta.Documentation,
 		}
 		if err := dmeta.SetMetaData(meta); err != nil {
 			return err
@@ -87,6 +91,8 @@ func (c *Content) FromStore(src store.Store) error {
 				c.Meta.Version = v
 			case "Type":
 				c.Meta.Type = v
+			case "Documentation":
+				c.Meta.Documentation = v
 			}
 		}
 	}
@@ -171,6 +177,8 @@ func (c *ContentSummary) FromStore(src store.Store) {
 				c.Meta.Version = v
 			case "Type":
 				c.Meta.Type = v
+			case "Documentation":
+				c.Meta.Documentation = v
 			}
 		}
 	}

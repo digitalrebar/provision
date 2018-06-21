@@ -3,6 +3,7 @@
     "Available": true,
     "BootEnv": "",
     "Description": "",
+    "Documentation": "",
     "Errors": [],
     "Meta": {},
     "Name": "stage2",

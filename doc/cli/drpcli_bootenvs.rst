@@ -52,6 +52,8 @@ SEE ALSO
    a bootenv along with everything it requires
 -  `drpcli bootenvs list <drpcli_bootenvs_list.html>`__ - List all
    bootenvs
+-  `drpcli bootenvs meta <drpcli_bootenvs_meta.html>`__ - Gets metadata
+   for the bootenv
 -  `drpcli bootenvs runaction <drpcli_bootenvs_runaction.html>`__ - Run
    action on object from plugin
 -  `drpcli bootenvs show <drpcli_bootenvs_show.html>`__ - Show a single

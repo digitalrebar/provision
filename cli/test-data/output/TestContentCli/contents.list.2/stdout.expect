@@ -22,6 +22,7 @@
     "Warnings": [],
     "meta": {
       "Description": "Writable backing store",
+      "Documentation": "",
       "Name": "BackingStore",
       "Overwritable": false,
       "Source": "",
@@ -37,6 +38,7 @@
     "Warnings": [],
     "meta": {
       "Description": "Local Override Store",
+      "Documentation": "",
       "Name": "LocalStore",
       "Overwritable": true,
       "Source": "",
@@ -50,6 +52,7 @@
     "Warnings": [],
     "meta": {
       "Description": "",
+      "Documentation": "",
       "Name": "john",
       "Overwritable": false,
       "Source": "",
@@ -65,6 +68,7 @@
     "Warnings": [],
     "meta": {
       "Description": "Initial Default Content",
+      "Documentation": "",
       "Name": "DefaultStore",
       "Overwritable": true,
       "Source": "Unspecified",
@@ -80,6 +84,7 @@
     "Warnings": [],
     "meta": {
       "Description": "Test Plugin for DRP",
+      "Documentation": "",
       "Name": "incrementer",
       "Overwritable": false,
       "Source": "Digital Rebar",
@@ -97,6 +102,7 @@
     "Warnings": [],
     "meta": {
       "Description": "Default objects that must be present",
+      "Documentation": "",
       "Name": "BasicStore",
       "Overwritable": true,
       "Source": "",

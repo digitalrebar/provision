@@ -15,6 +15,10 @@ type Plugin struct {
 	// A description of this plugin.  This can contain any reference
 	// information for humans you want associated with the plugin.
 	Description string
+	// Documentation of this plugin.  This should tell what
+	// the plugin is for, any special considerations that
+	// should be taken into account when using it, etc. in rich structured text (rst).
+	Documentation string
 	// Any additional parameters that may be needed to configure
 	// the plugin.
 	Params map[string]interface{}
@@ -33,6 +37,10 @@ func (p *Plugin) GetMeta() Meta {
 
 func (p *Plugin) SetMeta(d Meta) {
 	p.Meta = d
+}
+
+func (p *Plugin) GetDocumentation() string {
+	return p.Documentation
 }
 
 func (p *Plugin) Validate() {

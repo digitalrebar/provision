@@ -3,6 +3,7 @@
     "Available": true,
     "BootEnv": "local",
     "Description": "Stage to boot into the local BootEnv.",
+    "Documentation": "",
     "Errors": [],
     "Meta": {
       "color": "green",
@@ -24,6 +25,7 @@
     "Available": true,
     "BootEnv": "",
     "Description": "Noop / Nothing stage",
+    "Documentation": "",
     "Errors": [],
     "Meta": {
       "color": "green",

@@ -50,6 +50,8 @@ SEE ALSO
    Get indexes for reservations
 -  `drpcli reservations list <drpcli_reservations_list.html>`__ - List
    all reservations
+-  `drpcli reservations meta <drpcli_reservations_meta.html>`__ - Gets
+   metadata for the reservation
 -  `drpcli reservations
    runaction <drpcli_reservations_runaction.html>`__ - Run action on
    object from plugin

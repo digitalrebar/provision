@@ -45,6 +45,8 @@ SEE ALSO
 -  `drpcli params indexes <drpcli_params_indexes.html>`__ - Get indexes
    for params
 -  `drpcli params list <drpcli_params_list.html>`__ - List all params
+-  `drpcli params meta <drpcli_params_meta.html>`__ - Gets metadata for
+   the param
 -  `drpcli params show <drpcli_params_show.html>`__ - Show a single
    params by id
 -  `drpcli params update <drpcli_params_update.html>`__ - Unsafely

@@ -66,6 +66,8 @@ SEE ALSO
    Insert a task at [offset] from machine's running task
 -  `drpcli machines list <drpcli_machines_list.html>`__ - List all
    machines
+-  `drpcli machines meta <drpcli_machines_meta.html>`__ - Gets metadata
+   for the machine
 -  `drpcli machines params <drpcli_machines_params.html>`__ - Gets/sets
    all parameters for the machine
 -  `drpcli machines processjobs <drpcli_machines_processjobs.html>`__ -

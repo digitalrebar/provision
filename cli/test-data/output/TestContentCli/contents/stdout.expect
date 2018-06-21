@@ -7,6 +7,7 @@ Available Commands:
   bundle      Bundle the current directory into [file].  [meta fields] allows for the specification of the meta data.
   create      Add a new content layer to the system
   destroy     Remove the content layer [id] from the system.
+  document    Expand the content bundle [file] into documentation
   exists      See if content layer referenced by [id] exists
   list        List the installed content bundles
   show        Show a single content layer referenced by [id]

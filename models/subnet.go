@@ -21,6 +21,10 @@ type Subnet struct {
 	// any special considerations that should be taken into account when
 	// using it, etc.
 	Description string
+	// Documentation of this subnet.  This should tell what
+	// the subnet is for, any special considerations that
+	// should be taken into account when using it, etc. in rich structured text (rst).
+	Documentation string
 	// Enabled indicates if the subnet should hand out leases or continue operating
 	// leases if already running.
 	//
@@ -128,6 +132,10 @@ func (s *Subnet) GetMeta() Meta {
 
 func (s *Subnet) SetMeta(d Meta) {
 	s.Meta = d
+}
+
+func (s *Subnet) GetDocumentation() string {
+	return s.Documentation
 }
 
 func (s *Subnet) Validate() {

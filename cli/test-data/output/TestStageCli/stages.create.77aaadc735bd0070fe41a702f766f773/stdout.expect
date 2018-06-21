@@ -2,6 +2,7 @@
   "Available": true,
   "BootEnv": "local",
   "Description": "",
+  "Documentation": "",
   "Errors": [],
   "Meta": {},
   "Name": "john",

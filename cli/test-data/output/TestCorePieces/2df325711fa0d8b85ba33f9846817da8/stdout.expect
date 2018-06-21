@@ -2,6 +2,7 @@
   BootParams: ""
   Description: The boot environment you should use to have unknown machines boot off
     their local hard drive
+  Documentation: ""
   Errors: []
   Initrds: []
   Kernel: ""
@@ -46,6 +47,7 @@
   BootParams: ""
   Description: The boot environment you should use to have known machines boot off
     their local hard drive
+  Documentation: ""
   Errors: []
   Initrds: []
   Kernel: ""

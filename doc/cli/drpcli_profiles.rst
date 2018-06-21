@@ -54,6 +54,8 @@ SEE ALSO
    indexes for profiles
 -  `drpcli profiles list <drpcli_profiles_list.html>`__ - List all
    profiles
+-  `drpcli profiles meta <drpcli_profiles_meta.html>`__ - Gets metadata
+   for the profile
 -  `drpcli profiles params <drpcli_profiles_params.html>`__ - Gets/sets
    all parameters for the profile
 -  `drpcli profiles remove <drpcli_profiles_remove.html>`__ - Remove the

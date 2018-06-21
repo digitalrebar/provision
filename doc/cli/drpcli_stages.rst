@@ -55,6 +55,8 @@ SEE ALSO
 -  `drpcli stages indexes <drpcli_stages_indexes.html>`__ - Get indexes
    for stages
 -  `drpcli stages list <drpcli_stages_list.html>`__ - List all stages
+-  `drpcli stages meta <drpcli_stages_meta.html>`__ - Gets metadata for
+   the stage
 -  `drpcli stages removeprofile <drpcli_stages_removeprofile.html>`__ -
    Remove a profile from the machine's list
 -  `drpcli stages removetask <drpcli_stages_removetask.html>`__ - Remove

@@ -53,6 +53,8 @@ SEE ALSO
 -  `drpcli subnets leasetimes <drpcli_subnets_leasetimes.html>`__ - Set
    the leasetimes of a subnet
 -  `drpcli subnets list <drpcli_subnets_list.html>`__ - List all subnets
+-  `drpcli subnets meta <drpcli_subnets_meta.html>`__ - Gets metadata
+   for the subnet
 -  `drpcli subnets nextserver <drpcli_subnets_nextserver.html>`__ - Set
    next non-reserved IP
 -  `drpcli subnets pickers <drpcli_subnets_pickers.html>`__ - assigns IP

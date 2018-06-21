@@ -2,6 +2,7 @@
   {
     "Available": true,
     "Description": "",
+    "Documentation": "",
     "Errors": [],
     "Meta": {},
     "Name": "wf1",
@@ -15,6 +16,7 @@
   {
     "Available": true,
     "Description": "",
+    "Documentation": "",
     "Errors": [],
     "Meta": {},
     "Name": "wf2",
@@ -28,6 +30,7 @@
   {
     "Available": true,
     "Description": "",
+    "Documentation": "",
     "Errors": [],
     "Meta": {},
     "Name": "wf3",
@@ -41,6 +44,7 @@
   {
     "Available": false,
     "Description": "",
+    "Documentation": "",
     "Errors": [
       "Stage missing does not exist"
     ],

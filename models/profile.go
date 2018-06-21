@@ -20,6 +20,10 @@ type Profile struct {
 	// A description of this profile.  This can contain any reference
 	// information for humans you want associated with the profile.
 	Description string
+	// Documentation of this profile.  This should tell what
+	// the profile is for, any special considerations that
+	// should be taken into account when using it, etc. in rich structured text (rst).
+	Documentation string
 	// Any additional parameters that may be needed to expand templates
 	// for BootEnv, as documented by that boot environment's
 	// RequiredParams and OptionalParams.

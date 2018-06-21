@@ -53,6 +53,8 @@ SEE ALSO
 -  `drpcli plugins indexes <drpcli_plugins_indexes.html>`__ - Get
    indexes for plugins
 -  `drpcli plugins list <drpcli_plugins_list.html>`__ - List all plugins
+-  `drpcli plugins meta <drpcli_plugins_meta.html>`__ - Gets metadata
+   for the plugin
 -  `drpcli plugins params <drpcli_plugins_params.html>`__ - Gets/sets
    all parameters for the plugin
 -  `drpcli plugins remove <drpcli_plugins_remove.html>`__ - Remove the

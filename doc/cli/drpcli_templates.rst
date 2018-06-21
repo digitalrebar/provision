@@ -50,6 +50,8 @@ SEE ALSO
    indexes for templates
 -  `drpcli templates list <drpcli_templates_list.html>`__ - List all
    templates
+-  `drpcli templates meta <drpcli_templates_meta.html>`__ - Gets
+   metadata for the template
 -  `drpcli templates runaction <drpcli_templates_runaction.html>`__ -
    Run action on object from plugin
 -  `drpcli templates show <drpcli_templates_show.html>`__ - Show a

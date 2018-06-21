@@ -39,6 +39,10 @@ func (p *Param) SetMeta(d Meta) {
 	p.Meta = d
 }
 
+func (p *Param) GetDocumentation() string {
+	return p.Documentation
+}
+
 func (p *Param) DefaultValue() (interface{}, bool) {
 	if km, ok := p.Schema.(map[string]interface{}); ok {
 		v, vok := km["default"]
