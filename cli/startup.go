@@ -153,7 +153,9 @@ func NewApp() *cobra.Command {
 		// contents needs some help.
 		if c.Use == "contents" {
 			for _, sc := range c.Commands() {
-				if !strings.HasPrefix(sc.Use, "bundle") && !strings.HasPrefix(sc.Use, "unbundle") {
+				if !strings.HasPrefix(sc.Use, "bundle") &&
+					!strings.HasPrefix(sc.Use, "unbundle") &&
+					!strings.HasPrefix(sc.Use, "document") {
 					sc.PersistentPreRunE = ppr
 				}
 			}
