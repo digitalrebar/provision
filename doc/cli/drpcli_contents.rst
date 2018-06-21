@@ -43,6 +43,8 @@ SEE ALSO
    content layer to the system
 -  `drpcli contents destroy <drpcli_contents_destroy.html>`__ - Remove
    the content layer [id] from the system.
+-  `drpcli contents document <drpcli_contents_document.html>`__ - Expand
+   the content bundle [file] into documentation
 -  `drpcli contents exists <drpcli_contents_exists.html>`__ - See if
    content layer referenced by [id] exists
 -  `drpcli contents list <drpcli_contents_list.html>`__ - List the

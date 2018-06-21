@@ -177,6 +177,11 @@ type TaskRunner interface {
 	RunningTask() int
 }
 
+type Docer interface {
+	Model
+	GetDocumentation() string
+}
+
 // Only implement this if you want actions
 type Actor interface {
 	Model

@@ -2,6 +2,7 @@
   "Available": true,
   "BootParams": "Acounted for",
   "Description": "",
+  "Documentation": "",
   "Errors": [],
   "Initrds": [
     "fakeinitrd"

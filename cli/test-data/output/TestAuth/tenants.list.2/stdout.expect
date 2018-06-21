@@ -2,6 +2,7 @@
   {
     "Available": true,
     "Description": "",
+    "Documentation": "",
     "Errors": [],
     "Members": {
       "bootenvs": [],
@@ -39,6 +40,7 @@
   {
     "Available": true,
     "Description": "",
+    "Documentation": "",
     "Errors": [],
     "Members": {
       "bootenvs": [],

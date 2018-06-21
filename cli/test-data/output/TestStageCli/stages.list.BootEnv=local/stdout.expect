@@ -3,6 +3,7 @@
     "Available": true,
     "BootEnv": "local",
     "Description": "",
+    "Documentation": "",
     "Errors": [],
     "Meta": {},
     "Name": "john",
@@ -20,6 +21,7 @@
     "Available": true,
     "BootEnv": "local",
     "Description": "Stage to boot into the local BootEnv.",
+    "Documentation": "",
     "Errors": [],
     "Meta": {
       "color": "green",

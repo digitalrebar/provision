@@ -45,6 +45,8 @@ SEE ALSO
 -  `drpcli tenants indexes <drpcli_tenants_indexes.html>`__ - Get
    indexes for tenants
 -  `drpcli tenants list <drpcli_tenants_list.html>`__ - List all tenants
+-  `drpcli tenants meta <drpcli_tenants_meta.html>`__ - Gets metadata
+   for the tenant
 -  `drpcli tenants show <drpcli_tenants_show.html>`__ - Show a single
    tenants by id
 -  `drpcli tenants update <drpcli_tenants_update.html>`__ - Unsafely

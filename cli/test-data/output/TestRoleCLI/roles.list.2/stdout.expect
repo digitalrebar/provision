@@ -9,6 +9,7 @@
       }
     ],
     "Description": "",
+    "Documentation": "",
     "Errors": [],
     "Meta": {},
     "Name": "superuser",
@@ -25,6 +26,7 @@
       }
     ],
     "Description": "",
+    "Documentation": "",
     "Errors": [],
     "Meta": {},
     "Name": "validButUseless",

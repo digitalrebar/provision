@@ -16,6 +16,10 @@ type Stage struct {
 	// any special considerations that should be taken into account when
 	// using it, etc.
 	Description string
+	// Documentation of this stage.  This should tell what
+	// the stage is for, any special considerations that
+	// should be taken into account when using it, etc. in rich structured text (rst).
+	Documentation string
 	// The templates that should be expanded into files for the stage.
 	//
 	// required: true
@@ -60,6 +64,11 @@ func (s *Stage) GetMeta() Meta {
 func (s *Stage) SetMeta(d Meta) {
 	s.Meta = d
 }
+
+func (s *Stage) GetDocumentation() string {
+	return s.Documentation
+}
+
 func (s *Stage) Validate() {
 	s.AddError(ValidName("Invalid Name", s.Name))
 	if s.BootEnv != "" {

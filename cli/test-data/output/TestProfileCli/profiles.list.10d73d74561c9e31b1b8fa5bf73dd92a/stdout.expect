@@ -2,6 +2,7 @@
   {
     "Available": true,
     "Description": "Global profile attached automatically to all machines.",
+    "Documentation": "",
     "Errors": [],
     "Meta": {},
     "Name": "global",
@@ -12,6 +13,7 @@
   {
     "Available": true,
     "Description": "",
+    "Documentation": "",
     "Errors": [],
     "Meta": {},
     "Name": "john",

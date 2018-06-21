@@ -1,6 +1,7 @@
 {
   "Available": true,
   "Description": "Cow's rule",
+  "Documentation": "",
   "Errors": [],
   "Meta": {},
   "Name": "jsontest",

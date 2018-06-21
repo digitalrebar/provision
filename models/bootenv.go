@@ -114,6 +114,10 @@ type BootEnv struct {
 	// the boot environment is for, any special considerations that
 	// should be taken into account when using it, etc.
 	Description string
+	// Documentation of this boot environment.  This should tell what
+	// the boot environment is for, any special considerations that
+	// should be taken into account when using it, etc. in rich structured text (rst).
+	Documentation string
 	// The OS specific information for the boot environment.
 	OS OsInfo
 	// The templates that should be expanded into files for the
@@ -166,6 +170,10 @@ func (b *BootEnv) GetMeta() Meta {
 
 func (b *BootEnv) SetMeta(d Meta) {
 	b.Meta = d
+}
+
+func (b *BootEnv) GetDocumentation() string {
+	return b.Documentation
 }
 
 func (b *BootEnv) Validate() {

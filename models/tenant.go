@@ -7,8 +7,12 @@ type Tenant struct {
 	Meta
 	Name        string
 	Description string
-	Members     map[string][]string
-	Users       []string
+	// Documentation of this tenant.  This should tell what
+	// the tenant is for, any special considerations that
+	// should be taken into account when using it, etc. in rich structured text (rst).
+	Documentation string
+	Members       map[string][]string
+	Users         []string
 }
 
 func (t *Tenant) Fill() {
@@ -30,6 +34,10 @@ func (t *Tenant) GetMeta() Meta {
 
 func (t *Tenant) SetMeta(d Meta) {
 	t.Meta = d
+}
+
+func (t *Tenant) GetDocumentation() string {
+	return t.Documentation
 }
 
 func (t *Tenant) Validate() {

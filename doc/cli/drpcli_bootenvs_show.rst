@@ -18,7 +18,8 @@ Options
 
 ::
 
-      -h, --help   help for show
+      -h, --help          help for show
+          --slim string   Should elide certain fields.  Can be 'Params', 'Meta', or a comma-seperated list of both.
 
 Options inherited from parent commands
 --------------------------------------

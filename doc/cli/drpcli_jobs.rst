@@ -49,6 +49,8 @@ SEE ALSO
 -  `drpcli jobs list <drpcli_jobs_list.html>`__ - List all jobs
 -  `drpcli jobs log <drpcli_jobs_log.html>`__ - Gets the log or appends
    to the log if a second argument or stream is given
+-  `drpcli jobs meta <drpcli_jobs_meta.html>`__ - Gets metadata for the
+   job
 -  `drpcli jobs plugin\_action <drpcli_jobs_plugin_action.html>`__ -
    Display the action for this job
 -  `drpcli jobs plugin\_actions <drpcli_jobs_plugin_actions.html>`__ -

@@ -49,6 +49,8 @@ SEE ALSO
 -  `drpcli users indexes <drpcli_users_indexes.html>`__ - Get indexes
    for users
 -  `drpcli users list <drpcli_users_list.html>`__ - List all users
+-  `drpcli users meta <drpcli_users_meta.html>`__ - Gets metadata for
+   the user
 -  `drpcli users password <drpcli_users_password.html>`__ - Set the
    password for this id
 -  `drpcli users runaction <drpcli_users_runaction.html>`__ - Run action

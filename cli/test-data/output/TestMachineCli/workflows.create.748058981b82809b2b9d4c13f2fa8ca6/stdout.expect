@@ -1,6 +1,7 @@
 {
   "Available": false,
   "Description": "",
+  "Documentation": "",
   "Errors": [
     "Stage nonexistent-stage does not exist"
   ],

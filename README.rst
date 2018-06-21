@@ -114,6 +114,7 @@ Table of Contents
    doc/faq-troubleshooting
    doc/arch
    doc/integrations
+   doc/content-packages
    CONTRIBUTING
    Trademark
    LICENSE

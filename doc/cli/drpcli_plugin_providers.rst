@@ -47,6 +47,8 @@ SEE ALSO
    plugin\_providers
 -  `drpcli plugin\_providers list <drpcli_plugin_providers_list.html>`__
    - List all plugin\_providers
+-  `drpcli plugin\_providers meta <drpcli_plugin_providers_meta.html>`__
+   - Gets metadata for the plugin\_provider
 -  `drpcli plugin\_providers show <drpcli_plugin_providers_show.html>`__
    - Show a single plugin\_providers by id
 -  `drpcli plugin\_providers

@@ -45,6 +45,8 @@ SEE ALSO
 -  `drpcli roles indexes <drpcli_roles_indexes.html>`__ - Get indexes
    for roles
 -  `drpcli roles list <drpcli_roles_list.html>`__ - List all roles
+-  `drpcli roles meta <drpcli_roles_meta.html>`__ - Gets metadata for
+   the role
 -  `drpcli roles show <drpcli_roles_show.html>`__ - Show a single roles
    by id
 -  `drpcli roles update <drpcli_roles_update.html>`__ - Unsafely update

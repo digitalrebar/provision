@@ -2,6 +2,7 @@
   "Available": false,
   "BootParams": "",
   "Description": "",
+  "Documentation": "",
   "Errors": [
     "bootenv: Missing elilo or pxelinux template",
     "bootenv: john: missing kernel lpxelinux.0 (/johann/lpxelinux.0)"
