@@ -30,7 +30,7 @@ Digital Rebar Provision will fail if it cannot attach to one of the required por
 
 See the port mapping list on start-up for a complete list.
 
-.. _rs_tftp_error
+.. _rs_tftp_error:
 
 TFTP Error 
 ----------
