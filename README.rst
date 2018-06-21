@@ -105,6 +105,7 @@ Table of Contents
    doc/os-support
    doc/os-support/linuxkit
    doc/ui
+   doc/ux/portalux
    doc/Swagger
    doc/cli
    doc/api
