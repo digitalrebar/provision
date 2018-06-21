@@ -26,6 +26,14 @@ type Profile struct {
 	Params map[string]interface{}
 }
 
+func (p *Profile) GetMeta() Meta {
+	return p.Meta
+}
+
+func (p *Profile) SetMeta(d Meta) {
+	p.Meta = d
+}
+
 func (p *Profile) Validate() {
 	p.AddError(ValidName("Invalid Name", p.Name))
 	for k := range p.Params {
@@ -59,12 +67,12 @@ func (p *Profile) AuthKey() string {
 	return p.Key()
 }
 
-func (b *Profile) SliceOf() interface{} {
+func (p *Profile) SliceOf() interface{} {
 	s := []*Profile{}
 	return &s
 }
 
-func (b *Profile) ToModels(obj interface{}) []Model {
+func (p *Profile) ToModels(obj interface{}) []Model {
 	items := obj.(*[]*Profile)
 	res := make([]Model, len(*items))
 	for i, item := range *items {
@@ -74,18 +82,18 @@ func (b *Profile) ToModels(obj interface{}) []Model {
 }
 
 // match Paramer interface
-func (b *Profile) GetParams() map[string]interface{} {
-	return copyMap(b.Params)
+func (p *Profile) GetParams() map[string]interface{} {
+	return copyMap(p.Params)
 }
 
-func (b *Profile) SetParams(p map[string]interface{}) {
-	b.Params = copyMap(p)
+func (p *Profile) SetParams(pl map[string]interface{}) {
+	p.Params = copyMap(pl)
 }
 
-func (b *Profile) SetName(n string) {
-	b.Name = n
+func (p *Profile) SetName(n string) {
+	p.Name = n
 }
 
-func (b *Profile) CanHaveActions() bool {
+func (p *Profile) CanHaveActions() bool {
 	return true
 }

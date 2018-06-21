@@ -27,6 +27,14 @@ type Plugin struct {
 	PluginErrors []string
 }
 
+func (p *Plugin) GetMeta() Meta {
+	return p.Meta
+}
+
+func (p *Plugin) SetMeta(d Meta) {
+	p.Meta = d
+}
+
 func (p *Plugin) Validate() {
 	p.AddError(ValidName("Invalid Name", p.Name))
 	p.AddError(ValidName("Invalid Provider", p.Provider))
@@ -68,12 +76,12 @@ func (n *Plugin) AuthKey() string {
 	return n.Key()
 }
 
-func (b *Plugin) SliceOf() interface{} {
+func (p *Plugin) SliceOf() interface{} {
 	s := []*Plugin{}
 	return &s
 }
 
-func (b *Plugin) ToModels(obj interface{}) []Model {
+func (p *Plugin) ToModels(obj interface{}) []Model {
 	items := obj.(*[]*Plugin)
 	res := make([]Model, len(*items))
 	for i, item := range *items {
@@ -83,14 +91,14 @@ func (b *Plugin) ToModels(obj interface{}) []Model {
 }
 
 // match Paramer interface
-func (b *Plugin) GetParams() map[string]interface{} {
-	return copyMap(b.Params)
+func (p *Plugin) GetParams() map[string]interface{} {
+	return copyMap(p.Params)
 }
 
-func (b *Plugin) SetParams(p map[string]interface{}) {
-	b.Params = copyMap(p)
+func (p *Plugin) SetParams(pl map[string]interface{}) {
+	p.Params = copyMap(pl)
 }
 
-func (b *Plugin) CanHaveActions() bool {
+func (p *Plugin) CanHaveActions() bool {
 	return true
 }

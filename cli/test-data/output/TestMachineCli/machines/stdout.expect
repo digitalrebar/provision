@@ -19,6 +19,7 @@ Available Commands:
   indexes       Get indexes for machines
   inserttask    Insert a task at [offset] from machine's running task
   list          List all machines
+  meta          Gets metadata for the machine
   params        Gets/sets all parameters for the machine
   processjobs   For the given machine, process pending jobs until done.
   remove        Remove the param *key* from machines

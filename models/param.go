@@ -31,6 +31,14 @@ type Param struct {
 	Schema interface{}
 }
 
+func (p *Param) GetMeta() Meta {
+	return p.Meta
+}
+
+func (p *Param) SetMeta(d Meta) {
+	p.Meta = d
+}
+
 func (p *Param) DefaultValue() (interface{}, bool) {
 	if km, ok := p.Schema.(map[string]interface{}); ok {
 		v, vok := km["default"]

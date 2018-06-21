@@ -11,6 +11,7 @@ Available Commands:
   exists      See if a workflows exists by id
   indexes     Get indexes for workflows
   list        List all workflows
+  meta        Gets metadata for the workflow
   runaction   Run action on object from plugin
   show        Show a single workflows by id
   update      Unsafely update workflow by id with the passed-in JSON

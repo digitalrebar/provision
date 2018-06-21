@@ -3,7 +3,8 @@ Usage:
   drpcli templates show [id] [flags]
 
 Flags:
-  -h, --help   help for show
+  -h, --help          help for show
+      --slim string   Should elide certain fields.  Can be 'Params', 'Meta', or a comma-seperated list of both.
 
 Global Flags:
   -d, --debug               Whether the CLI should run in debug mode

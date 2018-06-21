@@ -85,6 +85,14 @@ type Machine struct {
 	Workflow string
 }
 
+func (n *Machine) GetMeta() Meta {
+	return n.Meta
+}
+
+func (n *Machine) SetMeta(d Meta) {
+	n.Meta = d
+}
+
 func (n *Machine) Validate() {
 	n.AddError(ValidMachineName("Invalid Name", n.Name))
 	n.AddError(ValidName("Invalid Stage", n.Stage))

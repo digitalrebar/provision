@@ -22,6 +22,14 @@ type PluginProvider struct {
 	Content string
 }
 
+func (p *PluginProvider) GetMeta() Meta {
+	return p.Meta
+}
+
+func (p *PluginProvider) SetMeta(d Meta) {
+	p.Meta = d
+}
+
 func (p *PluginProvider) Prefix() string  { return "plugin_providers" }
 func (p *PluginProvider) Key() string     { return p.Name }
 func (p *PluginProvider) KeyName() string { return "Name" }

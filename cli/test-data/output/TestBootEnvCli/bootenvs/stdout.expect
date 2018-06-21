@@ -12,6 +12,7 @@ Available Commands:
   indexes     Get indexes for bootenvs
   install     Install a bootenv along with everything it requires
   list        List all bootenvs
+  meta        Gets metadata for the bootenv
   runaction   Run action on object from plugin
   show        Show a single bootenvs by id
   update      Unsafely update bootenv by id with the passed-in JSON

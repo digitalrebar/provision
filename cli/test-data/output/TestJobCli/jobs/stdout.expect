@@ -11,6 +11,7 @@ Available Commands:
   indexes          Get indexes for jobs
   list             List all jobs
   log              Gets the log or appends to the log if a second argument or stream is given
+  meta             Gets metadata for the job
   plugin_action    Display the action for this job
   plugin_actions   Display actions for this job
   runplugin_action Run action on object from plugin

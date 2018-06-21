@@ -53,6 +53,13 @@ type Stage struct {
 	RunnerWait bool
 }
 
+func (s *Stage) GetMeta() Meta {
+	return s.Meta
+}
+
+func (s *Stage) SetMeta(d Meta) {
+	s.Meta = d
+}
 func (s *Stage) Validate() {
 	s.AddError(ValidName("Invalid Name", s.Name))
 	if s.BootEnv != "" {

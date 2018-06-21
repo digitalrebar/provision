@@ -31,6 +31,14 @@ type Task struct {
 	OptionalParams []string
 }
 
+func (t *Task) GetMeta() Meta {
+	return t.Meta
+}
+
+func (t *Task) SetMeta(d Meta) {
+	t.Meta = d
+}
+
 func (t *Task) Validate() {
 	t.AddError(ValidName("Invalid Name", t.Name))
 
@@ -79,12 +87,12 @@ func (t *Task) AuthKey() string {
 	return t.Key()
 }
 
-func (b *Task) SliceOf() interface{} {
+func (t *Task) SliceOf() interface{} {
 	s := []*Task{}
 	return &s
 }
 
-func (b *Task) ToModels(obj interface{}) []Model {
+func (t *Task) ToModels(obj interface{}) []Model {
 	items := obj.(*[]*Task)
 	res := make([]Model, len(*items))
 	for i, item := range *items {
@@ -93,10 +101,10 @@ func (b *Task) ToModels(obj interface{}) []Model {
 	return res
 }
 
-func (b *Task) SetName(n string) {
-	b.Name = n
+func (t *Task) SetName(n string) {
+	t.Name = n
 }
 
-func (b *Task) CanHaveActions() bool {
+func (t *Task) CanHaveActions() bool {
 	return true
 }

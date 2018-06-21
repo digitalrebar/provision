@@ -11,6 +11,7 @@ Available Commands:
   exists      See if a users exists by id
   indexes     Get indexes for users
   list        List all users
+  meta        Gets metadata for the user
   password    Set the password for this id
   runaction   Run action on object from plugin
   show        Show a single users by id

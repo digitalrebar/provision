@@ -14,6 +14,7 @@ Available Commands:
   exists        See if a stages exists by id
   indexes       Get indexes for stages
   list          List all stages
+  meta          Gets metadata for the stage
   removeprofile Remove a profile from the machine's list
   removetask    Remove a task from the stage's list
   runaction     Run action on object from plugin

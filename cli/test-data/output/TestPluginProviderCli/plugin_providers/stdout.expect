@@ -8,6 +8,7 @@ Available Commands:
   exists      See if a plugin_providers exists by id
   indexes     Get indexes for plugin_providers
   list        List all plugin_providers
+  meta        Gets metadata for the plugin_provider
   show        Show a single plugin_providers by id
   upload      Upload a program to act as a plugin_provider
   wait        Wait for a plugin_provider's field to become a value within a number of seconds

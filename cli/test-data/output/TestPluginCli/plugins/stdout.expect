@@ -13,6 +13,7 @@ Available Commands:
   get         Get a parameter from the plugin
   indexes     Get indexes for plugins
   list        List all plugins
+  meta        Gets metadata for the plugin
   params      Gets/sets all parameters for the plugin
   remove      Remove the param *key* from plugins
   runaction   Run action on object from plugin

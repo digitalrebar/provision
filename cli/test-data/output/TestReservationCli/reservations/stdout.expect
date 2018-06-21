@@ -11,6 +11,7 @@ Available Commands:
   exists      See if a reservations exists by id
   indexes     Get indexes for reservations
   list        List all reservations
+  meta        Gets metadata for the reservation
   runaction   Run action on object from plugin
   show        Show a single reservations by id
   update      Unsafely update reservation by id with the passed-in JSON

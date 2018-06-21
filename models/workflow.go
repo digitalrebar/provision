@@ -9,6 +9,14 @@ type Workflow struct {
 	Stages      []string
 }
 
+func (w *Workflow) GetMeta() Meta {
+	return w.Meta
+}
+
+func (w *Workflow) SetMeta(d Meta) {
+	w.Meta = d
+}
+
 func (w *Workflow) Prefix() string {
 	return "workflows"
 }

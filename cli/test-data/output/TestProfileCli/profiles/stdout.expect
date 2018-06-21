@@ -13,6 +13,7 @@ Available Commands:
   get         Get a parameter from the profile
   indexes     Get indexes for profiles
   list        List all profiles
+  meta        Gets metadata for the profile
   params      Gets/sets all parameters for the profile
   remove      Remove the param *key* from profiles
   runaction   Run action on object from plugin

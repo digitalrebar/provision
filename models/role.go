@@ -240,7 +240,7 @@ func makeClaims(things ...string) []*Claim {
 	return res
 }
 
-// User is an API user of DigitalRebar Provision
+// Role is used to determine which API endpoints are available.
 // swagger:model
 type Role struct {
 	Validation
@@ -254,6 +254,14 @@ type Role struct {
 	Claims []*Claim
 	// Description of user
 	Description string
+}
+
+func (r *Role) GetMeta() Meta {
+	return r.Meta
+}
+
+func (r *Role) SetMeta(d Meta) {
+	r.Meta = d
 }
 
 func (r *Role) Fill() {
