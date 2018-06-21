@@ -16,6 +16,7 @@ drp-data
 /dr-provision
 /drpcli
 /default.yaml
+/doc/content-packages/*.rst
 drpcli-docs
 drpcli.amd64.linux
 drpcli.amd64.darwin
