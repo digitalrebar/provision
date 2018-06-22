@@ -315,7 +315,6 @@ urls=[
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/dev-library.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/drp-prom-mon.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/flash.rst",
-    "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/ha-krib.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/honeycomb.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/image-builder.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/image-deploy.rst",
