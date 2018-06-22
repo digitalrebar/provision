@@ -441,6 +441,13 @@ v3.7.0 to v3.8.0
 
 No additional changes necessary.
 
+v3.8.0 to v3.9.0
+----------------
+
+`Release Notes for v3.9.0 <https://github.com/digitalrebar/provision/releases/tag/v3.9.0>`_
+
+No additional changes necessary.
+
 Local UI Removed
 ~~~~~~~~~~~~~~~~
 
