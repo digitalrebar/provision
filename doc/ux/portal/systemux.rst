@@ -2,6 +2,7 @@
 .. Licensed under the Apache License, Version 2.0 (the "License");
 .. Digital Rebar Provision documentation under Digital Rebar master license
 .. index::
+  pair: Digital Rebar Provision; UX
 
 .. _rs_systemux:
 
@@ -13,7 +14,7 @@ This part of the RackN Portal contains a quick overview of key activities being 
 Video: Why RackN built the Portal https://youtu.be/levzBw5t7gc. 
 
 Overview
--------
+--------
 The Overview page shows a live view of all the active machine stages running via the RackN Portal including their State and BootEnv settings. The page also shows the running machines activity.    
 
 The top of the page offers the following services via a single blue button for each action:

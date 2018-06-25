@@ -132,6 +132,7 @@ You can also override the return icon (`map outline`) and color ('black') by add
 Users can set icons using
 
   ::
+
 	  Meta {
 	      icon = "leaf"
 	      color = "green"
