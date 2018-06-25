@@ -108,7 +108,7 @@ value                     definition
 ``forced-commands-only``  only allow forced commands to run via remote login
 ========================  ==========================================================
 
-.. _rs_ubuntu_root:
+.. _rs_default_password:
 
 What are the default passwords?
 -------------------------------
