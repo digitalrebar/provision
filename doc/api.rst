@@ -43,20 +43,36 @@ The filter specification allows more complex filters using functions:
 
 The query string applies ALL parameters are to be applied (as implied by the & separator).  All must match to be returned.
 
+Filtering by Param Value
+------------------------
+
+The API includes specialized filter behavior for Params that allows deep searching models for Param values.
+
+To filter Machines or Profiles by Param values, pass the Param name and value using the normal Field filter specification.  When the Field is not found, the backend will search model's Params keys and evalute the filter against the Param value.
+
+Payload Reduction (slim)
+------------------------
+
+Since Params and Meta may contain a lot of data, the API supports the ``?slim=[Params,Meta]`` option to allow requests to leave these fields unpopulated.  If this data is needed, operators will have to request the full object or object's Params or Meta in secondary calls.
+
+  ::
+
+    /api/v3/machines?slim=Params,Meta
+
+Only endpoints that offer the ``slim-objects`` feature flag (v3.9+) will accept this flag.
 
 .. _rs_api_notes:
 
-API Exception Notes
--------------------
+API Exception & Deprecation Notes
+---------------------------------
 
-There are times when the API and models have exceptions or changes that do not follow the normal pattern.  This section is designed to provide a reference for those exceptions
+There are times when the API and models have exceptions or changes that do not follow the normal pattern.  This section is designed to provide a reference for those exceptions.
 
-This section is intended to provide general information about and functional of the API
+This section is intended to provide general information about and functional of the API.  We maintain this section for legacy operators, when possible avoid using deprecated features!
 
-*Machines.Profile*
+*Machines.Profile (deprecated by flag: profileless-machine)*
   What would otherwise be Machine.Params is actually embedded under Machines.Profile.Params.
-  This composition simplifies that precedence calculation for Params by making Machines the
+  This deprecated composition simplifies that precedence calculation for Params by making Machines the
   top of the Profiles stack.  All the other fields in the Machines.Profile are ignored.
-
 
 .. swaggerv2doc:: https://github.com/digitalrebar/provision/releases/download/tip/swagger.json
