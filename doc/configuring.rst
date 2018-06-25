@@ -58,6 +58,8 @@ Each content pack has various supported operating system BootEnv definitions.  T
 
 Additional Operating System versions are available via registered RackN content pack add-ons.  
 
+.. _rs_configuring_default:
+
 Default Template Identity
 -------------------------
 

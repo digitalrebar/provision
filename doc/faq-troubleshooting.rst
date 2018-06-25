@@ -108,6 +108,14 @@ value                     definition
 ``forced-commands-only``  only allow forced commands to run via remote login
 ========================  ==========================================================
 
+.. _rs_ubuntu_root:
+
+What are the default passwords?
+-------------------------------
+
+When using the community BootEnvs for installation, the password is set to a variant of ``RocketSkates``.  See :ref:`rs_configuring_default` for complete details.
+
+We *strongly* recommend changing this default or, better, using SSH ``without-password`` options as per :ref:`rs_access_ssh_root_mode` above.
 
 .. _rs_autocomplete:
 
