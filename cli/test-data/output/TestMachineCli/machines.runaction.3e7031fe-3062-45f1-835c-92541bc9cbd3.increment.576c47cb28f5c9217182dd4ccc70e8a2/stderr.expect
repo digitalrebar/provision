@@ -1,4 +1,4 @@
-Error: error unmarshaling JSON: while decoding JSON: json: cannot unmarshal string into Go value of type map[string]interface {}
+Error: error unmarshaling JSON: json: cannot unmarshal string into Go value of type map[string]interface {}
 Usage:
   drpcli machines runaction [id] [command] [- | JSON or YAML Map of objects | pairs of string objects] [flags]
 
