@@ -545,3 +545,15 @@ The Job Logs provide a lot of information about the provisioning process of your
     export UUID=`abcd-efgh-ijkl-mnop-qrps"
     drpcli jobs list | jq ".[] | select(.Machine==\"$UUID\")"
 
+List Machines with a Given Profile Added to Them
+================================================
+
+Starting sometime after v3.9.0 the API will allow you to filter Machines that have a given ``Profile`` applied to them.  If you don't have this version, you can use ``jq`` to list all Machines with a specified ``Profile`` by using the following construct:
+  ::
+
+    # set the PROFILE variable to the name you want to match
+    export PROFILE=foobar
+    drpcli machines list | jq -r ".[] | select(.Profiles[] == \"$PROFILE\") | \"\(.Name)\""
+
+In this case, we simply list the output of the Machines ``Name``.  You can change the final ``\(.Name)`` to any valid JSON key(s) on the Machine Object.
+
