@@ -79,23 +79,32 @@ The critical block is the provider block which identifies the provider and login
 
   ::
 
-	  provider "drp" {
-	    api_user     = "rocketskates"
-	    api_password = "r0cketsk8ts"
-	    api_url      = "https://127.0.0.1:8092"
-	  }
+   	variable "api_url" {
+   	  default = "https://127.0.0.1:8092"
+   	}
+   	variable "api_user" {
+   	  default = "rocketskates"
+   	}
+   	variable "api_password" {
+   	  default = "r0cketsk8ts"
+   	}
+   	provider "drp" {
+   	  api_user     = "${var.api_user}"
+   	  api_password = "${var.api_password}"
+   	  api_url      = "${var.api_url}"
+   	}
 
 Once you have the provider block, you can name resource blocks using the normal object key values.  For example, a machine resource looks like this:
 
   ::
 
-	resource "drp_machine" "one_random_node" {
-	  count = 1
-	  Workflow    = "centos-7"
-	  Description = "updated description"
-	  Name        = "greg2"
-	  userdata    = "yaml cloudinit file"
-	}
+  	resource "drp_machine" "one_random_node" {
+  	  count = 1
+  	  Workflow    = "centos-7"
+  	  Description = "updated description"
+  	  Name        = "greg2"
+  	  userdata    = "yaml cloudinit file"
+  	}
 
 You can set any Machine property by naming the property with correct capitalization.  You can use the Terraform syntax to create more complex models like Meta, Profiles.
 
@@ -138,10 +147,37 @@ Users can set icons using
 	      color = "green"
 	  }
 
+
+Creating RAW Machines using Cloud IPMI plugins
+------------------------------------------
+
+The `drp_machine` resource relies on having a pool of machines already configured; however, you can use the `drp_raw_machine` resource to create machines in Digital Rebar Provision.  If you are using an IPMI plugin that supports creating machines, such as Packet or Virtualbox, and set the `machine-plugin` value then the plugin will create (and destroy) the associated machine in the target platform.  This can be a very powerful way to build and manage clusters.  
+
+It is possible to use raw and pooled machines together by also setting the `terraform/managed` and `terraform/allocated` parameters when creating machines.  This will allow Terraform to treat newly created machines as a pool.  It's important to include chained `depends_on` in the resource blocks when using this approach in a single plan.
+
+Note: Unlike the `drp_machine` resource, this resource does not wait until the workflow has completed.  It will return when the machine has been create API returns.
+
+An example of the `drp_raw_machine` resource with correct parameter values is
+
+  ::
+
+    resource "drp_raw_machine" "packet-machines" {
+      Description = "Terraform Added RAW"
+      Workflow = "discover"
+      Name = "packet_machine"
+      Params {
+        "machine-plugin" = "packet-ipmi"
+        "packet/plan" ="baremetal_0"
+        "terraform/managed" = "true"
+        "terraform/allocated" = "false"
+      }
+
 Running Terraform
 -----------------
 
 Just use `terraform apply` and `terraform destroy` and as normal!
+
+Note: the examples above use variables for endpoint login.  The syntax for overriding these variables is `-var 'api_url=https://[ip address]:8092'`.  User names and passwords should never be hard coded into plan files!
 
 Extending the Features
 ----------------------
