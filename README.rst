@@ -20,7 +20,7 @@ Key Features:
    * Multi-boot workflows using composable and reusable building blocks 
    * Event driven actions via Websockets API
    * Extensible Plug-in Model for public, vendor and internal enhancements
-   * Supports ALL orchestration tools including Chef, Puppet, Ansible, SaltStack, Bosh, Teraform, etc
+   * Supports ALL orchestration tools including Chef, Puppet, Ansible, SaltStack, Bosh, Terraform, etc
    * RAID, IPMI, and BIOS Configuration (via commercial plugins)
 
 .. figure::  doc/images/dr_provision.png
