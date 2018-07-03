@@ -107,6 +107,8 @@ and enable the service.  The method described in the :ref:`rs_quickstart` can be
 *--isolated* flag is removed from the command line.  Look at the internals of the **install.sh** script to see what
 is going on.
 
+.. note:: The default location for storing runtime information is ``/var/lib/dr-provision`` unless overridden by ``--data-root``
+
 Alternatively, the **install.sh** script can be passed the *--isolated* flag and it will setup the current directory
 as an isolated "test drive" environment.  This will create a symbolic link from the bin directory to the local top-level
 directory for the appropriate OS/platform, create a set of directories for data storage and file storage, and
