@@ -125,7 +125,7 @@ For example:
 
     filters = [{
 	    name = "Name"
-	    value = "greg2"
+	    jsonvalue = "greg2"
 	}]
 
 
