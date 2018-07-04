@@ -432,7 +432,12 @@ Example URLs:
 Booting Ubunutu Without External Access
 ---------------------------------------
 
-Default Ubuntu ISOs will attempt to check internet repositories, this can cause problems during provisioning if your environment does not have outbound access.  Adding ``default_route=true`` to the boot parameters and including a DNS server on the local subnet in DHCP seems to correct the problem.
+Default Ubuntu ISOs will attempt to check internet repositories, this can cause problems during provisioning if your environment does not have outbound access.
+
+To workaround this problem, you need to supply a DNS and gateway for your subnet.  There are several ways to do this:
+
+1. Internal to Digital Rebar: Define Options 3 (Gateway) and 6 (DNS) for your machines' Subnet.
+2. External to Digital Rebar: Adding ``default_route=true`` to the boot parameters and include a DNS server on the local subnet in DHCP.
 
 .. _rs_kubernetes_dashboard:
 
