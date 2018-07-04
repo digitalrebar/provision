@@ -432,7 +432,7 @@ Example URLs:
 Booting Ubunutu Without External Access
 ---------------------------------------
 
-Default Ubuntu ISOs will attempt to check internet repositories.  This behavior will cause installs to hang in environments that do not have internet access.  Set the ``local-repo`` parameter to ``true`` to disable this check and only use boot ISO.
+Default Ubuntu ISOs will attempt to check internet repositories, this can cause problems during provisioning if your environment does not have outbound access.  Adding ``default_route=true`` to the boot parameters and including a DNS server on the local subnet in DHCP seems to correct the problem.
 
 .. _rs_kubernetes_dashboard:
 
