@@ -1,8 +1,8 @@
 
 .. _rs_krib:
 
-KRIB (Kubernetes Rebar Immutable Bootstrapping)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+KRIB (Kubernetes Rebar Integrated Bootstrapping)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This document provides information on how to use the Digital Rebar *KRIB* content add-on.  Use of this content will enable the operator to install Kubernetes in either a Live Boot (immutable infrastructure pattern) mode, or via installed to local hard disk OS mode.
 

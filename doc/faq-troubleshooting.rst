@@ -398,15 +398,14 @@ The expected behavior is for a client to attempt to download files in the follow
 
 Due to this behavior, filenames will be specified that do not exist, and the error message related to that probe request is a normal message.  This is NOT an indicator that provisioning is broken in your environment.
 
-
 .. _rs_render_kickstart_preseed:
 
 Render a Kickstart or Preseed
 -----------------------------
 
-Kickstart and Preseed files only created by request and are not stored on a filesystem that is viewable.  They are dynamically generated on the fly, and served from the virtual Filesystem space of the Digital Rebar HTTP server (on port 8091 by default).  However, it is possible to render a kickstart or preseed to evaluate how it is going to operate, or troubleshoot issues with your config files. 
+Kickstart and Preseed files only created by request and are not stored on a filesystem that is viewable.  They are dynamically generated on the fly, and served from the virtual Filesystem space of the Digital Rebar HTTP server (on port 8091 by default).  However, it is possible to render a kickstart or preseed to evaluate how it is going to operate, or troubleshoot issues with your config files.
 
-When a machine is in provisioning status, you can view the dynamically generated preseed or kickstart from the TFTP server (or via the HTTP gateway).  Provisioning status means the Machine has been plaed in to an installable BootEnv via a Stage.  If (for exaxmple) placed in to ``centos-7-install`` Stage, the ``compute.ks`` can be rendered for the machine.  Or, if placed in to ``ubuntu-16.04-install`` Stage, the ``seed`` can be rendered for the machine.  
+When a machine is in provisioning status, you can view the dynamically generated preseed or kickstart from the TFTP server (or via the HTTP gateway).  Provisioning status means the Machine has been plaed in to an installable BootEnv via a Stage.  If (for exaxmple) placed in to ``centos-7-install`` Stage, the ``compute.ks`` can be rendered for the machine.  Or, if placed in to ``ubuntu-16.04-install`` Stage, the ``seed`` can be rendered for the machine.
 
 Get the Machine ID, then use the following constructed URL:
   ::
@@ -428,13 +427,21 @@ Example URLs:
 
 .. note:: A simple trick ... you can create a non-existent Machine, and place that machine in different BootEnvs to render provisioning files for testing purposes.  For example, put the non-existent Machine in the ``centos-7-install`` Stage, then render the ``compute.ks`` kickstart URL above.
 
+.. _rs_ubuntu_local_repo:
+
+Booting Ubunutu Without External Access
+---------------------------------------
+
+Default Ubuntu ISOs will attempt to check internet repositories.  This behavior will cause installs to hang in environments that do not have internet access.  Set the ``local-repo`` parameter to ``true`` to disable this check and only use boot ISO.
 
 .. _rs_kubernetes_dashboard:
 
 Kubernetes Dashboard
 --------------------
 
-The Ansible Kubespray and the Kubeadm deployments of Kubernetes are all maintained by the respective Kubernetes communities.  Digital Rebar simply implements a basic version of those configurations.  Access to the Kubernetes Dashboard is often changing, and being updated by the community.  Please check with the respective communities about how to correctly access the Dashboard.   
+For :ref:`rs_krib`, the ``admin.conf`` files is saved into the ``krib/cluster-admin-conf`` profile parameter and can be downloaded after installation is complete.  Using this file ``kubectl --kubeconfig=admin.conf`` allows autheticated access to the cluster.  Please see the KRIB documentation for more details.
+
+For other deployments such as Ansible Kubespray or the Kubeadm deployments of Kubernetes are all maintained by the respective Kubernetes communities.  Digital Rebar simply implements a basic version of those configurations.  Access to the Kubernetes Dashboard is often changing, and being updated by the community.  Please check with the respective communities about how to correctly access the Dashboard.
 
 Some things to note in general: 
 
