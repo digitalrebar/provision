@@ -115,6 +115,21 @@ template.  RenderData has the following fields:
 
     5. The default value defined as part of the JSON schema for the Param.
 
+    Param returns values as simple strings! For complex output, look at
+    .ParamAsJSON and .ParamAsYAML below.
+
+  - **.ParamAsJSON <key>** returns the value for the specified key for this
+    rendering preserved in JSON formatting.  This is important for templates
+    that rely on ``jq`` or other commands that need consistent formatting
+
+    Note: .ParamAsJSON will use the .Param lookup order above.
+
+  - **.ParamAsYAML <key>** returns the value for the specified key for this
+    rendering preserved in YAML formatting.  This is important for configuration
+    files and templates that need consistent formatting
+
+    Note: .ParamAsYAML will use the .Param lookup order above.
+
   - **.Repos <tag>, <tag>,...** returns Repos (as defined by the
     package-repositories param currently in scope) with the matching
     tags.
