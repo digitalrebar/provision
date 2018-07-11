@@ -30,7 +30,7 @@ Templates:
       PROMPT 0
       TIMEOUT 10
       LABEL local
-      localboot 0
+      {{.Param "pxelinux-local-boot"}}
     ID: ""
     Name: pxelinux
     Path: pxelinux.cfg/{{.Machine.HexAddress}}
@@ -45,7 +45,7 @@ Templates:
       PROMPT 0
       TIMEOUT 10
       LABEL local
-      localboot 0
+      {{.Param "pxelinux-local-boot"}}
     ID: ""
     Name: pxelinux-mac
     Path: pxelinux.cfg/{{.Machine.MacAddr "pxelinux"}}
@@ -74,7 +74,7 @@ Templates:
     PROMPT 0
     TIMEOUT 10
     LABEL local
-    localboot 0
+    {{.Param "pxelinux-local-boot"}}
   Name: "pxelinux"
   Path: "pxelinux.cfg/default"
 - Contents: |

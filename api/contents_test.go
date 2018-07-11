@@ -76,6 +76,7 @@ func TestContentCrud(t *testing.T) {
 - Counts:
     bootenvs: 2
     roles: 1
+    params: 1
     stages: 2
   Warnings: []
   meta:
@@ -386,7 +387,7 @@ Templates:
     PROMPT 0
     TIMEOUT 10
     LABEL local
-    localboot 0
+    {{.Param "pxelinux-local-boot"}}
   Name: pxelinux
   Path: pxelinux.cfg/default
 - Contents: |

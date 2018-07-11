@@ -96,6 +96,7 @@
   {
     "Counts": {
       "bootenvs": 2,
+      "params": 1,
       "roles": 1,
       "stages": 2
     },
