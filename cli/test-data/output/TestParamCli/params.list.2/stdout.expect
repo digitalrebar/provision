@@ -71,17 +71,18 @@
     "Validated": true
   },
   {
-    "Available": false,
+    "Available": true,
     "Description": "The method pxelinux should use to try to boot to the local disk",
     "Documentation": "\nOn most systems, using 'localboot 0' is the proper thing to do to have\npxelinux try to boot off the first hard drive.  However, some systems\ndo not behave properlydoing that, either due to firmware bugs or\nmalconfigured hard drives.  This param allows you to override 'localboot 0'\nwith another pxelinux command.  A useful reference for alternate boot methods\nis at https://www.syslinux.org/wiki/index.php?title=Comboot/chain.c32",
-    "Errors": [
-      "Expected: valid schema, given: Invalid JSON"
-    ],
+    "Errors": [],
     "Meta": {},
     "Name": "pxelinux-local-boot",
     "ReadOnly": true,
-    "Schema": "\n{\n    \"type\": \"string\",\n    \"default\": \"localboot 0\"\n}\n",
+    "Schema": {
+      "default": "localboot 0",
+      "type": "string"
+    },
     "Secure": false,
-    "Validated": false
+    "Validated": true
   }
 ]
