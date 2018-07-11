@@ -68,7 +68,7 @@
     "RequiredParams": [],
     "Templates": [
       {
-        "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
+        "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\n{{.Param \"pxelinux-local-boot\"}}\n",
         "ID": "",
         "Name": "pxelinux",
         "Path": "pxelinux.cfg/default"
@@ -112,7 +112,7 @@
     "RequiredParams": [],
     "Templates": [
       {
-        "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
+        "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\n{{.Param \"pxelinux-local-boot\"}}\n",
         "ID": "",
         "Name": "pxelinux",
         "Path": "pxelinux.cfg/{{.Machine.HexAddress}}"
@@ -124,7 +124,7 @@
         "Path": "{{.Machine.Address}}.ipxe"
       },
       {
-        "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\nlocalboot 0\n",
+        "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\n{{.Param \"pxelinux-local-boot\"}}\n",
         "ID": "",
         "Name": "pxelinux-mac",
         "Path": "pxelinux.cfg/{{.Machine.MacAddr \"pxelinux\"}}"
