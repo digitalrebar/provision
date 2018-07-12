@@ -1,4 +1,5 @@
-Log for Job: 04a97298-385e-47b1-a9ba-45dc93dff113
+RE:
+Log for Job: .*
 Starting task :noisyStage:noisyTask on phred
 Starting command ./noisyTask-noisy
 

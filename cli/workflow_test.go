@@ -1,6 +1,9 @@
 package cli
 
-import "testing"
+import (
+	"runtime"
+	"testing"
+)
 
 func TestWorkflowCli(t *testing.T) {
 	stageCreateInput := `{
@@ -152,5 +155,83 @@ func TestWorkflowSwitch(t *testing.T) {
 	cliTest(false, false, "tasks", "destroy", "task2").run(t)
 	cliTest(false, false, "tasks", "destroy", "task3").run(t)
 	cliTest(false, false, "tasks", "destroy", "task4").run(t)
+	verifyClean(t)
+}
+
+func TestWorkflowAgent(t *testing.T) {
+	if runtime.GOOS != "linux" || runtime.GOARCH != "amd64" {
+		t.Logf("Agent tests only run on linux amd64")
+		return
+	}
+	cliTest(false, false, "tasks", "create", "-").Stdin(`---
+Name: task1
+Templates:
+  - Contents: |
+      #!/usr/bin/env bash
+      exit 0
+    Name: task1`).run(t)
+	cliTest(false, false, "tasks", "create", "-").Stdin(`---
+Name: task2
+Templates:
+  - Contents: |
+      #!/usr/bin/env bash
+      DRPCLI="$GOPATH/src/github.com/digitalrebar/provision/bin/linux/amd64/drpcli"
+      if [[ ! -x $DRPCLI ]]; then
+         echo "Missing drpcli.  Please run tools/build.sh before running tests"
+         exit 1
+      fi
+      "$DRPCLI" machines workflow Name:m1 wf2 &>/dev/null
+    Name: task2`).run(t)
+	cliTest(false, false, "tasks", "create", "-").Stdin(`---
+Name: task3
+Templates:
+  - Contents: |
+      #!/usr/bin/env bash
+      echo "Shouldn't get here 0"
+      exit 1
+    Name: task3`).run(t)
+	cliTest(false, false, "tasks", "create", "-").Stdin(`---
+Name: task4
+Templates:
+  - Contents: |
+      #!/usr/bin/env bash
+      echo "Should exit here"
+      exit 1
+    Name: task4`).run(t)
+	cliTest(false, false, "tasks", "create", "-").Stdin(`---
+Name: task5
+Templates:
+  - Contents: |
+      #!/usr/bin/env bash
+      echo "Should not get here 1"
+      exit 1
+    Name: task5`).run(t)
+	cliTest(false, false, "tasks", "create", "-").Stdin(`---
+Name: task6
+Templates:
+  - Contents: |
+      #!/usr/bin/env bash
+      echo "Should not get here 2"
+      exit 1
+    Name: task6`).run(t)
+	cliTest(false, false, "stages", "create", "-").Stdin(`{"Name":"stage1","Tasks":["task1","task2","task3"]}`).run(t)
+	cliTest(false, false, "stages", "create", "-").Stdin(`{"Name":"stage2","Tasks":["task4","task5","task6"]}`).run(t)
+	cliTest(false, false, "workflows", "create", "-").Stdin(`{"Name":"wf1","Stages":["stage1"]}`).run(t)
+	cliTest(false, false, "workflows", "create", "-").Stdin(`{"Name":"wf2","Stages":["stage2"]}`).run(t)
+	cliTest(false, false, "machines", "create", "-").Stdin(`{"Name":"m1","Workflow":"wf1","Runnable":true}`).run(t)
+	cliTest(false, false, "machines", "processjobs", "Name:m1", "--oneshot", "--exit-on-failure", "--").run(t)
+	cliTest(false, false, "machines", "currentlog", "Name:m1").run(t)
+	cliTest(false, false, "machines", "deletejobs", "Name:m1").run(t)
+	cliTest(false, false, "machines", "destroy", "Name:m1").run(t)
+	cliTest(false, false, "workflows", "destroy", "wf2").run(t)
+	cliTest(false, false, "workflows", "destroy", "wf1").run(t)
+	cliTest(false, false, "stages", "destroy", "stage1").run(t)
+	cliTest(false, false, "stages", "destroy", "stage2").run(t)
+	cliTest(false, false, "tasks", "destroy", "task1").run(t)
+	cliTest(false, false, "tasks", "destroy", "task2").run(t)
+	cliTest(false, false, "tasks", "destroy", "task3").run(t)
+	cliTest(false, false, "tasks", "destroy", "task4").run(t)
+	cliTest(false, false, "tasks", "destroy", "task5").run(t)
+	cliTest(false, false, "tasks", "destroy", "task6").run(t)
 	verifyClean(t)
 }

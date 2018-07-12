@@ -1,0 +1,22 @@
+{
+  "Available": true,
+  "Description": "",
+  "Documentation": "",
+  "Errors": [],
+  "Meta": {
+    "feature-flags": "sane-exit-codes"
+  },
+  "Name": "task2",
+  "OptionalParams": [],
+  "ReadOnly": false,
+  "RequiredParams": [],
+  "Templates": [
+    {
+      "Contents": "#!/usr/bin/env bash\nset -x\n$GOPATH/src/github.com/digitalrebar/provision/bin/linux/amd64/drpcli machines workflow Name:m1 wf2 || exit 1\n",
+      "ID": "",
+      "Name": "task2",
+      "Path": ""
+    }
+  ],
+  "Validated": true
+}

@@ -1,0 +1,13 @@
+RE:
+Starting task wf2:stage2:task4 on m1
+Starting command ./task4-task4
+
+
+Command running
+Should exit here
+Command exited with status 1
+Action task4 finished
+Task task4 failed
+Marked machine m1 as not runnable
+Updated job for wf2:stage2:task4 to failed
+Task signalled that it failed
