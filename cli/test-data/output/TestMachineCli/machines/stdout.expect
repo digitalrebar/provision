@@ -18,6 +18,7 @@ Available Commands:
   get           Get a parameter from the machine
   indexes       Get indexes for machines
   inserttask    Insert a task at [offset] from machine's running task
+  jobs          Access commands for manipulating the current job
   list          List all machines
   meta          Gets metadata for the machine
   params        Gets/sets all parameters for the machine

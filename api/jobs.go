@@ -275,10 +275,10 @@ func (r *TaskRunner) Run() error {
 			newM := models.Clone(r.m).(*models.Machine)
 			newM.Runnable = false
 			if err := r.c.Req().PatchTo(r.m, newM).Do(&newM); err == nil {
-				r.Log("Marked machine %s as not runnable", r.m.Key())
+				r.Log("Marked machine %s as not runnable", r.m.Name)
 				r.m = newM
 			} else {
-				r.Log("Failed to mark machine %s as not runnable: %v", r.m.Key(), err)
+				r.Log("Failed to mark machine %s as not runnable: %v", r.m.Name, err)
 			}
 		}
 		exitState := "complete"
@@ -298,9 +298,9 @@ func (r *TaskRunner) Run() error {
 			{Op: "replace", Path: "/ExitState", Value: exitState},
 		}
 		if err := r.c.Req().Patch(finalPatch).UrlForM(r.j).Do(&r.j); err != nil {
-			r.Log("Failed to update job %s to its final state %s", r.j.Key(), finalState)
+			r.Log("Failed to update job %s:%s:%s to its final state %s", r.j.Workflow, r.j.Stage, r.j.Task, finalState)
 		} else {
-			r.Log("Updated job %s to %s", r.j.Key(), finalState)
+			r.Log("Updated job for %s:%s:%s to %s", r.j.Workflow, r.j.Stage, r.j.Task, finalState)
 		}
 	}()
 	obj, err := r.c.PatchModel(r.j.Prefix(), r.j.Key(), patch)
@@ -309,7 +309,7 @@ func (r *TaskRunner) Run() error {
 		return finalErr
 	}
 	r.j = obj.(*models.Job)
-	r.Log("Starting task %s on %s", r.j.Task, r.m.Uuid)
+	r.Log("Starting task %s:%s:%s on %s", r.j.Workflow, r.j.Stage, r.j.Task, r.m.Name)
 	// At this point, we are running.
 	actions, err := r.c.JobActions(r.j)
 	if err != nil {
