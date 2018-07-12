@@ -76,6 +76,95 @@ func registerMachine(app *cobra.Command) {
 			return prettyPrint(clone)
 		},
 	})
+	jobs := &cobra.Command{
+		Use:   "jobs",
+		Short: "Access commands for manipulating the current job",
+	}
+	jobs.AddCommand(&cobra.Command{
+		Use:   "create [id]",
+		Short: "Create a job for the current task on machine [id]",
+		Args: func(c *cobra.Command, args []string) error {
+			if len(args) != 1 {
+				return fmt.Errorf("%v requires 1 argument", c.UseLine())
+			}
+			return nil
+		},
+		RunE: func(c *cobra.Command, args []string) error {
+			id := args[0]
+			m, err := op.refOrFill(id)
+			if err != nil {
+				return generateError(err, "Failed to fetch %v: %v", op.singleName, id)
+			}
+			machine := m.(*models.Machine)
+			job := &models.Job{}
+			j2 := &models.Job{}
+			job.Machine = machine.Uuid
+			if err := session.Req().Post(job).UrlFor("jobs").Do(j2); err != nil {
+				return generateError(err, "Failed to create job for %v: %v", op.singleName, id)
+			}
+			return prettyPrint(j2)
+		},
+	})
+	jobs.AddCommand(&cobra.Command{
+		Use:   "current [id]",
+		Short: "Get the current job on machine [id]",
+		Args: func(c *cobra.Command, args []string) error {
+			if len(args) != 1 {
+				return fmt.Errorf("%v requires 1 argument", c.UseLine())
+			}
+			return nil
+		},
+		RunE: func(c *cobra.Command, args []string) error {
+			id := args[0]
+			m, err := op.refOrFill(id)
+			if err != nil {
+				return generateError(err, "Failed to fetch %v: %v", op.singleName, id)
+			}
+			machine := m.(*models.Machine)
+			if machine.CurrentJob == nil || len(machine.CurrentJob) == 0 {
+				return fmt.Errorf("No current job on machine %v", m.Key())
+			}
+			job := &models.Job{}
+			if err := session.Req().UrlFor("jobs", machine.CurrentJob.String()).Do(job); err != nil {
+				return generateError(err, "Failed to fetch current job for %v: %v", op.singleName, id)
+			}
+			return prettyPrint(job)
+		},
+	})
+	jobs.AddCommand(&cobra.Command{
+		Use:   "state [id] to [state]",
+		Short: "Set the current job on machine [id] to [state]",
+		Args: func(c *cobra.Command, args []string) error {
+			if len(args) != 3 {
+				return fmt.Errorf("%v requires 2 arguments", c.UseLine())
+			}
+			return nil
+		},
+		RunE: func(c *cobra.Command, args []string) error {
+			id := args[0]
+			state := args[2]
+			m, err := op.refOrFill(id)
+			if err != nil {
+				return generateError(err, "Failed to fetch %v: %v", op.singleName, id)
+			}
+			machine := m.(*models.Machine)
+			if machine.CurrentJob == nil || len(machine.CurrentJob) == 0 {
+				return fmt.Errorf("No current job on machine %v", m.Key())
+			}
+			job := &models.Job{}
+			if err := session.Req().UrlFor("jobs", machine.CurrentJob.String()).Do(job); err != nil {
+				return generateError(err, "Failed to fetch current job for %v: %v", op.singleName, id)
+			}
+			j2 := models.Clone(job).(*models.Job)
+			j2.State = state
+			j3, err := session.PatchTo(job, j2)
+			if err != nil {
+				return generateError(err, "Failed to mark job %s as %s", job.Uuid, state)
+			}
+			return prettyPrint(j3)
+		},
+	})
+	op.addCommand(jobs)
 	op.addCommand(&cobra.Command{
 		Use:   "currentlog [id]",
 		Short: "Get the log for the most recent job run on the machine",
