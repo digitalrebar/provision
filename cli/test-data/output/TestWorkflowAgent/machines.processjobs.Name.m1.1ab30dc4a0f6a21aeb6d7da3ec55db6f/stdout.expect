@@ -1,0 +1,49 @@
+Agent in init
+Agent waiting for tasks
+Waiting on machine to become runnable
+Wait: finished with complete
+Agent running task
+Runner created for task wf1:stage1:task1 (1:2)
+Starting task wf1:stage1:task1 on m1
+Starting command ./task1-task1
+
+
+Command running
+Command exited with status 0
+Action task1 finished
+Task task1 finished
+Updated job for wf1:stage1:task1 to finished
+Task signalled that it finished normally
+Agent waiting for tasks
+Waiting on machine to become runnable
+Wait: finished with complete
+Agent running task
+Runner created for task wf1:stage1:task2 (2:3)
+Starting task wf1:stage1:task2 on m1
+Starting command ./task2-task2
+
+
+Command running
+Command exited with status 0
+Action task2 finished
+Task task2 finished
+Updated job for wf1:stage1:task2 to finished
+Task signalled that it finished normally
+Agent waiting for tasks
+Waiting on machine to become runnable
+Wait: finished with complete
+Agent running task
+Runner created for task wf2:stage2:task4 (1:2)
+Starting task wf2:stage2:task4 on m1
+Starting command ./task4-task4
+
+
+Command running
+Should exit here
+Command exited with status 1
+Action task4 finished
+Task task4 failed
+Marked machine m1 as not runnable
+Updated job for wf2:stage2:task4 to failed
+Task signalled that it failed
+Agent exiting

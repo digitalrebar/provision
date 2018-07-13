@@ -180,18 +180,28 @@ func (r *TaskRunner) Perform(action *models.JobAction, taskDir string) error {
 	code := uint(status.ExitStatus())
 	r.Log("Command exited with status %d", code)
 	if sane {
-		// codes can be between 0 and 255
-		// if the low bits are not 0, the command failed.
-		r.failed = code&^240 > uint(0)
-		// If the high bit is set, the command was incomplete and the
-		// the current task pointer should not be advanced.
-		r.incomplete = code&128 > uint(0)
-		// If we need a reboot, set bit 6
-		r.reboot = code&64 > uint(0)
-		// If we need to poweroff, set bit 5.  Reboot wins if it is set.
-		r.poweroff = code&32 > uint(0)
-		// If we need to stop, set bit 4
-		r.stop = code&16 > uint(0)
+		switch code {
+		case 0:
+		case 16:
+			r.stop = true
+		case 32:
+			r.poweroff = true
+		case 64:
+			r.reboot = true
+		case 128:
+			r.incomplete = true
+		case 144:
+			r.stop = true
+			r.incomplete = true
+		case 160:
+			r.incomplete = true
+			r.poweroff = true
+		case 192:
+			r.incomplete = true
+			r.reboot = true
+		default:
+			r.failed = true
+		}
 	} else {
 		switch code {
 		case 0:
@@ -275,10 +285,10 @@ func (r *TaskRunner) Run() error {
 			newM := models.Clone(r.m).(*models.Machine)
 			newM.Runnable = false
 			if err := r.c.Req().PatchTo(r.m, newM).Do(&newM); err == nil {
-				r.Log("Marked machine %s as not runnable", r.m.Key())
+				r.Log("Marked machine %s as not runnable", r.m.Name)
 				r.m = newM
 			} else {
-				r.Log("Failed to mark machine %s as not runnable: %v", r.m.Key(), err)
+				r.Log("Failed to mark machine %s as not runnable: %v", r.m.Name, err)
 			}
 		}
 		exitState := "complete"
@@ -298,9 +308,9 @@ func (r *TaskRunner) Run() error {
 			{Op: "replace", Path: "/ExitState", Value: exitState},
 		}
 		if err := r.c.Req().Patch(finalPatch).UrlForM(r.j).Do(&r.j); err != nil {
-			r.Log("Failed to update job %s to its final state %s", r.j.Key(), finalState)
+			r.Log("Failed to update job %s:%s:%s to its final state %s", r.j.Workflow, r.j.Stage, r.j.Task, finalState)
 		} else {
-			r.Log("Updated job %s to %s", r.j.Key(), finalState)
+			r.Log("Updated job for %s:%s:%s to %s", r.j.Workflow, r.j.Stage, r.j.Task, finalState)
 		}
 	}()
 	obj, err := r.c.PatchModel(r.j.Prefix(), r.j.Key(), patch)
@@ -309,7 +319,7 @@ func (r *TaskRunner) Run() error {
 		return finalErr
 	}
 	r.j = obj.(*models.Job)
-	r.Log("Starting task %s on %s", r.j.Task, r.m.Uuid)
+	r.Log("Starting task %s:%s:%s on %s", r.j.Workflow, r.j.Stage, r.j.Task, r.m.Name)
 	// At this point, we are running.
 	actions, err := r.c.JobActions(r.j)
 	if err != nil {

@@ -1,0 +1,22 @@
+{
+  "Available": true,
+  "Description": "",
+  "Documentation": "",
+  "Errors": [],
+  "Meta": {
+    "feature-flags": "sane-exit-codes"
+  },
+  "Name": "task3",
+  "OptionalParams": [],
+  "ReadOnly": false,
+  "RequiredParams": [],
+  "Templates": [
+    {
+      "Contents": "#!/usr/bin/env bash\necho \"Shouldn't get here 0\"\nexit 1\n",
+      "ID": "",
+      "Name": "task3",
+      "Path": ""
+    }
+  ],
+  "Validated": true
+}

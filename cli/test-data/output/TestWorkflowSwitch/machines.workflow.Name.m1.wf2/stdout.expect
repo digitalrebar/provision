@@ -1,0 +1,23 @@
+RE:
+  "Address": "",
+  "Available": true,
+  "BootEnv": "local",
+  "CurrentTask": -1,
+  "Description": "",
+  "Name": "m1",
+  "OS": "",
+  "ReadOnly": false,
+  "Runnable": true,
+  "Stage": "stage3",
+  "Tasks": \[
+    "stage:stage3",
+    "task3",
+    "task2",
+    "task1",
+    "stage:stage4",
+    "task4",
+    "task3",
+    "task2"
+  \],
+  "Validated": true,
+  "Workflow": "wf2"

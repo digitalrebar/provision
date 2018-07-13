@@ -1,0 +1,22 @@
+{
+  "Available": true,
+  "Description": "",
+  "Documentation": "",
+  "Errors": [],
+  "Meta": {
+    "feature-flags": "sane-exit-codes"
+  },
+  "Name": "task1",
+  "OptionalParams": [],
+  "ReadOnly": false,
+  "RequiredParams": [],
+  "Templates": [
+    {
+      "Contents": "#!/usr/bin/env bash\nexit 0\n",
+      "ID": "",
+      "Name": "task1",
+      "Path": ""
+    }
+  ],
+  "Validated": true
+}

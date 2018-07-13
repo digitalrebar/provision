@@ -502,6 +502,7 @@ func TestMain(m *testing.M) {
 		os.Exit(1)
 	}
 	os.Setenv("RS_TOKEN_PATH", path.Join(tmpDir, "tokens"))
+	os.Setenv("RS_ENDPOINT", "https://127.0.0.1:10001")
 
 	testArgs := []string{
 		"--base-root", tmpDir,

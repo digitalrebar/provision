@@ -1,0 +1,15 @@
+RE:
+  "Archived": false,
+  "Available": true,
+  "BootEnv": "local",
+  "Current": true,
+  "CurrentIndex": 1,
+  "ExitState": "",
+  "NextIndex": 2,
+  "Previous": "00000000-0000-0000-0000-000000000000",
+  "ReadOnly": false,
+  "Stage": "stage1",
+  "State": "finished",
+  "Task": "task1",
+  "Validated": true,
+  "Workflow": "wf1"

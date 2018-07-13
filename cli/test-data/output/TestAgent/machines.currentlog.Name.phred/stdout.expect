@@ -1,6 +1,6 @@
 RE:
 Log for Job: .*
-Starting task noisyTask on c9196b77-deef-4c8e-8130-299b3e3d9a10
+Starting task :noisyStage:noisyTask on phred
 Starting command ./noisyTask-noisy
 
 
@@ -2062,7 +2062,7 @@ Done
 Command exited with status 16
 Action noisy finished
 Task noisyTask finished
-Marked machine c9196b77-deef-4c8e-8130-299b3e3d9a10 as not runnable
-Updated job .* to finished
+Marked machine phred as not runnable
+Updated job for :noisyStage:noisyTask to finished
 Task signalled runner to stop
 Task signalled that it finished normally
