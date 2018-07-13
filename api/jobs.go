@@ -180,18 +180,28 @@ func (r *TaskRunner) Perform(action *models.JobAction, taskDir string) error {
 	code := uint(status.ExitStatus())
 	r.Log("Command exited with status %d", code)
 	if sane {
-		// codes can be between 0 and 255
-		// if the low bits are not 0, the command failed.
-		r.failed = code&^240 > uint(0)
-		// If the high bit is set, the command was incomplete and the
-		// the current task pointer should not be advanced.
-		r.incomplete = code&128 > uint(0)
-		// If we need a reboot, set bit 6
-		r.reboot = code&64 > uint(0)
-		// If we need to poweroff, set bit 5.  Reboot wins if it is set.
-		r.poweroff = code&32 > uint(0)
-		// If we need to stop, set bit 4
-		r.stop = code&16 > uint(0)
+		switch code {
+		case 0:
+		case 16:
+			r.stop = true
+		case 32:
+			r.poweroff = true
+		case 64:
+			r.reboot = true
+		case 128:
+			r.incomplete = true
+		case 144:
+			r.stop = true
+			r.incomplete = true
+		case 160:
+			r.incomplete = true
+			r.poweroff = true
+		case 192:
+			r.incomplete = true
+			r.reboot = true
+		default:
+			r.failed = true
+		}
 	} else {
 		switch code {
 		case 0:
