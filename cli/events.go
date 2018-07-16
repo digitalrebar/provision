@@ -33,5 +33,37 @@ func registerEvent(app *cobra.Command) {
 			return session.PostEvent(evt)
 		},
 	})
+	res.AddCommand(&cobra.Command{
+		Use:   "watch [filter]",
+		Short: "Watch events as they come in real time. Optional filter can be specified.",
+		Args: func(c *cobra.Command, args []string) error {
+			if len(args) > 1 {
+				return fmt.Errorf("%v requires 0 or 1 argument", c.UseLine())
+			}
+			return nil
+		},
+		RunE: func(c *cobra.Command, args []string) error {
+			stream, err := session.Events()
+			if err != nil {
+				return err
+			}
+			filter := "*.*.*"
+			if len(args) == 1 {
+				filter = args[0]
+			}
+			handle, es, err := stream.Register(filter)
+			if err != nil {
+				return err
+			}
+			defer stream.Deregister(handle)
+			for {
+				evt := <-es
+				if evt.Err != nil {
+					return err
+				}
+				prettyPrint(evt.E)
+			}
+		},
+	})
 	app.AddCommand(res)
 }

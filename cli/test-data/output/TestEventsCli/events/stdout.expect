@@ -5,6 +5,7 @@ Usage:
 
 Available Commands:
   post        Post an event
+  watch       Watch events as they come in real time. Optional filter can be specified.
 
 Flags:
   -h, --help   help for events
