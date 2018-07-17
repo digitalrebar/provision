@@ -319,7 +319,6 @@ urls=[
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/image-builder.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/image-deploy.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/ipmi.rst",
-    "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/krib.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/kubespray.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/kvm-test.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/license.rst",
@@ -333,6 +332,7 @@ urls=[
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/virtualbox-ipmi.rst",
     "https://github.com/digitalrebar/provision-content/releases/download/tip/drp-community-content.rst",
     "https://github.com/digitalrebar/provision-content/releases/download/tip/drp-community-contrib.rst",
+    "https://github.com/digitalrebar/provision-content/releases/download/tip/krib.rst",
 ]
 for url in urls:
     filename = url.rsplit('/', 1)[-1]

@@ -1,2 +1,2 @@
-Error: Failed to generate changed stages:john object: Unable to unmarshal reference object: error unmarshaling JSON: while decoding JSON: json: cannot unmarshal string into Go value of type map[string]interface {}
+Error: Failed to generate changed stages:john object: Unable to unmarshal reference object: error unmarshaling JSON: json: cannot unmarshal string into Go value of type map[string]interface {}
 
