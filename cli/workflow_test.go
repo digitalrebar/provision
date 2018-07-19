@@ -196,6 +196,7 @@ Templates:
   - Contents: |
       #!/usr/bin/env bash
       echo "Should exit here"
+      sleep 2
       exit 1
     Name: task4`).run(t)
 	cliTest(false, false, "tasks", "create", "-").Stdin(`---
