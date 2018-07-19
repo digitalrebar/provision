@@ -230,7 +230,11 @@ worked`)
 			if body != expected {
 				t.Errorf("tftp: Wanted body\n`%s`\nnot\n`%s`\n", expected, body)
 			} else {
-				t.Logf("tftp: Lookaside from \nsledgehammer/708de8b878e3818b1c1bb598a56de968939f9d4b/vmlinuz0\nto\nhttp://127.0.0.1:10003/hammertime/vmlinuz0\nworked")
+				t.Logf(`tftp: Lookaside from 
+sledgehammer/708de8b878e3818b1c1bb598a56de968939f9d4b/vmlinuz0
+to
+http://127.0.0.1:10003/hammertime/vmlinuz0
+worked`)
 			}
 		}
 	}
