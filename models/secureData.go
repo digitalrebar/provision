@@ -119,7 +119,7 @@ func (s *SecureData) Marshal(peerPublicKey []byte, data interface{}) error {
 // * Decrypt Payload using the extracted nonce, the extracted public key,
 //   and the passed-in private key.
 //
-// * If any errors were returnd in the decrypt process, return a
+// * If any errors were returned in the decrypt process, return a
 //   Corrupt error, otherwise return the decrypted data.
 func (s *SecureData) Open(targetPrivateKey *[32]byte) ([]byte, error) {
 	err := s.Validate()

@@ -1,2 +1,2 @@
-Error: Failed to generate changed jobs:00000000-0000-0000-0000-000000000001 object: Unable to unmarshal reference object: error unmarshaling JSON: while decoding JSON: json: cannot unmarshal array into Go value of type map[string]interface {}
+Error: Failed to generate changed jobs:00000000-0000-0000-0000-000000000001 object: Unable to unmarshal reference object: error unmarshaling JSON: json: cannot unmarshal array into Go value of type map[string]interface {}
 

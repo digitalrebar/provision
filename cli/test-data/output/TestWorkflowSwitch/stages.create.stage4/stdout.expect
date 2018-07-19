@@ -1,0 +1,18 @@
+{
+  "Available": true,
+  "BootEnv": "",
+  "Description": "",
+  "Documentation": "",
+  "Errors": [],
+  "Meta": {},
+  "Name": "stage4",
+  "OptionalParams": [],
+  "Profiles": [],
+  "ReadOnly": false,
+  "Reboot": false,
+  "RequiredParams": [],
+  "RunnerWait": true,
+  "Tasks": [],
+  "Templates": [],
+  "Validated": true
+}

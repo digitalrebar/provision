@@ -309,7 +309,6 @@ func testCli(t *testing.T, test CliTest) {
 	} else if test.expectedStdOut != "" {
 		t.Logf("Expected stdout overridden by %s", expectOut)
 	}
-	err = nil
 	seb, err = ioutil.ReadFile(expectErr)
 	if err != nil {
 		if test.expectedStdErr == "" {
@@ -329,7 +328,6 @@ func testCli(t *testing.T, test CliTest) {
 	}
 	test.expectedStdOut, test.expectedStdErr = string(sob), string(seb)
 	os.Remove(path.Join(testPath, "untouched"))
-	err = nil
 	hasE := false
 	// Add access args
 	args := test.args
@@ -502,6 +500,7 @@ func TestMain(m *testing.M) {
 		os.Exit(1)
 	}
 	os.Setenv("RS_TOKEN_PATH", path.Join(tmpDir, "tokens"))
+	os.Setenv("RS_ENDPOINT", "https://127.0.0.1:10001")
 
 	testArgs := []string{
 		"--base-root", tmpDir,
@@ -512,6 +511,7 @@ func TestMain(m *testing.M) {
 		"--tftp-port", "10003",
 		"--dhcp-port", "10004",
 		"--binl-port", "10005",
+		"--metrics-port", "10006",
 		"--fake-pinger",
 		"--drp-id", "Fred",
 		"--backend", "memory:///",

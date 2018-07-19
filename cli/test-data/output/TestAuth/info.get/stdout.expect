@@ -65,7 +65,7 @@ RE:
     "roles",
     "tenants",
     "secure-params",
-    "seperate-meta-api",
+    "separate-meta-api",
     "slim-objects"
   \],
   "file_port": 10002,

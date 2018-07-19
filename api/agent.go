@@ -261,8 +261,9 @@ func (a *MachineAgent) RunTask() {
 			return
 		}
 	}
-	a.Logf("Runner created for task %s:%s (%d:%d)",
-		runner.j.Uuid.String(),
+	a.Logf("Runner created for task %s:%s:%s (%d:%d)\n",
+		runner.j.Workflow,
+		runner.j.Stage,
 		runner.j.Task,
 		runner.j.CurrentIndex,
 		runner.j.NextIndex)

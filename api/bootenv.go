@@ -143,12 +143,10 @@ func (c *Client) InstallBootEnvFromFile(src string) (*models.BootEnv, error) {
 	if found, _ := c.ExistsModel("bootenvs", env.Key()); found {
 		return env, c.Req().Fill(env)
 	}
-	tmplDir := "."
 	srcDir := path.Dir(src)
+	tmplDir := srcDir
 	if path.Base(srcDir) == "bootenvs" {
 		tmplDir = path.Join(path.Dir(srcDir), "templates")
-	} else {
-		tmplDir = srcDir
 	}
 	// Upload all directly-referenced templates.
 	for _, ti := range env.Templates {
