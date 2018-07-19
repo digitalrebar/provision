@@ -12,7 +12,7 @@ Digital Rebar Provision
 
 `Digital Rebar Provision (DRP) <https://rebar.digital>`_ is a `APLv2 <https://raw.githubusercontent.com/digitalrebar/provision/master/LICENSE>`_ simple Golang executable that provides a simple yet complete API-driven DHCP/PXE/TFTP provisioning and workflow system.
 
-DRP is designed to be a complete data center provisioning, content scaffolding and infrastructure workflow platform with a cloud native architecture that completely replaces Cobblerm Foreman, MaaS or similar technologies. DRP offers a single golang binary (less than 30MB) with no dependencies capable of installation on a laptop, RPi or switch supporting both bare metal and virtualized infrastructure.
+DRP is designed to be a complete data center provisioning, content scaffolding and infrastructure workflow platform with a cloud native architecture that completely replaces Cobbler, Foreman, MaaS or similar technologies. DRP offers a single golang binary (less than 30MB) with no dependencies capable of installation on a laptop, RPi or switch supporting both bare metal and virtualized infrastructure.
 
 Key Features:
 
