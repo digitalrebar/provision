@@ -664,7 +664,9 @@ Validated: true
 				if err == nil {
 					_, err = session.DeleteModel("templates", "local3-elilo.tmpl")
 				}
-				_, err = session.DeleteModel("templates", "local3-ipxe.tmpl")
+				if err == nil {
+					_, err = session.DeleteModel("templates", "local3-ipxe.tmpl")
+				}
 				return res, err
 			},
 		},
@@ -745,7 +747,9 @@ Validated: true
 				if err == nil {
 					_, err = session.DeleteModel("templates", "local3-elilo.tmpl")
 				}
-				_, err = session.DeleteModel("templates", "local3-ipxe.tmpl")
+				if err == nil {
+					_, err = session.DeleteModel("templates", "local3-ipxe.tmpl")
+				}
 				return res, err
 			},
 		},

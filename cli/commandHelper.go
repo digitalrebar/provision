@@ -122,7 +122,7 @@ further tweak how the results are returned using the following meta-filters:
 		listCmd.Flags().StringVar(&slim,
 			"slim",
 			"",
-			"Should elide certain fields.  Can be 'Params', 'Meta', or a comma-seperated list of both.")
+			"Should elide certain fields.  Can be 'Params', 'Meta', or a comma-separated list of both.")
 	}
 	cmds = append(cmds, &cobra.Command{
 		Use:   "indexes",
@@ -167,7 +167,7 @@ format id as *index*:*value*
 		showCmd.Flags().StringVar(&slim,
 			"slim",
 			"",
-			"Should elide certain fields.  Can be 'Params', 'Meta', or a comma-seperated list of both.")
+			"Should elide certain fields.  Can be 'Params', 'Meta', or a comma-separated list of both.")
 	}
 	cmds = append(cmds, showCmd)
 	cmds = append(cmds, &cobra.Command{

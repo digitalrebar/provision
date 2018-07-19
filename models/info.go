@@ -78,7 +78,7 @@ func (i *Info) Fill() {
 			"roles",
 			"tenants",
 			"secure-params",
-			"seperate-meta-api",
+			"separate-meta-api",
 			"slim-objects",
 		}
 	}

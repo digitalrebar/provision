@@ -55,7 +55,7 @@ func TestInfo(t *testing.T) {
 				"roles",
 				"tenants",
 				"secure-params",
-				"seperate-meta-api",
+				"separate-meta-api",
 				"slim-objects",
 			},
 			License: models.LicenseBundle{Licenses: []models.License{}},
