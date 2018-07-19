@@ -114,10 +114,22 @@ You can set any Machine property by naming the property with correct capitalizat
 
 There are many options to set including filters, parameters and profiles.  For a full example, please look at https://github.com/rackn/terraform-provider-drp/blob/master/test.tf.example
 
+Picking Machines with a Pool
+----------------------------
+
+You can add a `pool` block into the plan that will select machines based on the pool name.  This is helpful if you want to partiation your machines.  Pools use the `terraform/pool` Param on the machines and will be assumed to be `default` if omitted.
+
+For example:
+
+  ::
+
+    pool = "deep_eddy"
+
+
 Picking Machines with Filter
 ----------------------------
 
-You can add a `filters` block into the plan that will select machines based on criteria.  This is helpful if you want to select specific types of machines based on gohai data.  Filters use the API filters definition.  See :ref:`rs_api_filters`.
+You can add a `filters` block into the plan that will select machines based on criteria.  This is helpful if you want to select specific types of machines based on Param data.  Filters use the API filters definition and are JSON formatted (types are guessed so numbers and bools are coerced).  See :ref:`rs_api_filters`.
 
 For example:
 
@@ -128,6 +140,7 @@ For example:
 	    jsonvalue = "greg2"
 	}]
 
+You can only filter on indexed fields and defined Params.  Further, you cannot search deeply into Params, only the first level value is matched.
 
 Special Complete and Decommissioning Fields
 -------------------------------------------
@@ -155,6 +168,8 @@ The `drp_machine` resource relies on having a pool of machines already configure
 
 It is possible to use raw and pooled machines together by also setting the `terraform/managed` and `terraform/allocated` parameters when creating machines.  This will allow Terraform to treat newly created machines as a pool.  It's important to include chained `depends_on` in the resource blocks when using this approach in a single plan.
 
+You may also set `terraform/pool` to something.  The default behavior assumes `default` but you can use this Param to manage multiple pools of resources.  Select pools using `pool` in the `drp_machine` resources.  
+
 Note: Unlike the `drp_machine` resource, this resource does not wait until the workflow has completed.  It will return when the machine has been create API returns.
 
 An example of the `drp_raw_machine` resource with correct parameter values is
@@ -170,6 +185,7 @@ An example of the `drp_raw_machine` resource with correct parameter values is
         "packet/plan" ="baremetal_0"
         "terraform/managed" = "true"
         "terraform/allocated" = "false"
+        "terraform/pool" = "default"
       }
 
 Running Terraform
@@ -177,7 +193,7 @@ Running Terraform
 
 Just use `terraform apply` and `terraform destroy` and as normal!
 
-Note: the examples above use variables for endpoint login.  The syntax for overriding these variables is `-var 'api_url=https://[ip address]:8092'`.  User names and passwords should never be hard coded into plan files!
+Note: the examples above use variables for endpoint login.  The syntax for overriding these variables to set environment variables starting with `export TF_VAR_my_var=` and the variable name or pass `-var 'api_url=https://[ip address]:8092'`.  User names and passwords should never be hard coded into plan files!
 
 Extending the Features
 ----------------------
