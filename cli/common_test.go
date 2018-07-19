@@ -309,7 +309,6 @@ func testCli(t *testing.T, test CliTest) {
 	} else if test.expectedStdOut != "" {
 		t.Logf("Expected stdout overridden by %s", expectOut)
 	}
-	err = nil
 	seb, err = ioutil.ReadFile(expectErr)
 	if err != nil {
 		if test.expectedStdErr == "" {
@@ -329,7 +328,6 @@ func testCli(t *testing.T, test CliTest) {
 	}
 	test.expectedStdOut, test.expectedStdErr = string(sob), string(seb)
 	os.Remove(path.Join(testPath, "untouched"))
-	err = nil
 	hasE := false
 	// Add access args
 	args := test.args

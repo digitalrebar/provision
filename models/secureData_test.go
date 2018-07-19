@@ -64,7 +64,7 @@ func TestSecureData(t *testing.T) {
 	} else {
 		t.Logf("Marshalled message intact")
 	}
-	decrypted := []byte{}
+	var decrypted []byte
 	msg.Nonce[0] = msg.Nonce[0] ^ byte(0xff)
 	decrypted, err = msg.Open(ourPrivateKey)
 	if err != Corrupt {
