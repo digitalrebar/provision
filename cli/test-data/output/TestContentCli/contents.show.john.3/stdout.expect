@@ -4,6 +4,7 @@
     "Documentation": "",
     "Name": "john",
     "Overwritable": false,
+    "RequiredFeatures": "",
     "Source": "",
     "Type": "dynamic",
     "Version": "",

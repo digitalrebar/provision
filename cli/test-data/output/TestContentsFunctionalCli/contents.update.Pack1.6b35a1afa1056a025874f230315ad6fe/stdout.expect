@@ -8,6 +8,7 @@
     "Documentation": "",
     "Name": "Pack1",
     "Overwritable": false,
+    "RequiredFeatures": "",
     "Source": "",
     "Type": "dynamic",
     "Version": "0.3",

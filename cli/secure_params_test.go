@@ -58,11 +58,44 @@ Claims:
 	cliTest(false, false, "roles", "destroy", "secretSetter").run(t)
 	cliTest(false, false, "roles", "destroy", "secretGetter").run(t)
 	cliTest(false, false, "contents", "destroy", "rackn-license").run(t)
-	cliTest(false, true, "machines", "set", "Name:bob", "param", "secure", "to", "Fred").run(t)
-	cliTest(false, true, "machines", "get", "Name:bob", "param", "secure", "--decode").run(t)
 	for _, tgt := range []string{"machines", "profiles", "plugins"} {
 		cliTest(false, false, tgt, "destroy", "Name:bob").run(t)
 	}
 	cliTest(false, false, "params", "destroy", "secure").run(t)
+	verifyClean(t)
+}
+
+func TestSecureParamUpgrade(t *testing.T) {
+	insecureContent := `---
+meta:
+  Name: insecure
+sections:
+  params:
+    test:
+      name: test
+      secure: false
+      schema:
+        type: string
+`
+	secureContent := `---
+meta:
+  Name: insecure
+sections:
+  params:
+    test:
+      name: test
+      secure: true
+      schema:
+        type: string
+`
+	cliTest(false, false, "contents", "create", "-").Stdin(insecureContent).run(t)
+	cliTest(false, false, "profiles", "create", "bob").run(t)
+	cliTest(false, false, "profiles", "set", "bob", "param", "test", "to", `"foo"`).run(t)
+	cliTest(false, false, "profiles", "get", "bob", "param", "test").run(t)
+	cliTest(false, false, "contents", "update", "insecure", "-").Stdin(secureContent).run(t)
+	cliTest(false, false, "profiles", "get", "bob", "param", "test").run(t)
+	cliTest(false, false, "profiles", "get", "bob", "param", "test", "--decode").run(t)
+	cliTest(false, false, "profiles", "destroy", "bob").run(t)
+	cliTest(false, false, "contents", "destroy", "insecure").run(t)
 	verifyClean(t)
 }

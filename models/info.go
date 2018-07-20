@@ -80,6 +80,7 @@ func (i *Info) Fill() {
 			"secure-params",
 			"separate-meta-api",
 			"slim-objects",
+			"secure-param-upgrade",
 		}
 	}
 }

@@ -107,3 +107,36 @@ func TestContentCli(t *testing.T) {
 	cliTest(false, false, "contents", "list").run(t)
 	verifyClean(t)
 }
+
+func TestContentRequiredFeatures(t *testing.T) {
+	okContent := `---
+meta:
+  Name: insecure
+  RequiredFeatures: 'secure-params'
+sections:
+  params:
+    test:
+      Name: test
+      Secure: true
+      Schema:
+        type: string
+`
+
+	badContent := `---
+meta:
+  Name: insecure
+  RequiredFeatures: 'missing-feature'
+sections:
+  params:
+    test:
+      Name: test
+      Secure: true
+      Schema:
+        type: string
+`
+	cliTest(false, true, "contents", "create", "-").Stdin(badContent).run(t)
+	cliTest(false, false, "contents", "create", "-").Stdin(okContent).run(t)
+	cliTest(false, true, "contents", "update", "insecure", "-").Stdin(badContent).run(t)
+	cliTest(false, false, "contents", "destroy", "insecure").run(t)
+	verifyClean(t)
+}
