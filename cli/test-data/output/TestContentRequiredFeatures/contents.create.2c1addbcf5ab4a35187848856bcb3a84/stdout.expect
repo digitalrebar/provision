@@ -1,12 +1,14 @@
 {
-  "Counts": {},
+  "Counts": {
+    "params": 1
+  },
   "Warnings": [],
   "meta": {
     "Description": "",
     "Documentation": "",
-    "Name": "john",
+    "Name": "insecure",
     "Overwritable": false,
-    "RequiredFeatures": "",
+    "RequiredFeatures": "secure-params",
     "Source": "",
     "Type": "dynamic",
     "Version": "",

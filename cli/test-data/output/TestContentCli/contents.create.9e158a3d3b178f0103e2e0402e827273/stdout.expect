@@ -8,6 +8,7 @@
     "Documentation": "",
     "Name": "withProfile",
     "Overwritable": false,
+    "RequiredFeatures": "",
     "Source": "",
     "Type": "dynamic",
     "Version": "",

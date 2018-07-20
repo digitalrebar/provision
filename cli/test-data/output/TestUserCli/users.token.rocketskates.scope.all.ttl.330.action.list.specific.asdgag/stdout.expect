@@ -27,7 +27,8 @@ RE:
       "tenants",
       "secure-params",
       "separate-meta-api",
-      "slim-objects"
+      "slim-objects",
+      "secure-param-upgrade"
     \],
     "file_port": 10002,
     "id": "Fred",

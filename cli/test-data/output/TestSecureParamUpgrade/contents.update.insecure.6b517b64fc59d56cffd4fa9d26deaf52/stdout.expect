@@ -1,10 +1,12 @@
 {
-  "Counts": {},
+  "Counts": {
+    "params": 1
+  },
   "Warnings": [],
   "meta": {
     "Description": "",
     "Documentation": "",
-    "Name": "john",
+    "Name": "insecure",
     "Overwritable": false,
     "RequiredFeatures": "",
     "Source": "",

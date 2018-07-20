@@ -57,6 +57,7 @@ func TestInfo(t *testing.T) {
 				"secure-params",
 				"separate-meta-api",
 				"slim-objects",
+				"secure-param-upgrade",
 			},
 			License: models.LicenseBundle{Licenses: []models.License{}},
 			Scopes: map[string]map[string]struct{}{
