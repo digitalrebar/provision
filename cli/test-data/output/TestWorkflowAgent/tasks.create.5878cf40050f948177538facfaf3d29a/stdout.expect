@@ -1,0 +1,22 @@
+{
+  "Available": true,
+  "Description": "",
+  "Documentation": "",
+  "Errors": [],
+  "Meta": {
+    "feature-flags": "sane-exit-codes"
+  },
+  "Name": "task4",
+  "OptionalParams": [],
+  "ReadOnly": false,
+  "RequiredParams": [],
+  "Templates": [
+    {
+      "Contents": "#!/usr/bin/env bash\necho \"Should exit here\"\nsleep 2\nexit 1\n",
+      "ID": "",
+      "Name": "task4",
+      "Path": ""
+    }
+  ],
+  "Validated": true
+}
