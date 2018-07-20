@@ -9,13 +9,9 @@ import (
 	"reflect"
 	"syscall"
 	"testing"
-	"time"
 
-	"github.com/digitalrebar/provision/embedded"
 	"github.com/digitalrebar/provision/models"
-	"github.com/digitalrebar/provision/server"
 	"github.com/ghodss/yaml"
-	flags "github.com/jessevdk/go-flags"
 )
 
 type crudTest struct {
@@ -76,9 +72,6 @@ func rt(t *testing.T,
 	}
 	ct.run(t)
 }
-
-var session *Client
-var tmpDir string
 
 func testFill(m models.Model) {
 	if f, ok := m.(models.Filler); ok {
@@ -147,85 +140,11 @@ func diff(expected, got interface{}) (bool, string) {
 	return cmd.ProcessState.Success(), string(res)
 }
 
-func generateArgs(args []string) *server.ProgOpts {
-	var c_opts server.ProgOpts
-
-	parser := flags.NewParser(&c_opts, flags.Default)
-	if _, err := parser.ParseArgs(args); err != nil {
-		if flagsErr, ok := err.(*flags.Error); ok && flagsErr.Type == flags.ErrHelp {
-			os.Exit(0)
-		} else {
-			os.Exit(1)
-		}
-	}
-
-	return &c_opts
-}
-
 func TestMain(m *testing.M) {
 	var err error
 	tmpDir, err = ioutil.TempDir("", "api-")
 	if err != nil {
 		log.Printf("Creating temp dir for file root failed: %v", err)
-		os.Exit(1)
-	}
-	embedded.IncludeMeFunction()
-
-	testArgs := []string{
-		"--base-root", tmpDir,
-		"--tls-key", tmpDir + "/server.key",
-		"--tls-cert", tmpDir + "/server.crt",
-		"--api-port", "10011",
-		"--static-port", "10012",
-		"--tftp-port", "10013",
-		"--dhcp-port", "10014",
-		"--binl-port", "10015",
-		"--metrics-port", "10016",
-		"--fake-pinger",
-		"--drp-id", "Fred",
-		"--backend", "memory:///",
-		"--local-content", "directory:../test-data/etc/dr-provision?codec=yaml",
-		"--default-content", "file:../test-data/usr/share/dr-provision/default.yaml?codec=yaml",
-	}
-
-	err = os.MkdirAll(tmpDir+"/plugins", 0755)
-	if err != nil {
-		log.Printf("Error creating required directory %s: %v", tmpDir+"/plugins", err)
-		os.Exit(1)
-	}
-
-	out, err := exec.Command("go", "generate", "../cmds/incrementer/incrementer.go").CombinedOutput()
-	if err != nil {
-		log.Printf("Failed to generate incrementer plugin: %v, %s", err, string(out))
-		os.Exit(1)
-	}
-
-	out, err = exec.Command("go", "build", "-o", tmpDir+"/plugins/incrementer", "../cmds/incrementer/incrementer.go", "../cmds/incrementer/content.go").CombinedOutput()
-	if err != nil {
-		log.Printf("Failed to build incrementer plugin: %v, %s", err, string(out))
-		os.Exit(1)
-	}
-
-	c_opts := generateArgs(testArgs)
-	go server.Server(c_opts)
-
-	count := 0
-	for count < 30 {
-		session, err = UserSession("https://127.0.0.1:10011", "rocketskates", "r0cketsk8ts")
-		if err == nil {
-			break
-		}
-		time.Sleep(1 * time.Second)
-		count++
-	}
-	if session == nil {
-		log.Printf("Failed to create UserSession: %v", err)
-		os.RemoveAll(tmpDir)
-		os.Exit(1)
-	}
-	if err != nil {
-		log.Printf("Server failed to start in time allowed")
-		os.RemoveAll(tmpDir)
 		os.Exit(1)
 	}
 	ret := m.Run()
