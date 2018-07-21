@@ -17,5 +17,17 @@ Digital Rebar Provision provides many growing integration points.
 
    integrations/ansible
    integrations/websocket
-   integrations/krib
-   integrations/terraform
+
+ .. _rs_terraform:
+
+Terraform Provider for Digital Rebar Provision
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+NOTICE: Moved to :ref:`component_terraform`.  Please update references.
+
+.. _rs_krib:
+
+Moved: KRIB (Kubernetes Rebar Integrated Bootstrapping)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+NOTICE: Moved to :ref:`component_krib`.  Please update references.

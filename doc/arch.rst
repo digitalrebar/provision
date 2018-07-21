@@ -21,3 +21,4 @@ dr-provision for developers and power users.
    arch/dhcp
    arch/sledgehammer
    arch/workflow
+   arch/cluster
