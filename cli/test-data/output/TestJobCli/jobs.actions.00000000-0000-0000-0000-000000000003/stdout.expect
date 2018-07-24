@@ -1,6 +1,9 @@
 [
   {
     "Content": "Fred rules",
+    "Meta": {
+      "foo": "bar"
+    },
     "Name": "part 1",
     "Path": ""
   }

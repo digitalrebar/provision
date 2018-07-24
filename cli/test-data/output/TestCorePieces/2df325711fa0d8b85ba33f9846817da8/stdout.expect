@@ -32,6 +32,7 @@
       LABEL local
       {{.Param "pxelinux-local-boot"}}
     ID: ""
+    Meta: {}
     Name: pxelinux
     Path: pxelinux.cfg/default
   - Contents: |
@@ -40,6 +41,7 @@
       :chainip
       chain tftp://{{.ProvisionerAddress}}/${netX/ip}.ipxe || exit
     ID: ""
+    Meta: {}
     Name: ipxe
     Path: default.ipxe
   Validated: true
@@ -77,12 +79,14 @@
       LABEL local
       {{.Param "pxelinux-local-boot"}}
     ID: ""
+    Meta: {}
     Name: pxelinux
     Path: pxelinux.cfg/{{.Machine.HexAddress}}
   - Contents: |
       #!ipxe
       exit
     ID: ""
+    Meta: {}
     Name: ipxe
     Path: '{{.Machine.Address}}.ipxe'
   - Contents: |
@@ -92,12 +96,14 @@
       LABEL local
       {{.Param "pxelinux-local-boot"}}
     ID: ""
+    Meta: {}
     Name: pxelinux-mac
     Path: pxelinux.cfg/{{.Machine.MacAddr "pxelinux"}}
   - Contents: |
       #!ipxe
       exit
     ID: ""
+    Meta: {}
     Name: ipxe-mac
     Path: '{{.Machine.MacAddr "ipxe"}}.ipxe'
   Validated: true

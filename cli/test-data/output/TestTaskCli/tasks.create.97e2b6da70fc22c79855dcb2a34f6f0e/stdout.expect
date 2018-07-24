@@ -1,0 +1,34 @@
+{
+  "Available": true,
+  "Description": "",
+  "Documentation": "",
+  "Errors": [],
+  "Meta": {
+    "feature-flags": "sane-exit-codes"
+  },
+  "Name": "multiGoodOS",
+  "OptionalParams": [],
+  "ReadOnly": false,
+  "RequiredParams": [],
+  "Templates": [
+    {
+      "Contents": "1",
+      "ID": "",
+      "Meta": {
+        "OS": "darwin"
+      },
+      "Name": "t1",
+      "Path": ""
+    },
+    {
+      "Contents": "2",
+      "ID": "",
+      "Meta": {
+        "OS": "linux"
+      },
+      "Name": "t2",
+      "Path": ""
+    }
+  ],
+  "Validated": true
+}

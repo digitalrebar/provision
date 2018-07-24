@@ -14,6 +14,7 @@
     {
       "Contents": "#!/usr/bin/env bash\necho \"Should exit here\"\nsleep 2\nexit 1\n",
       "ID": "",
+      "Meta": {},
       "Name": "task4",
       "Path": ""
     }

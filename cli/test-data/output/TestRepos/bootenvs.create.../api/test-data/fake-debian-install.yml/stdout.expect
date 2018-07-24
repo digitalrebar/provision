@@ -27,18 +27,21 @@
     {
       "Contents": "{{.Env.InstallUrl}}",
       "ID": "",
+      "Meta": {},
       "Name": "ipxe",
       "Path": "{{.Machine.Path}}/url"
     },
     {
       "Contents": "{{range $repo := .InstallRepos}}{{$repo.Install}}{{end}}\n",
       "ID": "",
+      "Meta": {},
       "Name": "install",
       "Path": "{{.Machine.Path}}/install"
     },
     {
       "Contents": "{{range $repo := .MachineRepos}}{{$repo.Lines}}{{end}}\n",
       "ID": "",
+      "Meta": {},
       "Name": "lines",
       "Path": "{{.Machine.Path}}/lines"
     }

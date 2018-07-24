@@ -25,12 +25,14 @@
     {
       "Contents": "foo",
       "ID": "",
+      "Meta": {},
       "Name": "ipxe",
       "Path": "/ipxe"
     },
     {
       "Contents": "bar",
       "ID": "",
+      "Meta": {},
       "Name": "ipxe-mac",
       "Path": "/ipxe-mac"
     }

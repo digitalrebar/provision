@@ -25,18 +25,21 @@
     {
       "Contents": "",
       "ID": "local3-pxelinux.tmpl",
+      "Meta": {},
       "Name": "pxelinux",
       "Path": "pxelinux.cfg/{{.Machine.HexAddress}}"
     },
     {
       "Contents": "",
       "ID": "local3-elilo.tmpl",
+      "Meta": {},
       "Name": "elilo",
       "Path": "{{.Machine.HexAddress}}.conf"
     },
     {
       "Contents": "",
       "ID": "local3-ipxe.tmpl",
+      "Meta": {},
       "Name": "ipxe",
       "Path": "{{.Machine.Address}}.ipxe"
     }

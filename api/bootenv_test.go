@@ -32,12 +32,14 @@ Templates:
       LABEL local
       {{.Param "pxelinux-local-boot"}}
     ID: ""
+    Meta: {}
     Name: pxelinux
     Path: pxelinux.cfg/{{.Machine.HexAddress}}
   - Contents: |
       #!ipxe
       exit
     ID: ""
+    Meta: {}
     Name: ipxe
     Path: '{{.Machine.Address}}.ipxe'
   - Contents: |
@@ -47,12 +49,14 @@ Templates:
       LABEL local
       {{.Param "pxelinux-local-boot"}}
     ID: ""
+    Meta: {}
     Name: pxelinux-mac
     Path: pxelinux.cfg/{{.Machine.MacAddr "pxelinux"}}
   - Contents: |
       #!ipxe
       exit
     ID: ""
+    Meta: {}
     Name: ipxe-mac
     Path: '{{.Machine.MacAddr "ipxe"}}.ipxe'
 `).(*models.BootEnv)
@@ -75,6 +79,7 @@ Templates:
     TIMEOUT 10
     LABEL local
     {{.Param "pxelinux-local-boot"}}
+  Meta: {}
   Name: "pxelinux"
   Path: "pxelinux.cfg/default"
 - Contents: |
@@ -82,6 +87,7 @@ Templates:
     chain {{.ProvisionerURL}}/${netX/mac}.ipxe && exit || goto chainip
     :chainip
     chain tftp://{{.ProvisionerAddress}}/${netX/ip}.ipxe || exit
+  Meta: {}
   Name: "ipxe"
   Path: "default.ipxe"`).(*models.BootEnv)
 	fred := &models.BootEnv{Name: "fred"}
@@ -418,15 +424,19 @@ OptionalParams:
 - access_keys
 Templates:
 - Contents: 'Attention all '
+  Meta: {}
   Name: pxelinux
   Path: pxelinux.cfg/{{.Machine.HexAddress}}
 - Contents: planets of the
+  Meta: {}
   Name: elilo
   Path: '{{.Machine.HexAddress}}.conf'
 - Contents: Solar Federation
+  Meta: {}
   Name: ipxe
   Path: '{{.Machine.Address}}.ipxe'
 - Contents: We have assumed control
+  Meta: {}
   Name: control.sh
   Path: '{{.Machine.Path}}/control.sh'
 Validated: true
@@ -642,12 +652,15 @@ OS:
   Name: local3
 Templates:
 - ID: local3-pxelinux.tmpl
+  Meta: {}
   Name: pxelinux
   Path: pxelinux.cfg/{{.Machine.HexAddress}}
 - ID: local3-elilo.tmpl
+  Meta: {}
   Name: elilo
   Path: '{{.Machine.HexAddress}}.conf'
 - ID: local3-ipxe.tmpl
+  Meta: {}
   Name: ipxe
   Path: '{{.Machine.Address}}.ipxe'
 Validated: true
@@ -711,12 +724,15 @@ OS:
   Name: local3
 Templates:
 - ID: local3-pxelinux.tmpl
+  Meta: {}
   Name: pxelinux
   Path: pxelinux.cfg/{{.Machine.HexAddress}}
 - ID: local3-elilo.tmpl
+  Meta: {}
   Name: elilo
   Path: '{{.Machine.HexAddress}}.conf'
 - ID: local3-ipxe.tmpl
+  Meta: {}
   Name: ipxe
   Path: '{{.Machine.Address}}.ipxe'
 Validated: true

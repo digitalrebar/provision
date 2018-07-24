@@ -56,7 +56,8 @@ You may also pass in a machine UUID or Name to create a new job on that Name.
 			return prettyPrint(ref)
 		},
 	})
-	op.addCommand(&cobra.Command{
+	actionsFor := ""
+	actionsCmd := &cobra.Command{
 		Use:   "actions [id]",
 		Short: "Get the actions for this job",
 		Args: func(c *cobra.Command, args []string) error {
@@ -67,13 +68,16 @@ You may also pass in a machine UUID or Name to create a new job on that Name.
 		},
 		RunE: func(c *cobra.Command, args []string) error {
 			uuid := args[0]
-			res := []*models.JobAction{}
-			if err := session.Req().UrlFor("jobs", uuid, "actions").Do(&res); err != nil {
+			res := models.JobActions{}
+			if err := session.Req().UrlFor("jobs", uuid, "actions").
+				Params("os", actionsFor).Do(&res); err != nil {
 				return generateError(err, "Error running action")
 			}
 			return prettyPrint(res)
 		},
-	})
+	}
+	actionsCmd.Flags().StringVar(&actionsFor, "for-os", "", "OS to fetch actions for.  Defaults to fetching all actions")
+	op.addCommand(actionsCmd)
 	op.addCommand(&cobra.Command{
 		Use:   "log [id] [- or string]",
 		Short: "Gets the log or appends to the log if a second argument or stream is given",

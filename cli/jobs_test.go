@@ -18,6 +18,9 @@ func TestJobCli(t *testing.T) {
   "Templates": [
     {
       "Contents": "Fred rules",
+      "Meta": {
+        "foo":"bar"
+      },
       "Name": "part 1",
       "Path": ""
     }
@@ -198,5 +201,47 @@ func TestJobCli(t *testing.T) {
 	cliTest(false, false, "jobs", "destroy", "00000000-0000-0000-0000-000000000003").run(t)
 	cliTest(false, false, "jobs", "destroy", "00000000-0000-0000-0000-000000000004").run(t)
 	cliTest(false, false, "jobs", "list").run(t)
+	verifyClean(t)
+}
+
+func TestJobOsFilter(t *testing.T) {
+	cliTest(false, false, "tasks", "create", "-").Stdin(`---
+Name: task1
+Templates:
+  - Name: t1
+    Contents: 't1'
+    Meta:
+      OS: linux,darwin
+  - Name: t2
+    Contents: 't2'
+    Meta:
+      OS: darwin
+  - Name: t3
+    Contents: 't3'
+    Meta:
+      OS: linux
+`).run(t)
+	cliTest(false, false, "stages", "create", "-").Stdin(`---
+Name: stage1
+Tasks:
+  - task1`).run(t)
+	cliTest(false, false, "machines", "create", "-").Stdin(`---
+Name: fred
+Uuid: "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+Stage: stage1`).run(t)
+	cliTest(false, false, "jobs", "create", "-").Stdin(`---
+Uuid: "00000000-0000-0000-0000-000000000001"
+Machine: "3e7031fe-3062-45f1-835c-92541bc9cbd3"
+`).run(t)
+	cliTest(false, false, "jobs", "actions", "00000000-0000-0000-0000-000000000001").run(t)
+	cliTest(false, false, "jobs", "actions", "00000000-0000-0000-0000-000000000001", "--for-os", "").run(t)
+	cliTest(false, false, "jobs", "actions", "00000000-0000-0000-0000-000000000001", "--for-os", "linux").run(t)
+	cliTest(false, false, "jobs", "actions", "00000000-0000-0000-0000-000000000001", "--for-os", "darwin").run(t)
+	cliTest(false, false, "jobs", "actions", "00000000-0000-0000-0000-000000000001", "--for-os", "windows").run(t)
+	cliTest(false, false, "jobs", "update", "00000000-0000-0000-0000-000000000001", `{"State":"failed"}`).run(t)
+	cliTest(false, false, "jobs", "destroy", "00000000-0000-0000-0000-000000000001").run(t)
+	cliTest(false, false, "machines", "destroy", "Name:fred").run(t)
+	cliTest(false, false, "stages", "destroy", "stage1").run(t)
+	cliTest(false, false, "tasks", "destroy", "task1").run(t)
 	verifyClean(t)
 }

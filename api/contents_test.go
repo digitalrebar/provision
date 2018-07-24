@@ -389,6 +389,7 @@ Templates:
     LABEL local
     {{.Param "pxelinux-local-boot"}}
   Name: pxelinux
+  Meta: {}
   Path: pxelinux.cfg/default
 - Contents: |
     #!ipxe
@@ -396,6 +397,7 @@ Templates:
     :chainip
     chain tftp://{{.ProvisionerAddress}}/${netX/ip}.ipxe || exit
   Name: ipxe
+  Meta: {}
   Path: default.ipxe
 Validated: true
 `),

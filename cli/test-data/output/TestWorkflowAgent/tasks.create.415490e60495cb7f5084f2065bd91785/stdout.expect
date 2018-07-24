@@ -14,6 +14,7 @@
     {
       "Contents": "#!/usr/bin/env bash\necho \"Should not get here 1\"\nexit 1\n",
       "ID": "",
+      "Meta": {},
       "Name": "task5",
       "Path": ""
     }

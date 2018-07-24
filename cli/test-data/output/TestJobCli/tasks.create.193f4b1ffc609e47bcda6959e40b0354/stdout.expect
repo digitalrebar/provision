@@ -1,0 +1,25 @@
+{
+  "Available": true,
+  "Description": "",
+  "Documentation": "",
+  "Errors": [],
+  "Meta": {
+    "feature-flags": "original-exit-codes"
+  },
+  "Name": "task2",
+  "OptionalParams": [],
+  "ReadOnly": false,
+  "RequiredParams": [],
+  "Templates": [
+    {
+      "Contents": "Fred rules",
+      "ID": "",
+      "Meta": {
+        "foo": "bar"
+      },
+      "Name": "part 1",
+      "Path": ""
+    }
+  ],
+  "Validated": true
+}

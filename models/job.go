@@ -19,6 +19,45 @@ type JobAction struct {
 	Path string
 	// required: true
 	Content string
+	// required: true
+	Meta map[string]string
+}
+
+func (ja *JobAction) ValidForOS(target string) bool {
+	if oses, ok := ja.Meta["OS"]; !ok || target == "" {
+		// if the JobAction does not have an OS, it is valid for all of them.
+		// Ditto if we are not actually looking for a target OS.
+		return true
+	} else {
+		canPerform := false
+		for _, v := range strings.Split(oses, ",") {
+			testOS := strings.TrimSpace(v)
+			if testOS == "any" || testOS == target {
+				canPerform = true
+				break
+			}
+		}
+		return canPerform
+	}
+}
+
+type JobActions []*JobAction
+
+func (ja JobActions) FilterOS(forOS string) JobActions {
+	if len(ja) == 0 {
+		return ja
+	}
+	if _, ok := ja[0].Meta["OS"]; !ok {
+		return ja
+	}
+	res := JobActions{}
+	for i := range ja {
+		action := ja[i]
+		if action.ValidForOS(forOS) {
+			res = append(res, action)
+		}
+	}
+	return res
 }
 
 // swagger:model

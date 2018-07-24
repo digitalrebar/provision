@@ -1,0 +1,30 @@
+{
+  "Available": true,
+  "Description": "",
+  "Documentation": "",
+  "Errors": [],
+  "Meta": {
+    "feature-flags": "sane-exit-codes"
+  },
+  "Name": "multiNoOS",
+  "OptionalParams": [],
+  "ReadOnly": false,
+  "RequiredParams": [],
+  "Templates": [
+    {
+      "Contents": "1",
+      "ID": "",
+      "Meta": {},
+      "Name": "t1",
+      "Path": ""
+    },
+    {
+      "Contents": "2",
+      "ID": "",
+      "Meta": {},
+      "Name": "t2",
+      "Path": ""
+    }
+  ],
+  "Validated": true
+}

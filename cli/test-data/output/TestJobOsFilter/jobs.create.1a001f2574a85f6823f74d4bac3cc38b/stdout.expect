@@ -1,0 +1,17 @@
+RE:
+  "Archived": false,
+  "Available": true,
+  "BootEnv": "local",
+  "Current": true,
+  "CurrentIndex": 0,
+  "ExitState": "",
+  "Machine": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "NextIndex": 1,
+  "Previous": "00000000-0000-0000-0000-000000000000",
+  "ReadOnly": false,
+  "Stage": "stage1",
+  "State": "created",
+  "Task": "task1",
+  "Uuid": "00000000-0000-0000-0000-000000000001",
+  "Validated": true,
+  "Workflow": ""

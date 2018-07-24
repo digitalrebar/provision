@@ -19,6 +19,7 @@
     {
       "Contents": "{{.Param \"sp-param\"}}",
       "ID": "",
+      "Meta": {},
       "Name": "test",
       "Path": "{{.Machine.Path}}/file"
     }

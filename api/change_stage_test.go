@@ -47,6 +47,7 @@ Templates:
     Contents: |
       #!/usr/bin/env bash
       exit 0
+    Meta: {}
 `).(*models.Task)
 
 	task1 := mustDecode(&models.Task{}, `
@@ -58,6 +59,7 @@ Templates:
     Contents: |
       #!/usr/bin/env bash
       exit 0
+    Meta: {}
 `).(*models.Task)
 
 	taskDone := mustDecode(&models.Task{}, `
@@ -69,6 +71,7 @@ Templates:
     Contents: |
       #!/usr/bin/env bash
       exit 0
+    Meta: {}
 `).(*models.Task)
 
 	stageGregInstall := mustDecode(&models.Stage{}, `
