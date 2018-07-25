@@ -35,9 +35,6 @@ dr-provision-hash.*
 server.key
 server.crt
 cmds/incrementer/content.go
-midlayer/fake_midlayer_server.go
-api/fake_api_server.go
-cli/fake_cli_server.go
 # ignore Mac vomit 
 .DS_Store
 # Pip stuff for docs

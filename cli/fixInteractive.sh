@@ -7,7 +7,17 @@ for dir in "${dirs[@]}"; do
     [[ -f $dir/stdout.expect || -f $dir/stderr.expect ]] && touch "$dir/untouched"
 done
 
-go test $@ |& tee test.log
+args=()
+while (( "$#" )); do
+  args+=($1)
+  if [[ "$1" == "-run" ]]; then
+    shift
+    args+=("TestFirst|$1")
+  fi
+  shift
+done
+
+go test "${args[@]}" |& tee test.log
 
 readarray -t log_lines <test.log
 
