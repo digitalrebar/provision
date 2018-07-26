@@ -31,12 +31,14 @@
       {
         "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\n{{.Param \"pxelinux-local-boot\"}}\n",
         "ID": "",
+        "Meta": {},
         "Name": "pxelinux",
         "Path": "pxelinux.cfg/default"
       },
       {
         "Contents": "#!ipxe\nchain {{.ProvisionerURL}}/${netX/mac}.ipxe \u0026\u0026 exit || goto chainip\n:chainip\nchain tftp://{{.ProvisionerAddress}}/${netX/ip}.ipxe || exit\n",
         "ID": "",
+        "Meta": {},
         "Name": "ipxe",
         "Path": "default.ipxe"
       }
@@ -75,24 +77,28 @@
       {
         "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\n{{.Param \"pxelinux-local-boot\"}}\n",
         "ID": "",
+        "Meta": {},
         "Name": "pxelinux",
         "Path": "pxelinux.cfg/{{.Machine.HexAddress}}"
       },
       {
         "Contents": "#!ipxe\nexit\n",
         "ID": "",
+        "Meta": {},
         "Name": "ipxe",
         "Path": "{{.Machine.Address}}.ipxe"
       },
       {
         "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\n{{.Param \"pxelinux-local-boot\"}}\n",
         "ID": "",
+        "Meta": {},
         "Name": "pxelinux-mac",
         "Path": "pxelinux.cfg/{{.Machine.MacAddr \"pxelinux\"}}"
       },
       {
         "Contents": "#!ipxe\nexit\n",
         "ID": "",
+        "Meta": {},
         "Name": "ipxe-mac",
         "Path": "{{.Machine.MacAddr \"ipxe\"}}.ipxe"
       }

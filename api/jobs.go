@@ -11,6 +11,7 @@ import (
 	"os/exec"
 	"path"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"syscall"
 	"time"
@@ -27,9 +28,13 @@ func (c *Client) JobLog(j *models.Job, dst io.Writer) error {
 
 // JobActions returns the expanded list of templates that should be
 // written or executed for a specific Job.
-func (c *Client) JobActions(j *models.Job) ([]*models.JobAction, error) {
-	res := []*models.JobAction{}
-	return res, c.Req().UrlFor("jobs", j.Key(), "actions").Do(&res)
+func (c *Client) JobActions(j *models.Job, targetOS string) (models.JobActions, error) {
+	res := models.JobActions{}
+	req := c.Req().UrlFor("jobs", j.Key(), "actions")
+	if targetOS != "" {
+		req.Params("os", targetOS)
+	}
+	return res, req.Do(&res)
 }
 
 // TaskRunner is responsible for expanding templates and running
@@ -151,7 +156,12 @@ func (r *TaskRunner) Perform(action *models.JobAction, taskDir string) error {
 	}
 
 	cmdArray := []string{}
-	if strings.HasSuffix(taskFile, "ps1") {
+	if interp, ok := action.Meta["Interpreter"]; ok {
+		// This is probably usually not required anywhere but Windows,
+		// as basically all Unix shell scripts should start with #!,
+		// and even on Windows we will try to guess based on the extension.
+		cmdArray = append(cmdArray, interp)
+	} else if strings.HasSuffix(taskFile, "ps1") {
 		cmdArray = append(cmdArray, "powershell")
 	}
 	cmdArray = append(cmdArray, "./"+path.Base(taskFile))
@@ -321,11 +331,13 @@ func (r *TaskRunner) Run() error {
 	r.j = obj.(*models.Job)
 	r.Log("Starting task %s:%s:%s on %s", r.j.Workflow, r.j.Stage, r.j.Task, r.m.Name)
 	// At this point, we are running.
-	actions, err := r.c.JobActions(r.j)
-	if err != nil {
+	var actions models.JobActions
+	if allActions, err := r.c.JobActions(r.j, runtime.GOOS); err != nil {
 		r.Log("Failed to render actions: %v", err)
 		finalErr.AddError(err)
 		return finalErr
+	} else {
+		actions = allActions.FilterOS(runtime.GOOS)
 	}
 	for i, action := range actions {
 		final := len(actions)-1 == i

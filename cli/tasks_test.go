@@ -57,6 +57,53 @@ func TestTaskCli(t *testing.T) {
 	cliTest(false, false, "tasks", "update", "john", "-").Stdin(taskUpdateInputString + "\n").run(t)
 	cliTest(false, false, "tasks", "show", "john").run(t)
 	cliTest(false, false, "tasks", "destroy", "john").run(t)
+	cliTest(false, true, "tasks", "create", "-").Stdin(`---
+Name: mixedOSes
+Templates:
+  - Name: t1
+    Contents: '1'
+  - Name: t2
+    Contents: '2'
+    Meta:
+      OS: any`).run(t)
+	cliTest(false, true, "tasks", "create", "-").Stdin(`---
+Name: badOS
+Templates:
+  - Name: t2
+    Contents: '2'
+    Meta:
+      OS: sithisOS`).run(t)
+	cliTest(false, false, "tasks", "create", "-").Stdin(`---
+Name: multiGoodOS
+Templates:
+  - Name: t1
+    Contents: '1'
+    Meta:
+      OS: darwin
+  - Name: t2
+    Contents: '2'
+    Meta:
+      OS: linux`).run(t)
+	cliTest(false, true, "tasks", "create", "-").Stdin(`---
+Name: multiBadCommaOS
+Templates:
+  - Name: t1
+    Contents: '1'
+    Meta:
+      OS: darwin,netbsd
+  - Name: t2
+    Contents: '2'
+    Meta:
+      OS: linux,sithisOS`).run(t)
+	cliTest(false, false, "tasks", "create", "-").Stdin(`---
+Name: multiNoOS
+Templates:
+  - Name: t1
+    Contents: '1'
+  - Name: t2
+    Contents: '2'`).run(t)
+	cliTest(false, false, "tasks", "destroy", "multiGoodOS").run(t)
+	cliTest(false, false, "tasks", "destroy", "multiNoOS").run(t)
 	cliTest(false, false, "tasks", "list").run(t)
 	verifyClean(t)
 }

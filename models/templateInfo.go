@@ -31,6 +31,11 @@ type TemplateInfo struct {
 	//
 	// required: false
 	Contents string
+	// Metadata for the TemplateInfo.  This can be used by the job running
+	// system and the bootenvs to handle OS, arch, and firmware differences.
+	//
+	// required: false
+	Meta     map[string]string
 	pathTmpl *template.Template
 }
 
@@ -57,6 +62,9 @@ func (ti *TemplateInfo) SanityCheck(idx int, e ErrorAdder, missingPathOK bool) {
 	}
 	if ti.Contents != "" && ti.ID != "" {
 		e.Errorf("Template[%d] has both an ID and Contents", idx)
+	}
+	if ti.Meta == nil {
+		ti.Meta = map[string]string{}
 	}
 }
 

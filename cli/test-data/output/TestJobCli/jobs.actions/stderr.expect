@@ -3,7 +3,8 @@ Usage:
   drpcli jobs actions [id] [flags]
 
 Flags:
-  -h, --help   help for actions
+      --for-os string   OS to fetch actions for.  Defaults to fetching all actions
+  -h, --help            help for actions
 
 Global Flags:
   -d, --debug               Whether the CLI should run in debug mode

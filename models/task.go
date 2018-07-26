@@ -1,5 +1,10 @@
 package models
 
+import (
+	"sort"
+	"strings"
+)
+
 // Task is a thing that can run on a Machine.
 //
 // swagger:model
@@ -31,6 +36,26 @@ type Task struct {
 	OptionalParams []string
 }
 
+var (
+	validGOOS = map[string]struct{}{
+		"any":     struct{}{},
+		"darwin":  struct{}{},
+		"freebsd": struct{}{},
+		"linux":   struct{}{},
+		"netbsd":  struct{}{},
+		"openbsd": struct{}{},
+		"solaris": struct{}{},
+		"windows": struct{}{},
+	}
+
+	validGOARCH = map[string]struct{}{
+		"386":   struct{}{},
+		"amd64": struct{}{},
+		"arm":   struct{}{},
+		"arm64": struct{}{},
+	}
+)
+
 func (t *Task) GetMeta() Meta {
 	return t.Meta
 }
@@ -52,9 +77,46 @@ func (t *Task) Validate() {
 	for _, p := range t.OptionalParams {
 		t.AddError(ValidParamName("Invalid Optional Param", p))
 	}
-	for _, tt := range t.Templates {
-		if tt.ID != "" {
-			t.AddError(ValidName("Invalid Template ID", tt.ID))
+	printedValidValues := false
+	osMetaCount := 0
+	tmplNames := map[string]int{}
+	for i := range t.Templates {
+		tmpl := &(t.Templates[i])
+		tmpl.SanityCheck(i, t, true)
+		if j, ok := tmplNames[tmpl.Name]; ok {
+			t.Errorf("Template %d and %d have the same name %s", i, j, tmpl.Name)
+		} else {
+			tmplNames[tmpl.Name] = i
+		}
+		if _, ok := tmpl.Meta["OS"]; ok {
+			osMetaCount++
+			oses := strings.Split(tmpl.Meta["OS"], ",")
+			for _, os := range oses {
+				if _, ok := validGOOS[strings.ToLower(strings.TrimSpace(os))]; ok {
+					continue
+				}
+				t.Errorf("Template[%d]: Invalid OS value %s", i, os)
+				if !printedValidValues {
+					validOSes := make([]string, 0, len(validGOOS))
+					for k := range validGOOS {
+						validOSes = append(validOSes, k)
+					}
+					sort.Strings(validOSes)
+					t.Errorf("Valid values are: %s", strings.Join(validOSes, ","))
+					printedValidValues = true
+				}
+			}
+		}
+	}
+	if osMetaCount != 0 && osMetaCount != len(tmplNames) {
+		t.Errorf("Cannot mix templates with OS metadata and templates without OS metadata")
+		for i := range t.Templates {
+			tmpl := &(t.Templates[i])
+			if _, ok := tmpl.Meta["OS"]; ok {
+				t.Errorf("Template[%d] %s has OS metadata %s", i, tmpl.Name, tmpl.Meta["OS"])
+			} else {
+				t.Errorf("Template[%d] %s is missing OS metadata", i, tmpl.Name)
+			}
 		}
 	}
 }

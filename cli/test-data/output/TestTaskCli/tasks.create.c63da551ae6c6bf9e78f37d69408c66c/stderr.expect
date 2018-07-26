@@ -1,0 +1,4 @@
+Error: ValidationError: tasks/mixedOSes
+  Cannot mix templates with OS metadata and templates without OS metadata
+  Template[0] t1 is missing OS metadata
+  Template[1] t2 has OS metadata any

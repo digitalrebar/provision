@@ -14,6 +14,7 @@
     {
       "Contents": "#!/usr/bin/env bash\n. ./helper\n# The internal buffer the logger uses is 64K, so make sure to overflow it a bit.\nfor ((i=0;i\u003c1026;i++)); do\n   printf '%04d...........................................................\\n' \"$i\"\ndone\necho \"Pause\"\nsleep 3\nfor ((i=0;i\u003c1026;i++)); do\n   printf '%04d...........................................................\\n' \"$i\"\ndone\nsleep 3\necho \"Done\"\nexit_stop\n",
       "ID": "",
+      "Meta": {},
       "Name": "noisy",
       "Path": ""
     }

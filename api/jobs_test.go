@@ -88,18 +88,21 @@ Templates:
       [[ -e "$JT"/reboot-orig.txt ]] && exit 0
       touch "$JT"/reboot-orig.txt""
       exit 1
+    Meta: {}
   - Name: fail
     Contents: |
       #!/usr/bin/env bash
       [[ -e "$JT"/fail-orig.txt ]] && exit 0
       touch "$JT"/fail-orig.txt
       exit 4
+    Meta: {}
   - Name: incomplete
     Contents: |
       #!/usr/bin/env bash
       [[ -e "$JT"/incomplete-orig.txt ]] && exit 0
       touch "$JT"/incomplete-orig.txt
       exit 2
+    Meta: {}
 `).(*models.Task)
 
 	task2 := mustDecode(&models.Task{}, `
@@ -113,30 +116,35 @@ Templates:
       [[ -e "$JT"/reboot.txt ]] && exit 0
       touch "$JT"/reboot.txt
       exit 64
+    Meta: {}
   - Name: poweroff
     Contents: |
       #!/usr/bin/env bash
       [[ -e "$JT"/poweroff.txt ]] && exit 0
       touch "$JT"/poweroff.txt
       exit 32
+    Meta: {}
   - Name: stop
     Contents: |
       #!/usr/bin/env bash
       [[ -e "$JT"/stop.txt ]] && exit 0
       touch "$JT"/stop.txt
       exit 16
+    Meta: {}
   - Name: fail
     Contents: |
       #!/usr/bin/env bash
       [[ -e "$JT"/fail.txt ]] && exit 0
       touch "$JT"/fail.txt
       exit 1
+    Meta: {}
   - Name: incomplete
     Contents: |
       #!/usr/bin/env bash
       [[ -e "$JT"/incomplete.txt ]] && exit 0
       touch "$JT"/incomplete.txt
       exit 128
+    Meta: {}
 `).(*models.Task)
 
 	stage1 := mustDecode(&models.Stage{}, `

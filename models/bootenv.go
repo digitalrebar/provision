@@ -184,8 +184,15 @@ func (b *BootEnv) Validate() {
 	for _, p := range b.OptionalParams {
 		b.AddError(ValidParamName("Invalid Optional Param", p))
 	}
-	for _, t := range b.Templates {
-		b.AddError(ValidName("Invalid Template Name", t.Name))
+	tmplNames := map[string]int{}
+	for i := range b.Templates {
+		tmpl := &(b.Templates[i])
+		tmpl.SanityCheck(i, b, false)
+		if j, ok := tmplNames[tmpl.Name]; ok {
+			b.Errorf("Template %d and %d have the same name %s", i, j, tmpl.Name)
+		} else {
+			tmplNames[tmpl.Name] = i
+		}
 	}
 }
 

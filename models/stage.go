@@ -81,8 +81,15 @@ func (s *Stage) Validate() {
 	for _, p := range s.OptionalParams {
 		s.AddError(ValidParamName("Invalid Optional Param", p))
 	}
-	for _, t := range s.Templates {
-		s.AddError(ValidName("Invalid Template Name", t.Name))
+	tmplNames := map[string]int{}
+	for i := range s.Templates {
+		tmpl := &(s.Templates[i])
+		tmpl.SanityCheck(i, s, false)
+		if j, ok := tmplNames[tmpl.Name]; ok {
+			s.Errorf("Template %d and %d have the same name %s", i, j, tmpl.Name)
+		} else {
+			tmplNames[tmpl.Name] = i
+		}
 	}
 	for _, p := range s.Profiles {
 		s.AddError(ValidName("Invalid Profile", p))
