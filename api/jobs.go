@@ -162,7 +162,8 @@ func (r *TaskRunner) Perform(action *models.JobAction, taskDir string) error {
 		// and even on Windows we will try to guess based on the extension.
 		cmdArray = append(cmdArray, interp)
 	} else if strings.HasSuffix(taskFile, "ps1") {
-		cmdArray = append(cmdArray, "powershell")
+		cmdArray = append(cmdArray, "powershell.exe")
+		cmdArray = append(cmdArray, "-File")
 	}
 	cmdArray = append(cmdArray, "./"+path.Base(taskFile))
 	cmd := exec.Command(cmdArray[0], cmdArray[1:]...)
