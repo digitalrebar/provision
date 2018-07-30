@@ -7,7 +7,7 @@ RE:
   "Name": "m1",
   "OS": "",
   "ReadOnly": false,
-  "Runnable": false,
+  "Runnable": true,
   "Stage": "stage1",
   "Tasks": \[
     "stage:stage1",
