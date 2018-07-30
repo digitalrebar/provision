@@ -168,8 +168,6 @@ func TestJobCli(t *testing.T) {
 	// This tests that incomplet jobs come back again
 	cliTest(false, false, "jobs", "create", "-").Stdin(jobCreateNextInputString + "\n").run(t)
 	cliTest(false, false, "jobs", "update", "00000000-0000-0000-0000-000000000001", jobUpdateFailedJobInputString).run(t)
-	cliTest(false, true, "jobs", "create", "-").Stdin(jobCreateNextInputString + "\n").run(t)
-	cliTest(false, false, "machines", "update", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "{ \"Runnable\": true }").run(t)
 	cliTest(false, false, "jobs", "create", "-").Stdin(jobCreateNextInputString + "\n").run(t)
 	cliTest(false, false, "jobs", "update", "00000000-0000-0000-0000-000000000002", jobUpdateFinishedJobInputString).run(t)
 	cliTest(false, false, "jobs", "create", "-").Stdin(jobCreateNextInput3String).run(t)

@@ -2,7 +2,7 @@
   "Address": "192.168.100.110",
   "Available": true,
   "BootEnv": "local",
-  "CurrentJob": "00000000-0000-0000-0000-000000000001",
+  "CurrentJob": "00000000-0000-0000-0000-000000000002",
   "CurrentTask": 0,
   "Description": "",
   "Errors": [],
