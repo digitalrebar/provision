@@ -23,29 +23,41 @@ type BsdpBootOption struct {
 	RootPath  string `plist:"RootPath"`
 }
 
-func (bo *BsdpBootOption) String() string {
-	res := []string{}
-	switch bo.Install {
-	case true:
-		res = append(res, "netinstall")
-	case false:
-		res = append(res, "netboot")
-	}
+func (bo *BsdpBootOption) OSName() string {
 	switch bo.OSType {
 	case BsdpOS9:
-		res = append(res, "os9")
+		return "os9"
 	case BsdpOSX:
-		res = append(res, "osx")
+		return "osx"
 	case BsdpOSXServer:
-		res = append(res, "osxsrv")
+		return "osxsrv"
 	case BsdpDiags:
-		res = append(res, "diags")
+		return "diags"
+	default:
+		return "unknown"
 	}
-	res = append(res, bo.OSVersion)
-	res = append(res, fmt.Sprintf("%d", bo.Index))
-	res = append(res, bo.Name)
-	res = append(res, bo.Booter)
-	res = append(res, bo.RootPath)
+}
+
+func (bo *BsdpBootOption) InstallType() string {
+	switch bo.Install {
+	case true:
+		return "netinstall"
+	case false:
+		return "netboot"
+	}
+	return "Impossible"
+}
+
+func (bo *BsdpBootOption) String() string {
+	res := []string{
+		bo.InstallType(),
+		bo.OSName(),
+		bo.OSVersion,
+		fmt.Sprintf("%d", bo.Index),
+		bo.Name,
+		bo.Booter,
+		bo.RootPath,
+	}
 	return strings.Join(res, ":")
 }
 
