@@ -1,9 +1,16 @@
-Terraform Provider for Digital Rebar Provision
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+MOVING: Terraform Provider for Digital Rebar Provision
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 NOTICE: Moving to :ref:`component_terraform`.  Please update references.
 
+DOC SOURCE: https://github.com/rackn/provision-content/blob/master/terraform/._Documentation.meta
+
+ADDITIONAL MATERIAL: https://provision.readthedocs.io/en/tip/doc/content-packages/terraform.html
+
 .. _rs_terraform:
+
+Terraform Provider for Digital Rebar Provision
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The following instructions to install the needed Digital Rebar Provision
 integrations to support Terraform.  Terraform integrations require that

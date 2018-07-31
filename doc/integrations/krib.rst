@@ -1,7 +1,13 @@
-Moved: KRIB (Kubernetes Rebar Integrated Bootstrapping)
+Moving: KRIB (Kubernetes Rebar Integrated Bootstrapping)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 NOTICE: Moving to :ref:`component_krib`.  Please update references.
+
+DOC SOURCE: https://github.com/digitalrebar/provision-content/blob/master/krib/._Documentation.meta
+
+ADDITIONAL MATERIAL: https://provision.readthedocs.io/en/tip/doc/content-packages/krib.html
+
+.. _rs_krib:
 
 KRIB (Kubernetes Rebar Integrated Bootstrapping)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
