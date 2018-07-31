@@ -4,20 +4,21 @@ Usage:
   drpcli bootenvs [command]
 
 Available Commands:
-  action      Display the action for this bootenv
-  actions     Display actions for this bootenv
-  create      Create a new bootenv with the passed-in JSON or string key
-  destroy     Destroy bootenv by id
-  exists      See if a bootenvs exists by id
-  indexes     Get indexes for bootenvs
-  install     Install a bootenv along with everything it requires
-  list        List all bootenvs
-  meta        Gets metadata for the bootenv
-  runaction   Run action on object from plugin
-  show        Show a single bootenvs by id
-  update      Unsafely update bootenv by id with the passed-in JSON
-  uploadiso   This will attempt to upload the ISO from the specified ISO URL.
-  wait        Wait for a bootenv's field to become a value within a number of seconds
+  action       Display the action for this bootenv
+  actions      Display actions for this bootenv
+  create       Create a new bootenv with the passed-in JSON or string key
+  destroy      Destroy bootenv by id
+  exists       See if a bootenvs exists by id
+  fromAppleNBI This will attempt to translate an Apple .nbi directory into a bootenv and an archive.
+  indexes      Get indexes for bootenvs
+  install      Install a bootenv along with everything it requires
+  list         List all bootenvs
+  meta         Gets metadata for the bootenv
+  runaction    Run action on object from plugin
+  show         Show a single bootenvs by id
+  update       Unsafely update bootenv by id with the passed-in JSON
+  uploadiso    This will attempt to upload the ISO from the specified ISO URL.
+  wait         Wait for a bootenv's field to become a value within a number of seconds
 
 Flags:
   -h, --help   help for bootenvs
