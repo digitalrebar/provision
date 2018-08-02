@@ -1,0 +1,36 @@
+{
+  "Address": "192.168.100.110",
+  "Available": true,
+  "BootEnv": "local",
+  "CurrentJob": "",
+  "CurrentTask": 0,
+  "Description": "",
+  "Errors": [],
+  "HardwareAddrs": [],
+  "Meta": {
+    "feature-flags": "change-stage-v2"
+  },
+  "Name": "john",
+  "OS": "",
+  "Params": {},
+  "Profile": {
+    "Available": false,
+    "Description": "",
+    "Documentation": "",
+    "Errors": null,
+    "Meta": null,
+    "Name": "",
+    "Params": null,
+    "ReadOnly": false,
+    "Validated": false
+  },
+  "Profiles": [],
+  "ReadOnly": false,
+  "Runnable": true,
+  "Secret": "secret1",
+  "Stage": "none",
+  "Tasks": [],
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true,
+  "Workflow": ""
+}
