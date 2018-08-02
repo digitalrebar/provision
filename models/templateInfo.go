@@ -4,7 +4,23 @@ import (
 	"bytes"
 	"fmt"
 	"text/template"
+
+	"github.com/Masterminds/sprig"
 )
+
+func DrpSafeFuncMap() template.FuncMap {
+	gfm := sprig.GenericFuncMap()
+
+	// Dangerous
+	delete(gfm, "env")
+	delete(gfm, "expandenv")
+
+	// Misleading
+	delete(gfm, "ago")
+	delete(gfm, "now")
+
+	return template.FuncMap(gfm)
+}
 
 // TemplateInfo holds information on the templates in the boot
 // environment that will be expanded into files.
@@ -53,7 +69,7 @@ func (ti *TemplateInfo) SanityCheck(idx int, e ErrorAdder, missingPathOK bool) {
 	if !missingPathOK {
 		if ti.Path == "" {
 			e.Errorf("Template[%d] is missing a Path", idx)
-		} else if _, err := template.New(ti.Name).Parse(ti.Path); err != nil {
+		} else if _, err := template.New(ti.Name).Funcs(DrpSafeFuncMap()).Parse(ti.Path); err != nil {
 			e.Errorf("Template[%d] Path is not a valid text/template: %v", idx, err)
 		}
 	}
@@ -76,7 +92,7 @@ func MergeTemplates(root *template.Template, tmpls []TemplateInfo, e ErrorAdder)
 	var res *template.Template
 	var err error
 	if root == nil {
-		res = template.New("")
+		res = template.New("").Funcs(DrpSafeFuncMap())
 	} else {
 		res, err = root.Clone()
 	}
@@ -92,7 +108,7 @@ func MergeTemplates(root *template.Template, tmpls []TemplateInfo, e ErrorAdder)
 			continue
 		}
 		if ti.Path != "" {
-			pathTmpl, err := template.New(ti.Name).Parse(ti.Path)
+			pathTmpl, err := template.New(ti.Name).Funcs(DrpSafeFuncMap()).Parse(ti.Path)
 			if err != nil {
 				e.Errorf("Error compiling path template %s (%s): %v",
 					ti.Name,
