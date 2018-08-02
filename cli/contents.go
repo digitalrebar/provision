@@ -300,7 +300,7 @@ func registerContent(app *cobra.Command) {
 				}
 			}
 
-			tmpl := template.New("installLines").Option("missingkey=error")
+			tmpl := template.New("installLines").Funcs(models.DrpSafeFuncMap()).Option("missingkey=error")
 			tmpl, err = tmpl.Parse(docTemplate)
 			if err != nil {
 				return err
