@@ -1,0 +1,1 @@
+Error: ValidationError: reservations/C0A86465: Address 192.168.100.101 is not in a defined Subnet, and Scoped is true.

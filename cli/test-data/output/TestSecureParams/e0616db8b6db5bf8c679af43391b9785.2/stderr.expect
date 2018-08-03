@@ -1,3 +1,0 @@
-Error: AUTH
-  Cannot access /api/v3/machines/Name:bob/params/secure?decode=true
-  Requires: machines getSecure Name:bob

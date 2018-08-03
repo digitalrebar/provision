@@ -1,3 +1,4 @@
+Command "subnet" is deprecated, Changing the subnet CIDR address is not supported.
 Error: drpcli subnets subnet [subnetName] [subnet CIDR] [flags] requires 2 arguments
 Usage:
   drpcli subnets subnet [subnetName] [subnet CIDR] [flags]

@@ -20,6 +20,11 @@ func TestReservationCli(t *testing.T) {
 `
 	cliTest(true, false, "reservations").run(t)
 	cliTest(false, false, "reservations", "list").run(t)
+	cliTest(false, true, "reservations", "create", "-").Stdin(`---
+Addr: "192.168.100.101"
+Strategy: MAC
+Token: frank
+Scoped: true`).run(t)
 	cliTest(true, true, "reservations", "create").run(t)
 	cliTest(true, true, "reservations", "create", "john", "john2").run(t)
 	cliTest(false, true, "reservations", "create", reservationCreateBadJSONString).run(t)

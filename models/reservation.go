@@ -40,6 +40,11 @@ type Reservation struct {
 	//
 	// required: true
 	Strategy string
+	// Scoped indicates that this reservation is tied to a particular Subnet,
+	// as determined by the reservation's Addr.
+	//
+	// required: true
+	Scoped bool
 }
 
 func (r *Reservation) GetMeta() Meta {

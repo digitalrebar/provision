@@ -20,7 +20,6 @@ Available Commands:
   runaction   Run action on object from plugin
   set         Set the given subnet's dhcpOption to a value
   show        Show a single subnets by id
-  subnet      Set the CIDR network address
   update      Unsafely update subnet by id with the passed-in JSON
   wait        Wait for a subnet's field to become a value within a number of seconds
 

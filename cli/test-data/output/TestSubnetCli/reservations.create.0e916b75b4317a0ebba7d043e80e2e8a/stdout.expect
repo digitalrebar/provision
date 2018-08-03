@@ -5,11 +5,11 @@
   "Documentation": "",
   "Errors": [],
   "Meta": {},
-  "NextServer": "2.2.2.2",
+  "NextServer": "",
   "Options": [],
   "ReadOnly": false,
-  "Scoped": false,
+  "Scoped": true,
   "Strategy": "MAC",
-  "Token": "john",
+  "Token": "foo",
   "Validated": true
 }

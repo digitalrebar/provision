@@ -63,9 +63,7 @@ func TestSubnetCli(t *testing.T) {
 	cliTest(true, true, "subnets", "update").run(t)
 	cliTest(true, true, "subnets", "update", "john", "john2", "john3").run(t)
 	cliTest(false, true, "subnets", "update", "john", subnetUpdateBadJSONString).run(t)
-	cliTest(false, false, "subnets", "update", "john", subnetUpdateInputString).run(t)
 	cliTest(false, true, "subnets", "update", "john2", subnetUpdateInputString).run(t)
-	cliTest(false, false, "subnets", "show", "john").run(t)
 	cliTest(false, false, "subnets", "show", "john").run(t)
 	cliTest(true, true, "subnets", "destroy").run(t)
 	cliTest(true, true, "subnets", "destroy", "john", "june").run(t)
@@ -74,7 +72,7 @@ func TestSubnetCli(t *testing.T) {
 	cliTest(false, false, "subnets", "list").run(t)
 	cliTest(false, false, "subnets", "create", "-").Stdin(subnetCreateInputString + "\n").run(t)
 	cliTest(false, false, "subnets", "list").run(t)
-	cliTest(false, false, "subnets", "update", "john", "-").Stdin(subnetUpdateInputString + "\n").run(t)
+	cliTest(false, true, "subnets", "update", "john", "-").Stdin(subnetUpdateInputString + "\n").run(t)
 	cliTest(false, false, "subnets", "show", "john").run(t)
 	cliTest(true, true, "subnets", "range").run(t)
 	cliTest(true, true, "subnets", "range", "john", "1.24.36.7", "1.24.36.16", "1.24.36.16").run(t)
@@ -83,7 +81,7 @@ func TestSubnetCli(t *testing.T) {
 	cliTest(false, false, "subnets", "range", "john", "192.168.100.10", "192.168.100.200").run(t)
 	cliTest(true, true, "subnets", "subnet").run(t)
 	cliTest(true, true, "subnets", "subnet", "john", "june", "1.24.36.16").run(t)
-	cliTest(false, false, "subnets", "subnet", "john", "192.168.100.0/10").run(t)
+	cliTest(false, true, "subnets", "subnet", "john", "192.168.100.0/10").run(t)
 	cliTest(false, true, "subnets", "subnet", "john", "1111.11.2223.544/66666").run(t)
 	/* Save for when we have extra strategies other than MAC */
 	/*
@@ -114,6 +112,13 @@ func TestSubnetCli(t *testing.T) {
 	cliTest(false, false, "subnets", "set", "john", "option", "6", "to", "null").run(t)
 	cliTest(false, true, "subnets", "get", "john", "option", "6").run(t)
 	//End of Helpers
+	cliTest(false, false, "reservations", "create", "-").Stdin(`---
+Addr: "192.168.100.100"
+Strategy: MAC
+Token: foo
+Scoped: true`).run(t)
+	cliTest(false, true, "subnets", "destroy", "john").run(t)
+	cliTest(false, false, "reservations", "destroy", "192.168.100.100").run(t)
 	cliTest(false, false, "subnets", "destroy", "john").run(t)
 	cliTest(false, false, "subnets", "list").run(t)
 	verifyClean(t)

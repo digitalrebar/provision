@@ -47,9 +47,10 @@ func registerSubnet(app *cobra.Command) {
 		},
 	})
 	op.addCommand(&cobra.Command{
-		Use:   "subnet [subnetName] [subnet CIDR]",
-		Short: fmt.Sprintf("Set the CIDR network address"),
-		Long:  `Helper function to set the CIDR of a given subnet.`,
+		Use:        "subnet [subnetName] [subnet CIDR]",
+		Short:      fmt.Sprintf("Set the CIDR network address"),
+		Deprecated: "Changing the subnet CIDR address is not supported.",
+		Long:       `Helper function to set the CIDR of a given subnet.`,
 		Args: func(c *cobra.Command, args []string) error {
 			if len(args) != 2 {
 				return fmt.Errorf("%s requires 2 arguments", c.UseLine())

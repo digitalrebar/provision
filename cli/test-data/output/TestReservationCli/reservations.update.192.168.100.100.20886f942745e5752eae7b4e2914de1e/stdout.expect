@@ -13,6 +13,7 @@
     }
   ],
   "ReadOnly": false,
+  "Scoped": false,
   "Strategy": "MAC",
   "Token": "john",
   "Validated": true
