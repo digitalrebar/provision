@@ -1,3 +1,3 @@
 Error: PUT: contents/Pack1
-  Unable to load profiles: error unmarshaling JSON: json: cannot unmarshal number into Go struct field Profile.Params of type map[string]interface {}
+  Unable to load profiles: error unmarshaling JSON: while decoding JSON: json: cannot unmarshal number into Go struct field Profile.Params of type map[string]interface {}
   Profile p1-prof (at 0) does not exist

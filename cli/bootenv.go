@@ -111,5 +111,33 @@ It will attempt to perform a direct copy without saving the ISO locally.`,
 			}
 		},
 	})
+	op.addCommand(&cobra.Command{
+		Use:   "fromAppleNBI [path]",
+		Short: "This will attempt to translate an Apple .nbi directory into a bootenv and an archive.",
+		Long: `This command translates an Apple .nbi directory into a bootenv .yaml file
+that contains apropriate metadata to be handled by the dr-provision NBSP DHCP
+handler, and a .tar.gz file that contains the contents of the .nbi directory.
+
+The .nbi directory must have been produced by the Apple System Image Utility
+or equivalent tooling, and must contain a valid NBImageInfo.plist file.
+The .yaml file containig the bootenv will be named <os>-<version>.yaml,
+and the .tar.gz file will contain the contents of the .nbi directory.
+
+Both created files will be left in the current working directory.`,
+		Args: func(c *cobra.Command, args []string) error {
+			if len(args) != 1 {
+				return fmt.Errorf("%v requires 1 argument", c.UseLine())
+			}
+			sb, err := os.Stat(path.Join(args[0], "NBImageInfo.plist"))
+			if err != nil {
+				return fmt.Errorf("Cannot find NBImageInfo.plist in %s: %v", args[0], err)
+			}
+			if !sb.Mode().IsRegular() {
+				return fmt.Errorf("%s is not a normal file", path.Join(args[0], "NBImageInfo.plist"))
+			}
+			return nil
+		},
+		RunE: genEnvAndArchiveFromAppleNBI,
+	})
 	op.command(app)
 }
