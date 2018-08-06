@@ -113,7 +113,7 @@ Addr: "192.168.124.2"
 Strategy: MAC
 Scoped: true
 Token: foo`).run(t)
-	cliTest(false, true, "reservations", "create", "-").Stdin(`---
+	cliTest(false, false, "reservations", "create", "-").Stdin(`---
 Addr: "192.168.124.2"
 Strategy: MAC
 Scoped: true
