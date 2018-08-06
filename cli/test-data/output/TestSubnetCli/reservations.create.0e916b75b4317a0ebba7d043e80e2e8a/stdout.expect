@@ -10,6 +10,7 @@
   "ReadOnly": false,
   "Scoped": true,
   "Strategy": "MAC",
+  "Subnet": "john",
   "Token": "foo",
   "Validated": true
 }

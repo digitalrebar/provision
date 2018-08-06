@@ -26,6 +26,10 @@ type Reservation struct {
 	//
 	// required: true
 	Token string
+	// Subnet is the name of the Subnet that this Reservation is associated with.
+	// This property is read-only.
+	//
+	Subnet string
 	// NextServer is the address the server should contact next. You
 	// should only set this if you want to talk to a DHCP or TFTP server
 	// other than the one provided by dr-provision.

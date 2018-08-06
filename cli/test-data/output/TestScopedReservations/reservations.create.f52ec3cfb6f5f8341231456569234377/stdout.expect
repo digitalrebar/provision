@@ -1,16 +1,16 @@
 {
-  "Addr": "192.168.100.100",
+  "Addr": "192.168.123.30",
   "Available": true,
   "Description": "",
   "Documentation": "",
   "Errors": [],
   "Meta": {},
-  "NextServer": "2.2.2.2",
+  "NextServer": "",
   "Options": [],
   "ReadOnly": false,
   "Scoped": false,
   "Strategy": "MAC",
   "Subnet": "",
-  "Token": "john",
+  "Token": "baz",
   "Validated": true
 }
