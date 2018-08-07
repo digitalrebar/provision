@@ -20,6 +20,11 @@ func TestReservationCli(t *testing.T) {
 `
 	cliTest(true, false, "reservations").run(t)
 	cliTest(false, false, "reservations", "list").run(t)
+	cliTest(false, true, "reservations", "create", "-").Stdin(`---
+Addr: "192.168.100.101"
+Strategy: MAC
+Token: frank
+Scoped: true`).run(t)
 	cliTest(true, true, "reservations", "create").run(t)
 	cliTest(true, true, "reservations", "create", "john", "john2").run(t)
 	cliTest(false, true, "reservations", "create", reservationCreateBadJSONString).run(t)
@@ -63,5 +68,107 @@ func TestReservationCli(t *testing.T) {
 	cliTest(false, false, "reservations", "show", "192.168.100.100").run(t)
 	cliTest(false, false, "reservations", "destroy", "192.168.100.100").run(t)
 	cliTest(false, false, "reservations", "list").run(t)
+	verifyClean(t)
+}
+
+func TestScopedReservations(t *testing.T) {
+	cliTest(false, false, "subnets", "create", "-").Stdin(`---
+Name: aa
+Strategy: MAC
+Subnet: "192.168.124.0/24"
+ActiveStart: "192.168.124.10"
+ActiveEnd: "192.168.124.20"`).run(t)
+	cliTest(false, false, "subnets", "create", "-").Stdin(`---
+Name: bb
+Strategy: MAC
+Subnet: "192.168.125.0/24"
+ActiveStart: "192.168.125.10"
+ActiveEnd: "192.168.125.20"`).run(t)
+	cliTest(false, true, "reservations", "create", "-").Stdin(`---
+Addr: "192.168.123.30"
+Strategy: MAC
+Scoped: true
+Token: baz`).run(t)
+	cliTest(false, false, "reservations", "create", "-").Stdin(`---
+Addr: "192.168.123.30"
+Strategy: MAC
+Token: baz`).run(t)
+	cliTest(false, true, "reservations", "create", "-").Stdin(`---
+Addr: "192.168.124.0"
+Strategy: MAC
+Scoped: true
+Token: foo`).run(t)
+	cliTest(false, true, "reservations", "create", "-").Stdin(`---
+Addr: "192.168.124.255"
+Strategy: MAC
+Scoped: true
+Token: foo`).run(t)
+	cliTest(false, false, "reservations", "create", "-").Stdin(`---
+Addr: "192.168.124.1"
+Strategy: MAC
+Scoped: true
+Token: foo`).run(t)
+	cliTest(false, true, "reservations", "create", "-").Stdin(`---
+Addr: "192.168.124.2"
+Strategy: MAC
+Scoped: true
+Token: foo`).run(t)
+	cliTest(false, false, "reservations", "create", "-").Stdin(`---
+Addr: "192.168.124.2"
+Strategy: MAC
+Scoped: true
+Token: bar`).run(t)
+	cliTest(false, true, "reservations", "create", "-").Stdin(`---
+Addr: "192.168.124.3"
+Strategy: MAC
+Scoped: true
+Token: baz`).run(t)
+	cliTest(false, true, "reservations", "create", "-").Stdin(`---
+Addr: "192.168.124.2"
+Strategy: MAC
+Scoped: true
+Token: bar`).run(t)
+	cliTest(false, true, "reservations", "create", "-").Stdin(`---
+Addr: "192.168.125.0"
+Strategy: MAC
+Scoped: true
+Token: foo`).run(t)
+	cliTest(false, true, "reservations", "create", "-").Stdin(`---
+Addr: "192.168.125.255"
+Strategy: MAC
+Scoped: true
+Token: foo`).run(t)
+	cliTest(false, false, "reservations", "create", "-").Stdin(`---
+Addr: "192.168.125.1"
+Strategy: MAC
+Scoped: true
+Token: foo`).run(t)
+	cliTest(false, true, "reservations", "create", "-").Stdin(`---
+Addr: "192.168.125.2"
+Strategy: MAC
+Scoped: true
+Token: foo`).run(t)
+	cliTest(false, false, "reservations", "create", "-").Stdin(`---
+Addr: "192.168.125.2"
+Strategy: MAC
+Scoped: true
+Token: bar`).run(t)
+	cliTest(false, true, "reservations", "create", "-").Stdin(`---
+Addr: "192.168.125.3"
+Strategy: MAC
+Scoped: true
+Token: baz`).run(t)
+	cliTest(false, true, "reservations", "create", "-").Stdin(`---
+Addr: "192.168.125.2"
+Strategy: MAC
+Scoped: true
+Token: bar`).run(t)
+	cliTest(false, false, "reservations", "destroy", "192.168.125.2").run(t)
+	cliTest(false, false, "reservations", "destroy", "192.168.125.1").run(t)
+	cliTest(false, false, "reservations", "destroy", "192.168.124.2").run(t)
+	cliTest(false, false, "reservations", "destroy", "192.168.124.1").run(t)
+	cliTest(false, false, "reservations", "destroy", "192.168.123.30").run(t)
+	cliTest(false, false, "subnets", "destroy", "bb").run(t)
+	cliTest(false, false, "subnets", "destroy", "aa").run(t)
 	verifyClean(t)
 }

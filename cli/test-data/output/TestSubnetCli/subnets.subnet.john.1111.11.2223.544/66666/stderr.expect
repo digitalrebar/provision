@@ -1,1 +1,2 @@
+Command "subnet" is deprecated, Changing the subnet CIDR address is not supported.
 Error: 1111.11.2223.544/66666 is not a valid subnet CIDR

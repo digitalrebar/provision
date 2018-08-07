@@ -26,6 +26,10 @@ type Reservation struct {
 	//
 	// required: true
 	Token string
+	// Subnet is the name of the Subnet that this Reservation is associated with.
+	// This property is read-only.
+	//
+	Subnet string
 	// NextServer is the address the server should contact next. You
 	// should only set this if you want to talk to a DHCP or TFTP server
 	// other than the one provided by dr-provision.
@@ -40,6 +44,11 @@ type Reservation struct {
 	//
 	// required: true
 	Strategy string
+	// Scoped indicates that this reservation is tied to a particular Subnet,
+	// as determined by the reservation's Addr.
+	//
+	// required: true
+	Scoped bool
 }
 
 func (r *Reservation) GetMeta() Meta {

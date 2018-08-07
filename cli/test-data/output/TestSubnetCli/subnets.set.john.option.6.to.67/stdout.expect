@@ -14,11 +14,11 @@
   "Options": [
     {
       "Code": 1,
-      "Value": "255.192.0.0"
+      "Value": "255.255.255.0"
     },
     {
       "Code": 28,
-      "Value": "192.191.255.255"
+      "Value": "192.168.100.255"
     },
     {
       "Code": 6,
@@ -33,8 +33,8 @@
   "Proxy": false,
   "ReadOnly": false,
   "ReservedLeaseTime": 7300,
-  "Strategy": "NewStrat",
-  "Subnet": "192.168.100.0/10",
+  "Strategy": "MAC",
+  "Subnet": "192.168.100.0/24",
   "Unmanaged": false,
   "Validated": true
 }

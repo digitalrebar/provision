@@ -1,0 +1,1 @@
+Error: ValidationError: reservations/C0A87CFF: Address 192.168.124.255 is a network or broadcast address for subnet aa

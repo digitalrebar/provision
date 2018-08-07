@@ -13,7 +13,9 @@
     }
   ],
   "ReadOnly": false,
+  "Scoped": false,
   "Strategy": "MAC",
+  "Subnet": "",
   "Token": "john",
   "Validated": true
 }

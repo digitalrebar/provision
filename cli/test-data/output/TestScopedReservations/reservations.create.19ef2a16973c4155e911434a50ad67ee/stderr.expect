@@ -1,0 +1,1 @@
+Error: ValidationError: reservations/C0A87C00: Address 192.168.124.0 is a network or broadcast address for subnet aa

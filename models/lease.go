@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"net"
 	"time"
 )
@@ -49,6 +50,10 @@ type Lease struct {
 	// read only: true
 	// required: true
 	State string
+}
+
+func (l *Lease) String() string {
+	return fmt.Sprintf("%s %s:%s:%s %d", l.Addr, l.Strategy, l.Token, l.State, l.ExpireTime.Unix())
 }
 
 func (l *Lease) GetMeta() Meta {

@@ -29,7 +29,7 @@
   "Proxy": false,
   "ReadOnly": false,
   "ReservedLeaseTime": 7200,
-  "Strategy": "NewStrat",
+  "Strategy": "MAC",
   "Subnet": "192.168.100.0/24",
   "Unmanaged": false,
   "Validated": true

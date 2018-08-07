@@ -1,0 +1,16 @@
+{
+  "Addr": "192.168.125.2",
+  "Available": true,
+  "Description": "",
+  "Documentation": "",
+  "Errors": [],
+  "Meta": {},
+  "NextServer": "",
+  "Options": [],
+  "ReadOnly": false,
+  "Scoped": true,
+  "Strategy": "MAC",
+  "Subnet": "bb",
+  "Token": "bar",
+  "Validated": true
+}

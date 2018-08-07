@@ -1,0 +1,16 @@
+{
+  "Addr": "192.168.123.30",
+  "Available": true,
+  "Description": "",
+  "Documentation": "",
+  "Errors": [],
+  "Meta": {},
+  "NextServer": "",
+  "Options": [],
+  "ReadOnly": false,
+  "Scoped": false,
+  "Strategy": "MAC",
+  "Subnet": "",
+  "Token": "baz",
+  "Validated": true
+}

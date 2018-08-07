@@ -8,7 +8,9 @@
   "NextServer": "2.2.2.2",
   "Options": [],
   "ReadOnly": false,
+  "Scoped": false,
   "Strategy": "MAC",
+  "Subnet": "",
   "Token": "john",
   "Validated": true
 }
