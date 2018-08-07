@@ -26,6 +26,9 @@ type Event struct {
 	// Key - the id of the object
 	Key string
 
+	// Principal - the user or subsystem that caused the event to be emitted
+	Principal string
+
 	// Object - the data of the object.
 	Object interface{}
 }
@@ -36,7 +39,7 @@ func (e *Event) Text() string {
 		jsonString = []byte("json failure")
 	}
 
-	return fmt.Sprintf("%d: %s %s %s\n%s\n", e.Time.Unix(), e.Type, e.Action, e.Key, string(jsonString))
+	return fmt.Sprintf("%d: %s %s %s %s\n%s\n", e.Time.Unix(), e.Type, e.Action, e.Key, e.Principal, string(jsonString))
 }
 
 func (e *Event) Model() (Model, error) {
