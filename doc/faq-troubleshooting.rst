@@ -485,6 +485,17 @@ If you have a task/template that has failed, once it's been run by the Job syste
 
 .. _rs_jq_examples:
 
+RBAC - Limit Users to Just Poweron and Poweroff IPMI Controls
+-------------------------------------------------------------
+
+The Role Base Access and Controls subsystem allows an operator to construct user account permissions to limit the scope that a user can impact the Digital Rebar Provision system.  Below is an example of how to create a *Claim* that assigns the ``Role`` named ``prod-role`` that limits t to only allow IPMI ``poweron`` and ``poweroff` actions.  These permissions are applied to the _specific_ set of _scope_ *Machines*:
+
+  ::
+
+    drpcli roles update prod-role '"Claims": [{"action": "action:poweron, action:poweroff", "scope": "machines", "specific": "*"}]'
+
+Now simply assign this Role to the given users you wish to limit their permissions on. 
+
 JQ Usage Examples
 -----------------
 
