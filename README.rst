@@ -94,6 +94,7 @@ Table of Contents
    
    doc/quickstart
    doc/install
+   doc/setup/index
    doc/features
    doc/server
    doc/configuring
@@ -102,6 +103,7 @@ Table of Contents
    doc/workflows
    doc/deployment
    doc/operation
+   doc/performance/intro
    doc/os-support
    doc/os-support/linuxkit
    doc/ui
