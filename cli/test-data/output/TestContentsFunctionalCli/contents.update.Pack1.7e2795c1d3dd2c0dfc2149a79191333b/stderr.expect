@@ -1,3 +1,4 @@
 Error: PUT: contents/Pack1
-  Unable to load profiles: error unmarshaling JSON: while decoding JSON: json: cannot unmarshal number into Go struct field Profile.Params of type map[string]interface {}
+  Store profiles item p2-prof failed to load from layer content-Pack1: error unmarshaling JSON: while decoding JSON: json: cannot unmarshal number into Go struct field Profile.Params of type map[string]interface {}
+  Try manually replacing content layer Pack1
   Profile p1-prof (at 0) does not exist
