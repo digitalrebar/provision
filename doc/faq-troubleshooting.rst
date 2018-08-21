@@ -92,6 +92,55 @@ The below example adds *User1* and *User2* SSH keys to the profile *my-profile*.
 
     drpcli profiles update my-profile -< keys.json
 
+.. _rs_docker_volume:
+
+Example Docker Volume Usage
+---------------------------
+
+Digital Rebar Provision writes content in the Docker Container to the ``/provision/drp-data``
+directory by default.  Most DRP Endpoint provisioning systems will want to have persistent
+data across the container runtimes.  For this you need to add a Docker Volume.  The below
+example shows you how to use the locak Docker host as the backing store for the volume. You
+can also use any of the container based networked storage solutions to back your volume in.
+
+
+1. Create a volume for the container
+  ::
+
+    export VOL="drp-data"
+
+    # create a Docker volume
+    docker volume create $VOL
+
+2. Lets verify that the volume is currently empty
+  ::
+
+    docker volume inspect $VOL | jq '.[].Mountpoint'
+    # outputs:
+    # "/docker/volumes/drp-data/_data"
+
+    # show the contents of the current (empty) volume
+    ls -la $(docker volume inspect $VOL | jq -r '.[].Mountpoint')
+    # total 0
+    # drwxr-xr-x. 2 root root  40 Aug 21 00:41 .
+    # dr-xr-x---. 1 root root 180 Aug 21 00:41 ..
+
+3. Lanch DRP, using our newly created volume:
+  ::
+
+    # now run DRP with our volume mapped to /provision/drp-data:
+    docker run --volume $VOL:/provision/drp-data --name drp -itd --net host digitalrebar/provision:stable
+
+4. Verify that DRP extracted the assets on the host in the mounted volume location:
+  ::
+
+    # when DRP starts up, it extracts and builds the default assets
+    # in the writable backing store (directory structure):
+    ls $(docker volume inspect drp-data | jq -r '.[].Mountpoint')
+    # outputs:
+    # digitalrebar  job-logs  plugins  replace  saas-content  secrets  tftpboot  ux
+
+
 .. _rs_access_ssh_root_mode:
 
 Set SSH Root Mode
