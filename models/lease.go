@@ -33,6 +33,13 @@ type Lease struct {
 	// required: false
 	// swagger:strfmt ipv4
 	NextServer net.IP
+	// Via is the IP address used to select which subnet the lease belongs to.
+	// It is either an address present on a local interface that dr-provision is
+	// listening on, or the GIADDR field of the DHCP request.
+	//
+	// required: false
+	// swagger:strfmt ipv4
+	Via net.IP
 	// Token is the unique token for this lease based on the
 	// Strategy this lease used.
 	//
@@ -96,6 +103,15 @@ func (l *Lease) KeyName() string {
 func (l *Lease) Fill() {
 	if l.Meta == nil {
 		l.Meta = Meta{}
+	}
+	if l.NextServer == nil {
+		l.NextServer = net.IP{}
+	}
+	if l.Via == nil {
+		l.Via = net.IP{}
+	}
+	if l.Options == nil {
+		l.Options = []DhcpOption{}
 	}
 	l.Validation.fill()
 }
