@@ -143,6 +143,11 @@ template.  RenderData has the following fields:
     repository that contains security updates to apply during OS
     install.
 
+  - **[Sprig functions]** are string, math, file and flow functions for golang
+    templates from the `Sprig Function Library <_http://masterminds.github.io/sprig/>`_.
+    They can be added to pipeline evaluation to perform useful template
+    rendering operations.
+
 - **Env**: The BootEnv that we are rendering templates for, if applicable.
   Unless the BootEnv has the OnlyUnknown flag set, RenderData will
   also include a Machine.  If Env is present, the following helpers will also
