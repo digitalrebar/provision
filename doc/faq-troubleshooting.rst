@@ -315,6 +315,18 @@ The ``template`` construct is a text string that refers to a given template name
 
 The ``CallTemplate`` construct can be a variable or expression that evaluates to a string.
 
+.. _rs_sprig:
+
+How Can I manipulate values during Golang Template rendering?
+-------------------------------------------------------------
+
+The Digital Rebar Provision integrates most of the `Sprig Function Library <_http://masterminds.github.io/sprig/>`_ in the Golang Template rendering operations.  That means that you may include their string, math and flow functions into your pipelines.
+
+For example: `{{.Param "noCamelCase/hashiCorp" | snakecase }}` or `{{.Param "cool/tech" | regexMatch "([DRP]*)"}}`
+
+Please consult the Sprig website for a full list of functions.
+
+Note: Digital Rebar Provision blocks functions that could be used to operate on the endpoint outside of DRP template rendering for security reasons.
 
 .. _rs_change_machine_name:
 
