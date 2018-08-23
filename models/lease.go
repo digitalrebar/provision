@@ -27,11 +27,20 @@ type Lease struct {
 	// required: true
 	// swagger:strfmt ipv4
 	Addr net.IP
+	// NextServer is the IP address that we should have the machine talk to
+	// next.  In most cases, this will be our address.
+	//
+	// required: false
+	// swagger:strfmt ipv4
+	NextServer net.IP
 	// Token is the unique token for this lease based on the
 	// Strategy this lease used.
 	//
 	// required: true
 	Token string
+	// Duration is the time in seconds for which a lease can be valid.
+	// ExpireTime is calculated from Duration.
+	Duration int32
 	// ExpireTime is the time at which the lease expires and is no
 	// longer valid The DHCP renewal time will be half this, and the
 	// DHCP rebind time will be three quarters of this.
@@ -50,6 +59,14 @@ type Lease struct {
 	// read only: true
 	// required: true
 	State string
+	// Options are the DHCP options that the Lease is running with.
+	Options []DhcpOption
+	// SkipBoot indicates that the DHCP system is allowed to offer
+	// boot options for whatever boot protocol the machine wants to
+	// use.
+	//
+	// read only: true
+	SkipBoot bool
 }
 
 func (l *Lease) String() string {
