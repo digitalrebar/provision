@@ -49,6 +49,9 @@ type Reservation struct {
 	//
 	// required: true
 	Scoped bool
+	// Duration is the time in seconds for which a lease can be valid.
+	// ExpireTime is calculated from Duration.
+	Duration int32
 }
 
 func (r *Reservation) GetMeta() Meta {

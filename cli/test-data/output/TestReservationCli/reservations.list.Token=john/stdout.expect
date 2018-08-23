@@ -4,6 +4,7 @@
     "Available": true,
     "Description": "",
     "Documentation": "",
+    "Duration": 0,
     "Errors": [],
     "Meta": {},
     "NextServer": "2.2.2.2",
