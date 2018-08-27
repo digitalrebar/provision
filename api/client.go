@@ -42,6 +42,7 @@ type Client struct {
 	closed                       bool
 	traceLvl                     string
 	traceToken                   string
+	info                         *models.Info
 }
 
 func (c *Client) Endpoint() string {
@@ -72,6 +73,23 @@ func (c *Client) TraceToken(t string) {
 	c.mux.Lock()
 	defer c.mux.Unlock()
 	c.traceToken = t
+}
+
+func (c *Client) File(pathParts ...string) (io.ReadCloser, error) {
+	info, err := c.Info()
+	if err != nil {
+		return nil, err
+	}
+	if info.FilePort == 0 {
+		return nil, fmt.Errorf("Static file service not running")
+	}
+	url := fmt.Sprintf("http://%s:%d/%s", info.Address, info.FilePort, path.Join(pathParts...))
+	log.Printf("url: %s", url)
+	resp, err := http.Get(url)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Body, nil
 }
 
 // R encapsulates a single Request/Response round trip.  It has a slew
@@ -547,8 +565,11 @@ func (c *Client) Token() string {
 // Info returns some basic system information that was retrieved as
 // part of the initial authentication.
 func (c *Client) Info() (*models.Info, error) {
-	res := &models.Info{}
-	return res, c.Req().UrlFor("info").Do(res)
+	if c.info != nil {
+		return c.info, nil
+	}
+	c.info = &models.Info{}
+	return c.info, c.Req().UrlFor("info").Do(c.info)
 }
 
 // Logs returns the currently buffered logs from the dr-provision server
