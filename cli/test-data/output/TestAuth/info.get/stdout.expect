@@ -67,7 +67,8 @@ RE:
     "secure-params",
     "separate-meta-api",
     "slim-objects",
-    "secure-param-upgrade"
+    "secure-param-upgrade",
+    "sprig"
   \],
   "file_port": 10002,
   "id": "Fred",
