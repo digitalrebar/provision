@@ -1,11 +1,15 @@
 package api
 
 import (
+	"bufio"
 	"fmt"
 	"io"
 	"io/ioutil"
+	"net/http"
 	"os"
 	"os/exec"
+	"path"
+	"runtime"
 	"strings"
 	"time"
 
@@ -45,6 +49,7 @@ const (
 	AGENT_EXIT
 	AGENT_REBOOT
 	AGENT_POWEROFF
+	AGENT_KEXEC
 )
 
 type MachineAgent struct {
@@ -167,9 +172,157 @@ func (a *MachineAgent) Init() {
 	a.state = AGENT_WAIT_FOR_RUNNABLE
 }
 
-func (a *MachineAgent) rebootOrExit() {
+func kexecLoaded() bool {
+	buf, err := ioutil.ReadFile("/sys/kernel/kexec_loaded")
+	return err == nil && string(buf)[0] == '1'
+}
+
+func (a *MachineAgent) loadKexec() {
+	if runtime.GOOS != "linux" {
+		a.Logf("kexec: Not running on Linux\n")
+		return
+	}
+	a.Logf("Running on Linux\n")
+	if _, err := exec.LookPath("kexec"); err != nil {
+		a.Logf("kexec: kexec command not installed")
+		return
+	}
+	kexecOk := false
+	if err := a.client.Req().
+		UrlFor("machines", a.machine.UUID(), "params", "kexec-ok").
+		Params("aggregate", "true").
+		Do(&kexecOk); err != nil {
+		a.Logf("kexec: Could not find kexec-ok\n")
+		return
+	}
+	if !kexecOk {
+		a.Logf("kexec: kexec-ok is false\n")
+		return
+	}
+	a.Logf("Machine has kexec-ok param set\n")
+	if kexecLoaded() {
+		return
+	}
+	tmpDir, err := ioutil.TempDir("", "drp-agent-kexec")
+	if err != nil {
+		a.Logf("Failed to make tmpdir for kexec\n")
+		return
+	}
+	defer os.RemoveAll(tmpDir)
+	kTmpl, err := a.client.File("machines", a.machine.UUID(), "kexec")
+	if err != nil {
+		a.Logf("Failed to fetch kexec information: %v\n", err)
+		return
+	}
+	a.Logf("kexec info fetched\n")
+	defer kTmpl.Close()
+	sc := bufio.NewScanner(kTmpl)
+	var kernel, cmdline string
+	initrds := []string{}
+	for sc.Scan() {
+		parts := strings.SplitN(sc.Text(), " ", 2)
+		var resp *http.Response
+		switch parts[0] {
+		case "kernel", "initrd":
+			resp, err = http.Get(parts[1])
+		case "params":
+			cmdline = parts[1]
+			continue
+		default:
+			continue
+		}
+		if err != nil {
+			a.Logf("Failed to fetch %s\n", parts[1])
+			return
+		}
+		defer resp.Body.Close()
+		outPath := path.Join(tmpDir, path.Base(parts[1]))
+		out, err := os.Create(outPath)
+		if err != nil {
+			a.Logf("Failed to create %s\n", outPath)
+			return
+		}
+		if _, err := io.Copy(out, resp.Body); err != nil {
+			a.Logf("Failed to save %s\n", outPath)
+			return
+		}
+		out.Sync()
+		out.Close()
+		switch parts[0] {
+		case "kernel":
+			kernel = outPath
+		case "initrd":
+			initrds = append(initrds, outPath)
+		}
+	}
+	if kernel == "" {
+		a.Logf("No kernel found\n")
+		return
+	}
+	if len(initrds) > 1 {
+		a.Logf("kexec: Too many initrds\n")
+		return
+	}
+	kOpts, err := ioutil.ReadFile("/proc/cmdline")
+	if err != nil {
+		a.Logf("kexec: No /proc/cmdline\n")
+		return
+	}
+	kexecOk = false
+	for _, part := range strings.Split(string(kOpts), " ") {
+		if strings.HasPrefix(part, "BOOTIF=") {
+			kexecOk = true
+			cmdline = cmdline + " " + part
+			break
+		}
+	}
+	if !kexecOk {
+		v, vok := a.machine.Params["last-boot-macaddr"]
+		macaddr, aok := v.(string)
+		if aok && vok {
+			cmdline = cmdline + " BOOTIF=" + macaddr
+		} else {
+			a.Logf("Could not determine nic we booted from")
+			return
+		}
+	}
+	a.Logf("kernel:%s initrd:%s\n", kernel, initrds[0])
+	a.Logf("cmdline: %s\n", cmdline)
+	cmd := exec.Command("/sbin/kexec", "-l", kernel, "--initrd="+initrds[0], "--command-line="+cmdline)
+	if err := cmd.Run(); err != nil {
+		return
+	}
+	a.Logf("kexec info staged\n")
+	return
+}
+
+func (a *MachineAgent) doKexec() {
+	a.state = AGENT_REBOOT
+	var cmdErr error
+	if _, err := exec.LookPath("systemctl"); err == nil {
+		cmdErr = exec.Command("systemctl", "kexec").Run()
+	} else if _, err = exec.LookPath("/etc/init.d/kexec"); err == nil {
+		cmdErr = exec.Command("telinit", "6").Run()
+	} else if err = exec.Command("grep", "-q", "kexec", "/etc/init.d/halt").Run(); err == nil {
+		cmdErr = exec.Command("telinit", "6").Run()
+	} else {
+		cmdErr = exec.Command("kexec", "-e").Run()
+	}
+	if cmdErr == nil {
+		time.Sleep(5 * time.Minute)
+	}
+}
+
+func (a *MachineAgent) rebootOrExit(autoKexec bool) {
 	if strings.HasSuffix(a.machine.BootEnv, "-install") {
 		a.state = AGENT_EXIT
+		return
+	}
+	if autoKexec {
+		a.loadKexec()
+	}
+	if kexecLoaded() {
+		a.state = AGENT_KEXEC
 	} else {
 		a.state = AGENT_REBOOT
 	}
@@ -205,7 +358,7 @@ func (a *MachineAgent) waitOn(m *models.Machine, cond TestFunc) {
 		a.state = AGENT_EXIT
 	case "complete":
 		if m.BootEnv != a.machine.BootEnv {
-			a.rebootOrExit()
+			a.rebootOrExit(true)
 		} else if m.Runnable {
 			a.state = AGENT_RUN_TASK
 		} else {
@@ -276,7 +429,7 @@ func (a *MachineAgent) RunTask() {
 	defer runner.Close()
 	if runner.reboot {
 		runner.Log("Task signalled runner to reboot")
-		a.rebootOrExit()
+		a.rebootOrExit(false)
 	} else if runner.poweroff {
 		runner.Log("Task signalled runner to poweroff")
 		a.state = AGENT_POWEROFF
@@ -386,13 +539,13 @@ func (a *MachineAgent) ChangeStage() {
 	} else {
 		// The new stage wants a new bootenv.  Reboot into it to continue
 		// processing.
-		a.rebootOrExit()
+		a.rebootOrExit(true)
 	}
 	if targetState != "" {
 		// The change stage map is overriding our default behaviour.
 		switch targetState {
 		case "Reboot":
-			a.rebootOrExit()
+			a.rebootOrExit(true)
 		case "Stop":
 			a.state = AGENT_EXIT
 		case "Shutdown":
@@ -401,7 +554,7 @@ func (a *MachineAgent) ChangeStage() {
 	}
 	if newStage.Reboot {
 		// A reboot flag on the next stage forces an unconditional reboot.
-		a.rebootOrExit()
+		a.rebootOrExit(true)
 	}
 	newM := models.Clone(a.machine).(*models.Machine)
 	newM.Stage = nextStage
@@ -450,6 +603,9 @@ func (a *MachineAgent) Run() error {
 		case AGENT_EXIT:
 			a.Logf("Agent exiting\n")
 			return a.err
+		case AGENT_KEXEC:
+			a.Logf("Attempting to kexec\n")
+			a.doKexec()
 		case AGENT_REBOOT:
 			a.Logf("Agent rebooting\n")
 			return a.power("reboot")
