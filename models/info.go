@@ -81,6 +81,7 @@ func (i *Info) Fill() {
 			"separate-meta-api",
 			"slim-objects",
 			"secure-param-upgrade",
+			"sprig",
 		}
 	}
 }
