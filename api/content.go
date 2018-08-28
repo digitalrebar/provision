@@ -44,7 +44,11 @@ func findOrFake(src, field string, args map[string]string) string {
 	if p, ok := args[field]; !ok {
 		s := "Unspecified"
 		if field == "Type" {
+			// Default Type should be dynamic
 			s = "dynamic"
+		} else if field == "RequiredFeatures" {
+			// Default RequiredFeatures should be empty string
+			s = ""
 		}
 		return s
 	} else {
