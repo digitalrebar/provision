@@ -55,12 +55,13 @@ func findOrFake(src, field string, args map[string]string) string {
 func (c *Client) BundleContent(src string, dst store.Store, params map[string]string) error {
 	if dm, ok := dst.(store.MetaSaver); ok {
 		meta := map[string]string{
-			"Name":          findOrFake(src, "Name", params),
-			"Description":   findOrFake(src, "Description", params),
-			"Documentation": findOrFake(src, "Documentation", params),
-			"Version":       findOrFake(src, "Version", params),
-			"Source":        findOrFake(src, "Source", params),
-			"Type":          findOrFake(src, "Type", params),
+			"Name":             findOrFake(src, "Name", params),
+			"Description":      findOrFake(src, "Description", params),
+			"Documentation":    findOrFake(src, "Documentation", params),
+			"RequiredFeatures": findOrFake(src, "RequiredFeatures", params),
+			"Version":          findOrFake(src, "Version", params),
+			"Source":           findOrFake(src, "Source", params),
+			"Type":             findOrFake(src, "Type", params),
 		}
 		dm.SetMetaData(meta)
 	}
