@@ -54,6 +54,8 @@ Another reason to use the *tools/build.sh* script is that it will inject version
 it easier to track what version is deployed.  Developer builds and production builds will be identifiable through the *version*
 command on both the server and the cli.
 
+.. note:: If you have performed a previous build and generated assets are updated, you may need to delete the contents of the `embedded` directory and rebuild to ensure that the server can start.  This problem manifests with the error: `No such embedded asset chain.c32: Asset chain.c32 not found`
+
 Serving UI from File System
 ---------------------------
 
