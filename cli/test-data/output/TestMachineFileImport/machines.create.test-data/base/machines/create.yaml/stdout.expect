@@ -1,5 +1,6 @@
 {
   "Address": "9.4.3.1",
+  "Arch": "amd64",
   "Available": true,
   "BootEnv": "local",
   "CurrentJob": "",

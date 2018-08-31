@@ -8,6 +8,35 @@ import (
 	"github.com/pborman/uuid"
 )
 
+func SupportedArch(s string) (string, bool) {
+	switch strings.ToLower(s) {
+	case "amd64", "x86_64":
+		return "amd64", true
+	case "386", "486", "686", "i386", "i486", "i686":
+		return "386", true
+	case "arm", "armel", "armhfp":
+		return "arm", true
+	case "arm64", "aarch64":
+		return "arm64", true
+	case "ppc64", "power9":
+		return "ppc64", true
+	case "ppc64le":
+		return "ppc64le", true
+	case "mips64":
+		return "mips64", true
+	case "mips64le", "mips64el":
+		return "mips64le", true
+	case "s390x":
+		return "s390x", true
+	case "mips":
+		return "mips", true
+	case "mipsle", "mipsel":
+		return "mipsle", true
+	default:
+		return "", false
+	}
+}
+
 // Machine represents a single bare-metal system that the provisioner
 // should manage the boot environment for.
 // swagger:model
@@ -83,6 +112,11 @@ type Machine struct {
 	//
 	// required: true
 	Workflow string
+	// Arch is the machine architecture. It should be an arch that can
+	// be fed into $GOARCH.
+	//
+	// required: true
+	Arch string
 }
 
 func (n *Machine) GetMeta() Meta {
@@ -94,6 +128,11 @@ func (n *Machine) SetMeta(d Meta) {
 }
 
 func (n *Machine) Validate() {
+	if arch, ok := SupportedArch(n.Arch); !ok {
+		n.Errorf("Unsupported arch %s", n.Arch)
+	} else if arch != n.Arch {
+		n.Errorf("Please use %s for Arch instead of %s", arch, n.Arch)
+	}
 	n.AddError(ValidMachineName("Invalid Name", n.Name))
 	n.AddError(ValidName("Invalid Stage", n.Stage))
 	n.AddError(ValidName("Invalid BootEnv", n.BootEnv))
@@ -161,6 +200,9 @@ func (n *Machine) Fill() {
 	}
 	if n.HardwareAddrs == nil {
 		n.HardwareAddrs = []string{}
+	}
+	if n.Arch == "" {
+		n.Arch = "amd64"
 	}
 }
 
