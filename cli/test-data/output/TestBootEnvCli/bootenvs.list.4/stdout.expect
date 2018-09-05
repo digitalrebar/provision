@@ -21,6 +21,7 @@
       "IsoSha256": "",
       "IsoUrl": "",
       "Name": "ignore",
+      "SupportedArchitectures": {},
       "Version": ""
     },
     "OnlyUnknown": true,
@@ -62,6 +63,7 @@
       "IsoSha256": "",
       "IsoUrl": "",
       "Name": "",
+      "SupportedArchitectures": {},
       "Version": ""
     },
     "OnlyUnknown": false,
@@ -93,6 +95,7 @@
       "IsoSha256": "",
       "IsoUrl": "",
       "Name": "local",
+      "SupportedArchitectures": {},
       "Version": ""
     },
     "OnlyUnknown": false,

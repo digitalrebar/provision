@@ -4,9 +4,7 @@
   "Description": "",
   "Documentation": "",
   "Errors": [
-    "bootenv: Missing OS.Name",
-    "bootenv: no-fredhammer: missing kernel vmlinuz0 (/vmlinuz0)",
-    "bootenv: no-fredhammer: missing initrd stage1.img (/stage1.img)"
+    "bootenv: Missing OS.Name"
   ],
   "Initrds": [
     "stage1.img"
@@ -21,6 +19,7 @@
     "IsoSha256": "",
     "IsoUrl": "http://127.0.0.1:10003/sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar",
     "Name": "",
+    "SupportedArchitectures": {},
     "Version": ""
   },
   "OnlyUnknown": false,

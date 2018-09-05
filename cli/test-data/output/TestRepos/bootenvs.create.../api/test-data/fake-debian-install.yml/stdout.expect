@@ -17,6 +17,7 @@
     "IsoSha256": "c82f6dd8270013d0a7dd47ed09563afe7c80a756fcefb885f74ef52d854711e1",
     "IsoUrl": "",
     "Name": "debian-6",
+    "SupportedArchitectures": {},
     "Version": ""
   },
   "OnlyUnknown": false,

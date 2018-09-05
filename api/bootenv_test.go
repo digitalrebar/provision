@@ -408,6 +408,7 @@ Name: fred
 BootEnv: fredhammer
 `).(*models.Stage)
 	fredhammer := mustDecode(&models.BootEnv{}, `
+Available: true
 BootParams: Acounted for
 Errors:
 - Fake error

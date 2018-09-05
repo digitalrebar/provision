@@ -4,9 +4,7 @@
   "Description": "",
   "Documentation": "",
   "Errors": [
-    "bootenv: Missing OS.Name",
-    "bootenv: no-phredhammer: missing kernel vmlinuz0 (/vmlinuz0)",
-    "bootenv: no-phredhammer: missing initrd stage1.img (/stage1.img)"
+    "bootenv: Missing OS.Name"
   ],
   "Initrds": [
     "stage1.img"
@@ -21,6 +19,7 @@
     "IsoSha256": "",
     "IsoUrl": "",
     "Name": "",
+    "SupportedArchitectures": {},
     "Version": ""
   },
   "OnlyUnknown": false,

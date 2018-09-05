@@ -1,14 +1,9 @@
 {
-  "Available": false,
+  "Available": true,
   "BootParams": "rootflags=loop root=live:/sledgehammer.iso rootfstype=auto ro liveimg rd_NO_LUKS rd_NO_MD rd_NO_DM provisioner.web={{.ProvisionerURL}} rebar.web={{.CommandURL}} rs.uuid={{.Machine.UUID}} rs.api={{.ApiURL}}",
   "Description": "",
   "Documentation": "",
-  "Errors": [
-    "Explode ISO: iso does not exist: /isos/sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar\n",
-    "You can download the required ISO from http://127.0.0.1:10003/sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar",
-    "bootenv: fredhammer: missing kernel vmlinuz0 (/sledgehammer/708de8b878e3818b1c1bb598a56de968939f9d4b/vmlinuz0)",
-    "bootenv: fredhammer: missing initrd stage1.img (/sledgehammer/708de8b878e3818b1c1bb598a56de968939f9d4b/stage1.img)"
-  ],
+  "Errors": [],
   "Initrds": [
     "stage1.img"
   ],
@@ -22,6 +17,7 @@
     "IsoSha256": "",
     "IsoUrl": "http://127.0.0.1:10003/sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar",
     "Name": "sledgehammer/708de8b878e3818b1c1bb598a56de968939f9d4b",
+    "SupportedArchitectures": {},
     "Version": ""
   },
   "OnlyUnknown": false,

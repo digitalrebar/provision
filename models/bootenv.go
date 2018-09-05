@@ -5,6 +5,44 @@ import (
 	"strings"
 )
 
+type ArchInfo struct {
+	// IsoFile is the name of the ISO file (or other archive)
+	// that contains all the necessacery information to be able to
+	// boot into this BootEnv for a given arch.
+	// At a minimum, it must contain a kernel and initrd that
+	// can be booted over the network.
+	IsoFile string
+	// Sha256 should contain the SHA256 checksum for the IsoFile.
+	// If it does, the IsoFile will be checked upon upload to make sure
+	// it has not been corrupted.
+	Sha256 string
+	// IsoUrl is the location that IsoFile can be downloaded from, if any.
+	// This must be a full URL, including the filename.
+	//
+	// swagger:strfmt url
+	IsoUrl string
+	// The partial path to the kernel for the boot environment.  This
+	// should be path that the kernel is located at in the OS ISO or
+	// install archive.  If empty, this will fall back to the top-level
+	// Kernel field in the BootEnv
+	//
+	// required: true
+	Kernel string
+	// Partial paths to the initrds that should be loaded for the boot
+	// environment. These should be paths that the initrds are located
+	// at in the OS ISO or install archive.  If empty, this will fall back
+	// to the top-level Initrds field in the BootEnv
+	//
+	// required: true
+	Initrds []string
+	// A template that will be expanded to create the full list of
+	// boot parameters for the environment.  If empty, this will fall back
+	// to the top-level BootParams field in the BootEnv
+	//
+	// required: true
+	BootParams string
+}
+
 // OsInfo holds information about the operating system this BootEnv
 // maps to.  Most of this information is optional for now.
 // swagger:model
@@ -20,14 +58,24 @@ type OsInfo struct {
 	Codename string
 	// The version of the OS, if any.
 	Version string
-	// The name of the ISO that the OS should install from.
+	// The name of the ISO that the OS should install from.  If
+	// non-empty, this is assumed to be for the amd64 hardware
+	// architecture.
 	IsoFile string
 	// The SHA256 of the ISO file.  Used to check for corrupt downloads.
+	// If non-empty, this is assumed to be for the amd64 hardware
+	// architecture.
 	IsoSha256 string
-	// The URL that the ISO can be downloaded from, if any.
+	// The URL that the ISO can be downloaded from, if any.  If
+	// non-empty, this is assumed to be for the amd64 hardware
+	// architecture.
 	//
 	// swagger:strfmt uri
 	IsoUrl string
+	// SupportedArchitectures maps from hardware architecture (named according to
+	// the distro architecture naming scheme) to the architecture-specific parameters
+	// for this OS.
+	SupportedArchitectures map[string]ArchInfo
 }
 
 // FamilyName is a helper that figures out the family (read: distro
@@ -176,6 +224,63 @@ func (b *BootEnv) GetDocumentation() string {
 	return b.Documentation
 }
 
+func (b *BootEnv) IsoFor(arch string) string {
+	info, ok := b.OS.SupportedArchitectures[arch]
+	if ok {
+		return info.IsoFile
+	}
+	if a, _ := SupportedArch(arch); a == "amd64" {
+		return b.OS.IsoFile
+	}
+	return ""
+}
+
+func (b *BootEnv) ShaFor(arch string) string {
+	info, ok := b.OS.SupportedArchitectures[arch]
+	if ok {
+		return info.Sha256
+	}
+	if a, _ := SupportedArch(arch); a == "amd64" {
+		return b.OS.IsoSha256
+	}
+	return ""
+}
+
+func (b *BootEnv) IsoUrlFor(arch string) string {
+	info, ok := b.OS.SupportedArchitectures[arch]
+	if ok {
+		return info.IsoUrl
+	}
+	if a, _ := SupportedArch(arch); a == "amd64" {
+		return b.OS.IsoUrl
+	}
+	return ""
+}
+
+func (b *BootEnv) KernelFor(arch string) string {
+	info, ok := b.OS.SupportedArchitectures[arch]
+	if ok && info.Kernel != "" {
+		return info.Kernel
+	}
+	return b.Kernel
+}
+
+func (b *BootEnv) InitrdsFor(arch string) []string {
+	info, ok := b.OS.SupportedArchitectures[arch]
+	if ok && len(info.Initrds) > 0 {
+		return info.Initrds
+	}
+	return b.Initrds
+}
+
+func (b *BootEnv) BootParamsFor(arch string) string {
+	info, ok := b.OS.SupportedArchitectures[arch]
+	if ok && info.BootParams != "" {
+		return info.BootParams
+	}
+	return b.BootParams
+}
+
 func (b *BootEnv) Validate() {
 	b.AddError(ValidName("Invalid Name", b.Name))
 	for _, p := range b.RequiredParams {
@@ -192,6 +297,11 @@ func (b *BootEnv) Validate() {
 			b.Errorf("Template %d and %d have the same name %s", i, j, tmpl.Name)
 		} else {
 			tmplNames[tmpl.Name] = i
+		}
+	}
+	for k := range b.OS.SupportedArchitectures {
+		if _, ok := SupportedArch(k); !ok {
+			b.Errorf("%s is not a supported architecture", k)
 		}
 	}
 }
@@ -242,6 +352,9 @@ func (b *BootEnv) Fill() {
 	}
 	if b.Templates == nil {
 		b.Templates = []TemplateInfo{}
+	}
+	if b.OS.SupportedArchitectures == nil {
+		b.OS.SupportedArchitectures = map[string]ArchInfo{}
 	}
 }
 

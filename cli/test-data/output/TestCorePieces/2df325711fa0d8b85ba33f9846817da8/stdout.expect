@@ -19,6 +19,7 @@
     IsoSha256: ""
     IsoUrl: ""
     Name: ignore
+    SupportedArchitectures: {}
     Version: ""
   OnlyUnknown: true
   OptionalParams: []
@@ -66,6 +67,7 @@
     IsoSha256: ""
     IsoUrl: ""
     Name: local
+    SupportedArchitectures: {}
     Version: ""
   OnlyUnknown: false
   OptionalParams: []
