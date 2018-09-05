@@ -37,6 +37,12 @@ func SupportedArch(s string) (string, bool) {
 	}
 }
 
+func ArchEqual(a, b string) bool {
+	a1, aok := SupportedArch(a)
+	b1, bok := SupportedArch(b)
+	return aok && bok && a1 == b1
+}
+
 // Machine represents a single bare-metal system that the provisioner
 // should manage the boot environment for.
 // swagger:model
