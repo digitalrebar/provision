@@ -29,7 +29,8 @@ RE:
       "separate-meta-api",
       "slim-objects",
       "secure-param-upgrade",
-      "sprig"
+      "sprig",
+      "multiarch"
     \],
     "file_port": 10002,
     "id": "Fred",
