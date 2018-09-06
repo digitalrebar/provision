@@ -1,0 +1,212 @@
+{
+  "Available": true,
+  "Description": "Repositories to use to install packages from",
+  "Documentation": "",
+  "Errors": [],
+  "Meta": {},
+  "Name": "package-repositories",
+  "ReadOnly": false,
+  "Schema": {
+    "default": [
+      {
+        "arch": "amd64",
+        "components": [
+          "main",
+          "contrib",
+          "non-free"
+        ],
+        "distribution": "6",
+        "installSource": true,
+        "os": [
+          "debian-6"
+        ],
+        "tag": "debian-6-install",
+        "url": "https://this.url.is.fake/debian"
+      },
+      {
+        "arch": "any",
+        "components": [
+          "main",
+          "contrib",
+          "non-free"
+        ],
+        "distribution": "6",
+        "os": [
+          "debian-6"
+        ],
+        "securitySource": true,
+        "tag": "debian-6-security",
+        "url": "https://this.url.is.secure/debian-security"
+      },
+      {
+        "arch": "any",
+        "components": [
+          "on-fire"
+        ],
+        "distribution": "sweet",
+        "os": [
+          "debian-6",
+          "ubuntu-6"
+        ],
+        "tag": "sweet-debs",
+        "url": "https://this.url.is.a.mirror/sweet-debs"
+      },
+      {
+        "arch": "amd64",
+        "components": [
+          "main",
+          "contrib",
+          "non-free"
+        ],
+        "distribution": "6",
+        "installSource": true,
+        "os": [
+          "ubuntu-6"
+        ],
+        "tag": "ubuntu-6-install",
+        "url": "https://this.url.is.fake/ubuntu"
+      },
+      {
+        "arch": "any",
+        "components": [
+          "main",
+          "contrib",
+          "non-free"
+        ],
+        "distribution": "6",
+        "os": [
+          "ubuntu-6"
+        ],
+        "securitySource": true,
+        "tag": "ubuntu-6-security",
+        "url": "https://this.url.is.secure/ubuntu-security"
+      },
+      {
+        "arch": "x86_64",
+        "installSource": true,
+        "os": [
+          "centos-6"
+        ],
+        "tag": "centos-6-install",
+        "url": "https://this.url.is.fake/centos/6/os/x86_64"
+      },
+      {
+        "arch": "x86_64",
+        "os": [
+          "centos-6"
+        ],
+        "securitySource": true,
+        "tag": "centos-6-security",
+        "url": "https://this.url.is.secure/centos/6/updates/x86_64"
+      },
+      {
+        "arch": "x86_64",
+        "components": [
+          "extras",
+          "cluster-stuff",
+          "atomic"
+        ],
+        "distribution": "6",
+        "os": [
+          "centos-6"
+        ],
+        "tag": "centos-6-extras",
+        "url": "https://this.url.is.fake/centos"
+      },
+      {
+        "arch": "x86_64",
+        "installSource": true,
+        "os": [
+          "scientificlinux-6"
+        ],
+        "tag": "scientificlinux-6-install",
+        "url": "https://this.url.is.fake/scientificlinux/6/x86_64/os"
+      },
+      {
+        "arch": "x86_64",
+        "os": [
+          "scientificlinux-6"
+        ],
+        "securitySource": true,
+        "tag": "scientificlinux-6-security",
+        "url": "https://this.url.is.secure/scientificlinux/6/x86_64/updates"
+      },
+      {
+        "arch": "x86_64",
+        "components": [
+          "extras",
+          "cluster-stuff",
+          "atomic"
+        ],
+        "distribution": "6",
+        "os": [
+          "scientificlinux-6"
+        ],
+        "tag": "scientificlinux-6-extras",
+        "url": "https://this.url.is.fake/scientificlinux"
+      },
+      {
+        "arch": "x86_64",
+        "os": [
+          "centos-6",
+          "scientificlinux-6"
+        ],
+        "tag": "epel-6",
+        "url": "https://this.url.is.a.mirror/epel/7/$basearch"
+      }
+    ],
+    "items": {
+      "properties": {
+        "arch": {
+          "type": "string"
+        },
+        "bootloc": {
+          "type": "string"
+        },
+        "components": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "distribution": {
+          "type": "string"
+        },
+        "installSource": {
+          "type": "boolean"
+        },
+        "os": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "packageType": {
+          "type": "string"
+        },
+        "repoType": {
+          "type": "string"
+        },
+        "securitySource": {
+          "type": "boolean"
+        },
+        "tag": {
+          "type": "string"
+        },
+        "url": {
+          "format": "uri",
+          "type": "string"
+        }
+      },
+      "required": [
+        "tag",
+        "os",
+        "url"
+      ],
+      "type": "object"
+    },
+    "type": "array"
+  },
+  "Secure": false,
+  "Validated": true
+}
