@@ -36,12 +36,21 @@ func (c *Client) InstallRawTemplateFromFileWithId(src, tid string) (*models.Temp
 	return tmpl, c.CreateModel(tmpl)
 }
 
-func (c *Client) UploadISOForBootEnv(env *models.BootEnv, src io.Reader) (models.BlobInfo, error) {
-	return c.PostBlob(src, "isos", env.OS.IsoFile)
+func (c *Client) UploadISOForBootEnv(env *models.BootEnv, src io.Reader, dest string) (models.BlobInfo, error) {
+	return c.PostBlob(src, "isos", dest)
 }
 
 func (c *Client) InstallISOForBootenv(env *models.BootEnv, src string, downloadOK bool) error {
-	if env.OS.IsoFile == "" {
+	isoFiles := map[string]string{}
+	if env.OS.IsoFile != "" {
+		isoFiles[env.OS.IsoFile] = env.OS.IsoUrl
+	}
+	for _, archInfo := range env.OS.SupportedArchitectures {
+		if archInfo.IsoFile != "" {
+			isoFiles[archInfo.IsoFile] = archInfo.IsoUrl
+		}
+	}
+	if len(isoFiles) == 0 {
 		return nil
 	}
 	isos, err := c.ListBlobs("isos")
@@ -49,71 +58,76 @@ func (c *Client) InstallISOForBootenv(env *models.BootEnv, src string, downloadO
 		return err
 	}
 	for _, iso := range isos {
-		if iso == env.OS.IsoFile {
-			return nil
+		if _, ok := isoFiles[iso]; ok {
+			delete(isoFiles, iso)
 		}
 	}
-	if st, err := os.Stat(src); err != nil {
-		if !downloadOK {
-			err := &models.Error{
-				Model: "isos",
-				Type:  "DOWNLOAD_NOT_ALLOWED",
-				Key:   env.OS.IsoFile,
-			}
-			err.Errorf("Iso not present at server, not present locally, and automatic download forbidden")
-			return err
-		}
-		if env.OS.IsoUrl == "" {
-			err := &models.Error{
-				Model: "isos",
-				Type:  "DOWNLOAD_NOT_POSSIBLE",
-				Key:   env.OS.IsoFile,
-			}
-			err.Errorf("Bootenv %s does not have a valid upstream source for the ISO it needs", env.Key())
-			return err
-		}
-		err := func() error {
-			isoTarget, err := os.Create(src)
-			if err != nil {
+	if len(isoFiles) == 0 {
+		return nil
+	}
+	for isoFile, isoUrl := range isoFiles {
+		if st, err := os.Stat(path.Join(src, isoFile)); err != nil {
+			if !downloadOK {
+				err := &models.Error{
+					Model: "isos",
+					Type:  "DOWNLOAD_NOT_ALLOWED",
+					Key:   isoFile,
+				}
+				err.Errorf("Iso not present at server, not present locally, and automatic download forbidden")
 				return err
 			}
-			defer isoTarget.Close()
-			resp, err := http.Get(env.OS.IsoUrl)
-			if err != nil {
-				os.Remove(src)
+			if isoUrl == "" {
+				err := &models.Error{
+					Model: "isos",
+					Type:  "DOWNLOAD_NOT_POSSIBLE",
+					Key:   isoFile,
+				}
+				err.Errorf("Bootenv %s does not have a valid upstream source for the ISO it needs", env.Key())
 				return err
 			}
-			defer resp.Body.Close()
-			if resp.StatusCode >= 300 {
-				os.Remove(src)
-				return fmt.Errorf("Unable to start download of %s: %s", env.OS.IsoUrl, resp.Status)
-			}
-			_, err = io.Copy(isoTarget, resp.Body)
+			err = func() error {
+				isoTarget, err := os.Create(path.Join(src, isoFile))
+				if err != nil {
+					return err
+				}
+				defer isoTarget.Close()
+				resp, err := http.Get(isoUrl)
+				if err != nil {
+					os.Remove(src)
+					return err
+				}
+				defer resp.Body.Close()
+				if resp.StatusCode >= 300 {
+					os.Remove(src)
+					return fmt.Errorf("Unable to start download of %s: %s", isoUrl, resp.Status)
+				}
+				_, err = io.Copy(isoTarget, resp.Body)
+				if err != nil {
+					os.Remove(src)
+				}
+				return err
+			}()
 			if err != nil {
-				os.Remove(src)
+				res := &models.Error{
+					Model: "isos",
+					Type:  "DOWNLOAD_FAILED",
+					Key:   isoUrl,
+				}
+				res.AddError(err)
+				return res
 			}
-			return err
-		}()
+		} else if st.IsDir() {
+			return &models.Error{Model: "isos", Type: "ISO_SRC_IS_A_DIR", Key: src}
+		}
+		isoSrc, err := os.Open(path.Join(src, isoFile))
 		if err != nil {
-			res := &models.Error{
-				Model: "isos",
-				Type:  "DOWNLOAD_FAILED",
-				Key:   env.OS.IsoUrl,
-			}
+			res := &models.Error{Model: "isos", Type: "UPLOAD_NOT_POSSIBLE", Key: src}
 			res.AddError(err)
 			return res
 		}
-	} else if st.IsDir() {
-		return &models.Error{Model: "isos", Type: "ISO_SRC_IS_A_DIR", Key: src}
+		defer isoSrc.Close()
+		_, err = c.UploadISOForBootEnv(env, isoSrc, isoFile)
 	}
-	isoSrc, err := os.Open(src)
-	if err != nil {
-		res := &models.Error{Model: "isos", Type: "UPLOAD_NOT_POSSIBLE", Key: src}
-		res.AddError(err)
-		return res
-	}
-	defer isoSrc.Close()
-	_, err = c.UploadISOForBootEnv(env, isoSrc)
 	return err
 }
 

@@ -1,0 +1,6 @@
+RE:
+  "Arch": "amd64",
+  "Available": true,
+  "BootEnv": "march",
+  "Name": "amd64",
+  "Validated": true,

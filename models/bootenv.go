@@ -43,6 +43,12 @@ type ArchInfo struct {
 	BootParams string
 }
 
+func (a *ArchInfo) Fill() {
+	if a.Initrds == nil {
+		a.Initrds = []string{}
+	}
+}
+
 // OsInfo holds information about the operating system this BootEnv
 // maps to.  Most of this information is optional for now.
 // swagger:model
@@ -355,6 +361,10 @@ func (b *BootEnv) Fill() {
 	}
 	if b.OS.SupportedArchitectures == nil {
 		b.OS.SupportedArchitectures = map[string]ArchInfo{}
+	}
+	for k, v := range b.OS.SupportedArchitectures {
+		v.Fill()
+		b.OS.SupportedArchitectures[k] = v
 	}
 }
 

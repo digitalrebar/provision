@@ -1,0 +1,5 @@
+chain http://127.0.0.1:10002/${netX/mac}.ipxe && exit || goto chainip
+:chainip
+chain http://127.0.0.1:10002/${netX/ip}.ipxe && exit || goto sledgehammer
+:sledgehammer
+kernel http://127.0.0.1:10002/march-discover/vmlinuz0 I am amd64, AKA x86_64 BOOTIF=01-${netX/mac:hexhyp}
