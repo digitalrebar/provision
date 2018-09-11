@@ -1,0 +1,15 @@
+{
+  "baseTokenSecret": "token-secret-token-secret-token1",
+  "debugBootEnv": "warn",
+  "debugDhcp": "warn",
+  "debugFrontend": "warn",
+  "debugPlugins": "warn",
+  "debugRenderer": "warn",
+  "defaultBootEnv": "local",
+  "defaultStage": "none",
+  "knownTokenTimeout": "3600",
+  "logLevel": "warn",
+  "systemGrantorSecret": "system-grantor-secret",
+  "unknownBootEnv": "ignore",
+  "unknownTokenTimeout": "600"
+}

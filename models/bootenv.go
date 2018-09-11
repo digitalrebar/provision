@@ -41,6 +41,22 @@ type ArchInfo struct {
 	//
 	// required: true
 	BootParams string
+	// Loader is the bootloader that should be used for this boot
+	// environment.  If left unspecified and not overridden by a aubnet
+	// or reservation option, the following boot loaders will be used:
+	//
+	// * lpxelinux.0 on 386-pcbios platforms that are not otherwise using ipxe.
+	//
+	// * ipxe.pxe on 386-pcbios platforms that already use ipxe.
+	//
+	// * ipxe.efi on amd64 EFI platforms.
+	//
+	// * ipxe-arm64.efi on arm64 EFI platforms.
+	//
+	// This setting will be overridden by Subnet and Reservation
+	// options, and it will also only be in effect when dr-provison is
+	// the DHCP server of record.
+	Loader string
 }
 
 func (a *ArchInfo) Fill() {

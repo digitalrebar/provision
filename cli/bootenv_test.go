@@ -103,6 +103,7 @@ func TestBootEnvLookaside(t *testing.T) {
   os:
     - "sledgehammer/708de8b878e3818b1c1bb598a56de968939f9d4b"
   installSource: true
+  arch: amd64
   url: "http://127.0.0.1:10003/hammertime"
 `).run(t)
 	cliTest(false, false, "bootenvs", "install", "test-data/no-phredhammer.yml").run(t)

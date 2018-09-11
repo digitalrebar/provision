@@ -21,6 +21,7 @@ drpcli-docs
 drpcli.amd64.linux
 drpcli.amd64.darwin
 drpcli.amd64.windows
+drpcli.arm64.linux
 cli/test.log
 bin
 vendor

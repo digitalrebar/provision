@@ -61,7 +61,7 @@ Templates:
 	cliTest(false, false, "isos", "upload", "test-data/march-arm64.tar", "as", "march-arm64.tar").run(t)
 	cliTest(false, false, "files", "static", "march/arm64/install").run(t)
 	cliTest(false, false, "machines", "bootenv", "Name:arm64", "march-install").run(t)
-	cliTest(false, true, "machines", "bootenv", "Name:arm", "march-install").run(t)
+	cliTest(false, false, "machines", "bootenv", "Name:arm", "march-install").run(t)
 	cliTest(false, false, "machines", "destroy", "Name:arm").run(t)
 	cliTest(false, false, "files", "static", "amd64/amd64/kernel").run(t)
 	cliTest(false, false, "files", "static", "arm64/arm64/kernel").run(t)
@@ -72,5 +72,7 @@ Templates:
 	cliTest(false, false, "isos", "destroy", "march-amd64.tar").run(t)
 	cliTest(false, false, "isos", "destroy", "march-arm64.tar").run(t)
 	cliTest(false, false, "bootenvs", "destroy", "march-install").run(t)
+	cliTest(false, false, "prefs", "set", "unknownBootEnv", "ignore").run(t)
+	cliTest(false, false, "bootenvs", "destroy", "march-discover").run(t)
 	verifyClean(t)
 }

@@ -546,7 +546,7 @@ Validated: true`),
 				Model:    "isos",
 				Key:      "http://127.0.0.1:10012/files/sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar",
 				Type:     "DOWNLOAD_FAILED",
-				Messages: []string{"open /no/iso/here: no such file or directory"},
+				Messages: []string{"open /no/iso/here/sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar: no such file or directory"},
 			},
 			op: func() (interface{}, error) {
 				env, err := session.GetModel("bootenvs", "fredhammer")
@@ -566,7 +566,7 @@ Validated: true`),
 				Messages: []string{"Unable to start download of http://127.0.0.1:10012/files/sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar: 404 Not Found"},
 			},
 			op: func() (interface{}, error) {
-				return nil, session.InstallISOForBootenv(fredhammer, path.Join(tmpDir, "fredhammer.iso"), true)
+				return nil, session.InstallISOForBootenv(fredhammer, tmpDir, true)
 			},
 		},
 		{
@@ -589,7 +589,7 @@ Validated: true`),
 				if err != nil {
 					return nil, err
 				}
-				err = session.InstallISOForBootenv(fredhammer, path.Join(tmpDir, "fredhammer.iso"), true)
+				err = session.InstallISOForBootenv(fredhammer, tmpDir, true)
 				if err != nil {
 					return nil, err
 				}
@@ -597,6 +597,63 @@ Validated: true`),
 				fredhammer.Errors = []string{}
 				time.Sleep(15 * time.Second)
 				return session.GetModel("bootenvs", fredhammer.Key())
+			},
+		},
+		{
+			name: "Test to make sure fredhammer bootenv is available",
+			expectRes: mustDecode(&models.BootEnv{}, `---
+Available: true
+BootParams: Acounted for
+Description: ""
+Documentation: ""
+Errors: []
+Initrds:
+- stage1.img
+Kernel: vmlinuz0
+Meta: {}
+Name: fredhammer
+OS:
+  Codename: ""
+  Family: ""
+  IsoFile: sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar
+  IsoSha256: ""
+  IsoUrl: http://127.0.0.1:10012/files/sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar
+  Name: sledgehammer/708de8b878e3818b1c1bb598a56de968939f9d4b
+  SupportedArchitectures: {}
+  Version: ""
+OnlyUnknown: false
+OptionalParams:
+- ntp_servers
+- access_keys
+ReadOnly: false
+RequiredParams: []
+Templates:
+- Contents: 'Attention all '
+  ID: ""
+  Meta: {}
+  Name: pxelinux
+  Path: pxelinux.cfg/{{.Machine.HexAddress}}
+- Contents: planets of the
+  ID: ""
+  Meta: {}
+  Name: elilo
+  Path: '{{.Machine.HexAddress}}.conf'
+- Contents: Solar Federation
+  ID: ""
+  Meta: {}
+  Name: ipxe
+  Path: '{{.Machine.Address}}.ipxe'
+- Contents: We have assumed control
+  ID: ""
+  Meta: {}
+  Name: control.sh
+  Path: '{{.Machine.Path}}/control.sh'
+  Validated: true
+`),
+			expectErr: nil,
+			op: func() (interface{}, error) {
+				err := session.Req().Fill(fredhammer)
+				return fredhammer, err
 			},
 		},
 		{
@@ -619,7 +676,8 @@ Templates: []
 Validated: true`),
 			expectErr: nil,
 			op: func() (interface{}, error) {
-				return fredstage, session.Req().Fill(fredstage)
+				err := session.Req().Fill(fredstage)
+				return fredstage, err
 			},
 		},
 		{
