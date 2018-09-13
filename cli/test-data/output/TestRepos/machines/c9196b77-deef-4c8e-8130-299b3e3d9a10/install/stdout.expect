@@ -1,4 +1,5 @@
 install
 url --url https://this.url.is.fake/centos/6/os/x86_64
 repo --name="centos-6-install" --baseurl=https://this.url.is.fake/centos/6/os/x86_64 --cost=100
-repo --name="centos-6-security" --baseurl=https://this.url.is.secure/centos/6/updates/x86_64 --cost=100
+repo --name="centos-6-security" --baseurl=https://this.url.is.secure/centos/6/updates/x86_64 --cost=200
+

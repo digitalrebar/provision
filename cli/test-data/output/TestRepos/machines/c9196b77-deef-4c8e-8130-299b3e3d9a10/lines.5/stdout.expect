@@ -4,11 +4,6 @@ name=centos-6 - fake-centos-install
 baseurl=http://127.0.0.1:10002/centos-6/install
 gpgcheck=0
 
-[centos-6-install]
-name=centos-6 - centos-6-install
-baseurl=https://this.url.is.fake/centos/6/os/x86_64
-gpgcheck=0
-
 [centos-6-security]
 name=centos-6 - centos-6-security
 baseurl=https://this.url.is.secure/centos/6/updates/x86_64

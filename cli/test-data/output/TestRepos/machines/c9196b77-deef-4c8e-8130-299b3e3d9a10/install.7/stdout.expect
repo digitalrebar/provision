@@ -1,4 +1,5 @@
 install
 url --url http://127.0.0.1:10002/scientificlinux-6/install
 repo --name="fake-scientificlinux-install" --baseurl=http://127.0.0.1:10002/scientificlinux-6/install --cost=100
-repo --name="scientificlinux-6-security" --baseurl=https://this.url.is.secure/scientificlinux/6/x86_64/updates --cost=100
+repo --name="scientificlinux-6-security" --baseurl=https://this.url.is.secure/scientificlinux/6/x86_64/updates --cost=200
+
