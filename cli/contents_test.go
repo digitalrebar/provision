@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"os"
 	"testing"
 )
 
@@ -105,7 +106,52 @@ func TestContentCli(t *testing.T) {
 	cliTest(false, false, "profiles", "get", "englobal", "param", "foo").run(t)
 	cliTest(false, false, "contents", "destroy", "withProfile").run(t)
 	cliTest(false, false, "contents", "list").run(t)
+
+	cliTest(true, true, "contents", "bundlize").run(t)
+	cliTest(false, true, "contents", "bundlize", "greg.yaml").run(t)
+	cliTest(true, true, "contents", "bundlize", "greg.yaml", "greg").run(t)
+	cliTest(false, true, "contents", "bundlize", "greg.yaml", "Name=greg").run(t)
+	cliTest(false, true, "contents", "bundlize", "greg.yaml", "Name=greg", "profiles:test1").run(t)
+
+	cliTest(false, false, "profiles", "create", "test1").run(t)
+	cliTest(false, false, "contents", "bundlize", "greg.yaml", "Name=greg", "profiles:test1").run(t)
+	cliTest(false, false, "profiles", "show", "test1").run(t)
+
+	// Test if greg.yaml exists
+	if _, err := os.Stat("greg.yaml"); os.IsNotExist(err) {
+		t.Errorf("Failed to find greg.yaml\n")
+	}
+	os.Remove("greg.yaml")
+
+	cliTest(false, false, "contents", "bundlize", "greg.yaml", "Name=greg", "profiles:test1", "--delete", "--reload").run(t)
+	cliTest(false, false, "profiles", "show", "test1").run(t)
+	cliTest(false, false, "contents", "destroy", "greg").run(t)
+	cliTest(false, true, "profiles", "show", "test1").run(t)
+
+	// Test if greg.yaml exists
+	if _, err := os.Stat("greg.yaml"); os.IsNotExist(err) {
+		t.Errorf("Failed to find greg.yaml\n")
+	}
+	os.Remove("greg.yaml")
+
+	cliTest(false, false, "profiles", "create", "test1").run(t)
+	cliTest(false, false, "contents", "bundlize", "greg.yaml", "Name=greg", "profiles:test1", "--delete").run(t)
+	cliTest(false, true, "profiles", "show", "test1").run(t)
+	// Test if greg.yaml exists
+	if _, err := os.Stat("greg.yaml"); os.IsNotExist(err) {
+		t.Errorf("Failed to find greg.yaml\n")
+	}
+
+	cliTest(true, true, "contents", "convert").run(t)
+	cliTest(true, true, "contents", "convert", "gg", "ff").run(t)
+	cliTest(false, true, "contents", "convert", "gg.yaml").run(t)
+	cliTest(false, false, "contents", "convert", "greg.yaml").run(t)
+	cliTest(false, false, "profiles", "show", "test1").run(t)
+	cliTest(false, false, "profiles", "destroy", "test1").run(t)
+
 	verifyClean(t)
+
+	os.Remove("greg.yaml")
 }
 
 func TestContentRequiredFeatures(t *testing.T) {
