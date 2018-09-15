@@ -19,6 +19,38 @@ func init() {
 	addRegistrar(registerContent)
 }
 
+func findOrFake(field string, args map[string]string) string {
+	if p, ok := args[field]; !ok {
+		s := "Unspecified"
+		if field == "Type" {
+			// Default Type should be dynamic
+			s = "dynamic"
+		} else if field == "RequiredFeatures" {
+			// Default RequiredFeatures should be empty string
+			s = ""
+		}
+		return s
+	} else {
+		return p
+	}
+
+}
+
+func replaceContent(path string) error {
+	layer := &models.Content{}
+	if err := into(path, layer); err != nil {
+		return generateError(err, "Error parsing layer")
+	}
+	if res, err := session.ReplaceContent(layer); err == nil {
+		return prettyPrint(res)
+	}
+	if res, err := session.CreateContent(layer); err == nil {
+		return prettyPrint(res)
+	} else {
+		return generateError(err, "Error uploading layer")
+	}
+}
+
 func registerContent(app *cobra.Command) {
 	content := &cobra.Command{
 		Use:   "contents",
@@ -132,18 +164,7 @@ func registerContent(app *cobra.Command) {
 			return nil
 		},
 		RunE: func(c *cobra.Command, args []string) error {
-			layer := &models.Content{}
-			if err := into(args[0], layer); err != nil {
-				return generateError(err, "Error parsing layer")
-			}
-			if res, err := session.ReplaceContent(layer); err == nil {
-				return prettyPrint(res)
-			}
-			if res, err := session.CreateContent(layer); err == nil {
-				return prettyPrint(res)
-			} else {
-				return generateError(err, "Error uploading layer")
-			}
+			return replaceContent(args[0])
 		},
 	})
 	content.AddCommand(&cobra.Command{
@@ -244,6 +265,210 @@ func registerContent(app *cobra.Command) {
 			return cc.UnbundleContent(s, ".")
 		},
 	})
+
+	// Bundlize - takes a list of objects and makes them a bundle - deleting them optionaly.- interactive.
+	var delete = false
+	var reload = false
+	bundlize := &cobra.Command{
+		Use:   "bundlize [file] [meta fields] [objects]",
+		Short: "Bundle the specified object into [file]. [meta fields] allows for the specification of the meta data. [objects] define which objects to record.",
+		Long:  "Bundlize assumes that the objects are read-write.",
+		Args: func(c *cobra.Command, args []string) error {
+			if len(args) == 0 {
+				return fmt.Errorf("Must provide a file")
+			}
+			for i := 1; i < len(args); i++ {
+				if !strings.ContainsAny(args[i], "=") && !strings.ContainsAny(args[i], ":") {
+					return fmt.Errorf("Meta fields must have '=' in them.  Objects must have a :.")
+				}
+			}
+			return nil
+		},
+		RunE: func(c *cobra.Command, args []string) error {
+			target := args[0]
+			ext := path.Ext(target)
+			codec := ""
+			switch ext {
+			case ".go", ".yaml", ".yml":
+				codec = "yaml"
+			case ".json":
+				codec = "json"
+			default:
+				return fmt.Errorf("Unknown store extension %s", ext)
+			}
+
+			params := map[string]string{}
+			objects := map[string][]string{}
+			for i := 1; i < len(args); i++ {
+				arg := args[i]
+				ci := strings.IndexRune(arg, ':')
+				ei := strings.IndexRune(arg, '=')
+
+				if ci == -1 {
+					ci = 10000
+				}
+				if ei == -1 {
+					ei = 10000
+				}
+
+				if ci < ei {
+					// if colon first, then it is an object key
+					parts := strings.SplitN(args[i], ":", 2)
+					objects[parts[0]] = append(objects[parts[0]], parts[1])
+				} else {
+					// if equal first, then it is an meta key
+					parts := strings.SplitN(args[i], "=", 2)
+					params[parts[0]] = parts[1]
+				}
+			}
+
+			storeURI := fmt.Sprintf("file:%s.tmp?codec=%s", target, codec)
+			s, err := store.Open(storeURI)
+			if err != nil {
+				return fmt.Errorf("Failed to open store %s: %v", target, err)
+			}
+			defer os.Remove(target + ".tmp")
+			defer s.Close()
+
+			if dm, ok := s.(store.MetaSaver); ok {
+				meta := map[string]string{
+					"Name":             findOrFake("Name", params),
+					"Description":      findOrFake("Description", params),
+					"Documentation":    findOrFake("Documentation", params),
+					"RequiredFeatures": findOrFake("RequiredFeatures", params),
+					"Version":          findOrFake("Version", params),
+					"Source":           findOrFake("Source", params),
+					"Type":             findOrFake("Type", params),
+				}
+				dm.SetMetaData(meta)
+			}
+
+			if len(objects) == 0 {
+				// interactive mode??
+				return fmt.Errorf("No object specified")
+			}
+
+			// Get objects
+			deleteObjects := map[string][]string{}
+			for prefix, list := range objects {
+				sub, err := s.MakeSub(prefix)
+				if err != nil {
+					return fmt.Errorf("Cannot make substore %s: %v", prefix, err)
+				}
+
+				for _, lookupKey := range list {
+					if strings.ContainsAny(lookupKey, "=") {
+						items, err := session.ListModel(prefix, strings.SplitN(lookupKey, "=", 2)...)
+						if err != nil {
+							return fmt.Errorf("Failed to list: %s: %v", lookupKey, err)
+						}
+						for _, item := range items {
+							if err := sub.Save(item.Key(), item); err != nil {
+								return fmt.Errorf("Failed to save from list %s:%s: %v", item.Prefix(), item.Key(), err)
+							}
+							deleteObjects[prefix] = append(deleteObjects[prefix], item.Key())
+						}
+					} else {
+						item, _ := models.New(prefix)
+						if err := session.FillModel(item, lookupKey); err != nil {
+							return fmt.Errorf("Failed to get: %s: %v", lookupKey, err)
+						}
+						if err := sub.Save(item.Key(), item); err != nil {
+							return fmt.Errorf("Failed to save %s:%s: %v", item.Prefix(), item.Key(), err)
+						}
+						deleteObjects[prefix] = append(deleteObjects[prefix], item.Key())
+					}
+				}
+			}
+
+			// delete the objects
+			if delete {
+				deleteOrder := []string{
+					"machines",
+					"leases",
+					"reservations",
+					"subnets",
+					"roles",
+					"users",
+					"workflows",
+					"stages",
+					"bootenvs",
+					"tasks",
+					"templates",
+					"profiles",
+					"params",
+					"plugins",
+					"jobs",
+				}
+				for _, prefix := range deleteOrder {
+					list, ok := deleteObjects[prefix]
+					if !ok {
+						continue
+					}
+					for _, lookupKey := range list {
+						if _, err := session.DeleteModel(prefix, lookupKey); err != nil {
+							return fmt.Errorf("Failed to delete %s:%s: %v", prefix, lookupKey, err)
+						}
+					}
+				}
+
+				if reload {
+					if err := replaceContent(target + ".tmp"); err != nil {
+						return err
+					}
+				}
+			}
+
+			os.Rename(target+".tmp", target)
+			return nil
+		},
+	}
+	bundlize.Flags().BoolVar(&delete, "delete", false, "Delete bundlized content")
+	bundlize.Flags().BoolVar(&reload, "reload", false, "Load the bundle as a content package (requires delete)")
+	content.AddCommand(bundlize)
+
+	// Convert - load a yaml content as read=write objects.
+	content.AddCommand(&cobra.Command{
+		Use:   "convert [file]",
+		Short: "Expand the content bundle [file] into DRP as read-write objects",
+		Args: func(c *cobra.Command, args []string) error {
+			if len(args) != 1 {
+				return fmt.Errorf("Must provide a file")
+			}
+			return nil
+		},
+		RunE: func(c *cobra.Command, args []string) error {
+			src := args[0]
+			ext := path.Ext(src)
+			switch ext {
+			case ".yaml", ".yml", ".json":
+			default:
+				return fmt.Errorf("Unknown store extension %s", ext)
+			}
+			buf, err := ioutil.ReadFile(src)
+			if err != nil {
+				return fmt.Errorf("Failed to open store %s: %v", src, err)
+			}
+			content := &models.Content{}
+			if err := api.DecodeYaml(buf, content); err != nil {
+				return fmt.Errorf("Failed to unmarshal store content: %v", err)
+			}
+
+			for prefix, vals := range content.Sections {
+				for _, v := range vals {
+					item, _ := models.New(prefix)
+					if err := models.Remarshal(v, item); err != nil {
+						return fmt.Errorf("Failed to remarshal %s:%v: %v", prefix, v, err)
+					}
+					if err := session.CreateModel(item); err != nil {
+						return fmt.Errorf("Failed to create %s:%v: %v", prefix, v, err)
+					}
+				}
+			}
+			return nil
+		},
+	})
+
 	content.AddCommand(&cobra.Command{
 		Use:   "document [file]",
 		Short: "Expand the content bundle [file] into documentation",
