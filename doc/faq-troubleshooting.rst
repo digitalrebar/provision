@@ -32,20 +32,20 @@ See the port mapping list on start-up for a complete list.
 
 .. _rs_tftp_error:
 
-TFTP Error 
+TFTP Error
 ----------
 
 In the dr-provision logfiles you may occassionally see error messages relating to ``TFTP Aborted``.  These
-errors are (typically) benign and expected behavior.  The TFTP protocol does not specify a mechanism to 
+errors are (typically) benign and expected behavior.  The TFTP protocol does not specify a mechanism to
 obtain the size of a file to transfer for calculating completed transfer; without first requesting the file.
 Digital Rebar Provision initiates the transfer request an then immediately aborts it.  This obtains the
-file size for the next transfer to validate the file was served correctly.  
+file size for the next transfer to validate the file was served correctly.
 
 Simply ignore these errors.  If you receive these errors and you believe you should be provisioning correctly,
-check that you have correctly specified the default/unknown BootEnv, default Stage, and default Workflow 
-are set correctly. 
+check that you have correctly specified the default/unknown BootEnv, default Stage, and default Workflow
+are set correctly.
 
-error messages may appear similarly to: 
+error messages may appear similarly to:
 
   ::
 
@@ -99,8 +99,8 @@ Example Docker Volume Usage
 
 Digital Rebar Provision writes content in the Docker Container to the ``/provision/drp-data``
 directory by default.  Most DRP Endpoint provisioning systems will want to have persistent
-data across the container runtimes.  For this you need to add a Docker Volume.  The below
-example shows you how to use the locak Docker host as the backing store for the volume. You
+data across the container runtimes.  For this, you need to add a Docker Volume.  The below
+example shows you how to use the local Docker host as the backing store for the volume. You
 can also use any of the container based networked storage solutions to back your volume in.
 
 
@@ -112,7 +112,7 @@ can also use any of the container based networked storage solutions to back your
     # create a Docker volume
     docker volume create $VOL
 
-2. Lets verify that the volume is currently empty
+2. Let's verify that the volume is currently empty
   ::
 
     docker volume inspect $VOL | jq '.[].Mountpoint'
@@ -125,7 +125,7 @@ can also use any of the container based networked storage solutions to back your
     # drwxr-xr-x. 2 root root  40 Aug 21 00:41 .
     # dr-xr-x---. 1 root root 180 Aug 21 00:41 ..
 
-3. Lanch DRP, using our newly created volume:
+3. Launch DRP, using our newly created volume:
   ::
 
     # now run DRP with our volume mapped to /provision/drp-data:
@@ -193,11 +193,11 @@ Once the autocomplete file has been created, either log out and log back in, or 
 .. note:: If you receive an error message when using autocomplete similar to:
     ::
 
-      bash: _get_comp_words_by_ref: command not found 
+      bash: _get_comp_words_by_ref: command not found
 
   Then you will need to install the ``bash-completion`` package (eg. ``sudo yum -y install bash-completion`` or ``sudo apt -y install bash-completion``).
 
-  You will also need to log out and then back in to your shell account to correct the bash_completion issue. 
+  You will also need to log out and then back in to your shell account to correct the bash_completion issue.
 
 
 .. _rs_more_debug:
@@ -394,7 +394,7 @@ If you wish to update/change a Machine Name, you can do:
 Set `hostname` in a DHCP Reservation
 ------------------------------------
 
-If you create a DHCP Reservation for a system (or convert an active Lease to Reservation), you can also set the Hostname for the Machine.  If you are pre-creating Reservations, this will allow you to have a pre-set hostname when the Machine first comes up.  Additionally, if you create/destroy your machine objects, but would like a hostname to persist with the Machine Reservation when the machine returns, you can do this. 
+If you create a DHCP Reservation for a system (or convert an active Lease to Reservation), you can also set the Hostname for the Machine.  If you are pre-creating Reservations, this will allow you to have a pre-set hostname when the Machine first comes up.  Additionally, if you create/destroy your machine objects, but would like a hostname to persist with the Machine Reservation when the machine returns, you can do this.
 
 .. note:: The UX version (at least as of v1.2.1 and older) does not support setting DHCP options to the Reservation.  You will have to perform these actions using either the CLI or API.  The CLI method is outlined below.
 
@@ -443,7 +443,7 @@ lpxelinux.0 error: no such file or directory
 After TFTPing lpxelinux.0, logs (or network packet traces) may show an error similar to:
   ::
 
-    477    0.378296662    10.10.20.76    10.10.31.96    TFTP    159    Error Code, Code: 
+    477    0.378296662    10.10.20.76    10.10.31.96    TFTP    159    Error Code, Code:
     File not found, Message: open /var/lib/dr-provision/tftpboot/pxelinux.cfg/16089a59-9abd-48c2-850a-2ac3bc134935: no such file or directory``
 
 This is expected behavior that is standard PXE *waterfall* searching for a valid filename to boot from.  For full reference, please see the `syslinux <http://www.syslinux.org/>`_ reference documentation, at:
@@ -509,18 +509,18 @@ For :ref:`rs_krib`, the ``admin.conf`` files is saved into the ``krib/cluster-ad
 
 For other deployments such as Ansible Kubespray or the Kubeadm deployments of Kubernetes are all maintained by the respective Kubernetes communities.  Digital Rebar simply implements a basic version of those configurations.  Access to the Kubernetes Dashboard is often changing, and being updated by the community.  Please check with the respective communities about how to correctly access the Dashboard.
 
-Some things to note in general: 
+Some things to note in general:
 
   * Access is restricted; as well it should
   * You must configure/enable access to the Dashboard
   * Our implmentations usually have a mechanism configured, but this changes over time
-  
+
 Some things that have worked in the past:
 
   * ``kubectl proxy`` - enabled Proxy access to the Kubernetes Master to get to the Dashboard
   * try stopping the Proxy container, and running ``kubectl proxy --address 0.0.0.0 --accept-hosts '.*'``
-     * carefully consider this implication - you are enable access from all hosts !!! 
-  * any other solutions, please let us know... we'll add them here 
+     * carefully consider this implication - you are enable access from all hosts !!!
+  * any other solutions, please let us know... we'll add them here
 
 
 .. _rs_expand_templates:
@@ -528,7 +528,7 @@ Some things that have worked in the past:
 Expand Templates from Failed Job
 --------------------------------
 
-If you have a task/template that has failed, once it's been run by the Job system, you can collect the rendered template.  The rendered template will be in JSON format, so it may be hard to parse.   
+If you have a task/template that has failed, once it's been run by the Job system, you can collect the rendered template.  The rendered template will be in JSON format, so it may be hard to parse.
 
   ::
 
@@ -555,7 +555,7 @@ The Role Base Access and Controls subsystem allows an operator to construct user
 
     drpcli roles update prod-role '"Claims": [{"action": "action:poweron, action:poweroff", "scope": "machines", "specific": "*"}]'
 
-Now simply assign this Role to the given users you wish to limit their permissions on. 
+Now simply assign this Role to the given users you wish to limit their permissions on.
 
 JQ Usage Examples
 -----------------
