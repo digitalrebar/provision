@@ -1,19 +1,25 @@
-drpcli events
-=============
+drpcli events watch
+===================
 
-DigitalRebar Provision Event Commands
+Watch events as they come in real time. Optional filter can be
+specified.
 
 Synopsis
 --------
 
-DigitalRebar Provision Event Commands
+Watch events as they come in real time. Optional filter can be
+specified.
+
+::
+
+    drpcli events watch [filter] [flags]
 
 Options
 -------
 
 ::
 
-      -h, --help   help for events
+      -h, --help   help for watch
 
 Options inherited from parent commands
 --------------------------------------
@@ -34,8 +40,5 @@ Options inherited from parent commands
 SEE ALSO
 --------
 
--  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
-   DigitalRebar Provision API
--  `drpcli events post <drpcli_events_post.html>`__ - Post an event
--  `drpcli events watch <drpcli_events_watch.html>`__ - Watch events as
-   they come in real time. Optional filter can be specified.
+-  `drpcli events <drpcli_events.html>`__ - DigitalRebar Provision Event
+   Commands

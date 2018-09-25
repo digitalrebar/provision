@@ -1,19 +1,35 @@
-drpcli events
-=============
+drpcli bootenvs fromAppleNBI
+============================
 
-DigitalRebar Provision Event Commands
+This will attempt to translate an Apple .nbi directory into a bootenv
+and an archive.
 
 Synopsis
 --------
 
-DigitalRebar Provision Event Commands
+This command translates an Apple .nbi directory into a bootenv .yaml
+file that contains apropriate metadata to be handled by the dr-provision
+NBSP DHCP handler, and a .tar.gz file that contains the contents of the
+.nbi directory.
+
+The .nbi directory must have been produced by the Apple System Image
+Utility or equivalent tooling, and must contain a valid
+NBImageInfo.plist file. The .yaml file containig the bootenv will be
+named -.yaml, and the .tar.gz file will contain the contents of the .nbi
+directory.
+
+Both created files will be left in the current working directory.
+
+::
+
+    drpcli bootenvs fromAppleNBI [path] [flags]
 
 Options
 -------
 
 ::
 
-      -h, --help   help for events
+      -h, --help   help for fromAppleNBI
 
 Options inherited from parent commands
 --------------------------------------
@@ -34,8 +50,5 @@ Options inherited from parent commands
 SEE ALSO
 --------
 
--  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
-   DigitalRebar Provision API
--  `drpcli events post <drpcli_events_post.html>`__ - Post an event
--  `drpcli events watch <drpcli_events_watch.html>`__ - Watch events as
-   they come in real time. Optional filter can be specified.
+-  `drpcli bootenvs <drpcli_bootenvs.html>`__ - Access CLI commands
+   relating to bootenvs

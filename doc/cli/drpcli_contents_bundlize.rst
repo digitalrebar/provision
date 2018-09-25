@@ -1,19 +1,27 @@
-drpcli events
-=============
+drpcli contents bundlize
+========================
 
-DigitalRebar Provision Event Commands
+Bundle the specified object into [file]. [meta fields] allows for the
+specification of the meta data. [objects] define which objects to
+record.
 
 Synopsis
 --------
 
-DigitalRebar Provision Event Commands
+Bundlize assumes that the objects are read-write.
+
+::
+
+    drpcli contents bundlize [file] [meta fields] [objects] [flags]
 
 Options
 -------
 
 ::
 
-      -h, --help   help for events
+          --delete   Delete bundlized content
+      -h, --help     help for bundlize
+          --reload   Load the bundle as a content package (requires delete)
 
 Options inherited from parent commands
 --------------------------------------
@@ -34,8 +42,5 @@ Options inherited from parent commands
 SEE ALSO
 --------
 
--  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
-   DigitalRebar Provision API
--  `drpcli events post <drpcli_events_post.html>`__ - Post an event
--  `drpcli events watch <drpcli_events_watch.html>`__ - Watch events as
-   they come in real time. Optional filter can be specified.
+-  `drpcli contents <drpcli_contents.html>`__ - Access CLI commands
+   relating to content

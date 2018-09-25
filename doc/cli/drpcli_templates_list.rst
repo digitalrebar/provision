@@ -52,7 +52,7 @@ Options
       -h, --help          help for list
           --limit int     Maximum number of items to return (default -1)
           --offset int    Number of items to skip before starting to return data (default -1)
-          --slim string   Should elide certain fields.  Can be 'Params', 'Meta', or a comma-seperated list of both.
+          --slim string   Should elide certain fields.  Can be 'Params', 'Meta', or a comma-separated list of both.
 
 Options inherited from parent commands
 --------------------------------------

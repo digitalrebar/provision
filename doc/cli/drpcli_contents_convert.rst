@@ -1,19 +1,23 @@
-drpcli events
-=============
+drpcli contents convert
+=======================
 
-DigitalRebar Provision Event Commands
+Expand the content bundle [file] into DRP as read-write objects
 
 Synopsis
 --------
 
-DigitalRebar Provision Event Commands
+Expand the content bundle [file] into DRP as read-write objects
+
+::
+
+    drpcli contents convert [file] [flags]
 
 Options
 -------
 
 ::
 
-      -h, --help   help for events
+      -h, --help   help for convert
 
 Options inherited from parent commands
 --------------------------------------
@@ -34,8 +38,5 @@ Options inherited from parent commands
 SEE ALSO
 --------
 
--  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
-   DigitalRebar Provision API
--  `drpcli events post <drpcli_events_post.html>`__ - Post an event
--  `drpcli events watch <drpcli_events_watch.html>`__ - Watch events as
-   they come in real time. Optional filter can be specified.
+-  `drpcli contents <drpcli_contents.html>`__ - Access CLI commands
+   relating to content

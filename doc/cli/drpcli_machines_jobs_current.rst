@@ -1,19 +1,23 @@
-drpcli events
-=============
+drpcli machines jobs current
+============================
 
-DigitalRebar Provision Event Commands
+Get the current job on machine [id]
 
 Synopsis
 --------
 
-DigitalRebar Provision Event Commands
+Get the current job on machine [id]
+
+::
+
+    drpcli machines jobs current [id] [flags]
 
 Options
 -------
 
 ::
 
-      -h, --help   help for events
+      -h, --help   help for current
 
 Options inherited from parent commands
 --------------------------------------
@@ -34,8 +38,5 @@ Options inherited from parent commands
 SEE ALSO
 --------
 
--  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
-   DigitalRebar Provision API
--  `drpcli events post <drpcli_events_post.html>`__ - Post an event
--  `drpcli events watch <drpcli_events_watch.html>`__ - Watch events as
-   they come in real time. Optional filter can be specified.
+-  `drpcli machines jobs <drpcli_machines_jobs.html>`__ - Access
+   commands for manipulating the current job

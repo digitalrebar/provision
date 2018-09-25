@@ -19,7 +19,7 @@ Options
 ::
 
       -h, --help          help for show
-          --slim string   Should elide certain fields.  Can be 'Params', 'Meta', or a comma-seperated list of both.
+          --slim string   Should elide certain fields.  Can be 'Params', 'Meta', or a comma-separated list of both.
 
 Options inherited from parent commands
 --------------------------------------

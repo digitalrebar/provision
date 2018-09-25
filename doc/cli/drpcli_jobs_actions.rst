@@ -17,7 +17,8 @@ Options
 
 ::
 
-      -h, --help   help for actions
+          --for-os string   OS to fetch actions for.  Defaults to fetching all actions
+      -h, --help            help for actions
 
 Options inherited from parent commands
 --------------------------------------
