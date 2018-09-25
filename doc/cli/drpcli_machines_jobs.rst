@@ -1,23 +1,19 @@
-drpcli subnets subnet
-=====================
+drpcli machines jobs
+====================
 
-Set the CIDR network address
+Access commands for manipulating the current job
 
 Synopsis
 --------
 
-Helper function to set the CIDR of a given subnet.
-
-::
-
-    drpcli subnets subnet [subnetName] [subnet CIDR] [flags]
+Access commands for manipulating the current job
 
 Options
 -------
 
 ::
 
-      -h, --help   help for subnet
+      -h, --help   help for jobs
 
 Options inherited from parent commands
 --------------------------------------
@@ -38,5 +34,11 @@ Options inherited from parent commands
 SEE ALSO
 --------
 
--  `drpcli subnets <drpcli_subnets.html>`__ - Access CLI commands
-   relating to subnets
+-  `drpcli machines <drpcli_machines.html>`__ - Access CLI commands
+   relating to machines
+-  `drpcli machines jobs create <drpcli_machines_jobs_create.html>`__ -
+   Create a job for the current task on machine [id]
+-  `drpcli machines jobs current <drpcli_machines_jobs_current.html>`__
+   - Get the current job on machine [id]
+-  `drpcli machines jobs state <drpcli_machines_jobs_state.html>`__ -
+   Set the current job on machine [id] to [state]

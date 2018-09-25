@@ -39,6 +39,12 @@ SEE ALSO
 -  `drpcli contents bundle <drpcli_contents_bundle.html>`__ - Bundle the
    current directory into [file]. [meta fields] allows for the
    specification of the meta data.
+-  `drpcli contents bundlize <drpcli_contents_bundlize.html>`__ - Bundle
+   the specified object into [file]. [meta fields] allows for the
+   specification of the meta data. [objects] define which objects to
+   record.
+-  `drpcli contents convert <drpcli_contents_convert.html>`__ - Expand
+   the content bundle [file] into DRP as read-write objects
 -  `drpcli contents create <drpcli_contents_create.html>`__ - Add a new
    content layer to the system
 -  `drpcli contents destroy <drpcli_contents_destroy.html>`__ - Remove

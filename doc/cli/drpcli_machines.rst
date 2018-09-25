@@ -64,6 +64,8 @@ SEE ALSO
    indexes for machines
 -  `drpcli machines inserttask <drpcli_machines_inserttask.html>`__ -
    Insert a task at [offset] from machine's running task
+-  `drpcli machines jobs <drpcli_machines_jobs.html>`__ - Access
+   commands for manipulating the current job
 -  `drpcli machines list <drpcli_machines_list.html>`__ - List all
    machines
 -  `drpcli machines meta <drpcli_machines_meta.html>`__ - Gets metadata

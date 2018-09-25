@@ -67,8 +67,6 @@ SEE ALSO
    subnet's dhcpOption to a value
 -  `drpcli subnets show <drpcli_subnets_show.html>`__ - Show a single
    subnets by id
--  `drpcli subnets subnet <drpcli_subnets_subnet.html>`__ - Set the CIDR
-   network address
 -  `drpcli subnets update <drpcli_subnets_update.html>`__ - Unsafely
    update subnet by id with the passed-in JSON
 -  `drpcli subnets wait <drpcli_subnets_wait.html>`__ - Wait for a

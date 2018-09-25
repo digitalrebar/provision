@@ -46,6 +46,9 @@ SEE ALSO
    bootenv by id
 -  `drpcli bootenvs exists <drpcli_bootenvs_exists.html>`__ - See if a
    bootenvs exists by id
+-  `drpcli bootenvs fromAppleNBI <drpcli_bootenvs_fromAppleNBI.html>`__
+   - This will attempt to translate an Apple .nbi directory into a
+   bootenv and an archive.
 -  `drpcli bootenvs indexes <drpcli_bootenvs_indexes.html>`__ - Get
    indexes for bootenvs
 -  `drpcli bootenvs install <drpcli_bootenvs_install.html>`__ - Install
