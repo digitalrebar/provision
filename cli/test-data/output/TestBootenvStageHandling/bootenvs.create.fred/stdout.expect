@@ -1,0 +1,27 @@
+{
+  "Available": true,
+  "BootParams": "",
+  "Description": "",
+  "Documentation": "",
+  "Errors": [],
+  "Initrds": [],
+  "Kernel": "",
+  "Meta": {},
+  "Name": "fred",
+  "OS": {
+    "Codename": "",
+    "Family": "",
+    "IsoFile": "",
+    "IsoSha256": "",
+    "IsoUrl": "",
+    "Name": "",
+    "SupportedArchitectures": {},
+    "Version": ""
+  },
+  "OnlyUnknown": false,
+  "OptionalParams": [],
+  "ReadOnly": false,
+  "RequiredParams": [],
+  "Templates": [],
+  "Validated": true
+}

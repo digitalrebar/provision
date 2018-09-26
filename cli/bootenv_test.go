@@ -96,6 +96,18 @@ func TestBootEnvCli(t *testing.T) {
 	verifyClean(t)
 }
 
+func TestBootenvStageHandling(t *testing.T) {
+	cliTest(false, false, "stages", "create", "-").Stdin(`---
+Name: fred
+BootEnv: fred`).run(t)
+	cliTest(false, false, "bootenvs", "create", "fred").run(t)
+	cliTest(false, false, "stages", "show", "fred").run(t)
+	cliTest(false, false, "bootenvs", "show", "fred").run(t)
+	cliTest(false, false, "stages", "destroy", "fred").run(t)
+	cliTest(false, false, "bootenvs", "destroy", "fred").run(t)
+	verifyClean(t)
+}
+
 func TestBootEnvLookaside(t *testing.T) {
 	testFile := "sledgehammer/708de8b878e3818b1c1bb598a56de968939f9d4b/vmlinuz0"
 	cliTest(false, false, "profiles", "add", "global", "param", "package-repositories", "to", "-").Stdin(`
