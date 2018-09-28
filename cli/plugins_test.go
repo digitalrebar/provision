@@ -96,3 +96,69 @@ func TestPluginCli(t *testing.T) {
 	cliTest(false, false, "plugins", "destroy", "i-woman").run(t)
 	cliTest(false, false, "plugins", "list").run(t)
 }
+
+func TestPluginActionsInTaskList(t *testing.T) {
+	// Make a noisy task that sleeps some to test log write coalescing
+	cliTest(false, false, "plugins", "create", "-").Stdin(`---
+Name: incr
+Provider: incrementer
+`).run(t)
+	cliTest(false, false, "machines", "create", "-").Stdin(`---
+Name: phred
+Uuid: c9196b77-deef-4c8e-8130-299b3e3d9a10
+Tasks:
+  - action:increment
+  - action:incr:increment
+Params:
+  incrementer/step: 2
+Runnable: true`).run(t)
+	cliTest(false, false, "machines", "processjobs", "c9196b77-deef-4c8e-8130-299b3e3d9a10", "--oneshot").run(t)
+	cliTest(false, false, "machines", "show", "Name:phred").run(t)
+	cliTest(false, false, "machines", "jobs", "current", "Name:phred").run(t)
+	cliTest(false, false, "machines", "currentlog", "Name:phred").run(t)
+	cliTest(false, false, "machines", "update", "Name:phred", "-").Stdin(`---
+Tasks:
+  - action:reset_count
+CurrentTask: -1
+Runnable: true
+`).run(t)
+	cliTest(false, false, "machines", "processjobs", "c9196b77-deef-4c8e-8130-299b3e3d9a10", "--oneshot").run(t)
+	cliTest(false, false, "machines", "show", "Name:phred").run(t)
+	cliTest(false, false, "machines", "jobs", "current", "Name:phred").run(t)
+	cliTest(false, false, "machines", "currentlog", "Name:phred").run(t)
+	cliTest(false, false, "machines", "update", "Name:phred", "-").Stdin(`---
+Tasks:
+  - action:explode
+CurrentTask: -1
+Runnable: true
+`).run(t)
+
+	cliTest(false, false, "machines", "processjobs", "c9196b77-deef-4c8e-8130-299b3e3d9a10", "--oneshot").run(t)
+	cliTest(false, false, "machines", "show", "Name:phred").run(t)
+	cliTest(false, false, "machines", "jobs", "current", "Name:phred").run(t)
+	cliTest(false, false, "machines", "currentlog", "Name:phred").run(t)
+	cliTest(false, false, "machines", "update", "Name:phred", "-").Stdin(`---
+Tasks:
+  - action:incr:explode
+CurrentTask: -1
+Runnable: true
+`).run(t)
+	cliTest(false, false, "machines", "processjobs", "c9196b77-deef-4c8e-8130-299b3e3d9a10", "--oneshot").run(t)
+	cliTest(false, false, "machines", "show", "Name:phred").run(t)
+	cliTest(false, false, "machines", "jobs", "current", "Name:phred").run(t)
+	cliTest(false, false, "machines", "currentlog", "Name:phred").run(t)
+	cliTest(false, false, "machines", "update", "Name:phred", "-").Stdin(`---
+Tasks:
+  - action:TROGDOR:BURNINATE
+CurrentTask: -1
+Runnable: true
+`).run(t)
+	cliTest(false, false, "machines", "processjobs", "c9196b77-deef-4c8e-8130-299b3e3d9a10", "--oneshot").run(t)
+	cliTest(false, false, "machines", "show", "Name:phred").run(t)
+	cliTest(false, false, "machines", "jobs", "current", "Name:phred").run(t)
+	cliTest(false, false, "machines", "currentlog", "Name:phred").run(t)
+	cliTest(false, false, "machines", "deletejobs", "Name:phred").run(t)
+	cliTest(false, false, "machines", "destroy", "Name:phred").run(t)
+	cliTest(false, false, "plugins", "destroy", "incr").run(t)
+	verifyClean(t)
+}

@@ -1,0 +1,19 @@
+RE:
+  "Available": true,
+  "BootEnv": "local",
+  "CurrentTask": -1,
+  "Description": "",
+  "Name": "phred",
+  "Params": \{
+    "incrementer/default": 4,
+    "incrementer/step": 2
+  \},
+  "ReadOnly": false,
+  "Runnable": true,
+  "Stage": "none",
+  "Tasks": \[
+    "action:incr:explode"
+  \],
+  "Uuid": "c9196b77-deef-4c8e-8130-299b3e3d9a10",
+  "Validated": true,
+  "Workflow": ""

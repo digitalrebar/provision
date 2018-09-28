@@ -30,7 +30,8 @@ RE:
       "slim-objects",
       "secure-param-upgrade",
       "sprig",
-      "multiarch"
+      "multiarch",
+      "actions-in-task-list"
     \],
     "file_port": 10002,
     "id": "Fred",

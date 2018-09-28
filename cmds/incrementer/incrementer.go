@@ -87,8 +87,9 @@ func (p *Plugin) removeParameter(uuid, parameter string) *models.Error {
 
 func (p *Plugin) Action(thelog logger.Logger, ma *models.Action) (interface{}, *models.Error) {
 	thelog.Infof("Action: %v\n", ma)
-	if ma.Command == "increment" {
-		var machine models.Machine
+	var machine models.Machine
+	switch ma.Command {
+	case "increment":
 		if err := utils.Remarshal(ma.Model, &machine); err != nil {
 			return nil, &models.Error{Code: 409,
 				Model:    "plugin",
@@ -100,7 +101,6 @@ func (p *Plugin) Action(thelog logger.Logger, ma *models.Action) (interface{}, *
 		if !ok {
 			parameter = "incrementer/default"
 		}
-
 		step := 1
 		if pstep, ok := ma.Params["incrementer/step"]; ok {
 			if fstep, ok := pstep.(float64); ok {
@@ -113,13 +113,12 @@ func (p *Plugin) Action(thelog logger.Logger, ma *models.Action) (interface{}, *
 				step = istep
 			}
 		}
-
 		val, err := p.updateOrCreateParameter(machine.UUID(), parameter, step)
 		if err == nil {
 			_, err = p.updateOrCreateParameter(machine.UUID(), "incrementer/touched", 1)
 		}
 		return val, err
-	} else if ma.Command == "reset_count" {
+	case "reset_count":
 		var machine models.Machine
 		if err := utils.Remarshal(ma.Model, &machine); err != nil {
 			return nil, &models.Error{Code: 409,
@@ -130,7 +129,7 @@ func (p *Plugin) Action(thelog logger.Logger, ma *models.Action) (interface{}, *
 		}
 		e := p.removeParameter(machine.UUID(), "incrementer/touched")
 		return "Success", e
-	} else if ma.Command == "incrstatus" {
+	case "incrstatus":
 		return "Running", nil
 	}
 

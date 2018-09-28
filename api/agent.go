@@ -422,30 +422,33 @@ func (a *MachineAgent) RunTask() {
 		runner.j.NextIndex)
 	if err := runner.Run(); err != nil {
 		a.err = err
+		panic("reinit for error running runner")
 		a.initOrExit()
 		return
 	}
 	a.state = AGENT_WAIT_FOR_RUNNABLE
-	defer runner.Close()
-	if runner.reboot {
-		runner.Log("Task signalled runner to reboot")
-		a.rebootOrExit(false)
-	} else if runner.poweroff {
-		runner.Log("Task signalled runner to poweroff")
-		a.state = AGENT_POWEROFF
-	} else if runner.stop {
-		runner.Log("Task signalled runner to stop")
-		a.state = AGENT_EXIT
-	} else if runner.failed {
-		runner.Log("Task signalled that it failed")
-		if a.exitOnFailure {
+	if runner.t != nil {
+		defer runner.Close()
+		if runner.reboot {
+			runner.Log("Task signalled runner to reboot")
+			a.rebootOrExit(false)
+		} else if runner.poweroff {
+			runner.Log("Task signalled runner to poweroff")
+			a.state = AGENT_POWEROFF
+		} else if runner.stop {
+			runner.Log("Task signalled runner to stop")
 			a.state = AGENT_EXIT
+		} else if runner.failed {
+			runner.Log("Task signalled that it failed")
+			if a.exitOnFailure {
+				a.state = AGENT_EXIT
+			}
 		}
-	}
-	if runner.incomplete {
-		runner.Log("Task signalled that it was incomplete")
-	} else if !runner.failed {
-		runner.Log("Task signalled that it finished normally")
+		if runner.incomplete {
+			runner.Log("Task signalled that it was incomplete")
+		} else if !runner.failed {
+			runner.Log("Task signalled that it finished normally")
+		}
 	}
 }
 

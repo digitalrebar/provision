@@ -1,0 +1,4 @@
+RE:
+Log for Job: .*
+Action TROGDOR:BURNINATE validation failed:
+GET: machines/c9196b77-deef-4c8e-8130-299b3e3d9a10: Action BURNINATE on machines for plugin TROGDOR not found

@@ -149,22 +149,24 @@ func (n *Machine) Validate() {
 		n.AddError(ValidName("Invalid Profile", p))
 	}
 	for _, t := range n.Tasks {
-		if n.Workflow == "" {
-			n.AddError(ValidName("Invalid Task", t))
-		} else {
-			parts := strings.SplitN(t, ":", 2)
-			if len(parts) == 2 {
-				switch parts[0] {
-				case "stage":
-					n.AddError(ValidName("Invalid Stage", parts[1]))
-				case "bootenv":
-					n.AddError(ValidName("Invalid BootEnv", parts[1]))
-				default:
-					n.Errorf("Invalid Task Step %s", t)
+		parts := strings.SplitN(t, ":", 2)
+		if len(parts) == 2 {
+			switch parts[0] {
+			case "stage":
+				n.AddError(ValidName("Invalid Stage", parts[1]))
+			case "bootenv":
+				n.AddError(ValidName("Invalid BootEnv", parts[1]))
+			case "action":
+				pparts := strings.SplitN(parts[1], ":", 2)
+				if len(pparts) == 2 {
+					n.AddError(ValidName("Invalid Plugin", pparts[0]))
+					n.AddError(ValidName("Invalid Action", pparts[1]))
+				} else {
+					n.AddError(ValidName("Invalid Action", parts[1]))
 				}
-			} else {
-				n.AddError(ValidName("Invalid Task", t))
 			}
+		} else {
+			n.AddError(ValidName("Invalid Task", t))
 		}
 	}
 	for _, m := range n.HardwareAddrs {

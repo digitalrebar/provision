@@ -1,0 +1,13 @@
+{
+  "Available": true,
+  "Description": "",
+  "Documentation": "",
+  "Errors": [],
+  "Meta": {},
+  "Name": "incr",
+  "Params": {},
+  "PluginErrors": [],
+  "Provider": "incrementer",
+  "ReadOnly": false,
+  "Validated": true
+}
