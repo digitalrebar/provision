@@ -331,6 +331,18 @@ Agent.  It encapsulates the following logic:
    CurrentJob is updated with the UUID of the new Job.  The new Job
    and the Machine are saved.
 
+#. If the the Entry in the Tasks list pointed to by CurrentTask starts
+   with `action:`, then the rest of the entry is interpreted as either
+   a `plugin:action_name` or as a `action_name`.  dr-provision will
+   try to invoke the requested `action_name` on the machine
+   (optionally using the specified `plugin`).  If the plugin
+   invocation succeeds, the results of the invocation are saved in the
+   log, the Job is set to `finished`, and returned along with the
+   Created HTTP status coe.  If the plugin invocation fails for any
+   reason, the reason it failed is saved in the log along with any
+   diagnostic output from the plugin, the job is set to `failed`, and
+   nothing is returned along with the NoContent status code.
+
 #. If the new Job is in the `created` state, it is returned along with
    Created HTTP status code, otherwise nothing is returned along with
    the NoContent status code.
