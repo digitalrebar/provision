@@ -422,7 +422,6 @@ func (a *MachineAgent) RunTask() {
 		runner.j.NextIndex)
 	if err := runner.Run(); err != nil {
 		a.err = err
-		panic("reinit for error running runner")
 		a.initOrExit()
 		return
 	}
