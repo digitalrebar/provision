@@ -74,7 +74,7 @@ The following steps will install the required plugins and content for KRIB
 
     # Get code
     git clone https://github.com/digitalrebar/provision-content
-    cd krib
+    cd provision-content/krib
 
     # KRIB content install
     drpcli contents bundle krib.yaml
