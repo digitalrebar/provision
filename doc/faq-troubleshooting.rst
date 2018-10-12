@@ -345,6 +345,15 @@ Now verify that our installed content matches the new vesion we expected ...
       "v1.5.0-0-13f1aff688b53d5dfdab9a1a0c1098bd3c6dc76c"
 
 
+.. _rs_reboot_faq:
+
+Rebooting inside a Tasks, Stages and Workflows
+----------------------------------------------
+
+The Runner Task execution system supports many ways to cause a system reboot that allow for the task being marked as either complete or incomplete (so it can resume).  This can be very important for tasks that require a reboot mid-task.
+
+These options are handled by using script helpers or sending specialized ``exit``codes.  Please see :ref:`rs_workflow_reboot` for comprehensive documentation.
+
 .. _rs_nested_templates:
 
 Nested Templates (or "Sub-templates")

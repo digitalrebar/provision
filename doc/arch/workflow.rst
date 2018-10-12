@@ -4,6 +4,7 @@
 .. index::
   pair: Digital Rebar Provision; Workflow
 
+.. _rs_workflow:
 
 Workflow
 ========
@@ -17,6 +18,8 @@ parts in more detail.
 
 The Bits and Bobs
 ^^^^^^^^^^^^^^^^^
+
+.. _rs_workflow_tasks:
 
 Tasks
 -----
@@ -32,6 +35,8 @@ empty or not present), or a file to be placed on the filesystem at the
 location indicated by template-expanding the Path parameter.(if the
 Path parameter is not empty).
 
+.. _rs_workflow_jobs:
+
 Jobs
 ----
 
@@ -42,12 +47,15 @@ execution.  The history of what has been executed (including all log
 output from scripts) is stored as a chain of Jobs, and the exit status
 of the Job determines what a machine agent will do next.
 
+.. _rs_workflow_stages:
 
 Stages
 ------
 
 A :ref:`rs_data_stage` is used to provide a list of Tasks that should
 be run on a Machine along with the BootEnv the tasks should be run in.
+
+.. _rs_workflow_mc_agent:
 
 Machine Agent
 -------------
@@ -61,8 +69,8 @@ Job exit status or the change stage map.  Unless directed to exit, the
 Machine Agent watches the event stream for the Machine it is running
 on and will execute new tasks as they come to be available.
 
-Change Stage Map (OLD AND BUSTED)
----------------------------------
+Change Stage Map (DEPRECATED)
+-----------------------------
 
 The change-stage/map parameter defines what stage to change to when
 you finish all the tasks in the current stage.  The change stage map
@@ -74,8 +82,10 @@ The change-stage/map mechanism has been replaced by the Workflow
 mechanism, but will be maintained for the forseeable future.  You are
 encouraged to migrate to using Workflows.
 
-Workflows (NEW HOTNESS)
------------------------
+.. _rs_workflows:
+
+Workflows
+---------
 
 A :ref:`rs_data_workflow` is used to provide a list of Stages that a
 Machine should run through to get to a desired end state.  When a
@@ -86,6 +96,8 @@ drive the machine through the Workflow.
 
 How They Work Together
 ^^^^^^^^^^^^^^^^^^^^^^
+
+.. _rs_workflow_agent:
 
 Machine Agent (client side)
 ---------------------------
@@ -201,6 +213,28 @@ AGENT_REBOOT
 AGENT_POWEROFF
   Cleanly shuts the system down.
 
+.. _rs_workflow_reboot:
+
+Reboot! Using Agent State Changes in Scripts
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+These functions are implemented in the community content shared template accessed by adding `{{ template "setup.tmpl" }}` in your content. 
+
+By adding this library, you can call the functions ```exit, exit_incomplete, exit_reboot, exit_shutdown, exit_stop, exit_incomplete_reboot, exit_incomplete_shutdown``` to access the agent states.
+
+Script authors can also force behaviors using specialized ``exit`` code in their routines. While ``exit 0`` provides a regular clean exit, non-0 values provide enhanced functionality:
+
+  * ``exit 16`` stops the script
+  * ``exit 32`` triggers a shutdown
+  * ``exit 64`` triggers a reboot
+  * ``exit 128`` means task is incomplete
+  * ``exit 192`` means task is incomplete AND system should reboot
+  * ``exit 160`` means task is incomplete AND system should shutdown.
+
+The codes are based on intpretation of bit position left as a trivial exercise to the reader until someone updates the documentation.
+
+.. _rs_workflow_server:
+
 dr-provision (server side)
 --------------------------
 
@@ -229,6 +263,8 @@ In dr-provision, the machine Agent relies on these API endpoints to perform its 
   recieves Events for the Machine from dr-provision.  Each Event
   contains a copy of the Machine state at the point in time that the
   event was created.
+
+.. _rs_workflow_next job:
 
 Retrieving the next Job
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -299,6 +335,8 @@ Agent.  It encapsulates the following logic:
    Created HTTP status code, otherwise nothing is returned along with
    the NoContent status code.
 
+.. _rs_workflow_changing:
+
 Changing the Workflow on a Machine
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -322,6 +360,8 @@ Changing a Workflow on the Machine has the following effects:
   Stages in the Workflow.  Any Stage changes that happen during
   processing a Workflow do not affect the Tasks list or the
   CurrentTask index.
+
+.. _rs_workflow_removing:
 
 Removing a Workflow from a Machine
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
