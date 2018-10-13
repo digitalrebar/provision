@@ -4,11 +4,6 @@ name=scientificlinux-6 - fake-scientificlinux-install
 baseurl=http://127.0.0.1:10002/scientificlinux-6/install
 gpgcheck=0
 
-[scientificlinux-6-install]
-name=scientificlinux-6 - scientificlinux-6-install
-baseurl=https://this.url.is.fake/scientificlinux/6/x86_64/os
-gpgcheck=0
-
 [scientificlinux-6-security]
 name=scientificlinux-6 - scientificlinux-6-security
 baseurl=https://this.url.is.secure/scientificlinux/6/x86_64/updates

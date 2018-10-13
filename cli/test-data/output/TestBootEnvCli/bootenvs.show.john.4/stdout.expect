@@ -4,8 +4,7 @@
   "Description": "",
   "Documentation": "",
   "Errors": [
-    "bootenv: Missing elilo or pxelinux template",
-    "bootenv: john: missing kernel lpxelinux.0 (/johann/lpxelinux.0)"
+    "bootenv: Missing elilo or pxelinux template"
   ],
   "Initrds": [],
   "Kernel": "lpxelinux.0",
@@ -18,6 +17,7 @@
     "IsoSha256": "",
     "IsoUrl": "",
     "Name": "johann",
+    "SupportedArchitectures": {},
     "Version": ""
   },
   "OnlyUnknown": false,

@@ -8,9 +8,7 @@ RE:
     "tasks": 7,
     "templates": 14
   },
-  "Warnings": \[
-[\s\S]*
-  \],
+  "Warnings": \[\],
   "meta": {
     "Description": "Digital Rebar Provision Community Content",
     "Name": "drp-community-content",

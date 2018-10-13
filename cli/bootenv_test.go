@@ -4,8 +4,6 @@ import (
 	"bytes"
 	"io/ioutil"
 	"net/http"
-	"os"
-	"path"
 	"testing"
 	"time"
 
@@ -95,87 +93,18 @@ func TestBootEnvCli(t *testing.T) {
 	cliTest(false, false, "bootenvs", "show", "john").run(t)
 	cliTest(false, false, "bootenvs", "destroy", "john").run(t)
 	cliTest(false, false, "bootenvs", "list").run(t)
+	verifyClean(t)
+}
 
-	cliTest(true, true, "bootenvs", "install").run(t)
-	cliTest(true, true, "bootenvs", "install", "john", "john", "john2").run(t)
-	cliTest(false, true, "bootenvs", "install", "fredhammer").run(t)
-
-	if f, err := os.Create("bootenvs"); err != nil {
-		t.Errorf("FAIL: Failed to create bootenvs file: %v\n", err)
-	} else {
-		f.Close()
-	}
-
-	cliTest(false, true, "bootenvs", "install", "bootenvs/fredhammer.yml").run(t)
-	os.RemoveAll("bootenvs")
-	if err := os.MkdirAll("bootenvs", 0755); err != nil {
-		t.Errorf("FAIL: Failed to create bootenvs dir: %v\n", err)
-	}
-
-	cliTest(false, true, "bootenvs", "install", "bootenvs/fredhammer.yml").run(t)
-	if err := ioutil.WriteFile("bootenvs/fredhammer.yml", []byte("TEST"), 0644); err != nil {
-		t.Errorf("FAIL: Failed to create bootenvs file: %v\n", err)
-	}
-
-	cliTest(false, true, "bootenvs", "install", "bootenvs/fredhammer.yml").run(t)
-
-	os.RemoveAll("bootenvs/fredhammer.yml")
-	if err := os.MkdirAll("bootenvs", 0755); err != nil {
-		t.Errorf("FAIL: Failed to create bootenvs dir: %v\n", err)
-	}
-	if err := os.Symlink("../test-data/fredhammer.yml", "bootenvs/fredhammer.yml"); err != nil {
-		t.Errorf("FAIL: Failed to create link to fredhammer.yml: %v\n", err)
-	}
-	if err := os.Symlink("../test-data/local3.yml", "bootenvs/local3.yml"); err != nil {
-		t.Errorf("FAIL: Failed to create link to local3.yml: %v\n", err)
-	}
-
-	cliTest(false, false, "bootenvs", "install", "--skip-download", "bootenvs/fredhammer.yml").run(t)
-	cliTest(false, false, "bootenvs", "destroy", "fredhammer").run(t)
-
-	installSkipDownloadIsos = false
-
-	cliTest(false, false, "bootenvs", "install", "bootenvs/fredhammer.yml").run(t)
-	cliTest(false, true, "bootenvs", "install", "bootenvs/local3.yml").run(t)
-
-	if err := os.MkdirAll("templates", 0755); err != nil {
-		t.Errorf("FAIL: Failed to create templates dir: %v\n", err)
-	}
-	tmpls := []string{"local3-pxelinux.tmpl", "local3-elilo.tmpl", "local3-ipxe.tmpl"}
-	for _, tmpl := range tmpls {
-		if err := os.Symlink("../test-data/"+tmpl, "templates/"+tmpl); err != nil {
-			t.Errorf("FAIL: Failed to create link to %s: %v\n", tmpl, err)
-		}
-	}
-
-	cliTest(false, false, "bootenvs", "install", "bootenvs/local3.yml", "ic").run(t)
-	cliTest(false, false, "bootenvs", "destroy", "fredhammer").run(t)
-	cliTest(false, false, "bootenvs", "install", "bootenvs/fredhammer.yml").run(t)
-	cliTest(false, false, "bootenvs", "uploadiso", "fredhammer").run(t)
-	cliTest(false, false, "bootenvs", "install", "test-data/no-fredhammer.yml").run(t)
-
-	// Clean up
-	cliTest(false, false, "bootenvs", "destroy", "fredhammer").run(t)
-	cliTest(false, false, "bootenvs", "destroy", "no-fredhammer").run(t)
-	cliTest(false, false, "bootenvs", "destroy", "local3").run(t)
-	cliTest(false, false, "templates", "destroy", "local3-pxelinux.tmpl").run(t)
-	cliTest(false, false, "templates", "destroy", "local3-elilo.tmpl").run(t)
-	cliTest(false, false, "templates", "destroy", "local3-ipxe.tmpl").run(t)
-	cliTest(false, false, "isos", "destroy", "sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar").run(t)
-
-	// Make sure that ic exists and iso exists
-	// if _, err := os.Stat("ic"); os.IsNotExist(err) {
-	//	t.Errorf("FAIL: Failed to create ic directory\n")
-	// }
-	if _, err := os.Stat("isos"); os.IsNotExist(err) {
-		t.Errorf("FAIL: Failed to create isos directory\n")
-	}
-
-	os.RemoveAll("bootenvs")
-	os.RemoveAll("templates")
-	os.RemoveAll("isos")
-	os.RemoveAll("ic")
-	os.RemoveAll(path.Join(tmpDir, "tftpboot", "sledgehammer"))
+func TestBootenvStageHandling(t *testing.T) {
+	cliTest(false, false, "stages", "create", "-").Stdin(`---
+Name: fred
+BootEnv: fred`).run(t)
+	cliTest(false, false, "bootenvs", "create", "fred").run(t)
+	cliTest(false, false, "stages", "show", "fred").run(t)
+	cliTest(false, false, "bootenvs", "show", "fred").run(t)
+	cliTest(false, false, "stages", "destroy", "fred").run(t)
+	cliTest(false, false, "bootenvs", "destroy", "fred").run(t)
 	verifyClean(t)
 }
 
@@ -186,6 +115,7 @@ func TestBootEnvLookaside(t *testing.T) {
   os:
     - "sledgehammer/708de8b878e3818b1c1bb598a56de968939f9d4b"
   installSource: true
+  arch: amd64
   url: "http://127.0.0.1:10003/hammertime"
 `).run(t)
 	cliTest(false, false, "bootenvs", "install", "test-data/no-phredhammer.yml").run(t)

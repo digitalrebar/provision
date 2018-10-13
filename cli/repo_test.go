@@ -21,6 +21,7 @@ Schema:
     - tag: debian-6-install
       os:
         - debian-6
+      arch: amd64
       url: https://this.url.is.fake/debian
       distribution: "6"
       installSource: true
@@ -31,6 +32,7 @@ Schema:
     - tag: debian-6-security
       os:
         - debian-6
+      arch: any
       url: https://this.url.is.secure/debian-security
       distribution: "6"
       securitySource: true
@@ -42,6 +44,7 @@ Schema:
       os:
         - debian-6
         - ubuntu-6
+      arch: any
       url: https://this.url.is.a.mirror/sweet-debs
       distribution: sweet
       components:
@@ -49,6 +52,7 @@ Schema:
     - tag: ubuntu-6-install
       os:
         - ubuntu-6
+      arch: amd64
       url: https://this.url.is.fake/ubuntu
       distribution: "6"
       installSource: true
@@ -59,6 +63,7 @@ Schema:
     - tag: ubuntu-6-security
       os:
         - ubuntu-6
+      arch: any
       url: https://this.url.is.secure/ubuntu-security
       distribution: "6"
       securitySource: true
@@ -69,16 +74,19 @@ Schema:
     - tag: centos-6-install
       os:
         - centos-6
+      arch: x86_64
       url: https://this.url.is.fake/centos/6/os/x86_64
       installSource: true
     - tag: centos-6-security
       os:
         - centos-6
+      arch: x86_64
       url: https://this.url.is.secure/centos/6/updates/x86_64
       securitySource: true
     - tag: centos-6-extras
       os:
         - centos-6
+      arch: x86_64
       url: https://this.url.is.fake/centos
       distribution: "6"
       components:
@@ -88,16 +96,19 @@ Schema:
     - tag: scientificlinux-6-install
       os:
         - scientificlinux-6
+      arch: x86_64
       url: https://this.url.is.fake/scientificlinux/6/x86_64/os
       installSource: true
     - tag: scientificlinux-6-security
       os:
         - scientificlinux-6
+      arch: x86_64
       url: https://this.url.is.secure/scientificlinux/6/x86_64/updates
       securitySource: true
     - tag: scientificlinux-6-extras
       os:
         - scientificlinux-6
+      arch: x86_64
       url: https://this.url.is.fake/scientificlinux
       distribution: "6"
       components:
@@ -108,6 +119,7 @@ Schema:
       os:
         - centos-6
         - scientificlinux-6
+      arch: x86_64
       url: https://this.url.is.a.mirror/epel/7/$basearch
   type: "array"
   items:
@@ -123,6 +135,8 @@ Schema:
         type: array
         items:
           type: string
+      arch:
+        type: string
       url:
         type: string
         format: uri

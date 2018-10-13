@@ -423,3 +423,38 @@ func TestMachineFileImport(t *testing.T) {
 	cliTest(false, false, prefix, "destroy", yamlId).run(t)
 	cliTest(false, false, prefix, "destroy", jsonId).run(t)
 }
+
+func TestMachineArch(t *testing.T) {
+	validArches := []string{"amd64", "386", "arm", "arm64", "ppc64", "ppc64le", "mips64", "mips64le", "s390x", "mipsle", "mips"}
+	for i, arch := range validArches {
+		cliTest(false, false, "machines", "create", "-").Stdin(
+			fmt.Sprintf(`---
+Name: test-%d
+Arch: %s`, i, arch)).run(t)
+	}
+	for i := range validArches {
+		cliTest(false, false, "machines", "destroy", fmt.Sprintf("Name:test-%d", i)).run(t)
+	}
+	archAliases := []string{
+		"x86_64",
+		"486", "686", "i386", "i486", "i686",
+		"armel", "armhfp",
+		"aarch64",
+		"power9",
+		"mips64el",
+		"mipsel",
+	}
+	for i, arch := range archAliases {
+		cliTest(false, true, "machines", "create", "-").Stdin(
+			fmt.Sprintf(`---
+Name: test-%d
+Arch: %s`, i, arch)).run(t)
+	}
+	for i, arch := range []string{"foo", "bar"} {
+		cliTest(false, true, "machines", "create", "-").Stdin(
+			fmt.Sprintf(`---
+Name: test-%d
+Arch: %s`, i, arch)).run(t)
+	}
+	verifyClean(t)
+}

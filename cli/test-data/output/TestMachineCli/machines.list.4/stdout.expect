@@ -1,6 +1,7 @@
 [
   {
     "Address": "192.168.100.110",
+    "Arch": "amd64",
     "Available": true,
     "BootEnv": "local",
     "CurrentJob": "",

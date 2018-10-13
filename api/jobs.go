@@ -170,6 +170,11 @@ func (r *TaskRunner) Perform(action *models.JobAction, taskDir string) error {
 
 	cmd.Dir = taskDir
 	cmd.Env = append(os.Environ(), "RS_TASK_DIR="+taskDir, "RS_RUNNER_DIR="+r.agentDir)
+	for _, e := range []string{"RS_UUID", "RS_ENDPOINT", "RS_TOKEN"} {
+		if os.Getenv(e) == "" {
+			cmd.Env = append(cmd.Env, e+"="+r.c.token.Token)
+		}
+	}
 	cmd.Stdout = r.in
 	cmd.Stderr = r.in
 	r.Log("Starting command %s\n\n", cmd.Path)

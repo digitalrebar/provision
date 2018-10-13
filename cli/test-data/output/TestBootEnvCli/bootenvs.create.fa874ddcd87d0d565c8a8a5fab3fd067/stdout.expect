@@ -15,6 +15,7 @@
     "IsoSha256": "",
     "IsoUrl": "",
     "Name": "",
+    "SupportedArchitectures": {},
     "Version": ""
   },
   "OnlyUnknown": false,

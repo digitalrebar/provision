@@ -2,6 +2,7 @@ package cli
 
 import (
 	"fmt"
+	"io"
 	"os"
 	"path"
 
@@ -61,6 +62,28 @@ func blobCommands(bt string) *cobra.Command {
 				return generateError(err, "Failed to fetch %v: %v", bt, args[0])
 			}
 			return nil
+		},
+	})
+	cmd.AddCommand(&cobra.Command{
+		Use:    "static [item]",
+		Hidden: true,
+		Short:  "Download [item] from the static file server. They will always go to stdout.",
+		Args: func(c *cobra.Command, args []string) error {
+			if len(args) != 1 {
+				return fmt.Errorf("%v requires 1 argument", c.UseLine())
+			}
+			return nil
+		},
+		RunE: func(c *cobra.Command, args []string) error {
+			rd, err := session.File(args[0])
+			if rd != nil {
+				defer rd.Close()
+			}
+			if err != nil {
+				return err
+			}
+			_, err = io.Copy(os.Stdout, rd)
+			return err
 		},
 	})
 	cmd.AddCommand(&cobra.Command{

@@ -1,0 +1,7 @@
+RE:
+  "Arch": "arm64",
+  "Available": true,
+  "BootEnv": "march-install",
+  "Name": "arm64",
+  "OS": "march",
+  "Validated": true,

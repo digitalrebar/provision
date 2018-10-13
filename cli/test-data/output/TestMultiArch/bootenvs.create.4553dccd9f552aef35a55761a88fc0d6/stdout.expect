@@ -1,0 +1,54 @@
+{
+  "Available": true,
+  "BootParams": "",
+  "Description": "",
+  "Documentation": "",
+  "Errors": [],
+  "Initrds": [],
+  "Kernel": "",
+  "Meta": {},
+  "Name": "march-discover",
+  "OS": {
+    "Codename": "",
+    "Family": "",
+    "IsoFile": "",
+    "IsoSha256": "",
+    "IsoUrl": "",
+    "Name": "march-discover",
+    "SupportedArchitectures": {
+      "aarch64": {
+        "BootParams": "I am aarch64, AKA arm64",
+        "Initrds": [],
+        "IsoFile": "march-arm64.tar",
+        "IsoUrl": "",
+        "Kernel": "vmlinuz0",
+        "Loader": "",
+        "Sha256": ""
+      },
+      "x86_64": {
+        "BootParams": "I am amd64, AKA x86_64",
+        "Initrds": [],
+        "IsoFile": "march-amd64.tar",
+        "IsoUrl": "",
+        "Kernel": "vmlinuz0",
+        "Loader": "",
+        "Sha256": ""
+      }
+    },
+    "Version": ""
+  },
+  "OnlyUnknown": true,
+  "OptionalParams": [],
+  "ReadOnly": false,
+  "RequiredParams": [],
+  "Templates": [
+    {
+      "Contents": "chain {{.ProvisionerURL}}/${netX/mac}.ipxe \u0026\u0026 exit || goto chainip\n:chainip\nchain {{.ProvisionerURL}}/${netX/ip}.ipxe \u0026\u0026 exit || goto sledgehammer\n:sledgehammer\nkernel {{.Env.PathFor \"http\" .Env.Kernel}} {{.BootParams}} BOOTIF=01-${netX/mac:hexhyp}\n",
+      "ID": "",
+      "Meta": {},
+      "Name": "ipxe",
+      "Path": "default.ipxe"
+    }
+  ],
+  "Validated": true
+}

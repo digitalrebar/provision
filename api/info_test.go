@@ -59,6 +59,7 @@ func TestInfo(t *testing.T) {
 				"slim-objects",
 				"secure-param-upgrade",
 				"sprig",
+				"multiarch",
 			},
 			License: models.LicenseBundle{Licenses: []models.License{}},
 			Scopes: map[string]map[string]struct{}{

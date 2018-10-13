@@ -2,6 +2,7 @@ package cli
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"path"
@@ -57,13 +58,12 @@ using isos upload.git `,
 			if err != nil {
 				return generateError(err, "Failed to install bootenv")
 			}
-			if bootEnv.OS.IsoFile != "" && !installSkipDownloadIsos {
+			if !installSkipDownloadIsos {
 				if err = os.MkdirAll(isoCache, 0755); err != nil {
 					return fmt.Errorf("Error ensuring ISO cache exists: %s", err)
 				}
-				isoPath := path.Join(isoCache, bootEnv.OS.IsoFile)
-				if err := session.InstallISOForBootenv(bootEnv, isoPath, !installSkipDownloadIsos); err != nil {
-					return generateError(err, "Error uploading %s", isoPath)
+				if err := session.InstallISOForBootenv(bootEnv, isoCache, !installSkipDownloadIsos); err != nil {
+					return generateError(err, "Error uploading %s", isoCache)
 				}
 			}
 			return prettyPrint(bootEnv)
@@ -90,25 +90,55 @@ It will attempt to perform a direct copy without saving the ISO locally.`,
 			if err := session.FillModel(bootEnv, args[0]); err != nil {
 				return generateError(err, "Failed to fetch %v: %v", op.singleName, args[0])
 			}
-			if bootEnv.OS.IsoFile == "" {
+			isoFiles := map[string]string{}
+			if bootEnv.OS.IsoFile != "" {
+				isoFiles[bootEnv.OS.IsoFile] = bootEnv.OS.IsoUrl
+			}
+			for _, archInfo := range bootEnv.OS.SupportedArchitectures {
+				if archInfo.IsoFile != "" {
+					isoFiles[archInfo.IsoFile] = archInfo.IsoUrl
+				}
+			}
+			if len(isoFiles) == 0 {
 				return fmt.Errorf("BootEnv %s does not require an iso", bootEnv.Name)
 			}
-			if bootEnv.OS.IsoUrl == "" {
-				return fmt.Errorf("Unable to automatically download iso for %s", bootEnv.Name)
-			}
-			isoDlResp, err := http.Get(bootEnv.OS.IsoUrl)
+			isos, err := session.ListBlobs("isos")
 			if err != nil {
-				return fmt.Errorf("Unable to connect to %s: %v", bootEnv.OS.IsoUrl, err)
+				return fmt.Errorf("BootEnv %s Unable to determine what ISO files are already present", bootEnv.Name)
 			}
-			defer isoDlResp.Body.Close()
-			if isoDlResp.StatusCode >= 300 {
-				return fmt.Errorf("Unable to initiate download of %s: %s", bootEnv.OS.IsoUrl, isoDlResp.Status)
+			for _, iso := range isos {
+				if _, ok := isoFiles[iso]; ok {
+					delete(isoFiles, iso)
+				}
 			}
-			if info, err := session.PostBlob(isoDlResp.Body, "isos", bootEnv.OS.IsoFile); err != nil {
-				return generateError(err, "Error uploading %s", bootEnv.OS.IsoFile)
-			} else {
-				return prettyPrint(info)
+			if len(isoFiles) == 0 {
+				return fmt.Errorf("BootEnv %s already has all required ISO files", bootEnv.Name)
 			}
+			for isoFile, isoUrl := range isoFiles {
+				if isoUrl == "" {
+					log.Printf("Unable to automatically download iso for %s, skipping", bootEnv.Name)
+					continue
+				}
+				isoDlResp, err := http.Get(isoUrl)
+				if err != nil {
+					log.Printf("Unable to connect to %s: %v: Skipping", isoUrl, err)
+					continue
+				}
+				if isoDlResp.StatusCode >= 300 {
+					isoDlResp.Body.Close()
+					log.Printf("Unable to initiate download of %s: %s: Skipping", isoUrl, isoDlResp.Status)
+					continue
+				}
+				func() {
+					defer isoDlResp.Body.Close()
+					if info, err := session.PostBlob(isoDlResp.Body, "isos", isoFile); err != nil {
+						log.Printf("%v", generateError(err, "Error uploading %s", isoUrl))
+					} else {
+						log.Printf("%v", prettyPrint(info))
+					}
+				}()
+			}
+			return nil
 		},
 	})
 	op.addCommand(&cobra.Command{
