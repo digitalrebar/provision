@@ -83,6 +83,7 @@ func (i *Info) Fill() {
 			"secure-param-upgrade",
 			"sprig",
 			"multiarch",
+			"actions-in-task-list",
 		}
 	}
 }

@@ -82,22 +82,14 @@ func NewTaskRunner(c *Client, m *models.Machine, agentDir string, logger io.Writ
 		// Nothing to do.  Not an error
 		return nil, nil
 	}
-	if job.State != "created" && job.State != "incomplete" {
-		err := &models.Error{
-			Type:  "CLIENT_ERROR",
-			Model: job.Prefix(),
-			Key:   job.Key(),
+	if !strings.Contains(job.Task, ":") {
+		t := &models.Task{Name: job.Task}
+		if err := c.Req().Fill(t); err != nil {
+			return nil, err
 		}
-		err.Errorf("Invalid job state returned: %v", job.State)
-		err.Errorf("Job: %#v", job)
-		return nil, err
-	}
-	t := &models.Task{Name: job.Task}
-	if err := c.Req().Fill(t); err != nil {
-		return nil, err
+		res.t = t
 	}
 	res.j = job
-	res.t = t
 	return res, nil
 }
 
@@ -245,6 +237,20 @@ func (r *TaskRunner) Run() error {
 		Model: r.j.Prefix(),
 		Key:   r.j.Key(),
 	}
+	if r.t == nil {
+		// no task, return based on the state of the job.
+		// These are actions that are handled on the server side
+		switch r.j.State {
+		case "created", "incomplete":
+			finalErr.Errorf("Invalid job state returned: %v", r.j.State)
+		case "running":
+			finalErr.Errorf("Job %s running somewhere else: %v", r.j.State)
+		case "failed":
+			r.failed = true
+		}
+		return finalErr.HasError()
+	}
+
 	jKey := r.j.Key()
 	// Arrange to log everything to the job log and stderr at the same time.
 	// Due to how io.Pipe works, this should wind up being fairly synchronous.

@@ -1,5 +1,7 @@
 package models
 
+import "strings"
+
 // Stage encapsulates a set of tasks and profiles to apply
 // to a Machine in a BootEnv.
 //
@@ -95,7 +97,22 @@ func (s *Stage) Validate() {
 		s.AddError(ValidName("Invalid Profile", p))
 	}
 	for _, t := range s.Tasks {
-		s.AddError(ValidName("Invalid Task", t))
+		if parts := strings.SplitN(t, ":", 2); len(parts) == 1 {
+			s.AddError(ValidName("Invalid Task", t))
+		} else {
+			switch parts[0] {
+			case "action":
+				pparts := strings.SplitN(parts[1], ":", 2)
+				if len(pparts) != 2 {
+					s.Errorf("Invalid action specifier %s", parts[1])
+					continue
+				}
+				s.AddError(ValidName("Invalid Plugin", pparts[0]))
+				s.AddError(ValidName("Invalid Action", pparts[1]))
+			default:
+				s.Errorf("Invalid Task: %s", t)
+			}
+		}
 	}
 }
 

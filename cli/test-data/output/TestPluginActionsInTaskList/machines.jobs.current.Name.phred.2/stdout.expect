@@ -1,0 +1,15 @@
+RE:
+  "Archived": false,
+  "Available": true,
+  "BootEnv": "local",
+  "Current": true,
+  "CurrentIndex": 0,
+  "ExitState": "complete",
+  "Machine": "c9196b77-deef-4c8e-8130-299b3e3d9a10",
+  "NextIndex": 1,
+  "ReadOnly": false,
+  "Stage": "none",
+  "State": "finished",
+  "Task": "action:reset_count",
+  "Validated": true,
+  "Workflow": ""

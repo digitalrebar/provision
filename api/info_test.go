@@ -60,6 +60,7 @@ func TestInfo(t *testing.T) {
 				"secure-param-upgrade",
 				"sprig",
 				"multiarch",
+				"actions-in-task-list",
 			},
 			License: models.LicenseBundle{Licenses: []models.License{}},
 			Scopes: map[string]map[string]struct{}{

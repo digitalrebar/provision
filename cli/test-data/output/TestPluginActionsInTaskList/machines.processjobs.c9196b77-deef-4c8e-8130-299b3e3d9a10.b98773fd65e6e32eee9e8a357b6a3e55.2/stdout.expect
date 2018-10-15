@@ -1,0 +1,22 @@
+Agent in init
+Agent waiting for tasks
+Waiting on machine to become runnable
+Wait: finished with complete
+Agent running task
+Runner created for task :none:action:reset_count (0:1)
+Agent waiting for tasks
+Waiting on machine to become runnable
+Wait: finished with complete
+Agent running task
+Current tasks finished, check to see if stage needs to change
+Agent changing stage
+Agent waiting stage change
+Waiting for system to be runnable and for stage or current tasks to change
+Wait: finished with complete
+Agent running task
+Current tasks finished, check to see if stage needs to change
+Agent changing stage
+Agent waiting stage change
+Waiting for system to be runnable and for stage or current tasks to change
+Wait: finished with timeout
+Agent exiting

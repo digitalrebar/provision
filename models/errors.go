@@ -57,7 +57,7 @@ func (e *Error) Error() string {
 }
 
 func (e *Error) ContainsError() bool {
-	return len(e.Messages) != 0
+	return e != nil && len(e.Messages) != 0
 }
 
 func (e *Error) AddError(src error) {
