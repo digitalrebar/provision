@@ -156,6 +156,7 @@ func (n *Machine) Validate() {
 				n.AddError(ValidName("Invalid Stage", parts[1]))
 			case "bootenv":
 				n.AddError(ValidName("Invalid BootEnv", parts[1]))
+			case "chroot":
 			case "action":
 				pparts := strings.SplitN(parts[1], ":", 2)
 				if len(pparts) == 2 {
