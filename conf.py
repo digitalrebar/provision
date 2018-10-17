@@ -332,6 +332,7 @@ urls=[
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/sledgehammer-builder.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/task-library.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/terraform.rst",
+    "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/tower.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/virtualbox-ipmi.rst",
     "https://github.com/digitalrebar/provision-content/releases/download/tip/drp-community-content.rst",
     "https://github.com/digitalrebar/provision-content/releases/download/tip/drp-community-contrib.rst",
