@@ -1,7 +1,6 @@
 package api
 
 import (
-	"errors"
 	"io"
 	"os"
 	"path"
@@ -98,12 +97,6 @@ Templates:
 	phred := models.Clone(fred)
 	phred.(*models.BootEnv).OS.Name = "phred"
 
-	rt(t,
-		"List all feebles",
-		nil,
-		errors.New("No such Model: feebles"),
-		func() (interface{}, error) { return session.ListModel("feebles") },
-		nil)
 	rt(t,
 		"List all bootenvs",
 		[]models.Model{ignoreBootEnv, localBootEnv},
@@ -206,14 +199,6 @@ Templates:
 		nil,
 		func() (interface{}, error) {
 			return session.ExistsModel("bootenvs", "local")
-		},
-		nil)
-	rt(t,
-		"Get the robert feeble",
-		nil,
-		errors.New("No such Model: feebles"),
-		func() (interface{}, error) {
-			return session.GetModel("feebles", "robert")
 		},
 		nil)
 	rt(t,

@@ -1,0 +1,4 @@
+---
+Name: cow/id
+Schema:
+  type: string

@@ -5,6 +5,34 @@
     "Documentation": "",
     "Errors": [],
     "Meta": {},
+    "Name": "cow/id",
+    "ReadOnly": true,
+    "Schema": {
+      "type": "string"
+    },
+    "Secure": false,
+    "Validated": true
+  },
+  {
+    "Available": true,
+    "Description": "",
+    "Documentation": "",
+    "Errors": [],
+    "Meta": {},
+    "Name": "cow/object",
+    "ReadOnly": true,
+    "Schema": {
+      "type": "object"
+    },
+    "Secure": false,
+    "Validated": true
+  },
+  {
+    "Available": true,
+    "Description": "",
+    "Documentation": "",
+    "Errors": [],
+    "Meta": {},
     "Name": "incrementer/parameter",
     "ReadOnly": true,
     "Schema": {

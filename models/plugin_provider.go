@@ -18,6 +18,9 @@ type PluginProvider struct {
 	RequiredParams []string
 	OptionalParams []string
 
+	// Object prefixes that can be accessed by this plugin.
+	StoreObjects []string
+
 	// Documentation of this plugin provider.  This should tell what
 	// the plugin provider is for, any special considerations that
 	// should be taken into account when using it, etc. in rich structured text (rst).

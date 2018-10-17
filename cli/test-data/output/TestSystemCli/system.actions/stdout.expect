@@ -5,5 +5,12 @@
     "OptionalParams": [],
     "Provider": "incrementer",
     "RequiredParams": []
+  },
+  {
+    "Command": "listCows",
+    "Model": "system",
+    "OptionalParams": [],
+    "Provider": "incrementer",
+    "RequiredParams": []
   }
 ]

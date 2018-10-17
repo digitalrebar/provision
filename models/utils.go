@@ -96,7 +96,10 @@ func New(kind string) (Slicer, error) {
 			return res, nil
 		}
 	}
-	return nil, fmt.Errorf("No such Model: %s", kind)
+
+	res := &RawModel{Type: kind}
+	res.Fill()
+	return res, nil
 }
 
 func Clone(m Model) Model {
