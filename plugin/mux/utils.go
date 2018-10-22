@@ -70,6 +70,29 @@ func AssureDecode(w http.ResponseWriter, r *http.Request, val interface{}) bool 
 	return false
 }
 
+// Get provides a path for the Plugin to get data from
+// DRP over the Plugin Server RestFUL API.
+func Get(client *http.Client, path string) ([]byte, error) {
+	resp, err := client.Get(fmt.Sprintf("http://unix/api-server-plugin/v3%s", path))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	b, e := ioutil.ReadAll(resp.Body)
+	if e != nil {
+		return nil, e
+	}
+	if resp.StatusCode >= 400 {
+		berr := &models.Error{}
+		err := json.Unmarshal(b, berr)
+		if err != nil {
+			return nil, e
+		}
+		return nil, berr
+	}
+	return b, nil
+}
+
 // Post provides a path for the Plugin to send messages to
 // DRP over the Plugin Server RestFUL API.
 func Post(client *http.Client, path string, indata interface{}) ([]byte, error) {
@@ -98,6 +121,35 @@ func Post(client *http.Client, path string, indata interface{}) ([]byte, error) 
 		return nil, berr
 	}
 	return b, nil
+}
+
+// Delete provides a path for the Plugin to delete data from
+// DRP over the Plugin Server RestFUL API.
+func Delete(client *http.Client, path string) error {
+	req, err := http.NewRequest("DELETE",
+		fmt.Sprintf("http://unix/api-server-plugin/v3%s", path),
+		nil)
+	if err != nil {
+		return err
+	}
+	resp, err := client.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	b, e := ioutil.ReadAll(resp.Body)
+	if e != nil {
+		return e
+	}
+	if resp.StatusCode >= 400 {
+		berr := &models.Error{}
+		err := json.Unmarshal(b, berr)
+		if err != nil {
+			return e
+		}
+		return berr
+	}
+	return nil
 }
 
 // ResponseWriter wraps a normal http.ResponseWriter with
@@ -196,6 +248,19 @@ func nf(w http.ResponseWriter, r *http.Request) {
 		Key:  r.URL.Path,
 	}
 	JsonResponse(w, res.Code, res)
+}
+
+// Handle Map by request type
+func (m *Mux) HandleMap(path string, mh map[string]http.HandlerFunc) {
+	vh := func(w http.ResponseWriter, r *http.Request) {
+		h, ok := mh[r.Method]
+		if !ok {
+			nf(w, r)
+		} else {
+			h(w, r)
+		}
+	}
+	m.ServeMux.Handle(path, logWrap(m, vh))
 }
 
 // Handle registers a handler at the path on the provided Mux.

@@ -25,9 +25,44 @@
       "OptionalParams": [],
       "Provider": "incrementer",
       "RequiredParams": []
+    },
+    {
+      "Command": "listCows",
+      "Model": "system",
+      "OptionalParams": [],
+      "Provider": "incrementer",
+      "RequiredParams": []
+    },
+    {
+      "Command": "showCow",
+      "Model": "system",
+      "OptionalParams": [],
+      "Provider": "incrementer",
+      "RequiredParams": [
+        "cow/id"
+      ]
+    },
+    {
+      "Command": "putCow",
+      "Model": "system",
+      "OptionalParams": [],
+      "Provider": "incrementer",
+      "RequiredParams": [
+        "cow/id",
+        "cow/object"
+      ]
+    },
+    {
+      "Command": "deleteCow",
+      "Model": "system",
+      "OptionalParams": [],
+      "Provider": "incrementer",
+      "RequiredParams": [
+        "cow/id"
+      ]
     }
   ],
-  "Content": "meta:\n  Description: Test Plugin for DRP\n  Documentation: Unspecified\n  Name: incrementer\n  RequiredFeatures: \"\"\n  Source: Digital Rebar\n  Type: plugin\n  Version: Internal\nsections:\n  params:\n    incrementer/parameter:\n      Available: false\n      Description: \"\"\n      Documentation: \"\"\n      Errors: []\n      Meta: {}\n      Name: incrementer/parameter\n      ReadOnly: false\n      Schema:\n        type: string\n      Secure: false\n      Validated: false\n    incrementer/step:\n      Available: false\n      Description: \"\"\n      Documentation: \"\"\n      Errors: []\n      Meta: {}\n      Name: incrementer/step\n      ReadOnly: false\n      Schema:\n        type: integer\n      Secure: false\n      Validated: false\n    incrementer/touched:\n      Available: false\n      Description: \"\"\n      Documentation: \"\"\n      Errors: []\n      Meta: {}\n      Name: incrementer/touched\n      ReadOnly: false\n      Schema:\n        type: integer\n      Secure: false\n      Validated: false\n",
+  "Content": "meta:\n  Description: Test Plugin for DRP\n  Documentation: Unspecified\n  Name: incrementer\n  RequiredFeatures: \"\"\n  Source: Digital Rebar\n  Type: plugin\n  Version: Internal\nsections:\n  params:\n    cow/id:\n      Available: false\n      Description: \"\"\n      Documentation: \"\"\n      Errors: []\n      Meta: {}\n      Name: cow/id\n      ReadOnly: false\n      Schema:\n        type: string\n      Secure: false\n      Validated: false\n    cow/object:\n      Available: false\n      Description: \"\"\n      Documentation: \"\"\n      Errors: []\n      Meta: {}\n      Name: cow/object\n      ReadOnly: false\n      Schema:\n        type: object\n      Secure: false\n      Validated: false\n    incrementer/parameter:\n      Available: false\n      Description: \"\"\n      Documentation: \"\"\n      Errors: []\n      Meta: {}\n      Name: incrementer/parameter\n      ReadOnly: false\n      Schema:\n        type: string\n      Secure: false\n      Validated: false\n    incrementer/step:\n      Available: false\n      Description: \"\"\n      Documentation: \"\"\n      Errors: []\n      Meta: {}\n      Name: incrementer/step\n      ReadOnly: false\n      Schema:\n        type: integer\n      Secure: false\n      Validated: false\n    incrementer/touched:\n      Available: false\n      Description: \"\"\n      Documentation: \"\"\n      Errors: []\n      Meta: {}\n      Name: incrementer/touched\n      ReadOnly: false\n      Schema:\n        type: integer\n      Secure: false\n      Validated: false\n",
   "Documentation": "",
   "HasPublish": true,
   "Meta": {},
@@ -35,5 +70,8 @@
   "OptionalParams": [],
   "PluginVersion": 2,
   "RequiredParams": [],
+  "StoreObjects": [
+    "cows"
+  ],
   "Version": "v3.0.2-pre-alpha-NotSet"
 }

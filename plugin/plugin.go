@@ -93,6 +93,65 @@ func Leaving(e *models.Error) {
 	}
 }
 
+func ListObjects(prefix string) ([]*models.RawModel, *models.Error) {
+	if client == nil {
+		return nil, models.NewError("plugin-mux", 400, fmt.Sprintf("No client to look up %s", prefix))
+	}
+	data, err := mux.Get(client, fmt.Sprintf("/objects/%s", prefix))
+	if err != nil {
+		return nil, models.NewError("plugin-mux", 400, fmt.Sprintf("Failed to list %s: %v", prefix, err))
+	}
+	var m []*models.RawModel
+	err = json.Unmarshal(data, &m)
+	if err != nil {
+		return nil, models.NewError("plugin-mux", 400, fmt.Sprintf("Failed to marshal list %s: %v", prefix, err))
+	}
+	return m, nil
+}
+
+func GetObject(prefix, key string) (models.Model, *models.Error) {
+	if client == nil {
+		return nil, models.NewError("plugin-mux", 400, fmt.Sprintf("No client to look up %s:%s", prefix, key))
+	}
+	data, err := mux.Get(client, fmt.Sprintf("/objects/%s/%s", prefix, key))
+	if err != nil {
+		return nil, models.NewError("plugin-mux", 400, fmt.Sprintf("Failed to show %s:%s %v", prefix, key, err))
+	}
+	var m models.RawModel
+	err = json.Unmarshal(data, &m)
+	if err != nil {
+		return nil, models.NewError("plugin-mux", 400, fmt.Sprintf("Failed to marshal %s:%s %v", prefix, key, err))
+	}
+	return &m, nil
+}
+
+func SaveObject(prefix, key string, data interface{}) (models.Model, *models.Error) {
+	if client == nil {
+		return nil, models.NewError("plugin-mux", 400, fmt.Sprintf("No client to save %s:%s", prefix, key))
+	}
+	rdata, err := mux.Post(client, fmt.Sprintf("/objects/%s/%s", prefix, key), data)
+	if err != nil {
+		return nil, models.NewError("plugin-mux", 400, fmt.Sprintf("Failed to post %s:%s %v", prefix, key, err))
+	}
+	var m models.RawModel
+	err = json.Unmarshal(rdata, &m)
+	if err != nil {
+		return nil, models.NewError("plugin-mux", 400, fmt.Sprintf("Failed to unmarshal %s:%s %v", prefix, key, err))
+	}
+	return &m, nil
+}
+
+func DeleteObject(prefix, key string) *models.Error {
+	if client == nil {
+		return models.NewError("plugin-mux", 400, fmt.Sprintf("No client to delete %s:%s", prefix, key))
+	}
+	err := mux.Delete(client, fmt.Sprintf("/objects/%s/%s", prefix, key))
+	if err != nil {
+		return models.NewError("plugin-mux", 400, fmt.Sprintf("Failed to delete %s:%s %v", prefix, key, err))
+	}
+	return nil
+}
+
 // InitApp initializes the plugin system and makes the base actions
 // available in cobra CLI.
 func InitApp(use, short, version string, def *models.PluginProvider, pc PluginConfig) {

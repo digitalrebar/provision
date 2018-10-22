@@ -62,7 +62,7 @@ func TestContentCrud(t *testing.T) {
     Version: user
     Writable: false
 - Counts:
-    params: 3
+    params: 5
   Warnings: []
   meta:
     Description: Test Plugin for DRP
