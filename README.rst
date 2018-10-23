@@ -1,7 +1,7 @@
 .. Copyright (c) 2017 RackN Inc.
 .. Licensed under the Apache License, Version 2.0 (the "License");
 .. DigitalRebar Provision documentation under Digital Rebar master license
-.. 
+..
 
 .. _rs_welcome:
 
@@ -17,7 +17,7 @@ DRP is designed to be a complete data center provisioning, content scaffolding a
 Key Features:
 
    * API-driven infrastructure-as-code automation
-   * Multi-boot workflows using composable and reusable building blocks 
+   * Multi-boot workflows using composable and reusable building blocks
    * Event driven actions via Websockets API
    * Extensible Plug-in Model for public, vendor and internal enhancements
    * Supports ALL orchestration tools including Chef, Puppet, Ansible, SaltStack, Bosh, Terraform, etc
@@ -59,7 +59,7 @@ Community Resources from https://rebar.digital
   :alt: Documentation Latest Status
 
 
-* `Mailing List <http://bit.ly/digitalrebarlist>`_ 
+* `Mailing List <http://bit.ly/digitalrebarlist>`_
 * Chat/messaging via the Digital Rebar ``#community`` channel is our preferred communication method.  If you do not have a Slack invite to our channel, you can `Request a Slack Invite <http://www.rackn.com/support/slack/>`_
 * Alternate chat vi Gitter `Live Chat <https://gitter.im/digitalrebar/core?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge>`_  (Gitter.im) and IRC on Freenode #DigitalRebar
 * `Issues and Features <https://github.com/digitalrebar/provision/issues>`_
@@ -76,7 +76,7 @@ Install & Quick Start
 
 Our `Stable Quick Start <http://provision.readthedocs.io/en/stable/doc/quickstart.html>`_ has fast play-with-it steps.  Don't worry, they are very simple and take 10 to 20 minutes.
 
-Want the `Latest Quick Start <http://provision.readthedocs.io/en/tip/doc/quickstart.html>`_? You'll have access to the newest features in tested work for the next release.  This is NOT the bleeding edge! 
+Want the `Latest Quick Start <http://provision.readthedocs.io/en/tip/doc/quickstart.html>`_? You'll have access to the newest features in tested work for the next release.  This is NOT the bleeding edge!
 
 Regular `Install <http://provision.readthedocs.io/en/latest/doc/install.html>`_ for more details on the install steps.  These include production options. (`Previous Version Docs <http://provision.readthedocs.io/en/latest/doc/quickstart.html>`_)
 
@@ -91,7 +91,7 @@ Table of Contents
    :includehidden:
    :numbered:
    :maxdepth: 1
-   
+
    doc/quickstart
    doc/install
    doc/setup/index
@@ -132,16 +132,16 @@ Digital Rebar Provision Documentation is available from multiple authors under t
 
 ::
 
-    Work licensed under a Creative Commons license is governed by applicable copyright law. 
-    This allows Creative Commons licenses to be applied to all work falling under copyright, 
-    including: books, plays, movies, music, articles, photographs, blogs, and websites. 
+    Work licensed under a Creative Commons license is governed by applicable copyright law.
+    This allows Creative Commons licenses to be applied to all work falling under copyright,
+    including: books, plays, movies, music, articles, photographs, blogs, and websites.
     Creative Commons does not recommend the use of Creative Commons licenses for software.
 
     However, application of a Creative Commons license may not modify the rights allowed by
-    fair use or fair dealing or exert restrictions which violate copyright exceptions. 
-    Furthermore, Creative Commons licenses are non-exclusive and non-revocable. 
+    fair use or fair dealing or exert restrictions which violate copyright exceptions.
+    Furthermore, Creative Commons licenses are non-exclusive and non-revocable.
     Any work or copies of the work obtained under a Creative Commons license may continue
     to be used under that license.
 
-    In the case of works protected by multiple Creative Common licenses, 
+    In the case of works protected by multiple Creative Common licenses,
     the user may choose either.
