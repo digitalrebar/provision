@@ -3,6 +3,8 @@ package models
 import (
 	"fmt"
 	"strings"
+
+	"github.com/VictorLowther/jsonpatch2/utils"
 )
 
 type RawModel map[string]interface{}
@@ -118,7 +120,14 @@ func (r *RawModel) MakeError(code int, errType string, obj Model) error {
 
 // MetaHaver Interface
 func (r *RawModel) GetMeta() Meta {
-	return (*r)["Meta"].(Meta)
+	if m, ok := (*r)["Meta"].(Meta); ok {
+		return m
+	}
+	m := Meta{}
+	if utils.Remarshal((*r)["Meta"], &m) != nil {
+		return Meta{}
+	}
+	return m
 }
 
 func (r *RawModel) SetMeta(d Meta) {

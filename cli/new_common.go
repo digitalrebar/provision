@@ -61,6 +61,11 @@ func (o *ops) command(app *cobra.Command) {
 		Use:   o.name,
 		Short: fmt.Sprintf("Access CLI commands relating to %v", o.name),
 	}
+	if o.name == "extended" {
+		res.PersistentFlags().StringVarP(&o.name,
+			"ldata", "l", "",
+			"object type for extended data commands")
+	}
 	if o.example != nil {
 		ref := o.example()
 		if _, ok := ref.(models.BootEnver); ok {

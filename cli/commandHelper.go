@@ -152,7 +152,7 @@ format id as *index*:*value*
 		},
 		RunE: func(c *cobra.Command, args []string) error {
 			data := o.example()
-			req := session.Req().UrlFor(data.Prefix(), args[0])
+			req := session.Req().UrlFor(o.name, args[0])
 			if slim != "" {
 				req = req.Params("slim", slim)
 			}
