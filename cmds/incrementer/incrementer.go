@@ -34,8 +34,22 @@ var (
 			},
 			{Command: "incrstatus"},
 		},
-		StoreObjects: map[string]interface{}{"cows": struct{}{}},
-		Content:      contentYamlString,
+		StoreObjects: map[string]interface{}{
+			"cows": map[string]interface{}{},
+			"typed-cows": map[string]interface{}{
+				"Spotted": map[string]interface{}{
+					"type":       "boolean",
+					"isrequired": true,
+				},
+				"CanMilk": map[string]interface{}{
+					"type": "boolean",
+				},
+				"Location": map[string]interface{}{
+					"type": "string",
+				},
+			},
+		},
+		Content: contentYamlString,
 	}
 )
 
