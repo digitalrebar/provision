@@ -148,7 +148,11 @@ func (r *RawModel) Prefix() string {
 }
 
 func (r *RawModel) Key() string {
-	return (*r)["Id"].(string)
+	s, ok := (*r)["Id"]
+	if !ok {
+		return ""
+	}
+	return s.(string)
 }
 
 func (r *RawModel) KeyName() string {

@@ -34,7 +34,7 @@ var (
 			},
 			{Command: "incrstatus"},
 		},
-		StoreObjects: []string{"cows"},
+		StoreObjects: map[string]interface{}{"cows": struct{}{}},
 		Content:      contentYamlString,
 	}
 )
