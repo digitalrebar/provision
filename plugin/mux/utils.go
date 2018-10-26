@@ -250,19 +250,6 @@ func nf(w http.ResponseWriter, r *http.Request) {
 	JsonResponse(w, res.Code, res)
 }
 
-// Handle Map by request type
-func (m *Mux) HandleMap(path string, mh map[string]http.HandlerFunc) {
-	vh := func(w http.ResponseWriter, r *http.Request) {
-		h, ok := mh[r.Method]
-		if !ok {
-			nf(w, r)
-		} else {
-			h(w, r)
-		}
-	}
-	m.ServeMux.Handle(path, logWrap(m, vh))
-}
-
 // Handle registers a handler at the path on the provided Mux.
 func (m *Mux) Handle(path string, h http.HandlerFunc) {
 	vh := func(w http.ResponseWriter, r *http.Request) {
