@@ -8,18 +8,26 @@ import (
 	"github.com/spf13/cobra"
 )
 
+func (o *ops) getPrefix() string {
+	prefix := "system"
+	if o.singleName == "extended" {
+		prefix = o.name
+	} else if o.example != nil {
+		prefix = o.example().Prefix()
+	}
+	return prefix
+}
+
 func (o *ops) actions() {
 	actionName := o.actionName
 	if actionName == "" {
 		actionName = "action"
 	}
 	actionsName := fmt.Sprintf("%ss", actionName)
-	prefix := "system"
 	idStr := ""
 	argCount := 0
 	evenCount := 1
 	if o.example != nil {
-		prefix = o.example().Prefix()
 		idStr = " [id]"
 		argCount = 1
 		evenCount = 0
@@ -36,6 +44,7 @@ func (o *ops) actions() {
 			return nil
 		},
 		RunE: func(c *cobra.Command, args []string) error {
+			prefix := o.getPrefix()
 			res := []models.AvailableAction{}
 			var req *api.R
 			id := "system"
@@ -67,6 +76,7 @@ func (o *ops) actions() {
 			return nil
 		},
 		RunE: func(c *cobra.Command, args []string) error {
+			prefix := o.getPrefix()
 			action := args[argCount]
 			res := &models.AvailableAction{}
 			var req *api.R
@@ -117,6 +127,7 @@ func (o *ops) actions() {
 		},
 
 		RunE: func(c *cobra.Command, args []string) error {
+			prefix := o.getPrefix()
 			command := args[argCount]
 			var resp interface{}
 			var req *api.R

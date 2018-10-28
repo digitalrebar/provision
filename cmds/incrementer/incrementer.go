@@ -33,24 +33,23 @@ var (
 				RequiredParams: []string{"incrementer/touched"},
 			},
 			{Command: "incrstatus"},
-			{Command: "listCows",
-				Model: "system",
-			},
-			{Command: "showCow",
-				Model:          "system",
-				RequiredParams: []string{"cow/id"},
-			},
-			{Command: "putCow",
-				Model:          "system",
-				RequiredParams: []string{"cow/id", "cow/object"},
-			},
-			{Command: "deleteCow",
-				Model:          "system",
-				RequiredParams: []string{"cow/id"},
+		},
+		StoreObjects: map[string]interface{}{
+			"cows": map[string]interface{}{},
+			"typed-cows": map[string]interface{}{
+				"Spotted": map[string]interface{}{
+					"type":       "boolean",
+					"isrequired": true,
+				},
+				"CanMilk": map[string]interface{}{
+					"type": "boolean",
+				},
+				"Location": map[string]interface{}{
+					"type": "string",
+				},
 			},
 		},
-		StoreObjects: []string{"cows"},
-		Content:      contentYamlString,
+		Content: contentYamlString,
 	}
 )
 
@@ -147,20 +146,6 @@ func (p *Plugin) Action(thelog logger.Logger, ma *models.Action) (interface{}, *
 		return "Success", e
 	case "incrstatus":
 		return "Running", nil
-
-	case "listCows":
-		return plugin.ListObjects("cows")
-	case "showCow":
-		cid, _ := ma.Params["cow/id"].(string)
-		return plugin.GetObject("cows", cid)
-	case "putCow":
-		cid, _ := ma.Params["cow/id"].(string)
-		cowData, _ := ma.Params["cow/object"]
-		return plugin.SaveObject("cows", cid, cowData)
-	case "deleteCow":
-		cid, _ := ma.Params["cow/id"].(string)
-		e := plugin.DeleteObject("cows", cid)
-		return "Success", e
 	}
 
 	return nil, &models.Error{Code: 404,

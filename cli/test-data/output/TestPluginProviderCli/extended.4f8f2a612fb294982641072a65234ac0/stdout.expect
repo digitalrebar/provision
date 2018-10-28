@@ -1,0 +1,38 @@
+{
+  "Available": {
+    "Type": "boolean",
+    "Unique": false
+  },
+  "CanMilk": {
+    "Type": "boolean",
+    "Unique": false
+  },
+  "Id": {
+    "Type": "string",
+    "Unique": false
+  },
+  "Key": {
+    "Type": "string",
+    "Unique": true
+  },
+  "Location": {
+    "Type": "string",
+    "Unique": false
+  },
+  "ReadOnly": {
+    "Type": "boolean",
+    "Unique": false
+  },
+  "Spotted": {
+    "Type": "boolean",
+    "Unique": false
+  },
+  "Type": {
+    "Type": "string",
+    "Unique": false
+  },
+  "Valid": {
+    "Type": "boolean",
+    "Unique": false
+  }
+}

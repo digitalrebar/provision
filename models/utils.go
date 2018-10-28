@@ -97,7 +97,7 @@ func New(kind string) (Slicer, error) {
 		}
 	}
 
-	res := &RawModel{Type: kind}
+	res := &RawModel{"Type": kind}
 	res.Fill()
 	return res, nil
 }

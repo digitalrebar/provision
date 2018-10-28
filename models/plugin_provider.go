@@ -19,7 +19,8 @@ type PluginProvider struct {
 	OptionalParams []string
 
 	// Object prefixes that can be accessed by this plugin.
-	StoreObjects []string
+	// The interface can be empty struct{} or a JSONSchema draft v4
+	StoreObjects map[string]interface{}
 
 	// Documentation of this plugin provider.  This should tell what
 	// the plugin provider is for, any special considerations that

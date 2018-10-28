@@ -1,0 +1,41 @@
+Access CLI commands relating to extended
+
+Usage:
+  drpcli extended [command]
+
+Available Commands:
+  action      Display the action for this extended
+  actions     Display actions for this extended
+  add         Add the  param *key* to *blob*
+  create      Create a new extended with the passed-in JSON or string key
+  destroy     Destroy extended by id
+  exists      See if a  exists by id
+  get         Get a parameter from the extended
+  indexes     Get indexes for 
+  list        List all 
+  meta        Gets metadata for the extended
+  params      Gets/sets all parameters for the extended
+  remove      Remove the param *key* from 
+  runaction   Run action on object from plugin
+  set         Set the  param *key* to *blob*
+  show        Show a single  by id
+  update      Unsafely update extended by id with the passed-in JSON
+  wait        Wait for a extended's field to become a value within a number of seconds
+
+Flags:
+  -h, --help           help for extended
+  -l, --ldata string   object type for extended data commands
+
+Global Flags:
+  -d, --debug               Whether the CLI should run in debug mode
+  -E, --endpoint string     The Digital Rebar Provision API endpoint to talk to (default "https://127.0.0.1:10001")
+  -f, --force               When needed, attempt to force the operation - used on some update/patch calls
+  -F, --format string       The serialzation we expect for output.  Can be "json" or "yaml" (default "json")
+  -P, --password string     password of the Digital Rebar Provision user (default "r0cketsk8ts")
+  -r, --ref string          A reference object for update commands that can be a file name, yaml, or json blob
+  -T, --token string        token of the Digital Rebar Provision access
+  -t, --trace string        The log level API requests should be logged at on the server side
+  -Z, --traceToken string   A token that individual traced requests should report in the server logs
+  -U, --username string     Name of the Digital Rebar Provision user to talk to (default "rocketskates")
+
+Use "drpcli extended [command] --help" for more information about a command.
