@@ -41,6 +41,9 @@ func maybeEncryptParam(param string,
 
 func (o *ops) refOrFill(key string) (data models.Model, err error) {
 	data = o.example()
+	if o.singleName == "extended" {
+		(*(data.(*models.RawModel)))["Type"] = o.name
+	}
 
 	if ref == "" {
 		if err = session.FillModel(data, key); err != nil {
@@ -68,6 +71,9 @@ func (o *ops) command(app *cobra.Command) {
 	}
 	if o.example != nil {
 		ref := o.example()
+		if o.singleName == "extended" {
+			(*(ref.(*models.RawModel)))["Type"] = o.name
+		}
 		if _, ok := ref.(models.BootEnver); ok {
 			o.bootenv()
 		}

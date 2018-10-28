@@ -1,0 +1,17 @@
+{
+  "Available": false,
+  "Description": "",
+  "Documentation": "",
+  "Errors": [],
+  "Id": "fred1",
+  "Meta": {},
+  "Params": {
+    "cow-size": "big",
+    "cow2-size": "big"
+  },
+  "ReadOnly": false,
+  "Tree": "neat",
+  "Type": "cows",
+  "Validated": false,
+  "forceChange": false
+}

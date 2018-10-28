@@ -10,11 +10,10 @@ import (
 
 func (o *ops) getPrefix() string {
 	prefix := "system"
-	if o.example != nil {
-		prefix = o.example().Prefix()
-	}
 	if o.singleName == "extended" {
 		prefix = o.name
+	} else if o.example != nil {
+		prefix = o.example().Prefix()
 	}
 	return prefix
 }

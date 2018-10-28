@@ -1,0 +1,13 @@
+{
+  "Available": false,
+  "Description": "",
+  "Documentation": "",
+  "Errors": [],
+  "Id": "fred1",
+  "Meta": {},
+  "Params": {},
+  "ReadOnly": false,
+  "Type": "cows",
+  "Validated": false,
+  "forceChange": false
+}

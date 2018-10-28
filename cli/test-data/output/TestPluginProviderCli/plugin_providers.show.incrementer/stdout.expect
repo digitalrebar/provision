@@ -35,8 +35,20 @@
   "OptionalParams": [],
   "PluginVersion": 2,
   "RequiredParams": [],
-  "StoreObjects": [
-    "cows"
-  ],
+  "StoreObjects": {
+    "cows": {},
+    "typed-cows": {
+      "CanMilk": {
+        "type": "boolean"
+      },
+      "Location": {
+        "type": "string"
+      },
+      "Spotted": {
+        "isrequired": true,
+        "type": "boolean"
+      }
+    }
+  },
   "Version": "v3.0.2-pre-alpha-NotSet"
 }
