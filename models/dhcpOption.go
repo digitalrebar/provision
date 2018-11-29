@@ -205,6 +205,9 @@ func DHCPOptionParser(code dhcp.OptionCode) (func(string) ([]byte, error), func(
 		// Untyped array of bytes
 	default:
 		return func(s string) ([]byte, error) {
+				if strings.HasPrefix(s, "string:") {
+					return []byte(strings.TrimPrefix(s, "string:")), nil
+				}
 				res := []byte{}
 				for _, b := range strings.Split(s, ",") {
 					ival, err := strconv.Atoi(b)
