@@ -6,11 +6,10 @@
 
 .. _rs_content_packages:
 
+Content Packages & Plugins
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Content Packages
-~~~~~~~~~~~~~~~~
-
-Digital Rebar Provision provides many content packages.
+Digital Rebar Provision provides many content packages and plugins.  By design, these provide critical functionality for the system and embed documentation into the content.
 
 
 .. toctree::
