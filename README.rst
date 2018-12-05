@@ -80,6 +80,11 @@ Want the `Latest Quick Start <http://provision.readthedocs.io/en/tip/doc/quickst
 
 Regular `Install <http://provision.readthedocs.io/en/latest/doc/install.html>`_ for more details on the install steps.  These include production options. (`Previous Version Docs <http://provision.readthedocs.io/en/latest/doc/quickstart.html>`_)
 
+Components & Extensions
+-----------------------
+
+Digital Rebar Provision is composable by design.  Much of our advanced funtionality is exposed in :ref:`rs_content_packages` that are added into the system as content and plugins which have documentation embedded in the extension.
+
 .. _rs_toc:
 
 Table of Contents
