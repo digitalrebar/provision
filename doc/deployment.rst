@@ -42,10 +42,31 @@ With DHCP disabled, the admin can provide a DHCP server for distributing address
 the following:
 
 * Set NextServer to an IP that routes to Digital Rebar Provision
-* Set Option 67 (bootfile) to *lpxelinux.0* for legacy bios boots.  Other options are available for other.  See: :ref:`rs_model_subnet`
-* Set Option 15 (dns domain) - This is needed for discovery boots to construct a meaningful FQDN for the node.
-* Set Option 6 (dns server) - This is optional, but often useful in conjunction with Option 15.
 * Set Option 3 (gateway) - This is optional, but may be required depending on the network routing.
+* Set Option 6 (dns server) - This is optional, but often useful in conjunction with Option 15.
+* Set Option 15 (dns domain) - This is needed for discovery boots to construct a meaningful FQDN for the node.
+* Set Option 67 (bootfile) - This is required and can be complex, see below.
+
+Setting a bootfile is required.  If you have only one architecture and boot mode, this is simply the name
+of the bootloader.  For example, if you are only booting legacy bios x86 systems, then you can set *lpxelinux.0*
+and be done.  If you have to support both UEFI and Legacy or multiple architecture types or iPXE as well, you will
+need a more complex configuration.
+
+For example, this snippet works for most systems when using the ISC DHCP Server.  It will set the bootfile
+for legacy, UEFI, or iPXE booting clients and set the next server parameter to *192.168.100.3*.  Place this
+snippet inside a subnet or host definition.
+
+::
+    if exists user-class and option user-class = "iPXE" {
+      filename "default.ipxe";
+    } else if option arch = 00:07 {
+      filename "ipxe.efi";
+    } else if option arch = 00:09 {
+      filename "ipxe.efi";
+    } else {
+      filename "ipxe.ipxe";
+    }
+    next-server 192.168.100.3;
 
 
 Provisioner Disabled
