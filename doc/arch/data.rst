@@ -714,7 +714,7 @@ Type      #     Description
 IP        3     Default Gateway
 IP        6     DNS Server
 IP        15    Domain Name
-String    67    Next Boot File - e.g. lpxelinux.0
+String    67    Next Boot File - e.g. ipxe.pxe
 ========  ====  =================================
 
 golang template expansion also works in these fields.  This can be
@@ -723,13 +723,16 @@ used to make custom request-based reply options.
 For example, this value in the Next Boot File option (67) will return
 a file based upon what type of machine is booting.  If the machine
 supports, iPXE then an iPXE boot image is sent, if the system is
-marked for legacy bios, then lpxelinux.0 is returned, otherwise return
-a 64-bit UEFI network boot loader:
+marked for legacy bios, then ipxe.pxe is returned, otherwise return
+a 64-bit UEFI iPXE boot loader:
 
   ::
 
-    {{if (eq (index . 77) "iPXE") }}default.ipxe{{else if (eq (index . 93) "0")}}lpxelinux.0{{else}}bootx64.efi{{end}}
+    {{if (eq (index . 77) "iPXE") }}default.ipxe{{else if (eq (index . 93) "0")}}ipxe.pxe{{else}}ipxe.efi{{end}}
 
+
+NOTE: Option 67 is optional.  When using DRP as the DHCP server,
+it will generate a bootfile like the above template expansion.
 
 The data element for the template expansion as represented by the '.'
 above is a map of strings indexed by an integer.  The integer is the

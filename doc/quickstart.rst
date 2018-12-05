@@ -162,15 +162,17 @@ supports "magic" DHCP Boot Options for `next-server` and `bootfile`
 (option code 67).  This means that these options should work "magically"
 for you without needing to be set.
 
-_HOWEVER_ - VirtualBox has a broken iPXE implementation.
+_HOWEVER_ - VirtualBox has a broken iPXE implementation, but DRP now ships with an iPXE client that will
+work with ViritualBox.  The latest version of DRP will boot VirtualBox systems correctly.
 
 If you are creating a subnet for an older version (before v3.7.0) of Digital Rebar
 Provision, you must set the `next-server` to your DRP Endpoint IP Address,
 and set the Option 67 value to ``lpxelinux.0`` for Legacy BIOS mode
 Machines.
 
-If you are *using VirtualBox*, you must set the `next-server` value to the DRP
+If you are *using VirtualBox* and DRP version before v3.10.0, you must set the `next-server` value to the DRP
 Endpoint IP address _and_ the DHCP Option 67 value to ``lpxelinux.0``
+
 
 .. note:: The UX will create a Subnet based on an interface of the DRP Endpoint with sane defaults - it is easier to create a subnet via the UX.
 

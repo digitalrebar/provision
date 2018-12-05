@@ -424,7 +424,7 @@ In the above exmaple, we are assuming our DHCP Reservation is for a Reservation 
 
 UEFI Boot Support - Option 67
 -----------------------------
-Starting with v3.7.1 and newer, a DHCP Subnet specification will try to automatically determine the correct values for the ``next-server`` and *DHCP Option 67* values.  In most cases, you shouldn't need to change this.  Older versions of DRP may need the ``next-boot`` and/or the *DHCP Option 67* values set to work correctly.  This is especially true of Virtualbox environments prior to v3.7.1.  You will need to force the *DHCP Option 67* to ``lpxelinux.0``.
+Starting with v3.7.1 and newer, a DHCP Subnet specification will try to automatically determine the correct values for the ``next-server`` and *DHCP Option 67* values.  In most cases, you shouldn't need to change this or set these fields.  Older versions of DRP may need the ``next-boot`` and/or the *DHCP Option 67* values set to work correctly.  This is especially true of Virtualbox environments prior to v3.7.1.  You will need to force the *DHCP Option 67* to ``lpxelinux.0``.
 
 The DHCP service in Digital Rebar Provision can support fairly complex boot file service.  You can use advanced logic to ensure you send the right PXE boot file to a client, based on Legacy BIOS boot mode, or UEFI boot mode.  Note that UEFI boot mode can vary dramatically in implementations, and some (sadly; extensive) testing may be necessary to get it to work for your system.  We have several reports of field deployments with various UEFI implementations working with the new v3.7.0 and newer "magic" Option 67 values.
 
@@ -432,7 +432,7 @@ Here is an example of an advanced Option 67 parameter for a DHCP Subnet specific
 
   ::
 
-    {{if (eq (index . 77) "iPXE") }}default.ipxe{{else if (eq (index . 93) "0")}}lpxelinux.0{{else}}bootx64.efi{{end}}
+    {{if (eq (index . 77) "iPXE") }}default.ipxe{{else if (eq (index . 93) "0")}}ipxe.pxe{{else}}ipxe.efi{{end}}
 
 If you run in to issues with UEFI boot support - please do NOT hesitate to contact us on the `Slack Channel <https://www.rackn.com/support/slack>`_ as we may have updated info to help you with UEFI boot support.
 
@@ -442,7 +442,10 @@ An example of adding this to your Subnet specification might look something like
     # assumes your subnet name is "eth1" - change it to match your Subnet name:
     # you may need to delete the existing value if there is one, first, by doing:
     # drpcli subnets set eth1 option 67 to null # The setting to null is not needed with v3.7.1 and beyond.
-    drpcli subnets set eth1 option 67 to '{{if (eq (index . 77) "iPXE") }}default.ipxe{{else if (eq (index . 93) "0")}}lpxelinux.0{{else}}bootx64.efi{{end}}'
+    drpcli subnets set eth1 option 67 to '{{if (eq (index . 77) "iPXE") }}default.ipxe{{else if (eq (index . 93) "0")}}ipxe.pxe{{else}}ipxe.efi{{end}}'
+
+
+.. note:: You should not have to add option 67 unless you are meeting a specific need.  Test without it first!
 
 .. _rs_lpxelinux_no_such_file:
 
