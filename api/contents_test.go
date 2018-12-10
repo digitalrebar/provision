@@ -66,6 +66,7 @@ func TestContentCrud(t *testing.T) {
   Warnings: []
   meta:
     Description: Test Plugin for DRP
+    Documentation: Unspecified
     Meta: {}
     Name: incrementer
     Overwritable: false
