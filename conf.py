@@ -327,6 +327,7 @@ urls=[
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/os-other.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/packet-ipmi.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/pool.rst",
+    "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/agent.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/raid.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/slack.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/sledgehammer-builder.rst",
