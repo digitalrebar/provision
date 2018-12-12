@@ -18,19 +18,20 @@ func (c *Client) InstallRawTemplateFromFile(src string) (*models.Template, error
 }
 
 func (c *Client) InstallRawTemplateFromFileWithId(src, tid string) (*models.Template, error) {
-	tmpl := &models.Template{ID: tid}
-	if fillErr := c.Req().Fill(tmpl); fillErr == nil {
-		return tmpl, nil
-	}
-	err := &models.Error{
-		Model: "templates",
-		Type:  "CLIENT_ERROR",
-		Key:   tid,
-	}
 	buf, readErr := ioutil.ReadFile(src)
 	if readErr != nil {
+		err := &models.Error{
+			Model: "templates",
+			Type:  "CLIENT_ERROR",
+			Key:   tid,
+		}
 		err.Errorf("Unable to import template %s", tid)
 		return nil, err
+	}
+	tmpl := &models.Template{ID: tid}
+	if fillErr := c.Req().Fill(tmpl); fillErr == nil {
+		tmpl.Contents = string(buf)
+		return tmpl, c.PutModel(tmpl)
 	}
 	tmpl.Contents = string(buf)
 	return tmpl, c.CreateModel(tmpl)
