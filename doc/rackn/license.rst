@@ -51,7 +51,7 @@ The first time that you use a license entitlement, you will need to generate a l
 
 1. Select the Organization in the upper left blue drop down.  For example: "Foo Industries"
 
-.. figure::  images/licensing/01-select-org.png
+.. figure::  ../images/licensing/01-select-org.png
    :align: left
    :width: 300 px
    :alt: Select Organization
@@ -59,28 +59,28 @@ The first time that you use a license entitlement, you will need to generate a l
 2. Shift-Reload your browser to insure the Org change was successful
 3. Go to the "Info & Preferences" menu screen
 
-.. figure::  images/licensing/02-info-prefs.png
+.. figure::  ../images/licensing/02-info-prefs.png
    :align: left
    :width: 200 px
    :alt: Info & Preferences Menu Item
 
 4. Verify in the center bottom panel that you see a green check mark and the text *Foo Industries is a Licensed Organization*
 
-.. figure::  images/licensing/03-licensed-org.png
+.. figure::  ../images/licensing/03-licensed-org.png
    :align: left
    :width: 300 px
    :alt: Verify Organization is Licensed
 
 5. Click on the blue *Update License* button - there will be a spinning feedback dialog for 10 to 30 seconds
 
-.. figure::  images/licensing/04-spinning.png
+.. figure::  ../images/licensing/04-spinning.png
    :align: left
    :width: 300 px
    :alt: License Generation Spinner
 
 6. Once completed, you should see the licensed features, contents, and plugin providers
 
-.. figure::  images/licensing/05-generated-license.png
+.. figure::  ../images/licensing/05-generated-license.png
    :align: left
    :width: 300 px
    :alt: Generated Licensed Overview
@@ -97,7 +97,7 @@ Once you have generated a license, you now need to enable each endpoint that wil
 
 1. Go to the "Info & Preferences" menu item and click on the "Update License" button for any DRP Endpoint that requires licensed content
 
-.. figure::  images/licensing/02-info-prefs.png
+.. figure::  ../images/licensing/02-info-prefs.png
    :align: left
    :width: 200 px
    :alt: Info & Preferences Menu Item
@@ -112,14 +112,14 @@ It is necessary to install the *License* Plugin Provider, which works in conjunc
 
 1. Go to the *Plugin Providers* menu item
 
-.. figure::  images/licensing/06-plugin-providers.png
+.. figure::  ../images/licensing/06-plugin-providers.png
    :align: left
    :width: 200 px
    :alt: Plugin Providers Menu Item
 
 2. Locate the *License* plugin in the right side panel (labeled "Organization Plugin Providers")
 
-.. figure::  images/licensing/07-org-license-provider.png
+.. figure::  ../images/licensing/07-org-license-provider.png
    :align: left
    :width: 350 px
    :alt: Organization License Plugin Provider
@@ -127,7 +127,7 @@ It is necessary to install the *License* Plugin Provider, which works in conjunc
 3. Click on the "Transfer" link to install the Plugin Provider on the DRP Endpoint (See the above image for details)
 4. The *License* plugin provider should now be listed in the "Endpoint Plugin Providers" panel in the center of the page
 
-.. figure::  images/licensing/08-enabled-license-provider.png
+.. figure::  ../images/licensing/08-enabled-license-provider.png
    :align: left
    :width: 350 px
    :alt: Endpoint License Plugin Provider
@@ -142,14 +142,14 @@ Once the above steps have been completed, you may now install licensed Contents 
 
 1. Go to the *Plugin Providers* menu item
 
-.. figure::  images/licensing/06-plugin-providers.png
+.. figure::  ../images/licensing/06-plugin-providers.png
    :align: left
    :width: 200 px
    :alt: Plugin Providers Menu Item
 
 2. Select the appropriate plugin from the "Organization Plugin Providers" panel on the right
 
-.. figure::  images/licensing/09-image-deploy-example.png
+.. figure::  ../images/licensing/09-image-deploy-example.png
    :align: left
    :width: 350 px
    :alt: Image Deploy Plugin Provider Example
@@ -157,7 +157,7 @@ Once the above steps have been completed, you may now install licensed Contents 
 3. Click "Transfer" to install the Plugin Provider on the DRP Endpoint (see above image for details)
 4. Verify the *Plugin Provider* was installed successfully be examining the center "Endpoint Plugin Providers" panel
 
-.. figure::  images/licensing/10-installed-plugin-providers.png
+.. figure::  ../images/licensing/10-installed-plugin-providers.png
    :align: left
    :width: 350 px
    :alt: Installed Endpoint Plugin Providers
@@ -173,14 +173,14 @@ Additionally, you can view each individual components entitlements from the over
 
 1. Click on the "Hamburger" menu in the upper left (three horizontal gray bars)
 
-.. figure::  images/licensing/11-hamburger-menu.png
+.. figure::  ../images/licensing/11-hamburger-menu.png
    :align: left
    :width: 300 px
    :alt: Hamburger Menu
 
 2. Select "Licenses"
 
-.. figure::  images/licensing/12-select-licenses.png
+.. figure::  ../images/licensing/12-select-licenses.png
    :align: left
    :width: 200 px
    :alt: Select Licenses
@@ -189,7 +189,7 @@ Additionally, you can view each individual components entitlements from the over
 4. General license terms will be shown first
 5. Each licensed component (feature, content, or plugin provider) will have individual licensing terms and details following the "General" terms
 
-.. figure::  images/licensing/13-license-details.png
+.. figure::  ../images/licensing/13-license-details.png
    :align: left
    :width: 450 px
    :alt: License Details
