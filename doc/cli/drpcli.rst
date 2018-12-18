@@ -39,6 +39,8 @@ SEE ALSO
    relating to content
 -  `drpcli events <drpcli_events.html>`__ - DigitalRebar Provision Event
    Commands
+-  `drpcli extended <drpcli_extended.html>`__ - Access CLI commands
+   relating to extended
 -  `drpcli files <drpcli_files.html>`__ - Access CLI commands relating
    to files
 -  `drpcli gohai <drpcli_gohai.html>`__ - Get basic system information
