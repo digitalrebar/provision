@@ -189,7 +189,7 @@ func (r *RawModel) AuthKey() string {
 }
 
 func (r *RawModel) SliceOf() interface{} {
-	return &[]RawModel{}
+	return &[]*RawModel{}
 }
 
 func (r *RawModel) ToModels(obj interface{}) []Model {

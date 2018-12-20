@@ -17,7 +17,7 @@ while (( "$#" )); do
   shift
 done
 
-go test "${args[@]}" |& tee test.log
+go test -timeout 30m "${args[@]}" |& tee test.log
 
 readarray -t log_lines <test.log
 
