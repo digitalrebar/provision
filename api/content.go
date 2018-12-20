@@ -73,7 +73,7 @@ func (c *Client) BundleContent(src string, dst store.Store, params map[string]st
 	// for each valid content type, load it
 	files, _ := ioutil.ReadDir(src)
 	for _, f := range files {
-		if !f.IsDir() {
+		if !f.IsDir() || (f.IsDir() && strings.HasPrefix(f.Name(), ".")) {
 			continue
 		}
 		prefix := f.Name()
