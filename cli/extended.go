@@ -13,7 +13,7 @@ func registerExtended(app *cobra.Command) {
 	op := &ops{
 		name:       "extended",
 		singleName: "extended",
-		example:    func() models.Model { return &models.RawModel{} },
 	}
+	op.example = func() models.Model { return &models.RawModel{"Type": op.name} }
 	op.command(app)
 }
