@@ -354,6 +354,21 @@ The Runner Task execution system supports many ways to cause a system reboot tha
 
 These options are handled by using script helpers or sending specialized ``exit``codes.  Please see :ref:`rs_workflow_reboot` for comprehensive documentation.
 
+.. _rs_reboot_wo_ipmi:
+
+Rebooting without IPMI plugins (without a Task)
+-----------------------------------------------
+
+The Runner will automatically reboot the system if the BootEnv changes during a Workflow.  You can force this behavior by changing the BootEnv to `local` on the machine manually then starting a Workflow with a different BootEnv like `discover`.  This will cause the runner to reboot the machine.
+
+
+Steps: 
+  #. Clear the Machine Workflow
+  #. Set the Machine BootEnv to `local`
+  #. Update
+  #. Set the Workflow to a workflow with a different BootEnv.
+  #. Update and watch machine reboot
+
 .. _rs_nested_templates:
 
 Nested Templates (or "Sub-templates")
