@@ -354,6 +354,8 @@ The Runner Task execution system supports many ways to cause a system reboot tha
 
 These options are handled by using script helpers or sending specialized ``exit``codes.  Please see :ref:`rs_workflow_reboot` for comprehensive documentation.
 
+.. _rs_reboot_wo_ipmi:
+
 Rebooting without IPMI plugins (without a Task)
 -----------------------------------------------
 
