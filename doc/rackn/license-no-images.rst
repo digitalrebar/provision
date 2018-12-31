@@ -9,10 +9,11 @@
 RackN Licensing Overview
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-This document outlines the RackN commercial licensing information and initial setup steps necessary to access license entitlements.  If you have any questions or concerns, please feel free to contact us on Slack, or email us at support@rackn.com. 
+This document outlines the RackN limited use and commercial licensing information and initial setup steps necessary to access license entitlements.  If you have any questions or concerns, please feel free to contact us on Slack, `RackN web site <https://rackn.com/contact>`_, or email us at support@rackn.com.
 
-Commercial licensing of Digital Rebar Provision is provided to Organizations.  License entitlements are enabled on the Organization and not on an individual users Portal account.  Your RackN sales and solution team will need to setup an Organization with the correct license entitlements for you.
+*Limited Use licensing* of RackN Extensions for Digital Rebar Provision is provided for individual users or non-commercial teams.  These licenses start at 10 machines with 90-day self-service renewal.  They allow limited access to all publically available plugins in the RackN catalog.
 
+*Commercial Use licensing* of RackN Extensions and Support for Digital Rebar Provision is provided to Organizations.  License entitlements are enabled by either total count or named module for an Organization.  The RackN solution team will need to setup an Organization with the correct license entitlements for you.
 
 .. _rackn_licensing_prereqs:
 
@@ -21,11 +22,10 @@ Prerequisites
 
 Here is a list of the necessary prerequisites that will need to be in place prior to you successfully using any licensed component(s):
 
-1. An `Organization` setup in the Portal with correct license entitlements enabled
-2. You must have a Web Portal user account that is registered and functioning (sign up if you do not already have one here: https://portal.rackn.io/#/user/signup)
-3. A functioning DRP Endpoint that is managable via the Web Portal
+#. You must have a Web Portal user account that is registered and functioning (sign up if you do not already have one here: https://portal.rackn.io/#/user/signup)
+#. A functioning DRP Endpoint that is managable via the Web Portal
 
-Insure you are logged in to the Rackn Web Portal (using the upper right "login" button.
+Insure you are logged in to the Rackn Web Portal (using the upper right "login" button).
 
 Log in to the DRP Endpoint - which will be the username/password authentication dialog in the center of the Web Portal if you are not logged in. If you have not changed the default username and password, click the "Defaults" button, then "Login".
 
