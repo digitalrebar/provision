@@ -54,7 +54,7 @@ Each content pack has various supported operating system BootEnv definitions.  T
   #. centos-7.4.1708-install: Centos 7.4.1708 (this may change as new versions are released)
   #. ubuntu-16.04-install: Ubuntu 16.04
   #. debian-8: Debian 8 (Jessie) version
-  #. debian-9: Debian 9 (Sarge) version
+  #. debian-9: Debian 9 (Stretch) version
 
 Additional Operating System versions are available via registered RackN content pack add-ons.  
 
