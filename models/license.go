@@ -12,6 +12,7 @@ type LicenseBundle struct {
 	Grantor           string
 	GrantorEmail      string
 	GenerationVersion string
+	Endpoints         []string `json:",omitempty"`
 
 	Licenses []License
 }
