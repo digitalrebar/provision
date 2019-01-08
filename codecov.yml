@@ -2,4 +2,6 @@ coverage:
   range: 50..75
   round: down
   precision: 2
-
+ignore:
+  - "doc"
+  - "tools"
