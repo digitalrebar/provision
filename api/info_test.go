@@ -134,6 +134,9 @@ func TestInfo(t *testing.T) {
 					"update":       {},
 					"updateSecure": {},
 				},
+				"objects": {
+					"list": {},
+				},
 				"params": {
 					"action":  {},
 					"actions": {},
