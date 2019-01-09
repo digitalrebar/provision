@@ -2,6 +2,7 @@ package cli
 
 import (
 	"testing"
+	"time"
 )
 
 func TestPluginCli(t *testing.T) {
@@ -103,6 +104,7 @@ func TestPluginActionsInTaskList(t *testing.T) {
 Name: incr
 Provider: incrementer
 `).run(t)
+
 	cliTest(false, false, "machines", "create", "-").Stdin(`---
 Name: phred
 Uuid: c9196b77-deef-4c8e-8130-299b3e3d9a10
@@ -112,6 +114,7 @@ Tasks:
 Params:
   incrementer/step: 2
 Runnable: true`).run(t)
+	time.Sleep(3 * time.Second)
 	cliTest(false, false, "machines", "processjobs", "c9196b77-deef-4c8e-8130-299b3e3d9a10", "--oneshot").run(t)
 	cliTest(false, false, "machines", "show", "Name:phred").run(t)
 	cliTest(false, false, "machines", "jobs", "current", "Name:phred").run(t)

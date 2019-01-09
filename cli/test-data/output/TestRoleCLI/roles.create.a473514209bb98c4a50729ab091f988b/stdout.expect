@@ -1,0 +1,18 @@
+{
+  "Available": true,
+  "Claims": [
+    {
+      "action": "*",
+      "scope": "*",
+      "specific": ""
+    }
+  ],
+  "Description": "",
+  "Documentation": "",
+  "Endpoint": "Fred",
+  "Errors": [],
+  "Meta": {},
+  "Name": "validButUseless",
+  "ReadOnly": false,
+  "Validated": true
+}
