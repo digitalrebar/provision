@@ -7,6 +7,7 @@
     "Description": "",
     "Documentation": "",
     "Enabled": false,
+    "Endpoint": "Fred",
     "Errors": [],
     "Meta": {},
     "Name": "john",

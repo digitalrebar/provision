@@ -3,6 +3,7 @@
   "BootEnv": "local",
   "Description": "Awesome sauce",
   "Documentation": "",
+  "Endpoint": "Fred",
   "Errors": [],
   "Meta": {},
   "Name": "john",

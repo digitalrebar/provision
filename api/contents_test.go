@@ -169,6 +169,7 @@ sections:
       Available: false
       Description: Global profile attached automatically to all machines.
       Documentation: ""
+      Endpoint: Fred
       Errors: []
       Meta:
         color: blue
@@ -189,6 +190,7 @@ sections:
     rocketskates:
       Available: false
       Description: ""
+      Endpoint: Fred
       Errors: []
       Meta: {}
       Name: rocketskates
@@ -370,6 +372,7 @@ meta:
 			name: "Make sure we can get the ignoble boot env",
 			expectRes: mustDecode(&models.BootEnv{}, `
 Available: true
+Endpoint: Fred
 Description: The boot environment you should use to have unknown machines boot off
   their local hard drive
 Meta:

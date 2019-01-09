@@ -10,6 +10,7 @@ type User struct {
 	Validation
 	Access
 	Meta
+	Owned
 	// Name is the name of the user
 	//
 	// required: true

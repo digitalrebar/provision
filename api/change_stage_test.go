@@ -19,6 +19,7 @@ func TestChangeStage(t *testing.T) {
 
 	machine1 := mustDecode(&models.Machine{}, `
 Address: 192.168.100.110
+Endpoint: Fred
 BootEnv: local
 Meta:
   feature-flags: ""
@@ -40,6 +41,7 @@ Validated: true
 
 	taskInstall := mustDecode(&models.Task{}, `
 Name: taskInstall
+Endpoint: Fred
 Meta:
   feature-flags: sane-exit-codes
 Templates:
@@ -52,6 +54,7 @@ Templates:
 
 	task1 := mustDecode(&models.Task{}, `
 Name: task1
+Endpoint: Fred
 Meta:
   feature-flags: sane-exit-codes
 Templates:
@@ -64,6 +67,7 @@ Templates:
 
 	taskDone := mustDecode(&models.Task{}, `
 Name: taskDone
+Endpoint: Fred
 Meta:
   feature-flags: sane-exit-codes
 Templates:
@@ -76,78 +80,91 @@ Templates:
 
 	stageGregInstall := mustDecode(&models.Stage{}, `
 Name: greg-install
+Endpoint: Fred
 RunnerWait: true
 Tasks:
 - taskInstall
 `).(*models.Stage)
 	stageFredInstall := mustDecode(&models.Stage{}, `
 Name: fred-install
+Endpoint: Fred
 RunnerWait: true
 Tasks:
 - taskInstall
 `).(*models.Stage)
 	stageRealReboot1 := mustDecode(&models.Stage{}, `
 Name: stageRealReboot1
+Endpoint: Fred
 RunnerWait: true
 Tasks:
 - task1
 `).(*models.Stage)
 	stageRealReboot := mustDecode(&models.Stage{}, `
 Name: stageRealReboot
+Endpoint: Fred
 RunnerWait: true
 Tasks:
 - task1
 `).(*models.Stage)
 	stageStop := mustDecode(&models.Stage{}, `
 Name: stageStop
+Endpoint: Fred
 RunnerWait: true
 Tasks:
 - task1
 `).(*models.Stage)
 	stageReboot := mustDecode(&models.Stage{}, `
 Name: stageReboot
+Endpoint: Fred
 RunnerWait: true
 Tasks:
 - task1
 `).(*models.Stage)
 	stageNoWait := mustDecode(&models.Stage{}, `
 Name: stageNoWait
+Endpoint: Fred
 RunnerWait: true
 Tasks:
 - task1
 `).(*models.Stage)
 	stageWait := mustDecode(&models.Stage{}, `
 Name: stageWait
+Endpoint: Fred
 RunnerWait: true
 Tasks:
 - task1
 `).(*models.Stage)
 	stageNoWait1 := mustDecode(&models.Stage{}, `
 Name: stageNoWait1
+Endpoint: Fred
 RunnerWait: true
 Tasks:
 - task1
 `).(*models.Stage)
 	stageWait1 := mustDecode(&models.Stage{}, `
 Name: stageWait1
+Endpoint: Fred
 RunnerWait: true
 Tasks:
 - task1
 `).(*models.Stage)
 	stageDoneNoWait := mustDecode(&models.Stage{}, `
 Name: stageDoneNoWait
+Endpoint: Fred
 RunnerWait: true
 Tasks:
 - taskDone
 `).(*models.Stage)
 	stageDoneWait := mustDecode(&models.Stage{}, `
 Name: stageDoneWait
+Endpoint: Fred
 RunnerWait: true
 Tasks:
 - taskDone
 `).(*models.Stage)
 	stageDoneReboot := mustDecode(&models.Stage{}, `
 Name: stageDoneReboot
+Endpoint: Fred
 RunnerWait: true
 Reboot: true
 Tasks:

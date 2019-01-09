@@ -3,6 +3,7 @@
   "BootEnv": "fred",
   "Description": "",
   "Documentation": "",
+  "Endpoint": "Fred",
   "Errors": [
     "BootEnv fred does not exist"
   ],

@@ -3,6 +3,7 @@
     "Available": true,
     "Description": "Global profile attached automatically to all machines.",
     "Documentation": "",
+    "Endpoint": "Fred",
     "Errors": [],
     "Meta": {
       "color": "blue",
@@ -18,6 +19,7 @@
     "Available": true,
     "Description": "pack1",
     "Documentation": "",
+    "Endpoint": "Fred",
     "Errors": [],
     "Meta": {},
     "Name": "p1-prof",

@@ -159,8 +159,8 @@ func TestWorkflowSwitch(t *testing.T) {
 }
 
 func TestWorkflowAgent(t *testing.T) {
-	if runtime.GOOS != "linux" || runtime.GOARCH != "amd64" {
-		t.Logf("Agent tests only run on linux amd64")
+	if runtime.GOARCH != "amd64" {
+		t.Logf("Agent tests only run on amd64")
 		return
 	}
 	cliTest(false, false, "tasks", "create", "-").Stdin(`---
@@ -175,7 +175,12 @@ Name: task2
 Templates:
   - Contents: |
       #!/usr/bin/env bash
-      DRPCLI="$GOPATH/src/github.com/digitalrebar/provision/bin/linux/amd64/drpcli"
+      if [[ $(uname -s) == Darwin ]] ; then
+        LOS=darwin
+      else
+        LOS=linux
+      fi
+      DRPCLI="$GOPATH/src/github.com/digitalrebar/provision/bin/$LOS/amd64/drpcli"
       if [[ ! -x $DRPCLI ]]; then
          echo "Missing drpcli.  Please run tools/build.sh before running tests"
          exit 1

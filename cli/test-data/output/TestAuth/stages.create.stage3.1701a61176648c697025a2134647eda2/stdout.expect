@@ -3,6 +3,7 @@
   "BootEnv": "",
   "Description": "",
   "Documentation": "",
+  "Endpoint": "Fred",
   "Errors": [],
   "Meta": {},
   "Name": "stage3",

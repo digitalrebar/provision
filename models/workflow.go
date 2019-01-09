@@ -4,6 +4,7 @@ type Workflow struct {
 	Validation
 	Access
 	Meta
+	Owned
 	Name          string
 	Description   string
 	Documentation string

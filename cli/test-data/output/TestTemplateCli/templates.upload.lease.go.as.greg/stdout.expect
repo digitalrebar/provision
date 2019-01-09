@@ -2,6 +2,7 @@
   "Available": true,
   "Contents": "package cli\n\nimport (\n\t\"github.com/digitalrebar/provision/models\"\n\t\"github.com/spf13/cobra\"\n)\n\nfunc init() {\n\taddRegistrar(registerLease)\n}\n\nfunc registerLease(app *cobra.Command) {\n\top := \u0026ops{\n\t\tname:       \"leases\",\n\t\tsingleName: \"lease\",\n\t\texample:    func() models.Model { return \u0026models.Lease{} },\n\t\tnoCreate:   true,\n\t\tnoUpdate:   true,\n\t}\n\top.command(app)\n}\n",
   "Description": "",
+  "Endpoint": "Fred",
   "Errors": [],
   "ID": "greg",
   "Meta": {},

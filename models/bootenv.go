@@ -175,6 +175,7 @@ type BootEnv struct {
 	Validation
 	Access
 	Meta
+	Owned
 	// The name of the boot environment.  Boot environments that install
 	// an operating system must end in '-install'.
 	//

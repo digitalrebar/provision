@@ -5,6 +5,7 @@ type Tenant struct {
 	Validation
 	Access
 	Meta
+	Owned
 	Name        string
 	Description string
 	// Documentation of this tenant.  This should tell what

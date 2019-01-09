@@ -572,6 +572,12 @@ func (c *Client) Info() (*models.Info, error) {
 	return c.info, c.Req().UrlFor("info").Do(c.info)
 }
 
+// Objects returns a list of objects in the DRP system
+func (c *Client) Objects() ([]string, error) {
+	objects := []string{}
+	return objects, c.Req().UrlFor("objects").Do(&objects)
+}
+
 // Logs returns the currently buffered logs from the dr-provision server
 func (c *Client) Logs() ([]logger.Line, error) {
 	res := []logger.Line{}

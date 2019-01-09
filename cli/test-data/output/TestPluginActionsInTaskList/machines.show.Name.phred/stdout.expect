@@ -3,6 +3,7 @@ RE:
   "BootEnv": "local",
   "CurrentTask": 2,
   "Description": "",
+  "Endpoint": "Fred",
   "Errors": \[\],
   "HardwareAddrs": \[\],
   "Name": "phred",

@@ -3,6 +3,7 @@
     "Available": true,
     "Contents": "John Rules",
     "Description": "",
+    "Endpoint": "Fred",
     "Errors": [],
     "ID": "john",
     "Meta": {},

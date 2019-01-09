@@ -3,6 +3,7 @@
   "BootParams": "Acounted for",
   "Description": "",
   "Documentation": "",
+  "Endpoint": "Fred",
   "Errors": [],
   "Initrds": [
     "fakeinitrd"

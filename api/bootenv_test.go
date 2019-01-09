@@ -22,6 +22,7 @@ Meta:
   title: Digital Rebar Provision
 OS:
   Name: "local"
+Endpoint: Fred
 ReadOnly: true
 Templates:
   - Contents: |
@@ -70,6 +71,7 @@ Meta:
 OS:
   Name: "ignore"
 OnlyUnknown: true
+Endpoint: Fred
 ReadOnly: true
 Templates:
 - Contents: |
@@ -92,6 +94,7 @@ Templates:
 	fred := &models.BootEnv{Name: "fred"}
 	fred.SetValid()
 	fred.SetAvailable()
+	fred.Endpoint = "Fred"
 	testFill(fred)
 
 	phred := models.Clone(fred)
@@ -392,6 +395,7 @@ BootEnv: fredhammer
 	fredhammer := mustDecode(&models.BootEnv{}, `
 Available: true
 BootParams: Acounted for
+Endpoint: Fred
 Errors:
 - Fake error
 Initrds:
@@ -430,6 +434,7 @@ Validated: true
 Available: false
 BootEnv: fredhammer
 Description: ""
+Endpoint: Fred
 Errors:
 - BootEnv fredhammer does not exist
 Meta: {}
@@ -587,6 +592,7 @@ Available: true
 BootParams: Acounted for
 Description: ""
 Documentation: ""
+Endpoint: Fred
 Errors: []
 Initrds:
 - stage1.img
@@ -643,6 +649,7 @@ Templates:
 Available: true
 BootEnv: fredhammer
 Description: ""
+Endpoint: Fred
 Errors: []
 Meta: {}
 Name: fred
@@ -687,6 +694,7 @@ Validated: true`),
 		"Install local3 bootenv (flat install)",
 		mustDecode(&models.BootEnv{}, `
 Available: true
+Endpoint: Fred
 Name: local3
 OS:
   Name: local3
@@ -760,6 +768,7 @@ Validated: true
 		mustDecode(&models.BootEnv{}, `
 Available: true
 Name: local3
+Endpoint: Fred
 OS:
   Name: local3
 Templates:

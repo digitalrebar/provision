@@ -4,6 +4,7 @@
     "BootEnv": "Fred",
     "Description": "",
     "Documentation": "",
+    "Endpoint": "Fred",
     "Errors": [],
     "Meta": {},
     "Name": "james",
@@ -22,6 +23,7 @@
     "BootEnv": "local",
     "Description": "",
     "Documentation": "",
+    "Endpoint": "Fred",
     "Errors": [],
     "Meta": {},
     "Name": "john",
@@ -40,6 +42,7 @@
     "BootEnv": "local",
     "Description": "Stage to boot into the local BootEnv.",
     "Documentation": "",
+    "Endpoint": "Fred",
     "Errors": [],
     "Meta": {
       "color": "green",
@@ -62,6 +65,7 @@
     "BootEnv": "",
     "Description": "Noop / Nothing stage",
     "Documentation": "",
+    "Endpoint": "Fred",
     "Errors": [],
     "Meta": {
       "color": "green",

@@ -3,6 +3,7 @@
   "BootEnv": "Fred",
   "Description": "",
   "Documentation": "",
+  "Endpoint": "Fred",
   "Errors": [],
   "Meta": {},
   "Name": "james",

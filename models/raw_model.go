@@ -18,6 +18,11 @@ func (r *RawModel) IsReadOnly() bool {
 	return (*r)["ReadOnly"].(bool)
 }
 
+// Owner Interface
+func (r *RawModel) GetEndpoint() string {
+	return (*r)["Endpoint"].(string)
+}
+
 // Validator Interface
 func (r *RawModel) SaveValidation() *Validation {
 	return &Validation{
@@ -180,6 +185,9 @@ func (r *RawModel) Fill() {
 	}
 	if (*r)["Description"] == nil {
 		(*r)["Description"] = ""
+	}
+	if (*r)["Endpoint"] == nil {
+		(*r)["Endpoint"] = ""
 	}
 	return
 }

@@ -1,0 +1,21 @@
+[
+  "bootenvs",
+  "cows",
+  "jobs",
+  "leases",
+  "machines",
+  "params",
+  "plugins",
+  "preferences",
+  "profiles",
+  "reservations",
+  "roles",
+  "stages",
+  "subnets",
+  "tasks",
+  "templates",
+  "tenants",
+  "typed-cows",
+  "users",
+  "workflows"
+]

@@ -7,6 +7,7 @@ type Plugin struct {
 	Validation
 	Access
 	Meta
+	Owned
 	// The name of the plugin instance.  THis must be unique across all
 	// plugins.
 	//
