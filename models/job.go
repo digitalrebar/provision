@@ -65,6 +65,7 @@ type Job struct {
 	Validation
 	Access
 	Meta
+	Owned
 	// The UUID of the job.  The primary key.
 	// required: true
 	// swagger:strfmt uuid

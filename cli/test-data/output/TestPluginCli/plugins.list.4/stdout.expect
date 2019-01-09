@@ -3,6 +3,7 @@
     "Available": true,
     "Description": "",
     "Documentation": "",
+    "Endpoint": "Fred",
     "Errors": [],
     "Meta": {},
     "Name": "i-woman",

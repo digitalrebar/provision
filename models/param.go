@@ -11,6 +11,7 @@ type Param struct {
 	Validation
 	Access
 	Meta
+	Owned
 	// Name is the name of the param.  Params must be uniquely named.
 	//
 	// required: true

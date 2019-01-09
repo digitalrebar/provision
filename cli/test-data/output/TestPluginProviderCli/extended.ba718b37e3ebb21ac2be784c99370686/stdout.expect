@@ -2,6 +2,7 @@
   "Available": false,
   "Description": "",
   "Documentation": "",
+  "Endpoint": "Fred",
   "Errors": [],
   "Id": "fred1",
   "Meta": {},

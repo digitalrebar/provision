@@ -3,6 +3,7 @@
     "Available": true,
     "Description": "Global profile attached automatically to all machines.",
     "Documentation": "",
+    "Endpoint": "Fred",
     "Errors": [],
     "Meta": {
       "color": "blue",

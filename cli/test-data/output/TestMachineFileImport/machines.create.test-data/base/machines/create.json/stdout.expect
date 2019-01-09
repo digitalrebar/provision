@@ -6,6 +6,7 @@
   "CurrentJob": "",
   "CurrentTask": -1,
   "Description": "Cow's rule",
+  "Endpoint": "Fred",
   "Errors": [],
   "HardwareAddrs": [],
   "Meta": {
@@ -18,6 +19,7 @@
     "Available": false,
     "Description": "",
     "Documentation": "",
+    "Endpoint": "",
     "Errors": null,
     "Meta": null,
     "Name": "",

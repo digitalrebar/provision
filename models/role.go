@@ -28,6 +28,7 @@ var (
 		"files":      "list, get, post, delete",
 		"interfaces": "list, get",
 		"info":       "get",
+		"objects":    "list",
 		"isos":       "list, get, post, delete",
 	}
 
@@ -246,6 +247,7 @@ type Role struct {
 	Validation
 	Access
 	Meta
+	Owned
 	// Name is the name of the user
 	//
 	// required: true

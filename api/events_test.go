@@ -92,6 +92,7 @@ func TestEventDeadlock(t *testing.T) {
 func TestWaitFor(t *testing.T) {
 	machine1 := mustDecode(&models.Machine{}, `
 Address: 192.168.100.110
+Endpoint: Fred
 BootEnv: local
 Meta:
   feature-flags: change-stage-v2

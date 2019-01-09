@@ -3,6 +3,7 @@
     "Available": true,
     "Description": "",
     "Documentation": "",
+    "Endpoint": "Fred",
     "Errors": [],
     "Meta": {
       "feature-flags": "sane-exit-codes"
@@ -18,6 +19,7 @@
     "Available": true,
     "Description": "",
     "Documentation": "",
+    "Endpoint": "Fred",
     "Errors": [],
     "Meta": {
       "feature-flags": "sane-exit-codes"

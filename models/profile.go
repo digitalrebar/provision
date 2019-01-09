@@ -12,6 +12,7 @@ type Profile struct {
 	Validation
 	Access
 	Meta
+	Owned
 	// The name of the profile.  This must be unique across all
 	// profiles.
 	//

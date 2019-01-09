@@ -2,6 +2,7 @@
   "Available": true,
   "Description": "lpxelinux.0",
   "Documentation": "",
+  "Endpoint": "Fred",
   "Errors": [],
   "Meta": {},
   "Name": "i-woman",

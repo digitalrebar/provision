@@ -3,6 +3,7 @@
     "Available": true,
     "Description": "",
     "Documentation": "",
+    "Endpoint": "Fred",
     "Errors": [],
     "Members": {
       "bootenvs": [],
@@ -41,6 +42,7 @@
     "Available": true,
     "Description": "",
     "Documentation": "",
+    "Endpoint": "Fred",
     "Errors": [],
     "Members": {
       "bootenvs": [],

@@ -12,6 +12,7 @@ type Subnet struct {
 	Validation
 	Access
 	Meta
+	Owned
 	// Name is the name of the subnet.
 	// Subnet names must be unique
 	//

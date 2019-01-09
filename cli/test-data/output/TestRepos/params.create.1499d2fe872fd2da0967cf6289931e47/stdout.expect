@@ -2,6 +2,7 @@
   "Available": true,
   "Description": "Repositories to use to install packages from",
   "Documentation": "",
+  "Endpoint": "Fred",
   "Errors": [],
   "Meta": {},
   "Name": "package-repositories",

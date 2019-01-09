@@ -10,6 +10,7 @@ type Stage struct {
 	Validation
 	Access
 	Meta
+	Owned
 	// The name of the stage.
 	//
 	// required: true

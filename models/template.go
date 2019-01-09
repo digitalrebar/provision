@@ -8,6 +8,7 @@ type Template struct {
 	Validation
 	Access
 	Meta
+	Owned
 	// ID is a unique identifier for this template.  It cannot change once it is set.
 	//
 	// required: true

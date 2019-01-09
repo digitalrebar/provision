@@ -2,6 +2,7 @@
   "Available": true,
   "Description": "Cow's drool",
   "Documentation": "",
+  "Endpoint": "Fred",
   "Errors": [],
   "Meta": {},
   "Name": "jsontest",

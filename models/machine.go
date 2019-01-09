@@ -50,6 +50,7 @@ type Machine struct {
 	Validation
 	Access
 	Meta
+	Owned
 	// The name of the machine.  THis must be unique across all
 	// machines, and by convention it is the FQDN of the machine,
 	// although nothing enforces that.

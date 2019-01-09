@@ -9,6 +9,7 @@
   ],
   "Description": "",
   "Documentation": "",
+  "Endpoint": "Fred",
   "Errors": [],
   "Meta": {},
   "Name": "validButUseless",

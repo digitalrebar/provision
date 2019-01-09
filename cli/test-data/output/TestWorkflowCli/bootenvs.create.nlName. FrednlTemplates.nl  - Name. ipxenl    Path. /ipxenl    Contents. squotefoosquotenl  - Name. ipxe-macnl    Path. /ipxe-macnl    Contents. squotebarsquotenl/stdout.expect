@@ -3,6 +3,7 @@
   "BootParams": "",
   "Description": "",
   "Documentation": "",
+  "Endpoint": "Fred",
   "Errors": [],
   "Initrds": [],
   "Kernel": "",

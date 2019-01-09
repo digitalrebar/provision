@@ -2,6 +2,7 @@
   "Available": false,
   "Description": "",
   "Documentation": "",
+  "Endpoint": "Fred",
   "Errors": [
     "Stage nonexistent-stage does not exist"
   ],

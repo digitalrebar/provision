@@ -12,6 +12,7 @@ type Task struct {
 	Validation
 	Access
 	Meta
+	Owned
 	// Name is the name of this Task.  Task names must be globally unique
 	//
 	// required: true
