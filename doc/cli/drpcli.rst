@@ -25,6 +25,8 @@ Options
       -Z, --traceToken string   A token that individual traced requests should report in the server logs
       -U, --username string     Name of the Digital Rebar Provision user to talk to (default "rocketskates")
 
+.. _rs_cli_filters:
+
 Filters
 -------
 
