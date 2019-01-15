@@ -25,6 +25,18 @@ Options
       -Z, --traceToken string   A token that individual traced requests should report in the server logs
       -U, --username string     Name of the Digital Rebar Provision user to talk to (default "rocketskates")
 
+.. _rs_cli_filters:
+
+Filters
+-------
+
+The CLI supports :ref:`rs_api_filters` on the command line by including `Field=Value` in the command list.  It is possible to have several filters applied in a single line as an AND operation.
+
+Since simple Params are automatically mapped as fields, you can select objects by their .Properties.  If the object has .Params then the keys are also indexed as search keys.  For example `drpcli machines list rack/name=DC01AAA` will return all the machines with the Param rack/name set to DC01AAA.  You can also search into the .Meta field using `Meta.icon=lock`.
+
+.. note:: Machines have a special shortcut `Name:[value]` that allows operators to select machines by name instead of UUID.  For example: `drpcli machines show Name:my.fqdn.com`.  While this uses filters in the background, it is not a general purpose filter.
+
+
 SEE ALSO
 --------
 
