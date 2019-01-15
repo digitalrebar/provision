@@ -36,7 +36,6 @@ Since simple Params are automatically mapped as fields, you can select objects b
 
 .. note:: Machines have a special shortcut `Name:[value]` that allows operators to select machines by name instead of UUID.  For example: `drpcli machines show Name:my.fqdn.com`.  While this uses filters in the background, it is not a general purpose filter.
 
-
 SEE ALSO
 --------
 
@@ -102,3 +101,16 @@ SEE ALSO
    CLI Command Version
 -  `drpcli workflows <drpcli_workflows.html>`__ - Access CLI commands
    relating to workflows
+
+
+.. _rs_bundlize_note:
+
+Note on Contents Bundlize
+-------------------------
+
+The CLI offers the "bundlize" special command to extract data from an endpoint.  It can be used to back data or recover objects that were developed on a live endpoint and should now be moved into a bundle.
+
+The special syntax for bundlize allows operators to name the objects that they want to extract using the following convention `[object type]:[name]` where the type is the plural object type (e.g. `machines`) and the name is the index of the object.
+
+For example: `drpcli contents bundlize example.yaml workflows:discover` will create a file with a single workflow object.
+
