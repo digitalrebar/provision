@@ -6,7 +6,7 @@ Usage:
 Available Commands:
   bundle      Bundle the current directory into [file].  [meta fields] allows for the specification of the meta data.
   bundlize    Bundle the specified object into [file]. [meta fields] allows for the specification of the meta data. [objects] define which objects to record.
-  convert     Expand the content bundle [file] into DRP as read-write objects
+  convert     Expand the content bundle [file or - for stdin] into DRP as read-write objects
   create      Add a new content layer to the system
   destroy     Remove the content layer [id] from the system.
   document    Expand the content bundle [file] into documentation

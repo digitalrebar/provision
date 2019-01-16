@@ -1,4 +1,4 @@
-Error: Must provide a file
+Error: Must provide a file or stdin
 Usage:
   drpcli contents convert [file] [flags]
 
