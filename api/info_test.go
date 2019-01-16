@@ -61,6 +61,8 @@ func TestInfo(t *testing.T) {
 				"sprig",
 				"multiarch",
 				"actions-in-task-list",
+				"endpoint-refs",
+				"endpoint-proxy",
 			},
 			License: models.LicenseBundle{Licenses: []models.License{}},
 			Scopes: map[string]map[string]struct{}{

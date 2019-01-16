@@ -10,7 +10,7 @@ var RSPrePart = "v"
 var RSMajorVersion = "3"
 
 // RSMinorVersion is the second number of SemVer
-var RSMinorVersion = "0"
+var RSMinorVersion = "8"
 
 // RSPatchVersion is the third number of SemVer
 var RSPatchVersion = "2"

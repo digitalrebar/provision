@@ -31,7 +31,9 @@ RE:
       "secure-param-upgrade",
       "sprig",
       "multiarch",
-      "actions-in-task-list"
+      "actions-in-task-list",
+      "endpoint-refs",
+      "endpoint-proxy"
     \],
     "file_port": 10002,
     "id": "Fred",
@@ -239,6 +241,6 @@ RE:
     \],
     "tftp_enabled": true,
     "tftp_port": 10003,
-    "version": "v3.0.2-pre-alpha-NotSet"
+    "version": "v3.8.2-pre-alpha-NotSet"
   \},
 \}

@@ -84,6 +84,8 @@ func (i *Info) Fill() {
 			"sprig",
 			"multiarch",
 			"actions-in-task-list",
+			"endpoint-refs",
+			"endpoint-proxy",
 		}
 	}
 }
