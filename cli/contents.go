@@ -430,27 +430,34 @@ func registerContent(app *cobra.Command) {
 	// Convert - load a yaml content as read=write objects.
 	content.AddCommand(&cobra.Command{
 		Use:   "convert [file]",
-		Short: "Expand the content bundle [file] into DRP as read-write objects",
+		Short: "Expand the content bundle [file or - for stdin] into DRP as read-write objects",
 		Args: func(c *cobra.Command, args []string) error {
 			if len(args) != 1 {
-				return fmt.Errorf("Must provide a file")
+				return fmt.Errorf("Must provide a file or stdin")
 			}
 			return nil
 		},
 		RunE: func(c *cobra.Command, args []string) error {
 			src := args[0]
-			ext := path.Ext(src)
-			switch ext {
-			case ".yaml", ".yml", ".json":
-			default:
-				return fmt.Errorf("Unknown store extension %s", ext)
+			var buf []byte
+			var err error
+			if src == "-" {
+				buf, err = ioutil.ReadAll(os.Stdin)
+			} else {
+				ext := path.Ext(src)
+				switch ext {
+				case ".yaml", ".yml", ".json":
+				default:
+					return fmt.Errorf("Unknown store extension %s", ext)
+				}
+				buf, err = ioutil.ReadFile(src)
 			}
-			buf, err := ioutil.ReadFile(src)
 			if err != nil {
 				return fmt.Errorf("Failed to open store %s: %v", src, err)
 			}
+
 			content := &models.Content{}
-			if err := api.DecodeYaml(buf, content); err != nil {
+			if yerr := api.DecodeYaml(buf, content); yerr != nil {
 				return fmt.Errorf("Failed to unmarshal store content: %v", err)
 			}
 
