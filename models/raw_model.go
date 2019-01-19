@@ -20,7 +20,18 @@ func (r *RawModel) IsReadOnly() bool {
 
 // Owner Interface
 func (r *RawModel) GetEndpoint() string {
-	return (*r)["Endpoint"].(string)
+	sobj, _ := r.GetStringField("Endpoint")
+	return sobj
+}
+
+// Helpers to get fields
+func (r *RawModel) GetStringField(field string) (string, bool) {
+	if val, ok := (*r)[field]; ok {
+		if sval, ok := val.(string); ok {
+			return sval, true
+		}
+	}
+	return "", false
 }
 
 // Validator Interface
