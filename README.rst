@@ -59,7 +59,6 @@ Community Resources from https://rebar.digital
   :alt: Documentation Latest Status
 
 
-* `Mailing List <http://bit.ly/digitalrebarlist>`_
 * Chat/messaging via the Digital Rebar ``#community`` channel is our preferred communication method.  If you do not have a Slack invite to our channel, you can `Request a Slack Invite <http://www.rackn.com/support/slack/>`_
 * Alternate chat vi Gitter `Live Chat <https://gitter.im/digitalrebar/core?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge>`_  (Gitter.im) and IRC on Freenode #DigitalRebar
 * `Issues and Features <https://github.com/digitalrebar/provision/issues>`_
