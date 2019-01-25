@@ -2,7 +2,6 @@ package cli
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/digitalrebar/provision/models"
 	"github.com/spf13/cobra"
@@ -32,7 +31,7 @@ func registerPluginProvider(app *cobra.Command) {
 		RunE: func(c *cobra.Command, args []string) error {
 			name := args[0]
 			filePath := args[2]
-			fi, err := os.Open(filePath)
+			fi, err := urlOrFileAsReadCloser(filePath)
 			if err != nil {
 				return fmt.Errorf("Error opening %s: %v", filePath, err)
 			}
