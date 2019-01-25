@@ -128,20 +128,36 @@ During the install step above, the installer output a message on how to install 
 
     drpcli bootenvs list | jq '.[].Name'
 
-  1. install the *sledgehammer* Boot Environment, used for discovery and provisioning workflow
-  2. install the CentOS Boot Environment <optional>
-  3. install the Ubuntu Boot Environment <optional>
+  #. install the *sledgehammer* Boot Environment, used for discovery and provisioning workflow
+  #. set default preferences for basic discovery booting
+  #. download common utilties for Digital Rebar from the RackN catalog
+  #. cache the CentOS Boot ISO locally <optional>
+  #. cache the Ubuntu Boot ISO locally <optional>
 
 These steps should be performed from the newly installed *dr-provision* endpoint (or via remote *drpcli* binary with the use of the ``--endpoint`` flag):
 
   ::
 
     drpcli bootenvs uploadiso sledgehammer
-    drpcli bootenvs uploadiso ubuntu-16.04-install
+    drpcli prefs set defaultWorkflow discover-base unknownBootEnv discovery
+    drpcli contents upload https://api.rackn.io/catalog/content/task-library
+    drpcli bootenvs uploadiso ubuntu-18.04-install
     drpcli bootenvs uploadiso centos-7-install
 
 The ``uploadiso`` command will fetch the ISO image as specified in the BootEnv JSON spec, download it, and then "explode" it in to the ``drp-data/tftpboot/`` directory for installation use.  You may optionally choose one or both of the CentOS and Ubuntu BootEnvs (or any other Community Content supported BootEnv) to install; depending on which Operating System and Version you wish to test or use.
 
+
+Try the RackN UX
+----------------
+
+At this point, you can switch to the RackN Web UX by pointing your web browser to ``https://<ip_address_of_your_endpoint>:8092/``.
+
+After you accept the endpoint's self-signed certificate, you will be automatically redirected to
+the RackN portal at ``https://portal.rackn.io/`` with your endpoint IP included.
+This will guide you to ``Digital Rebar Endpoint Login`` for your new endpoint's API. Clicking ``defaults`` will populate the login with default credentials.
+
+.. note:: The RackN portal runs as a single-page app *locally* in your browser so all DRP API calls
+remain behind your firewall. RackN *never* has direct access to your DRP endpoint.
 
 .. _rs_qs_subnet:
 
@@ -170,8 +186,8 @@ Provision, you must set the `next-server` to your DRP Endpoint IP Address,
 and set the Option 67 value to ``lpxelinux.0`` for Legacy BIOS mode
 Machines.
 
-If you are *using VirtualBox* and DRP version before v3.10.0, you must set the `next-server` value to the DRP
-Endpoint IP address _and_ the DHCP Option 67 value to ``lpxelinux.0``
+If you are *using VirtualBox* and DRP version before v3.10.0, you must set the `next-server`
+value to the DRP Endpoint IP address _and_ the DHCP Option 67 value to ``lpxelinux.0``
 
 
 .. note:: The UX will create a Subnet based on an interface of the DRP Endpoint with sane defaults - it is easier to create a subnet via the UX.
@@ -229,70 +245,31 @@ environment.
 Create a Workflow
 -----------------
 
+No Action Required!
+
 *Workflows* define a series of *Stages* that a Machine transitions through, driven
 by Digital Rebar Provision.  Not only do the drive basic Operating System 
 installation, but they also allow for advanced application installation and
 configuration if desired.  *Workflows* also allow for some basic power management
 functions for hardware that does not support IPMI-like functions.  
 
-For our QuickStart use case, we'll create two simple *Workflows*:
+For our QuickStart use case, you've automatically created three simple *Workflows*:
 
-  #. Discovery
-  #. Operating System Install
+  #. discover-base (from community content)
+  #. centos-base (from RackN task-library)
+  #. ubuntu-base (from RackN task-library)
 
-1. Create the Discovery Workflow 
-
-  ::
-
-    # you must have installed the 'sledgehammer' ISO (see steps above)
-    drpcli workflows create '{ "Name": "discovery", "Stages": [ "discover", "sledgehammer-wait" ] } '
-
-    # for packet.net environment, insert:     "packet-discover", 
-    # between discover and sledgehammer-wait stages
-    # requires 'packet-ipmi' plugin provider installed and plugin configured
-
-2. Now we will create the Installation workflow.   You can select any OS that is 
-supported in the ``drp-community-content`` package.  Simply change the ``Name``
-and the initial install Stage accordingly - use the following ``jq`` command
-to filter the list of Available BootEnvs for installation:
-
-  ::
-
-    drpcli stages list | jq '.[] | select(.Available==true) | .Name' | grep "\-install"
-
-Using one of the *Available* BootEnvs as listed above, create, the OS install
-Workflow:
-
-  ::
-
-    # example for CentOS 7
-    drpcli workflows create '{ "Name": "centos7", "Stages": [ "centos-7-install", "complete" ] } '
-
-    # example for Ubuntu 18.04
-    drpcli workflows create '{ "Name": "ubuntu18", "Stages": [ "ubuntu-18.04-install", "complete" ] } '
-
-    # example for Debian 8
-    drpcli workflows create '{ "Name": "debian9", "Stages": [ "debian-9-install", "complete" ] } '
-
-    # in all cases for packet.net environemnt, insert:   "packet-ssh-keys",
-    # between the "install" and "complete" stages
-    # requires 'packet-ipmi' plugin provider installed and plugin configured
-
-.. note::
-
-  You should receive a JSON blob back with the results of the command.  It is important you check
-  the *Errors* field for any messages.  For example, if you see:
-
-  ``"Stage debian-9-install is not available"``
-
-  Then the BootEnv `debian-9-install` is not installed or available, and
-  this Workflow will not install an Operating System.  Verify you successfully
-  completed the ``drpcli bootenvs uploadiso ...`` steps outlined above.
+These pre-built basic workflows are imported as read only to get you running quickly.
+You'll need to clone them to customize them as you learn Digital Rebar.
 
 .. _rs_qs_defaults:
 
 Set The Defaults 
 ----------------
+
+No Action Required!
+
+For our QuickStart use case, you've already configured preferences to use base discovery.
 
 One of the basic safety mechanisms for newly installed DRP Endpoints, is to
 prevent accidental Installation of a Machine, if it should PXE boot against 
@@ -300,19 +277,13 @@ a DRP Endpoint ... **before** you are ready for that to happen!!  So we must
 first set the default actions for a few system wide preferences.  One of those
 defaults will point to our Discovery Workflow (see :ref:`rs_qs_workflow`).
 
+You can review the preferences using ``drpcli prefs get``.
+
 Any Machine that boots will by default be placed in to the Discovery Workflow,
 which will NOT install an Operating System, but will enroll the machine for
 management by Digital Rebar Provision
 
-Define the default Workflow, Default Stage, Default BootEnv, and the Unknown BootEnv:
-
-  ::
-
-    # make sure you use the 'Name' specified in the Discovery Workflow,
-    # if you changed it from the default we specified
-    drpcli prefs set defaultWorkflow discovery unknownBootEnv discovery defaultBootEnv sledgehammer defaultStage discover
-
-Now any "unknown" or new Machines that boot against the DRP Endpoint will
+Once set, any "unknown" or new Machines that boot against the DRP Endpoint will
 be *discovered* and sit idly by waiting (`sledgehammer-wait`) for your 
 next commands (eg. install an operating system).
 
