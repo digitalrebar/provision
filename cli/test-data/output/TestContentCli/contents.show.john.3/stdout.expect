@@ -1,7 +1,9 @@
 {
   "meta": {
+    "Color": "",
     "Description": "Fred Rules",
     "Documentation": "",
+    "Icon": "",
     "Name": "john",
     "Overwritable": false,
     "RequiredFeatures": "",

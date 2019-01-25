@@ -6,8 +6,10 @@
     "Profile p1-prof (at 0) does not exist"
   ],
   "meta": {
+    "Color": "",
     "Description": "",
     "Documentation": "",
+    "Icon": "",
     "Name": "Pack1",
     "Overwritable": false,
     "RequiredFeatures": "",

@@ -4,8 +4,10 @@
   },
   "Warnings": [],
   "meta": {
+    "Color": "",
     "Description": "Unspecified",
     "Documentation": "Unspecified",
+    "Icon": "",
     "Name": "greg",
     "Overwritable": false,
     "RequiredFeatures": "",

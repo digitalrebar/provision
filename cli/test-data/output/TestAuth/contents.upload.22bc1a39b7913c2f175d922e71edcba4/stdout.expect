@@ -4,8 +4,10 @@
   },
   "Warnings": [],
   "meta": {
+    "Color": "",
     "Description": "License Data for RackN",
     "Documentation": "",
+    "Icon": "",
     "Name": "rackn-license",
     "Overwritable": false,
     "RequiredFeatures": "",

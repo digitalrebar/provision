@@ -13,6 +13,8 @@ type ContentMetaData struct {
 	// Optional fields
 	Documentation    string
 	RequiredFeatures string
+	Color            string
+	Icon             string
 
 	// Informational Fields
 	Writable     bool
@@ -59,6 +61,8 @@ func (c *Content) ToStore(dest store.Store) error {
 			"Type":             c.Meta.Type,
 			"Documentation":    c.Meta.Documentation,
 			"RequiredFeatures": c.Meta.RequiredFeatures,
+			"Color":            c.Meta.Color,
+			"Icon":             c.Meta.Icon,
 		}
 		if err := dmeta.SetMetaData(meta); err != nil {
 			return err
@@ -97,6 +101,10 @@ func (c *Content) FromStore(src store.Store) error {
 				c.Meta.Documentation = v
 			case "RequiredFeatures":
 				c.Meta.RequiredFeatures = v
+			case "Color":
+				c.Meta.Color = v
+			case "Icon":
+				c.Meta.Icon = v
 			}
 		}
 	}
@@ -185,6 +193,10 @@ func (c *ContentSummary) FromStore(src store.Store) {
 				c.Meta.Documentation = v
 			case "RequiredFeatures":
 				c.Meta.RequiredFeatures = v
+			case "Color":
+				c.Meta.Color = v
+			case "Icon":
+				c.Meta.Icon = v
 			}
 		}
 	}

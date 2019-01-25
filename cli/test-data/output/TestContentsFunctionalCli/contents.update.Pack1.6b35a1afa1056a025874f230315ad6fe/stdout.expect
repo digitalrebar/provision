@@ -4,8 +4,10 @@
   },
   "Warnings": [],
   "meta": {
+    "Color": "",
     "Description": "",
     "Documentation": "",
+    "Icon": "",
     "Name": "Pack1",
     "Overwritable": false,
     "RequiredFeatures": "",
