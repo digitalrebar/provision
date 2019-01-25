@@ -27,7 +27,7 @@ When you look at a task list, you might see something like this example task lis
 
 That workflow is: `discover`->`ipmi-configure`->`virtualbox-discover`->`sledgehammer-wait` for testing some stuff in ipmi.
 
-When DRP is told to set a workflow on a machine, it decomposes the workflow into tasks. There are some special tasks ``stage:xxxx`` and ``bootenv:yyyy`` that represent stage changes in the workflow or bootenv changes in the workflow as indicated by a stage that has a different workflow from the previous one.
+When DRP is told to set a workflow on a machine, it decomposes the workflow into tasks. There are some special tasks ``stage:xxxx`` and ``bootenv:yyyy`` that represent stage changes in the workflow or bootenv changes in the workflow as indicated by a stage that has a different bootenv from the previous one.
 
 In this scenario, the machine boots into sledgehammer then the runner starts and asks DRP for its tasks.  We’ve already set the machine’s workflow to discover.  This built that task list and set the stage and bootenv to the values specified by the first stage in the workflow. (discover and sledgehammer respectively).
 
@@ -56,7 +56,7 @@ The task list looks like this:
     8: bootenv:local
     9: stage:complete
 
-This workflow will wipe the disks of a system, then install centos 7,  install a runner into the image, finish the install, reboot, and the get marked complete by the runner in newly booted os.  In this case, 
+This workflow will wipe the disks of a system, then install centos 7,  install a runner into the image, finish the install, reboot, and then get marked complete by the runner in newly booted os.  In this case, 
 
   #. the first stage sets the bootenv to sledgehammer (if we are there, it is fine nothing happens).  If drpcli sees this as a change, it will attempt to kexec or reboot the node into that bootenv.
   # In our case of a discovered node, the system is sitting in sledgehammer so nothing happens.  The runner and DRP move through task list cleaning the disks until the bootenv change to centos-7-install.
@@ -66,7 +66,7 @@ This workflow will wipe the disks of a system, then install centos 7,  install a
   # This continues until the ``bootenv:local``
   # drpcli notices the bootenv change and prepares to reboot/kexec the system, but in this case does NOT.
 
-The runner has a historical anomaly for this case.  If the bootenv’s name ends in ``-install``, the runner exits instead of rebooting/kexecing.  This is to allow the kickstart / preseed based OSes “finish” their processing and reboot or kexec themselves.
+The runner has a historical anomaly for this case.  If the bootenv’s name ends in ``-install``, the runner exits instead of rebooting/kexecing.  This allows the kickstart / preseed based OSes to “finish” their processing and reboot or kexec themselves.
 
 Once the system boots from the local disk, the runner starts and processes the last task which has DRP set the stage to `complete`.  The runner goes idle at that point. (edited) 
 
