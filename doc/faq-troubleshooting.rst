@@ -272,31 +272,31 @@ Of course, you can apply a Param to a Profile, and apply that Profile to a group
 
 .. _rs_download_rackn_content:
 
-Download RackN Content via Command Line
----------------------------------------
+Download Content and Plugins via Command Line
+---------------------------------------------
 
-If you need to download RackN content requiring authentication, you can do this via the command line by adding Auth Token to the download URL.  Your Auth Token is your RackN UserID (UUID) found after logging in to the `RackN Portal User Management panel <https://portal.rackn.io/#/user/>`_.
+RackN maintains a catalog of open and proprietary Digital Rebar extensions at ``https://api.rackn.io/catalog``.  In both examples, providing ``?version=[version]`` on the query path will specify a version.  No version gives ``stable``.
 
-Here is an example download using our Auth Token, and using the Catalog to locate the correct download URL based on our DRP Endpoint OS and Architecture:
+Content downloads directly from the Catalog as JSON and can be imported directly using the DRP CLI.
   ::
+      drpcli contents upload https://api.rackn.io/catalog/content/task-library?version=tip
 
-      # Set our RACKN_AUTH token to our UUID
-      export RACKN_AUTH="?username=<rackn_username_uuid>"
+Plugin downloads require two steps.  First, use the Catalog to locate the correct download URL based on our DRP Endpoint OS and Architecture. Second, request the plugin binary from the given URL.
+  ::
 
       # set our DRP OS and ARCH type
       export DRP_ARCH="amd64"
       export DRP_OS="linux"
 
       # set our catalog location
-      PACKET_URL="https://qww9e4paf1.execute-api.us-west-2.amazonaws.com/main/catalog/plugins/packet-ipmi${RACKN_AUTH}"
+      URL="https://api.rackn.io/catalog/plugins/ipmi"
 
       # obtain our parts for the final plugin download
-      PART=`curl -sfSL $PACKET_URL | jq -r ".$DRP_ARCH.$DRP_OS"`
-      BASE=`curl -sfSL $PACKET_URL | jq -r '.base'`
+      PART=`curl -sfSL $URL | jq -r ".$DRP_ARCH.$DRP_OS"`
+      BASE=`curl -sfSL $URL | jq -r '.base'`
 
       # download the plugin - AWS cares about extra slashes ... blech
-      curl -s ${BASE}${PART}${RACKN_AUTH} -o drp-plugin-packet-ipmi
-
+      curl -s ${BASE}${PART} -o drp-plugin-ipmi
 
 .. _rs_update_content_command_line:
 

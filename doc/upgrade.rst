@@ -316,8 +316,7 @@ Please read the steps through carefully, and make note of the current contents/p
 
       # go to RackN UX - log in, go to Hamburger menu (upper left, 3 horizontal lines)
       # go to Organization - User Profile - copy your UUID for Unique User Identity
-      export RACKN_AUTH="?username=<UUID_Unique_User_Identity>"
-      export CATALOG="https://qww9e4paf1.execute-api.us-west-2.amazonaws.com/main/catalog"
+      export CATALOG="https://api.rackn.io/catalog"
 
       # get raw output of just the content packs
       for CONTENT in `drpcli contents list | jq -r '.[].meta.Name' | egrep -v "BackingStore|BasicStore"`
@@ -330,7 +329,7 @@ Please read the steps through carefully, and make note of the current contents/p
       for CONTENT in drp-community-content task-library drp-community-contrib
       do
         echo "install content:  $CONTENT"
-        curl -s $CATALOG/content/${CONTENT}${RACKN_AUTH} -o $CONTENT.json
+        curl -s $CATALOG/content/${CONTENT} -o $CONTENT.json
         drpcli contents create -< $CONTENT.json
       done
 
@@ -339,7 +338,7 @@ Please read the steps through carefully, and make note of the current contents/p
       for PLUGIN in plug1 plug2 plug3
       do
         echo "install plugin:  $PLUGIN"
-        curl -s $CATALOG/plugin/${PLUGIN}${RACKN_AUTH} -o $PLUGIN.json
+        curl -s $CATALOG/plugin/${PLUGIN} -o $PLUGIN.json
         drpcli contents create -< $PLUGIN.json
       done
 
@@ -347,7 +346,7 @@ Please read the steps through carefully, and make note of the current contents/p
       # adjust these as appropriate
       drpcli prefs set defaultStage discover defaultBootEnv sledgehammer unknownBootEnv discovery
 
-    Again - make sure you modify things appropriately in the above scriptlet. YOU MUST MODIFY THE *RACK_AUTH* variable appropriately for the download authentication to work correctly.
+    Again - make sure you modify things appropriately in the above scriptlet.
 
 v3.2.0 to v3.3.0
 ----------------
