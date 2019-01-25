@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -37,6 +38,30 @@ func bufOrFileDecode(ref string, data interface{}) (err error) {
 		}
 	}
 	return
+}
+
+func urlOrFileAsReadCloser(src string) (io.ReadCloser, error) {
+	if s, err := os.Lstat(src); err == nil && s.Mode().IsRegular() {
+		fi, err := os.Open(src)
+		if err != nil {
+			return nil, fmt.Errorf("Error opening %s: %v", src, err)
+		}
+		return fi, nil
+	}
+	if u, err := url.Parse(src); err == nil && (u.Scheme == "http" || u.Scheme == "https") {
+		tr := &http.Transport{
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		}
+		client := &http.Client{Transport: tr}
+		if res, err := client.Get(src); err != nil {
+			return nil, err
+		} else {
+			return res.Body, nil
+		}
+	} else if err == nil && u.Scheme == "file" {
+		return nil, fmt.Errorf("file:// scheme not supported")
+	}
+	return nil, fmt.Errorf("Must specify a file or url")
 }
 
 func bufOrFile(src string) ([]byte, error) {
