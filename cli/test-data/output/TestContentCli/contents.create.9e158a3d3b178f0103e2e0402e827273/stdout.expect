@@ -4,8 +4,10 @@
   },
   "Warnings": [],
   "meta": {
+    "Color": "",
     "Description": "",
     "Documentation": "",
+    "Icon": "",
     "Name": "withProfile",
     "Overwritable": false,
     "RequiredFeatures": "",

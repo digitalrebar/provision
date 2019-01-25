@@ -2,8 +2,10 @@
   "Counts": {},
   "Warnings": [],
   "meta": {
+    "Color": "",
     "Description": "",
     "Documentation": "",
+    "Icon": "",
     "Name": "john",
     "Overwritable": false,
     "RequiredFeatures": "",
