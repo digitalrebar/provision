@@ -527,6 +527,30 @@ To workaround this problem, you need to supply a DNS and gateway for your subnet
 1. Internal to Digital Rebar: Define Options 3 (Gateway) and 6 (DNS) for your machines' Subnet.
 2. External to Digital Rebar: Adding ``default_route=true`` to the boot parameters and include a DNS server on the local subnet in DHCP.
 
+.. _rs_wget_timeout:
+
+Network Unreachable from Wget / Second Stage Timeout
+----------------------------------------------------
+
+Throwing a ‘network unreachable’ error from `wget` when trying to fetch second stage initramfs; however, by the time you get dropped into a root console, eth0 has an IP address and can connect to the server fine.  May also see a baremetal PXE boot initial PXE boot works but then it's getting kicked to a shell before it can download root.squashfs.
+
+Troubleshooting: You can manually grab the file with ``wget`` after it bails, so communications are working fine. It just appears it's not waiting long enough for DHCP and then fails to get the file before it gets an IP.
+
+Note: You can set these changes the global profile so it will apply everywhere.  It shouldn’t hurt functioning systems (they will escape the loop early) and might fix this system.
+
+Solution 1: Do you run your switches with Portfast? or spanning tree delays?
+
+You add these to your kernel-console parameter to alter the retry and wait times.
+  * `provisioner.portdelay=<Number of seconds>` - seconds to wait before bring up link
+  * `provisioner.postportdelay=<Number of seconds>` - seconds to wait after bringing up link before dhcp
+  * `provisioner.wgetretrycount=<Number of retries before failure>` - wget of squashfs occurs once a second for 10 times by default.
+
+Solution 2: Is something is really “slower” than sledgehammer expects?
+
+You could try setting `provisioner.wgetretrycount=60`.  `kernel-console` is a parameter that lets you changing the kernel parameters passed to bootenvs.
+Sometimes it is used to tweak the kernel console that the kernel is using, but it can be used for other values as well.
+
+
 .. _rs_kubernetes_dashboard:
 
 Kubernetes Dashboard
