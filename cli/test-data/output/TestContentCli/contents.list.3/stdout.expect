@@ -21,6 +21,7 @@
     },
     "Warnings": [],
     "meta": {
+      "Author": "",
       "Color": "",
       "Description": "Writable backing store",
       "Documentation": "",
@@ -40,6 +41,7 @@
     },
     "Warnings": [],
     "meta": {
+      "Author": "",
       "Color": "",
       "Description": "Local Override Store",
       "Documentation": "",
@@ -59,6 +61,7 @@
     },
     "Warnings": [],
     "meta": {
+      "Author": "",
       "Color": "",
       "Description": "Initial Default Content",
       "Documentation": "",
@@ -78,6 +81,7 @@
     },
     "Warnings": [],
     "meta": {
+      "Author": "",
       "Color": "",
       "Description": "Test Plugin for DRP",
       "Documentation": "Unspecified",
@@ -100,6 +104,7 @@
     },
     "Warnings": [],
     "meta": {
+      "Author": "",
       "Color": "",
       "Description": "Default objects that must be present",
       "Documentation": "",
