@@ -6,11 +6,17 @@
     "Profile p1-prof (at 0) does not exist"
   ],
   "meta": {
+    "Author": "",
+    "CodeSource": "",
     "Color": "",
+    "Copyright": "",
     "Description": "",
+    "DisplayName": "",
     "Documentation": "",
     "Icon": "",
+    "License": "",
     "Name": "Pack1",
+    "Order": "",
     "Overwritable": false,
     "RequiredFeatures": "",
     "Source": "",

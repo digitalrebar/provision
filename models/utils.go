@@ -2,6 +2,8 @@ package models
 
 import (
 	"bytes"
+	"crypto/rand"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -242,4 +244,15 @@ func Remarshal(src, dest interface{}) error {
 		err = json.Unmarshal(buf, dest)
 	}
 	return err
+}
+
+func RandString(n int) string {
+	b := make([]byte, n)
+	_, err := rand.Read(b)
+	if err != nil {
+		fmt.Printf("Failed to read random\n")
+		return "ARGH!"
+	}
+	base64 := base64.URLEncoding.EncodeToString(b)
+	return base64[:n]
 }

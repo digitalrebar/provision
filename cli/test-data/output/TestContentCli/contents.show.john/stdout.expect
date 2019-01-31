@@ -1,10 +1,16 @@
 {
   "meta": {
+    "Author": "",
+    "CodeSource": "",
     "Color": "",
+    "Copyright": "",
     "Description": "",
+    "DisplayName": "",
     "Documentation": "",
     "Icon": "",
+    "License": "",
     "Name": "john",
+    "Order": "",
     "Overwritable": false,
     "RequiredFeatures": "",
     "Source": "",

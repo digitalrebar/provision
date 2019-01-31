@@ -71,6 +71,17 @@ func (u *User) CheckPassword(pass string) bool {
 	return false
 }
 
+func (u *User) ChangePassword(newPass string) error {
+	ph, err := sc.GenerateFromPassword([]byte(newPass), sc.DefaultParams)
+	if err != nil {
+		return err
+	}
+	u.PasswordHash = ph
+	// When a user changes their password, invalidate any previous cached auth tokens.
+	u.Secret = RandString(16)
+	return nil
+}
+
 func (u *User) Sanitize() Model {
 	res := Clone(u)
 	res.(*User).PasswordHash = []byte{}

@@ -6,15 +6,23 @@ import "github.com/digitalrebar/store"
 type ContentMetaData struct {
 	// required: true
 	Name        string
-	Source      string
-	Description string
 	Version     string
+	Description string
+	Source      string // Was who authored it, but was confusing
 
 	// Optional fields
 	Documentation    string
 	RequiredFeatures string
-	Color            string
-	Icon             string
+
+	// New descriptor fields for catalog
+	Color       string
+	Icon        string
+	Author      string
+	DisplayName string
+	License     string
+	Copyright   string
+	CodeSource  string
+	Order       string
 
 	// Informational Fields
 	Writable     bool
@@ -63,6 +71,7 @@ func (c *Content) ToStore(dest store.Store) error {
 			"RequiredFeatures": c.Meta.RequiredFeatures,
 			"Color":            c.Meta.Color,
 			"Icon":             c.Meta.Icon,
+			"Author":           c.Meta.Author,
 		}
 		if err := dmeta.SetMetaData(meta); err != nil {
 			return err
@@ -105,6 +114,8 @@ func (c *Content) FromStore(src store.Store) error {
 				c.Meta.Color = v
 			case "Icon":
 				c.Meta.Icon = v
+			case "Author":
+				c.Meta.Author = v
 			}
 		}
 	}
@@ -197,6 +208,8 @@ func (c *ContentSummary) FromStore(src store.Store) {
 				c.Meta.Color = v
 			case "Icon":
 				c.Meta.Icon = v
+			case "Author":
+				c.Meta.Author = v
 			}
 		}
 	}
