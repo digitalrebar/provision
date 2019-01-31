@@ -15,6 +15,7 @@ type ContentMetaData struct {
 	RequiredFeatures string
 	Color            string
 	Icon             string
+	Author           string
 
 	// Informational Fields
 	Writable     bool
@@ -63,6 +64,7 @@ func (c *Content) ToStore(dest store.Store) error {
 			"RequiredFeatures": c.Meta.RequiredFeatures,
 			"Color":            c.Meta.Color,
 			"Icon":             c.Meta.Icon,
+			"Author":           c.Meta.Author,
 		}
 		if err := dmeta.SetMetaData(meta); err != nil {
 			return err
@@ -105,6 +107,8 @@ func (c *Content) FromStore(src store.Store) error {
 				c.Meta.Color = v
 			case "Icon":
 				c.Meta.Icon = v
+			case "Author":
+				c.Meta.Author = v
 			}
 		}
 	}
@@ -197,6 +201,8 @@ func (c *ContentSummary) FromStore(src store.Store) {
 				c.Meta.Color = v
 			case "Icon":
 				c.Meta.Icon = v
+			case "Author":
+				c.Meta.Author = v
 			}
 		}
 	}
