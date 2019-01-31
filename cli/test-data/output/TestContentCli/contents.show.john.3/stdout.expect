@@ -1,11 +1,16 @@
 {
   "meta": {
     "Author": "",
+    "CodeSource": "",
     "Color": "",
+    "Copyright": "",
     "Description": "Fred Rules",
+    "DisplayName": "",
     "Documentation": "",
     "Icon": "",
+    "License": "",
     "Name": "john",
+    "Order": "",
     "Overwritable": false,
     "RequiredFeatures": "",
     "Source": "",

@@ -6,16 +6,23 @@ import "github.com/digitalrebar/store"
 type ContentMetaData struct {
 	// required: true
 	Name        string
-	Source      string
-	Description string
 	Version     string
+	Description string
+	Source      string // Was who authored it, but was confusing
 
 	// Optional fields
 	Documentation    string
 	RequiredFeatures string
-	Color            string
-	Icon             string
-	Author           string
+
+	// New descriptor fields for catalog
+	Color       string
+	Icon        string
+	Author      string
+	DisplayName string
+	License     string
+	Copyright   string
+	CodeSource  string
+	Order       string
 
 	// Informational Fields
 	Writable     bool
