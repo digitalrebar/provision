@@ -53,6 +53,8 @@ SEE ALSO
    the user
 -  `drpcli users password <drpcli_users_password.html>`__ - Set the
    password for this id
+-  `drpcli users passwordhash <drpcli_users_passwordhash.html>`__ - Get
+   a password hash for a password
 -  `drpcli users runaction <drpcli_users_runaction.html>`__ - Run action
    on object from plugin
 -  `drpcli users show <drpcli_users_show.html>`__ - Show a single users

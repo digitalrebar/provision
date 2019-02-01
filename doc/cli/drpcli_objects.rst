@@ -1,25 +1,19 @@
-drpcli contents convert
-=======================
+drpcli objects
+==============
 
-Expand the content bundle [file or - for stdin] into DRP as read-write
-objects
+Access CLI commands relating to objects
 
 Synopsis
 --------
 
-Expand the content bundle [file or - for stdin] into DRP as read-write
-objects
-
-::
-
-    drpcli contents convert [file] [flags]
+Access CLI commands relating to objects
 
 Options
 -------
 
 ::
 
-      -h, --help   help for convert
+      -h, --help   help for objects
 
 Options inherited from parent commands
 --------------------------------------
@@ -40,5 +34,7 @@ Options inherited from parent commands
 SEE ALSO
 --------
 
--  `drpcli contents <drpcli_contents.html>`__ - Access CLI commands
-   relating to content
+-  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
+   DigitalRebar Provision API
+-  `drpcli objects list <drpcli_objects_list.html>`__ - List object
+   types in DRP

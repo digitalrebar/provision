@@ -159,6 +159,12 @@ func NewApp() *cobra.Command {
 					sc.PersistentPreRunE = ppr
 				}
 			}
+		} else if c.Use == "users" {
+			for _, sc := range c.Commands() {
+				if !strings.HasPrefix(sc.Use, "passwordhash") {
+					sc.PersistentPreRunE = ppr
+				}
+			}
 		} else {
 			c.PersistentPreRunE = ppr
 		}

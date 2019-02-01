@@ -1,27 +1,9 @@
-Access CLI commands relating to users
-
+Error: drpcli users passwordhash [password] [flags] needs 1 arg
 Usage:
-  drpcli users [command]
-
-Available Commands:
-  action       Display the action for this user
-  actions      Display actions for this user
-  create       Create a new user with the passed-in JSON or string key
-  destroy      Destroy user by id
-  exists       See if a users exists by id
-  indexes      Get indexes for users
-  list         List all users
-  meta         Gets metadata for the user
-  password     Set the password for this id
-  passwordhash Get a password hash for a password
-  runaction    Run action on object from plugin
-  show         Show a single users by id
-  token        Get a login token for this user with optional parameters
-  update       Unsafely update user by id with the passed-in JSON
-  wait         Wait for a user's field to become a value within a number of seconds
+  drpcli users passwordhash [password] [flags]
 
 Flags:
-  -h, --help   help for users
+  -h, --help   help for passwordhash
 
 Global Flags:
   -d, --debug               Whether the CLI should run in debug mode
@@ -35,4 +17,3 @@ Global Flags:
   -Z, --traceToken string   A token that individual traced requests should report in the server logs
   -U, --username string     Name of the Digital Rebar Provision user to talk to (default "rocketskates")
 
-Use "drpcli users [command] --help" for more information about a command.

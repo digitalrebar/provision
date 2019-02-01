@@ -1,25 +1,23 @@
-drpcli contents convert
-=======================
+drpcli objects list
+===================
 
-Expand the content bundle [file or - for stdin] into DRP as read-write
-objects
+List object types in DRP
 
 Synopsis
 --------
 
-Expand the content bundle [file or - for stdin] into DRP as read-write
-objects
+A helper function to return object types in DRP
 
 ::
 
-    drpcli contents convert [file] [flags]
+    drpcli objects list [flags]
 
 Options
 -------
 
 ::
 
-      -h, --help   help for convert
+      -h, --help   help for list
 
 Options inherited from parent commands
 --------------------------------------
@@ -40,5 +38,5 @@ Options inherited from parent commands
 SEE ALSO
 --------
 
--  `drpcli contents <drpcli_contents.html>`__ - Access CLI commands
-   relating to content
+-  `drpcli objects <drpcli_objects.html>`__ - Access CLI commands
+   relating to objects

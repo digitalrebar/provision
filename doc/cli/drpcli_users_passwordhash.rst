@@ -1,25 +1,24 @@
-drpcli contents convert
-=======================
+drpcli users passwordhash
+=========================
 
-Expand the content bundle [file or - for stdin] into DRP as read-write
-objects
+Get a password hash for a password
 
 Synopsis
 --------
 
-Expand the content bundle [file or - for stdin] into DRP as read-write
-objects
+Get a password hash for a password. This can be used in content
+packages.
 
 ::
 
-    drpcli contents convert [file] [flags]
+    drpcli users passwordhash [password] [flags]
 
 Options
 -------
 
 ::
 
-      -h, --help   help for convert
+      -h, --help   help for passwordhash
 
 Options inherited from parent commands
 --------------------------------------
@@ -40,5 +39,5 @@ Options inherited from parent commands
 SEE ALSO
 --------
 
--  `drpcli contents <drpcli_contents.html>`__ - Access CLI commands
-   relating to content
+-  `drpcli users <drpcli_users.html>`__ - Access CLI commands relating
+   to users

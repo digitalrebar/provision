@@ -25,17 +25,6 @@ Options
       -Z, --traceToken string   A token that individual traced requests should report in the server logs
       -U, --username string     Name of the Digital Rebar Provision user to talk to (default "rocketskates")
 
-.. _rs_cli_filters:
-
-Filters
--------
-
-The CLI supports :ref:`rs_api_filters` on the command line by including `Field=Value` in the command list.  It is possible to have several filters applied in a single line as an AND operation.
-
-Since simple Params are automatically mapped as fields, you can select objects by their .Properties.  If the object has .Params then the keys are also indexed as search keys.  For example `drpcli machines list rack/name=DC01AAA` will return all the machines with the Param rack/name set to DC01AAA.  You can also search into the .Meta field using `Meta.icon=lock`.
-
-.. note:: Machines have a special shortcut `Name:[value]` that allows operators to select machines by name instead of UUID.  For example: `drpcli machines show Name:my.fqdn.com`.  While this uses filters in the background, it is not a general purpose filter.
-
 SEE ALSO
 --------
 
@@ -69,6 +58,8 @@ SEE ALSO
 -  `drpcli logs <drpcli_logs.html>`__ - Access commands relating to logs
 -  `drpcli machines <drpcli_machines.html>`__ - Access CLI commands
    relating to machines
+-  `drpcli objects <drpcli_objects.html>`__ - Access CLI commands
+   relating to objects
 -  `drpcli params <drpcli_params.html>`__ - Access CLI commands relating
    to params
 -  `drpcli plugin\_providers <drpcli_plugin_providers.html>`__ - Access
@@ -101,16 +92,3 @@ SEE ALSO
    CLI Command Version
 -  `drpcli workflows <drpcli_workflows.html>`__ - Access CLI commands
    relating to workflows
-
-
-.. _rs_bundlize_note:
-
-Note on Contents Bundlize
--------------------------
-
-The CLI offers the "bundlize" special command to extract data from an endpoint.  It can be used to back data or recover objects that were developed on a live endpoint and should now be moved into a bundle.
-
-The special syntax for bundlize allows operators to name the objects that they want to extract using the following convention `[object type]:[name]` where the type is the plural object type (e.g. `machines`) and the name is the index of the object.
-
-For example: `drpcli contents bundlize example.yaml workflows:discover` will create a file with a single workflow object.
-
