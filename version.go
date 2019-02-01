@@ -10,10 +10,10 @@ var RSPrePart = "v"
 var RSMajorVersion = "3"
 
 // RSMinorVersion is the second number of SemVer
-var RSMinorVersion = "8"
+var RSMinorVersion = "10"
 
 // RSPatchVersion is the third number of SemVer
-var RSPatchVersion = "2"
+var RSPatchVersion = "1000"
 
 // RSExtra is a mostly free form field that must
 // start with a dash, but an be anything else.
