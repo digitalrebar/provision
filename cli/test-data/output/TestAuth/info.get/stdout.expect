@@ -289,5 +289,5 @@ RE:
   \],
   "tftp_enabled": true,
   "tftp_port": 10003,
-  "version": "v3.8.2-pre-alpha-NotSet"
+  "version": "v3.10.1000-pre-alpha-NotSet"
 }
