@@ -164,6 +164,8 @@ What are the default passwords?
 
 When using the community BootEnvs for installation, the password is set to a variant of ``RocketSkates``.  See :ref:`rs_configuring_default` for complete details.
 
+For Sledgehammer logins via the console, user ``root`` and password ``rebar`` can be used _unless_ you've set the Param to allow remote root login (this is strongly recommended)
+
 We *strongly* recommend changing this default or, better, using SSH ``without-password`` options as per :ref:`rs_access_ssh_root_mode` above.
 
 .. _rs_autocomplete:
