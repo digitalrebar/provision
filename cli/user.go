@@ -36,6 +36,25 @@ func registerUser(app *cobra.Command) {
 			return prettyPrint(res)
 		},
 	})
+	op.addCommand(&cobra.Command{
+		Use:   "passwordhash [password]",
+		Short: "Get a password hash for a password",
+		Long:  "Get a password hash for a password.  This can be used in content packages.",
+		Args: func(c *cobra.Command, args []string) error {
+			if len(args) != 1 {
+				return fmt.Errorf("%v needs 1 arg", c.UseLine())
+			}
+			return nil
+		},
+		RunE: func(c *cobra.Command, args []string) error {
+			res := &models.User{}
+			if err := res.ChangePassword(args[0]); err != nil {
+				return generateError(err, "Error: generating password: %v", err)
+			}
+			fmt.Printf("%s\n", string(res.PasswordHash))
+			return nil
+		},
+	})
 	tokenArgs := []string{}
 	op.addCommand(&cobra.Command{
 		Use:   "token [id] [ttl [ttl]] [scope [scope]] [action [action]] [specific [specific]]",

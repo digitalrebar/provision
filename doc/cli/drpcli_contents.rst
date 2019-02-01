@@ -44,7 +44,8 @@ SEE ALSO
    specification of the meta data. [objects] define which objects to
    record.
 -  `drpcli contents convert <drpcli_contents_convert.html>`__ - Expand
-   the content bundle [file] into DRP as read-write objects
+   the content bundle [file or - for stdin] into DRP as read-write
+   objects
 -  `drpcli contents create <drpcli_contents_create.html>`__ - Add a new
    content layer to the system
 -  `drpcli contents destroy <drpcli_contents_destroy.html>`__ - Remove
