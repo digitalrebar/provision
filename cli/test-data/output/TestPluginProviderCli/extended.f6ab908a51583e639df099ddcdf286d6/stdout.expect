@@ -1,5 +1,4 @@
 {
-  "Available": false,
   "Description": "",
   "Documentation": "",
   "Endpoint": "Fred",
@@ -7,8 +6,5 @@
   "Id": "fred1",
   "Meta": {},
   "Params": {},
-  "ReadOnly": false,
-  "Type": "cows",
-  "Validated": false,
-  "forceChange": false
+  "Type": "cows"
 }

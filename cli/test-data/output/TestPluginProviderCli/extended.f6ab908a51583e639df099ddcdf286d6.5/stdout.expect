@@ -1,5 +1,4 @@
 {
-  "Available": false,
   "Description": "",
   "Documentation": "",
   "Endpoint": "Fred",
@@ -9,9 +8,6 @@
   "Params": {
     "cow-size": "big"
   },
-  "ReadOnly": false,
   "Tree": "neat",
-  "Type": "cows",
-  "Validated": false,
-  "forceChange": false
+  "Type": "cows"
 }
