@@ -1,5 +1,4 @@
 {
-  "Available": false,
   "Description": "",
   "Documentation": "",
   "Endpoint": "Fred",
@@ -10,9 +9,6 @@
     "cow-size": "big",
     "cow2-size": "big"
   },
-  "ReadOnly": false,
   "Tree": "neat",
-  "Type": "cows",
-  "Validated": false,
-  "forceChange": false
+  "Type": "cows"
 }

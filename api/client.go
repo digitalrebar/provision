@@ -200,7 +200,7 @@ func (r *R) PatchObj(old, new interface{}) *R {
 func (r *R) PatchTo(old, new models.Model) *R {
 	if old.Prefix() != new.Prefix() || old.Key() != new.Key() {
 		r.err.Model = old.Prefix()
-		r.err.Model = old.Key()
+		r.err.Key = old.Key()
 		r.err.Errorf("Cannot patch from %T to %T, or change keys from %s to %s", old, new, old.Key(), new.Key())
 		return r
 	}

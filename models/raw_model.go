@@ -15,7 +15,11 @@ func (r *RawModel) String() string {
 
 // Access Interface
 func (r *RawModel) IsReadOnly() bool {
-	return (*r)["ReadOnly"].(bool)
+	b, ok := (*r)["ReadOnly"]
+	if !ok {
+		return false
+	}
+	return b.(bool)
 }
 
 // Owner Interface
@@ -34,24 +38,60 @@ func (r *RawModel) GetStringField(field string) (string, bool) {
 	return "", false
 }
 
+func (r *RawModel) getValidated() bool {
+	b, ok := (*r)["Validated"]
+	if !ok {
+		return false
+	}
+	return b.(bool)
+}
+func (r *RawModel) setValidated(v bool) {
+	if !v {
+		delete((*r), "Validated")
+		return
+	}
+	(*r)["Validated"] = true
+}
+func (r *RawModel) getAvailable() bool {
+	b, ok := (*r)["Available"]
+	if !ok {
+		return false
+	}
+	return b.(bool)
+}
+func (r *RawModel) setAvailable(v bool) {
+	if !v {
+		delete((*r), "Available")
+		return
+	}
+	(*r)["Available"] = true
+}
+func (r *RawModel) getErrors() []string {
+	e, ok := (*r)["Errors"]
+	if !ok {
+		return []string{}
+	}
+	return e.([]string)
+}
+
 // Validator Interface
 func (r *RawModel) SaveValidation() *Validation {
 	return &Validation{
-		Validated: (*r)["Validated"].(bool),
-		Available: (*r)["Available"].(bool),
-		Errors:    (*r)["Errors"].([]string),
+		Validated: r.getValidated(),
+		Available: r.getAvailable(),
+		Errors:    r.getErrors(),
 	}
 }
 
 func (r *RawModel) RestoreValidation(or *RawModel) {
-	(*r)["Validated"] = (*or)["Validated"]
-	(*r)["Available"] = (*or)["Available"]
-	(*r)["Errors"] = (*or)["Errors"]
+	r.setValidated(or.getValidated())
+	r.setAvailable(or.getAvailable())
+	(*r)["Errors"] = or.getErrors()
 }
 
 func (r *RawModel) ClearValidation() {
-	(*r)["Validated"] = false
-	(*r)["Available"] = false
+	r.setValidated(false)
+	r.setAvailable(false)
 	(*r)["Errors"] = []string{}
 }
 
@@ -64,65 +104,62 @@ func (r *RawModel) ChangeForced() bool {
 }
 
 func (r *RawModel) Errorf(fmtStr string, args ...interface{}) {
-	(*r)["Available"] = false
-	if (*r)["Errors"] == nil {
-		(*r)["Errors"] = []string{}
-	}
-	(*r)["Errors"] = append((*r)["Errors"].([]string), fmt.Sprintf(fmtStr, args...))
+	r.setAvailable(false)
+	e := r.getErrors()
+	(*r)["Errors"] = append(e, fmt.Sprintf(fmtStr, args...))
 }
 
 func (r *RawModel) AddError(err error) {
 	if err != nil {
-		if (*r)["Errors"] == nil {
-			(*r)["Errors"] = []string{}
-		}
+		e := r.getErrors()
 		switch o := err.(type) {
 		case *Validation:
-			(*r)["Errors"] = append((*r)["Errors"].([]string), o.Errors...)
+			e = append(e, o.Errors...)
 		case *Error:
-			(*r)["Errors"] = append((*r)["Errors"].([]string), o.Messages...)
+			e = append(e, o.Messages...)
 		default:
-			(*r)["Errors"] = append((*r)["Errors"].([]string), err.Error())
+			e = append(e, err.Error())
 		}
+		(*r)["Errors"] = e
 	}
 }
 
 func (r *RawModel) HasError() error {
-	if len((*r)["Errors"].([]string)) == 0 {
+	if len(r.getErrors()) == 0 {
 		return nil
 	}
 	return r
 }
 
 func (r *RawModel) Useable() bool {
-	return (*r)["Validated"].(bool)
+	return r.getValidated()
 }
 
 func (r *RawModel) IsAvailable() bool {
-	return (*r)["Available"].(bool)
+	return r.getAvailable()
 }
 
 func (r *RawModel) SetInvalid() bool {
-	(*r)["Validated"] = false
+	r.setValidated(false)
 	return false
 }
 
 func (r *RawModel) SetValid() bool {
-	(*r)["Validated"] = (*r)["Validated"].(bool) || len((*r)["Errors"].([]string)) == 0
-	return (*r)["Validated"].(bool)
+	r.setValidated(r.getValidated() || len(r.getErrors()) == 0)
+	return r.getValidated()
 }
 
 func (r *RawModel) SetAvailable() bool {
-	(*r)["Available"] = (*r)["Available"].(bool) || len((*r)["Errors"].([]string)) == 0
-	return (*r)["Available"].(bool)
+	r.setAvailable(r.getAvailable() || len(r.getErrors()) == 0)
+	return r.getAvailable()
 }
 
 func (r *RawModel) Error() string {
-	return strings.Join((*r)["Errors"].([]string), "\n")
+	return strings.Join(r.getErrors(), "\n")
 }
 
 func (r *RawModel) MakeError(code int, errType string, obj Model) error {
-	if len((*r)["Errors"].([]string)) == 0 {
+	if len(r.getErrors()) == 0 {
 		return nil
 	}
 	return &Error{
@@ -130,7 +167,7 @@ func (r *RawModel) MakeError(code int, errType string, obj Model) error {
 		Key:      obj.Key(),
 		Code:     code,
 		Type:     errType,
-		Messages: (*r)["Errors"].([]string),
+		Messages: r.getErrors(),
 	}
 }
 
@@ -176,12 +213,6 @@ func (r *RawModel) KeyName() string {
 }
 
 func (r *RawModel) Fill() {
-	boolFields := []string{"Available", "Validated", "forceChange", "ReadOnly"}
-	for _, f := range boolFields {
-		if (*r)[f] == nil {
-			(*r)[f] = false
-		}
-	}
 	if (*r)["Errors"] == nil {
 		(*r)["Errors"] = []string{}
 	}
