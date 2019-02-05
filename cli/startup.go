@@ -114,6 +114,35 @@ func NewApp() *cobra.Command {
 		default_username = key[0]
 		default_password = key[1]
 	}
+	home := os.ExpandEnv("${HOME}")
+	if data, err := ioutil.ReadFile(fmt.Sprintf("%s/.drpclirc", home)); err == nil {
+		lines := strings.Split(string(data), "\n")
+		for _, line := range lines {
+			line = strings.TrimSpace(line)
+			parts := strings.SplitN(line, "=", 2)
+
+			switch parts[0] {
+			case "RS_ENDPOINT":
+				default_endpoint = parts[1]
+			case "RS_TOKEN":
+				default_token = parts[1]
+			case "RS_USERNAME":
+				default_username = parts[1]
+			case "RS_PASSWORD":
+				default_password = parts[1]
+			case "RS_KEY":
+				key := strings.SplitN(parts[1], ":", 2)
+				if len(key) < 2 {
+					continue
+				}
+				if key[0] == "" || key[1] == "" {
+					continue
+				}
+				default_username = key[0]
+				default_password = key[1]
+			}
+		}
+	}
 	app.PersistentFlags().StringVarP(&endpoint,
 		"endpoint", "E", default_endpoint,
 		"The Digital Rebar Provision API endpoint to talk to")

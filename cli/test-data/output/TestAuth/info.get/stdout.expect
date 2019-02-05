@@ -37,7 +37,8 @@ RE:
     \],
     "Owner": "RackN Team",
     "OwnerEmail": "support@rackn.com",
-    "OwnerId": "rackn"
+    "OwnerId": "rackn",
+    "Version": ""
   },
 
   "address": "127.0.0.1",
