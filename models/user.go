@@ -4,6 +4,13 @@ import (
 	sc "github.com/elithrar/simple-scrypt"
 )
 
+// ExtAuthData is used by external auth systems to pass
+// back information about the authenticated user.
+type ExtAuthData struct {
+	User    *User
+	Tenants []string
+}
+
 // User is an API user of DigitalRebar Provision
 // swagger:model
 type User struct {
