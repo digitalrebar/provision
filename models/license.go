@@ -11,6 +11,7 @@ type LicenseBundle struct {
 	OwnerId           string
 	Grantor           string
 	GrantorEmail      string
+	Version           string
 	GenerationVersion string
 	Endpoints         []string `json:",omitempty"`
 
