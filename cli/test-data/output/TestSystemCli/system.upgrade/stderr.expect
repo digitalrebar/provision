@@ -1,16 +1,9 @@
-Access CLI commands relating to system
-
+Error: drpcli system upgrade [zip file] [flags] requires 1 argument
 Usage:
-  drpcli system [command]
-
-Available Commands:
-  action      Display the action for this system
-  actions     Display actions for this system
-  runaction   Run action on object from plugin
-  upgrade     Upgrade DRP with the provided file
+  drpcli system upgrade [zip file] [flags]
 
 Flags:
-  -h, --help   help for system
+  -h, --help   help for upgrade
 
 Global Flags:
   -d, --debug               Whether the CLI should run in debug mode
@@ -24,4 +17,3 @@ Global Flags:
   -Z, --traceToken string   A token that individual traced requests should report in the server logs
   -U, --username string     Name of the Digital Rebar Provision user to talk to (default "rocketskates")
 
-Use "drpcli system [command] --help" for more information about a command.

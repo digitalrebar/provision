@@ -7,6 +7,7 @@ Available Commands:
   action      Display the action for this system
   actions     Display actions for this system
   runaction   Run action on object from plugin
+  upgrade     Upgrade DRP with the provided file
 
 Flags:
   -h, --help   help for system

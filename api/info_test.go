@@ -219,6 +219,9 @@ func TestInfo(t *testing.T) {
 					"list":    {},
 					"update":  {},
 				},
+				"system": {
+					"upgrade": {},
+				},
 				"tasks": {
 					"action":  {},
 					"actions": {},
