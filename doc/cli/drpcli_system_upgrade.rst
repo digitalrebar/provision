@@ -1,23 +1,23 @@
-drpcli params meta set
-======================
+drpcli system upgrade
+=====================
 
-Set metadata [key]:[val] on [params]:[id]
+Upgrade DRP with the provided file
 
 Synopsis
 --------
 
-Set metadata [key]:[val] on [params]:[id]
+Upgrade DRP with the provided file
 
 ::
 
-    drpcli params meta set [id] key [key] to [val] [flags]
+    drpcli system upgrade [zip file] [flags]
 
 Options
 -------
 
 ::
 
-      -h, --help   help for set
+      -h, --help   help for upgrade
 
 Options inherited from parent commands
 --------------------------------------
@@ -39,5 +39,5 @@ Options inherited from parent commands
 SEE ALSO
 --------
 
--  `drpcli params meta <drpcli_params_meta.html>`__ - Gets metadata for
-   the param
+-  `drpcli system <drpcli_system.html>`__ - Access CLI commands relating
+   to system

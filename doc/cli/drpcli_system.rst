@@ -20,6 +20,7 @@ Options inherited from parent commands
 
 ::
 
+      -c, --catalog string      The catalog file to use to get product information (default "https://repo.rackn.io")
       -d, --debug               Whether the CLI should run in debug mode
       -E, --endpoint string     The Digital Rebar Provision API endpoint to talk to (default "https://127.0.0.1:8092")
       -f, --force               When needed, attempt to force the operation - used on some update/patch calls
@@ -42,3 +43,5 @@ SEE ALSO
    actions for this system
 -  `drpcli system runaction <drpcli_system_runaction.html>`__ - Run
    action on object from plugin
+-  `drpcli system upgrade <drpcli_system_upgrade.html>`__ - Upgrade DRP
+   with the provided file

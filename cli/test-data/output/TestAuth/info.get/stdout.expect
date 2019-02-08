@@ -73,7 +73,8 @@ RE:
     "multiarch",
     "actions-in-task-list",
     "endpoint-refs",
-    "endpoint-proxy"
+    "endpoint-proxy",
+    "inline-upgrade"
   \],
   "file_port": 10002,
   "id": "Fred",
