@@ -8,7 +8,6 @@ func TestSystemCli(t *testing.T) {
 	cliTest(true, false, "system").run(t)
 	cliTest(false, true, "system", "upgrade").run(t)
 	cliTest(false, true, "system", "upgrade", "cows").run(t)
-	cliTest(false, true, "system", "upgrade", "https://no.where.lcl/cows").run(t)
 	cliTest(true, false, "system", "get", "john2").run(t)
 	cliTest(false, false, "system", "actions").run(t)
 	cliTest(false, true, "system", "action", "command").run(t)
