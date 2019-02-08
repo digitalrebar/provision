@@ -12,6 +12,7 @@ import (
 	"net/url"
 	"os"
 	"reflect"
+	"runtime"
 	"strings"
 
 	"github.com/VictorLowther/jsonpatch2/utils"
@@ -40,6 +41,49 @@ func bufOrFileDecode(ref string, data interface{}) (err error) {
 	return
 }
 
+func getCatalogSource(nv string) (string, error) {
+	// XXX: Query self first?  One day.
+
+	catalogData, err := bufOrFile(catalog)
+	if err != nil {
+		return "", err
+	}
+
+	clayer := &models.Content{}
+	if err := api.DecodeYaml(catalogData, clayer); err != nil {
+		return "", err
+	}
+
+	var elem interface{}
+	for k, cobj := range clayer.Sections["catalog_items"] {
+		if k == nv {
+			elem = cobj
+			break
+		}
+	}
+	if elem == nil {
+		return "", fmt.Errorf("Catalog item: %s not found", nv)
+	}
+
+	ci := map[string]interface{}{}
+	if err := utils.Remarshal(elem, &ci); err != nil {
+		return "", fmt.Errorf("Catalog item: %s can not be remarshaled: %v", nv, err)
+	}
+
+	src, ok := ci["Source"].(string)
+	if !ok {
+		return "", fmt.Errorf("Catalog item: %s does not have a source: %v", nv, ci)
+	}
+
+	t, _ := ci["ContentType"].(string)
+	if t == "PluginProvider" {
+		n := ci["Name"].(string)
+		src = fmt.Sprintf("%s/%s/%s/%s", src, runtime.GOARCH, runtime.GOOS, n)
+	}
+
+	return src, nil
+}
+
 func urlOrFileAsReadCloser(src string) (io.ReadCloser, error) {
 	if s, err := os.Lstat(src); err == nil && s.Mode().IsRegular() {
 		fi, err := os.Open(src)
@@ -47,6 +91,13 @@ func urlOrFileAsReadCloser(src string) (io.ReadCloser, error) {
 			return nil, fmt.Errorf("Error opening %s: %v", src, err)
 		}
 		return fi, nil
+	}
+	if strings.HasPrefix(src, "catalog:") {
+		var err error
+		src, err = getCatalogSource(strings.TrimPrefix(src, "catalog:"))
+		if err != nil {
+			return nil, err
+		}
 	}
 	if u, err := url.Parse(src); err == nil && (u.Scheme == "http" || u.Scheme == "https") {
 		tr := &http.Transport{
@@ -67,6 +118,13 @@ func urlOrFileAsReadCloser(src string) (io.ReadCloser, error) {
 func bufOrFile(src string) ([]byte, error) {
 	if s, err := os.Lstat(src); err == nil && s.Mode().IsRegular() {
 		return ioutil.ReadFile(src)
+	}
+	if strings.HasPrefix(src, "catalog:") {
+		var err error
+		src, err = getCatalogSource(strings.TrimPrefix(src, "catalog:"))
+		if err != nil {
+			return nil, err
+		}
 	}
 	if u, err := url.Parse(src); err == nil && (u.Scheme == "http" || u.Scheme == "https") {
 		tr := &http.Transport{

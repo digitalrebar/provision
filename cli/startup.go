@@ -19,6 +19,8 @@ type registerSection func(*cobra.Command)
 var (
 	version          = provision.RSVersion
 	debug            = false
+	catalog          = "https://repo.rackn.io"
+	default_catalog  = "https://repo.rackn.io"
 	endpoint         = "https://127.0.0.1:8092"
 	default_endpoint = "https://127.0.0.1:8092"
 	token            = ""
@@ -103,6 +105,9 @@ func NewApp() *cobra.Command {
 	if tk := os.Getenv("RS_TOKEN"); tk != "" {
 		default_token = tk
 	}
+	if tk := os.Getenv("RS_CATALOG"); tk != "" {
+		default_catalog = tk
+	}
 	if kv := os.Getenv("RS_KEY"); kv != "" {
 		key := strings.SplitN(kv, ":", 2)
 		if len(key) < 2 {
@@ -173,6 +178,9 @@ func NewApp() *cobra.Command {
 	app.PersistentFlags().StringVarP(&traceToken,
 		"traceToken", "Z", "",
 		"A token that individual traced requests should report in the server logs")
+	app.PersistentFlags().StringVarP(&catalog,
+		"catalog", "c", default_catalog,
+		"The catalog file to use to get product information")
 
 	for _, rs := range registrations {
 		rs(app)

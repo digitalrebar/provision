@@ -63,6 +63,7 @@ func TestInfo(t *testing.T) {
 				"actions-in-task-list",
 				"endpoint-refs",
 				"endpoint-proxy",
+				"inline-upgrade",
 			},
 			License: models.LicenseBundle{Licenses: []models.License{}},
 			Scopes: map[string]map[string]struct{}{
@@ -218,6 +219,9 @@ func TestInfo(t *testing.T) {
 					"get":     {},
 					"list":    {},
 					"update":  {},
+				},
+				"system": {
+					"upgrade": {},
 				},
 				"tasks": {
 					"action":  {},

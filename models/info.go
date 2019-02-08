@@ -86,6 +86,7 @@ func (i *Info) Fill() {
 			"actions-in-task-list",
 			"endpoint-refs",
 			"endpoint-proxy",
+			"inline-upgrade",
 		}
 	}
 }
