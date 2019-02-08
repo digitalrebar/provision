@@ -255,7 +255,7 @@ func (r *TaskRunner) Run() error {
 		case "created", "incomplete":
 			finalErr.Errorf("Invalid job state returned: %v", r.j.State)
 		case "running":
-			finalErr.Errorf("Job %s running somewhere else: %v", r.j.State)
+			finalErr.Errorf("Job %s running somewhere else: %v", r.j.Key(), r.j.State)
 		case "failed":
 			r.failed = true
 		}
