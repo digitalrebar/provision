@@ -12,6 +12,7 @@ import (
 	"net/url"
 	"os"
 	"reflect"
+	"runtime"
 	"strings"
 
 	"github.com/VictorLowther/jsonpatch2/utils"
@@ -73,6 +74,13 @@ func getCatalogSource(nv string) (string, error) {
 	if !ok {
 		return "", fmt.Errorf("Catalog item: %s does not have a source: %v", nv, ci)
 	}
+
+	t, _ := ci["ContentType"].(string)
+	if t == "PluginProvider" {
+		n := ci["Name"].(string)
+		src = fmt.Sprintf("%s/%s/%s/%s", src, runtime.GOARCH, runtime.GOOS, n)
+	}
+
 	return src, nil
 }
 
