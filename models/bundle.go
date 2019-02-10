@@ -9,7 +9,17 @@ type Bundled struct {
 	Bundle string
 }
 
+type Bundler interface {
+	SetBundle(string)
+	GetBundle() string
+}
+
 // SetBundle sets the name of the content layer holding this object.
 func (b *Bundled) SetBundle(name string) {
 	b.Bundle = name
+}
+
+// GetBundle gets the name of the content layer holding this object.
+func (b *Bundled) GetBundle() string {
+	return b.Bundle
 }

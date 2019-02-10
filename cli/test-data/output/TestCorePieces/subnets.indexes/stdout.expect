@@ -11,6 +11,10 @@
     "Type": "boolean",
     "Unique": false
   },
+  "Bundle": {
+    "Type": "string",
+    "Unique": false
+  },
   "Enabled": {
     "Type": "boolean",
     "Unique": false

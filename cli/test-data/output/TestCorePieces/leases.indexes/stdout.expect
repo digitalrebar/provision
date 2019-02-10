@@ -7,6 +7,10 @@
     "Type": "boolean",
     "Unique": false
   },
+  "Bundle": {
+    "Type": "string",
+    "Unique": false
+  },
   "ExpireTime": {
     "Type": "Date/Time string",
     "Unique": false
