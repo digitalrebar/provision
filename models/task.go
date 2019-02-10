@@ -13,6 +13,7 @@ type Task struct {
 	Access
 	Meta
 	Owned
+	Bundled
 	// Name is the name of this Task.  Task names must be globally unique
 	//
 	// required: true

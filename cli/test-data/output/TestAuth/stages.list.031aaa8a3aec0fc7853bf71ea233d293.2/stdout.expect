@@ -2,6 +2,7 @@
   {
     "Available": true,
     "BootEnv": "local",
+    "Bundle": "BasicStore",
     "Description": "Stage to boot into the local BootEnv.",
     "Documentation": "",
     "Endpoint": "Fred",
@@ -25,6 +26,7 @@
   {
     "Available": true,
     "BootEnv": "",
+    "Bundle": "BasicStore",
     "Description": "Noop / Nothing stage",
     "Documentation": "",
     "Endpoint": "Fred",
@@ -48,6 +50,7 @@
   {
     "Available": true,
     "BootEnv": "",
+    "Bundle": "",
     "Description": "",
     "Documentation": "",
     "Endpoint": "Fred",
@@ -67,6 +70,7 @@
   {
     "Available": true,
     "BootEnv": "",
+    "Bundle": "",
     "Description": "",
     "Documentation": "",
     "Endpoint": "Fred",
@@ -86,6 +90,7 @@
   {
     "Available": true,
     "BootEnv": "",
+    "Bundle": "",
     "Description": "",
     "Documentation": "",
     "Endpoint": "Fred",

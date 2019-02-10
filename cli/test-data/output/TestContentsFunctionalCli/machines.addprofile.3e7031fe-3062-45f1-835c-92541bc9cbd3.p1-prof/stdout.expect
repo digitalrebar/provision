@@ -3,6 +3,7 @@
   "Arch": "amd64",
   "Available": true,
   "BootEnv": "mylocal",
+  "Bundle": "",
   "CurrentJob": "",
   "CurrentTask": -1,
   "Description": "",
@@ -17,6 +18,7 @@
   "Params": {},
   "Profile": {
     "Available": false,
+    "Bundle": "",
     "Description": "",
     "Documentation": "",
     "Endpoint": "",

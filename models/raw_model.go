@@ -22,6 +22,10 @@ func (r *RawModel) IsReadOnly() bool {
 	return b.(bool)
 }
 
+func (r *RawModel) SetBundle(name string) {
+	(*r)["Bundle"] = name
+}
+
 // Owner Interface
 func (r *RawModel) GetEndpoint() string {
 	sobj, _ := r.GetStringField("Endpoint")

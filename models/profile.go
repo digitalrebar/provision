@@ -13,6 +13,7 @@ type Profile struct {
 	Access
 	Meta
 	Owned
+	Bundled
 	// The name of the profile.  This must be unique across all
 	// profiles.
 	//

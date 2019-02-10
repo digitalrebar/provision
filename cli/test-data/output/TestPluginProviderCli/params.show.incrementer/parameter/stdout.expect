@@ -1,5 +1,6 @@
 {
   "Available": true,
+  "Bundle": "incrementer",
   "Description": "",
   "Documentation": "",
   "Endpoint": "Fred",

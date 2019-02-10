@@ -10,6 +10,7 @@ type Reservation struct {
 	Access
 	Meta
 	Owned
+	Bundled
 	// Addr is the IP address permanently assigned to the strategy/token combination.
 	//
 	// required: true

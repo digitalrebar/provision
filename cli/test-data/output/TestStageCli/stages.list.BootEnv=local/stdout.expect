@@ -2,6 +2,7 @@
   {
     "Available": true,
     "BootEnv": "local",
+    "Bundle": "",
     "Description": "",
     "Documentation": "",
     "Endpoint": "Fred",
@@ -21,6 +22,7 @@
   {
     "Available": true,
     "BootEnv": "local",
+    "Bundle": "BasicStore",
     "Description": "Stage to boot into the local BootEnv.",
     "Documentation": "",
     "Endpoint": "Fred",

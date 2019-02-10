@@ -18,6 +18,7 @@ type User struct {
 	Access
 	Meta
 	Owned
+	Bundled
 	// Name is the name of the user
 	//
 	// required: true

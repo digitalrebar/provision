@@ -13,6 +13,7 @@ type Subnet struct {
 	Access
 	Meta
 	Owned
+	Bundled
 	// Name is the name of the subnet.
 	// Subnet names must be unique
 	//

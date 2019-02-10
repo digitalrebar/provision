@@ -64,6 +64,7 @@ func TestInfo(t *testing.T) {
 				"endpoint-refs",
 				"endpoint-proxy",
 				"inline-upgrade",
+				"bundle-objects",
 			},
 			License: models.LicenseBundle{Licenses: []models.License{}},
 			Scopes: map[string]map[string]struct{}{

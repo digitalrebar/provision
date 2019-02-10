@@ -1,6 +1,7 @@
 [
   {
     "Available": true,
+    "Bundle": "",
     "Description": "",
     "Documentation": "",
     "Endpoint": "Fred",
@@ -16,6 +17,7 @@
   },
   {
     "Available": true,
+    "Bundle": "",
     "Description": "",
     "Documentation": "",
     "Endpoint": "Fred",
@@ -31,6 +33,7 @@
   },
   {
     "Available": true,
+    "Bundle": "",
     "Description": "",
     "Documentation": "",
     "Endpoint": "Fred",
@@ -46,6 +49,7 @@
   },
   {
     "Available": false,
+    "Bundle": "",
     "Description": "",
     "Documentation": "",
     "Endpoint": "Fred",

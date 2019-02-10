@@ -87,6 +87,7 @@ func (i *Info) Fill() {
 			"endpoint-refs",
 			"endpoint-proxy",
 			"inline-upgrade",
+			"bundle-objects",
 		}
 	}
 }

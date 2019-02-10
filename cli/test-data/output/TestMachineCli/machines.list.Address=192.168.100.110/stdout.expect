@@ -4,6 +4,7 @@
     "Arch": "amd64",
     "Available": true,
     "BootEnv": "local",
+    "Bundle": "",
     "CurrentJob": "",
     "CurrentTask": -1,
     "Description": "",
@@ -18,6 +19,7 @@
     "Params": {},
     "Profile": {
       "Available": false,
+      "Bundle": "",
       "Description": "",
       "Documentation": "",
       "Endpoint": "",

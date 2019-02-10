@@ -167,6 +167,7 @@ sections:
   profiles:
     global:
       Available: false
+      Bundle: BackingStore
       Description: Global profile attached automatically to all machines.
       Documentation: ""
       Endpoint: Fred
@@ -189,6 +190,7 @@ sections:
   users:
     rocketskates:
       Available: false
+      Bundle: BackingStore
       Description: ""
       Endpoint: Fred
       Errors: []
@@ -373,6 +375,7 @@ meta:
 			expectRes: mustDecode(&models.BootEnv{}, `
 Available: true
 Endpoint: Fred
+Bundle: BarkingStore
 Description: The boot environment you should use to have unknown machines boot off
   their local hard drive
 Meta:
