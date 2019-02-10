@@ -11,6 +11,10 @@
     "Type": "string",
     "Unique": false
   },
+  "Bundle": {
+    "Type": "string",
+    "Unique": false
+  },
   "Key": {
     "Type": "string",
     "Unique": true

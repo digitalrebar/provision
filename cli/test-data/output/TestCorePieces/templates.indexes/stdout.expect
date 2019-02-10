@@ -3,6 +3,10 @@
     "Type": "boolean",
     "Unique": false
   },
+  "Bundle": {
+    "Type": "string",
+    "Unique": false
+  },
   "ID": {
     "Type": "string",
     "Unique": true
