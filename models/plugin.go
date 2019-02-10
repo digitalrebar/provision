@@ -8,6 +8,7 @@ type Plugin struct {
 	Access
 	Meta
 	Owned
+	Bundled
 	// The name of the plugin instance.  THis must be unique across all
 	// plugins.
 	//

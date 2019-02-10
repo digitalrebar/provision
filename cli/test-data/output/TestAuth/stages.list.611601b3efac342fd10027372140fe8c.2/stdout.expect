@@ -2,6 +2,7 @@
   {
     "Available": true,
     "BootEnv": "",
+    "Bundle": "",
     "Description": "",
     "Documentation": "",
     "Endpoint": "Fred",
@@ -21,6 +22,7 @@
   {
     "Available": true,
     "BootEnv": "",
+    "Bundle": "",
     "Description": "",
     "Documentation": "",
     "Endpoint": "Fred",

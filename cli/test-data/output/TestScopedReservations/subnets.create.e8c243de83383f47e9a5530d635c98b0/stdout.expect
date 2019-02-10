@@ -3,6 +3,7 @@
   "ActiveLeaseTime": 60,
   "ActiveStart": "192.168.125.10",
   "Available": true,
+  "Bundle": "",
   "Description": "",
   "Documentation": "",
   "Enabled": false,

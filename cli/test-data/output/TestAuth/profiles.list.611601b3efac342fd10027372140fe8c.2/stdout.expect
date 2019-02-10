@@ -1,6 +1,7 @@
 [
   {
     "Available": true,
+    "Bundle": "BackingStore",
     "Description": "Global profile attached automatically to all machines.",
     "Documentation": "",
     "Endpoint": "Fred",
@@ -17,6 +18,7 @@
   },
   {
     "Available": true,
+    "Bundle": "rackn-license",
     "Description": "RackN License Holder",
     "Documentation": "",
     "Endpoint": "Fred",

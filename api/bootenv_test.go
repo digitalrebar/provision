@@ -14,6 +14,7 @@ import (
 func TestBootEnvCrud(t *testing.T) {
 	localBootEnv := mustDecode(&models.BootEnv{}, `
 Description: "The boot environment you should use to have known machines boot off their local hard drive"
+Bundle: BasicStore
 Name: "local"
 Meta:
   color: green
@@ -62,6 +63,7 @@ Templates:
 `).(*models.BootEnv)
 	ignoreBootEnv := mustDecode(&models.BootEnv{}, `
 Description: "The boot environment you should use to have unknown machines boot off their local hard drive"
+Bundle: BasicStore
 Name:        "ignore"
 Meta:
   color: green

@@ -5,6 +5,7 @@ type Workflow struct {
 	Access
 	Meta
 	Owned
+	Bundled
 	Name          string
 	Description   string
 	Documentation string

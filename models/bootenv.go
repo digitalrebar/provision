@@ -176,6 +176,7 @@ type BootEnv struct {
 	Access
 	Meta
 	Owned
+	Bundled
 	// The name of the boot environment.  Boot environments that install
 	// an operating system must end in '-install'.
 	//

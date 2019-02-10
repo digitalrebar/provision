@@ -3,6 +3,7 @@
   "Arch": "amd64",
   "Available": true,
   "BootEnv": "local",
+  "Bundle": "",
   "CurrentJob": "",
   "CurrentTask": -1,
   "Description": "lpxelinux.0",
@@ -19,6 +20,7 @@
   },
   "Profile": {
     "Available": false,
+    "Bundle": "",
     "Description": "",
     "Documentation": "",
     "Endpoint": "",

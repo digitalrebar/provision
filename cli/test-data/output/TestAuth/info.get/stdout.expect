@@ -74,7 +74,8 @@ RE:
     "actions-in-task-list",
     "endpoint-refs",
     "endpoint-proxy",
-    "inline-upgrade"
+    "inline-upgrade",
+    "bundle-objects"
   \],
   "file_port": 10002,
   "id": "Fred",

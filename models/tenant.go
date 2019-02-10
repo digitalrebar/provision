@@ -6,6 +6,7 @@ type Tenant struct {
 	Access
 	Meta
 	Owned
+	Bundled
 	Name        string
 	Description string
 	// Documentation of this tenant.  This should tell what

@@ -1,6 +1,7 @@
 [
   {
     "Available": true,
+    "Bundle": "incrementer",
     "Description": "",
     "Documentation": "",
     "Endpoint": "Fred",
@@ -16,6 +17,7 @@
   },
   {
     "Available": true,
+    "Bundle": "incrementer",
     "Description": "",
     "Documentation": "",
     "Endpoint": "Fred",
@@ -31,6 +33,7 @@
   },
   {
     "Available": true,
+    "Bundle": "incrementer",
     "Description": "",
     "Documentation": "",
     "Endpoint": "Fred",
@@ -46,6 +49,7 @@
   },
   {
     "Available": true,
+    "Bundle": "incrementer",
     "Description": "",
     "Documentation": "",
     "Endpoint": "Fred",
@@ -61,6 +65,7 @@
   },
   {
     "Available": true,
+    "Bundle": "incrementer",
     "Description": "",
     "Documentation": "",
     "Endpoint": "Fred",
@@ -76,6 +81,7 @@
   },
   {
     "Available": true,
+    "Bundle": "BasicStore",
     "Description": "The method pxelinux should use to try to boot to the local disk",
     "Documentation": "\nOn most systems, using 'localboot 0' is the proper thing to do to have\npxelinux try to boot off the first hard drive.  However, some systems\ndo not behave properlydoing that, either due to firmware bugs or\nmalconfigured hard drives.  This param allows you to override 'localboot 0'\nwith another pxelinux command.  A useful reference for alternate boot methods\nis at https://www.syslinux.org/wiki/index.php?title=Comboot/chain.c32",
     "Endpoint": "Fred",

@@ -1,6 +1,7 @@
 {
   "Available": false,
   "BootEnv": "fred",
+  "Bundle": "",
   "Description": "",
   "Documentation": "",
   "Endpoint": "Fred",

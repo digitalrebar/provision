@@ -12,6 +12,7 @@ type Param struct {
 	Access
 	Meta
 	Owned
+	Bundled
 	// Name is the name of the param.  Params must be uniquely named.
 	//
 	// required: true

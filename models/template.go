@@ -9,6 +9,7 @@ type Template struct {
 	Access
 	Meta
 	Owned
+	Bundled
 	// ID is a unique identifier for this template.  It cannot change once it is set.
 	//
 	// required: true

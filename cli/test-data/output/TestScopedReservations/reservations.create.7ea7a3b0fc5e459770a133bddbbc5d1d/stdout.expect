@@ -1,6 +1,7 @@
 {
   "Addr": "192.168.125.2",
   "Available": true,
+  "Bundle": "",
   "Description": "",
   "Documentation": "",
   "Duration": 0,

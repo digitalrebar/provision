@@ -23,6 +23,7 @@ type Lease struct {
 	Access
 	Meta
 	Owned
+	Bundled
 	// Addr is the IP address that the lease handed out.
 	//
 	// required: true

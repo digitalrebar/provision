@@ -11,6 +11,7 @@ type Stage struct {
 	Access
 	Meta
 	Owned
+	Bundled
 	// The name of the stage.
 	//
 	// required: true

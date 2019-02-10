@@ -249,6 +249,7 @@ type Role struct {
 	Access
 	Meta
 	Owned
+	Bundled
 	// Name is the name of the user
 	//
 	// required: true

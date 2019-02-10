@@ -1,6 +1,7 @@
 [
   {
     "Available": true,
+    "Bundle": "BasicStore",
     "Claims": [
       {
         "action": "*",
@@ -19,6 +20,7 @@
   },
   {
     "Available": true,
+    "Bundle": "",
     "Claims": [
       {
         "action": "*",

@@ -1,6 +1,7 @@
 [
   {
     "Available": true,
+    "Bundle": "LocalStore",
     "Contents": "etc\n",
     "Description": "A test template for LocalStore testing",
     "Endpoint": "Fred",
@@ -12,6 +13,7 @@
   },
   {
     "Available": true,
+    "Bundle": "",
     "Contents": "John Rules",
     "Description": "",
     "Endpoint": "Fred",
@@ -23,6 +25,7 @@
   },
   {
     "Available": true,
+    "Bundle": "DefaultStore",
     "Contents": "usrshare\n",
     "Description": "A test template for DefaultStore testing",
     "Endpoint": "Fred",

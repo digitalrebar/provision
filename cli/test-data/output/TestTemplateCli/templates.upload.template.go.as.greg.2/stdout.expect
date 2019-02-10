@@ -1,5 +1,6 @@
 {
   "Available": true,
+  "Bundle": "",
   "Contents": "package cli\n\nimport (\n\t\"fmt\"\n\n\t\"github.com/digitalrebar/provision/models\"\n\t\"github.com/spf13/cobra\"\n)\n\nfunc init() {\n\taddRegistrar(registerTemplate)\n}\n\nfunc registerTemplate(app *cobra.Command) {\n\top := \u0026ops{\n\t\tname:       \"templates\",\n\t\tsingleName: \"template\",\n\t\texample:    func() models.Model { return \u0026models.Template{} },\n\t}\n\top.addCommand(\u0026cobra.Command{\n\t\tUse:   \"upload [file] as [id]\",\n\t\tShort: \"Upload the template file [file] as template [id]\",\n\t\tArgs: func(c *cobra.Command, args []string) error {\n\t\t\tif len(args) != 3 {\n\t\t\t\treturn fmt.Errorf(\"%v: expected 3 argument\", c.UseLine())\n\t\t\t}\n\t\t\treturn nil\n\t\t},\n\t\tRunE: func(c *cobra.Command, args []string) error {\n\t\t\ttmpl, err := session.InstallRawTemplateFromFileWithId(args[0], args[2])\n\t\t\tif err != nil {\n\t\t\t\treturn err\n\t\t\t}\n\t\t\treturn prettyPrint(tmpl)\n\t\t},\n\t})\n\top.command(app)\n}\n",
   "Description": "",
   "Endpoint": "Fred",
