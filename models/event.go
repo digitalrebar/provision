@@ -31,6 +31,9 @@ type Event struct {
 
 	// Object - the data of the object.
 	Object interface{}
+
+	// Original - the data of the object before the operation (update and save only)
+	Original interface{}
 }
 
 func (e *Event) Text() string {
