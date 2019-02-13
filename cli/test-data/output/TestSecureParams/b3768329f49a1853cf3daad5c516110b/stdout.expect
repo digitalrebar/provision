@@ -1,0 +1,17 @@
+{
+  "Available": true,
+  "Bundle": "BackingStore",
+  "Description": "",
+  "Documentation": "",
+  "Endpoint": "Fred",
+  "Errors": [],
+  "Meta": {},
+  "Name": "bob",
+  "Params": {
+    "secure": "Fred"
+  },
+  "PluginErrors": [],
+  "Provider": "incrementer",
+  "ReadOnly": false,
+  "Validated": true
+}

@@ -109,7 +109,7 @@ further tweak how the results are returned using the following meta-filters:
 					args = append(args, "slim", slim)
 				}
 				if decode {
-					args = append(args, "decode", "true")
+					args = append(args, "decode")
 				}
 				if len(args) > 0 {
 					req = session.Req().Filter(o.name, args...)

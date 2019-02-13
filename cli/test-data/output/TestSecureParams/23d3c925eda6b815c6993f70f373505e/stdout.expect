@@ -1,0 +1,88 @@
+RE:
+\[
+  {
+    "Available": true,
+    "Bundle": "BackingStore",
+    "Description": "",
+    "Documentation": "",
+    "Endpoint": "Fred",
+    "Meta": {},
+    "Name": "bob",
+    "Params": {
+      "secure": {
+        "Key": ".*",
+        "Nonce": ".*",
+        "Payload": ".*"
+      }
+    },
+    "ReadOnly": false,
+    "Validated": true
+  },
+  {
+    "Available": true,
+    "Bundle": "BackingStore",
+    "Description": "Global profile attached automatically to all machines.",
+    "Documentation": "",
+    "Endpoint": "Fred",
+    "Meta": {
+      "color": "blue",
+      "icon": "world",
+      "title": "Digital Rebar Provision"
+    },
+    "Name": "global",
+    "Params": {},
+    "ReadOnly": false,
+    "Validated": true
+  },
+  {
+    "Available": true,
+    "Bundle": "rackn-license",
+    "Description": "RackN License Holder",
+    "Documentation": "",
+    "Endpoint": "Fred",
+    "Meta": {
+      "color": "blue",
+      "icon": "key",
+      "title": "RackN Content"
+    },
+    "Name": "rackn-license",
+    "Params": {
+      "rackn/license": "zWbsv/HDxynQsaDQ6SPfb5TKz3GjdgVi1q77sEsnjoxdvjQHr1BIlYxy3hHCqXCZyj1/gw1gtxm7fYol7Ps7CXsKICAiQ29udGFjdCI6ICJVbml0IFRlc3QiLAogICJDb250YWN0RW1haWwiOiAic3VwcG9ydEByYWNrbi5jb20iLAogICJDb250YWN0SWQiOiAiMmE0NGU4MDctZmNjYS00NzJjLTg4MzItZTQ0ZDMzZjVjMTQwIiwKICAiR2VuZXJhdGlvblZlcnNpb24iOiAidjAuMC4xLXRpcC02LTYzNjE2MTQ4YmU5ZTJmZWFlMGFhNDAwNjczNGU3Mzc1ZjgwZWU3ZmYiLAogICJHcmFudG9yIjogIlJhY2tOIEluYyIsCiAgIkdyYW50b3JFbWFpbCI6ICJzdXBwb3J0QHJhY2tuLmNvbSIsCiAgIkxpY2Vuc2VzIjogWwogICAgewogICAgICAiRGF0YSI6IFtdLAogICAgICAiSGFyZEV4cGlyZURhdGUiOiAiMjAyMy0wNi0xNVQyMDo1MDo1Mi42OFoiLAogICAgICAiTG9uZ0xpY2Vuc2UiOiAiUmFja04gSW50ZXJuYWwgVXNlIExpY2Vuc2UiLAogICAgICAiTmFtZSI6ICJyYmFjIiwKICAgICAgIlB1cmNoYXNlRGF0ZSI6ICIyMDE4LTA1LTE1VDIwOjUwOjUyLjY4WiIsCiAgICAgICJTaG9ydExpY2Vuc2UiOiAiUmFja05fSW50ZXJuYWwiLAogICAgICAiU29mdEV4cGlyZURhdGUiOiAiMjAyMy0wNi0wNVQyMDo1MDo1Mi42OFoiLAogICAgICAiU3RhcnREYXRlIjogIjIwMTgtMDUtMTVUMjA6NTA6NTIuNjhaIiwKICAgICAgIlZlcnNpb24iOiAidjIuKiIKICAgIH0sCiAgICB7CiAgICAgICJEYXRhIjogW10sCiAgICAgICJIYXJkRXhwaXJlRGF0ZSI6ICIyMDIzLTA2LTIwVDIxOjIwOjIwLjYwMVoiLAogICAgICAiTG9uZ0xpY2Vuc2UiOiAiUmFja04gSW50ZXJuYWwgVXNlIExpY2Vuc2UiLAogICAgICAiTmFtZSI6ICJzZWN1cmUtcGFyYW1zIiwKICAgICAgIlB1cmNoYXNlRGF0ZSI6ICIyMDE4LTA1LTIwVDIxOjIwOjIwLjYwMVoiLAogICAgICAiU2hvcnRMaWNlbnNlIjogIlJhY2tOX0ludGVybmFsIiwKICAgICAgIlNvZnRFeHBpcmVEYXRlIjogIjIwMjMtMDYtMTBUMjE6MjA6MjAuNjAxWiIsCiAgICAgICJTdGFydERhdGUiOiAiMjAxOC0wNS0yMFQyMToyMDoyMC42MDFaIiwKICAgICAgIlZlcnNpb24iOiAidjIuKiIKICAgIH0KICBdLAogICJPd25lciI6ICJSYWNrTiBUZWFtIiwKICAiT3duZXJFbWFpbCI6ICJzdXBwb3J0QHJhY2tuLmNvbSIsCiAgIk93bmVySWQiOiAicmFja24iCn0K",
+      "rackn/license-object": {
+        "Contact": "Unit Test",
+        "ContactEmail": "support@rackn.com",
+        "ContactId": "2a44e807-fcca-472c-8832-e44d33f5c140",
+        "GenerationVersion": "v0.0.1-tip-galthaus-dev-24-3a9ac1523e674e05ee91d1184feb007fba7cbe96",
+        "Grantor": "RackN Inc",
+        "GrantorEmail": "support@rackn.com",
+        "Licenses": \[
+          {
+            "HardExpireDate": "2023-06-15T20:50:52.68Z",
+            "LongLicense": "RackN Internal Use License",
+            "Name": "rbac",
+            "PurchaseDate": "2018-05-15T20:50:52.68Z",
+            "ShortLicense": "RackN_Internal",
+            "SoftExpireDate": "2023-06-05T20:50:52.68Z",
+            "StartDate": "2018-05-15T20:50:52.68Z",
+            "Version": "v2.*"
+          },
+          {
+            "HardExpireDate": "2023-06-20T21:20:20.601Z",
+            "LongLicense": "RackN Internal Use License",
+            "Name": "secure-params",
+            "PurchaseDate": "2018-05-20T21:20:20.601Z",
+            "ShortLicense": "RackN_Internal",
+            "SoftExpireDate": "2023-06-10T21:20:20.601Z",
+            "StartDate": "2018-05-20T21:20:20.601Z",
+            "Version": "v2.*"
+          }
+        \],
+        "Owner": "RackN Team",
+        "OwnerEmail": "support@rackn.com",
+        "OwnerId": "rackn"
+      }
+    },
+    "ReadOnly": true,
+    "Validated": true
+  }
+\]

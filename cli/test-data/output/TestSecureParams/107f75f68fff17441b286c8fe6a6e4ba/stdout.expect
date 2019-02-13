@@ -1,0 +1,19 @@
+RE:
+{
+  "Available": true,
+  "Bundle": "BackingStore",
+  "Description": "",
+  "Documentation": "",
+  "Endpoint": "Fred",
+  "Meta": {},
+  "Name": "bob",
+  "Params": {
+    "secure": {
+      "Key": ".*",
+      "Nonce": ".*",
+      "Payload": ".*"
+    }
+  },
+  "ReadOnly": false,
+  "Validated": true
+}

@@ -3,6 +3,7 @@ Usage:
   drpcli plugins show [id] [flags]
 
 Flags:
+      --decode        Should decode any secure params.
   -h, --help          help for show
       --slim string   Should elide certain fields.  Can be 'Params', 'Meta', or a comma-separated list of both.
 

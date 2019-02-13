@@ -19,6 +19,10 @@
     "Type": "boolean",
     "Unique": false
   },
+  "Secure": {
+    "Type": "boolean",
+    "Unique": false
+  },
   "Valid": {
     "Type": "boolean",
     "Unique": false

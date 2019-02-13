@@ -1,0 +1,24 @@
+{
+  "Available": true,
+  "Bundle": "",
+  "Claims": [
+    {
+      "action": "get",
+      "scope": "params",
+      "specific": "*"
+    },
+    {
+      "action": "get,getSecure,list",
+      "scope": "machines,profiles,plugins",
+      "specific": "*"
+    }
+  ],
+  "Description": "",
+  "Documentation": "",
+  "Endpoint": "Fred",
+  "Errors": [],
+  "Meta": {},
+  "Name": "secretGetter",
+  "ReadOnly": false,
+  "Validated": true
+}
