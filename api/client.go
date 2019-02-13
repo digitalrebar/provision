@@ -317,7 +317,7 @@ func (r *R) Filter(prefix string, filterArgs ...string) *R {
 	for i < len(filterArgs) {
 		filter := filterArgs[i]
 		switch filter {
-		case "reverse":
+		case "reverse", "decode":
 			finalParams = append(finalParams, filter, "true")
 			i++
 		case "sort", "limit", "offset", "slim":

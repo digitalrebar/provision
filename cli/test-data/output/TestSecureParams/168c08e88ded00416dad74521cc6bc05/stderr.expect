@@ -1,0 +1,3 @@
+Error: AUTH
+  Cannot access /api/v3/machines?decode=true
+  Requires: machines getSecure 

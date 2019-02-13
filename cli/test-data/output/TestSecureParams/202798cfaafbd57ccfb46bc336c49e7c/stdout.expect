@@ -1,0 +1,40 @@
+RE:
+\[
+  {
+    "Address": "",
+    "Arch": "amd64",
+    "Available": true,
+    "BootEnv": "local",
+    "Bundle": "BackingStore",
+    "CurrentJob": "",
+    "CurrentTask": -1,
+    "Description": "",
+    "Endpoint": "Fred",
+    "Meta": {
+      "feature-flags": "change-stage-v2"
+    },
+    "Name": "bob",
+    "OS": "",
+    "Params": {
+      "secure": "Fred"
+    },
+    "Profile": {
+      "Available": false,
+      "Bundle": "",
+      "Description": "",
+      "Documentation": "",
+      "Endpoint": "",
+      "Errors": null,
+      "Meta": null,
+      "Name": "",
+      "Params": null,
+      "ReadOnly": false,
+      "Validated": false
+    },
+    "ReadOnly": false,
+    "Runnable": true,
+    "Stage": "none",
+    "Validated": true,
+    "Workflow": ""
+  }
+\]

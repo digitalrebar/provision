@@ -13,13 +13,16 @@ import (
 
 func (o *ops) commands() []*cobra.Command {
 	canSlim := false
+	canDecode := false
 	if _, ok := o.example().(models.MetaHaver); ok {
 		canSlim = true
 	}
 	if _, ok := o.example().(models.Paramer); ok {
 		canSlim = true
+		canDecode = true
 	}
 	slim := ""
+	decode := false
 	cmds := []*cobra.Command{}
 	listCmd := &cobra.Command{
 		Use:   "list [filters...]",
@@ -85,6 +88,9 @@ further tweak how the results are returned using the following meta-filters:
 				if slim != "" {
 					args = append(args, fmt.Sprintf("slim=%s", slim))
 				}
+				if decode {
+					args = append(args, "decode=true")
+				}
 				pargs := []string{}
 				for _, arg := range args {
 					a := strings.SplitN(arg, "=", 2)
@@ -101,6 +107,9 @@ further tweak how the results are returned using the following meta-filters:
 				}
 				if slim != "" {
 					args = append(args, "slim", slim)
+				}
+				if decode {
+					args = append(args, "decode")
 				}
 				if len(args) > 0 {
 					req = session.Req().Filter(o.name, args...)
@@ -123,6 +132,12 @@ further tweak how the results are returned using the following meta-filters:
 			"slim",
 			"",
 			"Should elide certain fields.  Can be 'Params', 'Meta', or a comma-separated list of both.")
+	}
+	if canDecode {
+		listCmd.Flags().BoolVar(&decode,
+			"decode",
+			false,
+			"Should decode any secure params")
 	}
 	cmds = append(cmds, &cobra.Command{
 		Use:   "indexes",
@@ -156,6 +171,9 @@ format id as *index*:*value*
 			if slim != "" {
 				req = req.Params("slim", slim)
 			}
+			if decode {
+				req = req.Params("decode", "true")
+			}
 			if err := req.Do(&data); err != nil {
 				return generateError(err, "Failed to fetch %v: %v", o.singleName, args[0])
 			} else {
@@ -169,6 +187,13 @@ format id as *index*:*value*
 			"",
 			"Should elide certain fields.  Can be 'Params', 'Meta', or a comma-separated list of both.")
 	}
+	if canDecode {
+		showCmd.Flags().BoolVar(&decode,
+			"decode",
+			false,
+			"Should decode any secure params.")
+	}
+
 	cmds = append(cmds, showCmd)
 	cmds = append(cmds, &cobra.Command{
 		Use:   "exists [id]",

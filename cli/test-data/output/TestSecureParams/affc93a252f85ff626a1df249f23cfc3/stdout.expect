@@ -1,0 +1,22 @@
+RE:
+{
+  "Available": true,
+  "Bundle": "BackingStore",
+  "Description": "",
+  "Documentation": "",
+  "Endpoint": "Fred",
+  "Errors": \[\],
+  "Meta": {},
+  "Name": "bob",
+  "Params": {
+    "secure": {
+      "Key": ".*",
+      "Nonce": ".*",
+      "Payload": ".*"
+    }
+  },
+  "PluginErrors": \[\],
+  "Provider": "incrementer",
+  "ReadOnly": false,
+  "Validated": true
+}
