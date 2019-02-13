@@ -39,6 +39,14 @@ var (
 	Corrupt  = errors.New("SecureData corrupted")
 )
 
+func IsSecureData(val interface{}) bool {
+	s := &SecureData{}
+	if err := Remarshal(val, s); err != nil {
+		return false
+	}
+	return s.Validate() == nil
+}
+
 // Validate makes sure that the lengths we expect for the Key and
 // Nonce are correct.
 func (s *SecureData) Validate() error {
