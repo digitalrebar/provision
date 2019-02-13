@@ -46,12 +46,18 @@ Claims:
 		cliTest(false, false, "-T", "", "-U", "fred", "-P", "fred", tgt, "set", "Name:bob", "param", "secure", "to", "Fred").run(t)
 		cliTest(false, false, "-T", "", "-U", "fred", "-P", "fred", tgt, "get", "Name:bob", "param", "secure").run(t)
 		cliTest(false, true, "-T", "", "-U", "fred", "-P", "fred", tgt, "get", "Name:bob", "param", "secure", "--decode").run(t)
+		cliTest(false, true, "-T", "", "-U", "fred", "-P", "fred", tgt, "get", "Name:bob", "--decode").run(t)
+		cliTest(false, true, "-T", "", "-U", "fred2", "-P", "fred", tgt, "list", "--decode").run(t)
+		cliTest(false, false, "-T", "", "-U", "fred2", "-P", "fred", tgt, "list").run(t)
 	}
 	cliTest(false, false, "users", "update", "fred2", `{"Roles":["secretGetter"]}`).run(t)
 	for _, tgt := range []string{"machines", "profiles", "plugins"} {
 		cliTest(false, true, "-T", "", "-U", "fred2", "-P", "fred", tgt, "set", "Name:bob", "param", "secure", "to", "Freddy").run(t)
 		cliTest(false, false, "-T", "", "-U", "fred2", "-P", "fred", tgt, "get", "Name:bob", "param", "secure").run(t)
 		cliTest(false, false, "-T", "", "-U", "fred2", "-P", "fred", tgt, "get", "Name:bob", "param", "secure", "--decode").run(t)
+		cliTest(false, false, "-T", "", "-U", "fred2", "-P", "fred", tgt, "get", "Name:bob", "--decode").run(t)
+		cliTest(false, false, "-T", "", "-U", "fred2", "-P", "fred", tgt, "list", "--decode").run(t)
+		cliTest(false, false, "-T", "", "-U", "fred2", "-P", "fred", tgt, "list").run(t)
 	}
 	cliTest(false, false, "users", "destroy", "fred2").run(t)
 	cliTest(false, false, "users", "destroy", "fred").run(t)
