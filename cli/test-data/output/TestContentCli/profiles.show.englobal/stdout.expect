@@ -1,0 +1,21 @@
+RE:
+{
+  "Available": true,
+  "Bundle": "withProfile",
+  "Description": "",
+  "Documentation": "",
+  "Endpoint": "Fred",
+  "Errors": \[\],
+  "Meta": {},
+  "Name": "englobal",
+  "Params": {
+    "foo": "bar",
+    "secureFoo": {
+      "Key": ".*",
+      "Nonce": ".*",
+      "Payload": ".*"
+    }
+  },
+  "ReadOnly": true,
+  "Validated": true
+}

@@ -35,11 +35,19 @@ func TestContentCli(t *testing.T) {
   "Name": "withProfile"
 },
 "sections": {
+  "params": {
+    "secureFoo": {
+      "Name": "secureFoo",
+      "Secure": true,
+      "Schema": { "type":"string"},
+    }
+  },
   "profiles": {
     "englobal": {
       "Name": "englobal",
       "Params": {
-        "foo": "bar"
+        "foo": "bar",
+        "secureFoo": "secureBar"
 }
 }
 }
@@ -104,6 +112,11 @@ func TestContentCli(t *testing.T) {
 	cliTest(false, false, "contents", "create", "-").Stdin(contentWithProfileString + "\n").run(t)
 	cliTest(false, true, "profiles", "set", "englobal", "param", "foo", "to", "baz").run(t)
 	cliTest(false, false, "profiles", "get", "englobal", "param", "foo").run(t)
+	cliTest(false, false, "profiles", "get", "englobal", "param", "secureFoo").run(t)
+	cliTest(false, false, "profiles", "get", "englobal", "param", "secureFoo", "--decode").run(t)
+	cliTest(false, false, "profiles", "show", "englobal", "--decode").run(t)
+	cliTest(false, false, "profiles", "show", "englobal").run(t)
+	cliTest(false, false, "contents", "show", "withProfile").run(t)
 	cliTest(false, false, "contents", "destroy", "withProfile").run(t)
 	cliTest(false, false, "contents", "list").run(t)
 
