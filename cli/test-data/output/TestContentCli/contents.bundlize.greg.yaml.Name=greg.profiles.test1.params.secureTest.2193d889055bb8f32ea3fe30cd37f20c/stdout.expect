@@ -1,0 +1,26 @@
+{
+  "Counts": {
+    "params": 1,
+    "profiles": 1
+  },
+  "Warnings": [],
+  "meta": {
+    "Author": "",
+    "CodeSource": "",
+    "Color": "",
+    "Copyright": "",
+    "Description": "Unspecified",
+    "DisplayName": "",
+    "Documentation": "Unspecified",
+    "Icon": "",
+    "License": "",
+    "Name": "greg",
+    "Order": "",
+    "Overwritable": false,
+    "RequiredFeatures": "",
+    "Source": "Unspecified",
+    "Type": "dynamic",
+    "Version": "Unspecified",
+    "Writable": false
+  }
+}

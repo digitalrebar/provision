@@ -18,7 +18,7 @@ func (c *Client) GetContentSummary() ([]*models.ContentSummary, error) {
 
 func (c *Client) GetContentItem(name string) (*models.Content, error) {
 	res := &models.Content{}
-	return res, c.FillModel(res, name)
+	return res, c.Req().UrlFor("contents", name).Do(&res)
 }
 
 func (c *Client) CreateContent(content *models.Content) (*models.ContentSummary, error) {

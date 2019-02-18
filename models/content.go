@@ -1,6 +1,8 @@
 package models
 
-import "github.com/digitalrebar/store"
+import (
+	"github.com/digitalrebar/store"
+)
 
 // All fields must be strings
 type ContentMetaData struct {
@@ -84,6 +86,19 @@ func (c *Content) ToStore(dest store.Store) error {
 		}
 		for k, v := range vals {
 			if err := sub.Save(k, v); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+func (c *Content) Mangle(thunk func(string, interface{}) (interface{}, error)) error {
+	for section := range c.Sections {
+		for k := range c.Sections[section] {
+			if final, err := thunk(section, c.Sections[section][k]); err == nil && final != nil {
+				c.Sections[section][k] = final
+			} else if err != nil {
 				return err
 			}
 		}

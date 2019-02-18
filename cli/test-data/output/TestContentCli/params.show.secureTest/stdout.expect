@@ -1,18 +1,16 @@
-RE:
 {
   "Available": true,
   "Bundle": "greg",
   "Description": "",
   "Documentation": "",
   "Endpoint": "Fred",
-  "Name": "test1",
-  "Params": {
-    "secureTest": {
-      "Key": ".*",
-      "Nonce": ".*",
-      "Payload": ".*"
-    }
-  },
+  "Errors": [],
+  "Meta": {},
+  "Name": "secureTest",
   "ReadOnly": true,
+  "Schema": {
+    "type": "string"
+  },
+  "Secure": true,
   "Validated": true
 }

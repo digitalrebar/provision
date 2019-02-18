@@ -65,6 +65,7 @@ func TestInfo(t *testing.T) {
 				"endpoint-proxy",
 				"inline-upgrade",
 				"bundle-objects",
+				"secure-params-in-content-packs",
 			},
 			License: models.LicenseBundle{Licenses: []models.License{}},
 			Scopes: map[string]map[string]struct{}{

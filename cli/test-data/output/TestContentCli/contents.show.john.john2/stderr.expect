@@ -3,7 +3,8 @@ Usage:
   drpcli contents show [id] [flags]
 
 Flags:
-  -h, --help   help for show
+  -h, --help         help for show
+      --key string   Location to save key for embedded secure parameters
 
 Global Flags:
   -c, --catalog string      The catalog file to use to get product information (default "https://repo.rackn.io")

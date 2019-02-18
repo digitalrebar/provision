@@ -1,0 +1,16 @@
+{
+  "Available": true,
+  "Bundle": "",
+  "Description": "",
+  "Documentation": "",
+  "Endpoint": "Fred",
+  "Errors": [],
+  "Meta": {},
+  "Name": "secureTest",
+  "ReadOnly": false,
+  "Schema": {
+    "type": "string"
+  },
+  "Secure": true,
+  "Validated": true
+}

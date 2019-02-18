@@ -116,7 +116,8 @@ func TestContentCli(t *testing.T) {
 	cliTest(false, false, "profiles", "get", "englobal", "param", "secureFoo", "--decode").run(t)
 	cliTest(false, false, "profiles", "show", "englobal", "--decode").run(t)
 	cliTest(false, false, "profiles", "show", "englobal").run(t)
-	cliTest(false, false, "contents", "show", "withProfile").run(t)
+	cliTest(false, true, "contents", "show", "withProfile").run(t)
+	cliTest(false, false, "contents", "show", "withProfile", "--key", "/tmp/drpkey.json").run(t)
 	cliTest(false, false, "contents", "destroy", "withProfile").run(t)
 	cliTest(false, false, "contents", "list").run(t)
 
@@ -145,6 +146,24 @@ func TestContentCli(t *testing.T) {
 	if _, err := os.Stat("greg.yaml"); os.IsNotExist(err) {
 		t.Errorf("Failed to find greg.yaml\n")
 	}
+	os.Remove("greg.yaml")
+
+	cliTest(false, false, "profiles", "create", "test1").run(t)
+	cliTest(false, false, "params", "create", "-").Stdin(`---
+Name: secureTest
+Secure: true
+Schema:
+  type: string`).run(t)
+	cliTest(false, false, "profiles", "set", "test1", "param", "secureTest", "to", "Fred").run(t)
+	cliTest(false, false, "profiles", "show", "test1").run(t)
+	cliTest(false, false, "profiles", "show", "test1", "--decode").run(t)
+	cliTest(false, true, "contents", "bundlize", "greg.yaml", "Name=greg", "profiles:test1", "params:secureTest", "--delete", "--reload").run(t)
+	cliTest(false, false, "contents", "bundlize", "greg.yaml", "Name=greg", "profiles:test1", "params:secureTest", "--delete", "--reload", "--key", "/tmp/drpkey.json").run(t)
+	cliTest(false, false, "profiles", "show", "test1").run(t)
+	cliTest(false, false, "profiles", "show", "test1", "--decode").run(t)
+	cliTest(false, false, "params", "show", "secureTest").run(t)
+	cliTest(false, false, "contents", "destroy", "greg").run(t)
+	cliTest(false, true, "profiles", "show", "test1").run(t)
 	os.Remove("greg.yaml")
 
 	cliTest(false, false, "profiles", "create", "test1").run(t)
