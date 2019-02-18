@@ -1,7 +1,7 @@
 RE:
 {
   "Available": true,
-  "Bundle": "greg",
+  "Bundle": "",
   "Description": "",
   "Documentation": "",
   "Endpoint": "Fred",
@@ -13,6 +13,6 @@ RE:
       "Payload": ".*"
     }
   },
-  "ReadOnly": true,
+  "ReadOnly": false,
   "Validated": true
 }

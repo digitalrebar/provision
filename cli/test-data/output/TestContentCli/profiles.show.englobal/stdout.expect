@@ -1,13 +1,16 @@
 RE:
 {
   "Available": true,
-  "Bundle": "greg",
+  "Bundle": "withProfile",
   "Description": "",
   "Documentation": "",
   "Endpoint": "Fred",
-  "Name": "test1",
+  "Errors": \[\],
+  "Meta": {},
+  "Name": "englobal",
   "Params": {
-    "secureTest": {
+    "foo": "bar",
+    "secureFoo": {
       "Key": ".*",
       "Nonce": ".*",
       "Payload": ".*"

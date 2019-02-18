@@ -1,0 +1,62 @@
+RE:
+{
+  "meta": {
+    "Author": "",
+    "CodeSource": "",
+    "Color": "",
+    "Copyright": "",
+    "Description": "",
+    "DisplayName": "",
+    "Documentation": "",
+    "Icon": "",
+    "License": "",
+    "Name": "withProfile",
+    "Order": "",
+    "Overwritable": false,
+    "RequiredFeatures": "",
+    "Source": "",
+    "Type": "dynamic",
+    "Version": "",
+    "Writable": false
+  },
+  "sections": {
+    "params": {
+      "secureFoo": {
+        "Available": false,
+        "Bundle": "withProfile",
+        "Description": "",
+        "Documentation": "",
+        "Endpoint": "",
+        "Meta": {},
+        "Name": "secureFoo",
+        "ReadOnly": false,
+        "Schema": {
+          "type": "string"
+        },
+        "Secure": true,
+        "Validated": false
+      }
+    },
+    "profiles": {
+      "englobal": {
+        "Available": false,
+        "Bundle": "withProfile",
+        "Description": "",
+        "Documentation": "",
+        "Endpoint": "",
+        "Meta": {},
+        "Name": "englobal",
+        "Params": {
+          "foo": "bar",
+          "secureFoo": {
+            "Key": ".*",
+            "Nonce": ".*",
+            "Payload": ".*"
+          }
+        },
+        "ReadOnly": false,
+        "Validated": false
+      }
+    }
+  }
+}

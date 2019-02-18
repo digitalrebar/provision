@@ -3,9 +3,10 @@ Usage:
   drpcli contents bundlize [file] [meta fields] [objects] [flags]
 
 Flags:
-      --delete   Delete bundlized content
-  -h, --help     help for bundlize
-      --reload   Load the bundle as a content package (requires delete)
+      --delete       Delete bundlized content
+  -h, --help         help for bundlize
+      --key string   Location to save key for embedded secure parameters
+      --reload       Load the bundle as a content package (requires delete)
 
 Global Flags:
   -c, --catalog string      The catalog file to use to get product information (default "https://repo.rackn.io")

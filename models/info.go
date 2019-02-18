@@ -50,6 +50,15 @@ type Info struct {
 	License  LicenseBundle
 }
 
+func (i *Info) HasFeature(f string) bool {
+	for _, v := range i.Features {
+		if v == f {
+			return true
+		}
+	}
+	return false
+}
+
 func (i *Info) Fill() {
 	i.Arch = runtime.GOARCH
 	i.Os = runtime.GOOS
@@ -88,6 +97,7 @@ func (i *Info) Fill() {
 			"endpoint-proxy",
 			"inline-upgrade",
 			"bundle-objects",
+			"secure-params-in-content-packs",
 		}
 	}
 }

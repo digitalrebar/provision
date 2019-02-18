@@ -75,7 +75,8 @@ RE:
     "endpoint-refs",
     "endpoint-proxy",
     "inline-upgrade",
-    "bundle-objects"
+    "bundle-objects",
+    "secure-params-in-content-packs"
   \],
   "file_port": 10002,
   "id": "Fred",

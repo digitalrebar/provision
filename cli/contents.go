@@ -2,8 +2,11 @@ package cli
 
 import (
 	"bytes"
+	"crypto/rand"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 	"path"
 	"strings"
@@ -13,6 +16,7 @@ import (
 	"github.com/digitalrebar/provision/models"
 	"github.com/digitalrebar/store"
 	"github.com/spf13/cobra"
+	"golang.org/x/crypto/nacl/box"
 )
 
 func init() {
@@ -20,7 +24,8 @@ func init() {
 }
 
 func findOrFake(field string, args map[string]string) string {
-	if p, ok := args[field]; !ok {
+	p, ok := args[field]
+	if !ok {
 		s := "Unspecified"
 		if field == "Type" {
 			// Default Type should be dynamic
@@ -30,16 +35,115 @@ func findOrFake(field string, args map[string]string) string {
 			s = ""
 		}
 		return s
-	} else {
-		return p
 	}
-
+	return p
 }
 
-func replaceContent(path string) error {
+func decryptForUpload(c *models.Content, key string) error {
+	if s, e := session.Info(); e != nil || !s.HasFeature("secure-params-in-content-packs") {
+		return nil
+	}
+	if key == "" {
+		return nil
+	}
+	pk := []byte{}
+	if err := into(key, &pk); err != nil {
+		return err
+	}
+	return c.Mangle(func(prefix string, obj interface{}) (interface{}, error) {
+		v, _ := models.New(prefix)
+		if err := models.Remarshal(obj, v); err != nil {
+			return nil, err
+		}
+		paramer, ok := v.(models.Paramer)
+		if !ok {
+			return nil, nil
+		}
+		params := paramer.GetParams()
+		for k := range params {
+			sd := &models.SecureData{}
+			if err := models.Remarshal(params[k], sd); err != nil || sd.Validate() != nil {
+				continue
+			}
+			if len(pk) != 32 {
+				return nil, models.BadKey
+			}
+			var v interface{}
+			if err := sd.Unmarshal(pk, &v); err != nil {
+				return nil, err
+			}
+			params[k] = v
+		}
+		paramer.SetParams(params)
+		return paramer, nil
+	})
+}
+
+func encryptAfterDownload(c *models.Content) (key []byte, err error) {
+	if s, e := session.Info(); e != nil || !s.HasFeature("secure-params-in-content-packs") {
+		return
+	}
+	sp := []models.Param{}
+	if err = session.Req().Filter("params", "Secure", "Eq", "true").Do(&sp); err != nil {
+		return
+	}
+	if len(sp) == 0 {
+		return
+	}
+	secureParams := map[string]struct{}{}
+	for i := range sp {
+		secureParams[sp[i].Name] = struct{}{}
+	}
+	var pubKey, privKey *[32]byte
+	pubKey, privKey, err = box.GenerateKey(rand.Reader)
+	if err != nil {
+		return
+	}
+	seenSP := false
+	if key, err = json.Marshal(privKey[:]); err != nil {
+		return
+	}
+	err = c.Mangle(func(prefix string, obj interface{}) (interface{}, error) {
+		v, _ := models.New(prefix)
+		if err := models.Remarshal(obj, &v); err != nil {
+			return nil, nil
+		}
+		paramer, ok := v.(models.Paramer)
+		if !ok {
+			return nil, nil
+		}
+		params := paramer.GetParams()
+		for k := range params {
+			if _, ok := secureParams[k]; !ok {
+				continue
+			}
+			sd := &models.SecureData{}
+			if err := models.Remarshal(params[k], sd); err == nil && sd.Validate() == nil {
+				continue
+			}
+			sd = &models.SecureData{}
+			if err = sd.Marshal(pubKey[:], params[k]); err != nil {
+				return nil, err
+			}
+			seenSP = true
+			params[k] = sd
+		}
+		paramer.SetParams(params)
+		return paramer, nil
+	})
+	if !seenSP {
+		key = []byte{}
+	}
+	return
+}
+
+func replaceContent(path, key string) error {
 	layer := &models.Content{}
 	if err := into(path, layer); err != nil {
 		return generateError(err, "Error parsing layer")
+	}
+	if err := decryptForUpload(layer, key); err != nil {
+		return generateError(err, "Error preparing layer")
 	}
 	if res, err := session.ReplaceContent(layer); err == nil {
 		return prettyPrint(res)
@@ -56,6 +160,7 @@ func registerContent(app *cobra.Command) {
 		Use:   "contents",
 		Short: "Access CLI commands relating to content",
 	}
+	var key string
 	content.AddCommand(&cobra.Command{
 		Use:   "list",
 		Short: "List the installed content bundles",
@@ -74,7 +179,7 @@ func registerContent(app *cobra.Command) {
 			return prettyPrint(summary)
 		},
 	})
-	content.AddCommand(&cobra.Command{
+	cshow := &cobra.Command{
 		Use:   "show [id]",
 		Short: "Show a single content layer referenced by [id]",
 		Args: func(c *cobra.Command, args []string) error {
@@ -88,9 +193,23 @@ func registerContent(app *cobra.Command) {
 			if err != nil {
 				return generateError(err, "Failed to fetch content: %s", args[0])
 			}
+			genKey, err := encryptAfterDownload(layer)
+			if err != nil {
+				return generateError(err, "Failed to postprocess comments")
+			}
+			if len(genKey) > 0 {
+				if key == "" {
+					return fmt.Errorf("Content has secure parameters, but cannot save key!  Use --key=path/to/keyfile.json")
+				}
+				if err = ioutil.WriteFile(key, genKey, 0600); err != nil {
+					return generateError(err, "Error saving key for secure params")
+				}
+			}
 			return prettyPrint(layer)
 		},
-	})
+	}
+	cshow.Flags().StringVar(&key, "key", "", "Location to save key for embedded secure parameters")
+	content.AddCommand(cshow)
 	content.AddCommand(&cobra.Command{
 		Use:   "exists [id]",
 		Short: "See if content layer referenced by [id] exists",
@@ -108,7 +227,7 @@ func registerContent(app *cobra.Command) {
 			return nil
 		},
 	})
-	content.AddCommand(&cobra.Command{
+	create := &cobra.Command{
 		Use:   "create [json]",
 		Short: "Add a new content layer to the system",
 		Args: func(c *cobra.Command, args []string) error {
@@ -122,14 +241,19 @@ func registerContent(app *cobra.Command) {
 			if err := into(args[0], layer); err != nil {
 				return generateError(err, "Error parsing layer")
 			}
+			if err := decryptForUpload(layer, key); err != nil {
+				return generateError(err, "Error preparing layer")
+			}
 			if res, err := session.CreateContent(layer); err != nil {
 				return generateError(err, "Error adding content layer")
 			} else {
 				return prettyPrint(res)
 			}
 		},
-	})
-	content.AddCommand(&cobra.Command{
+	}
+	create.Flags().StringVar(&key, "key", "", "Location of key to use for embedded secure parameters")
+	content.AddCommand(create)
+	update := &cobra.Command{
 		Use:   "update [id] [json]",
 		Short: "Replace a content layer in the system.",
 		Args: func(c *cobra.Command, args []string) error {
@@ -144,6 +268,9 @@ func registerContent(app *cobra.Command) {
 			if err := into(args[1], layer); err != nil {
 				return generateError(err, "Error parsing layer")
 			}
+			if err := decryptForUpload(layer, key); err != nil {
+				return generateError(err, "Error preparing layer")
+			}
 			if id != layer.Meta.Name {
 				return fmt.Errorf("Passed ID %s does not match layer ID %s", id, layer.Meta.Name)
 			}
@@ -153,8 +280,10 @@ func registerContent(app *cobra.Command) {
 				return prettyPrint(res)
 			}
 		},
-	})
-	content.AddCommand(&cobra.Command{
+	}
+	update.Flags().StringVar(&key, "key", "", "Location of key to use for embedded secure parameters")
+	content.AddCommand(update)
+	upload := &cobra.Command{
 		Use:   "upload [json]",
 		Short: "Upload a content layer into the system, replacing the earlier one if needed.",
 		Args: func(c *cobra.Command, args []string) error {
@@ -164,9 +293,11 @@ func registerContent(app *cobra.Command) {
 			return nil
 		},
 		RunE: func(c *cobra.Command, args []string) error {
-			return replaceContent(args[0])
+			return replaceContent(args[0], key)
 		},
-	})
+	}
+	upload.Flags().StringVar(&key, "key", "", "Location of key to use for embedded secure parameters")
+	content.AddCommand(upload)
 	content.AddCommand(&cobra.Command{
 		Use:   "destroy [id]",
 		Short: "Remove the content layer [id] from the system.",
@@ -296,7 +427,7 @@ func registerContent(app *cobra.Command) {
 			default:
 				return fmt.Errorf("Unknown store extension %s", ext)
 			}
-
+			log.Printf("Figuring out args")
 			params := map[string]string{}
 			objects := map[string][]string{}
 			for i := 1; i < len(args); i++ {
@@ -321,28 +452,19 @@ func registerContent(app *cobra.Command) {
 					params[parts[0]] = parts[1]
 				}
 			}
-
-			storeURI := fmt.Sprintf("file:%s.tmp?codec=%s", target, codec)
-			s, err := store.Open(storeURI)
-			if err != nil {
-				return fmt.Errorf("Failed to open store %s: %v", target, err)
+			log.Printf("Making content layer")
+			content := &models.Content{
+				Meta: models.ContentMetaData{
+					Name:             findOrFake("Name", params),
+					Description:      findOrFake("Description", params),
+					Documentation:    findOrFake("Documentation", params),
+					RequiredFeatures: findOrFake("RequiredFeatures", params),
+					Version:          findOrFake("Version", params),
+					Source:           findOrFake("Source", params),
+					Type:             findOrFake("Type", params),
+				},
+				Sections: map[string]models.Section{},
 			}
-			defer os.Remove(target + ".tmp")
-			defer s.Close()
-
-			if dm, ok := s.(store.MetaSaver); ok {
-				meta := map[string]string{
-					"Name":             findOrFake("Name", params),
-					"Description":      findOrFake("Description", params),
-					"Documentation":    findOrFake("Documentation", params),
-					"RequiredFeatures": findOrFake("RequiredFeatures", params),
-					"Version":          findOrFake("Version", params),
-					"Source":           findOrFake("Source", params),
-					"Type":             findOrFake("Type", params),
-				}
-				dm.SetMetaData(meta)
-			}
-
 			if len(objects) == 0 {
 				// interactive mode??
 				return fmt.Errorf("No object specified")
@@ -351,35 +473,53 @@ func registerContent(app *cobra.Command) {
 			// Get objects
 			deleteObjects := map[string][]string{}
 			for prefix, list := range objects {
-				sub, err := s.MakeSub(prefix)
-				if err != nil {
-					return fmt.Errorf("Cannot make substore %s: %v", prefix, err)
-				}
-
+				content.Sections[prefix] = map[string]interface{}{}
 				for _, lookupKey := range list {
 					if strings.ContainsAny(lookupKey, "=") {
-						items, err := session.ListModel(prefix, strings.SplitN(lookupKey, "=", 2)...)
+						listArgs := strings.SplitN(lookupKey, "=", 2)
+						listArgs = append(listArgs, "decode", "true")
+						items, err := session.ListModel(prefix, listArgs...)
 						if err != nil {
 							return fmt.Errorf("Failed to list: %s: %v", lookupKey, err)
 						}
 						for _, item := range items {
-							if err := sub.Save(item.Key(), item); err != nil {
-								return fmt.Errorf("Failed to save from list %s:%s: %v", item.Prefix(), item.Key(), err)
-							}
+							log.Printf("Adding %s:%s to %s", prefix, item.Key(), content.Meta.Name)
+							content.Sections[prefix][item.Key()] = item
 							deleteObjects[prefix] = append(deleteObjects[prefix], item.Key())
 						}
 					} else {
 						item, _ := models.New(prefix)
-						if err := session.FillModel(item, lookupKey); err != nil {
+						if err := session.Req().UrlFor(prefix, lookupKey).Params("decode", "true").Do(&item); err != nil {
 							return fmt.Errorf("Failed to get: %s: %v", lookupKey, err)
 						}
-						if err := sub.Save(item.Key(), item); err != nil {
-							return fmt.Errorf("Failed to save %s:%s: %v", item.Prefix(), item.Key(), err)
-						}
+						log.Printf("Adding %s:%s to %s", prefix, item.Key(), content.Meta.Name)
+						content.Sections[prefix][item.Key()] = item
 						deleteObjects[prefix] = append(deleteObjects[prefix], item.Key())
 					}
 				}
 			}
+			genKey, err := encryptAfterDownload(content)
+			if err != nil {
+				return generateError(err, "Failed to postprocess content")
+			}
+			if len(genKey) > 0 {
+				if key == "" {
+					return fmt.Errorf("Content has secure parameters, but cannot save key!  Use --key=path/to/keyfile.json")
+				}
+				if err = ioutil.WriteFile(key, genKey, 0600); err != nil {
+					return generateError(err, "Error saving key for secure params")
+				}
+			}
+			log.Printf("Saving content to local store")
+			storeURI := fmt.Sprintf("file:%s?codec=%s", target, codec)
+			s, err := store.Open(storeURI)
+			if err != nil {
+				return fmt.Errorf("Failed to open store %s: %v", target, err)
+			}
+			if err := content.ToStore(s); err != nil {
+				return fmt.Errorf("Failed to save content layer: %v", err)
+			}
+			s.Close()
 
 			// delete the objects
 			if delete {
@@ -411,20 +551,18 @@ func registerContent(app *cobra.Command) {
 						}
 					}
 				}
-
 				if reload {
-					if err := replaceContent(target + ".tmp"); err != nil {
+					if err := replaceContent(target, key); err != nil {
 						return err
 					}
 				}
 			}
-
-			os.Rename(target+".tmp", target)
 			return nil
 		},
 	}
 	bundlize.Flags().BoolVar(&delete, "delete", false, "Delete bundlized content")
 	bundlize.Flags().BoolVar(&reload, "reload", false, "Load the bundle as a content package (requires delete)")
+	bundlize.Flags().StringVar(&key, "key", "", "Location to save key for embedded secure parameters")
 	content.AddCommand(bundlize)
 
 	// Convert - load a yaml content as read=write objects.
