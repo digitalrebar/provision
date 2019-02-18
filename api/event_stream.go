@@ -2,6 +2,7 @@ package api
 
 import (
 	"crypto/tls"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -88,7 +89,13 @@ func (c *Client) ws() (*websocket.Conn, error) {
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
 	header := http.Header{}
-	header.Set("Authorization", "Bearer "+c.Token())
+	// If we have a token use it, otherwise basic auth
+	if c.Token() != "" {
+		header.Set("Authorization", "Bearer "+c.Token())
+	} else {
+		basicAuth := base64.StdEncoding.EncodeToString([]byte(c.username + ":" + c.password))
+		header.Set("Authorization", "Basic "+basicAuth)
+	}
 	res, _, err := dialer.Dial(ep.String(), header)
 	return res, err
 }
