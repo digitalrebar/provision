@@ -603,7 +603,13 @@ func (c *Client) Logs() ([]logger.Line, error) {
 // you don't have to unless you are building your own http.Requests.
 func (c *Client) Authorize(req *http.Request) error {
 	if req.Header.Get("Authorization") == "" {
-		req.Header.Set("Authorization", "Bearer "+c.Token())
+		// If we have a token use it, otherwise basic auth
+		if c.Token() != "" {
+			req.Header.Set("Authorization", "Bearer "+c.Token())
+		} else {
+			basicAuth := base64.StdEncoding.EncodeToString([]byte(c.username + ":" + c.password))
+			req.Header.Set("Authorization", "Basic "+basicAuth)
+		}
 	}
 	return nil
 }
@@ -792,6 +798,11 @@ func TokenSession(endpoint, token string) (*Client, error) {
 // UserSession does not currently attempt to cache tokens to
 // persistent storage, although that may change in the future.
 func UserSession(endpoint, username, password string) (*Client, error) {
+	return UserSessionToken(endpoint, username, password, true)
+}
+
+// UserSessionToken allows for the token conversion turned off.
+func UserSessionToken(endpoint, username, password string, usetoken bool) (*Client, error) {
 	tr := &http.Transport{
 		Proxy: http.ProxyFromEnvironment,
 		DialContext: (&net.Dialer{
@@ -821,30 +832,32 @@ func UserSession(endpoint, username, password string) (*Client, error) {
 		Do(&token); err != nil {
 		return nil, err
 	}
-	go func() {
-		ticker := time.NewTicker(300 * time.Second)
-		for {
-			select {
-			case <-c.closer:
-				ticker.Stop()
-				tr.CloseIdleConnections()
-				return
-			case <-ticker.C:
-				token := &models.UserToken{}
-				if err := c.reauth(token); err != nil {
-					if err := c.Req().
-						UrlFor("users", c.username, "token").
-						Headers("Authorization", "Basic "+basicAuth).
-						Do(&token); err != nil {
-						log.Fatalf("Error reauthing token, aborting: %v", err)
+	if usetoken {
+		go func() {
+			ticker := time.NewTicker(300 * time.Second)
+			for {
+				select {
+				case <-c.closer:
+					ticker.Stop()
+					tr.CloseIdleConnections()
+					return
+				case <-ticker.C:
+					token := &models.UserToken{}
+					if err := c.reauth(token); err != nil {
+						if err := c.Req().
+							UrlFor("users", c.username, "token").
+							Headers("Authorization", "Basic "+basicAuth).
+							Do(&token); err != nil {
+							log.Fatalf("Error reauthing token, aborting: %v", err)
+						}
 					}
+					c.mux.Lock()
+					c.token = token
+					c.mux.Unlock()
 				}
-				c.mux.Lock()
-				c.token = token
-				c.mux.Unlock()
 			}
-		}
-	}()
-	c.token = token
+		}()
+		c.token = token
+	}
 	return c, nil
 }
