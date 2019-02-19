@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 	"path"
 	"strings"
@@ -427,7 +426,6 @@ func registerContent(app *cobra.Command) {
 			default:
 				return fmt.Errorf("Unknown store extension %s", ext)
 			}
-			log.Printf("Figuring out args")
 			params := map[string]string{}
 			objects := map[string][]string{}
 			for i := 1; i < len(args); i++ {
@@ -452,7 +450,6 @@ func registerContent(app *cobra.Command) {
 					params[parts[0]] = parts[1]
 				}
 			}
-			log.Printf("Making content layer")
 			content := &models.Content{
 				Meta: models.ContentMetaData{
 					Name:             findOrFake("Name", params),
@@ -483,7 +480,6 @@ func registerContent(app *cobra.Command) {
 							return fmt.Errorf("Failed to list: %s: %v", lookupKey, err)
 						}
 						for _, item := range items {
-							log.Printf("Adding %s:%s to %s", prefix, item.Key(), content.Meta.Name)
 							content.Sections[prefix][item.Key()] = item
 							deleteObjects[prefix] = append(deleteObjects[prefix], item.Key())
 						}
@@ -492,7 +488,6 @@ func registerContent(app *cobra.Command) {
 						if err := session.Req().UrlFor(prefix, lookupKey).Params("decode", "true").Do(&item); err != nil {
 							return fmt.Errorf("Failed to get: %s: %v", lookupKey, err)
 						}
-						log.Printf("Adding %s:%s to %s", prefix, item.Key(), content.Meta.Name)
 						content.Sections[prefix][item.Key()] = item
 						deleteObjects[prefix] = append(deleteObjects[prefix], item.Key())
 					}
@@ -510,7 +505,6 @@ func registerContent(app *cobra.Command) {
 					return generateError(err, "Error saving key for secure params")
 				}
 			}
-			log.Printf("Saving content to local store")
 			storeURI := fmt.Sprintf("file:%s?codec=%s", target, codec)
 			s, err := store.Open(storeURI)
 			if err != nil {
