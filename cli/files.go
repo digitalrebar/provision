@@ -101,7 +101,7 @@ func blobCommands(bt string) *cobra.Command {
 			if len(args) == 3 {
 				dest = args[2]
 			}
-			data, err := os.Open(item)
+			data, err := urlOrFileAsReadCloser(item)
 			if err != nil {
 				return fmt.Errorf("Error opening src file %s: %v", item, err)
 			}
