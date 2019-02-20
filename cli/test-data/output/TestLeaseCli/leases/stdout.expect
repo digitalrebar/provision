@@ -24,6 +24,7 @@ Global Flags:
   -E, --endpoint string     The Digital Rebar Provision API endpoint to talk to (default "https://127.0.0.1:10001")
   -f, --force               When needed, attempt to force the operation - used on some update/patch calls
   -F, --format string       The serialzation we expect for output.  Can be "json" or "yaml" (default "json")
+  -x, --noToken             Do not use token auth or token cache
   -P, --password string     password of the Digital Rebar Provision user (default "r0cketsk8ts")
   -r, --ref string          A reference object for update commands that can be a file name, yaml, or json blob
   -T, --token string        token of the Digital Rebar Provision access

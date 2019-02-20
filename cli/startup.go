@@ -31,6 +31,7 @@ var (
 	default_password = "r0cketsk8ts"
 	format           = "json"
 	session          *api.Client
+	noToken          = false
 	force            = false
 	noPretty         = false
 	ref              = ""
@@ -57,7 +58,7 @@ var ppr = func(c *cobra.Command, a []string) error {
 				tPath = path.Join(home, ".cache", "drpcli", "tokens")
 			}
 			tokenFile := path.Join(tPath, "."+username+".token")
-			if tPath != "" {
+			if !noToken && tPath != "" {
 				if err := os.MkdirAll(tPath, 0700); err == nil {
 					if tokenStr, err := ioutil.ReadFile(tokenFile); err == nil {
 						session, err = api.TokenSession(endpoint, string(tokenStr))
@@ -73,8 +74,8 @@ var ppr = func(c *cobra.Command, a []string) error {
 					}
 				}
 			}
-			session, err = api.UserSession(endpoint, username, password)
-			if tPath != "" && err == nil {
+			session, err = api.UserSessionToken(endpoint, username, password, !noToken)
+			if !noToken && tPath != "" && err == nil {
 				if err := os.MkdirAll(tPath, 700); err == nil {
 					tok := &models.UserToken{}
 					if err := session.
@@ -181,6 +182,9 @@ func NewApp() *cobra.Command {
 	app.PersistentFlags().StringVarP(&catalog,
 		"catalog", "c", default_catalog,
 		"The catalog file to use to get product information")
+	app.PersistentFlags().BoolVarP(&noToken,
+		"noToken", "x", noToken,
+		"Do not use token auth or token cache")
 
 	for _, rs := range registrations {
 		rs(app)
