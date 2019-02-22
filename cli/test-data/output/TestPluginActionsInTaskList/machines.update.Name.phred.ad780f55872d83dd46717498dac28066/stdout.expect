@@ -3,7 +3,7 @@ RE:
   "BootEnv": "local",
   "CurrentTask": -1,
   "Description": "",
-  "Endpoint": "Fred",
+  "Endpoint": "",
   "Name": "phred",
   "OS": "",
   "Params": {

@@ -4,7 +4,7 @@
     "Bundle": "",
     "Description": "",
     "Documentation": "",
-    "Endpoint": "Fred",
+    "Endpoint": "",
     "Errors": [],
     "Meta": {
       "feature-flags": "sane-exit-codes"
@@ -21,7 +21,7 @@
     "Bundle": "",
     "Description": "",
     "Documentation": "",
-    "Endpoint": "Fred",
+    "Endpoint": "",
     "Errors": [],
     "Meta": {
       "feature-flags": "sane-exit-codes"

@@ -15,9 +15,15 @@ type Owned struct {
 //
 type Owner interface {
 	GetEndpoint() string
+	SetEndpoint(string)
 }
 
 // GetEndpoint returns the name of the owning DRP Endpoint
 func (o *Owned) GetEndpoint() string {
 	return o.Endpoint
+}
+
+// SetEndpoint sets the model's Endpoint
+func (o *Owned) SetEndpoint(n string) {
+	o.Endpoint = n
 }

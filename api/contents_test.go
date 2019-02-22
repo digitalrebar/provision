@@ -170,7 +170,7 @@ sections:
       Bundle: BackingStore
       Description: Global profile attached automatically to all machines.
       Documentation: ""
-      Endpoint: Fred
+      Endpoint: ""
       Errors: []
       Meta:
         color: blue
@@ -192,7 +192,7 @@ sections:
       Available: false
       Bundle: BackingStore
       Description: ""
-      Endpoint: Fred
+      Endpoint: ""
       Errors: []
       Meta: {}
       Name: rocketskates
@@ -374,7 +374,7 @@ meta:
 			name: "Make sure we can get the ignoble boot env",
 			expectRes: mustDecode(&models.BootEnv{}, `
 Available: true
-Endpoint: Fred
+Endpoint: ""
 Bundle: BarkingStore
 Description: The boot environment you should use to have unknown machines boot off
   their local hard drive

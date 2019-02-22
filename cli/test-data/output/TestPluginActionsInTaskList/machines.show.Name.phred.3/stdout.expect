@@ -2,7 +2,7 @@ RE:
   "Available": true,
   "BootEnv": "local",
   "CurrentTask": 0,
-  "Endpoint": "Fred",
+  "Endpoint": "",
   "Name": "phred",
   "Params": \{
     "incrementer/default": 4,

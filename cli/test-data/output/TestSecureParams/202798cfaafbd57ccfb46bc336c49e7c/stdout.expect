@@ -9,7 +9,7 @@ RE:
     "CurrentJob": "",
     "CurrentTask": -1,
     "Description": "",
-    "Endpoint": "Fred",
+    "Endpoint": "",
     "Meta": {
       "feature-flags": "change-stage-v2"
     },
