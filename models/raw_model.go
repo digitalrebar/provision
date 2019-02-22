@@ -32,6 +32,10 @@ func (r *RawModel) GetEndpoint() string {
 	return sobj
 }
 
+func (r *RawModel) SetEndpoint(n string) {
+	(*r)["Endpoint"] = n
+}
+
 // Helpers to get fields
 func (r *RawModel) GetStringField(field string) (string, bool) {
 	if val, ok := (*r)[field]; ok {

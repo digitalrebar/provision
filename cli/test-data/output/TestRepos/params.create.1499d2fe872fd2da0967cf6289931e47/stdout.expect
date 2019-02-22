@@ -3,7 +3,7 @@
   "Bundle": "",
   "Description": "Repositories to use to install packages from",
   "Documentation": "",
-  "Endpoint": "Fred",
+  "Endpoint": "",
   "Errors": [],
   "Meta": {},
   "Name": "package-repositories",

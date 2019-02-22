@@ -5,7 +5,7 @@ RE:
     "Bundle": "BackingStore",
     "Description": "",
     "Documentation": "",
-    "Endpoint": "Fred",
+    "Endpoint": "",
     "Meta": {},
     "Name": "bob",
     "Params": {

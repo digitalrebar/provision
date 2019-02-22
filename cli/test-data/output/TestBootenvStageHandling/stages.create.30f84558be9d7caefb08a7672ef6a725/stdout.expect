@@ -4,7 +4,7 @@
   "Bundle": "",
   "Description": "",
   "Documentation": "",
-  "Endpoint": "Fred",
+  "Endpoint": "",
   "Errors": [
     "BootEnv fred does not exist"
   ],

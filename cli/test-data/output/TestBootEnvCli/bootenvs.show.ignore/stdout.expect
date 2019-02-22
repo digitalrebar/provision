@@ -4,7 +4,7 @@
   "Bundle": "BasicStore",
   "Description": "The boot environment you should use to have unknown machines boot off their local hard drive",
   "Documentation": "",
-  "Endpoint": "Fred",
+  "Endpoint": "",
   "Errors": [],
   "Initrds": [],
   "Kernel": "",

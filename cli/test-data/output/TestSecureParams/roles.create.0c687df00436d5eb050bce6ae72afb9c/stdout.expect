@@ -15,7 +15,7 @@
   ],
   "Description": "",
   "Documentation": "",
-  "Endpoint": "Fred",
+  "Endpoint": "",
   "Errors": [],
   "Meta": {},
   "Name": "secretGetter",

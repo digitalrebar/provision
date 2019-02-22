@@ -71,7 +71,7 @@ func TestJobs(t *testing.T) {
 	machine1 := mustDecode(&models.Machine{}, `
 Address: 192.168.100.110
 BootEnv: local
-Endpoint: Fred
+Endpoint: ""
 Meta:
   feature-flags: change-stage-v2
 Name: john
@@ -80,7 +80,7 @@ Validated: true
 `).(*models.Machine)
 	task1 := mustDecode(&models.Task{}, `
 Name: task1
-Endpoint: Fred
+Endpoint: ""
 Meta:
   feature-flags: original-exit-codes
 Templates:
@@ -109,7 +109,7 @@ Templates:
 
 	task2 := mustDecode(&models.Task{}, `
 Name: task2
-Endpoint: Fred
+Endpoint: ""
 Meta:
   feature-flags: sane-exit-codes
 Templates:
@@ -152,7 +152,7 @@ Templates:
 
 	stage1 := mustDecode(&models.Stage{}, `
 Name: stage1
-Endpoint: Fred
+Endpoint: ""
 RunnerWait: true
 Tasks:
 - task1
@@ -160,7 +160,7 @@ Tasks:
 `).(*models.Stage)
 	stage2 := mustDecode(&models.Stage{}, `
 Name: stage2
-Endpoint: Fred
+Endpoint: ""
 RunnerWait: true
 Tasks:
 - task2

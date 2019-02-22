@@ -4,7 +4,7 @@
     "Bundle": "BackingStore",
     "Description": "",
     "Documentation": "",
-    "Endpoint": "Fred",
+    "Endpoint": "",
     "Errors": [],
     "Meta": {},
     "Name": "bob",
@@ -19,7 +19,7 @@
     "Bundle": "BackingStore",
     "Description": "Global profile attached automatically to all machines.",
     "Documentation": "",
-    "Endpoint": "Fred",
+    "Endpoint": "",
     "Errors": [],
     "Meta": {
       "color": "blue",
@@ -36,7 +36,7 @@
     "Bundle": "rackn-license",
     "Description": "RackN License Holder",
     "Documentation": "",
-    "Endpoint": "Fred",
+    "Endpoint": "",
     "Errors": [],
     "Meta": {
       "color": "blue",

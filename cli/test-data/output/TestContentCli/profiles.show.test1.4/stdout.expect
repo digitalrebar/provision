@@ -4,7 +4,7 @@ RE:
   "Bundle": "",
   "Description": "",
   "Documentation": "",
-  "Endpoint": "Fred",
+  "Endpoint": "",
   "Name": "test1",
   "Params": {
     "secureTest": {

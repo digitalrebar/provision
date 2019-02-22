@@ -3,7 +3,7 @@ RE:
   "BootEnv": "local",
   "CurrentTask": 0,
   "Description": "",
-  "Endpoint": "Fred",
+  "Endpoint": "",
   "Name": "phred",
   "Params": \{
     "incrementer/default": 4,

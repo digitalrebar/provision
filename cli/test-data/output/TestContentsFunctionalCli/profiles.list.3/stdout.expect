@@ -4,7 +4,7 @@
     "Bundle": "BackingStore",
     "Description": "Global profile attached automatically to all machines.",
     "Documentation": "",
-    "Endpoint": "Fred",
+    "Endpoint": "",
     "Errors": [],
     "Meta": {
       "color": "blue",
@@ -21,7 +21,7 @@
     "Bundle": "Pack1",
     "Description": "pack1-2",
     "Documentation": "",
-    "Endpoint": "Fred",
+    "Endpoint": "",
     "Errors": [],
     "Meta": {},
     "Name": "p2-prof",

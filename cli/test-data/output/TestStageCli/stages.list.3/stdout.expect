@@ -5,7 +5,7 @@
     "Bundle": "BasicStore",
     "Description": "Stage to boot into the local BootEnv.",
     "Documentation": "",
-    "Endpoint": "Fred",
+    "Endpoint": "",
     "Errors": [],
     "Meta": {
       "color": "green",
@@ -29,7 +29,7 @@
     "Bundle": "BasicStore",
     "Description": "Noop / Nothing stage",
     "Documentation": "",
-    "Endpoint": "Fred",
+    "Endpoint": "",
     "Errors": [],
     "Meta": {
       "color": "green",
