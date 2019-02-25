@@ -488,6 +488,32 @@ The expected behavior is for a client to attempt to download files in the follow
 
 Due to this behavior, filenames will be specified that do not exist, and the error message related to that probe request is a normal message.  This is NOT an indicator that provisioning is broken in your environment.
 
+.. _rs_different_pxelinux_version:
+
+Change Pxelinux Versions
+------------------------
+
+DRP ships with two versions of PXELinux, 6.03 and 3.86.  The default operation is to use 6.03 as lpxelinux.0 with
+all the supporting files present in the tftpboot root directory.  This does not always work for all environments.
+It is sometimes useful to change this.  In general, DRP attempts to serve iPXE based bootloaders through the
+default DHCP operations.  Again, this is not always possible.
+
+The 3.86 version is a single file shipped as esxi.0.
+
+There are couple of ways to change the operation.
+
+First, the file, esxi.0, can be used by changing the bootfile option in DHCP server.  For DRP, this can be at
+the subnet or reservation level.
+
+Second, the lpxelinux.0 file can be replaced.  To do this safely, a couple of steps need to be done.
+
+#. In the tftpboot directory, copy lpxelinux.0 to lpxelinux.0.bak.
+#. In the replace direcotry, copy esxi.0 to lpxelinux.0.  The replace directory is usually a peer to the tftpboot
+   directory.
+#. In the tftpboot directory, copy esxi.0 to lpxelinux.0.
+
+The middle step keeps DRP from overwriting your changes on startup.
+
 .. _rs_render_kickstart_preseed:
 
 Render a Kickstart or Preseed
