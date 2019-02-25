@@ -181,6 +181,61 @@ uploads, interrogate them to discover what functionality they
 implement, import any content built in to the plugin, and hand off
 requests and events to the plugin for further processing.
 
+.. _rs_plugin_license_events:
+
+Plugin License Events
+=====================
+
+When plugins are loaded, they will validate their licenses and fail to load or generate events.  You may see
+these events as part of that validation process.
+
+A plugin that determines a license is hard expired will generate an event:
+
+* Type - plugins
+* Action - failure
+* Key - Name of Plugin
+* Object - A data structure.
+
+The object data structure has four fields:
+
+* Type - "license expired (hard)"
+* CurrentDate - The current date
+* SoftExpireDate - The soft expire date
+* HardExpireDate - The hard expire date
+
+The plugin will then exit.
+
+A plugin that detects an exceeded value in the license, e.g. too machines, will generate an event:
+
+* Type - plugins
+* Action - exceeded
+* Key - Name of Plugin
+* Object - A data structure
+
+The object data structure has three fields:
+
+* Type - what was exceeded, e.g. machines
+* Current - integer count of current objects
+* Expected - integer count of expected objects
+
+The plugin will then exit.
+
+A plugin that determines a license is soft expired will generate an event:
+
+* Type - plugins
+* Action - failure
+* Key - Name of Plugin
+* Object - A data structure.
+
+The object data structure has four fields:
+
+* Type - "license expired (soft)"
+* CurrentDate - The current date
+* SoftExpireDate - The soft expire date
+* HardExpireDate - The hard expire date
+
+The plugin will continue to operate.
+
 .. _rs_arch_content:
 
 Content Package Management
