@@ -255,6 +255,32 @@ The contents and structure of these locations is the same.  Follow the below pro
 
 .. note::  WARNING:  If you install a new version of the Digital Rebar Provision service, you must verify that there are no Contents differences between the two versions.  Should the ``dr-provision`` service fail to start up; it's entirely likely that there may be some content changes that need to be addressed in the JSON/YAML files prior to the new version being started.  See the :ref:`rs_upgrade` notes for any version-to-version specific documentation.
 
+.. _rs_customize_production_mode:
+
+Customize Production Mode
+-------------------------
+
+You can use systemd drop configuration to alter dr-provision start up options.
+
+To use, figure out the environment variable to set by checking the help of dr-provision.  e.g. dr-provision -h
+
+You will need to create the drop-in directory if it doesn't exist.
+
+* mkdir -p /etc/systemd/system/dr-provision.service.d
+
+Then you will need to create a drop-in service file.  For example, to name your system, you would use this file, drpid.conf:
+
+  ::
+
+     [ Service ]
+     Environment=RS_DRP_ID=mydrpserver
+
+Then reload and restart the service.
+
+* sudo systemctl daemon-reload && sudo systemctl restart dr-provision
+
+This will work with multiple files and multiple variables.
+
 
 .. _rs_kickseed:
 
