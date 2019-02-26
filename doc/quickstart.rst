@@ -9,13 +9,13 @@
 Quick Start
 ~~~~~~~~~~~
 
-.. note::  We HIGHLY recommend using the ``latest`` version of the documentation, as it contains the most up to date information.  Use the version selector in the lower     right corner of your browser.
+.. note::  We HIGHLY recommend using the ``latest`` version of the documentation, as it contains the most up to date information.  Use the version selector in the lower right corner of your browser.
 
 This quick start guide provides a basic installation and start point for further exploration.  The guide has been designed for UNIX systems: Mac OS, Linux OS, Linux VMs and Linux Packet Servers.  While it is possible to install and run Digital Rebar Provision on a Windows instance, we do not cover that here.  The guide employs Curl and Bash commands which are not typically considered safe, but they do provide a simple and quick process for start up.
 
 It is possible to install on hypervisors and in virtualized environments (eg. VirtualBox, VMware Workstation/Fusion, KVM, etc.).  Each of these environments requires careful setup up of your network environment and consideration with regard to competing DHCP services.  The setup of these environments is outside the scope of this document.
 
-For a full install, please see :ref:`rs_install`
+For a full install, or for installations that require offline setup (no direct access to the internet to install prereqs, or pull down zip files), please see the full :ref:`rs_install` documentation.
 
 Overview
 --------
