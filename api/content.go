@@ -66,6 +66,14 @@ func (c *Client) BundleContent(src string, dst store.Store, params map[string]st
 			"Version":          findOrFake(src, "Version", params),
 			"Source":           findOrFake(src, "Source", params),
 			"Type":             findOrFake(src, "Type", params),
+			"Color":            findOrFake(src, "Color", params),
+			"Icon":             findOrFake(src, "Icon", params),
+			"Author":           findOrFake(src, "Author", params),
+			"DisplayName":      findOrFake(src, "DisplayName", params),
+			"License":          findOrFake(src, "License", params),
+			"Copyright":        findOrFake(src, "Copyright", params),
+			"CodeSource":       findOrFake(src, "CodeSource", params),
+			"Order":            findOrFake(src, "Order", params),
 		}
 		dm.SetMetaData(meta)
 	}
