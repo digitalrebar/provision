@@ -18,6 +18,7 @@
     "Overwritable": false,
     "RequiredFeatures": "secure-params",
     "Source": "",
+    "Tags": "",
     "Type": "dynamic",
     "Version": "",
     "Writable": false
