@@ -26,6 +26,7 @@ type ContentMetaData struct {
 	CodeSource  string
 	Order       string
 	Tags        string // Comma separated list
+	DocUrl      string
 
 	// Informational Fields
 	Writable     bool
@@ -77,6 +78,7 @@ func (c *Content) ToStore(dest store.Store) error {
 			"Author":           c.Meta.Author,
 			"Order":            c.Meta.Order,
 			"Tags":             c.Meta.Tags,
+			"DocUrl":           c.Meta.DocUrl,
 		}
 		if err := dmeta.SetMetaData(meta); err != nil {
 			return err
@@ -138,6 +140,8 @@ func (c *Content) FromStore(src store.Store) error {
 				c.Meta.Order = v
 			case "Tags":
 				c.Meta.Tags = v
+			case "DocUrl":
+				c.Meta.DocUrl = v
 			}
 		}
 	}
@@ -234,6 +238,8 @@ func (c *ContentSummary) FromStore(src store.Store) {
 				c.Meta.Author = v
 			case "Order":
 				c.Meta.Order = v
+			case "DocUrl":
+				c.Meta.DocUrl = v
 			}
 		}
 	}
