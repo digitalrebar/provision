@@ -35,6 +35,7 @@
       "Overwritable": false,
       "RequiredFeatures": "",
       "Source": "",
+      "Tags": "",
       "Type": "writable",
       "Version": "user",
       "Writable": true
@@ -60,6 +61,7 @@
       "Overwritable": true,
       "RequiredFeatures": "",
       "Source": "",
+      "Tags": "",
       "Type": "local",
       "Version": "user",
       "Writable": false
@@ -85,6 +87,7 @@
       "Overwritable": true,
       "RequiredFeatures": "",
       "Source": "Unspecified",
+      "Tags": "",
       "Type": "default",
       "Version": "user",
       "Writable": false
@@ -110,6 +113,7 @@
       "Overwritable": false,
       "RequiredFeatures": "",
       "Source": "Digital Rebar",
+      "Tags": "",
       "Type": "plugin",
       "Version": "Internal",
       "Writable": false
@@ -138,6 +142,7 @@
       "Overwritable": true,
       "RequiredFeatures": "",
       "Source": "",
+      "Tags": "",
       "Type": "basic",
       "Version": "Unversioned",
       "Writable": false

@@ -25,6 +25,7 @@ type ContentMetaData struct {
 	Copyright   string
 	CodeSource  string
 	Order       string
+	Tags        string // Comma separated list
 
 	// Informational Fields
 	Writable     bool
@@ -75,6 +76,7 @@ func (c *Content) ToStore(dest store.Store) error {
 			"Icon":             c.Meta.Icon,
 			"Author":           c.Meta.Author,
 			"Order":            c.Meta.Order,
+			"Tags":             c.Meta.Tags,
 		}
 		if err := dmeta.SetMetaData(meta); err != nil {
 			return err
@@ -134,6 +136,8 @@ func (c *Content) FromStore(src store.Store) error {
 				c.Meta.Author = v
 			case "Order":
 				c.Meta.Order = v
+			case "Tags":
+				c.Meta.Tags = v
 			}
 		}
 	}
