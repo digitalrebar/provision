@@ -74,6 +74,7 @@ func (c *Content) ToStore(dest store.Store) error {
 			"Color":            c.Meta.Color,
 			"Icon":             c.Meta.Icon,
 			"Author":           c.Meta.Author,
+			"Order":            c.Meta.Order,
 		}
 		if err := dmeta.SetMetaData(meta); err != nil {
 			return err
@@ -131,6 +132,8 @@ func (c *Content) FromStore(src store.Store) error {
 				c.Meta.Icon = v
 			case "Author":
 				c.Meta.Author = v
+			case "Order":
+				c.Meta.Order = v
 			}
 		}
 	}
@@ -225,6 +228,8 @@ func (c *ContentSummary) FromStore(src store.Store) {
 				c.Meta.Icon = v
 			case "Author":
 				c.Meta.Author = v
+			case "Order":
+				c.Meta.Order = v
 			}
 		}
 	}
