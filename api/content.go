@@ -60,11 +60,11 @@ func (c *Client) BundleContent(src string, dst store.Store, params map[string]st
 	if dm, ok := dst.(store.MetaSaver); ok {
 		meta := map[string]string{
 			"Name":             findOrFake(src, "Name", params),
+			"Version":          findOrFake(src, "Version", params),
 			"Description":      findOrFake(src, "Description", params),
+			"Source":           findOrFake(src, "Source", params),
 			"Documentation":    findOrFake(src, "Documentation", params),
 			"RequiredFeatures": findOrFake(src, "RequiredFeatures", params),
-			"Version":          findOrFake(src, "Version", params),
-			"Source":           findOrFake(src, "Source", params),
 			"Type":             findOrFake(src, "Type", params),
 			"Color":            findOrFake(src, "Color", params),
 			"Icon":             findOrFake(src, "Icon", params),
@@ -74,6 +74,8 @@ func (c *Client) BundleContent(src string, dst store.Store, params map[string]st
 			"Copyright":        findOrFake(src, "Copyright", params),
 			"CodeSource":       findOrFake(src, "CodeSource", params),
 			"Order":            findOrFake(src, "Order", params),
+			"Tags":             findOrFake(src, "Tags", params),
+			"DocUrl":           findOrFake(src, "DocUrl", params),
 		}
 		dm.SetMetaData(meta)
 	}
