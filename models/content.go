@@ -29,8 +29,8 @@ type ContentMetaData struct {
 	DocUrl      string
 
 	// Informational Fields
-	Writable     bool
 	Type         string
+	Writable     bool
 	Overwritable bool
 }
 
@@ -66,19 +66,26 @@ func (c *Content) ToStore(dest store.Store) error {
 	c.Fill()
 	if dmeta, ok := dest.(store.MetaSaver); ok {
 		meta := map[string]string{
-			"Name":             c.Meta.Name,
-			"Source":           c.Meta.Source,
-			"Description":      c.Meta.Description,
-			"Version":          c.Meta.Version,
-			"Type":             c.Meta.Type,
+			"Name":        c.Meta.Name,
+			"Version":     c.Meta.Version,
+			"Description": c.Meta.Description,
+			"Source":      c.Meta.Source,
+
+			"Type": c.Meta.Type,
+
 			"Documentation":    c.Meta.Documentation,
 			"RequiredFeatures": c.Meta.RequiredFeatures,
-			"Color":            c.Meta.Color,
-			"Icon":             c.Meta.Icon,
-			"Author":           c.Meta.Author,
-			"Order":            c.Meta.Order,
-			"Tags":             c.Meta.Tags,
-			"DocUrl":           c.Meta.DocUrl,
+
+			"Color":       c.Meta.Color,
+			"Icon":        c.Meta.Icon,
+			"Author":      c.Meta.Author,
+			"DisplayName": c.Meta.DisplayName,
+			"License":     c.Meta.License,
+			"Copyright":   c.Meta.Copyright,
+			"CodeSource":  c.Meta.CodeSource,
+			"Order":       c.Meta.Order,
+			"Tags":        c.Meta.Tags,
+			"DocUrl":      c.Meta.DocUrl,
 		}
 		if err := dmeta.SetMetaData(meta); err != nil {
 			return err
@@ -136,6 +143,14 @@ func (c *Content) FromStore(src store.Store) error {
 				c.Meta.Icon = v
 			case "Author":
 				c.Meta.Author = v
+			case "DisplayName":
+				c.Meta.DisplayName = v
+			case "License":
+				c.Meta.License = v
+			case "Copyright":
+				c.Meta.Copyright = v
+			case "CodeSource":
+				c.Meta.CodeSource = v
 			case "Order":
 				c.Meta.Order = v
 			case "Tags":
@@ -236,6 +251,14 @@ func (c *ContentSummary) FromStore(src store.Store) {
 				c.Meta.Icon = v
 			case "Author":
 				c.Meta.Author = v
+			case "DisplayName":
+				c.Meta.DisplayName = v
+			case "License":
+				c.Meta.License = v
+			case "Copyright":
+				c.Meta.Copyright = v
+			case "CodeSource":
+				c.Meta.CodeSource = v
 			case "Order":
 				c.Meta.Order = v
 			case "DocUrl":
