@@ -129,7 +129,7 @@ Once running, the following endpoints are available:
 * https://127.0.0.1:8092/swagger-ui - swagger-ui to explore the API
 * https://127.0.0.1:8092/swagger.json - API Swagger JSON file
 * https://127.0.0.1:8092/api/v3 - Raw api endpoint
-* https://127.0.0.1:8092/ux - Redirects to Community Portal (maintained by RackN)
+* https://127.0.0.1:8092/ - Redirects to RackN Portal (available for community use)
 * http://127.0.0.1:8091 - Static files served by http from the *test-data/tftpboot* directory
 * udp 69 - Static files served from the test-data/tftpboot directory through the tftp protocol
 * udp 67 - DHCP Server listening socket - will only serve addresses when once configured.  By default, silent.
@@ -173,6 +173,8 @@ Start the "dr-provision" binary as an ordinary user, and now it will have permis
 
 .. note:: The *setcap* command must reference the actual binary itself, and can not be pointed at a symbolic link.  Additional refinement of the capabilities may be possible.  For extremely security conscious setups, you may want to refer to the StackOverflow discussion (eg setting capabilities on a per-user basis, etc.):
   https://stackoverflow.com/questions/1956732/is-it-possible-to-configure-linux-capabilities-per-user
+
+.. note:: You must run the *setcap* command after very upgrade of DRP, the *setcap* tracks the binary and if it changes, you must rerun for the new binary.
 
 System Logs
 ===========
