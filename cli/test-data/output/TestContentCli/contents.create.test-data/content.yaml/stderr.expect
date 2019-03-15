@@ -1,0 +1,19 @@
+Error: Failed to load backing objects from cache
+  Templates[0]: No common template for default-pxelinux.tmpl
+  Templates[1]: No common template for default-elilo.tmpl
+  Templates[2]: No common template for default-ipxe.tmpl
+  Templates[0]: No common template for default-pxelinux.tmpl
+  Templates[1]: No common template for default-elilo.tmpl
+  Templates[2]: No common template for default-ipxe.tmpl
+  Templates[0]: No common template for default-pxelinux.tmpl
+  Templates[1]: No common template for default-elilo.tmpl
+  Templates[2]: No common template for default-ipxe.tmpl
+  Templates[3]: No common template for centos-7.ks.tmpl
+  Templates[0]: No common template for default-pxelinux.tmpl
+  Templates[1]: No common template for default-elilo.tmpl
+  Templates[2]: No common template for default-ipxe.tmpl
+  Templates[0]: No common template for default-pxelinux.tmpl
+  Templates[1]: No common template for default-elilo.tmpl
+  Templates[2]: No common template for default-ipxe.tmpl
+  Templates[3]: No common template for net-seed.tmpl
+  Templates[4]: No common template for net-post-install.sh.tmpl
