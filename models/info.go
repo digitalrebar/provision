@@ -98,6 +98,7 @@ func (i *Info) Fill() {
 			"inline-upgrade",
 			"bundle-objects",
 			"secure-params-in-content-packs",
+			"task-prerequisites",
 		}
 	}
 }

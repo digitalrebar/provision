@@ -66,6 +66,7 @@ func TestInfo(t *testing.T) {
 				"inline-upgrade",
 				"bundle-objects",
 				"secure-params-in-content-packs",
+				"task-prerequisites",
 			},
 			License: models.LicenseBundle{Licenses: []models.License{}},
 			Scopes: map[string]map[string]struct{}{
