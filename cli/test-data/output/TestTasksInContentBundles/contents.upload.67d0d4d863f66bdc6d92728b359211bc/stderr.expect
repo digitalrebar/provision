@@ -1,0 +1,5 @@
+Error: Failed to load backing objects from cache
+  Task t1 depends on itself!
+  t1: t2: t1 (cycle at 0)
+  Task t2 depends on itself!
+  t2: t1: t2 (cycle at 0)

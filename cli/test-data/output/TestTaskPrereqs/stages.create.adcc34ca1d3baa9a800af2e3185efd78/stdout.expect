@@ -1,0 +1,26 @@
+{
+  "Available": true,
+  "BootEnv": "two",
+  "Bundle": "",
+  "Description": "",
+  "Documentation": "",
+  "Endpoint": "",
+  "Errors": [],
+  "Meta": {},
+  "Name": "flat2",
+  "OptionalParams": [],
+  "Profiles": [],
+  "ReadOnly": false,
+  "Reboot": false,
+  "RequiredParams": [],
+  "RunnerWait": true,
+  "Tasks": [
+    "foo1",
+    "foo4",
+    "bar1",
+    "bar2",
+    "bar4"
+  ],
+  "Templates": [],
+  "Validated": true
+}

@@ -1,0 +1,22 @@
+{
+  "Available": true,
+  "Bundle": "",
+  "Description": "",
+  "Documentation": "",
+  "Endpoint": "",
+  "Errors": [],
+  "Meta": {
+    "feature-flags": "sane-exit-codes"
+  },
+  "Name": "bar3",
+  "OptionalParams": [],
+  "Prerequisites": [
+    "foo4",
+    "foo5",
+    "foo6"
+  ],
+  "ReadOnly": false,
+  "RequiredParams": [],
+  "Templates": [],
+  "Validated": true
+}

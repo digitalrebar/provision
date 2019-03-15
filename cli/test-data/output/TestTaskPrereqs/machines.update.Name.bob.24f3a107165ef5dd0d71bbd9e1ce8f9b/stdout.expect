@@ -1,0 +1,51 @@
+RE:
+{
+  "Address": "",
+  "Arch": "amd64",
+  "Available": true,
+  "BootEnv": "local",
+  "Bundle": "",
+  "CurrentJob": "",
+  "CurrentTask": -1,
+  "Description": "",
+  "Endpoint": "",
+  "Errors": \[\],
+  "HardwareAddrs": \[\],
+  "Meta": {
+    "feature-flags": "change-stage-v2"
+  },
+  "Name": "bob",
+  "OS": "",
+  "Params": {},
+  "Profile": {
+    "Available": false,
+    "Bundle": "",
+    "Description": "",
+    "Documentation": "",
+    "Endpoint": "",
+    "Errors": null,
+    "Meta": null,
+    "Name": "",
+    "Params": null,
+    "ReadOnly": false,
+    "Validated": false
+  },
+  "ReadOnly": false,
+  "Runnable": true,
+  "Stage": "flat1",
+  "Tasks": \[
+    "foo1",
+    "foo4",
+    "foo2",
+    "foo3",
+    "bar1",
+    "bar2",
+    "foo5",
+    "foo6",
+    "bar3",
+    "foo7",
+    "bar4"
+  \],
+  "Validated": true,
+  "Workflow": ""
+}

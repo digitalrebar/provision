@@ -1,0 +1,29 @@
+{
+  "Available": true,
+  "BootParams": "",
+  "Bundle": "",
+  "Description": "",
+  "Documentation": "",
+  "Endpoint": "",
+  "Errors": [],
+  "Initrds": [],
+  "Kernel": "",
+  "Meta": {},
+  "Name": "two",
+  "OS": {
+    "Codename": "",
+    "Family": "",
+    "IsoFile": "",
+    "IsoSha256": "",
+    "IsoUrl": "",
+    "Name": "",
+    "SupportedArchitectures": {},
+    "Version": ""
+  },
+  "OnlyUnknown": false,
+  "OptionalParams": [],
+  "ReadOnly": false,
+  "RequiredParams": [],
+  "Templates": [],
+  "Validated": true
+}

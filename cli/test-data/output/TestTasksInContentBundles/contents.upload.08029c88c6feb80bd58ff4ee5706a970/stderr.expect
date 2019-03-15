@@ -1,0 +1,13 @@
+Error: Failed to load backing objects from cache
+  Task t2 depends on a task with a circular dependency
+  t1: t2: t3: t2 (cycle at 1)
+  Task t3 depends on a task with a circular dependency
+  t1: t3: t2: t3 (cycle at 1)
+  Task t4 depends on a task with a circular dependency
+  t1: t4: t4 (cycle at 1)
+  Task t2 depends on itself!
+  t2: t3: t2 (cycle at 0)
+  Task t3 depends on itself!
+  t3: t2: t3 (cycle at 0)
+  Task t4 depends on itself!
+  t4: t4 (cycle at 0)

@@ -1,0 +1,17 @@
+{
+  "Available": true,
+  "Bundle": "",
+  "Description": "",
+  "Documentation": "",
+  "Endpoint": "",
+  "Errors": [],
+  "Meta": {},
+  "Name": "wfPrereqs",
+  "ReadOnly": false,
+  "Stages": [
+    "flat2",
+    "flat1",
+    "flat3"
+  ],
+  "Validated": true
+}
