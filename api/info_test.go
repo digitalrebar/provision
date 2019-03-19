@@ -67,6 +67,7 @@ func TestInfo(t *testing.T) {
 				"bundle-objects",
 				"secure-params-in-content-packs",
 				"task-prerequisites",
+				"content-prerequisite-version-checking",
 			},
 			License: models.LicenseBundle{Licenses: []models.License{}},
 			Scopes: map[string]map[string]struct{}{
