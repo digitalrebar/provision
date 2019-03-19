@@ -128,10 +128,24 @@ func replaceContent(path, key string) error {
 	if err := decryptForUpload(layer, key); err != nil {
 		return generateError(err, "Error preparing layer")
 	}
-	if res, err := session.ReplaceContent(layer); err == nil {
-		return prettyPrint(res)
+	summary, err := session.GetContentSummary()
+	if err != nil {
+		return generateError(err, "Error uploading layer")
 	}
-	if res, err := session.CreateContent(layer); err == nil {
+	exists := false
+	for _, cs := range summary {
+		if cs.Meta.Name == layer.Meta.Name {
+			exists = true
+			break
+		}
+	}
+	var res interface{}
+	if exists {
+		res, err = session.ReplaceContent(layer)
+	} else {
+		res, err = session.CreateContent(layer)
+	}
+	if err == nil {
 		return prettyPrint(res)
 	} else {
 		return generateError(err, "Error uploading layer")
