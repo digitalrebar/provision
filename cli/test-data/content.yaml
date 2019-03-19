@@ -3,7 +3,7 @@ meta:
   Name: drp-community-contrib
   Source: https://github.com/digitalrebar/provision-content
   Type: dynamic
-  Version: stable.galthaus.7-strange-30b5a4603088a31f898ce1960f1f4475bda2630d
+  Version: 7.7.7-strange-30b5a4603088a31f898ce1960f1f4475bda2630d
 sections:
   bootenvs:
     centos-6-install:

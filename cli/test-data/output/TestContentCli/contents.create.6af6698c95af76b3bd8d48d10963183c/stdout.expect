@@ -18,6 +18,7 @@
     "Name": "withProfile",
     "Order": "",
     "Overwritable": false,
+    "Prerequisites": "",
     "RequiredFeatures": "",
     "Source": "",
     "Tags": "",

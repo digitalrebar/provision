@@ -1,9 +1,8 @@
 meta:
   Description: Initial Default Content
   Name: DefaultStore
-  Source: Unspecified
   Type: default
-  Version: user
+  Version: 0.0.0
 sections:
   templates:
     usrshare:

@@ -1,1 +1,1 @@
-Error: STORE_ERROR: contents: dr-provision missing required feature missing-feature
+Error: STORE_ERROR: contents: Content layer insecure requires feature missing-feature, but dr-provision does not provide it
