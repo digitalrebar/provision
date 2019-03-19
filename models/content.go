@@ -87,10 +87,6 @@ func ParseContentPrerequisites(prereqs string) (map[string]semver.Range, error) 
 	return res, nil
 }
 
-func (c *Content) Prerequisites() (map[string]semver.Range, error) {
-	return ParseContentPrerequisites(c.Meta.Prerequisites)
-}
-
 func (c *Content) ToStore(dest store.Store) error {
 	c.Fill()
 	if dmeta, ok := dest.(store.MetaSaver); ok {
@@ -161,9 +157,6 @@ func (c *Content) FromStore(src store.Store) error {
 				c.Meta.Description = v
 			case "Version":
 				c.Meta.Version = v
-				if _, err := semver.ParseTolerant(v); v != "" && err != nil {
-					return err
-				}
 			case "Type":
 				c.Meta.Type = v
 			case "Documentation":
@@ -192,9 +185,6 @@ func (c *Content) FromStore(src store.Store) error {
 				c.Meta.DocUrl = v
 			case "Prerequisites":
 				c.Meta.Prerequisites = v
-				if _, err := c.Prerequisites(); err != nil {
-					return err
-				}
 			}
 		}
 	}
