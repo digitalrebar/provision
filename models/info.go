@@ -24,6 +24,8 @@ type Info struct {
 	// required: true
 	Id string `json:"id"`
 	// required: true
+	HaId string `json:"ha_id"`
+	// required: true
 	ApiPort int `json:"api_port"`
 	// required: true
 	FilePort int `json:"file_port"`
