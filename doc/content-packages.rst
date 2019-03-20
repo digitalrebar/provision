@@ -9,7 +9,9 @@
 Content Packages & Plugins
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Digital Rebar Provision provides many content packages and plugins.  By design, these provide critical functionality for the system and embed documentation into the content.
+Digital Rebar Provision provides many content packages and plugins.
+By design, these provide critical functionality for the system and
+embed documentation into the content.
 
 
 .. toctree::
