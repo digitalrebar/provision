@@ -90,7 +90,7 @@ The below example adds *User1* and *User2* SSH keys to the profile *my-profile*.
     }
     END_KEYS
 
-    drpcli profiles update my-profile -< keys.json
+    drpcli profiles update my-profile keys.json
 
 .. _rs_docker_volume:
 
@@ -164,9 +164,22 @@ What are the default passwords?
 
 When using the community BootEnvs for installation, the password is set to a variant of ``RocketSkates``.  See :ref:`rs_configuring_default` for complete details.
 
-For Sledgehammer logins via the console, user ``root`` and password ``rebar`` can be used _unless_ you've set the Param to allow remote root login (this is strongly recommended)
+For all bootenvs (sledgehammer, centos, ubuntu, etc.) the default pattern does NOT allow login via Password.  See :ref:`rs_add_ssh` for manaing SSH Authorized Keys login details.
 
-We *strongly* recommend changing this default or, better, using SSH ``without-password`` options as per :ref:`rs_access_ssh_root_mode` above.
+We *strongly* recommend changing this default or, better, using SSH ``without-password`` options as per :ref:`rs_access_ssh_root_mode` details.
+
+A quick reference table for passwords:
+
+========================  ============  ============
+use                       user          password
+========================  ============  ============
+``drp endpoint auth``     rocketskates  r0cketsk8ts
+``sledgehammer``          root          rebar1
+``most bootenvs``         root          RocketSkates
+``debian / ubuntu``       rocketskates  RocketSkates
+========================  ============  ============
+
+For ``debian / ubuntu`` bootenvs, the default user (``rocketskates``, can be changed by setting ``provisioner-default-user`` Param), has ``sudo`` privileges.
 
 .. _rs_autocomplete:
 
