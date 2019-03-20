@@ -101,6 +101,7 @@ func (i *Info) Fill() {
 			"bundle-objects",
 			"secure-params-in-content-packs",
 			"task-prerequisites",
+			"content-prerequisite-version-checking",
 		}
 	}
 }

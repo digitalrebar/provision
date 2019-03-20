@@ -22,4 +22,6 @@ dr-provision for developers and power users.
    arch/sledgehammer
    arch/workflow
    arch/runner-state
+   arch/content-package
    arch/cluster
+

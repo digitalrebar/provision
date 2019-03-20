@@ -34,11 +34,12 @@
       "Name": "BackingStore",
       "Order": "",
       "Overwritable": false,
+      "Prerequisites": "",
       "RequiredFeatures": "",
       "Source": "",
       "Tags": "",
       "Type": "writable",
-      "Version": "user",
+      "Version": "0.0.0",
       "Writable": true
     }
   },
@@ -61,11 +62,12 @@
       "Name": "LocalStore",
       "Order": "",
       "Overwritable": true,
+      "Prerequisites": "",
       "RequiredFeatures": "",
       "Source": "",
       "Tags": "",
       "Type": "local",
-      "Version": "user",
+      "Version": "0.0.0",
       "Writable": false
     }
   },
@@ -88,11 +90,12 @@
       "Name": "DefaultStore",
       "Order": "",
       "Overwritable": true,
+      "Prerequisites": "",
       "RequiredFeatures": "",
-      "Source": "Unspecified",
+      "Source": "",
       "Tags": "",
       "Type": "default",
-      "Version": "user",
+      "Version": "0.0.0",
       "Writable": false
     }
   },
@@ -115,11 +118,12 @@
       "Name": "incrementer",
       "Order": "",
       "Overwritable": false,
+      "Prerequisites": "",
       "RequiredFeatures": "",
       "Source": "Digital Rebar",
       "Tags": "",
       "Type": "plugin",
-      "Version": "Internal",
+      "Version": "1.0.0",
       "Writable": false
     }
   },
@@ -145,11 +149,12 @@
       "Name": "BasicStore",
       "Order": "",
       "Overwritable": true,
+      "Prerequisites": "",
       "RequiredFeatures": "",
       "Source": "",
       "Tags": "",
       "Type": "basic",
-      "Version": "Unversioned",
+      "Version": "3.12.0",
       "Writable": false
     }
   }

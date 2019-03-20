@@ -15,6 +15,7 @@
     "Name": "john",
     "Order": "",
     "Overwritable": false,
+    "Prerequisites": "",
     "RequiredFeatures": "",
     "Source": "",
     "Tags": "",

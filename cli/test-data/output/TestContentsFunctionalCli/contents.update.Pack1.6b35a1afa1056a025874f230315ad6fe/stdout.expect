@@ -17,6 +17,7 @@
     "Name": "Pack1",
     "Order": "",
     "Overwritable": false,
+    "Prerequisites": "",
     "RequiredFeatures": "",
     "Source": "",
     "Tags": "",

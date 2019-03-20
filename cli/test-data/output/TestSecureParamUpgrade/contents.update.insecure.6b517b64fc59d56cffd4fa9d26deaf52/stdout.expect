@@ -17,6 +17,7 @@
     "Name": "insecure",
     "Order": "",
     "Overwritable": false,
+    "Prerequisites": "",
     "RequiredFeatures": "",
     "Source": "",
     "Tags": "",

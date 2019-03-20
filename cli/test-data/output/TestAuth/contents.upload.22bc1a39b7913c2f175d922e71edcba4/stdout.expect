@@ -17,6 +17,7 @@
     "Name": "rackn-license",
     "Order": "",
     "Overwritable": false,
+    "Prerequisites": "",
     "RequiredFeatures": "",
     "Source": "RackN",
     "Tags": "",
