@@ -140,7 +140,7 @@ These steps should be performed from the newly installed *dr-provision* endpoint
 
     drpcli bootenvs uploadiso sledgehammer
     drpcli prefs set defaultWorkflow discover-base unknownBootEnv discovery
-    drpcli contents upload https://api.rackn.io/catalog/content/task-library
+    drpcli contents upload catalog:task-library-stable
     drpcli bootenvs uploadiso ubuntu-18.04-install
     drpcli bootenvs uploadiso centos-7-install
 
