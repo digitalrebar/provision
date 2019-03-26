@@ -62,7 +62,7 @@ func registerNet(app *cobra.Command) {
 			if err != nil {
 				return generateError(err, "Failed to fetch phys")
 			}
-			err = netwrangler.Compile(phys, "netplan", args[0], args[2], args[4], bindMac)
+			err = netwrangler.Compile(phys, "netplan", args[2], args[0], args[4], bindMac)
 			if err == nil {
 				fmt.Printf("Plan %s compiled to format %s at %s", args[0], args[2], args[4])
 				return nil
