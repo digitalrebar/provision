@@ -1,0 +1,51 @@
+RE:
+{
+  "Address": "",
+  "Arch": "amd64",
+  "Available": true,
+  "BootEnv": "env2",
+  "Bundle": "",
+  "CurrentTask": 7,
+  "Description": "",
+  "Endpoint": "",
+  "Errors": \[\],
+  "HardwareAddrs": \[\],
+  "Meta": {
+    "feature-flags": "change-stage-v2"
+  },
+  "Name": "bob",
+  "OS": "",
+  "Params": {
+    "change-stage/map": {
+      "stage1": "stage2"
+    }
+  },
+  "Profile": {
+    "Available": false,
+    "Bundle": "",
+    "Description": "",
+    "Documentation": "",
+    "Endpoint": "",
+    "Errors": null,
+    "Meta": null,
+    "Name": "",
+    "Params": null,
+    "ReadOnly": false,
+    "Validated": false
+  },
+  "Profiles": \[\],
+  "ReadOnly": false,
+  "Runnable": true,
+  "Stage": "stage2",
+  "Tasks": \[
+    "stage:stage1",
+    "bootenv:env1",
+    "task1",
+    "task2",
+    "stage:stage2",
+    "bootenv:env2",
+    "task3"
+  \],
+  "Validated": true,
+  "Workflow": "wf1"
+}

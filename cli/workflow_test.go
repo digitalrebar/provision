@@ -241,3 +241,63 @@ Templates:
 	cliTest(false, false, "tasks", "destroy", "task6").run(t)
 	verifyClean(t)
 }
+
+func TestCurrentTaskReposition(t *testing.T) {
+	cliTest(false, false, "tasks", "create", "task1").run(t)
+	cliTest(false, false, "tasks", "create", "task2").run(t)
+	cliTest(false, false, "tasks", "create", "task3").run(t)
+	cliTest(false, false, "tasks", "create", "task4").run(t)
+	cliTest(false, false, "bootenvs", "create", "env1").run(t)
+	cliTest(false, false, "bootenvs", "create", "env2").run(t)
+	cliTest(false, false, "stages", "create", "-").Stdin(`
+---
+Name: stage1
+BootEnv: env1
+Tasks:
+  - task1
+  - task2`).run(t)
+	cliTest(false, false, "stages", "create", "-").Stdin(`
+---
+Name: stage2
+BootEnv: env2
+Tasks:
+  - task3
+  - task4`).run(t)
+	cliTest(false, false, "workflows", "create", "-").Stdin(`
+---
+Name: wf1
+Stages:
+  - stage1
+  - stage2`).run(t)
+	cliTest(false, false, "machines", "create", "bob").run(t)
+	cliTest(false, false, "machines", "update", "Name:bob", `{"Workflow":"wf1"}`).run(t)
+	cliTest(false, false, "machines", "update", "Name:bob", `{"Runnable":true}`).run(t)
+	cliTest(false, false, "machines", "processjobs", "Name:bob", "--oneshot", "--exit-on-failure", "--").run(t)
+	cliTest(false, false, "machines", "currentlog", "Name:bob").run(t)
+	cliTest(false, true, "machines", "update", "Name:bob", `{"CurrentTask":6}`).run(t)
+	cliTest(false, false, "machines", "update", "Name:bob", `{"CurrentTask":0}`).run(t)
+	cliTest(false, false, "machines", "update", "Name:bob", `{"Runnable":true}`).run(t)
+	cliTest(false, false, "machines", "processjobs", "Name:bob", "--oneshot", "--exit-on-failure", "--").run(t)
+	cliTest(false, false, "machines", "currentlog", "Name:bob").run(t)
+	cliTest(false, false, "machines", "show", "Name:bob").run(t)
+	cliTest(false, true, "machines", "update", "Name:bob", `{"CurrentTask":0}`).run(t)
+	cliTest(false, false, "machines", "update", "Name:bob", `{"CurrentTask":6}`).run(t)
+	cliTest(false, false, "machines", "tasks", "del", "Name:bob", "task4").run(t)
+	cliTest(false, false, "machines", "update", "Name:bob", `{"Runnable":true}`).run(t)
+	cliTest(false, false, "machines", "processjobs", "Name:bob", "--oneshot", "--exit-on-failure", "--").run(t)
+	cliTest(false, false, "machines", "show", "Name:bob").run(t)
+	cliTest(false, false, "machines", "currentlog", "Name:bob").run(t)
+	cliTest(false, false, "jobs", "list", "sort", "StartTime").run(t)
+	cliTest(false, false, "machines", "deletejobs", "Name:bob").run(t)
+	cliTest(false, false, "machines", "destroy", "Name:bob").run(t)
+	cliTest(false, false, "workflows", "destroy", "wf1").run(t)
+	cliTest(false, false, "stages", "destroy", "stage2").run(t)
+	cliTest(false, false, "stages", "destroy", "stage1").run(t)
+	cliTest(false, false, "bootenvs", "destroy", "env2").run(t)
+	cliTest(false, false, "bootenvs", "destroy", "env1").run(t)
+	cliTest(false, false, "tasks", "destroy", "task4").run(t)
+	cliTest(false, false, "tasks", "destroy", "task3").run(t)
+	cliTest(false, false, "tasks", "destroy", "task2").run(t)
+	cliTest(false, false, "tasks", "destroy", "task1").run(t)
+	verifyClean(t)
+}

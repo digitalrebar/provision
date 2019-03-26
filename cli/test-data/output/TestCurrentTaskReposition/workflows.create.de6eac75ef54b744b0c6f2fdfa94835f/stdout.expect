@@ -1,0 +1,16 @@
+{
+  "Available": true,
+  "Bundle": "",
+  "Description": "",
+  "Documentation": "",
+  "Endpoint": "",
+  "Errors": [],
+  "Meta": {},
+  "Name": "wf1",
+  "ReadOnly": false,
+  "Stages": [
+    "stage1",
+    "stage2"
+  ],
+  "Validated": true
+}

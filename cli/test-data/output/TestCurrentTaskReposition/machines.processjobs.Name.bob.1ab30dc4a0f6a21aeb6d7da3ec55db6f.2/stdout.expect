@@ -1,0 +1,33 @@
+Agent in init
+Agent waiting for tasks
+Waiting on machine to become runnable
+Wait: finished with complete
+Agent running task
+Runner created for task wf1:stage2:task3 (6:7)
+Starting task wf1:stage2:task3 on bob
+Task task3 finished
+Updated job for wf1:stage2:task3 to finished
+Task signalled that it finished normally
+Agent waiting for tasks
+Waiting on machine to become runnable
+Wait: finished with complete
+Agent running task
+Runner created for task wf1:stage2:task4 (7:8)
+Starting task wf1:stage2:task4 on bob
+Task task4 finished
+Updated job for wf1:stage2:task4 to finished
+Task signalled that it finished normally
+Agent waiting for tasks
+Waiting on machine to become runnable
+Wait: finished with complete
+Agent running task
+Current tasks finished, wait for stage or bootenv to change
+Agent waiting stage change
+Waiting for system to be runnable and for stage or current tasks to change
+Wait: finished with complete
+Agent running task
+Current tasks finished, wait for stage or bootenv to change
+Agent waiting stage change
+Waiting for system to be runnable and for stage or current tasks to change
+Wait: finished with timeout
+Agent exiting

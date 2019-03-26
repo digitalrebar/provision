@@ -1,0 +1,6 @@
+RE:
+Log for Job: .*
+Starting task wf1:stage2:task4 on bob
+Task task4 finished
+Updated job for wf1:stage2:task4 to finished
+Task signalled that it finished normally
