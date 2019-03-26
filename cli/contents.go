@@ -22,22 +22,6 @@ func init() {
 	addRegistrar(registerContent)
 }
 
-func findOrFake(field string, args map[string]string) string {
-	p, ok := args[field]
-	if !ok {
-		s := "Unspecified"
-		if field == "Type" {
-			// Default Type should be dynamic
-			s = "dynamic"
-		} else if field == "RequiredFeatures" {
-			// Default RequiredFeatures should be empty string
-			s = ""
-		}
-		return s
-	}
-	return p
-}
-
 func decryptForUpload(c *models.Content, key string) error {
 	if s, e := session.Info(); e != nil || !s.HasFeature("secure-params-in-content-packs") {
 		return nil
@@ -144,10 +128,24 @@ func replaceContent(path, key string) error {
 	if err := decryptForUpload(layer, key); err != nil {
 		return generateError(err, "Error preparing layer")
 	}
-	if res, err := session.ReplaceContent(layer); err == nil {
-		return prettyPrint(res)
+	summary, err := session.GetContentSummary()
+	if err != nil {
+		return generateError(err, "Error uploading layer")
 	}
-	if res, err := session.CreateContent(layer); err == nil {
+	exists := false
+	for _, cs := range summary {
+		if cs.Meta.Name == layer.Meta.Name {
+			exists = true
+			break
+		}
+	}
+	var res interface{}
+	if exists {
+		res, err = session.ReplaceContent(layer)
+	} else {
+		res, err = session.CreateContent(layer)
+	}
+	if err == nil {
 		return prettyPrint(res)
 	} else {
 		return generateError(err, "Error uploading layer")
@@ -452,13 +450,14 @@ func registerContent(app *cobra.Command) {
 			}
 			content := &models.Content{
 				Meta: models.ContentMetaData{
-					Name:             findOrFake("Name", params),
-					Description:      findOrFake("Description", params),
-					Documentation:    findOrFake("Documentation", params),
-					RequiredFeatures: findOrFake("RequiredFeatures", params),
-					Version:          findOrFake("Version", params),
-					Source:           findOrFake("Source", params),
-					Type:             findOrFake("Type", params),
+					Name:             api.FindOrFake("", "Name", params),
+					Description:      api.FindOrFake("", "Description", params),
+					Documentation:    api.FindOrFake("", "Documentation", params),
+					RequiredFeatures: api.FindOrFake("", "RequiredFeatures", params),
+					Version:          api.FindOrFake("", "Version", params),
+					Source:           api.FindOrFake("", "Source", params),
+					Type:             api.FindOrFake("", "Type", params),
+					Prerequisites:    api.FindOrFake("", "Prerequisites", params),
 				},
 				Sections: map[string]models.Section{},
 			}

@@ -1,0 +1,1 @@
+Error: PUT: contents/basic: Layer basic: error parsing prerequisites BasicStore: >=3.12.foo: Invalid version requirement for BasicStore: Could not parse Range ">=3.12.foo": Could not parse version "3.12.foo" in ">=3.12.foo": Invalid character(s) found in patch number "foo"

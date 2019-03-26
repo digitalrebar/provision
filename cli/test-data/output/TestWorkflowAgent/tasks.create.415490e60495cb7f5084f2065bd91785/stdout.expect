@@ -10,6 +10,7 @@
   },
   "Name": "task5",
   "OptionalParams": [],
+  "Prerequisites": [],
   "ReadOnly": false,
   "RequiredParams": [],
   "Templates": [

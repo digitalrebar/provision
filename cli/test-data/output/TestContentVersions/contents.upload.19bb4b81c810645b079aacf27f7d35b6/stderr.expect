@@ -1,0 +1,1 @@
+Error: PUT: contents/basic: Layer basic has foo as a prerequisite, but foo does not exist!

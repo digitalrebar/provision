@@ -11,6 +11,7 @@
     "Copyright": "",
     "Description": "",
     "DisplayName": "",
+    "DocUrl": "",
     "Documentation": "",
     "Icon": "",
     "License": "",
@@ -19,6 +20,7 @@
     "Overwritable": false,
     "RequiredFeatures": "",
     "Source": "",
+    "Tags": "",
     "Type": "dynamic",
     "Version": "",
     "Writable": false

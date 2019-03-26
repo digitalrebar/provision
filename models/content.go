@@ -1,14 +1,18 @@
 package models
 
 import (
+	"fmt"
+	"strings"
+
 	"github.com/digitalrebar/store"
+	"github.com/gofunky/semver"
 )
 
 // All fields must be strings
 type ContentMetaData struct {
 	// required: true
 	Name        string
-	Version     string
+	Version     string // If present, must be parseable as semver
 	Description string
 	Source      string // Was who authored it, but was confusing
 
@@ -17,18 +21,21 @@ type ContentMetaData struct {
 	RequiredFeatures string
 
 	// New descriptor fields for catalog
-	Color       string
-	Icon        string
-	Author      string
-	DisplayName string
-	License     string
-	Copyright   string
-	CodeSource  string
-	Order       string
+	Color         string
+	Icon          string
+	Author        string
+	DisplayName   string
+	License       string
+	Copyright     string
+	CodeSource    string
+	Order         string
+	Tags          string // Comma separated list
+	DocUrl        string
+	Prerequisites string // also a comma-seperated list. May contain semver
 
 	// Informational Fields
-	Writable     bool
 	Type         string
+	Writable     bool
 	Overwritable bool
 }
 
@@ -60,20 +67,51 @@ type Content struct {
 	Sections Sections `json:"sections"`
 }
 
+func ParseContentPrerequisites(prereqs string) (map[string]semver.Range, error) {
+	res := map[string]semver.Range{}
+	for _, v := range strings.Split(prereqs, ",") {
+		v = strings.TrimSpace(v)
+		if v == "" {
+			continue
+		}
+		parts := strings.SplitN(v, ":", 2)
+		if len(parts) == 1 {
+			parts = append(parts, ">=0.0.0")
+		}
+		ver, err := semver.ParseRange(strings.TrimSpace(parts[1]))
+		if err != nil {
+			return nil, fmt.Errorf("Invalid version requirement for %s: %v", parts[0], err)
+		}
+		res[strings.TrimSpace(parts[0])] = ver
+	}
+	return res, nil
+}
+
 func (c *Content) ToStore(dest store.Store) error {
 	c.Fill()
 	if dmeta, ok := dest.(store.MetaSaver); ok {
 		meta := map[string]string{
-			"Name":             c.Meta.Name,
-			"Source":           c.Meta.Source,
-			"Description":      c.Meta.Description,
-			"Version":          c.Meta.Version,
-			"Type":             c.Meta.Type,
+			"Name":        c.Meta.Name,
+			"Version":     c.Meta.Version,
+			"Description": c.Meta.Description,
+			"Source":      c.Meta.Source,
+
+			"Type": c.Meta.Type,
+
 			"Documentation":    c.Meta.Documentation,
 			"RequiredFeatures": c.Meta.RequiredFeatures,
-			"Color":            c.Meta.Color,
-			"Icon":             c.Meta.Icon,
-			"Author":           c.Meta.Author,
+
+			"Color":         c.Meta.Color,
+			"Icon":          c.Meta.Icon,
+			"Author":        c.Meta.Author,
+			"DisplayName":   c.Meta.DisplayName,
+			"License":       c.Meta.License,
+			"Copyright":     c.Meta.Copyright,
+			"CodeSource":    c.Meta.CodeSource,
+			"Order":         c.Meta.Order,
+			"Tags":          c.Meta.Tags,
+			"DocUrl":        c.Meta.DocUrl,
+			"Prerequisites": c.Meta.Prerequisites,
 		}
 		if err := dmeta.SetMetaData(meta); err != nil {
 			return err
@@ -131,6 +169,22 @@ func (c *Content) FromStore(src store.Store) error {
 				c.Meta.Icon = v
 			case "Author":
 				c.Meta.Author = v
+			case "DisplayName":
+				c.Meta.DisplayName = v
+			case "License":
+				c.Meta.License = v
+			case "Copyright":
+				c.Meta.Copyright = v
+			case "CodeSource":
+				c.Meta.CodeSource = v
+			case "Order":
+				c.Meta.Order = v
+			case "Tags":
+				c.Meta.Tags = v
+			case "DocUrl":
+				c.Meta.DocUrl = v
+			case "Prerequisites":
+				c.Meta.Prerequisites = v
 			}
 		}
 	}
@@ -225,6 +279,20 @@ func (c *ContentSummary) FromStore(src store.Store) {
 				c.Meta.Icon = v
 			case "Author":
 				c.Meta.Author = v
+			case "DisplayName":
+				c.Meta.DisplayName = v
+			case "License":
+				c.Meta.License = v
+			case "Copyright":
+				c.Meta.Copyright = v
+			case "CodeSource":
+				c.Meta.CodeSource = v
+			case "Order":
+				c.Meta.Order = v
+			case "DocUrl":
+				c.Meta.DocUrl = v
+			case "Prerequisites":
+				c.Meta.Prerequisites = v
 			}
 		}
 	}

@@ -171,8 +171,8 @@ func (s *Subnet) Validate() {
 		endBytes := big.NewInt(0)
 		startBytes.SetBytes(s.ActiveStart)
 		endBytes.SetBytes(s.ActiveEnd)
-		if startBytes.Cmp(endBytes) != -1 {
-			s.Errorf("ActiveStart %s must be less than ActiveEnd %s", s.ActiveStart, s.ActiveEnd)
+		if startBytes.Cmp(endBytes) == 1 {
+			s.Errorf("ActiveStart %s must be less than or equal to ActiveEnd %s", s.ActiveStart, s.ActiveEnd)
 		}
 		if s.ActiveLeaseTime < 60 {
 			s.Errorf("ActiveLeaseTime must be greater than or equal to 60 seconds, not %d", s.ActiveLeaseTime)

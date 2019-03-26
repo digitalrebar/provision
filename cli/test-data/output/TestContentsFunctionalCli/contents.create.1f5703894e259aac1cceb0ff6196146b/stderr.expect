@@ -1,1 +1,1 @@
-Error: ValidationError: New layer violates key restrictions: keysCannotBeOverridden: p1-prof is already in layer 1
+Error: STORE_ERROR: contents: New layer violates key restrictions: keysCannotBeOverridden: p1-prof is already in layer 1

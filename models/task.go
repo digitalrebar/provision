@@ -36,6 +36,9 @@ type Task struct {
 	//
 	// required: true
 	OptionalParams []string
+	// Prerequisites are tasks that must have been run in the current
+	// BootEnv before this task can be run.
+	Prerequisites []string
 }
 
 var (
@@ -148,6 +151,9 @@ func (t *Task) Fill() {
 	}
 	if t.OptionalParams == nil {
 		t.OptionalParams = []string{}
+	}
+	if t.Prerequisites == nil {
+		t.Prerequisites = []string{}
 	}
 }
 

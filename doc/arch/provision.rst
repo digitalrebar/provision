@@ -340,6 +340,11 @@ machine. Tasks have the following fields:
 - **Templates**: A list of TemplateInfos that will be rendered into Job
   Actions when the machine agent starts exeuting this Task as a Job.
 
+- **Prerequisites**: A list of Tasks that must be run in the current BootEnv
+  before this task can be run.  dr-provision will not allow a cyclical
+  prerequisite -- task cannot have themselves as prerequisites, either directly
+  or indirectly.
+
 Rendering a Task for a Machine
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -351,6 +356,15 @@ All referenced templates can refer to each other by their ID (if
 referring to a Template object directly), or by the TemplateInfo Name
 (if the TemplateInfo object), in addition to all the Template objects
 by ID.
+
+Template Prerequisite Expansion
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+When a Task is added to a Task list, its fully expanded list of
+prerequisite tasks are expanded, any tasks in that expanded list that
+already appear in the machine task list in the same BootEnv are
+discarded, and the resultant set of prerequisite tasks are inserted
+just before the Task to be inserted.
 
 .. _rs_data_profile:
 

@@ -1,0 +1,29 @@
+{
+  "Counts": {
+    "params": 1,
+    "profiles": 1
+  },
+  "Warnings": [],
+  "meta": {
+    "Author": "",
+    "CodeSource": "",
+    "Color": "",
+    "Copyright": "",
+    "Description": "",
+    "DisplayName": "",
+    "DocUrl": "",
+    "Documentation": "",
+    "Icon": "",
+    "License": "",
+    "Name": "withProfile",
+    "Order": "",
+    "Overwritable": false,
+    "Prerequisites": "",
+    "RequiredFeatures": "",
+    "Source": "",
+    "Tags": "",
+    "Type": "dynamic",
+    "Version": "",
+    "Writable": false
+  }
+}

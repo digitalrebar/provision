@@ -35,18 +35,21 @@ func (c *Client) DeleteContent(name string) error {
 	return c.Req().Del().UrlFor("contents", name).Do(nil)
 }
 
-func findOrFake(src, field string, args map[string]string) string {
-	filepath := fmt.Sprintf("._%s.meta", field)
-	buf, err := ioutil.ReadFile(path.Join(src, filepath))
-	if err == nil {
-		return string(buf)
+func FindOrFake(src, field string, args map[string]string) string {
+	if src != "" {
+		filepath := fmt.Sprintf("._%s.meta", field)
+		buf, err := ioutil.ReadFile(path.Join(src, filepath))
+		if err == nil {
+			return string(buf)
+		}
 	}
 	if p, ok := args[field]; !ok {
 		s := "Unspecified"
-		if field == "Type" {
+		switch field {
+		case "Type":
 			// Default Type should be dynamic
 			s = "dynamic"
-		} else if field == "RequiredFeatures" {
+		case "RequiredFeatures", "Version", "Prerequisites":
 			// Default RequiredFeatures should be empty string
 			s = ""
 		}
@@ -59,13 +62,24 @@ func findOrFake(src, field string, args map[string]string) string {
 func (c *Client) BundleContent(src string, dst store.Store, params map[string]string) error {
 	if dm, ok := dst.(store.MetaSaver); ok {
 		meta := map[string]string{
-			"Name":             findOrFake(src, "Name", params),
-			"Description":      findOrFake(src, "Description", params),
-			"Documentation":    findOrFake(src, "Documentation", params),
-			"RequiredFeatures": findOrFake(src, "RequiredFeatures", params),
-			"Version":          findOrFake(src, "Version", params),
-			"Source":           findOrFake(src, "Source", params),
-			"Type":             findOrFake(src, "Type", params),
+			"Name":             FindOrFake(src, "Name", params),
+			"Version":          FindOrFake(src, "Version", params),
+			"Description":      FindOrFake(src, "Description", params),
+			"Source":           FindOrFake(src, "Source", params),
+			"Documentation":    FindOrFake(src, "Documentation", params),
+			"RequiredFeatures": FindOrFake(src, "RequiredFeatures", params),
+			"Type":             FindOrFake(src, "Type", params),
+			"Color":            FindOrFake(src, "Color", params),
+			"Icon":             FindOrFake(src, "Icon", params),
+			"Author":           FindOrFake(src, "Author", params),
+			"DisplayName":      FindOrFake(src, "DisplayName", params),
+			"License":          FindOrFake(src, "License", params),
+			"Copyright":        FindOrFake(src, "Copyright", params),
+			"CodeSource":       FindOrFake(src, "CodeSource", params),
+			"Order":            FindOrFake(src, "Order", params),
+			"Tags":             FindOrFake(src, "Tags", params),
+			"DocUrl":           FindOrFake(src, "DocUrl", params),
+			"Prerequisites":    FindOrFake(src, "Prerequisites", params),
 		}
 		dm.SetMetaData(meta)
 	}

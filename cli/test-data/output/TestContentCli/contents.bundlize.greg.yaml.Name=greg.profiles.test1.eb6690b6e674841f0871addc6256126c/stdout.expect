@@ -10,16 +10,19 @@
     "Copyright": "",
     "Description": "Unspecified",
     "DisplayName": "",
+    "DocUrl": "",
     "Documentation": "Unspecified",
     "Icon": "",
     "License": "",
     "Name": "greg",
     "Order": "",
     "Overwritable": false,
+    "Prerequisites": "",
     "RequiredFeatures": "",
     "Source": "Unspecified",
+    "Tags": "",
     "Type": "dynamic",
-    "Version": "Unspecified",
+    "Version": "",
     "Writable": false
   }
 }

@@ -24,6 +24,8 @@ type Info struct {
 	// required: true
 	Id string `json:"id"`
 	// required: true
+	HaId string `json:"ha_id"`
+	// required: true
 	ApiPort int `json:"api_port"`
 	// required: true
 	FilePort int `json:"file_port"`
@@ -98,6 +100,8 @@ func (i *Info) Fill() {
 			"inline-upgrade",
 			"bundle-objects",
 			"secure-params-in-content-packs",
+			"task-prerequisites",
+			"content-prerequisite-version-checking",
 		}
 	}
 }

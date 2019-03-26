@@ -30,30 +30,30 @@ func TestContentCli(t *testing.T) {
   }
 }
 `
-		contentWithProfileString string = `{
-"meta": {
-  "Name": "withProfile"
-},
-"sections": {
-  "params": {
-    "secureFoo": {
-      "Name": "secureFoo",
-      "Secure": true,
-      "Schema": { "type":"string"},
-    }
+		contentWithProfileString string = `
+{
+  "meta": {
+    "Name": "withProfile"
   },
-  "profiles": {
-    "englobal": {
-      "Name": "englobal",
-      "Params": {
-        "foo": "bar",
-        "secureFoo": "secureBar"
-}
-}
-}
-}
-}
-`
+  "sections": {
+    "params": {
+      "secureFoo": {
+        "Name": "secureFoo",
+        "Secure": true,
+        "Schema": { "type":"string" }
+      }
+    },
+    "profiles": {
+      "englobal": {
+        "Name": "englobal",
+        "Params": {
+          "foo": "bar",
+          "secureFoo": "secureBar"
+        }
+      }
+    }
+  }
+}`
 	)
 
 	cliTest(true, false, "contents").run(t)
@@ -64,8 +64,8 @@ func TestContentCli(t *testing.T) {
 	cliTest(false, true, "contents", "create", "https://gi333thub.com/digitalrebar/provision-content/releases/download/v1.3.0/drp-community-content.yamljj").run(t)
 	cliTest(false, false, "contents", "create", "https://github.com/digitalrebar/provision-content/releases/download/v1.3.0/drp-community-content.yaml").run(t)
 	cliTest(false, false, "contents", "destroy", "drp-community-content").run(t)
-	cliTest(false, false, "contents", "create", "test-data/content.yaml").run(t)
-	cliTest(false, false, "contents", "destroy", "drp-community-contrib").run(t)
+	cliTest(false, true, "contents", "create", "test-data/content.yaml").run(t)
+	cliTest(false, true, "contents", "destroy", "drp-community-contrib").run(t)
 	cliTest(false, true, "contents", "create", contentCreateBadJSONString).run(t)
 	cliTest(false, true, "contents", "create", contentCreateBadJSON2String).run(t)
 	cliTest(false, false, "contents", "create", contentCreateInputString).run(t)

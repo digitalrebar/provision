@@ -1,0 +1,6 @@
+RE:
+Error: ValidationError:.*
+  This task depends on itself!
+  badfoo: badbaz: badbar: badfoo \(cycle at 0\)
+  This task depends on a task with a circular dependency
+  badfoo: badbaz: badbar: badbaz \(cycle at 1\)

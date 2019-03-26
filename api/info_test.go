@@ -36,6 +36,7 @@ func TestInfo(t *testing.T) {
 			Arch:    runtime.GOARCH,
 			Os:      runtime.GOOS,
 			Version: provision.RSVersion,
+			HaId:    "Fred",
 			Id:      "Fred",
 			Features: []string{
 				"api-v3",
@@ -66,6 +67,8 @@ func TestInfo(t *testing.T) {
 				"inline-upgrade",
 				"bundle-objects",
 				"secure-params-in-content-packs",
+				"task-prerequisites",
+				"content-prerequisite-version-checking",
 			},
 			License: models.LicenseBundle{Licenses: []models.License{}},
 			Scopes: map[string]map[string]struct{}{

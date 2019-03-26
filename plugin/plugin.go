@@ -154,7 +154,11 @@ func InitApp(use, short, version string, def *models.PluginProvider, pc PluginCo
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			var theDef interface{}
-			if pv, ok := pc.(PluginValidator); ok {
+			defaultToken := ""
+			if tk := os.Getenv("RS_TOKEN"); tk != "" {
+				defaultToken = tk
+			}
+			if pv, ok := pc.(PluginValidator); ok && defaultToken != "catalog" {
 				session, err2 := buildSession()
 				if err2 != nil {
 					return err2

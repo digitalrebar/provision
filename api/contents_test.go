@@ -35,7 +35,7 @@ func TestContentCrud(t *testing.T) {
     Overwritable: false
     Source: ""
     Type: writable
-    Version: user
+    Version: 0.0.0
     Writable: true
 - Counts:
     templates: 1
@@ -47,7 +47,7 @@ func TestContentCrud(t *testing.T) {
     Overwritable: true
     Source: ""
     Type: local
-    Version: user
+    Version: 0.0.0
     Writable: false
 - Counts:
     templates: 1
@@ -57,9 +57,9 @@ func TestContentCrud(t *testing.T) {
     Meta: {}
     Name: DefaultStore
     Overwritable: true
-    Source: Unspecified
+    Source: ""
     Type: default
-    Version: user
+    Version: 0.0.0
     Writable: false
 - Counts:
     params: 5
@@ -72,7 +72,7 @@ func TestContentCrud(t *testing.T) {
     Overwritable: false
     Source: Digital Rebar
     Type: plugin
-    Version: Internal
+    Version: 1.0.0
     Writable: false
 - Counts:
     bootenvs: 2
@@ -87,7 +87,7 @@ func TestContentCrud(t *testing.T) {
     Overwritable: true
     Source: ""
     Type: basic
-    Version: Unversioned
+    Version: 3.12.0
     Writable: false
 `
 	cs := []models.ContentSummary{}
@@ -102,7 +102,7 @@ meta:
   Overwritable: false
   Source: ""
   Type: writable
-  Version: user
+  Version: 0.0.0
   Writable: true
 sections:
   bootenvs: {}
@@ -268,7 +268,7 @@ sections:
 				Model:    "contents",
 				Key:      "",
 				Type:     "STORE_ERROR",
-				Messages: []string{"Content Store must have a name"},
+				Messages: []string{"Content Store must have a name", "Store at content- has no Name metadata"},
 				Code:     422,
 			},
 			op: func() (interface{}, error) {
