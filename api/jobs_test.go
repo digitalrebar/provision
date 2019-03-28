@@ -220,7 +220,7 @@ Tasks:
 			Model:    "machines",
 			Key:      "3e7031fe-3062-45f1-835c-92541bc9cbd3",
 			Type:     "ValidationError",
-			Messages: []string{"Cannot change CurrentTask from -1 to 0"},
+			Messages: []string{"Cannot advance CurrentTask from -1 to 0 without running jobs"},
 			Code:     422,
 		},
 		func() (interface{}, error) {
