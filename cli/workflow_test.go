@@ -275,7 +275,7 @@ Stages:
 	cliTest(false, false, "machines", "processjobs", "Name:bob", "--oneshot", "--exit-on-failure", "--").run(t)
 	cliTest(false, false, "machines", "currentlog", "Name:bob").run(t)
 	cliTest(false, true, "machines", "update", "Name:bob", `{"CurrentTask":6}`).run(t)
-	cliTest(false, false, "machines", "update", "Name:bob", `{"CurrentTask":0}`).run(t)
+	cliTest(false, true, "machines", "update", "Name:bob", `{"CurrentTask":0}`).run(t)
 	cliTest(false, false, "machines", "update", "Name:bob", `{"Runnable":true}`).run(t)
 	cliTest(false, false, "machines", "processjobs", "Name:bob", "--oneshot", "--exit-on-failure", "--").run(t)
 	cliTest(false, false, "machines", "currentlog", "Name:bob").run(t)
