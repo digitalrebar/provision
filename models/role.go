@@ -36,7 +36,7 @@ var (
 	addedActions = map[string]string{
 		"users":    "token, password",
 		"jobs":     "log",
-		"machines": "getSecure, updateSecure",
+		"machines": "getSecure, updateSecure, updateTaskList",
 		"plugins":  "getSecure, updateSecure",
 		"profiles": "getSecure, updateSecure",
 	}
@@ -164,6 +164,17 @@ func (a Claims) Contains(b Claims) bool {
 		}
 	}
 	return finalRes
+}
+
+type ClaimsList []Claims
+
+func (c ClaimsList) Match(wanted Claims) bool {
+	for i := range c {
+		if c[i].Contains(wanted) {
+			return true
+		}
+	}
+	return false
 }
 
 // Claim is an individial specifier for something we are allowed access to.

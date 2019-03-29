@@ -1,0 +1,23 @@
+{
+  "Available": true,
+  "BootEnv": "env1",
+  "Bundle": "",
+  "Description": "",
+  "Documentation": "",
+  "Endpoint": "",
+  "Errors": [],
+  "Meta": {},
+  "Name": "stage1",
+  "OptionalParams": [],
+  "Profiles": [],
+  "ReadOnly": false,
+  "Reboot": false,
+  "RequiredParams": [],
+  "RunnerWait": true,
+  "Tasks": [
+    "task1",
+    "task2"
+  ],
+  "Templates": [],
+  "Validated": true
+}

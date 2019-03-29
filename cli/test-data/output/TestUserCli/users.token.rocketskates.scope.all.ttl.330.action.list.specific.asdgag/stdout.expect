@@ -113,7 +113,8 @@ RE:
         "getSecure": {},
         "list": {},
         "update": {},
-        "updateSecure": {}
+        "updateSecure": {},
+        "updateTaskList": {}
       },
       "params": {
         "action": {},

@@ -178,15 +178,6 @@ func kexecLoaded() bool {
 }
 
 func (a *MachineAgent) loadKexec() {
-	if runtime.GOOS != "linux" {
-		a.Logf("kexec: Not running on Linux\n")
-		return
-	}
-	a.Logf("Running on Linux\n")
-	if _, err := exec.LookPath("kexec"); err != nil {
-		a.Logf("kexec: kexec command not installed")
-		return
-	}
 	kexecOk := false
 	if err := a.client.Req().
 		UrlFor("machines", a.machine.UUID(), "params", "kexec-ok").
@@ -200,6 +191,15 @@ func (a *MachineAgent) loadKexec() {
 		return
 	}
 	a.Logf("Machine has kexec-ok param set\n")
+	if runtime.GOOS != "linux" {
+		a.Logf("kexec: Not running on Linux\n")
+		return
+	}
+	a.Logf("Running on Linux\n")
+	if _, err := exec.LookPath("kexec"); err != nil {
+		a.Logf("kexec: kexec command not installed\n")
+		return
+	}
 	if kexecLoaded() {
 		return
 	}

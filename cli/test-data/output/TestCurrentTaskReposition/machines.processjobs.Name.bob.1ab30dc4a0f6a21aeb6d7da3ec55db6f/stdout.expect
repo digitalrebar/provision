@@ -1,0 +1,34 @@
+Agent in init
+Agent waiting for tasks
+Waiting on machine to become runnable
+Wait: finished with complete
+Agent running task
+Runner created for task wf1:stage1:task1 (2:3)
+Starting task wf1:stage1:task1 on bob
+Task task1 finished
+Updated job for wf1:stage1:task1 to finished
+Task signalled that it finished normally
+Agent waiting for tasks
+Waiting on machine to become runnable
+Wait: finished with complete
+Agent running task
+Runner created for task wf1:stage1:task2 (3:4)
+Starting task wf1:stage1:task2 on bob
+Task task2 finished
+Updated job for wf1:stage1:task2 to finished
+Task signalled that it finished normally
+Agent waiting for tasks
+Waiting on machine to become runnable
+Wait: finished with complete
+Agent running task
+Current tasks finished, wait for stage or bootenv to change
+Agent waiting stage change
+Waiting for system to be runnable and for stage or current tasks to change
+Wait: finished with complete
+Agent running task
+Current tasks finished, wait for stage or bootenv to change
+Agent waiting stage change
+Waiting for system to be runnable and for stage or current tasks to change
+Wait: finished with complete
+kexec: kexec-ok is false
+Agent rebooting
