@@ -1,3 +1,0 @@
-Error: PUT: contents/basic
-  Layer basic: invalid version 1.2.foo: Invalid character(s) found in patch number "foo"
-  Layer basic prerequisite test on BasicStore failed
