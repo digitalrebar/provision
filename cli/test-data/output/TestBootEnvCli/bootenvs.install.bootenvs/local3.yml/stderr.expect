@@ -1,4 +1,0 @@
-Error: CLIENT_ERROR: bootenvs/local3
-  Unable to import template local3-pxelinux.tmpl
-  Unable to import template local3-elilo.tmpl
-  Unable to import template local3-ipxe.tmpl

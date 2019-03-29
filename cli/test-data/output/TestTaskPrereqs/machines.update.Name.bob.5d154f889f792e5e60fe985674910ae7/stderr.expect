@@ -1,6 +1,0 @@
-RE:
-Error: ValidationError: machines/.*
-  This task depends on a task with a circular dependency
-  badbark: badbaz: badbar: badfoo: badbaz \(cycle at 1\)
-  This task depends on a task with a circular dependency
-  badbark: badbaz: badbar: badbaz \(cycle at 1\)
