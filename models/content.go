@@ -9,6 +9,7 @@ import (
 )
 
 // All fields must be strings
+// All string fields will be trimmed except Documentation.
 type ContentMetaData struct {
 	// required: true
 	Name        string
@@ -91,27 +92,27 @@ func (c *Content) ToStore(dest store.Store) error {
 	c.Fill()
 	if dmeta, ok := dest.(store.MetaSaver); ok {
 		meta := map[string]string{
-			"Name":        c.Meta.Name,
-			"Version":     c.Meta.Version,
-			"Description": c.Meta.Description,
-			"Source":      c.Meta.Source,
+			"Name":        strings.TrimSpace(c.Meta.Name),
+			"Version":     strings.TrimSpace(c.Meta.Version),
+			"Description": strings.TrimSpace(c.Meta.Description),
+			"Source":      strings.TrimSpace(c.Meta.Source),
 
 			"Type": c.Meta.Type,
 
 			"Documentation":    c.Meta.Documentation,
-			"RequiredFeatures": c.Meta.RequiredFeatures,
+			"RequiredFeatures": strings.TrimSpace(c.Meta.RequiredFeatures),
 
-			"Color":         c.Meta.Color,
-			"Icon":          c.Meta.Icon,
-			"Author":        c.Meta.Author,
-			"DisplayName":   c.Meta.DisplayName,
-			"License":       c.Meta.License,
-			"Copyright":     c.Meta.Copyright,
-			"CodeSource":    c.Meta.CodeSource,
-			"Order":         c.Meta.Order,
-			"Tags":          c.Meta.Tags,
-			"DocUrl":        c.Meta.DocUrl,
-			"Prerequisites": c.Meta.Prerequisites,
+			"Color":         strings.TrimSpace(c.Meta.Color),
+			"Icon":          strings.TrimSpace(c.Meta.Icon),
+			"Author":        strings.TrimSpace(c.Meta.Author),
+			"DisplayName":   strings.TrimSpace(c.Meta.DisplayName),
+			"License":       strings.TrimSpace(c.Meta.License),
+			"Copyright":     strings.TrimSpace(c.Meta.Copyright),
+			"CodeSource":    strings.TrimSpace(c.Meta.CodeSource),
+			"Order":         strings.TrimSpace(c.Meta.Order),
+			"Tags":          strings.TrimSpace(c.Meta.Tags),
+			"DocUrl":        strings.TrimSpace(c.Meta.DocUrl),
+			"Prerequisites": strings.TrimSpace(c.Meta.Prerequisites),
 		}
 		if err := dmeta.SetMetaData(meta); err != nil {
 			return err
@@ -148,43 +149,44 @@ func (c *Content) FromStore(src store.Store) error {
 	c.Fill()
 	if smeta, ok := src.(store.MetaSaver); ok {
 		for k, v := range smeta.MetaData() {
+			tv := strings.TrimSpace(v)
 			switch k {
 			case "Name":
-				c.Meta.Name = v
+				c.Meta.Name = tv
 			case "Source":
-				c.Meta.Source = v
+				c.Meta.Source = tv
 			case "Description":
-				c.Meta.Description = v
+				c.Meta.Description = tv
 			case "Version":
-				c.Meta.Version = v
+				c.Meta.Version = tv
 			case "Type":
-				c.Meta.Type = v
+				c.Meta.Type = tv
 			case "Documentation":
 				c.Meta.Documentation = v
 			case "RequiredFeatures":
-				c.Meta.RequiredFeatures = v
+				c.Meta.RequiredFeatures = tv
 			case "Color":
-				c.Meta.Color = v
+				c.Meta.Color = tv
 			case "Icon":
-				c.Meta.Icon = v
+				c.Meta.Icon = tv
 			case "Author":
-				c.Meta.Author = v
+				c.Meta.Author = tv
 			case "DisplayName":
-				c.Meta.DisplayName = v
+				c.Meta.DisplayName = tv
 			case "License":
-				c.Meta.License = v
+				c.Meta.License = tv
 			case "Copyright":
-				c.Meta.Copyright = v
+				c.Meta.Copyright = tv
 			case "CodeSource":
-				c.Meta.CodeSource = v
+				c.Meta.CodeSource = tv
 			case "Order":
-				c.Meta.Order = v
+				c.Meta.Order = tv
 			case "Tags":
-				c.Meta.Tags = v
+				c.Meta.Tags = tv
 			case "DocUrl":
-				c.Meta.DocUrl = v
+				c.Meta.DocUrl = tv
 			case "Prerequisites":
-				c.Meta.Prerequisites = v
+				c.Meta.Prerequisites = tv
 			}
 		}
 	}
@@ -258,41 +260,42 @@ func (c *ContentSummary) FromStore(src store.Store) {
 	c.Fill()
 	if smeta, ok := src.(store.MetaSaver); ok {
 		for k, v := range smeta.MetaData() {
+			tv := strings.TrimSpace(v)
 			switch k {
 			case "Name":
-				c.Meta.Name = v
+				c.Meta.Name = tv
 			case "Source":
-				c.Meta.Source = v
+				c.Meta.Source = tv
 			case "Description":
-				c.Meta.Description = v
+				c.Meta.Description = tv
 			case "Version":
-				c.Meta.Version = v
+				c.Meta.Version = tv
 			case "Type":
-				c.Meta.Type = v
+				c.Meta.Type = tv
 			case "Documentation":
 				c.Meta.Documentation = v
 			case "RequiredFeatures":
-				c.Meta.RequiredFeatures = v
+				c.Meta.RequiredFeatures = tv
 			case "Color":
-				c.Meta.Color = v
+				c.Meta.Color = tv
 			case "Icon":
-				c.Meta.Icon = v
+				c.Meta.Icon = tv
 			case "Author":
-				c.Meta.Author = v
+				c.Meta.Author = tv
 			case "DisplayName":
-				c.Meta.DisplayName = v
+				c.Meta.DisplayName = tv
 			case "License":
-				c.Meta.License = v
+				c.Meta.License = tv
 			case "Copyright":
-				c.Meta.Copyright = v
+				c.Meta.Copyright = tv
 			case "CodeSource":
-				c.Meta.CodeSource = v
+				c.Meta.CodeSource = tv
 			case "Order":
-				c.Meta.Order = v
+				c.Meta.Order = tv
 			case "DocUrl":
-				c.Meta.DocUrl = v
+				c.Meta.DocUrl = tv
 			case "Prerequisites":
-				c.Meta.Prerequisites = v
+				c.Meta.Prerequisites = tv
 			}
 		}
 	}
