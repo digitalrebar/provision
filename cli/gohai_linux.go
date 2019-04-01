@@ -17,6 +17,7 @@ type dmiinfo interface {
 
 func gohai() error {
 	infos := map[string]dmiinfo{}
+	defer prettyPrint(infos)
 	dmiInfo, err := dmi.Gather()
 	if err != nil {
 		return fmt.Errorf("Failed to gather DMI information: %v", err)
@@ -37,6 +38,5 @@ func gohai() error {
 		return fmt.Errorf("Failed tp gather storage info: %v", err)
 	}
 	infos[storInfo.Class()] = storInfo
-	prettyPrint(infos)
 	return nil
 }
