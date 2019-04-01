@@ -21,22 +21,26 @@ func gohai() error {
 	dmiInfo, err := dmi.Gather()
 	if err != nil {
 		res.Errorf("Failed to gather DMI information: %v", err)
+	} else {
+		infos[dmiInfo.Class()] = dmiInfo
 	}
-	infos[dmiInfo.Class()] = dmiInfo
 	netInfo, err := net.Gather()
 	if err != nil {
 		res.Errorf("Failed to gather network info: %v", err)
+	} else {
+		infos[netInfo.Class()] = netInfo
 	}
-	infos[netInfo.Class()] = netInfo
 	sysInfo, err := system.Gather()
 	if err != nil {
 		res.Errorf("Failed to gather basic OS info: %v", err)
+	} else {
+		infos[sysInfo.Class()] = sysInfo
 	}
-	infos[sysInfo.Class()] = sysInfo
 	storInfo, err := storage.Gather()
 	if err != nil {
 		res.Errorf("Failed to gather storage info: %v", err)
+	} else {
+		infos[storInfo.Class()] = storInfo
 	}
-	infos[storInfo.Class()] = storInfo
 	return res.HasError()
 }
