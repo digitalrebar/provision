@@ -181,6 +181,33 @@ use                       user          password
 
 For ``debian / ubuntu`` bootenvs, the default user (``rocketskates``, can be changed by setting ``provisioner-default-user`` Param), has ``sudo`` privileges.
 
+.. _rs_rsclirc:
+
+Using the ``.rsclirc`` File
+---------------------------
+
+In addition to the environment variables (eg ``RS_ENDPOINT``, ``RS_KEY``, etc) and setting explicit ``drpcli`` values via option flags (eg ``--enpdoint``, ``-E``, etc), you can now use a home _RC_ style configuration file to set these values.  
+
+To do so, create a file ``$HOME/.drpclirc`` with the following possible values and format:
+
+===============  ==================================================================
+value            notes
+===============  ==================================================================
+``RS_ENDPOINT``  sets the endpoint API location (default: https://10.10.10.10:8092)
+``RS_USERNAME``  sets username to auth to the Endpoint (default: "rocketskates")
+``RS_PASSWORD``  sets the password for the auth (default: "r0cketsk8ts")
+``RS_KEY``       sets user:pass pair for authentication
+``RS_TOKEN``     a precreated Token (which may have a specific use scope)
+===============  ==================================================================
+
+Example:
+  ::
+    RS_ENDPOINT=https://10.10.10.10.8092
+    RS_PASSWORD=super_secure_secret_password_don't_share_with_anyone
+
+Please note that you can not use Shell style ``export`` in front of the variable,
+and do NOT surround the value with double or single quotes.
+
 .. _rs_autocomplete:
 
 Turn on autocomplete for the CLI
