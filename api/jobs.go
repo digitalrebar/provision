@@ -170,7 +170,14 @@ func (r *TaskRunner) Perform(action *models.JobAction, taskDir string) error {
 	cmd.Env = append(os.Environ(), "RS_TASK_DIR="+taskDir, "RS_RUNNER_DIR="+r.agentDir)
 	for _, e := range []string{"RS_UUID", "RS_ENDPOINT", "RS_TOKEN"} {
 		if os.Getenv(e) == "" {
-			cmd.Env = append(cmd.Env, e+"="+r.c.token.Token)
+			switch e {
+			case "RS_UUID":
+				cmd.Env = append(cmd.Env, e+"="+r.m.Key())
+			case "RS_ENDPOINT":
+				cmd.Env = append(cmd.Env, e+"="+r.c.Endpoint())
+			case "RS_TOKEN":
+				cmd.Env = append(cmd.Env, e+"="+r.c.token.Token)
+			}
 		}
 	}
 	cmd.Stdout = r.in
