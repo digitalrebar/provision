@@ -306,6 +306,16 @@ texinfo_documents = [
 #texinfo_no_detailmenu = False
 
 # Get the extra pieces - if they exist
+folder = 'doc/content-packages'
+for the_file in os.listdir(folder):
+    if the_file == '.keep-me':
+        continue
+    file_path = os.path.join(folder, the_file)
+    try:
+        if os.path.isfile(file_path):
+            os.unlink(file_path)
+    except Exception as e:
+        print(e)
 urls=[
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/ad-auth.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/agent.rst",
