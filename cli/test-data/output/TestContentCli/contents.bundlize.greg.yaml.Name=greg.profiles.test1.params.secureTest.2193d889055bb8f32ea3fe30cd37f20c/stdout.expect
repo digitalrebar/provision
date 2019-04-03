@@ -9,10 +9,10 @@
     "CodeSource": "",
     "Color": "",
     "Copyright": "",
-    "Description": "Unspecified",
+    "Description": "",
     "DisplayName": "",
     "DocUrl": "",
-    "Documentation": "Unspecified",
+    "Documentation": "",
     "Icon": "",
     "License": "",
     "Name": "greg",
@@ -20,10 +20,10 @@
     "Overwritable": false,
     "Prerequisites": "",
     "RequiredFeatures": "",
-    "Source": "Unspecified",
+    "Source": "",
     "Tags": "",
     "Type": "dynamic",
-    "Version": "",
+    "Version": "v0.0.0",
     "Writable": false
   }
 }

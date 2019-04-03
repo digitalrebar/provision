@@ -66,13 +66,14 @@ func TestContentCrud(t *testing.T) {
   Warnings: []
   meta:
     Description: Test Plugin for DRP
-    Documentation: Unspecified
     Meta: {}
     Name: incrementer
     Overwritable: false
-    Source: Digital Rebar
+    Prerequisites: ""
+    RequiredFeatures: ""
+    Source: FromPluginProvider
     Type: plugin
-    Version: 1.0.0
+    Version: v3.10.1000-pre-alpha-NotSet
     Writable: false
 - Counts:
     bootenvs: 2
