@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
+	"strconv"
 
 	"github.com/digitalrebar/provision/api"
 	"github.com/digitalrebar/store"
@@ -13,7 +14,7 @@ import (
 func outputBuffer(filename string, buf []byte) error {
 	ext := path.Ext(filename)
 	if ext == ".go" {
-		s := fmt.Sprintf("package main\n\nvar contentYamlString = `%s`\n", string(buf))
+		s := fmt.Sprintf("package main\n\nvar contentYamlString = %s\n", strconv.Quote(string(buf)))
 		buf = []byte(s)
 	}
 
