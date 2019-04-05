@@ -40,46 +40,46 @@ func FindOrFake(src, field string, args map[string]string) string {
 		filepath := fmt.Sprintf("._%s.meta", field)
 		buf, err := ioutil.ReadFile(path.Join(src, filepath))
 		if err == nil {
-			return string(buf)
+			return strings.TrimSpace(string(buf))
 		}
 	}
-	if p, ok := args[field]; !ok {
-		s := "Unspecified"
+	s := ""
+	ok := false
+	if s, ok = args[field]; !ok {
 		switch field {
+		case "Name":
+			s = "Unspecified"
+		case "Version":
+			s = "v0.0.0"
 		case "Type":
 			// Default Type should be dynamic
 			s = "dynamic"
-		case "RequiredFeatures", "Version", "Prerequisites":
-			// Default RequiredFeatures should be empty string
-			s = ""
 		}
-		return s
-	} else {
-		return p
 	}
+	return strings.TrimSpace(s)
 }
 
 func (c *Client) BundleContent(src string, dst store.Store, params map[string]string) error {
 	if dm, ok := dst.(store.MetaSaver); ok {
 		meta := map[string]string{
-			"Name":             strings.TrimSpace(FindOrFake(src, "Name", params)),
-			"Version":          strings.TrimSpace(FindOrFake(src, "Version", params)),
-			"Description":      strings.TrimSpace(FindOrFake(src, "Description", params)),
-			"Source":           strings.TrimSpace(FindOrFake(src, "Source", params)),
+			"Name":             FindOrFake(src, "Name", params),
+			"Version":          FindOrFake(src, "Version", params),
+			"Description":      FindOrFake(src, "Description", params),
+			"Source":           FindOrFake(src, "Source", params),
 			"Documentation":    FindOrFake(src, "Documentation", params),
-			"RequiredFeatures": strings.TrimSpace(FindOrFake(src, "RequiredFeatures", params)),
-			"Type":             strings.TrimSpace(FindOrFake(src, "Type", params)),
-			"Color":            strings.TrimSpace(FindOrFake(src, "Color", params)),
-			"Icon":             strings.TrimSpace(FindOrFake(src, "Icon", params)),
-			"Author":           strings.TrimSpace(FindOrFake(src, "Author", params)),
-			"DisplayName":      strings.TrimSpace(FindOrFake(src, "DisplayName", params)),
-			"License":          strings.TrimSpace(FindOrFake(src, "License", params)),
-			"Copyright":        strings.TrimSpace(FindOrFake(src, "Copyright", params)),
-			"CodeSource":       strings.TrimSpace(FindOrFake(src, "CodeSource", params)),
-			"Order":            strings.TrimSpace(FindOrFake(src, "Order", params)),
-			"Tags":             strings.TrimSpace(FindOrFake(src, "Tags", params)),
-			"DocUrl":           strings.TrimSpace(FindOrFake(src, "DocUrl", params)),
-			"Prerequisites":    strings.TrimSpace(FindOrFake(src, "Prerequisites", params)),
+			"RequiredFeatures": FindOrFake(src, "RequiredFeatures", params),
+			"Type":             FindOrFake(src, "Type", params),
+			"Color":            FindOrFake(src, "Color", params),
+			"Icon":             FindOrFake(src, "Icon", params),
+			"Author":           FindOrFake(src, "Author", params),
+			"DisplayName":      FindOrFake(src, "DisplayName", params),
+			"License":          FindOrFake(src, "License", params),
+			"Copyright":        FindOrFake(src, "Copyright", params),
+			"CodeSource":       FindOrFake(src, "CodeSource", params),
+			"Order":            FindOrFake(src, "Order", params),
+			"Tags":             FindOrFake(src, "Tags", params),
+			"DocUrl":           FindOrFake(src, "DocUrl", params),
+			"Prerequisites":    FindOrFake(src, "Prerequisites", params),
 		}
 		dm.SetMetaData(meta)
 	}

@@ -1,5 +1,11 @@
 package models
 
+import (
+	"fmt"
+
+	"github.com/digitalrebar/store"
+)
+
 // Plugin Provider describes the available functions that could be
 // instantiated by a plugin.
 // swagger:model
@@ -77,6 +83,30 @@ func (p *PluginProvider) Fill() {
 	for _, a := range p.AvailableActions {
 		a.Fill()
 	}
+}
+
+func (p *PluginProvider) Store() (store.Store, error) {
+	content := &Content{}
+	content.Fill()
+
+	if p.Content != "" {
+		codec := store.YamlCodec
+		if err := codec.Decode([]byte(p.Content), content); err != nil {
+			return nil, err
+		}
+	}
+	cName := p.Name
+	content.Meta.Name = cName
+	content.Meta.Version = p.Version
+	if content.Meta.Description == "" || content.Meta.Description == "Unspecified" {
+		content.Meta.Description = fmt.Sprintf("Content layer for %s plugin provider", p.Name)
+	}
+	if content.Meta.Source == "" || content.Meta.Source == "Unspecified" {
+		content.Meta.Source = "FromPluginProvider"
+	}
+	content.Meta.Type = "plugin"
+	s, _ := store.Open("memory:///")
+	return s, content.ToStore(s)
 }
 
 // swagger:model
