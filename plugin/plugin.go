@@ -279,7 +279,6 @@ func stopHandler(w http.ResponseWriter, r *http.Request, ps PluginStop) {
 	}
 	resp := models.Error{Code: http.StatusOK}
 	mux.JsonResponse(w, resp.Code, resp)
-	client.CloseIdleConnections()
 	l.Infof("STOPPING\n")
 	os.Exit(0)
 }
