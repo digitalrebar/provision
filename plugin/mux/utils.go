@@ -42,6 +42,9 @@ func AssureContentType(w http.ResponseWriter, r *http.Request, ct string) bool {
 	if ok {
 		return true
 	}
+	if r.Body != nil {
+		r.Body.Close()
+	}
 	err := &models.Error{Type: r.Method, Code: http.StatusBadRequest}
 	err.Errorf("Invalid content type: %s", rct)
 	JsonResponse(w, err.Code, err)
@@ -52,6 +55,7 @@ func AssureContentType(w http.ResponseWriter, r *http.Request, ct string) bool {
 // object into the provided interface.  It will return false and generate
 // a JSON encoded error message upon failure.
 func AssureDecode(w http.ResponseWriter, r *http.Request, val interface{}) bool {
+
 	if !AssureContentType(w, r, "application/json") {
 		return false
 	}
@@ -61,6 +65,7 @@ func AssureDecode(w http.ResponseWriter, r *http.Request, val interface{}) bool 
 	}
 	dec := json.NewDecoder(r.Body)
 	marshalErr := dec.Decode(&val)
+	r.Body.Close()
 	if marshalErr == nil {
 		return true
 	}
