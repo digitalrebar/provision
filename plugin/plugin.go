@@ -274,6 +274,9 @@ func stopHandler(w http.ResponseWriter, r *http.Request, ps PluginStop) {
 	if ps != nil {
 		ps.Stop(l)
 	}
+	if r.Body != nil {
+		r.Body.Close()
+	}
 	resp := models.Error{Code: http.StatusOK}
 	mux.JsonResponse(w, resp.Code, resp)
 	l.Infof("STOPPING\n")
