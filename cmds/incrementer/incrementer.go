@@ -53,10 +53,12 @@ var (
 	}
 )
 
+// Plugin is the base structure for the plugin.
 type Plugin struct {
 	session *api.Client
 }
 
+// Config is the plugin's configuration entrypoint
 func (p *Plugin) Config(thelog logger.Logger, session *api.Client, config map[string]interface{}) *models.Error {
 	thelog.Infof("Config: %v\n", config)
 	p.session = session
@@ -100,6 +102,7 @@ func (p *Plugin) removeParameter(uuid, parameter string) *models.Error {
 	return nil
 }
 
+// Action is the plugin's action entrypoint
 func (p *Plugin) Action(thelog logger.Logger, ma *models.Action) (interface{}, *models.Error) {
 	thelog.Infof("Action: %v\n", ma)
 	var machine models.Machine
@@ -155,12 +158,14 @@ func (p *Plugin) Action(thelog logger.Logger, ma *models.Action) (interface{}, *
 		Messages: []string{fmt.Sprintf("Unknown command: %s\n", ma.Command)}}
 }
 
+// Publish is the plugin's event publisher entrypoint
 func (p *Plugin) Publish(thelog logger.Logger, e *models.Event) *models.Error {
 	thelog.Debugf("Plugin received: %v\n", e)
 	// Just eat the publish messages.
 	return nil
 }
 
+// Unpack is the plugin's unpack entrypoint
 func (p *Plugin) Unpack(thelog logger.Logger, dir string) error {
 	return ioutil.WriteFile(path.Join(dir, "testFile"), []byte("ImaFile"), 0644)
 }
