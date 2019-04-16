@@ -39,6 +39,7 @@ var (
 		"machines": "getSecure, updateSecure, updateTaskList",
 		"plugins":  "getSecure, updateSecure",
 		"profiles": "getSecure, updateSecure",
+		"stages":   "getSecure, updateSecure",
 	}
 
 	overriddenActions = map[string]string{

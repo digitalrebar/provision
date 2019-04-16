@@ -6,18 +6,23 @@ Usage:
 Available Commands:
   action        Display the action for this stage
   actions       Display actions for this stage
+  add           Add the stages param *key* to *blob*
   addprofile    Add profile to the machine's profile list
   addtask       Add task to the stage's task list
   bootenv       Set the stage's bootenv
   create        Create a new stage with the passed-in JSON or string key
   destroy       Destroy stage by id
   exists        See if a stages exists by id
+  get           Get a parameter from the stage
   indexes       Get indexes for stages
   list          List all stages
   meta          Gets metadata for the stage
+  params        Gets/sets all parameters for the stage
+  remove        Remove the param *key* from stages
   removeprofile Remove a profile from the machine's list
   removetask    Remove a task from the stage's list
   runaction     Run action on object from plugin
+  set           Set the stages param *key* to *blob*
   show          Show a single stages by id
   update        Unsafely update stage by id with the passed-in JSON
   wait          Wait for a stage's field to become a value within a number of seconds

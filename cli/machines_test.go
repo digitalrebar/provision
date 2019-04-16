@@ -196,6 +196,7 @@ func TestMachineCli(t *testing.T) {
 	cliTest(false, false, "profiles", "set", "stage-prof", "param", "sp-param", "to", "val").run(t)
 	cliTest(false, false, "machines", "stage", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "stage2", "--force").run(t)
 	cliTest(false, false, "stages", "addprofile", "stage2", "stage-prof").run(t)
+	cliTest(false, false, "stages", "set", "stage2", "param", "sp-direct-param", "to", "val2").run(t)
 
 	cliTest(false, false, "machines", "params", "3e7031fe-3062-45f1-835c-92541bc9cbd3").run(t)
 	cliTest(false, false, "machines", "params", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "--aggregate").run(t)

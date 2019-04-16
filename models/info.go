@@ -102,6 +102,7 @@ func (i *Info) Fill() {
 			"secure-params-in-content-packs",
 			"task-prerequisites",
 			"content-prerequisite-version-checking",
+			"stage-paramer",
 		}
 	}
 }

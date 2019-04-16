@@ -1,0 +1,23 @@
+{
+  "Available": true,
+  "BootEnv": "local",
+  "Bundle": "",
+  "Description": "Awesome sauce",
+  "Documentation": "",
+  "Endpoint": "",
+  "Errors": [],
+  "Meta": {},
+  "Name": "john",
+  "OptionalParams": [],
+  "Params": {
+    "jj": 3
+  },
+  "Profiles": [],
+  "ReadOnly": false,
+  "Reboot": false,
+  "RequiredParams": [],
+  "RunnerWait": true,
+  "Tasks": [],
+  "Templates": [],
+  "Validated": true
+}
