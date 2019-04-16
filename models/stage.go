@@ -42,6 +42,9 @@ type Stage struct {
 	// renderer based upon the Machine.Params
 	//
 	OptionalParams []string
+	// Params contains parameters for the stage.
+	// This allows the machine to access these values while in this stage.
+	Params map[string]interface{}
 	// The BootEnv the machine should be in to run this stage.
 	// If the machine is not in this bootenv, the bootenv of the
 	// machine will be changed.
@@ -151,18 +154,21 @@ func (s *Stage) Fill() {
 	if s.Profiles == nil {
 		s.Profiles = []string{}
 	}
+	if s.Params == nil {
+		s.Params = map[string]interface{}{}
+	}
 }
 
 func (s *Stage) AuthKey() string {
 	return s.Key()
 }
 
-func (b *Stage) SliceOf() interface{} {
-	s := []*Stage{}
-	return &s
+func (s *Stage) SliceOf() interface{} {
+	s2 := []*Stage{}
+	return &s2
 }
 
-func (b *Stage) ToModels(obj interface{}) []Model {
+func (s *Stage) ToModels(obj interface{}) []Model {
 	items := obj.(*[]*Stage)
 	res := make([]Model, len(*items))
 	for i, item := range *items {
@@ -172,36 +178,45 @@ func (b *Stage) ToModels(obj interface{}) []Model {
 }
 
 // match Profiler interface
-func (b *Stage) GetProfiles() []string {
-	return b.Profiles
+func (s *Stage) GetProfiles() []string {
+	return s.Profiles
 }
 
-func (b *Stage) SetProfiles(p []string) {
-	b.Profiles = p
+func (s *Stage) SetProfiles(p []string) {
+	s.Profiles = p
+}
+
+// match Paramer interface
+func (s *Stage) GetParams() map[string]interface{} {
+	return copyMap(s.Params)
+}
+
+func (s *Stage) SetParams(p map[string]interface{}) {
+	s.Params = copyMap(p)
 }
 
 // match BootEnver interface
-func (b *Stage) GetBootEnv() string {
-	return b.BootEnv
+func (s *Stage) GetBootEnv() string {
+	return s.BootEnv
 }
 
-func (b *Stage) SetBootEnv(s string) {
-	b.BootEnv = s
+func (s *Stage) SetBootEnv(be string) {
+	s.BootEnv = be
 }
 
 // match TaskRunner interface
-func (b *Stage) GetTasks() []string {
-	return b.Tasks
+func (s *Stage) GetTasks() []string {
+	return s.Tasks
 }
 
-func (b *Stage) SetTasks(t []string) {
-	b.Tasks = t
+func (s *Stage) SetTasks(t []string) {
+	s.Tasks = t
 }
 
-func (b *Stage) SetName(n string) {
-	b.Name = n
+func (s *Stage) SetName(n string) {
+	s.Name = n
 }
 
-func (b *Stage) CanHaveActions() bool {
+func (s *Stage) CanHaveActions() bool {
 	return true
 }

@@ -9,6 +9,7 @@
   "Meta": {},
   "Name": "stage2",
   "OptionalParams": [],
+  "Params": {},
   "Profiles": [
     "stage-prof"
   ],

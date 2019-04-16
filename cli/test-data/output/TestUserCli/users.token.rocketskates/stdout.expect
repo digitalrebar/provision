@@ -38,7 +38,8 @@ RE:
       "bundle-objects",
       "secure-params-in-content-packs",
       "task-prerequisites",
-      "content-prerequisite-version-checking"
+      "content-prerequisite-version-checking",
+      "stage-paramer"
     \],
     "file_port": 10002,
     "id": "Fred",
@@ -184,8 +185,10 @@ RE:
         "create": {},
         "delete": {},
         "get": {},
+        "getSecure": {},
         "list": {},
-        "update": {}
+        "update": {},
+        "updateSecure": {}
       },
       "subnets": {
         "action": {},
