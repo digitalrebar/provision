@@ -371,6 +371,15 @@ Plugin downloads require two steps.  First, use the Catalog to locate the correc
       # download the plugin - AWS cares about extra slashes ... blech
       curl -s ${BASE}${PART} -o drp-plugin-ipmi
 
+.. _rs_plugin_providers_license:
+
+Import plugin failed pool: define failed
+----------------------------------------
+
+If you are using the DRPCLI to upload a licensed RackN plugin, the endpoint will reject the upload with a defined failed error.
+
+Install the license content pack and try again.  If you've saved the `rackn-license.json` file then you can use the DRPCLI to upload it via `drpcli contents upload rackn-license.json`.
+
 .. _rs_update_content_command_line:
 
 Update Community Content via Command Line
