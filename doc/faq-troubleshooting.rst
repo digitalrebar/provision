@@ -263,6 +263,13 @@ Virtual Box does not add host only networks until a VM is attempting to use them
 
 Virtual Box may also fail to allocate an IP to the host network due to incomplete configuration.  In this case, ``ip addr`` will show the network but no IPv4 address has been allocated; consequently, Digital Rebar will not report this as a working interface.
 
+Virtual Box "no bootable medium" on second boot
+----------------------------------------------
+
+Virtual Box PXE firmware does not handle PXE chaining effectively.  This happens because DRP treats known and unknown machines differently so the first boot gets more different boot instructions.
+
+The workaround is to use DHCP option 67 to supply the correct boot file.  Setting DHCP option 67 to `lpxelinux.0` bypasses the chainloader after the machine has registered.
+
 .. _rs_debug_sledgehammer:
 
 Debug Sledgehammer
