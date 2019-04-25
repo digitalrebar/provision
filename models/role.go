@@ -34,12 +34,13 @@ var (
 	}
 
 	addedActions = map[string]string{
-		"users":    "token, password",
-		"jobs":     "log",
-		"machines": "getSecure, updateSecure, updateTaskList",
-		"plugins":  "getSecure, updateSecure",
-		"profiles": "getSecure, updateSecure",
-		"stages":   "getSecure, updateSecure",
+		"users":     "token, password",
+		"jobs":      "log",
+		"machines":  "getSecure, updateSecure, updateTaskList",
+		"plugins":   "getSecure, updateSecure",
+		"profiles":  "getSecure, updateSecure",
+		"stages":    "getSecure, updateSecure",
+		"rawModels": "getSecure, updateSecure",
 	}
 
 	overriddenActions = map[string]string{
@@ -73,6 +74,22 @@ var (
 		return res
 	}()
 )
+
+func UpdateAllScopesWithRawModel(prefix string) {
+	actions := map[string]struct{}{}
+	for k2, v2 := range basicActions {
+		actions[k2] = v2
+	}
+	for k2, v2 := range valScopedActions {
+		actions[k2] = v2
+	}
+	if v, ok := addedActions["rawModels"]; ok {
+		for i := range csm(v) {
+			actions[i] = struct{}{}
+		}
+	}
+	allScopes[prefix] = actions
+}
 
 type actionNode struct {
 	items map[string]struct{}
