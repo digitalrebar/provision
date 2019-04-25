@@ -112,7 +112,8 @@ It will attempt to perform a direct copy without saving the ISO locally.`,
 				}
 			}
 			if len(isoFiles) == 0 {
-				return fmt.Errorf("BootEnv %s already has all required ISO files", bootEnv.Name)
+				log.Printf("BootEnv %s already has all required ISO files", bootEnv.Name)
+				return nil
 			}
 			for isoFile, isoUrl := range isoFiles {
 				if isoUrl == "" {
