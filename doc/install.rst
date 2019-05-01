@@ -226,7 +226,7 @@ Before starting, you'll need a copy of the RackN UX and to have installed a `rac
 
 Extract the RackN UX files into a directory named `ux` at the same level as the `drp-data` directory.  The account running your `dr-server` must have read permission for this directory.
 
-It is OK to use a different directory - the different directory can be specified with the `--local-ui` command line option for dr-provision.  The option specifies the directory containing the UX files.  If the path is relative, it will be assumed to be relative to the `data-root` option.
+It is OK to use a different directory - the different directory can be specified with the `--local-ui` command line option for dr-provision.  The option specifies the directory containing the UX files.  If the path is relative, it will be assumed to be relative to the `data-root` option.  NOTE: The directory specified in `--local-ui` is the directory where you places the files with `public` appended.  e.g. `cool-ux/public`.
 
 
 Running the UX from DRP
