@@ -209,3 +209,41 @@ For *iolated* installs, remove the directory used to contain the isolated instal
 
     sudo rm -rf dr-provision-install
 
+
+Running the RackN UX Locally
+============================
+
+Setting up DRP to host the RackN UX locally is trivial.  The DRP server includes an embedded web server that can host the UX files from a local directory.  The RackN UX can also be set up using any other HTTP server, however this document only addresses the setup related to using DRP as the HTTP server.
+
+The RackN UX uses the rackn-license content pack for entitlements so no external login to the RacKN SaaS is required.
+
+The RackN UX will still attempt to connect the RackN SaaS for updates and the catalog; however, the system will operate even if these calls fail.  This can be turned off by setting a parameter in the global profile, `ux-air-gap`, to `true`.
+
+Setup
++++++
+
+Before starting, you'll need a copy of the RackN UX and to have installed a `rackn-license.json` content package in the DRP server.  These items require a current RackN license - using them without a valid enterprise or trial license is a copyright violation.
+
+Extract the RackN UX files into a directory named `ux` at the same level as the `drp-data` directory.  The account running your `dr-server` must have read permission for this directory.
+
+It is OK to use a different directory - the different directory can be specified with the `--local-ui` command line option for dr-provision.  The option specifies the directory containing the UX files.  If the path is relative, it will be assumed to be relative to the `data-root` option.  NOTE: The directory specified in `--local-ui` is the directory where you places the files with `public` appended.  e.g. `cool-ux/public`.
+
+
+Running the UX from DRP
++++++++++++++++++++++++
+
+By unpacking the files in the `ux` directory within the `data-root` directory or specifying the `--local-ui` option, the DRP endpoint will serve that directory as `/local-ui`.
+
+If you are using the default port, you can access the local UX from `https://127.0.0.1:8092/local-ui`.
+
+The endpoint will detect file changes so no restart is required if you update or change the RackN UX files.
+
+
+Redirecting URL
++++++++++++++++
+
+If you are hosting a local UX, you should change the DRP endpoint UX redirect.  This is the site that is presented if you visit the DRP endpoints root URL.  To use the local-ui, add `--ui-url=/local-ui` to the `dr-provision` command line arguments.
+
+
+* Air Gap mode - the RackN UX disables all external calls and only operates against the local DRP endpoint.
+
