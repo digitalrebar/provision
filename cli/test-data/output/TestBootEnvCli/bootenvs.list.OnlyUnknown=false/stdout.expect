@@ -58,6 +58,20 @@
         "Meta": {},
         "Name": "ipxe-mac",
         "Path": "{{.Machine.MacAddr \"ipxe\"}}.ipxe"
+      },
+      {
+        "Contents": "if test $grub_platform == pc; then\n    chainloader (hd0)\nelse\n    bpx=/efi/boot\n    root='' prefix=''\n    search --file --set=root $bpx/bootx64.efi || search --file --set=root $bpx/bootaa64.efi\n    if test x$root == x; then\n        echo \"No EFI boot partiton found.\"\n        echo \"Rebooting in 120 seconds\"\n        sleep 120\n        reboot\n    fi\n    if test -f ($root)/efi/microsoft/boot/bootmgfw.efi; then\n        echo \"Microsoft Windows found, chainloading into it\"\n        chainloader ($root)/efi/microsoft/boot/bootmgfw.efi\n    fi\n    for f in ($root)/efi/*; do\n        if test -f $f/grub.cfg; then\n            prefix=$f\n            break\n        fi\n    done\n    if test x$prefix == x; then\n        echo \"Unable to find grub.cfg\"\n        echo \"Rebooting in 120 seconds\"\n        sleep 120\n        reboot\n    fi\n    configfile $prefix/grub.cfg\nfi\n",
+        "ID": "",
+        "Meta": {},
+        "Name": "grub",
+        "Path": "grub/{{.Machine.Address}}.cfg"
+      },
+      {
+        "Contents": "if test $grub_platform == pc; then\n    chainloader (hd0)\nelse\n    bpx=/efi/boot\n    root='' prefix=''\n    search --file --set=root $bpx/bootx64.efi || search --file --set=root $bpx/bootaa64.efi\n    if test x$root == x; then\n        echo \"No EFI boot partiton found.\"\n        echo \"Rebooting in 120 seconds\"\n        sleep 120\n        reboot\n    fi\n    if test -f ($root)/efi/microsoft/boot/bootmgfw.efi; then\n        echo \"Microsoft Windows found, chainloading into it\"\n        chainloader ($root)/efi/microsoft/boot/bootmgfw.efi\n    fi\n    for f in ($root)/efi/*; do\n        if test -f $f/grub.cfg; then\n            prefix=$f\n            break\n        fi\n    done\n    if test x$prefix == x; then\n        echo \"Unable to find grub.cfg\"\n        echo \"Rebooting in 120 seconds\"\n        sleep 120\n        reboot\n    fi\n    configfile $prefix/grub.cfg\nfi\n",
+        "ID": "",
+        "Meta": {},
+        "Name": "grub-mac",
+        "Path": "grub/{{.Machine.MacAddr \"grub\"}}.cfg"
       }
     ],
     "Validated": true
