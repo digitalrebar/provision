@@ -226,24 +226,24 @@ Before starting, you'll need a copy of the RackN UX and to have installed a `rac
 
 Extract the RackN UX files into a directory named `ux` at the same level as the `drp-data` directory.  The account running your `dr-server` must have read permission for this directory.
 
-It is OK to use a different directory - the different directory can be specified with the `--local-ui` command line option for dr-provision.  The option specifies the directory containing the UX files.  If the path is relative, it will be assumed to be relative to the `data-root` option.  NOTE: The directory specified in `--local-ui` is the directory where you places the files with `public` appended.  e.g. `cool-ux/public`.
+It is OK to use a different directory - the different directory can be specified with the `--local-ui` command line option for dr-provision.  The option specifies the directory containing the UX files.  If the path is relative, it will be assumed to be relative to the `data-root` option.
 
 
 Running the UX from DRP
 +++++++++++++++++++++++
 
-By unpacking the files in the `ux` directory within the `data-root` directory or specifying the `--local-ui` option, the DRP endpoint will serve that directory as `/local-ui`.
-
-If you are using the default port, you can access the local UX from `https://127.0.0.1:8092/local-ui`.
+By unpacking the files in the `ux` directory within the `data-root` directory or specifying the `--local-ui` option, the DRP endpoint will serve that directory as `/local-ui` and `/ux`.
 
 The endpoint will detect file changes so no restart is required if you update or change the RackN UX files.
 
+If you are using the default port, you can access the local UX from `https://127.0.0.1:8092/ux`.  NOTE: This will only serve the files for the UX; it will not ensure that the UX starts connecting to the current DRP instance.  To address that, continue below.
 
 Redirecting URL
 +++++++++++++++
 
-If you are hosting a local UX, you should change the DRP endpoint UX redirect.  This is the site that is presented if you visit the DRP endpoints root URL.  To use the local-ui, add `--ui-url=/local-ui` to the `dr-provision` command line arguments.
+If you are hosting a local UX, you should change the DRP endpoint UX redirect.  This is the site that is presented if you visit the DRP endpoints root URL, `/`, or the official UI url, `/ui`.  To use the local ux, add `--ui-url=/ux` to the `dr-provision` command line arguments.
 
+If you have connect to this DRP Endpoint previously, you may need to clear the browsers permanent redirect cache to start using the new feature.
 
 * Air Gap mode - the RackN UX disables all external calls and only operates against the local DRP endpoint.
 
