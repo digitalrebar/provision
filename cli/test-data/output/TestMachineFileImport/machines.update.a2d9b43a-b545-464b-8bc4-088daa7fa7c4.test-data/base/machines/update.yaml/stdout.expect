@@ -10,6 +10,7 @@
   "Endpoint": "",
   "Errors": [],
   "HardwareAddrs": [],
+  "Locked": false,
   "Meta": {
     "feature-flags": "change-stage-v2"
   },

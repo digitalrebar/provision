@@ -656,6 +656,12 @@ Machine objects have many fields used for different tasks:
 - **Runnable**: A flag that indicates whether the machine agent is allowed
   to create and execute Jobs against this Machine.
 
+- **Locked**: A flag that indicates whether user-initiated changes to
+  a Machine will be accepted.  When true, any changes that do not
+  include change that sets this flag to false will be rejected.
+  Changes from non-user sources will still be accepted -- this includes
+  changes made while running tasks on a machine.
+
 - **Workflow**: The name of the Workflow that the Machine is going
   through.  If the Workflow field is not empty, the Stage and BootEnv
   fields are read-only.
