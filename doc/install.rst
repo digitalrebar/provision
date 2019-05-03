@@ -171,6 +171,12 @@ or, in "production" mode:
 
 Start the "dr-provision" binary as an ordinary user, and now it will have permission to bind to privileged ports 67 and 69.
 
+For automated upgrades from within DRP, the user that is running DRP needs to have the following in /etc/sudousers.  In this example, `drp-user` is the user running DRP.  This will allow DRP to update itself.
+  ::
+
+    drp-user ALL=(ALL:ALL) NOPASSWD:/usr/sbin/setcap
+
+
 .. note:: The *setcap* command must reference the actual binary itself, and can not be pointed at a symbolic link.  Additional refinement of the capabilities may be possible.  For extremely security conscious setups, you may want to refer to the StackOverflow discussion (eg setting capabilities on a per-user basis, etc.):
   https://stackoverflow.com/questions/1956732/is-it-possible-to-configure-linux-capabilities-per-user
 
