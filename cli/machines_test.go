@@ -459,3 +459,18 @@ Arch: %s`, i, arch)).run(t)
 	}
 	verifyClean(t)
 }
+
+func TestMachineLocked(t *testing.T) {
+	cliTest(false, false, "machines", "create", "-").Stdin(machineCreateInputString).run(t)
+	cliTest(false, false, "machines", "update", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "-").Stdin(`{"Locked":true}`).run(t)
+	cliTest(false, true, "machines", "update", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "-").Stdin(`{"Address":"192.168.124.20"}`).run(t)
+	cliTest(false, false, "machines", "update", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "-").Stdin(`{"Locked":false}`).run(t)
+	cliTest(false, false, "machines", "update", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "-").Stdin(`{"Address":"192.168.124.20"}`).run(t)
+	cliTest(false, false, "machines", "update", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "-").Stdin(`{"Locked":true}`).run(t)
+	cliTest(false, false, "machines", "update", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "-").Stdin(`{"Address":"192.168.124.30","Locked":false}`).run(t)
+	cliTest(false, false, "machines", "update", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "-").Stdin(`{"Locked":true}`).run(t)
+	cliTest(false, true, "machines", "destroy", "3e7031fe-3062-45f1-835c-92541bc9cbd3").run(t)
+	cliTest(false, false, "machines", "update", "3e7031fe-3062-45f1-835c-92541bc9cbd3", "-").Stdin(`{"Locked":false}`).run(t)
+	cliTest(false, false, "machines", "destroy", "3e7031fe-3062-45f1-835c-92541bc9cbd3").run(t)
+	verifyClean(t)
+}

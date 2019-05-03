@@ -125,6 +125,16 @@ type Machine struct {
 	//
 	// required: true
 	Arch string
+	// Locked indicates that changes to the Machine by users are not
+	// allowed, except for unlocking the machine, which will always
+	// generate an Audit event.
+	//
+	// required: true
+	Locked bool
+}
+
+func (n *Machine) IsLocked() bool {
+	return n.Locked
 }
 
 func (n *Machine) GetMeta() Meta {

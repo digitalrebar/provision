@@ -1,0 +1,42 @@
+{
+  "Address": "192.168.124.20",
+  "Arch": "amd64",
+  "Available": true,
+  "BootEnv": "local",
+  "Bundle": "",
+  "CurrentJob": "",
+  "CurrentTask": -1,
+  "Description": "",
+  "Endpoint": "",
+  "Errors": [],
+  "HardwareAddrs": [],
+  "Locked": true,
+  "Meta": {
+    "feature-flags": "change-stage-v2"
+  },
+  "Name": "john",
+  "OS": "",
+  "Params": {},
+  "Profile": {
+    "Available": false,
+    "Bundle": "",
+    "Description": "",
+    "Documentation": "",
+    "Endpoint": "",
+    "Errors": null,
+    "Meta": null,
+    "Name": "",
+    "Params": null,
+    "ReadOnly": false,
+    "Validated": false
+  },
+  "Profiles": [],
+  "ReadOnly": false,
+  "Runnable": true,
+  "Secret": "secret1",
+  "Stage": "none",
+  "Tasks": [],
+  "Uuid": "3e7031fe-3062-45f1-835c-92541bc9cbd3",
+  "Validated": true,
+  "Workflow": ""
+}
