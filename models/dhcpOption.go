@@ -287,22 +287,38 @@ func (o DhcpOption) RenderToDHCP(srcOpts map[int]string) (code byte, val []byte,
 	return o.Code, val, err
 }
 
-func DHCPOptionsInOrder(p dhcp.Packet) []*DhcpOption {
-	res := []*DhcpOption{}
-	for opts := p.Options(); len(opts) > 2; opts = opts[2+opts[1]:] {
-		switch dhcp.OptionCode(opts[0]) {
+func DHCPOptionsInOrder(p dhcp.Packet) (res []*DhcpOption, err error) {
+	res = []*DhcpOption{}
+	opts := p.Options()
+	var opt dhcp.OptionCode
+	for {
+		if len(opts) == 0 {
+			return
+		}
+		opt, opts = dhcp.OptionCode(opts[0]), opts[1:]
+		switch opt {
 		case dhcp.End:
-			return res
+			return
 		case dhcp.Pad:
-			opts = opts[1:]
+			continue
 		default:
-			if len(opts) < int(opts[1])+2 {
-				return res
+			if len(opts) == 0 {
+				err = fmt.Errorf("DHCP Options: Option %d needs a length, but out of bytes", opt)
+				return
 			}
-			opt, val := &DhcpOption{Code: opts[0]}, opts[2:2+opts[1]]
-			opt.FillFromPacketOpt(val)
-			res = append(res, opt)
+			var length byte
+			length, opts = opts[0], opts[1:]
+			if int(length) >= len(opts) {
+				err = fmt.Errorf("DHCP Options: Option %d has length %d, but there are only %d bytes left",
+					opt, length, len(opts))
+				return
+			}
+			var val []byte
+			val, opts = opts[:length], opts[length:]
+			toAdd := &DhcpOption{Code: byte(opt)}
+			toAdd.FillFromPacketOpt(val)
+			res = append(res, toAdd)
 		}
 	}
-	return res
+	return
 }
