@@ -94,9 +94,13 @@ Workflow: wf4
 	cliTest(false, false, "workflows", "list", "sort", "Name").run(t)
 	cliTest(false, false, "machines", "list", "sort", "Name").run(t)
 	cliTest(false, false, "machines", "update", "Name:m0", `{"Workflow":"wf1"}`).run(t)
+	cliTest(false, false, "machines", "update", "Name:m0", `{"Runnable":true}`).run(t)
 	cliTest(false, false, "machines", "update", "Name:m0", `{"Workflow":"wf2"}`).run(t)
+	cliTest(false, false, "machines", "update", "Name:m0", `{"Runnable":true}`).run(t)
 	cliTest(false, false, "machines", "update", "Name:m0", `{"Workflow":"wf3"}`).run(t)
+	cliTest(false, false, "machines", "update", "Name:m0", `{"Runnable":true}`).run(t)
 	cliTest(false, true, "machines", "update", "Name:m0", `{"Workflow":"wf4"}`).run(t)
+	cliTest(false, false, "machines", "update", "Name:m0", `{"Runnable":true}`).run(t)
 	cliTest(false, false, "machines", "update", "Name:m0", `{"Workflow":""}`).run(t)
 
 	// Clean up
