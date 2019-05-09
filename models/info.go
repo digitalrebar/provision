@@ -5,6 +5,8 @@ import (
 	"runtime"
 )
 
+// Stat contains a basic statistic sbout dr-provision
+//
 // swagger:model
 type Stat struct {
 	// required: true
@@ -13,6 +15,9 @@ type Stat struct {
 	Count int `json:"count"`
 }
 
+// Info contains information on how the running instance of
+// dr-provision is configured.
+//
 // swagger:model
 type Info struct {
 	// required: true
@@ -52,6 +57,8 @@ type Info struct {
 	License  LicenseBundle
 }
 
+// HasFeature is a helper function to determine if a requested feature
+// is present.
 func (i *Info) HasFeature(f string) bool {
 	for _, v := range i.Features {
 		if v == f {

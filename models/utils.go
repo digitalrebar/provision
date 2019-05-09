@@ -33,12 +33,15 @@ func copyMap(m map[string]interface{}) map[string]interface{} {
 	return res
 }
 
+// BlobInfo contains information on an uploaded file or ISO.
 // swagger:model
 type BlobInfo struct {
 	Path string
 	Size int64
 }
 
+// Model is the interface that pretty much all non-Error objects
+// returned by the API satisfy.
 type Model interface {
 	Prefix() string
 	Key() string
@@ -56,6 +59,8 @@ type Slicer interface {
 	ToModels(interface{}) []Model
 }
 
+// All returns a slice containing a single blank instance of all the
+// Models.
 func All() []Model {
 	return []Model{
 		&BootEnv{},
@@ -80,6 +85,8 @@ func All() []Model {
 	}
 }
 
+// AllPrefixes returns a slice containing the prefix names of all the
+// Models.
 func AllPrefixes() []string {
 	all := All()
 	res := make([]string, len(all))
@@ -89,21 +96,24 @@ func AllPrefixes() []string {
 	return res
 }
 
-func New(kind string) (Slicer, error) {
+// New returns a new blank instance of the Model with the passed-in
+// prefix.
+func New(prefix string) (Slicer, error) {
 	for _, i := range All() {
 		key := i.Prefix()
-		if key == kind || kind == strings.TrimSuffix(key, "s") {
+		if key == prefix || prefix == strings.TrimSuffix(key, "s") {
 			res := i.(Slicer)
 			res.Fill()
 			return res, nil
 		}
 	}
 
-	res := &RawModel{"Type": kind}
+	res := &RawModel{"Type": prefix}
 	res.Fill()
 	return res, nil
 }
 
+// Clone returns a deep copy of the passed-in Model
 func Clone(m Model) Model {
 	if m == nil {
 		return nil

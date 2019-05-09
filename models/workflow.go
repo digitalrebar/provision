@@ -1,5 +1,9 @@
 package models
 
+// Workflow contains a list of Stages. When it is applied to a Machine,
+// that machine's Tasks list is populated with the contents of the Stages in the Workflow.
+//
+// swagger:model
 type Workflow struct {
 	Validation
 	Access

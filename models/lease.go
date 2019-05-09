@@ -17,6 +17,7 @@ func Hexaddr(addr net.IP) string {
 	return string(s)
 }
 
+// Lease tracks DHCP leases.
 // swagger:model
 type Lease struct {
 	Validation

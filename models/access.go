@@ -9,10 +9,10 @@ type Access struct {
 	ReadOnly bool
 }
 
-//
-// model object may define a Validate method that can
-// be used to return errors about if the model is valid
-// in the current datatracker.
+// Accessor is an interface that objects that can be ReadOnly should
+// satisfy.  model object may define a Validate method that can be
+// used to return errors about if the model is valid in the current
+// datatracker.
 //
 type Accessor interface {
 	IsReadOnly() bool

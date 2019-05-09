@@ -8,6 +8,8 @@ import (
 	"github.com/pborman/uuid"
 )
 
+// SupportedArch normalizes system architectures and returns whether
+// it is one we know how to normalize.
 func SupportedArch(s string) (string, bool) {
 	switch strings.ToLower(s) {
 	case "amd64", "x86_64":
@@ -37,6 +39,7 @@ func SupportedArch(s string) (string, bool) {
 	}
 }
 
+// ArchEqual returns whether two arches are equal.
 func ArchEqual(a, b string) bool {
 	a1, aok := SupportedArch(a)
 	b1, bok := SupportedArch(b)
@@ -52,7 +55,7 @@ type Machine struct {
 	Meta
 	Owned
 	Bundled
-	// The name of the machine.  THis must be unique across all
+	// The name of the machine.  This must be unique across all
 	// machines, and by convention it is the FQDN of the machine,
 	// although nothing enforces that.
 	//
@@ -76,10 +79,14 @@ type Machine struct {
 	// purposes.  Note that this field does not directly tie into DHCP
 	// leases or reservations -- the provisioner relies solely on this
 	// address when determining what to render for a specific machine.
+	// Address is updated automatically by the DHCP system if
+	// HardwareAddrs is filled out.
 	//
 	// swagger:strfmt ipv4
 	Address net.IP
-	// An optional value to indicate tasks and profiles to apply.
+	// The stage that the Machine is currently in.  If Workflow is also
+	// set, this field is read-only, otherwise changing it will change
+	// the Stage the system is in.
 	Stage string
 	// The boot environment that the machine should boot into.  This
 	// must be the name of a boot environment present in the backend.
@@ -89,15 +96,20 @@ type Machine struct {
 	// An array of profiles to apply to this machine in order when looking
 	// for a parameter during rendering.
 	Profiles []string
-	//
 	// The Machine specific Profile Data - only used for the map (name and other
 	// fields not used - THIS IS DEPRECATED AND WILL GO AWAY.
 	// Data will migrated from this struct to Params and then cleared.
 	Profile Profile
-	// Replaces the Profile.
+	// The Parameters that have been directly set on the Machine.
 	Params map[string]interface{}
 	// The tasks this machine has to run.
 	Tasks []string
+	// The index into the Tasks list for the task that is currently
+	// running (if a task is running) or the next task that will run (if
+	// no task is currently running).  If -1, then the first task will
+	// run next, and if it is equal to the length of the Tasks list then
+	// all the tasks have finished running.
+	//
 	// required: true
 	CurrentTask int
 	// Indicates if the machine can run jobs or not.  Failed jobs mark the machine
@@ -105,15 +117,16 @@ type Machine struct {
 	//
 	// required: true
 	Runnable bool
-
 	// Secret for machine token revocation.  Changing the secret will invalidate
 	// all existing tokens for this machine
 	Secret string
-	// OS is the operating system that the node is running in
+	// OS is the operating system that the node is running in.  It is updated by Sledgehammer and by
+	// the various OS install tasks.
 	//
 	OS string
 	// HardwareAddrs is a list of MAC addresses we expect that the system might boot from.
-	//
+	// This must be filled out to enable MAC address based booting from the various bootenvs,
+	// and must be updated if the MAC addresses for a system change for whatever reason.
 	//
 	HardwareAddrs []string
 	// Workflow is the workflow that is currently responsible for processing machine tasks.
@@ -289,6 +302,13 @@ func (b *Machine) SetName(n string) {
 	b.Name = n
 }
 
+// SplitTasks slits the machine's Tasks list into 3 subsets:
+//
+// 1. the immutable past, which cannot be chnaged by task list modification
+//
+// 2. The mutable present, which contains tasks that can be deleted, and where tasks can be added.
+//
+// 3. The immutable future, which also cannot be changed.
 func (b *Machine) SplitTasks() (thePast []string, thePresent []string, theFuture []string) {
 	thePast, thePresent, theFuture = []string{}, []string{}, []string{}
 	if len(b.Tasks) == 0 {
@@ -312,6 +332,8 @@ func (b *Machine) SplitTasks() (thePast []string, thePresent []string, theFuture
 	return
 }
 
+// AddTasks is a helper for adding tasks to the machine Tasks list in
+// the mutable present.
 func (b *Machine) AddTasks(offset int, tasks ...string) error {
 	thePast, thePresent, theFuture := b.SplitTasks()
 	if offset < 0 {
@@ -354,6 +376,7 @@ func (b *Machine) AddTasks(offset int, tasks ...string) error {
 	return nil
 }
 
+// DelTasks allows you to delete tasks in the mutable present.
 func (b *Machine) DelTasks(tasks ...string) {
 	if len(tasks) == 0 {
 		return

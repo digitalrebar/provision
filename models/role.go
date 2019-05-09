@@ -75,6 +75,8 @@ var (
 	}()
 )
 
+// UpdateAllScopesWithRawModel adds new role scopes for a specialized
+// RawModel
 func UpdateAllScopesWithRawModel(prefix string) {
 	actions := map[string]struct{}{}
 	for k2, v2 := range basicActions {
@@ -166,6 +168,7 @@ func (a claim) contains(b claim) bool {
 // Claims is a compiled list of claims from a Role.
 type Claims []claim
 
+// Claims returns true if all of the claims in a are a superset of b
 func (a Claims) Contains(b Claims) bool {
 	finalRes := true
 	res := false
@@ -184,8 +187,10 @@ func (a Claims) Contains(b Claims) bool {
 	return finalRes
 }
 
+// ClaimsList is a list of Claims derived from a Role.
 type ClaimsList []Claims
 
+// Match returns true if one of the entries in c contains wanted
 func (c ClaimsList) Match(wanted Claims) bool {
 	for i := range c {
 		if c[i].Contains(wanted) {
@@ -271,7 +276,8 @@ func makeClaims(things ...string) []*Claim {
 	return res
 }
 
-// Role is used to determine which API endpoints are available.
+// Role is used to determine which operations on which API endpoints are permitted.
+//
 // swagger:model
 type Role struct {
 	Validation
