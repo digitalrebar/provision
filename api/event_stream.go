@@ -20,8 +20,12 @@ import (
 	"github.com/gorilla/websocket"
 )
 
+// TestFunc is a function type used to test if an item matches some
+// sort of condition.
 type TestFunc func(interface{}) (bool, error)
 
+// AndItems retuens a TestFunc that returns true if all the passed-in
+// TestFuncs also return true.
 func AndItems(fs ...TestFunc) TestFunc {
 	return func(ref interface{}) (bool, error) {
 		for _, f := range fs {
@@ -35,6 +39,8 @@ func AndItems(fs ...TestFunc) TestFunc {
 	}
 }
 
+// OrItems returns a TestFunc that returns true if any of the
+// passed-in TestFuncs return true.
 func OrItems(fs ...TestFunc) TestFunc {
 	return func(ref interface{}) (bool, error) {
 		for _, f := range fs {
@@ -48,6 +54,8 @@ func OrItems(fs ...TestFunc) TestFunc {
 	}
 }
 
+// NotItems returns a TestFunc that returns the opposite of the
+// passed-in TestFunc.
 func NotItem(f TestFunc) TestFunc {
 	return func(ref interface{}) (bool, error) {
 		b, e := f(ref)
@@ -118,7 +126,8 @@ func (r *RecievedEvent) matches(registration string) bool {
 		(tak[2] == r.E.Key || tak[2] == "*")
 }
 
-// EventStream receives events from the digitalrebar provider.  You can read received events by reading from its Events channel.
+// EventStream receives events from the digitalrebar provider.  You
+// can read received events by reading from its Events channel.
 type EventStream struct {
 	client        *Client
 	handleId      int64
@@ -231,6 +240,7 @@ func (es *EventStream) subscribe(handle int64, events ...string) (int, error) {
 	return count, nil
 }
 
+// Subscribe directs an EventStream to listen for matching events.
 func (es *EventStream) Subscribe(handle int64, events ...string) error {
 	es.mux.Lock()
 	count, err := es.subscribe(handle, events...)

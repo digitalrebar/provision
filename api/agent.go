@@ -17,27 +17,6 @@ import (
 	"github.com/digitalrebar/provision/models"
 )
 
-// This implements a new machine agent structured as a finite state
-// machine.  There is one important behavioural change to the
-// behaviour of the runner that may impact how workflows are built:
-//
-// The RunnerWait flag in stages is no longer honored.  Instead,
-// the agent will wait by default, unless overridden by the following conditions, in order
-// of priority:
-//
-// * The next stage has the Reboot flag set.
-//
-// * The change-stage/map entry for the next stage has a Stop, Reboot,
-//   or Poweroff clause.
-//
-// * The machine is currently in a bootenv that ends in -install and
-//   there is nothing else to do, in which case the runner will exit
-//
-//
-// Additionally, this agent will automatically reboot the system when
-// it detects that the machine's boot environment has changed, unless
-// the machine is in an OS install, in which case the agent will exit.
-
 type AgentState int
 
 const (
@@ -52,6 +31,26 @@ const (
 	AGENT_KEXEC
 )
 
+// MachineAgent implements a new machine agent structured as a finite
+// state machine.  There is one important behavioural change to the
+// behaviour of the runner that may impact how workflows are built:
+//
+// The RunnerWait flag in stages is no longer honored.  Instead, the
+// agent will wait by default, unless overridden by the following
+// conditions, in order of priority:
+//
+// * The next stage has the Reboot flag set.
+//
+// * The change-stage/map entry for the next stage has a Stop, Reboot,
+//   or Poweroff clause.
+//
+// * The machine is currently in a bootenv that ends in -install and
+//   there is nothing else to do, in which case the runner will exit
+//
+//
+// Additionally, this agent will automatically reboot the system when
+// it detects that the machine's boot environment has changed, unless
+// the machine is in an OS install, in which case the agent will exit.
 type MachineAgent struct {
 	state                                     AgentState
 	waitTimeout                               time.Duration
