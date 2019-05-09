@@ -45,9 +45,15 @@ type Client struct {
 	info                         *models.Info
 }
 
+// Endpoint returns the address of the dr-provision API endpoint that
+// we are talking to.
 func (c *Client) Endpoint() string {
 	return c.endpoint
 }
+
+// Username returns the username that the Client is using.  If the
+// client was created via TokenSession, then this will return an empty
+// string.
 func (c *Client) Username() string {
 	return c.username
 }
@@ -82,6 +88,10 @@ func (c *Client) TraceToken(t string) {
 	c.traceToken = t
 }
 
+// File initiates a download from the static file service on the
+// dr-provision endpoint.  It is up to the caller to ensure that the
+// returned ReadCloser gets closed, otherwise stale HTTP connections
+// will leak.
 func (c *Client) File(pathParts ...string) (io.ReadCloser, error) {
 	info, err := c.Info()
 	if err != nil {
@@ -202,6 +212,7 @@ func (r *R) ParanoidPatch() *R {
 	return r
 }
 
+// PatchObj generates a PATCH request for the differences between old and new.
 func (r *R) PatchObj(old, new interface{}) *R {
 	b, err := GenPatch(old, new, r.paranoid)
 	if err != nil {
@@ -211,6 +222,7 @@ func (r *R) PatchObj(old, new interface{}) *R {
 	return r.Meth("PATCH").Body(b)
 }
 
+// PatchTo generates a Patch request that will transform old into new.
 func (r *R) PatchTo(old, new models.Model) *R {
 	if old.Prefix() != new.Prefix() || old.Key() != new.Key() {
 		r.err.Model = old.Prefix()
@@ -233,6 +245,8 @@ func (r *R) PatchToFull(old models.Model, new models.Model, paranoid bool) (mode
 	return res, err
 }
 
+// Fill fills in m with the corresponding data from the dr-provision
+// server.
 func (r *R) Fill(m models.Model) error {
 	r.err.Model = m.Prefix()
 	r.err.Model = m.Key()
@@ -243,13 +257,13 @@ func (r *R) Fill(m models.Model) error {
 	return r.Get().UrlForM(m).Do(&m)
 }
 
-// Post sets the R method to POST, and arranged for b to be the body
+// Post sets the R method to POST, and arranges for b to be the body
 // of the request by calling r.Body().
 func (r *R) Post(b interface{}) *R {
 	return r.Meth("POST").Body(b)
 }
 
-// Delete deletes a single object
+// Delete deletes a single object.
 func (r *R) Delete(m models.Model) error {
 	r.err.Model = m.Prefix()
 	r.err.Model = m.Key()
@@ -429,7 +443,7 @@ func (r *R) FailFast() *R {
 // Do attempts to execute the reqest built up by previous method calls
 // on R.  If any errors occurred while building up the request, they
 // will be returned and no API interaction will actually take place.
-// Otherwise, Do will generate am http.Request, perform it, and
+// Otherwise, Do will generate an http.Request, perform it, and
 // marshal the results to val.  If any errors occur while processing
 // the request, fibbonaci based backoff will be performed up to 6
 // times.
@@ -663,6 +677,8 @@ func (c *Client) OneIndex(prefix, param string) (models.Index, error) {
 	return res, c.Req().UrlFor("indexes", prefix, param).Do(&res)
 }
 
+// ListModel returns a list of models for prefix matching the request
+// parameters passed in by params.
 func (c *Client) ListModel(prefix string, params ...string) ([]models.Model, error) {
 	ref, err := models.New(prefix)
 	if err != nil {

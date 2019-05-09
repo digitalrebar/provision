@@ -1,5 +1,9 @@
 package models
 
+// Interface represents a network interface that is present on the
+// server running dr-provision.  It is primarily used by the UX to
+// help generate Subnets.
+//
 // swagger:model
 type Interface struct {
 	Access
