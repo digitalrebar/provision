@@ -1,26 +1,23 @@
-drpcli stages show
-==================
+drpcli stages remove
+====================
 
-Show a single stages by id
+Remove the param *key* from stages
 
 Synopsis
 --------
 
-This will show a stage by ID. You may also show a single item using a
-unique index. In that case, format id as *index*:*value*
+Helper function to update the stages parameters.
 
 ::
 
-    drpcli stages show [id] [flags]
+    drpcli stages remove [id] param [key] [flags]
 
 Options
 -------
 
 ::
 
-          --decode        Should decode any secure params.
-      -h, --help          help for show
-          --slim string   Should elide certain fields.  Can be 'Params', 'Meta', or a comma-separated list of both.
+      -h, --help   help for remove
 
 Options inherited from parent commands
 --------------------------------------

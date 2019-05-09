@@ -1,26 +1,24 @@
-drpcli stages show
-==================
+drpcli stages add
+=================
 
-Show a single stages by id
+Add the stages param *key* to *blob*
 
 Synopsis
 --------
 
-This will show a stage by ID. You may also show a single item using a
-unique index. In that case, format id as *index*:*value*
+Helper function to add parameters to the stages. Fails is already
+present.
 
 ::
 
-    drpcli stages show [id] [flags]
+    drpcli stages add [id] param [key] to [json blob] [flags]
 
 Options
 -------
 
 ::
 
-          --decode        Should decode any secure params.
-      -h, --help          help for show
-          --slim string   Should elide certain fields.  Can be 'Params', 'Meta', or a comma-separated list of both.
+      -h, --help   help for add
 
 Options inherited from parent commands
 --------------------------------------
