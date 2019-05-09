@@ -1,26 +1,25 @@
-drpcli stages show
-==================
+drpcli stages get
+=================
 
-Show a single stages by id
+Get a parameter from the stage
 
 Synopsis
 --------
 
-This will show a stage by ID. You may also show a single item using a
-unique index. In that case, format id as *index*:*value*
+A helper function to return the value of the parameter on the stage
 
 ::
 
-    drpcli stages show [id] [flags]
+    drpcli stages get [id] param [key] [flags]
 
 Options
 -------
 
 ::
 
-          --decode        Should decode any secure params.
-      -h, --help          help for show
-          --slim string   Should elide certain fields.  Can be 'Params', 'Meta', or a comma-separated list of both.
+          --aggregate   Should return aggregated view
+          --decode      Should return decoded secure params
+      -h, --help        help for get
 
 Options inherited from parent commands
 --------------------------------------

@@ -49,6 +49,7 @@ Options
 
 ::
 
+          --decode        Should decode any secure params
       -h, --help          help for list
           --limit int     Maximum number of items to return (default -1)
           --offset int    Number of items to skip before starting to return data (default -1)
