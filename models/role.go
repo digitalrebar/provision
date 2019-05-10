@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"sync"
 
 	"github.com/VictorLowther/jsonpatch2"
 )
@@ -73,11 +74,14 @@ var (
 		}
 		return res
 	}()
+	actionScopeLock = &sync.Mutex{}
 )
 
 // UpdateAllScopesWithRawModel adds new role scopes for a specialized
 // RawModel
 func UpdateAllScopesWithRawModel(prefix string) {
+	actionScopeLock.Lock()
+	defer actionScopeLock.Unlock()
 	actions := map[string]struct{}{}
 	for k2, v2 := range basicActions {
 		actions[k2] = v2
@@ -210,6 +214,8 @@ type Claim struct {
 }
 
 func (c *Claim) compile(e ErrorAdder) claim {
+	actionScopeLock.Lock()
+	defer actionScopeLock.Unlock()
 	res := map[string]scopeNode{}
 	if c.Scope == "*" {
 		for k := range allScopes {
