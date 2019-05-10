@@ -5,9 +5,12 @@ import (
 	"strings"
 )
 
+// ArchInfo tracks information required to make a BootEnv work across
+// different system architectures.  It supersedes the matching fields
+// in the BootEnv struct and the OsInfo struct.
 type ArchInfo struct {
 	// IsoFile is the name of the ISO file (or other archive)
-	// that contains all the necessacery information to be able to
+	// that contains all the necessary information to be able to
 	// boot into this BootEnv for a given arch.
 	// At a minimum, it must contain a kernel and initrd that
 	// can be booted over the network.
@@ -42,7 +45,7 @@ type ArchInfo struct {
 	// required: true
 	BootParams string
 	// Loader is the bootloader that should be used for this boot
-	// environment.  If left unspecified and not overridden by a aubnet
+	// environment.  If left unspecified and not overridden by a subnet
 	// or reservation option, the following boot loaders will be used:
 	//
 	// * lpxelinux.0 on 386-pcbios platforms that are not otherwise using ipxe.
@@ -54,7 +57,7 @@ type ArchInfo struct {
 	// * ipxe-arm64.efi on arm64 EFI platforms.
 	//
 	// This setting will be overridden by Subnet and Reservation
-	// options, and it will also only be in effect when dr-provison is
+	// options, and it will also only be in effect when dr-provision is
 	// the DHCP server of record.
 	Loader string
 }
@@ -94,9 +97,11 @@ type OsInfo struct {
 	//
 	// swagger:strfmt uri
 	IsoUrl string
-	// SupportedArchitectures maps from hardware architecture (named according to
-	// the distro architecture naming scheme) to the architecture-specific parameters
-	// for this OS.
+	// SupportedArchitectures maps from hardware architecture (named
+	// according to the distro architecture naming scheme) to the
+	// architecture-specific parameters for this OS.  If
+	// SupportedArchitectures is left empty, then the system assumes
+	// that the BootEnv only supports amd64 platforms.
 	SupportedArchitectures map[string]ArchInfo
 }
 
@@ -128,7 +133,7 @@ func (o OsInfo) FamilyType() string {
 
 // FamilyVersion figures out the version of the OS.  It returns the
 // Version field if set, and the second part of the OS name if not
-// set.  THis should be a Semver-ish version string, not a codename,
+// set.  This should be a Semver-ish version string, not a codename,
 // release name, or similar item.
 func (o OsInfo) FamilyVersion() string {
 	if o.Version != "" {
@@ -199,7 +204,8 @@ type BootEnv struct {
 	Templates []TemplateInfo
 	// The partial path to the kernel for the boot environment.  This
 	// should be path that the kernel is located at in the OS ISO or
-	// install archive.
+	// install archive.  Kernel must be non-empty for a BootEnv to be
+	// considered net bootable.
 	//
 	// required: true
 	Kernel string
@@ -248,6 +254,9 @@ func (b *BootEnv) GetDocumentation() string {
 	return b.Documentation
 }
 
+// IsoFor is a helper function used by the backend to locate the ISO
+// file that should be expanded to provide the install tree required
+// for the bootenv to function.
 func (b *BootEnv) IsoFor(arch string) string {
 	info, ok := b.OS.SupportedArchitectures[arch]
 	if ok {
@@ -259,6 +268,8 @@ func (b *BootEnv) IsoFor(arch string) string {
 	return ""
 }
 
+// ShaFor is a helper to return the right SHA256 sum for the ISO that
+// provides files for the BootEnv.
 func (b *BootEnv) ShaFor(arch string) string {
 	info, ok := b.OS.SupportedArchitectures[arch]
 	if ok {
@@ -270,6 +281,9 @@ func (b *BootEnv) ShaFor(arch string) string {
 	return ""
 }
 
+// IsoUrlFor is a helper to return the upstream URL that the ISO for
+// the BootEnv can be downloaded from.  This generally points to a
+// mirror location on the public Internet if one exists.
 func (b *BootEnv) IsoUrlFor(arch string) string {
 	info, ok := b.OS.SupportedArchitectures[arch]
 	if ok {
@@ -394,6 +408,8 @@ func (b *BootEnv) CanHaveActions() bool {
 	return true
 }
 
+// NetBoot returns whether this bootenv is able to boot via PXE or
+// some other network mechanism.
 func (b *BootEnv) NetBoot() bool {
 	return b.OnlyUnknown || b.Kernel != ""
 }

@@ -7,6 +7,8 @@ import (
 	"github.com/VictorLowther/jsonpatch2/utils"
 )
 
+// RawModel is a raw model that Plugins can specialize to save custom
+// data in the dr-provision backing store.
 type RawModel map[string]interface{}
 
 func (r *RawModel) String() string {

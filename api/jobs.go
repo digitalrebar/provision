@@ -1,7 +1,5 @@
 package api
 
-// Come back to processJobs later
-
 import (
 	"fmt"
 	"io"

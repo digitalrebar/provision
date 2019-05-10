@@ -8,31 +8,58 @@ import (
 	"github.com/gofunky/semver"
 )
 
+// ContentMetaData holds all the metadata about a content bundle that
+// dr-provision will use to decide how to treat the content bundle.
+//
 // All fields must be strings
 // All string fields will be trimmed except Documentation.
 type ContentMetaData struct {
+	// Name is the name of the content bundle.  Name must be unique across
+	// all content bundles loaded into a given dr-provision instance.
 	// required: true
-	Name        string
-	Version     string // If present, must be parseable as semver
+	Name string
+	// Version is a Semver-compliant string describing the version of
+	// the content as a whole.  If left empty, the version is assumed to
+	// be 0.0.0
+	Version string
+	// Description is a one or two line description of what the content
+	// bundle provides.
 	Description string
-	Source      string // Was who authored it, but was confusing
+	// Source is mostly deprecated, replaced by Author and CodeSource.
+	// It can be left blank.
+	Source string
 
 	// Optional fields
-	Documentation    string
-	RequiredFeatures string
 
-	// New descriptor fields for catalog
-	Color         string
-	Icon          string
-	Author        string
-	DisplayName   string
-	License       string
-	Copyright     string
-	CodeSource    string
-	Order         string
-	Tags          string // Comma separated list
-	DocUrl        string
-	Prerequisites string // also a comma-seperated list. May contain semver
+	// Documentation should contain Sphinx RST formatted documentation
+	// for the content bundle describing its usage.
+	Documentation string
+	// RequiredFeatures is a comma-seperated list of features that
+	// dr-provision must provide for the content bundle to operate properly.
+	// These correspond to the Features field in the Info struct.
+	RequiredFeatures string
+	// Prerequisites is also a comma-seperated list that contains other
+	// (possibly version-qualified) content bundles that must be present
+	// for this content bundle to load into dr-provision.  Each entry in
+	// the Prerequisites list should be in for format of name: version
+	// constraints.  The colon and the version constraints may be
+	// omitted if there are no version restrictions on the required
+	// content bundle.
+	//
+	// See ../doc/arch/content-package.rst for more detailed info.
+	Prerequisites string
+
+	// New descriptor fields for catalog.  These are used by the UX.
+	Color       string
+	Icon        string
+	Author      string
+	DisplayName string
+	License     string
+	Copyright   string
+	CodeSource  string
+	Order       string
+	Tags        string // Comma separated list
+	DocUrl      string
 
 	// Informational Fields
 	Type         string
@@ -40,9 +67,11 @@ type ContentMetaData struct {
 	Overwritable bool
 }
 
-//
-// Isos???
-// Files??
+// Content models a content bundle.  It consists of the metadata
+// describing the content bundle and the objects that the content
+// bundle provides.  Upon being sucessfully loaded into dr-provision,
+// these objects will be present and immutable until the content
+// bundle is removed or replaced.
 //
 // swagger:model
 type Content struct {
@@ -68,6 +97,10 @@ type Content struct {
 	Sections Sections `json:"sections"`
 }
 
+// ParseContentPrerequisites is a helper that parses a Prerequisites
+// string from the content bundle metadata and returns a map
+// containing the comparison functions that must pass in order for the
+// content bundle's prerequisites to be satisfied.
 func ParseContentPrerequisites(prereqs string) (map[string]semver.Range, error) {
 	res := map[string]semver.Range{}
 	for _, v := range strings.Split(prereqs, ",") {
@@ -88,6 +121,9 @@ func ParseContentPrerequisites(prereqs string) (map[string]semver.Range, error) 
 	return res, nil
 }
 
+// ToStore saves a Content bundle into a format that can be used but
+// the stackable store system dr-provision uses to save its working
+// data.
 func (c *Content) ToStore(dest store.Store) error {
 	c.Fill()
 	if dmeta, ok := dest.(store.MetaSaver); ok {
@@ -145,6 +181,7 @@ func (c *Content) Mangle(thunk func(string, interface{}) (interface{}, error)) e
 	return nil
 }
 
+// FromStore loads the contents of a Store into a content bundle.
 func (c *Content) FromStore(src store.Store) error {
 	c.Fill()
 	if smeta, ok := src.(store.MetaSaver); ok {

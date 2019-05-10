@@ -12,6 +12,8 @@ import (
 	dhcp "github.com/krolaw/dhcp4"
 )
 
+// DHCPOptionParser returns the appropriate string conversion and
+// deconversion functions for a given DHCP option code.
 func DHCPOptionParser(code dhcp.OptionCode) (func(string) ([]byte, error), func([]byte) string) {
 	switch code {
 	case dhcp.OptionDHCPMessageType:
@@ -287,6 +289,9 @@ func (o DhcpOption) RenderToDHCP(srcOpts map[int]string) (code byte, val []byte,
 	return o.Code, val, err
 }
 
+// DHCPOptionsInOrder returns the DHCP options present in the
+// passed-in Packet in the order they appeared, excluding the Pad and
+// End options.
 func DHCPOptionsInOrder(p dhcp.Packet) (res []*DhcpOption, err error) {
 	res = []*DhcpOption{}
 	opts := p.Options()

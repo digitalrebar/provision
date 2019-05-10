@@ -85,6 +85,8 @@ func (p *PluginProvider) Fill() {
 	}
 }
 
+// Store extracts the content bundle in the Content field of the
+// PluginProvider into a Store.
 func (p *PluginProvider) Store() (store.Store, error) {
 	content := &Content{}
 	content.Fill()
@@ -115,9 +117,9 @@ type PluginProviderUploadInfo struct {
 	Size int64  `json:"size"`
 }
 
-// Plugins can provide actions for machines
-// Assumes that there are parameters on the
-// call in addition to the machine.
+// AvailableAction is an Action that a Plugin instantiated by a
+// PluginProvider.  Assumes that there are parameters on the call in
+// addition to the machine.
 //
 // swagger:model
 type AvailableAction struct {
@@ -137,13 +139,8 @@ func (a *AvailableAction) Fill() {
 	}
 }
 
-//
-// Params is built from the caller, plus
-// the machine, plus profiles, plus global.
-//
-// This is used by the frontend to talk to
-// the plugin.
-//
+// Action is an additional command that can be added to other Models
+// by a Plugin.
 type Action struct {
 	Model   interface{}
 	Plugin  string

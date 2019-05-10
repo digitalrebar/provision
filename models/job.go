@@ -60,6 +60,9 @@ func (ja JobActions) FilterOS(forOS string) JobActions {
 	return res
 }
 
+// Job contains information on a Job that is running for a specific
+// Task on a Machine.
+//
 // swagger:model
 type Job struct {
 	Validation
@@ -91,10 +94,14 @@ type Job struct {
 	// Can be one of "reboot","poweroff","stop", or "complete"
 	// Other substates may be added as time goes on
 	ExitState string
-	// The time the job entered running.
+	// The time the job started running.
 	StartTime time.Time
-	// The time the job entered failed or finished.
+	// The time the job failed or finished.
 	EndTime time.Time
+	// Archived indicates whether the complete log for the job can be
+	// retrieved via the API.  If Archived is true, then the log cannot
+	// be retrieved.
+	//
 	// required: true
 	Archived bool
 	// Whether the job is the "current one" for the machine or if it has been superceded.

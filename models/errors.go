@@ -6,13 +6,17 @@ import (
 	"strings"
 )
 
+// ErrorAdder is an interface that the various models that can collect
+// errors for later repoting can satisfy.
 type ErrorAdder interface {
 	Errorf(string, ...interface{})
 	AddError(error)
 	HasError() error
 }
 
-// Error is the common Error type we should return for any errors.
+// Error is the common Error type the API returns for any error
+// conditions.
+//
 // swagger:model
 type Error struct {
 	Object Model `json:"-"`
@@ -25,10 +29,14 @@ type Error struct {
 	Code int
 }
 
+// NewError creates a new Error with a few key parameters
+// pre-populated.
 func NewError(t string, code int, m string) *Error {
 	return &Error{Type: t, Code: code, Messages: []string{m}}
 }
 
+// Errorf appends a new error message into the Messages tracked by the
+// Error.
 func (e *Error) Errorf(s string, args ...interface{}) {
 	if e.Messages == nil {
 		e.Messages = []string{}
@@ -36,6 +44,7 @@ func (e *Error) Errorf(s string, args ...interface{}) {
 	e.Messages = append(e.Messages, fmt.Sprintf(s, args...))
 }
 
+// Error satifies the global error interface.
 func (e *Error) Error() string {
 	var res string
 	if e.Key != "" {

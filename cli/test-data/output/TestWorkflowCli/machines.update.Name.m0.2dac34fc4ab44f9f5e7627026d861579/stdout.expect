@@ -26,7 +26,7 @@ RE:
   \},
   "Profiles": \[\],
   "ReadOnly": false,
-  "Runnable": false,
+  "Runnable": true,
   "Stage": "james",
   "Tasks": \[
     "stage:james",

@@ -42,6 +42,8 @@ SEE ALSO
    action for this stage
 -  `drpcli stages actions <drpcli_stages_actions.html>`__ - Display
    actions for this stage
+-  `drpcli stages add <drpcli_stages_add.html>`__ - Add the stages param
+   *key* to *blob*
 -  `drpcli stages addprofile <drpcli_stages_addprofile.html>`__ - Add
    profile to the machine's profile list
 -  `drpcli stages addtask <drpcli_stages_addtask.html>`__ - Add task to
@@ -54,17 +56,25 @@ SEE ALSO
    stage by id
 -  `drpcli stages exists <drpcli_stages_exists.html>`__ - See if a
    stages exists by id
+-  `drpcli stages get <drpcli_stages_get.html>`__ - Get a parameter from
+   the stage
 -  `drpcli stages indexes <drpcli_stages_indexes.html>`__ - Get indexes
    for stages
 -  `drpcli stages list <drpcli_stages_list.html>`__ - List all stages
 -  `drpcli stages meta <drpcli_stages_meta.html>`__ - Gets metadata for
    the stage
+-  `drpcli stages params <drpcli_stages_params.html>`__ - Gets/sets all
+   parameters for the stage
+-  `drpcli stages remove <drpcli_stages_remove.html>`__ - Remove the
+   param *key* from stages
 -  `drpcli stages removeprofile <drpcli_stages_removeprofile.html>`__ -
    Remove a profile from the machine's list
 -  `drpcli stages removetask <drpcli_stages_removetask.html>`__ - Remove
    a task from the stage's list
 -  `drpcli stages runaction <drpcli_stages_runaction.html>`__ - Run
    action on object from plugin
+-  `drpcli stages set <drpcli_stages_set.html>`__ - Set the stages param
+   *key* to *blob*
 -  `drpcli stages show <drpcli_stages_show.html>`__ - Show a single
    stages by id
 -  `drpcli stages update <drpcli_stages_update.html>`__ - Unsafely

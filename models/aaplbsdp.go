@@ -13,6 +13,10 @@ const (
 	BsdpDiags     = 3
 )
 
+// BsdpBootOption contains the information needed to boot their
+// systems using the aapl BDSP boot protocol.  Unless you are
+// provisioning Mac systems, you probably don't need to care about
+// this.
 type BsdpBootOption struct {
 	Index     uint16 `plist:"Index"`
 	Install   bool   `plist:"IsInstall"`

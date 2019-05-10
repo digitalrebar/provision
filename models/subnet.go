@@ -5,7 +5,7 @@ import (
 	"net"
 )
 
-// Subnet represents a DHCP Subnet
+// Subnet represents a DHCP Subnet.
 //
 // swagger:model
 type Subnet struct {

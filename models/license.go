@@ -2,6 +2,7 @@ package models
 
 import "time"
 
+// LicenseBundle is a collection of Licenses.
 type LicenseBundle struct {
 	Contact           string
 	ContactEmail      string
@@ -18,6 +19,8 @@ type LicenseBundle struct {
 	Licenses []License
 }
 
+// License is used to authorize acess to extended dr-provision
+// features and functionality.
 type License struct {
 	Name            string
 	Version         string
