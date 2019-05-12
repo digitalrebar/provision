@@ -16,12 +16,20 @@ DRP is designed to be a complete data center provisioning, content scaffolding a
 
 Key Features:
 
-   * API-driven infrastructure-as-code automation
-   * Multi-boot workflows using composable and reusable building blocks
-   * Event driven actions via Websockets API
-   * Extensible Plug-in Model for public, vendor and internal enhancements
-   * Supports ALL orchestration tools including Chef, Puppet, Ansible, SaltStack, Bosh, Terraform, etc
-   * RAID, IPMI, and BIOS Configuration (via commercial plugins)
+  Open Core Capabilities:
+    * API-driven infrastructure-as-code automation
+    * Multi-boot workflows using composable and reusable building blocks
+    * Event driven actions via Websockets API
+    * Extensible Plug-in Model for public, vendor and internal enhancements
+    * Supports ALL orchestration tools including Chef, Puppet, Ansible, SaltStack, Bosh, Terraform, etc
+
+  Via Commercial Plugins:
+    * RAID, IPMI, and BIOS Configuration (via commercial plugins)
+    * Cloud-like pooling capabilities
+    * Classification engine for automated workflow
+    * High Availability modes (via commercial plugin)
+    * Multi-site federated management architecture (via commercial plugin)
+    * more ...
 
 .. figure::  doc/images/dr_provision.png
    :align:   right
@@ -60,9 +68,8 @@ Community Resources from https://rebar.digital
 
 
 * Chat/messaging via the Digital Rebar ``#community`` channel is our preferred communication method.  If you do not have a Slack invite to our channel, you can `Request a Slack Invite <http://www.rackn.com/support/slack/>`_
-* Alternate chat vi Gitter `Live Chat <https://gitter.im/digitalrebar/core?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge>`_  (Gitter.im) and IRC on Freenode #DigitalRebar
 * `Issues and Features <https://github.com/digitalrebar/provision/issues>`_
-* Full `Documentation <http://provision.readthedocs.io/en/stable/>`_ (Github `/doc <https://github.com/digitalrebar/provision/tree/master/doc>`_ sources are updatable via pull request).
+* Full `Documentation <http://provision.readthedocs.io/en/tip/>`_ (Github `/doc <https://github.com/digitalrebar/provision/tree/master/doc>`_ sources are updatable via pull request).
 * Videos on the `DR Provision Playlist <https://www.youtube.com/playlist?list=PLXPBeIrpXjfilUi7Qj1Sl0UhjxNRSC7nx>`_ provide both specific and general background information.
 
 
@@ -120,7 +127,6 @@ Table of Contents
    doc/dev/dev-docs
    doc/faq-troubleshooting
    doc/arch
-   doc/integrations
    doc/content-packages
    CONTRIBUTING
    Trademark
@@ -130,9 +136,9 @@ Table of Contents
 
 License
 -------
-DigitalRebar Provision code is available is available from multiple authors under the `Apache 2 license <https://raw.githubusercontent.com/digitalrebar/provision/master/LICENSE>`_.
+DigitalRebar Provision code is available from multiple authors under the `Apache 2 license <https://raw.githubusercontent.com/digitalrebar/provision/master/LICENSE>`_.
 
-Digital Rebar Provision Documentation is available from multiple authors under the `Creative Commons license <https://en.wikipedia.org/wiki/Creative_Commons_license>`_ with Attribution.
+Digital Rebar Provision documentation is available from multiple authors under the `Creative Commons license <https://en.wikipedia.org/wiki/Creative_Commons_license>`_ with Attribution.
 
 ::
 
