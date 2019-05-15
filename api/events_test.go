@@ -73,7 +73,6 @@ func TestEventDeadlock(t *testing.T) {
 		t.Errorf("Failed to create user1 for users events: %v", err)
 		return
 	}
-
 	if _, err := session.DeleteModel("users", user1.Name); err != nil {
 		t.Errorf("Failed to destroy user1 for users events: %v", err)
 		return
@@ -84,7 +83,6 @@ func TestEventDeadlock(t *testing.T) {
 	t.Logf("Received event: %#v", received)
 	received = <-ch
 	t.Logf("Received event: %#v", received)
-
 	done <- true
 	<-finished
 }
