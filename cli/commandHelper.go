@@ -246,7 +246,11 @@ empty object of that type.  For User, BootEnv, Machine, and Profile, it will be 
 						return fmt.Errorf("Unable to create a new %s: %v", o.singleName, err)
 					}
 				}
-				if err := session.CreateModel(ref); err != nil {
+				req := session.Req().Post(ref).UrlFor(ref.Prefix())
+				if force {
+					req.Params("force", "true")
+				}
+				if err := req.Do(&ref); err != nil {
 					return generateError(err, "Unable to create new %v", o.singleName)
 				}
 				return prettyPrint(ref)
@@ -274,7 +278,11 @@ empty object of that type.  For User, BootEnv, Machine, and Profile, it will be 
 					if err != nil {
 						return generateError(err, "Failed to generate changed %s:%s object", o.name, args[0])
 					}
-					if err := session.PutModel(toPut); err != nil {
+					req := session.Req().Put(toPut).UrlForM(toPut)
+					if force {
+						req.Params("force", "true")
+					}
+					if err := req.Do(&toPut); err != nil {
 						return generateError(err, "Unable to update %v", args[0])
 					}
 					return prettyPrint(toPut)
@@ -300,7 +308,11 @@ empty object of that type.  For User, BootEnv, Machine, and Profile, it will be 
 					if err != nil {
 						return generateError(err, "Failed to generate changed %s:%s object", o.name, args[0])
 					}
-					if res, err := session.PatchToFull(refObj, toPut, ref != ""); err != nil {
+					req := session.Req()
+					if force {
+						req.Params("force", "true")
+					}
+					if res, err := req.PatchToFull(refObj, toPut, ref != ""); err != nil {
 						return generateError(err, "Unable to update %v", args[0])
 					} else {
 						return prettyPrint(res)
