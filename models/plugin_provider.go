@@ -142,10 +142,11 @@ func (a *AvailableAction) Fill() {
 // Action is an additional command that can be added to other Models
 // by a Plugin.
 type Action struct {
-	Model   interface{}
-	Plugin  string
-	Command string
-	Params  map[string]interface{}
+	Model      interface{}
+	Plugin     string
+	Command    string
+	CommandSet string
+	Params     map[string]interface{}
 }
 
 func (m *Action) Fill() {

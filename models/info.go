@@ -107,6 +107,7 @@ func (i *Info) Fill() {
 			"task-prerequisites",
 			"content-prerequisite-version-checking",
 			"stage-paramer",
+			"auto-boot-target",
 		}
 	}
 	if i.Scopes == nil {
