@@ -574,7 +574,6 @@ func (r *R) Do(val interface{}) error {
 // in the background, and force any API calls made to this client that
 // would communicate with the server to return an error
 func (c *Client) Close() {
-	c.closer <- struct{}{}
 	close(c.closer)
 	c.mux.Lock()
 	c.closed = true

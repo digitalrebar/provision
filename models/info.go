@@ -74,9 +74,6 @@ func (i *Info) Fill() {
 	if i.Stats == nil {
 		i.Stats = make([]Stat, 0, 0)
 	}
-	if i.Scopes == nil {
-		i.Scopes = allScopes
-	}
 	if i.Features == nil {
 		i.Features = []string{
 			"api-v3",
@@ -111,5 +108,12 @@ func (i *Info) Fill() {
 			"content-prerequisite-version-checking",
 			"stage-paramer",
 		}
+	}
+	if i.Scopes == nil {
+		scopes := map[string]map[string]struct{}{}
+		actionScopeLock.Lock()
+		defer actionScopeLock.Unlock()
+		Remarshal(allScopes, &scopes)
+		i.Scopes = scopes
 	}
 }
