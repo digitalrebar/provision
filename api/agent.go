@@ -106,12 +106,14 @@ func (a *MachineAgent) power(cmdLine string) error {
 	if !a.doPower {
 		return nil
 	}
-	var actionObj interface{}
-	if err := a.client.Req().Get().
-		UrlForM(a.machine, "actions", "nextbootpxe").Do(&actionObj); err == nil {
-		emptyMap := map[string]interface{}{}
-		a.client.Req().Post(emptyMap).
-			UrlForM(a.machine, "actions", "nextbootpxe").Do(nil)
+	if !a.client.info.HasFeature("auto-boot-target") {
+		var actionObj interface{}
+		if err := a.client.Req().Get().
+			UrlForM(a.machine, "actions", "nextbootpxe").Do(&actionObj); err == nil {
+			emptyMap := map[string]interface{}{}
+			a.client.Req().Post(emptyMap).
+				UrlForM(a.machine, "actions", "nextbootpxe").Do(nil)
+		}
 	}
 	cmd := exec.Command(cmdLine)
 	cmd.Stderr = os.Stderr

@@ -70,6 +70,7 @@ func TestInfo(t *testing.T) {
 				"task-prerequisites",
 				"content-prerequisite-version-checking",
 				"stage-paramer",
+				"auto-boot-target",
 			},
 			License: models.LicenseBundle{Licenses: []models.License{}},
 			Scopes: map[string]map[string]struct{}{
