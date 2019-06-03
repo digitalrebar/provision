@@ -102,15 +102,15 @@ func (c *Client) NewAgent(m *models.Machine,
 			if err = os.Setenv("TMP", td); err != nil {
 				return nil, err
 			}
-			runnerDir, err := ioutil.TempDir("", "runner-")
-			if err != nil {
-				return nil, err
-			}
-			if err := os.Setenv("RS_RUNNER_DIR", runnerDir); err != nil {
-				return nil, err
-			}
-			res.runnerDir = runnerDir
 		}
+		runnerDir, err := ioutil.TempDir("", "runner-")
+		if err != nil {
+			return nil, err
+		}
+		if err := os.Setenv("RS_RUNNER_DIR", runnerDir); err != nil {
+			return nil, err
+		}
+		res.runnerDir = runnerDir
 	}
 	if !rdExists {
 		if err := os.MkdirAll(res.runnerDir, 0755); err != nil {
