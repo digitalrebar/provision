@@ -81,11 +81,42 @@ func (c *Client) NewAgent(m *models.Machine,
 	if res.logger == nil {
 		res.logger = os.Stderr
 	}
-	runnerDir, err := ioutil.TempDir("", "runner-")
-	if err != nil {
-		return nil, err
+	rdExists := false
+	res.runnerDir = os.Getenv("RS_RUNNER_DIR")
+	if res.runnerDir != "" {
+		if fi, err := os.Stat(res.runnerDir); err == nil {
+			if fi.IsDir() {
+				rdExists = true
+			}
+		}
 	}
-	res.runnerDir = runnerDir
+	if res.runnerDir == "" {
+		var td string
+		if err := c.Req().UrlForM(m, "params", "runner-tmpdir").Params("aggregate", "true").Do(&td); err == nil && td != "" {
+			if err = mktd(td); err != nil {
+				return nil, err
+			}
+			if err = os.Setenv("TMPDIR", td); err != nil {
+				return nil, err
+			}
+			if err = os.Setenv("TMP", td); err != nil {
+				return nil, err
+			}
+			runnerDir, err := ioutil.TempDir("", "runner-")
+			if err != nil {
+				return nil, err
+			}
+			if err := os.Setenv("RS_RUNNER_DIR", runnerDir); err != nil {
+				return nil, err
+			}
+			res.runnerDir = runnerDir
+		}
+	}
+	if !rdExists {
+		if err := os.MkdirAll(res.runnerDir, 0755); err != nil {
+			return nil, err
+		}
+	}
 	return res, nil
 }
 
