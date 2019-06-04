@@ -165,7 +165,7 @@ func (r *TaskRunner) Perform(action *models.JobAction, taskDir string) error {
 	cmdArray = append(cmdArray, "./"+path.Base(taskFile))
 	cmd := exec.Command(cmdArray[0], cmdArray[1:]...)
 	cmd.Dir = taskDir
-	cmd.Env = append(os.Environ(), "RS_TASK_DIR="+taskDir, "RS_RUNNER_DIR="+r.agentDir)
+	cmd.Env = append(os.Environ(), "RS_TASK_DIR="+taskDir)
 	for _, e := range []string{"RS_UUID", "RS_ENDPOINT", "RS_TOKEN"} {
 		if os.Getenv(e) == "" {
 			switch e {
