@@ -137,7 +137,7 @@ func (a *MachineAgent) power(cmdLine string) error {
 	if !a.doPower {
 		return nil
 	}
-	if !a.client.info.HasFeature("auto-boot-target") {
+	if info, err := a.client.Info(); err == nil && !info.HasFeature("auto-boot-target") {
 		var actionObj interface{}
 		if err := a.client.Req().Get().
 			UrlForM(a.machine, "actions", "nextbootpxe").Do(&actionObj); err == nil {
@@ -176,6 +176,7 @@ func (a *MachineAgent) initOrExit() {
 // consists of marking any current running jobs as Failed and
 // repoening the event stream from dr-provision.
 func (a *MachineAgent) Init() {
+	a.client.info = nil
 	if a.err != nil {
 		a.err = nil
 	}
