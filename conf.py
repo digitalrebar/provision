@@ -349,6 +349,7 @@ urls=[
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/tenant-controller.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/terraform.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/tower.rst",
+    "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/ux-views.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/virtualbox-ipmi.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/vmware.rst",
     "https://github.com/digitalrebar/provision-content/releases/download/tip/drp-community-content.rst",
