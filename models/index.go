@@ -9,4 +9,6 @@ type Index struct {
 	// Unique tells you whether there can be mutiple entries in the
 	// index for the same key that refer to different items.
 	Unique bool
+	// Unordered tells you whether this index cannot be sorted.
+	Unordered bool
 }

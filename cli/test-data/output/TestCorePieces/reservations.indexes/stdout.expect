@@ -1,38 +1,47 @@
 {
   "Addr": {
     "Type": "IP Address",
-    "Unique": false
+    "Unique": false,
+    "Unordered": false
   },
   "Available": {
     "Type": "boolean",
-    "Unique": false
+    "Unique": false,
+    "Unordered": true
   },
   "Bundle": {
     "Type": "string",
-    "Unique": false
+    "Unique": false,
+    "Unordered": false
   },
   "Key": {
     "Type": "string",
-    "Unique": true
+    "Unique": true,
+    "Unordered": false
   },
   "NextServer": {
     "Type": "IP Address",
-    "Unique": false
+    "Unique": false,
+    "Unordered": false
   },
   "ReadOnly": {
     "Type": "boolean",
-    "Unique": false
+    "Unique": false,
+    "Unordered": true
   },
   "Strategy": {
     "Type": "string",
-    "Unique": false
+    "Unique": false,
+    "Unordered": false
   },
   "Token": {
     "Type": "string",
-    "Unique": false
+    "Unique": false,
+    "Unordered": false
   },
   "Valid": {
     "Type": "boolean",
-    "Unique": false
+    "Unique": false,
+    "Unordered": true
   }
 }

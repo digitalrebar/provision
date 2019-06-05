@@ -48,9 +48,9 @@ func TestBootEnvCli(t *testing.T) {
 	cliTest(false, false, "bootenvs", "list", "ReadOnly=true").run(t)
 	cliTest(false, false, "bootenvs", "list", "ReadOnly=false").run(t)
 	cliTest(false, true, "bootenvs", "list", "ReadOnly=fred").run(t)
-	cliTest(true, true, "bootenvs", "list", "sort=OnlyUnknown").run(t)
-	cliTest(false, true, "bootenvs", "list", "sort=Name").run(t)
-	cliTest(false, true, "bootenvs", "list", "sort=Name", "reverse=true").run(t)
+	cliTest(false, true, "bootenvs", "list", "sort=OnlyUnknown").run(t)
+	cliTest(false, false, "bootenvs", "list", "sort=Name").run(t)
+	cliTest(false, false, "bootenvs", "list", "sort=Name", "reverse=true").run(t)
 
 	cliTest(true, true, "bootenvs", "show").run(t)
 	cliTest(true, true, "bootenvs", "show", "john", "john2").run(t)
