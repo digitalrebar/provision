@@ -239,18 +239,18 @@ Templates:
 		nil)
 	rt(t,
 		"List all bootenvs by OnlyUnknown",
-		[]models.Model{localBootEnv, ignoreBootEnv},
+		[]models.Model{ignoreBootEnv},
 		nil,
 		func() (interface{}, error) {
-			return session.ListModel("bootenvs", "sort", "OnlyUnknown")
+			return session.ListModel("bootenvs", "OnlyUnknown", "true")
 		},
 		nil)
 	rt(t,
 		"List all bootenvs by OnlyUnknown in reverse",
-		[]models.Model{ignoreBootEnv, localBootEnv},
+		[]models.Model{localBootEnv},
 		nil,
 		func() (interface{}, error) {
-			return session.ListModel("bootenvs", "sort", "OnlyUnknown", "reverse", "true")
+			return session.ListModel("bootenvs", "OnlyUnknown", "false")
 		},
 		nil)
 	rt(t,

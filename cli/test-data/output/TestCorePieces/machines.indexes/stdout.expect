@@ -1,50 +1,62 @@
 {
   "Address": {
     "Type": "IP Address",
-    "Unique": false
+    "Unique": false,
+    "Unordered": false
   },
   "Available": {
     "Type": "boolean",
-    "Unique": false
+    "Unique": false,
+    "Unordered": true
   },
   "BootEnv": {
     "Type": "string",
-    "Unique": false
+    "Unique": false,
+    "Unordered": false
   },
   "Bundle": {
     "Type": "string",
-    "Unique": false
+    "Unique": false,
+    "Unordered": false
   },
   "Key": {
     "Type": "string",
-    "Unique": true
+    "Unique": true,
+    "Unordered": false
   },
   "Name": {
     "Type": "string",
-    "Unique": true
+    "Unique": true,
+    "Unordered": false
   },
   "ReadOnly": {
     "Type": "boolean",
-    "Unique": false
+    "Unique": false,
+    "Unordered": true
   },
   "Runnable": {
     "Type": "boolean",
-    "Unique": false
+    "Unique": false,
+    "Unordered": true
   },
   "Stage": {
     "Type": "string",
-    "Unique": false
+    "Unique": false,
+    "Unordered": false
   },
   "Uuid": {
     "Type": "UUID string",
-    "Unique": true
+    "Unique": true,
+    "Unordered": false
   },
   "Valid": {
     "Type": "boolean",
-    "Unique": false
+    "Unique": false,
+    "Unordered": true
   },
   "Workflow": {
     "Type": "string",
-    "Unique": false
+    "Unique": false,
+    "Unordered": false
   }
 }

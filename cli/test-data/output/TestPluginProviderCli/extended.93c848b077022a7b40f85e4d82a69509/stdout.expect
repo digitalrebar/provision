@@ -1,18 +1,22 @@
 {
   "Available": {
     "Type": "boolean",
-    "Unique": false
+    "Unique": false,
+    "Unordered": true
   },
   "Key": {
     "Type": "string",
-    "Unique": true
+    "Unique": true,
+    "Unordered": false
   },
   "ReadOnly": {
     "Type": "boolean",
-    "Unique": false
+    "Unique": false,
+    "Unordered": true
   },
   "Valid": {
     "Type": "boolean",
-    "Unique": false
+    "Unique": false,
+    "Unordered": true
   }
 }
