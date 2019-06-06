@@ -1,4 +1,6 @@
 {
+  "Available": false,
+  "Bundle": "",
   "Description": "",
   "Documentation": "",
   "Endpoint": "",
@@ -8,6 +10,8 @@
   "Params": {
     "cow-size": "big"
   },
+  "ReadOnly": false,
   "Tree": "neat",
-  "Type": "cows"
+  "Type": "cows",
+  "Validated": false
 }

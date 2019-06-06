@@ -1,4 +1,6 @@
 {
+  "Available": false,
+  "Bundle": "",
   "Description": "",
   "Documentation": "",
   "Endpoint": "",
@@ -6,5 +8,7 @@
   "Id": "fred1",
   "Meta": {},
   "Params": {},
-  "Type": "cows"
+  "ReadOnly": false,
+  "Type": "cows",
+  "Validated": false
 }
