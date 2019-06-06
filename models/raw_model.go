@@ -155,13 +155,15 @@ func (r *RawModel) SetInvalid() bool {
 }
 
 func (r *RawModel) SetValid() bool {
-	r.setValidated(r.getValidated() || len(r.getErrors()) == 0)
-	return r.getValidated()
+	b := len(r.getErrors()) == 0
+	r.setValidated(b)
+	return b
 }
 
 func (r *RawModel) SetAvailable() bool {
-	r.setAvailable(r.getAvailable() || len(r.getErrors()) == 0)
-	return r.getAvailable()
+	b := len(r.getErrors()) == 0
+	r.setAvailable(b)
+	return b
 }
 
 func (r *RawModel) Error() string {
@@ -223,23 +225,42 @@ func (r *RawModel) KeyName() string {
 }
 
 func (r *RawModel) Fill() {
+	// Validation
+	if (*r)["Validated"] == nil {
+		(*r)["Validated"] = false
+	}
+	if (*r)["Available"] == nil {
+		(*r)["Available"] = false
+	}
 	if (*r)["Errors"] == nil {
 		(*r)["Errors"] = []string{}
 	}
+	// Meta
 	if (*r)["Meta"] == nil {
 		(*r)["Meta"] = Meta{}
 	}
+	// Params
 	if (*r)["Params"] == nil {
 		(*r)["Params"] = map[string]interface{}{}
 	}
+	// Bundled
+	if (*r)["Bundle"] == nil {
+		(*r)["Bundle"] = ""
+	}
+	// Owner
+	if (*r)["Endpoint"] == nil {
+		(*r)["Endpoint"] = ""
+	}
+	// Accessible
+	if (*r)["ReadOnly"] == nil {
+		(*r)["ReadOnly"] = false
+	}
+	// Other common fields
 	if (*r)["Documentation"] == nil {
 		(*r)["Documentation"] = ""
 	}
 	if (*r)["Description"] == nil {
 		(*r)["Description"] = ""
-	}
-	if (*r)["Endpoint"] == nil {
-		(*r)["Endpoint"] = ""
 	}
 	return
 }

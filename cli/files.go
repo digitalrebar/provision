@@ -25,11 +25,10 @@ func blobCommands(bt string) *cobra.Command {
 			return fmt.Errorf("%v: Expected 0 or 1 argument", c.UseLine())
 		},
 		RunE: func(c *cobra.Command, args []string) error {
-			req := session.Req().UrlFor(bt)
+			req := session.Req().List(bt)
 			if len(args) == 1 {
 				req.Params("path", args[0])
 			}
-			req = session.Req().List(bt)
 			data := []interface{}{}
 			err := req.Do(&data)
 			if err != nil {
