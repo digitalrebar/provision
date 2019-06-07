@@ -1,6 +1,6 @@
 // +build !linux
 
-package api
+package agent
 
 import (
 	"fmt"
@@ -8,11 +8,11 @@ import (
 	"runtime"
 )
 
-func (r *TaskRunner) enterChroot(cmd *exec.Cmd) error {
+func (r *runner) enterChroot(cmd *exec.Cmd) error {
 	if r.chrootDir != "" {
 		return fmt.Errorf("enterChroot not supported on %v", runtime.GOOS)
 	}
 	return nil
 }
 
-func (r *TaskRunner) exitChroot() {}
+func (r *runner) exitChroot() {}

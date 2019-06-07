@@ -1,4 +1,4 @@
-package api
+package agent
 
 import (
 	"bytes"
@@ -8,6 +8,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/digitalrebar/provision/api"
 	"github.com/digitalrebar/provision/models"
 )
 
@@ -29,7 +30,7 @@ func runAgent(t *testing.T, mi *models.Machine, lastTask, lastState, lastExitSta
 	}
 
 	buf := &bytes.Buffer{}
-	agent, err := session.NewAgent(m, true, true, false, io.MultiWriter(buf, os.Stderr))
+	agent, err := New(session, m, true, true, false, io.MultiWriter(buf, os.Stderr))
 	if err != nil {
 		t.Errorf("ERROR: Agent create failed: %v", err)
 	}
@@ -68,6 +69,14 @@ func TestJobs(t *testing.T) {
 	}
 	defer os.RemoveAll(tjd)
 	os.Setenv("JT", tjd)
+	if session == nil {
+		session, err = api.UserSession("https://127.0.0.1:10001", "rocketskates", "r0cketsk8ts")
+		if err != nil {
+			t.Errorf("Error creating session: %v", err)
+			return
+		}
+		defer func() { session = nil }()
+	}
 	machine1 := mustDecode(&models.Machine{}, `
 Address: 192.168.100.110
 BootEnv: local

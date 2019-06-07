@@ -1,6 +1,6 @@
 // +build linux
 
-package api
+package agent
 
 import (
 	"os"
@@ -27,11 +27,11 @@ func bindMount(newRoots string, srcFS ...string) error {
 	return nil
 }
 
-func (r *TaskRunner) bindFSes() []string {
+func (r *runner) bindFSes() []string {
 	return []string{"/proc", "/sys", "/dev", "/dev/pts", r.agentDir}
 }
 
-func (r *TaskRunner) enterChroot(cmd *exec.Cmd) error {
+func (r *runner) enterChroot(cmd *exec.Cmd) error {
 	if r.chrootDir == "" {
 		return nil
 	}
@@ -42,7 +42,7 @@ func (r *TaskRunner) enterChroot(cmd *exec.Cmd) error {
 	return nil
 }
 
-func (r *TaskRunner) exitChroot() {
+func (r *runner) exitChroot() {
 	if r.chrootDir == "" {
 		return
 	}

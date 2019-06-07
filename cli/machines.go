@@ -3,18 +3,31 @@ package cli
 import (
 	"fmt"
 	"os"
+	"runtime"
 	"strconv"
 	"time"
 
+	"github.com/digitalrebar/provision/agent"
 	"github.com/digitalrebar/provision/models"
 	"github.com/spf13/cobra"
 )
 
+var (
+	actuallyPowerThings = true
+	defaultStateLoc     string
+)
+
 func init() {
+	if defaultStateLoc == "" {
+		switch runtime.GOOS {
+		case "windows":
+			defaultStateLoc = os.ExpandEnv("${APPDATA}/drp-agent")
+		default:
+			defaultStateLoc = "/var/lib/drp-agent"
+		}
+	}
 	addRegistrar(registerMachine)
 }
-
-var actuallyPowerThings = true
 
 func registerMachine(app *cobra.Command) {
 	op := &ops{
@@ -292,6 +305,7 @@ pass in more than one task.`,
 	op.addCommand(tasks)
 	var exitOnFailure = false
 	var oneShot = false
+	var runStateLoc string
 	processJobs := &cobra.Command{
 		Use:   "processjobs [id]",
 		Short: "For the given machine, process pending jobs until done.",
@@ -313,18 +327,27 @@ the stage runner wait flag.
 			if err := session.FillModel(m, uuid); err != nil {
 				return err
 			}
-			agent, err := session.NewAgent(m, oneShot, exitOnFailure, actuallyPowerThings, os.Stdout)
+			if runStateLoc == "" {
+				runStateLoc = defaultStateLoc
+			}
+			if runStateLoc != "" {
+				if err := os.MkdirAll(runStateLoc, 0700); err != nil {
+					return fmt.Errorf("Unable to create state directory %s: %v", runStateLoc, err)
+				}
+			}
+			agent, err := agent.New(session, m, oneShot, exitOnFailure, actuallyPowerThings, os.Stdout)
 			if err != nil {
 				return err
 			}
 			if oneShot {
 				agent = agent.Timeout(time.Second)
 			}
-			return agent.Run()
+			return agent.StateLoc(runStateLoc).Run()
 		},
 	}
 	processJobs.Flags().BoolVar(&exitOnFailure, "exit-on-failure", false, "Exit on failure of a task")
 	processJobs.Flags().BoolVar(&oneShot, "oneshot", false, "Do not wait for additional tasks to appear")
+	processJobs.Flags().StringVar(&runStateLoc, "stateDir", "", "Location to save agent runtime state")
 	op.addCommand(processJobs)
 	op.command(app)
 }

@@ -1,4 +1,4 @@
-package api
+package agent
 
 import (
 	"fmt"
@@ -15,18 +15,19 @@ import (
 	"time"
 
 	"github.com/VictorLowther/jsonpatch2"
+	"github.com/digitalrebar/provision/api"
 	"github.com/digitalrebar/provision/models"
 )
 
-// JobLog gets the log for a specific Job and writes it to the passed
+// jobLog gets the log for a specific Job and writes it to the passed
 // io.Writer
-func (c *Client) JobLog(j *models.Job, dst io.Writer) error {
+func jobLog(c *api.Client, j *models.Job, dst io.Writer) error {
 	return c.Req().UrlFor("jobs", j.Key(), "log").Do(dst)
 }
 
-// JobActions returns the expanded list of templates that should be
+// jobActions returns the expanded list of templates that should be
 // written or executed for a specific Job.
-func (c *Client) JobActions(j *models.Job, targetOS string) (models.JobActions, error) {
+func jobActions(c *api.Client, j *models.Job, targetOS string) (models.JobActions, error) {
 	res := models.JobActions{}
 	req := c.Req().UrlFor("jobs", j.Key(), "actions")
 	if targetOS != "" {
@@ -35,13 +36,13 @@ func (c *Client) JobActions(j *models.Job, targetOS string) (models.JobActions, 
 	return res, req.Do(&res)
 }
 
-// TaskRunner is responsible for expanding templates and running
+// runner is responsible for expanding templates and running
 // scripts for a single task.
-type TaskRunner struct {
+type runner struct {
 	// Status codes that may be returned when a script exits.
 	failed, incomplete, reboot, poweroff, stop, wantChroot bool
 	// Client that the TaskRunner will use to communicate with the API
-	c *Client
+	c *api.Client
 	// The Job that the TaskRunner will log to and update the status of.
 	j *models.Job
 	// The machine the TaskRunner is running on.
@@ -58,15 +59,15 @@ type TaskRunner struct {
 	logger                      io.Writer
 }
 
-// NewTaskRunner creates a new TaskRunner for the passed-in machine.
+// newRunner creates a new TaskRunner for the passed-in machine.
 // It creates the matching Job (or resumes the previous incomplete
 // one), and handles making sure that all relevant output is written
 // to the job log as well as local stderr
-func NewTaskRunner(c *Client, m *models.Machine, agentDir, chrootDir string, logger io.Writer) (*TaskRunner, error) {
+func newRunner(c *api.Client, m *models.Machine, agentDir, chrootDir string, logger io.Writer) (*runner, error) {
 	if logger == nil {
 		logger = ioutil.Discard
 	}
-	res := &TaskRunner{
+	res := &runner{
 		c:        c,
 		m:        m,
 		agentDir: agentDir,
@@ -98,7 +99,7 @@ func NewTaskRunner(c *Client, m *models.Machine, agentDir, chrootDir string, log
 
 // Close() shuts down the writer side of the logging pipe.
 // This will also flush any remaining data to stderr
-func (r *TaskRunner) Close() {
+func (r *runner) Close() {
 	if r.pipeWriter != nil {
 		r.pipeWriter.Close()
 	}
@@ -118,37 +119,37 @@ func (r *TaskRunner) Close() {
 	}
 }
 
-// Log writes the string (with a timestamp) to stderr and to the
+// log writes the string (with a timestamp) to stderr and to the
 // server-side log for the current job.
-func (r *TaskRunner) Log(s string, items ...interface{}) {
+func (r *runner) log(s string, items ...interface{}) {
 	fmt.Fprintf(r.in, s+"\n", items...)
 }
 
-// Expand a writes a file template to the appropriate location.
-func (r *TaskRunner) Expand(action *models.JobAction, taskDir string) error {
+// expand a writes a file template to the appropriate location.
+func (r *runner) expand(action *models.JobAction, taskDir string) error {
 	// Write the Contents of this template to the passed Path
 	if !strings.HasPrefix(action.Path, "/") {
 		action.Path = path.Join(taskDir, path.Clean(action.Path))
 	} else if r.chrootDir != "" {
 		action.Path = path.Join(r.chrootDir, action.Path)
 	}
-	r.Log("%s: Writing %s to %s", time.Now(), action.Name, action.Path)
+	r.log("%s: Writing %s to %s", time.Now(), action.Name, action.Path)
 	if err := os.MkdirAll(filepath.Dir(action.Path), os.ModePerm); err != nil {
-		r.Log("Unable to mkdirs for %s: %v", action.Path, err)
+		r.log("Unable to mkdirs for %s: %v", action.Path, err)
 		return err
 	}
 	if err := ioutil.WriteFile(action.Path, []byte(action.Content), 0644); err != nil {
-		r.Log("Unable to write to %s: %v", action.Path, err)
+		r.log("Unable to write to %s: %v", action.Path, err)
 		return err
 	}
 	return nil
 }
 
-// Perform runs a single script action.
-func (r *TaskRunner) Perform(action *models.JobAction, taskDir string) error {
+// perform runs a single script action.
+func (r *runner) perform(action *models.JobAction, taskDir string) error {
 	taskFile := path.Join(taskDir, r.j.Task+"-"+action.Name)
 	if err := ioutil.WriteFile(taskFile, []byte(action.Content), 0700); err != nil {
-		r.Log("Unable to write to script %s: %v", taskFile, err)
+		r.log("Unable to write to script %s: %v", taskFile, err)
 		return err
 	}
 
@@ -174,25 +175,25 @@ func (r *TaskRunner) Perform(action *models.JobAction, taskDir string) error {
 			case "RS_ENDPOINT":
 				cmd.Env = append(cmd.Env, e+"="+r.c.Endpoint())
 			case "RS_TOKEN":
-				cmd.Env = append(cmd.Env, e+"="+r.c.token.Token)
+				cmd.Env = append(cmd.Env, e+"="+r.c.Token())
 			}
 		}
 	}
 	cmd.Stdout = r.in
 	cmd.Stderr = r.in
 	if err := r.enterChroot(cmd); err != nil {
-		r.Log("Command failed to set up chroot: %v", err)
+		r.log("Command failed to set up chroot: %v", err)
 		return err
 	}
-	r.Log("Starting command %s\n\n", cmd.Path)
+	r.log("Starting command %s\n\n", cmd.Path)
 	if err := cmd.Start(); err != nil {
-		r.Log("Command failed to start: %v", err)
+		r.log("Command failed to start: %v", err)
 		return err
 	}
 	// Wait on the process, not the command to exit.
 	// We don't want to auto-close stdout and stderr,
 	// as we will continue to use them.
-	r.Log("Command running")
+	r.log("Command running")
 	pState, _ := cmd.Process.Wait()
 	r.exitChroot()
 	status := pState.Sys().(syscall.WaitStatus)
@@ -202,7 +203,7 @@ func (r *TaskRunner) Perform(action *models.JobAction, taskDir string) error {
 		sane = err == nil && st.Mode().IsRegular()
 	}
 	code := uint(status.ExitStatus())
-	r.Log("Command exited with status %d", code)
+	r.log("Command exited with status %d", code)
 	if sane {
 		switch code {
 		case 0:
@@ -243,11 +244,11 @@ func (r *TaskRunner) Perform(action *models.JobAction, taskDir string) error {
 	return nil
 }
 
-// Run loops over all of the actions for a particular job,
+// run loops over all of the actions for a particular job,
 // placing files and executing scripts as appropriate.
 // It also arranges for all logging output for the actions
 // to go to the right places.
-func (r *TaskRunner) Run() error {
+func (r *runner) run() error {
 	finalErr := &models.Error{
 		Type:  "RUNNER_ERR",
 		Model: r.j.Prefix(),
@@ -311,7 +312,7 @@ func (r *TaskRunner) Run() error {
 	finalState := "incomplete"
 	taskDir, err := ioutil.TempDir(r.agentDir, r.j.Task+"-")
 	if err != nil {
-		r.Log("Failed to create local tmpdir: %v", err)
+		r.log("Failed to create local tmpdir: %v", err)
 		finalErr.AddError(err)
 		return finalErr
 	}
@@ -323,10 +324,10 @@ func (r *TaskRunner) Run() error {
 			newM := models.Clone(r.m).(*models.Machine)
 			newM.Runnable = false
 			if err := r.c.Req().PatchTo(r.m, newM).Do(&newM); err == nil {
-				r.Log("Marked machine %s as not runnable", r.m.Name)
+				r.log("Marked machine %s as not runnable", r.m.Name)
 				r.m = newM
 			} else {
-				r.Log("Failed to mark machine %s as not runnable: %v", r.m.Name, err)
+				r.log("Failed to mark machine %s as not runnable: %v", r.m.Name, err)
 			}
 		}
 		exitState := "complete"
@@ -346,9 +347,9 @@ func (r *TaskRunner) Run() error {
 			{Op: "replace", Path: "/ExitState", Value: exitState},
 		}
 		if err := r.c.Req().Patch(finalPatch).UrlForM(r.j).Do(&r.j); err != nil {
-			r.Log("Failed to update job %s:%s:%s to its final state %s", r.j.Workflow, r.j.Stage, r.j.Task, finalState)
+			r.log("Failed to update job %s:%s:%s to its final state %s", r.j.Workflow, r.j.Stage, r.j.Task, finalState)
 		} else {
-			r.Log("Updated job for %s:%s:%s to %s", r.j.Workflow, r.j.Stage, r.j.Task, finalState)
+			r.log("Updated job for %s:%s:%s to %s", r.j.Workflow, r.j.Stage, r.j.Task, finalState)
 		}
 	}()
 	obj, err := r.c.PatchModel(r.j.Prefix(), r.j.Key(), patch)
@@ -357,11 +358,11 @@ func (r *TaskRunner) Run() error {
 		return finalErr
 	}
 	r.j = obj.(*models.Job)
-	r.Log("Starting task %s:%s:%s on %s", r.j.Workflow, r.j.Stage, r.j.Task, r.m.Name)
+	r.log("Starting task %s:%s:%s on %s", r.j.Workflow, r.j.Stage, r.j.Task, r.m.Name)
 	// At this point, we are running.
 	var actions models.JobActions
-	if allActions, err := r.c.JobActions(r.j, runtime.GOOS); err != nil {
-		r.Log("Failed to render actions: %v", err)
+	if allActions, err := jobActions(r.c, r.j, runtime.GOOS); err != nil {
+		r.log("Failed to render actions: %v", err)
 		finalErr.AddError(err)
 		return finalErr
 	} else {
@@ -376,7 +377,7 @@ func (r *TaskRunner) Run() error {
 		r.stop = false
 		var err error
 		if action.Path != "" {
-			err = r.Expand(action, taskDir)
+			err = r.expand(action, taskDir)
 		} else {
 			if !helperWritten {
 				err = ioutil.WriteFile(path.Join(taskDir, "helper"), cmdHelper, 0600)
@@ -386,17 +387,17 @@ func (r *TaskRunner) Run() error {
 				}
 				helperWritten = true
 			}
-			err = r.Perform(action, taskDir)
+			err = r.perform(action, taskDir)
 			// Contents is a script to run, run it.
 		}
 		if err != nil {
 			r.failed = true
 			finalState = "failed"
 			finalErr.AddError(err)
-			r.Log("Task %s %s", r.j.Task, finalState)
+			r.log("Task %s %s", r.j.Task, finalState)
 			return finalErr
 		}
-		r.Log("Action %s finished", action.Name)
+		r.log("Action %s finished", action.Name)
 		// If a non-final action sets the incomplete flag, it actually
 		// means early success and stop processing actions for this task.
 		// This allows actions to be structured in an "early exit"
@@ -419,17 +420,6 @@ func (r *TaskRunner) Run() error {
 	if !r.failed && !r.incomplete {
 		finalState = "finished"
 	}
-	r.Log("Task %s %s", r.j.Task, finalState)
+	r.log("Task %s %s", r.j.Task, finalState)
 	return nil
-}
-
-// Agent runs the machine Agent on the current machine.
-// It assumes there is only one Agent, which is not actually a safe assumption.
-// We should make it safe someday.
-func (c *Client) Agent(m *models.Machine, exitOnNotRunnable, exitOnFailure, actuallyPowerThings bool, logger io.Writer) error {
-	a, err := c.NewAgent(m, exitOnNotRunnable, exitOnFailure, actuallyPowerThings, logger)
-	if err != nil {
-		return err
-	}
-	return a.Run()
 }

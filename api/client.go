@@ -43,6 +43,7 @@ type Client struct {
 	traceLvl                     string
 	traceToken                   string
 	info                         *models.Info
+	iMux                         *sync.Mutex
 }
 
 // Endpoint returns the address of the dr-provision API endpoint that
@@ -502,6 +503,9 @@ func (r *R) Do(val interface{}) error {
 			break
 		}
 		if r.body == nil {
+			r.c.iMux.Lock()
+			r.c.info = nil
+			r.c.iMux.Unlock()
 			time.Sleep(waitFor)
 			continue
 		}
@@ -578,6 +582,9 @@ func (c *Client) Close() {
 	c.mux.Lock()
 	c.closed = true
 	c.mux.Unlock()
+	c.iMux.Lock()
+	c.info = nil
+	c.iMux.Unlock()
 }
 
 // Token returns the current authentication token associated with the
@@ -592,6 +599,8 @@ func (c *Client) Token() string {
 // Info returns some basic system information that was retrieved as
 // part of the initial authentication.
 func (c *Client) Info() (*models.Info, error) {
+	c.iMux.Lock()
+	defer c.iMux.Unlock()
 	if c.info != nil {
 		return c.info, nil
 	}
@@ -797,6 +806,7 @@ func TokenSession(endpoint, token string) (*Client, error) {
 		Client:   &http.Client{Transport: tr},
 		closer:   make(chan struct{}, 0),
 		token:    &models.UserToken{Token: token},
+		iMux:     &sync.Mutex{},
 	}
 	go func() {
 		<-c.closer
@@ -838,6 +848,7 @@ func UserSessionToken(endpoint, username, password string, usetoken bool) (*Clie
 		password: password,
 		Client:   &http.Client{Transport: tr},
 		closer:   make(chan struct{}, 0),
+		iMux:     &sync.Mutex{},
 	}
 	basicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
 	token := &models.UserToken{}

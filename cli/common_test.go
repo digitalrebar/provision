@@ -470,6 +470,7 @@ func TestCorePieces(t *testing.T) {
 func TestMain(m *testing.M) {
 	var err error
 	actuallyPowerThings = false
+	defaultStateLoc = ""
 
 	tmpDir, err = ioutil.TempDir("", "cli-")
 	if err != nil {

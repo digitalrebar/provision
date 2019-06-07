@@ -6,6 +6,7 @@ Flags:
       --exit-on-failure   Exit on failure of a task
   -h, --help              help for processjobs
       --oneshot           Do not wait for additional tasks to appear
+      --stateDir string   Location to save agent runtime state
 
 Global Flags:
   -c, --catalog string      The catalog file to use to get product information (default "https://repo.rackn.io")
