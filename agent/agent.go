@@ -1,7 +1,9 @@
-package api
+package agent
 
 import (
 	"bufio"
+	"compress/gzip"
+	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -14,13 +16,15 @@ import (
 	"time"
 
 	"github.com/VictorLowther/jsonpatch2/utils"
+	"github.com/digitalrebar/provision/api"
 	"github.com/digitalrebar/provision/models"
+	"github.com/shirou/gopsutil/host"
 )
 
-type AgentState int
+type state int
 
 const (
-	AGENT_INIT = AgentState(iota)
+	AGENT_INIT = state(iota)
 	AGENT_WAIT_FOR_RUNNABLE
 	AGENT_RUN_TASK
 	AGENT_WAIT_FOR_CHANGE_STAGE
@@ -31,7 +35,12 @@ const (
 	AGENT_KEXEC
 )
 
-// MachineAgent implements a new machine agent structured as a finite
+type si struct {
+	BootTime uint64
+	Machine  *models.Machine
+}
+
+// Agent implements a new machine agent structured as a finite
 // state machine.  There is one important behavioural change to the
 // behaviour of the runner that may impact how workflows are built:
 //
@@ -51,24 +60,50 @@ const (
 // Additionally, this agent will automatically reboot the system when
 // it detects that the machine's boot environment has changed, unless
 // the machine is in an OS install, in which case the agent will exit.
-type MachineAgent struct {
-	state                                     AgentState
+type Agent struct {
+	state                                     state
 	waitTimeout                               time.Duration
-	client                                    *Client
-	events                                    *EventStream
+	client                                    *api.Client
+	events                                    *api.EventStream
 	machine                                   *models.Machine
-	runnerDir, chrootDir                      string
+	runnerDir, chrootDir, stateDir            string
 	doPower, exitOnNotRunnable, exitOnFailure bool
 	logger                                    io.Writer
+	bootTime                                  uint64
 	err                                       error
 }
 
-// NewAgent creates a new FSM based Machine Agent that starts out in
+func (a *Agent) saveState() error {
+	if a.stateDir == "" {
+		return nil
+	}
+	saveFile := path.Join(a.stateDir, a.machine.Key()+".state.new")
+	fi, err := os.Create(saveFile)
+	if err != nil {
+		return err
+	}
+	defer fi.Close()
+	er := gzip.NewWriter(fi)
+	defer er.Close()
+	enc := json.NewEncoder(er)
+	ss := si{
+		BootTime: a.bootTime,
+		Machine:  a.machine,
+	}
+	if err := enc.Encode(&ss); err != nil {
+		return err
+	}
+	er.Flush()
+	fi.Sync()
+	return os.Rename(saveFile, strings.TrimSuffix(saveFile, ".new"))
+}
+
+// New creates a new FSM based Machine Agent that starts out in
 // the AGENT_INIT state.
-func (c *Client) NewAgent(m *models.Machine,
+func New(c *api.Client, m *models.Machine,
 	exitOnNotRunnable, exitOnFailure, actuallyPowerThings bool,
-	logger io.Writer) (*MachineAgent, error) {
-	res := &MachineAgent{
+	logger io.Writer) (*Agent, error) {
+	res := &Agent{
 		state:             AGENT_INIT,
 		client:            c,
 		machine:           m,
@@ -90,6 +125,11 @@ func (c *Client) NewAgent(m *models.Machine,
 			}
 		}
 	}
+	bt, err := host.BootTime()
+	if err != nil {
+		return nil, err
+	}
+	res.bootTime = bt
 	if res.runnerDir == "" {
 		var td string
 		if err := c.Req().UrlForM(m, "params", "runner-tmpdir").Params("aggregate", "true").Do(&td); err == nil && td != "" {
@@ -120,20 +160,25 @@ func (c *Client) NewAgent(m *models.Machine,
 	return res, nil
 }
 
-// Logf is a helper function to make logging of Agent actions a bit
+// logf is a helper function to make logging of Agent actions a bit
 // easier.
-func (a *MachineAgent) Logf(f string, args ...interface{}) {
+func (a *Agent) logf(f string, args ...interface{}) {
 	fmt.Fprintf(a.logger, f, args...)
 }
 
 // Timeout allows you to change how long the Agent will wait for an
 // event from dr-provision from the default of 1 hour.
-func (a *MachineAgent) Timeout(t time.Duration) *MachineAgent {
+func (a *Agent) Timeout(t time.Duration) *Agent {
 	a.waitTimeout = t
 	return a
 }
 
-func (a *MachineAgent) power(cmdLine string) error {
+func (a *Agent) StateLoc(s string) *Agent {
+	a.stateDir = s
+	return a
+}
+
+func (a *Agent) power(cmdLine string) error {
 	if !a.doPower {
 		return nil
 	}
@@ -155,7 +200,7 @@ func (a *MachineAgent) power(cmdLine string) error {
 	return fmt.Errorf("Failed to %s", cmdLine)
 }
 
-func (a *MachineAgent) exitOrSleep() {
+func (a *Agent) exitOrSleep() {
 	if a.exitOnFailure {
 		a.state = AGENT_EXIT
 	} else {
@@ -163,7 +208,7 @@ func (a *MachineAgent) exitOrSleep() {
 	}
 }
 
-func (a *MachineAgent) initOrExit() {
+func (a *Agent) initOrExit() {
 	if a.exitOnFailure {
 		a.state = AGENT_EXIT
 	} else {
@@ -172,11 +217,10 @@ func (a *MachineAgent) initOrExit() {
 	}
 }
 
-// Init resets the Machine Agent back to its initial state.  This
+// init resets the Machine Agent back to its initial state.  This
 // consists of marking any current running jobs as Failed and
 // repoening the event stream from dr-provision.
-func (a *MachineAgent) Init() {
-	a.client.info = nil
+func (a *Agent) init() {
 	if a.err != nil {
 		a.err = nil
 	}
@@ -198,7 +242,7 @@ func (a *MachineAgent) Init() {
 	}
 	a.events, a.err = a.client.Events()
 	if a.err != nil {
-		a.Logf("MachineAgent: error attaching to event stream: %v", err)
+		a.logf("MachineAgent: error attaching to event stream: %v", err)
 		a.exitOrSleep()
 		return
 	}
@@ -210,27 +254,27 @@ func kexecLoaded() bool {
 	return err == nil && string(buf)[0] == '1'
 }
 
-func (a *MachineAgent) loadKexec() {
+func (a *Agent) loadKexec() {
 	kexecOk := false
 	if err := a.client.Req().
 		UrlFor("machines", a.machine.UUID(), "params", "kexec-ok").
 		Params("aggregate", "true").
 		Do(&kexecOk); err != nil {
-		a.Logf("kexec: Could not find kexec-ok\n")
+		a.logf("kexec: Could not find kexec-ok\n")
 		return
 	}
 	if !kexecOk {
-		a.Logf("kexec: kexec-ok is false\n")
+		a.logf("kexec: kexec-ok is false\n")
 		return
 	}
-	a.Logf("Machine has kexec-ok param set\n")
+	a.logf("Machine has kexec-ok param set\n")
 	if runtime.GOOS != "linux" {
-		a.Logf("kexec: Not running on Linux\n")
+		a.logf("kexec: Not running on Linux\n")
 		return
 	}
-	a.Logf("Running on Linux\n")
+	a.logf("Running on Linux\n")
 	if _, err := exec.LookPath("kexec"); err != nil {
-		a.Logf("kexec: kexec command not installed\n")
+		a.logf("kexec: kexec command not installed\n")
 		return
 	}
 	if kexecLoaded() {
@@ -238,16 +282,16 @@ func (a *MachineAgent) loadKexec() {
 	}
 	tmpDir, err := ioutil.TempDir("", "drp-agent-kexec")
 	if err != nil {
-		a.Logf("Failed to make tmpdir for kexec\n")
+		a.logf("Failed to make tmpdir for kexec\n")
 		return
 	}
 	defer os.RemoveAll(tmpDir)
 	kTmpl, err := a.client.File("machines", a.machine.UUID(), "kexec")
 	if err != nil {
-		a.Logf("Failed to fetch kexec information: %v\n", err)
+		a.logf("Failed to fetch kexec information: %v\n", err)
 		return
 	}
-	a.Logf("kexec info fetched\n")
+	a.logf("kexec info fetched\n")
 	defer kTmpl.Close()
 	sc := bufio.NewScanner(kTmpl)
 	var kernel, cmdline string
@@ -265,18 +309,18 @@ func (a *MachineAgent) loadKexec() {
 			continue
 		}
 		if err != nil {
-			a.Logf("Failed to fetch %s\n", parts[1])
+			a.logf("Failed to fetch %s\n", parts[1])
 			return
 		}
 		defer resp.Body.Close()
 		outPath := path.Join(tmpDir, path.Base(parts[1]))
 		out, err := os.Create(outPath)
 		if err != nil {
-			a.Logf("Failed to create %s\n", outPath)
+			a.logf("Failed to create %s\n", outPath)
 			return
 		}
 		if _, err := io.Copy(out, resp.Body); err != nil {
-			a.Logf("Failed to save %s\n", outPath)
+			a.logf("Failed to save %s\n", outPath)
 			return
 		}
 		out.Sync()
@@ -289,16 +333,16 @@ func (a *MachineAgent) loadKexec() {
 		}
 	}
 	if kernel == "" {
-		a.Logf("No kernel found\n")
+		a.logf("No kernel found\n")
 		return
 	}
 	if len(initrds) > 1 {
-		a.Logf("kexec: Too many initrds\n")
+		a.logf("kexec: Too many initrds\n")
 		return
 	}
 	kOpts, err := ioutil.ReadFile("/proc/cmdline")
 	if err != nil {
-		a.Logf("kexec: No /proc/cmdline\n")
+		a.logf("kexec: No /proc/cmdline\n")
 		return
 	}
 	kexecOk = false
@@ -315,21 +359,21 @@ func (a *MachineAgent) loadKexec() {
 		if aok && vok {
 			cmdline = cmdline + " BOOTIF=" + macaddr
 		} else {
-			a.Logf("Could not determine nic we booted from")
+			a.logf("Could not determine nic we booted from")
 			return
 		}
 	}
-	a.Logf("kernel:%s initrd:%s\n", kernel, initrds[0])
-	a.Logf("cmdline: %s\n", cmdline)
+	a.logf("kernel:%s initrd:%s\n", kernel, initrds[0])
+	a.logf("cmdline: %s\n", cmdline)
 	cmd := exec.Command("/sbin/kexec", "-l", kernel, "--initrd="+initrds[0], "--command-line="+cmdline)
 	if err := cmd.Run(); err != nil {
 		return
 	}
-	a.Logf("kexec info staged\n")
+	a.logf("kexec info staged\n")
 	return
 }
 
-func (a *MachineAgent) doKexec() {
+func (a *Agent) doKexec() {
 	a.state = AGENT_REBOOT
 	var cmdErr error
 	if _, err := exec.LookPath("systemctl"); err == nil {
@@ -346,7 +390,7 @@ func (a *MachineAgent) doKexec() {
 	}
 }
 
-func (a *MachineAgent) rebootOrExit(autoKexec bool) {
+func (a *Agent) rebootOrExit(autoKexec bool) {
 	if strings.HasSuffix(a.machine.BootEnv, "-install") {
 		a.state = AGENT_EXIT
 		return
@@ -373,14 +417,14 @@ func (a *MachineAgent) rebootOrExit(autoKexec bool) {
 // * AGENT_RUN_TASK if the machine is runnable.
 //
 // * AGENT_WAIT_FOR_RUNNABLE if the machine is not runnable.
-func (a *MachineAgent) waitOn(m *models.Machine, cond TestFunc) {
-	found, err := a.events.WaitFor(m, AndItems(EqualItem("Available", true), cond), a.waitTimeout)
+func (a *Agent) waitOn(m *models.Machine, cond api.TestFunc) {
+	found, err := a.events.WaitFor(m, api.AndItems(api.EqualItem("Available", true), cond), a.waitTimeout)
 	if err != nil {
 		a.err = err
 		a.initOrExit()
 		return
 	}
-	a.Logf("Wait: finished with %s\n", found)
+	a.logf("Wait: finished with %s\n", found)
 	switch found {
 	case "timeout":
 		if a.exitOnNotRunnable {
@@ -410,14 +454,14 @@ func (a *MachineAgent) waitOn(m *models.Machine, cond TestFunc) {
 	a.machine = m
 }
 
-// WaitRunnable has waitOn wait for the Machine to become runnable.
-func (a *MachineAgent) WaitRunnable() {
+// waitRunnable has waitOn wait for the Machine to become runnable.
+func (a *Agent) waitRunnable() {
 	m := models.Clone(a.machine).(*models.Machine)
-	a.Logf("Waiting on machine to become runnable\n")
-	a.waitOn(m, EqualItem("Runnable", true))
+	a.logf("Waiting on machine to become runnable\n")
+	a.waitOn(m, api.EqualItem("Runnable", true))
 }
 
-// RunTask attempts to run the next task on the Machine.  It may
+// runTask attempts to run the next task on the Machine.  It may
 // transition to the following states:
 //
 // * AGENT_CHANGE_STAGE if there are no tasks to run.
@@ -429,8 +473,8 @@ func (a *MachineAgent) WaitRunnable() {
 // * AGENT_EXIT if the task signalled that the agent should stop.
 //
 // * AGENT_WAIT_FOR_RUNNABLE if no other conditions were met.
-func (a *MachineAgent) RunTask() {
-	runner, err := NewTaskRunner(a.client, a.machine, a.runnerDir, a.chrootDir, a.logger)
+func (a *Agent) runTask() {
+	runner, err := newRunner(a.client, a.machine, a.runnerDir, a.chrootDir, a.logger)
 	if err != nil {
 		a.err = err
 		a.initOrExit()
@@ -438,20 +482,20 @@ func (a *MachineAgent) RunTask() {
 	}
 	if runner == nil {
 		if a.chrootDir != "" {
-			a.Logf("Current tasks finished, exiting chroot\n")
+			a.logf("Current tasks finished, exiting chroot\n")
 			a.state = AGENT_EXIT
 			return
 		}
 		if a.machine.Workflow == "" {
-			a.Logf("Current tasks finished, check to see if stage needs to change\n")
+			a.logf("Current tasks finished, check to see if stage needs to change\n")
 			a.state = AGENT_CHANGE_STAGE
 			return
 		}
-		a.Logf("Current tasks finished, wait for stage or bootenv to change\n")
+		a.logf("Current tasks finished, wait for stage or bootenv to change\n")
 		a.state = AGENT_WAIT_FOR_CHANGE_STAGE
 		return
 	}
-	a.Logf("Runner created for task %s:%s:%s (%d:%d)\n",
+	a.logf("Runner created for task %s:%s:%s (%d:%d)\n",
 		runner.j.Workflow,
 		runner.j.Stage,
 		runner.j.Task,
@@ -463,7 +507,7 @@ func (a *MachineAgent) RunTask() {
 		runner.Close()
 		return
 	}
-	if err := runner.Run(); err != nil {
+	if err := runner.run(); err != nil {
 		a.err = err
 		a.initOrExit()
 		return
@@ -472,29 +516,29 @@ func (a *MachineAgent) RunTask() {
 	if runner.t != nil {
 		defer runner.Close()
 		if runner.reboot {
-			runner.Log("Task signalled runner to reboot")
+			runner.log("Task signalled runner to reboot")
 			a.rebootOrExit(false)
 		} else if runner.poweroff {
-			runner.Log("Task signalled runner to poweroff")
+			runner.log("Task signalled runner to poweroff")
 			a.state = AGENT_POWEROFF
 		} else if runner.stop {
-			runner.Log("Task signalled runner to stop")
+			runner.log("Task signalled runner to stop")
 			a.state = AGENT_EXIT
 		} else if runner.failed {
-			runner.Log("Task signalled that it failed")
+			runner.log("Task signalled that it failed")
 			if a.exitOnFailure {
 				a.state = AGENT_EXIT
 			}
 		}
 		if runner.incomplete {
-			runner.Log("Task signalled that it was incomplete")
+			runner.log("Task signalled that it was incomplete")
 		} else if !runner.failed {
-			runner.Log("Task signalled that it finished normally")
+			runner.log("Task signalled that it finished normally")
 		}
 	}
 }
 
-// WaitChangeStage has waitOn wait for any of the following on the
+// waitChangeStage has waitOn wait for any of the following on the
 // machine to change:
 //
 // * The CurrentTask index
@@ -502,18 +546,18 @@ func (a *MachineAgent) RunTask() {
 // * The Runnable flag
 // * The boot environment
 // * The stage
-func (a *MachineAgent) WaitChangeStage() {
+func (a *Agent) waitChangeStage() {
 	m := models.Clone(a.machine).(*models.Machine)
-	a.Logf("Waiting for system to be runnable and for stage or current tasks to change\n")
+	a.logf("Waiting for system to be runnable and for stage or current tasks to change\n")
 	a.waitOn(m,
-		OrItems(NotItem(EqualItem("CurrentTask", m.CurrentTask)),
-			NotItem(EqualItem("Tasks", m.Tasks)),
-			NotItem(EqualItem("Runnable", m.Runnable)),
-			NotItem(EqualItem("BootEnv", m.BootEnv)),
-			NotItem(EqualItem("Stage", m.Stage))))
+		api.OrItems(api.NotItem(api.EqualItem("CurrentTask", m.CurrentTask)),
+			api.NotItem(api.EqualItem("Tasks", m.Tasks)),
+			api.NotItem(api.EqualItem("Runnable", m.Runnable)),
+			api.NotItem(api.EqualItem("BootEnv", m.BootEnv)),
+			api.NotItem(api.EqualItem("Stage", m.Stage))))
 }
 
-// ChangeStage handles determining what to do when the Agent runs out
+// changeStage handles determining what to do when the Agent runs out
 // of tasks to run in the current Stage.  It may transition to the following states:
 //
 // * AGENT_WAIT_FOR_CHANGE_STAGE if there is no next stage for this
@@ -521,7 +565,7 @@ func (a *MachineAgent) WaitChangeStage() {
 //   bootenv.
 //
 // * AGENT_EXIT if there is no next stage in the change stage map and
-//   the machine is in an -install bootenv.  In this case, ChangeStage
+//   the machine is in an -install bootenv.  In this case, changeStage
 //   will set the machine stage to `local`.
 //
 // * AGENT_REBOOT if the next stage has the Reboot flag, the change
@@ -536,7 +580,7 @@ func (a *MachineAgent) WaitChangeStage() {
 //   off after changing the stage.
 //
 // * AGENT_WAIT_FOR_RUNNABLE if no other condition applies
-func (a *MachineAgent) ChangeStage() {
+func (a *Agent) changeStage() {
 	var cmObj interface{}
 	a.state = AGENT_WAIT_FOR_CHANGE_STAGE
 	inInstall := strings.HasSuffix(a.machine.BootEnv, "-install")
@@ -569,7 +613,7 @@ func (a *MachineAgent) ChangeStage() {
 	if nextStage == a.machine.Stage {
 		return
 	}
-	a.Logf("Changing stage from %s to %s\n", a.machine.Stage, nextStage)
+	a.logf("Changing stage from %s to %s\n", a.machine.Stage, nextStage)
 	newStage := &models.Stage{}
 	if err := a.client.FillModel(newStage, nextStage); err != nil {
 		a.err = err
@@ -609,8 +653,36 @@ func (a *MachineAgent) ChangeStage() {
 	}
 }
 
+func (a *Agent) loadState() {
+	if a.stateDir == "" {
+		return
+	}
+	stateFile, err := os.Open(path.Join(a.stateDir, a.machine.Key()+".state"))
+	if err != nil {
+		return
+	}
+	defer stateFile.Close()
+	var ss si
+	gr, err := gzip.NewReader(stateFile)
+	if err != nil {
+		return
+	}
+	defer gr.Close()
+	dec := json.NewDecoder(gr)
+	if err = dec.Decode(&ss); err != nil {
+		return
+	}
+	if ss.BootTime == a.bootTime && a.machine.Key() == ss.Machine.Key() {
+		if a.machine.BootEnv != ss.Machine.BootEnv {
+			a.rebootOrExit(true)
+		}
+		a.machine = ss.Machine
+		return
+	}
+}
+
 // Run kicks off the state machine for this agent.
-func (a *MachineAgent) Run() error {
+func (a *Agent) Run() error {
 	if a.machine.HasFeature("original-change-stage") ||
 		!a.machine.HasFeature("change-stage-v2") {
 		newM := models.Clone(a.machine).(*models.Machine)
@@ -628,47 +700,51 @@ func (a *MachineAgent) Run() error {
 			return res
 		}
 	}
+	a.loadState()
 	for {
 		switch a.state {
 		case AGENT_INIT:
-			a.Logf("Agent in init\n")
-			a.Init()
+			a.logf("Agent in init\n")
+			a.init()
 		case AGENT_WAIT_FOR_RUNNABLE:
-			a.Logf("Agent waiting for tasks\n")
-			a.WaitRunnable()
+			a.logf("Agent waiting for tasks\n")
+			a.waitRunnable()
 		case AGENT_RUN_TASK:
-			a.Logf("Agent running task\n")
-			a.RunTask()
+			a.logf("Agent running task\n")
+			a.runTask()
 		case AGENT_WAIT_FOR_CHANGE_STAGE:
-			a.Logf("Agent waiting stage change\n")
-			a.WaitChangeStage()
+			a.logf("Agent waiting stage change\n")
+			a.waitChangeStage()
 		case AGENT_CHANGE_STAGE:
-			a.Logf("Agent changing stage\n")
-			a.ChangeStage()
+			a.logf("Agent changing stage\n")
+			a.changeStage()
 		case AGENT_EXIT:
 			if a.chrootDir != "" {
-				a.Logf("Agent exiting chroot %s\n", a.chrootDir)
+				a.logf("Agent exiting chroot %s\n", a.chrootDir)
 				a.chrootDir = ""
-				a.WaitRunnable()
+				a.waitRunnable()
 			} else {
-				a.Logf("Agent exiting\n")
+				a.logf("Agent exiting\n")
 				return a.err
 			}
 		case AGENT_KEXEC:
-			a.Logf("Attempting to kexec\n")
+			a.logf("Attempting to kexec\n")
 			a.doKexec()
 		case AGENT_REBOOT:
-			a.Logf("Agent rebooting\n")
+			a.logf("Agent rebooting\n")
 			return a.power("reboot")
 		case AGENT_POWEROFF:
-			a.Logf("Agent powering off\n")
+			a.logf("Agent powering off\n")
 			return a.power("poweroff")
 		default:
-			a.Logf("Unknown agent state %d\n", a.state)
+			a.logf("Unknown agent state %d\n", a.state)
 			panic("unreachable")
 		}
 		if a.err != nil {
-			a.Logf("Error during run: %v\n", a.err)
+			a.logf("Error during run: %v\n", a.err)
+		}
+		if err := a.saveState(); err != nil {
+			a.logf("Error saving state: %v", err)
 		}
 	}
 }

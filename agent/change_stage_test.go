@@ -1,10 +1,11 @@
-package api
+package agent
 
 import (
 	"io/ioutil"
 	"os"
 	"testing"
 
+	"github.com/digitalrebar/provision/api"
 	"github.com/digitalrebar/provision/models"
 )
 
@@ -16,6 +17,14 @@ func TestChangeStage(t *testing.T) {
 	}
 	defer os.RemoveAll(tjd)
 	os.Setenv("JT", tjd)
+	if session == nil {
+		session, err = api.UserSession("https://127.0.0.1:10001", "rocketskates", "r0cketsk8ts")
+		if err != nil {
+			t.Errorf("Error creating session: %v", err)
+			return
+		}
+		defer func() { session = nil }()
+	}
 
 	machine1 := mustDecode(&models.Machine{}, `
 Address: 192.168.100.110

@@ -1,6 +1,6 @@
 // +build windows plan9
 
-package api
+package agent
 
 import "os"
 

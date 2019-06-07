@@ -1,4 +1,4 @@
-package api
+package agent
 
 var cmdHelper = []byte(`
 #!/bin/bash
