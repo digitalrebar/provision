@@ -85,7 +85,8 @@ func blobCommands(bt string) *cobra.Command {
 			return err
 		},
 	})
-	cmd.AddCommand(&cobra.Command{
+	explode := false
+	upload := &cobra.Command{
 		Use:   "upload [src] as [dest]",
 		Short: fmt.Sprintf("Upload the %v [src] as [dest]", bt),
 		Args: func(c *cobra.Command, args []string) error {
@@ -105,13 +106,16 @@ func blobCommands(bt string) *cobra.Command {
 				return fmt.Errorf("Error opening src file %s: %v", item, err)
 			}
 			defer data.Close()
-			if info, err := session.PostBlob(data, bt, dest); err != nil {
+			if info, err := session.PostBlobExplode(data, explode, bt, dest); err != nil {
 				return generateError(err, "Failed to post %v: %v", bt, dest)
 			} else {
 				return prettyPrint(info)
 			}
 		},
-	})
+	}
+	upload.Flags().BoolVar(&explode, "explode", false, "Should the upload file be untarred")
+	cmd.AddCommand(upload)
+
 	cmd.AddCommand(&cobra.Command{
 		Use:   "destroy [item]",
 		Short: fmt.Sprintf("Delete the %v [item] on the DRP server", bt),

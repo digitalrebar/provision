@@ -3,7 +3,8 @@ Usage:
   drpcli files upload [src] as [dest] [flags]
 
 Flags:
-  -h, --help   help for upload
+      --explode   Should the upload file be untarred
+  -h, --help      help for upload
 
 Global Flags:
   -c, --catalog string      The catalog file to use to get product information (default "https://repo.rackn.io")
