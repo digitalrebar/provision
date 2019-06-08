@@ -649,12 +649,23 @@ func (c *Client) GetBlob(dest io.Writer, at ...string) error {
 	return c.Req().UrlFor(path.Join("/", path.Join(at...))).Do(dest)
 }
 
+// PostBlobExplode uploads the binary blob contained in the passed io.Reader
+// to the location specified by at on the server.  You are responsible
+// for closing the passed io.Reader.  Sends the explode boolean as a query parameter.
+func (c *Client) PostBlobExplode(blob io.Reader, explode bool, at ...string) (models.BlobInfo, error) {
+	res := models.BlobInfo{}
+	r := c.Req().Post(blob).UrlFor(path.Join("/", path.Join(at...)))
+	if explode {
+		r = r.Params("explode", "true")
+	}
+	return res, r.Do(&res)
+}
+
 // PostBlob uploads the binary blob contained in the passed io.Reader
 // to the location specified by at on the server.  You are responsible
 // for closing the passed io.Reader.
 func (c *Client) PostBlob(blob io.Reader, at ...string) (models.BlobInfo, error) {
-	res := models.BlobInfo{}
-	return res, c.Req().Post(blob).UrlFor(path.Join("/", path.Join(at...))).Do(&res)
+	return c.PostBlobExplode(blob, false, at...)
 }
 
 // DeleteBlob deletes a blob on the server at the location indicated
