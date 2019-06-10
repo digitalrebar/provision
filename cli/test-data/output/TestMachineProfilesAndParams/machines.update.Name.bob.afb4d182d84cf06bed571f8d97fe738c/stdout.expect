@@ -1,0 +1,7 @@
+RE:
+  "Name": "bob",
+  "Params": {},
+  "Profiles": \[
+    "foo",
+    "bar"
+  \],

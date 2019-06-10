@@ -19,6 +19,11 @@
     "Unique": true,
     "Unordered": false
   },
+  "Params": {
+    "Type": "list",
+    "Unique": false,
+    "Unordered": true
+  },
   "Provider": {
     "Type": "string",
     "Unique": false,
