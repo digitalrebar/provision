@@ -24,6 +24,16 @@
     "Unique": true,
     "Unordered": false
   },
+  "Params": {
+    "Type": "list",
+    "Unique": false,
+    "Unordered": true
+  },
+  "Profiles": {
+    "Type": "list",
+    "Unique": false,
+    "Unordered": true
+  },
   "ReadOnly": {
     "Type": "boolean",
     "Unique": false,

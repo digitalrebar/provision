@@ -1,0 +1,15 @@
+RE:
+    "Name": "fred",
+    "Params": {
+      "bird": "tweet",
+      "cat": "meow"
+    },
+    "Profiles": \[
+      "bar"
+    \],
+    "Name": "julius",
+    "Params": {
+      "cat": "meow",
+      "dog": "bark"
+    },
+    "Profiles": \[\],

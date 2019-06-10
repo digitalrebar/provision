@@ -1,0 +1,13 @@
+{
+  "Available": true,
+  "Bundle": "",
+  "Description": "",
+  "Documentation": "",
+  "Endpoint": "",
+  "Errors": [],
+  "Meta": {},
+  "Name": "bar",
+  "Params": {},
+  "ReadOnly": false,
+  "Validated": true
+}
