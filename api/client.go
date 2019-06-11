@@ -337,6 +337,8 @@ func (r *R) Params(args ...string) *R {
 //        to return results Equal, Less Than, Less Than Or Equal, Greater Than, Greater Than Or Equal, or Not Equal to value according to IndexName
 //    "indexName" "Between/Except" "lowerBound" "upperBound"
 //        to return values Between(inclusive) lowerBound and Upperbound or its complement for Except.
+//    "indexName" "In/Nin" "comma,separated,list,of,values"
+//        to return values either in the list of values or not in the listr of values
 //
 // If formatArgs does not contain some valid combination of the above, the request will fail.
 func (r *R) Filter(prefix string, filterArgs ...string) *R {
@@ -364,7 +366,7 @@ func (r *R) Filter(prefix string, filterArgs ...string) *R {
 			op := strings.Title(strings.ToLower(filterArgs[i+1]))
 			i += 2
 			switch op {
-			case "Eq", "Lt", "Lte", "Gt", "Gte", "Ne":
+			case "Eq", "Lt", "Lte", "Gt", "Gte", "Ne", "In", "Nin":
 				if len(filterArgs)-i < 1 {
 					r.err.Errorf("Invalid Filter: %s op %s requires 1 parameter", filter, op)
 					return r
@@ -372,12 +374,17 @@ func (r *R) Filter(prefix string, filterArgs ...string) *R {
 				finalParams = append(finalParams, filter, fmt.Sprintf("%s(%s)", op, filterArgs[i]))
 				i++
 			case "Between", "Except":
-				if len(filterArgs)-i < 2 {
-					r.err.Errorf("Invalid Filter: %s op %s requires 2 parameters", filter, op)
+				if len(filterArgs)-i < 1 || (len(filterArgs)-i < 2 && !strings.Contains(filterArgs[i], ",")) {
+					r.err.Errorf("Invalid Filter: %s op %s requires 1 or 2 parameters", filter, op)
 					return r
 				}
-				finalParams = append(finalParams, filter, fmt.Sprintf("%s(%s,%s)", op, filterArgs[i], filterArgs[i+1]))
-				i += 2
+				if !strings.Contains(filterArgs[i], ",") {
+					finalParams = append(finalParams, filter, fmt.Sprintf("%s(%s,%s)", op, filterArgs[i], filterArgs[i+1]))
+					i += 2
+				} else {
+					finalParams = append(finalParams, filter, fmt.Sprintf("%s(%s)", op, filterArgs[i]))
+					i += 1
+				}
 			default:
 				r.err.Errorf("Invalid Filter %s: unknown op %s", filter, op)
 				return r

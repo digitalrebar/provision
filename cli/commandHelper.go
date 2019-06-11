@@ -51,6 +51,12 @@ To filter by indexes, you can use the following stanzas:
 * *index* Except *lower* *upper*
   This will return items Less Than *lower* or
   Greater Than *upper* according to *index*
+* *index* In *comma,separated,list,of,values*
+  This will return any items In the set passed for the
+  comma-separated list of values.
+* *index* Nin *comma,separated,list,of,values*
+  This will return any items Not In the set passed for the
+  comma-separated list of values.
 
 You can chain any number of filters together, and they will pipeline into
 each other as appropriate.  After the above filters have been applied, you can
