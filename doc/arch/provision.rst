@@ -118,6 +118,10 @@ template.  RenderData has the following fields:
     Param returns values as simple strings! For complex output, look at
     .ParamAsJSON and .ParamAsYAML below.
 
+  - **.ParamExpand <key>** returns the value for the specified key for this
+    rendering, but then re-expands the string value again through the renderer.
+    If not a string, no expansion is done.
+
   - **.ParamAsJSON <key>** returns the value for the specified key for this
     rendering preserved in JSON formatting.  This is important for templates
     that rely on ``jq`` or other commands that need consistent formatting
