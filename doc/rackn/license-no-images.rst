@@ -11,7 +11,7 @@ RackN Licensing Overview
 
 This document outlines the RackN limited use and commercial licensing information and initial setup steps necessary to access license entitlements.  If you have any questions or concerns, please feel free to contact us on Slack, `RackN web site <https://rackn.com/contact>`_, or email us at support@rackn.com.
 
-*Limited Use licensing* of RackN Extensions for Digital Rebar Provision is provided for individual users or non-commercial teams.  These licenses start at 10 machines with 90-day self-service renewal.  They allow limited access to all publically available plugins in the RackN catalog.
+*Limited Use licensing* of RackN Extensions for Digital Rebar Provision is provided for individual users or non-commercial teams.  These licenses start at 20 machines with 90-day self-service renewal.  They allow limited access to all publically available plugins in the RackN catalog.
 
 *Commercial Use licensing* of RackN Extensions and Support for Digital Rebar Provision is provided to Organizations.  License entitlements are enabled by either total count or named module for an Organization.  The RackN solution team will need to setup an Organization with the correct license entitlements for you.
 
@@ -39,8 +39,7 @@ The following are the basic steps you need to perform to generate, enable, and u
 
 1. Generate a License
 2. Enable DRP Endpoints to use Licensed Content
-3. Install License Plugin Provider
-4. Install Licensed Content and Plugins
+4. Install Licensed Catalog Items
 
 .. _rackn_licensing_generate_license:
 
@@ -63,7 +62,9 @@ Enable a DRP Endpoint to use Licensed Content
 
 Once you have generated a license, you now need to enable each endpoint that will consume licensed content.  This will allow for Content and Plugins that are licensed to be imported in to the DRP Endpoint and used for provisioning activities. 
 
-.. note:: The DRP Endpoint you initially generated the license on will also be enabled to utilize licensed content and plugins.  You will only need to do this step subsequently for any additional DRP Endpoints that will be using licensed content or plugins.
+The version of the license will be changed if the licnese changes due to new entitlements, dates or endpoints.
+
+.. note:: The DRP Endpoint you initially generated the license on will also be enabled to utilize licensed content and plugins.  You will need to do this step subsequently for any additional DRP Endpoints that will be using licensed content or plugins.  The license includes a list of authorized endpoints
 
 1. Go to the "Info & Preferences" menu item and click on the "Update License" button for any DRP Endpoint that requires licensed content
 
