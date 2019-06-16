@@ -7,6 +7,7 @@ type LicenseBundle struct {
 	Contact           string
 	ContactEmail      string
 	ContactId         string
+	Organization	  string
 	Owner             string
 	OwnerEmail        string
 	OwnerId           string
