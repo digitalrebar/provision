@@ -11,7 +11,7 @@ RackN Licensing Overview
 
 This document outlines the RackN limited use and commercial licensing information and initial setup steps necessary to access license entitlements.  If you have any questions or concerns, please feel free to contact us on Slack, or email us at support@rackn.com. 
 
-*Limited Use licensing* of RackN Extensions for Digital Rebar Provision is provided for individual users or non-commercial teams.  These licenses start at 10 machines with 90-day self-service renewal.  They allow limited access to all publically available plugins in the RackN catalog.  Contact the RackN solution team if you would like to expand your machine count.
+*Limited Use licensing* of RackN Extensions for Digital Rebar Provision is provided for individual users or non-commercial teams.  These licenses start at 20 machines with 90-day self-service renewal.  They allow limited access to all publically available plugins in the RackN catalog.  Contact the RackN solution team if you would like to expand your machine count.
 
 *Commercial Use licensing* of RackN Extensions and Support for Digital Rebar Provision is provided to Organizations.  License entitlements are enabled by either total count or named module for an Organization.  The RackN solution team will need to setup an Organization with the correct license entitlements for you.
 
@@ -41,8 +41,7 @@ The following are the basic steps you need to perform to generate, enable, and u
 
 1. Generate a License
 2. Enable DRP Endpoints to use Licensed Content
-3. Install License Plugin Provider
-4. Install Licensed Content and Plugins
+4. Install Licensed Catalog Items
 
 .. _rackn_licensing_generate_license:
 
@@ -105,59 +104,22 @@ Once you have generated a license, you now need to enable each endpoint that wil
    :alt: Info & Preferences Menu Item
 
 
-.. _rackn_licensing_license_plugin:
-
-Install License Plugin Provider
--------------------------------
-
-It is necessary to install the *License* Plugin Provider, which works in conjunction with the signed license, plugins, contents, and DRP Endpoint to enable the entitlements specified in the license.  To install the Plugin Provider, do:
-
-1. Go to the *Plugin Providers* menu item
-
-.. figure::  ../images/licensing/06-plugin-providers.png
-   :align: left
-   :width: 200 px
-   :alt: Plugin Providers Menu Item
-
-2. Locate the *License* plugin in the right side panel (labeled "Organization Plugin Providers")
-
-.. figure::  ../images/licensing/07-org-license-provider.png
-   :align: left
-   :width: 350 px
-   :alt: Organization License Plugin Provider
-
-3. Click on the "Transfer" link to install the Plugin Provider on the DRP Endpoint (See the above image for details)
-4. The *License* plugin provider should now be listed in the "Endpoint Plugin Providers" panel in the center of the page
-
-.. figure::  ../images/licensing/08-enabled-license-provider.png
-   :align: left
-   :width: 350 px
-   :alt: Endpoint License Plugin Provider
-
-
 .. _rackn_licensing_use:
 
-Install Licensed Content and Plugins
-------------------------------------
+Install Licensed Catalog Items
+------------------------------
 
-Once the above steps have been completed, you may now install licensed Contents and Plugin Providers that you are entitled to use.  This process is very simple, and completed as follows:
+Once the above steps have been completed, you may now install licensed Catalog Items.  This process is very simple, and completed as follows:
 
-1. Go to the *Plugin Providers* menu item
+1. Go to the *Catalog* menu item
 
 .. figure::  ../images/licensing/06-plugin-providers.png
    :align: left
    :width: 200 px
    :alt: Plugin Providers Menu Item
 
-2. Select the appropriate plugin from the "Organization Plugin Providers" panel on the right
-
-.. figure::  ../images/licensing/09-image-deploy-example.png
-   :align: left
-   :width: 350 px
-   :alt: Image Deploy Plugin Provider Example
-
-3. Click "Transfer" to install the Plugin Provider on the DRP Endpoint (see above image for details)
-4. Verify the *Plugin Provider* was installed successfully be examining the center "Endpoint Plugin Providers" panel
+1. Click "Download" to install the item on the DRP Endpoint (see above image for details)
+1. Verify the item was installed successfully
 
 .. figure::  ../images/licensing/10-installed-plugin-providers.png
    :align: left
@@ -170,6 +132,8 @@ Verify Your License Entitlements
 --------------------------------
 
 The "Info & Preferences" page will show an overview of the licensed Contents, Features, and Plugin Providers that the current organization is entitled to.  Please verify you are using the correct Organization to view the licensing rights for that Organization (upper left blue pull down menu item).  If you are currently in the context of your personal Portal account (eg. it shows your email address or account), you will NOT be able to view or manage license entitlements.
+
+.. note:: Many licenses, including trial licenses, use the "upto-nodes" module which allows operators to use *any* licensed content up to the stated number of machines.
 
 Additionally, you can view each individual components entitlements from the overview license page.
 
