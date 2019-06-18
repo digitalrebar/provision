@@ -636,7 +636,7 @@ Example URLs:
 
 .. _rs_ubuntu_local_repo:
 
-Booting Ubunutu Without External Access
+Booting Ubuntu Without External Access
 ---------------------------------------
 
 Default Ubuntu ISOs will attempt to check internet repositories, this can cause problems during provisioning if your environment does not have outbound access.
