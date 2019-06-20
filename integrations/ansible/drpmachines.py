@@ -29,7 +29,7 @@ def main():
     # change these values to match your DigitalRebar installation
     addr = os.getenv('RS_ENDPOINT', "https://127.0.0.1:8092")
     ups = os.getenv('RS_KEY', "rocketskates:r0cketsk8ts")
-    profile = os.getenv('RS_PROFILE', "default")
+    profile = os.getenv('RS_PROFILE', "all_machines")
     arr = ups.split(":")
     user = arr[0]
     password = arr[1]
@@ -51,18 +51,22 @@ def main():
     inventory["_meta"]["rebar_url"] = addr
     inventory["_meta"]["rebar_user"] = user
     inventory["_meta"]["rebar_profile"] = profile
+    inventory["_meta"]["rebar_profile"] = profile
+    inventory["_meta"]["all"] = {'hosts': {}, 'children': {}}
 
     groups = []
     profiles = {}
     profiles_vars = {}
     hostvars = {}
 
+    URL = addr + "/api/v3/machines"
     if list_inventory:
-        URL = addr + "/api/v3/machines?ansible=" + profile
+        if profile != "all_machines":
+            URL += "?ansible=" + profile
     elif ansible_host:
-        URL = addr + "/api/v3/machines?Name=" + ansible_host
-    else:
-        URL = addr + "/api/v3/machines?ansible=" + profile
+        URL = "Name=" + ansible_host
+    elif profile != "all_machines":
+        URL += "?ansible=" + profile
 
     raw = requests.get(URL,headers=Headers,auth=(user,password),verify=False)
 
@@ -70,14 +74,35 @@ def main():
         for machine in raw.json():
             name = machine[u'Name']
             myvars = hostvars.copy()
-            if u"Params" in machine[u'Profile'] and machine[u'Profile'][u'Params']:
-                for k in machine[u'Profile'][u'Params']:
-                    myvars[k] = machine[u'Profile'][u'Params'][k]
+            for k in machine[u'Params']:
+                if k != "gohai-inventory":
+                    myvars[k] = machine[u'Params'][k]
             myvars["ansible_host"] = machine[u"Address"]
             myvars["rebar_uuid"] = machine[u"Uuid"]
             inventory["_meta"]["hostvars"][name] = myvars
+            inventory["_meta"]["all"]["hosts"][name] = myvars 
     else:
         raise IOError(raw.text)
+
+    if ansible_host is None:
+        groups = requests.get(addr + "/api/v3/profiles",headers=Headers,auth=(user,password),verify=False)
+        if groups.status_code == 200:
+            for group in groups.json():
+                name = group[u'Name']
+                if name == "global":
+                    break
+                inventory["_meta"]["all"]["children"][name] = { "hosts": [], "vars": [] }
+                gvars = hostvars.copy()
+                for k in group[u'Params']:
+                    gvars[k] = group[u'Params'][k]
+                inventory["_meta"]["all"]["children"][name]["vars"] = gvars
+                hosts = requests.get(addr + "/api/v3/machines?slim=Params&Profiles=In("+name+")",headers=Headers,auth=(user,password),verify=False)
+                if hosts.status_code == 200:
+                    for host in hosts.json():
+                        hostname = host[u'Name']
+                        inventory["_meta"]["all"]["children"][name]["hosts"].extend([hostname])
+        else:
+            raise IOError(groups.text)        
 
     print json.dumps(inventory)
 
