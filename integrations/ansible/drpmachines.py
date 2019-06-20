@@ -19,7 +19,7 @@ import requests, argparse, json, urllib3, os
 '''
 Usage: https://github.com/digitalrebar/provision/tree/master/integration/ansible
 
-example: ansible -i inventory.py all -a "uname -a"
+example: ansible -i drpmachines.py all -a "uname -a"
 '''
 
 def main():
@@ -30,6 +30,7 @@ def main():
     addr = os.getenv('RS_ENDPOINT', "https://127.0.0.1:8092")
     ups = os.getenv('RS_KEY', "rocketskates:r0cketsk8ts")
     profile = os.getenv('RS_PROFILE', "all_machines")
+    parent_key = os.getenv('RS_ANSIBLE_PARENT', "ansible/children")
     arr = ups.split(":")
     user = arr[0]
     password = arr[1]
@@ -52,7 +53,7 @@ def main():
     inventory["_meta"]["rebar_user"] = user
     inventory["_meta"]["rebar_profile"] = profile
     inventory["_meta"]["rebar_profile"] = profile
-    inventory["_meta"]["all"] = {'hosts': {}, 'children': {}}
+    inventory["_meta"]["all"] = {'hosts': [], 'children': {}}
 
     groups = []
     profiles = {}
@@ -73,14 +74,14 @@ def main():
     if raw.status_code == 200: 
         for machine in raw.json():
             name = machine[u'Name']
+            inventory["_meta"]["all"]["hosts"].extend([name])
             myvars = hostvars.copy()
-            for k in machine[u'Params']:
-                if k != "gohai-inventory":
-                    myvars[k] = machine[u'Params'][k]
             myvars["ansible_host"] = machine[u"Address"]
             myvars["rebar_uuid"] = machine[u"Uuid"]
+            for k in machine[u'Params']:
+                if ansible_host and k != "gohai-inventory":
+                    myvars[k] = machine[u'Params'][k]
             inventory["_meta"]["hostvars"][name] = myvars
-            inventory["_meta"]["all"]["hosts"][name] = myvars 
     else:
         raise IOError(raw.text)
 
@@ -89,25 +90,19 @@ def main():
         if groups.status_code == 200:
             for group in groups.json():
                 name = group[u'Name']
-                if name == "global":
-                    break
-                parent = false
-                gvars = hostvars.copy()
-                for k in group[u'Params']:
-                    if k == "ansible/parent":
-                        parent = true
-                        break
-                    gvars[k] = group[u'Params'][k]
-                if parent:
-                    inventory["_meta"]["all"]["children"][name+":children"] = []
+                if name != "global" and name != "rackn-license":
+                    inventory["_meta"]["all"]["children"][name] = { "vars": [] }
+                    gvars = hostvars.copy()
                     for k in group[u'Params']:
-                        if k != "ansible/parent":
-                            inventory["_meta"]["all"]["children"][name+":children"].extend([k])
-                else:
-                    inventory["_meta"]["all"]["children"][name] = { "hosts": [], "vars": [] }
+                        v = group[u'Params'][k]
+                        if k == parent_key:
+                            inventory["_meta"]["all"]["children"][name]["children"] = v
+                        else:
+                            gvars[k] = v
                     inventory["_meta"]["all"]["children"][name]["vars"] = gvars
                     hosts = requests.get(addr + "/api/v3/machines?slim=Params&Profiles=In("+name+")",headers=Headers,auth=(user,password),verify=False)
                     if hosts.status_code == 200:
+                        inventory["_meta"]["all"]["children"][name]["hosts"] = []
                         for host in hosts.json():
                             hostname = host[u'Name']
                             inventory["_meta"]["all"]["children"][name]["hosts"].extend([hostname])
