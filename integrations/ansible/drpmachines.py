@@ -91,16 +91,26 @@ def main():
                 name = group[u'Name']
                 if name == "global":
                     break
-                inventory["_meta"]["all"]["children"][name] = { "hosts": [], "vars": [] }
+                parent = false
                 gvars = hostvars.copy()
                 for k in group[u'Params']:
+                    if k == "ansible/parent":
+                        parent = true
+                        break
                     gvars[k] = group[u'Params'][k]
-                inventory["_meta"]["all"]["children"][name]["vars"] = gvars
-                hosts = requests.get(addr + "/api/v3/machines?slim=Params&Profiles=In("+name+")",headers=Headers,auth=(user,password),verify=False)
-                if hosts.status_code == 200:
-                    for host in hosts.json():
-                        hostname = host[u'Name']
-                        inventory["_meta"]["all"]["children"][name]["hosts"].extend([hostname])
+                if parent:
+                    inventory["_meta"]["all"]["children"][name+":children"] = []
+                    for k in group[u'Params']:
+                        if k != "ansible/parent":
+                            inventory["_meta"]["all"]["children"][name+":children"].extend([k])
+                else:
+                    inventory["_meta"]["all"]["children"][name] = { "hosts": [], "vars": [] }
+                    inventory["_meta"]["all"]["children"][name]["vars"] = gvars
+                    hosts = requests.get(addr + "/api/v3/machines?slim=Params&Profiles=In("+name+")",headers=Headers,auth=(user,password),verify=False)
+                    if hosts.status_code == 200:
+                        for host in hosts.json():
+                            hostname = host[u'Name']
+                            inventory["_meta"]["all"]["children"][name]["hosts"].extend([hostname])
         else:
             raise IOError(groups.text)        
 
