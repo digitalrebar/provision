@@ -6,6 +6,7 @@ Usage:
 Available Commands:
   destroy     Delete the files [item] on the DRP server
   download    Download the files named [item] to [dest]
+  exists      Checks to see if [item] files exists and prints its checksum
   list        List all files
   upload      Upload the files [src] as [dest]
 
