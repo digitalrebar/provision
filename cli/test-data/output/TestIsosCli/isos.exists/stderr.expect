@@ -1,17 +1,9 @@
-Access CLI commands relating to isos
-
+Error: drpcli isos exists [item] [flags] requires 1
 Usage:
-  drpcli isos [command]
-
-Available Commands:
-  destroy     Delete the isos [item] on the DRP server
-  download    Download the isos named [item] to [dest]
-  exists      Checks to see if [item] isos exists and prints its checksum
-  list        List all isos
-  upload      Upload the isos [src] as [dest]
+  drpcli isos exists [item] [flags]
 
 Flags:
-  -h, --help   help for isos
+  -h, --help   help for exists
 
 Global Flags:
   -c, --catalog string      The catalog file to use to get product information (default "https://repo.rackn.io")
@@ -27,4 +19,3 @@ Global Flags:
   -Z, --traceToken string   A token that individual traced requests should report in the server logs
   -U, --username string     Name of the Digital Rebar Provision user to talk to (default "rocketskates")
 
-Use "drpcli isos [command] --help" for more information about a command.

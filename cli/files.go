@@ -64,6 +64,24 @@ func blobCommands(bt string) *cobra.Command {
 		},
 	})
 	cmd.AddCommand(&cobra.Command{
+		Use:   "exists [item]",
+		Short: fmt.Sprintf("Checks to see if [item] %s exists and prints its checksum", bt),
+		Args: func(c *cobra.Command, args []string) error {
+			if len(args) == 1 {
+				return nil
+			}
+			return fmt.Errorf("%v requires 1", c.UseLine())
+		},
+		RunE: func(c *cobra.Command, args []string) error {
+			sum, err := session.GetBlobSum(bt, args[0])
+			if err != nil {
+				return generateError(err, "Failed to exists %v: %v", bt, args[0])
+			}
+			fmt.Printf("%s: %s\n", args[0], sum)
+			return nil
+		},
+	})
+	cmd.AddCommand(&cobra.Command{
 		Use:    "static [item]",
 		Hidden: true,
 		Short:  "Download [item] from the static file server. They will always go to stdout.",

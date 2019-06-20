@@ -541,6 +541,9 @@ func (r *R) Do(val interface{}) error {
 	}
 	if r.method == "HEAD" {
 		if resp.StatusCode <= 300 {
+			if val != nil {
+				return models.Remarshal(resp.Header, val)
+			}
 			return nil
 		}
 		r.err.Errorf(http.StatusText(resp.StatusCode))
@@ -654,6 +657,16 @@ func (c *Client) ListBlobs(at string, params ...string) ([]string, error) {
 // passed io.Writer.
 func (c *Client) GetBlob(dest io.Writer, at ...string) error {
 	return c.Req().UrlFor(path.Join("/", path.Join(at...))).Do(dest)
+}
+
+// GetBlobSum fetches the checksum for the blob
+func (c *Client) GetBlobSum(at ...string) (string, error) {
+	h := http.Header{}
+	err := c.Req().Head().UrlFor(path.Join("/", path.Join(at...))).Do(&h)
+	if err != nil {
+		return "", err
+	}
+	return h.Get("X-DRP-SHA256SUM"), nil
 }
 
 // PostBlobExplode uploads the binary blob contained in the passed io.Reader
