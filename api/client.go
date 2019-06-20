@@ -541,7 +541,7 @@ func (r *R) Do(val interface{}) error {
 	}
 	if r.method == "HEAD" {
 		if resp.StatusCode <= 300 {
-			return nil
+			return models.Remarshal(resp.Header, val)
 		}
 		r.err.Errorf(http.StatusText(resp.StatusCode))
 		r.err.Code = resp.StatusCode
