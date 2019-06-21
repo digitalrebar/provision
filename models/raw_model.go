@@ -208,6 +208,18 @@ func (r *RawModel) SetParams(p map[string]interface{}) {
 	(*r)["Params"] = copyMap(p)
 }
 
+func (r *RawModel) IsPartial() bool {
+	b, ok := (*r)["Partial"]
+	if !ok {
+		return false
+	}
+	return b.(bool)
+}
+
+func (r *RawModel) SetPartial() {
+	(*r)["Partial"] = true
+}
+
 func (r *RawModel) Prefix() string {
 	return (*r)["Type"].(string)
 }

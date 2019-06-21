@@ -13,6 +13,7 @@
     },
     "Name": "global",
     "Params": {},
+    "Partial": false,
     "ReadOnly": false,
     "Validated": true
   },
@@ -67,6 +68,7 @@
         "OwnerId": "rackn"
       }
     },
+    "Partial": false,
     "ReadOnly": true,
     "Validated": true
   }

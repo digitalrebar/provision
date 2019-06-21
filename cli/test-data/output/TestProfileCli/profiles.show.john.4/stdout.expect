@@ -11,6 +11,7 @@
     "FRED": "GREG",
     "JESSIE": "JAMES"
   },
+  "Partial": false,
   "ReadOnly": false,
   "Validated": true
 }

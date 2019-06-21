@@ -14,6 +14,7 @@ type Profile struct {
 	Meta
 	Owned
 	Bundled
+	Partialed
 	// The name of the profile.  This must be unique across all
 	// profiles.
 	//

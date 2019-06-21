@@ -80,7 +80,8 @@ RE:
     "task-prerequisites",
     "content-prerequisite-version-checking",
     "stage-paramer",
-    "auto-boot-target"
+    "auto-boot-target",
+    "partial-objects"
   \],
   "file_port": 10002,
   "id": "Fred",

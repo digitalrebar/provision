@@ -18,6 +18,7 @@
     "Name": "john",
     "OS": "",
     "Params": {},
+    "Partial": false,
     "Profile": {
       "Available": false,
       "Bundle": "",
@@ -28,6 +29,7 @@
       "Meta": null,
       "Name": "",
       "Params": null,
+      "Partial": false,
       "ReadOnly": false,
       "Validated": false
     },

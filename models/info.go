@@ -108,6 +108,7 @@ func (i *Info) Fill() {
 			"content-prerequisite-version-checking",
 			"stage-paramer",
 			"auto-boot-target",
+			"partial-objects",
 		}
 	}
 	if i.Scopes == nil {

@@ -55,6 +55,7 @@ type Machine struct {
 	Meta
 	Owned
 	Bundled
+	Partialed
 	// The name of the machine.  This must be unique across all
 	// machines, and by convention it is the FQDN of the machine,
 	// although nothing enforces that.

@@ -10,6 +10,7 @@
   "Params": {
     "FRED": "GREG"
   },
+  "Partial": false,
   "ReadOnly": false,
   "Validated": true
 }

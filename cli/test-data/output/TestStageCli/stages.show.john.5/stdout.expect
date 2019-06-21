@@ -12,6 +12,7 @@
   "Params": {
     "jj": 3
   },
+  "Partial": false,
   "Profiles": [],
   "ReadOnly": false,
   "Reboot": false,

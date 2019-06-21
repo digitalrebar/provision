@@ -9,6 +9,7 @@ type Plugin struct {
 	Meta
 	Owned
 	Bundled
+	Partialed
 	// The name of the plugin instance.  THis must be unique across all
 	// plugins.
 	//

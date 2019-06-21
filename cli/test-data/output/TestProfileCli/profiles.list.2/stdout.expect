@@ -13,6 +13,7 @@
     },
     "Name": "global",
     "Params": {},
+    "Partial": false,
     "ReadOnly": false,
     "Validated": true
   },
@@ -28,6 +29,7 @@
     "Params": {
       "FRED": "GREG"
     },
+    "Partial": false,
     "ReadOnly": false,
     "Validated": true
   }

@@ -10,6 +10,7 @@
   "Params": {
     "secure": "Fred"
   },
+  "Partial": false,
   "PluginErrors": [],
   "Provider": "incrementer",
   "ReadOnly": false,

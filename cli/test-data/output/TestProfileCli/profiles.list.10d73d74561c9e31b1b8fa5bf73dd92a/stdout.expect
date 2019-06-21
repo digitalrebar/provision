@@ -9,6 +9,7 @@
     "Meta": {},
     "Name": "global",
     "Params": {},
+    "Partial": true,
     "ReadOnly": false,
     "Validated": true
   },
@@ -22,6 +23,7 @@
     "Meta": {},
     "Name": "john",
     "Params": {},
+    "Partial": true,
     "ReadOnly": false,
     "Validated": true
   }

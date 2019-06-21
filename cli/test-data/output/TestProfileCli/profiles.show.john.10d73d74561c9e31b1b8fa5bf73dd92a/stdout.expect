@@ -8,6 +8,7 @@
   "Meta": {},
   "Name": "john",
   "Params": {},
+  "Partial": true,
   "ReadOnly": false,
   "Validated": true
 }

@@ -11,6 +11,7 @@
     "foo": "bar",
     "secureFoo": "secureBar"
   },
+  "Partial": false,
   "ReadOnly": true,
   "Validated": true
 }

@@ -12,6 +12,7 @@ type Stage struct {
 	Meta
 	Owned
 	Bundled
+	Partialed
 	// The name of the stage.
 	//
 	// required: true

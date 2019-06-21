@@ -9,6 +9,7 @@
     "Meta": {},
     "Name": "i-woman",
     "Params": {},
+    "Partial": false,
     "PluginErrors": [],
     "Provider": "incrementer",
     "ReadOnly": false,
