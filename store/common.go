@@ -39,7 +39,6 @@ func safeReplace(name string, contents []byte) error {
 // The following storeTypes are known:
 //   * file, in which path refers to a single local file.
 //   * directory, in which path refers to a top-level directory
-//   * consul, in which path refers to the top key in the kv store.
 //   * bolt, in which path refers to the directory where the Bolt database
 //     is located.  bolt also takes an optional bucket parameter to specify the
 //     top-level bucket data is stored in.
@@ -85,14 +84,6 @@ func Open(locator string) (Store, error) {
 		res = &File{Path: path}
 	case "directory":
 		res = &Directory{Path: path}
-	case "bolt":
-		res = &Bolt{Path: path}
-		bucketParam := params.Get("bucket")
-		if bucketParam != "" {
-			res.(*Bolt).Bucket = []byte(bucketParam)
-		}
-	case "consul":
-		res = &Consul{BaseKey: path}
 	case "memory":
 		res = &Memory{}
 	}

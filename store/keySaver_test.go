@@ -290,7 +290,7 @@ func testPersistent(t *testing.T, storeType, storeCodec string) {
 
 func TestPersistentStores(t *testing.T) {
 	storeCodecs := []string{"json", "yaml", "default"}
-	storeType := []string{"bolt", "directory", "file"}
+	storeType := []string{"directory", "file"}
 	for _, codec := range storeCodecs {
 		for _, storeType := range storeType {
 			t.Logf("Testing persistent store %s with codec %s", storeType, codec)
