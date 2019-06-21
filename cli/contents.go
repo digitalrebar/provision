@@ -13,7 +13,7 @@ import (
 
 	"github.com/digitalrebar/provision/api"
 	"github.com/digitalrebar/provision/models"
-	"github.com/digitalrebar/store"
+	"github.com/digitalrebar/provision/store"
 	"github.com/spf13/cobra"
 	"golang.org/x/crypto/nacl/box"
 )

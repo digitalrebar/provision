@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/digitalrebar/provision/models"
-	"github.com/digitalrebar/store"
+	"github.com/digitalrebar/provision/store"
 )
 
 func (c *Client) GetContentSummary() ([]*models.ContentSummary, error) {
