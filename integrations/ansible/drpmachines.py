@@ -29,7 +29,7 @@ def main():
     # change these values to match your DigitalRebar installation
     addr = os.getenv('RS_ENDPOINT', "https://127.0.0.1:8092")
     ups = os.getenv('RS_KEY', "rocketskates:r0cketsk8ts")
-    profile = os.getenv('RS_PROFILE', "all_machines")
+    profile = os.getenv('RS_ANSIBLE', "all_machines")
     parent_key = os.getenv('RS_ANSIBLE_PARENT', "ansible/children")
     arr = ups.split(":")
     user = arr[0]
@@ -63,11 +63,11 @@ def main():
     URL = addr + "/api/v3/machines"
     if list_inventory:
         if profile != "all_machines":
-            URL += "?ansible=" + profile
+            URL += "?ansible=Eq(" + profile + ")"
     elif ansible_host:
         URL = "Name=" + ansible_host
     elif profile != "all_machines":
-        URL += "?ansible=" + profile
+        URL += "?ansible=Eq(" + profile + ")"
 
     raw = requests.get(URL,headers=Headers,auth=(user,password),verify=False)
 
