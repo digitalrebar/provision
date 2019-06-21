@@ -5,8 +5,8 @@ package cli
 import (
 	"fmt"
 
+	gnet "github.com/rackn/gohai/plugins/net"
 	"github.com/rackn/netwrangler"
-	"github.com/rackn/netwrangler/util"
 	"github.com/spf13/cobra"
 )
 
@@ -51,7 +51,7 @@ func registerNet(app *cobra.Command) {
 		},
 		RunE: func(c *cobra.Command, args []string) error {
 			var (
-				phys []util.Phy
+				phys []gnet.Interface
 				err  error
 			)
 			if phyLoc == "" {
