@@ -10,6 +10,7 @@
   "Params": {
     "jj": 3
   },
+  "Partial": false,
   "ReadOnly": false,
   "Validated": true
 }

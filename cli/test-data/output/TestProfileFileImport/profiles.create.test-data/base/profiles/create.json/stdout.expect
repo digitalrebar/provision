@@ -8,6 +8,7 @@
   "Meta": {},
   "Name": "jsontest",
   "Params": {},
+  "Partial": false,
   "ReadOnly": false,
   "Validated": true
 }

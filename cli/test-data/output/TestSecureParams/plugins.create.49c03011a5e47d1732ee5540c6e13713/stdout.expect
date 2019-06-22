@@ -8,6 +8,7 @@
   "Meta": {},
   "Name": "bob",
   "Params": {},
+  "Partial": false,
   "PluginErrors": [],
   "Provider": "incrementer",
   "ReadOnly": false,

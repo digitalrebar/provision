@@ -8,6 +8,7 @@
   "Meta": {},
   "Name": "bar",
   "Params": {},
+  "Partial": false,
   "ReadOnly": false,
   "Validated": true
 }

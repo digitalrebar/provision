@@ -10,6 +10,7 @@ import (
 func (o *ops) params() {
 	aggregate := false
 	decode := false
+	params := ""
 	getParams := &cobra.Command{
 		Use:   "params [id] [json]",
 		Short: fmt.Sprintf("Gets/sets all parameters for the %s", o.singleName),
@@ -29,6 +30,9 @@ func (o *ops) params() {
 				}
 				if decode {
 					req.Params("decode", "true")
+				}
+				if params != "" {
+					req.Params("params", params)
 				}
 				res := map[string]interface{}{}
 				if err := req.Do(&res); err != nil {
@@ -59,6 +63,10 @@ func (o *ops) params() {
 	}
 	getParams.Flags().BoolVar(&aggregate, "aggregate", false, "Should return aggregated view")
 	getParams.Flags().BoolVar(&decode, "decode", false, "Should return decoded secure params")
+	getParams.Flags().StringVar(&params,
+		"params",
+		"",
+		"Should return only the parameters specified as a comma-separated list of parameter names.")
 	o.addCommand(getParams)
 	getParam := &cobra.Command{
 		Use:   "get [id] param [key]",

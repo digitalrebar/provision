@@ -71,6 +71,7 @@ func TestInfo(t *testing.T) {
 				"content-prerequisite-version-checking",
 				"stage-paramer",
 				"auto-boot-target",
+				"partial-objects",
 			},
 			License: models.LicenseBundle{Licenses: []models.License{}},
 			Scopes: map[string]map[string]struct{}{

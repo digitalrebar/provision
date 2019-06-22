@@ -10,6 +10,7 @@
   "Params": {
     "secureTest": "Fred"
   },
+  "Partial": false,
   "ReadOnly": false,
   "Validated": true
 }

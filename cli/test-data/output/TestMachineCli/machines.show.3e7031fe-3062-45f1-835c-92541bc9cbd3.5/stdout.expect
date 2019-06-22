@@ -19,6 +19,7 @@
   "Params": {
     "jj": 3
   },
+  "Partial": false,
   "Profile": {
     "Available": false,
     "Bundle": "",
@@ -29,6 +30,7 @@
     "Meta": null,
     "Name": "",
     "Params": null,
+    "Partial": false,
     "ReadOnly": false,
     "Validated": false
   },

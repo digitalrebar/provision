@@ -1,0 +1,37 @@
+[
+  {
+    "Available": true,
+    "Bundle": "BackingStore",
+    "Description": "Global profile attached automatically to all machines.",
+    "Documentation": "",
+    "Endpoint": "",
+    "Errors": [],
+    "Meta": {
+      "color": "blue",
+      "icon": "world",
+      "title": "Digital Rebar Provision"
+    },
+    "Name": "global",
+    "Params": {},
+    "Partial": true,
+    "ReadOnly": false,
+    "Validated": true
+  },
+  {
+    "Available": true,
+    "Bundle": "",
+    "Description": "",
+    "Documentation": "",
+    "Endpoint": "",
+    "Errors": [],
+    "Meta": {},
+    "Name": "john",
+    "Params": {
+      "FRED": "GREG",
+      "JESSIE": "JAMES"
+    },
+    "Partial": true,
+    "ReadOnly": false,
+    "Validated": true
+  }
+]

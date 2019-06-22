@@ -8,6 +8,7 @@
   "Meta": {},
   "Name": "yamltest",
   "Params": {},
+  "Partial": false,
   "ReadOnly": false,
   "Validated": true
 }

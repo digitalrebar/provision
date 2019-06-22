@@ -325,6 +325,10 @@ func (r *R) Params(args ...string) *R {
 // describes how you want the results filtered.  Currently, filterArgs must be
 // in the following format:
 //
+//    "slim" "Meta|Params|Meta,Params"
+//        to reduce the amount of data sent back
+//    "params" "p1,p2,p3"
+//        to reduce the returned parameters to the specified set.
 //    "reverse"
 //        to reverse the order of the results
 //    "sort" "indexName"
@@ -351,7 +355,7 @@ func (r *R) Filter(prefix string, filterArgs ...string) *R {
 		case "reverse", "decode":
 			finalParams = append(finalParams, filter, "true")
 			i++
-		case "sort", "limit", "offset", "slim":
+		case "sort", "limit", "offset", "slim", "params":
 			if len(filterArgs)-i < 2 {
 				r.err.Errorf("Invalid Filter: %s requires exactly one parameter", filter)
 				return r

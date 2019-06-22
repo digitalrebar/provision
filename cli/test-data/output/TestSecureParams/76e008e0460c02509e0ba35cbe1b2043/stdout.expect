@@ -10,6 +10,7 @@
   "Params": {
     "secure": "Fred"
   },
+  "Partial": false,
   "ReadOnly": false,
   "Validated": true
 }

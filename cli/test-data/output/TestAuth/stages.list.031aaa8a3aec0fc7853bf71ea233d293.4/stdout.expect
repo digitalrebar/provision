@@ -11,6 +11,7 @@
     "Name": "stage2",
     "OptionalParams": [],
     "Params": {},
+    "Partial": false,
     "Profiles": [],
     "ReadOnly": false,
     "Reboot": false,

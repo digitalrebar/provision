@@ -10,6 +10,7 @@
   "Name": "fred",
   "OptionalParams": [],
   "Params": {},
+  "Partial": false,
   "Profiles": [],
   "ReadOnly": false,
   "Reboot": false,

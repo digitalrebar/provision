@@ -14,14 +14,17 @@ import (
 func (o *ops) commands() []*cobra.Command {
 	canSlim := false
 	canDecode := false
+	canParam := false
 	if _, ok := o.example().(models.MetaHaver); ok {
 		canSlim = true
 	}
 	if _, ok := o.example().(models.Paramer); ok {
 		canSlim = true
+		canParam = true
 		canDecode = true
 	}
 	slim := ""
+	params := ""
 	decode := false
 	cmds := []*cobra.Command{}
 	listCmd := &cobra.Command{
@@ -94,6 +97,9 @@ further tweak how the results are returned using the following meta-filters:
 				if slim != "" {
 					args = append(args, fmt.Sprintf("slim=%s", slim))
 				}
+				if params != "" {
+					args = append(args, fmt.Sprintf("params=%s", params))
+				}
 				if decode {
 					args = append(args, "decode=true")
 				}
@@ -113,6 +119,9 @@ further tweak how the results are returned using the following meta-filters:
 				}
 				if slim != "" {
 					args = append(args, "slim", slim)
+				}
+				if params != "" {
+					args = append(args, "params", params)
 				}
 				if decode {
 					args = append(args, "decode")
@@ -138,6 +147,12 @@ further tweak how the results are returned using the following meta-filters:
 			"slim",
 			"",
 			"Should elide certain fields.  Can be 'Params', 'Meta', or a comma-separated list of both.")
+	}
+	if canParam {
+		listCmd.Flags().StringVar(&params,
+			"params",
+			"",
+			"Should return only the parameters specified as a comma-separated list of parameter names.")
 	}
 	if canDecode {
 		listCmd.Flags().BoolVar(&decode,
@@ -180,6 +195,9 @@ format id as *index*:*value*
 			if decode {
 				req = req.Params("decode", "true")
 			}
+			if params != "" {
+				req = req.Params("params", params)
+			}
 			if err := req.Do(&data); err != nil {
 				return generateError(err, "Failed to fetch %v: %v", o.singleName, args[0])
 			} else {
@@ -192,6 +210,12 @@ format id as *index*:*value*
 			"slim",
 			"",
 			"Should elide certain fields.  Can be 'Params', 'Meta', or a comma-separated list of both.")
+	}
+	if canParam {
+		showCmd.Flags().StringVar(&params,
+			"params",
+			"",
+			"Should return only the parameters specified as a comma-separated list of parameter names.")
 	}
 	if canDecode {
 		showCmd.Flags().BoolVar(&decode,

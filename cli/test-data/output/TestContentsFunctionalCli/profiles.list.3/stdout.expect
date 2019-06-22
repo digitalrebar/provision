@@ -13,6 +13,7 @@
     },
     "Name": "global",
     "Params": {},
+    "Partial": false,
     "ReadOnly": false,
     "Validated": true
   },
@@ -26,6 +27,7 @@
     "Meta": {},
     "Name": "p2-prof",
     "Params": {},
+    "Partial": false,
     "ReadOnly": true,
     "Validated": true
   }

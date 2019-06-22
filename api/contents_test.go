@@ -179,6 +179,7 @@ sections:
         title: Digital Rebar Provision
       Name: global
       Params: {}
+      Partial: false
       ReadOnly: false
       Validated: false
   reservations: {}
