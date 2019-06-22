@@ -18,6 +18,7 @@ type PluginProvider struct {
 	// This is used to indicate what version the plugin is built for
 	PluginVersion int
 
+	AutoStart        bool
 	HasPublish       bool
 	AvailableActions []AvailableAction
 
