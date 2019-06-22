@@ -1,23 +1,23 @@
-drpcli plugin_providers indexes
--------------------------------
+drpcli files exists
+-------------------
 
-Get indexes for plugin_providers
+Checks to see if [item] files exists and prints its checksum
 
 Synopsis
 ~~~~~~~~
 
-Different object types can have indexes on various fields.
+Checks to see if [item] files exists and prints its checksum
 
 ::
 
-   drpcli plugin_providers indexes [flags]
+   drpcli files exists [item] [flags]
 
 Options
 ~~~~~~~
 
 ::
 
-     -h, --help   help for indexes
+     -h, --help   help for exists
 
 Options inherited from parent commands
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -40,5 +40,5 @@ Options inherited from parent commands
 SEE ALSO
 ~~~~~~~~
 
--  `drpcli plugin_providers <drpcli_plugin_providers.html>`__ - Access
-   CLI commands relating to plugin_providers
+-  `drpcli files <drpcli_files.html>`__ - Access CLI commands relating
+   to files
