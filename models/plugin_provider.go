@@ -108,7 +108,14 @@ func (p *PluginProvider) Store() (store.Store, error) {
 		content.Meta.Source = "FromPluginProvider"
 	}
 	content.Meta.Type = "plugin"
-	p.SetMeta(content.GenerateMetaMap())
+	meta := content.GenerateMetaMap()
+	if v, ok := meta["Color"]; ok {
+		meta["color"] = v
+	}
+	if v, ok := meta["Icon"]; ok {
+		meta["icon"] = v
+	}
+	p.SetMeta(meta)
 	s, _ := store.Open("memory:///")
 	return s, content.ToStore(s)
 }
