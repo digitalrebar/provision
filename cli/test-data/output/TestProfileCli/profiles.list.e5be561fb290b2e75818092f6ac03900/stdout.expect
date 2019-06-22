@@ -1,0 +1,30 @@
+[
+  {
+    "Available": true,
+    "Bundle": "BackingStore",
+    "Description": "Global profile attached automatically to all machines.",
+    "Documentation": "",
+    "Endpoint": "",
+    "Errors": [],
+    "Meta": {},
+    "Name": "global",
+    "Params": {},
+    "Partial": true,
+    "ReadOnly": false,
+    "Validated": true
+  },
+  {
+    "Available": true,
+    "Bundle": "",
+    "Description": "",
+    "Documentation": "",
+    "Endpoint": "",
+    "Errors": [],
+    "Meta": {},
+    "Name": "john",
+    "Params": {},
+    "Partial": true,
+    "ReadOnly": false,
+    "Validated": true
+  }
+]

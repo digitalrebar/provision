@@ -1,4 +1,4 @@
-Error: drpcli profiles params [id] [json] [flags] requires 1 or 2 arguments
+Error: flag needs an argument: --params
 Usage:
   drpcli profiles params [id] [json] [flags]
 

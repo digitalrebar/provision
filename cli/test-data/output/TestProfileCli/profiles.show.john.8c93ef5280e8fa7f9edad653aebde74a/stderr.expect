@@ -1,12 +1,12 @@
-Error: drpcli profiles params [id] [json] [flags] requires 1 or 2 arguments
+Error: flag needs an argument: --params
 Usage:
-  drpcli profiles params [id] [json] [flags]
+  drpcli profiles show [id] [flags]
 
 Flags:
-      --aggregate       Should return aggregated view
-      --decode          Should return decoded secure params
-  -h, --help            help for params
+      --decode          Should decode any secure params.
+  -h, --help            help for show
       --params string   Should return only the parameters specified as a comma-separated list of parameter names.
+      --slim string     Should elide certain fields.  Can be 'Params', 'Meta', or a comma-separated list of both.
 
 Global Flags:
   -c, --catalog string      The catalog file to use to get product information (default "https://repo.rackn.io")

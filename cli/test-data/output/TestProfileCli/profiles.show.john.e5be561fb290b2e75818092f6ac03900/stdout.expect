@@ -1,0 +1,14 @@
+{
+  "Available": true,
+  "Bundle": "",
+  "Description": "",
+  "Documentation": "",
+  "Endpoint": "",
+  "Errors": [],
+  "Meta": {},
+  "Name": "john",
+  "Params": {},
+  "Partial": true,
+  "ReadOnly": false,
+  "Validated": true
+}
