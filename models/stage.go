@@ -116,6 +116,8 @@ func (s *Stage) Validate() {
 				s.AddError(ValidName("Invalid Plugin", pparts[0]))
 				s.AddError(ValidName("Invalid Action", pparts[1]))
 			case "chroot":
+			case "bootenv":
+			case "stage":
 			default:
 				s.Errorf("Invalid Task: %s", t)
 			}
