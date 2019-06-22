@@ -1,5 +1,6 @@
 [
   {
+    "AutoStart": false,
     "AvailableActions": [
       {
         "Command": "increment",
