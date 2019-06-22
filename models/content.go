@@ -121,35 +121,40 @@ func ParseContentPrerequisites(prereqs string) (map[string]semver.Range, error) 
 	return res, nil
 }
 
+func (c *Content) GenerateMetaMap() map[string]string {
+	meta := map[string]string{
+		"Name":        strings.TrimSpace(c.Meta.Name),
+		"Version":     strings.TrimSpace(c.Meta.Version),
+		"Description": strings.TrimSpace(c.Meta.Description),
+		"Source":      strings.TrimSpace(c.Meta.Source),
+
+		"Type": c.Meta.Type,
+
+		"Documentation":    c.Meta.Documentation,
+		"RequiredFeatures": strings.TrimSpace(c.Meta.RequiredFeatures),
+
+		"Color":         strings.TrimSpace(c.Meta.Color),
+		"Icon":          strings.TrimSpace(c.Meta.Icon),
+		"Author":        strings.TrimSpace(c.Meta.Author),
+		"DisplayName":   strings.TrimSpace(c.Meta.DisplayName),
+		"License":       strings.TrimSpace(c.Meta.License),
+		"Copyright":     strings.TrimSpace(c.Meta.Copyright),
+		"CodeSource":    strings.TrimSpace(c.Meta.CodeSource),
+		"Order":         strings.TrimSpace(c.Meta.Order),
+		"Tags":          strings.TrimSpace(c.Meta.Tags),
+		"DocUrl":        strings.TrimSpace(c.Meta.DocUrl),
+		"Prerequisites": strings.TrimSpace(c.Meta.Prerequisites),
+	}
+	return meta
+}
+
 // ToStore saves a Content bundle into a format that can be used but
 // the stackable store system dr-provision uses to save its working
 // data.
 func (c *Content) ToStore(dest store.Store) error {
 	c.Fill()
 	if dmeta, ok := dest.(store.MetaSaver); ok {
-		meta := map[string]string{
-			"Name":        strings.TrimSpace(c.Meta.Name),
-			"Version":     strings.TrimSpace(c.Meta.Version),
-			"Description": strings.TrimSpace(c.Meta.Description),
-			"Source":      strings.TrimSpace(c.Meta.Source),
-
-			"Type": c.Meta.Type,
-
-			"Documentation":    c.Meta.Documentation,
-			"RequiredFeatures": strings.TrimSpace(c.Meta.RequiredFeatures),
-
-			"Color":         strings.TrimSpace(c.Meta.Color),
-			"Icon":          strings.TrimSpace(c.Meta.Icon),
-			"Author":        strings.TrimSpace(c.Meta.Author),
-			"DisplayName":   strings.TrimSpace(c.Meta.DisplayName),
-			"License":       strings.TrimSpace(c.Meta.License),
-			"Copyright":     strings.TrimSpace(c.Meta.Copyright),
-			"CodeSource":    strings.TrimSpace(c.Meta.CodeSource),
-			"Order":         strings.TrimSpace(c.Meta.Order),
-			"Tags":          strings.TrimSpace(c.Meta.Tags),
-			"DocUrl":        strings.TrimSpace(c.Meta.DocUrl),
-			"Prerequisites": strings.TrimSpace(c.Meta.Prerequisites),
-		}
+		meta := c.GenerateMetaMap()
 		if err := dmeta.SetMetaData(meta); err != nil {
 			return err
 		}
