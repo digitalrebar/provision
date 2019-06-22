@@ -108,8 +108,27 @@ func (p *PluginProvider) Store() (store.Store, error) {
 		content.Meta.Source = "FromPluginProvider"
 	}
 	content.Meta.Type = "plugin"
+	meta := content.GenerateMetaMap()
+	if v, ok := meta["Color"]; ok {
+		meta["color"] = v
+	}
+	if v, ok := meta["Icon"]; ok {
+		meta["icon"] = v
+	}
+	p.SetMeta(meta)
 	s, _ := store.Open("memory:///")
 	return s, content.ToStore(s)
+}
+
+// AutoPlugin - builds a plugin model if auto start is true, otherwise nil
+func (p *PluginProvider) AutoPlugin() *Plugin {
+	if p.AutoStart {
+		pl := &Plugin{Name: p.Name, Provider: p.Name}
+		pl.Fill()
+		pl.SetMeta(p.GetMeta())
+		return pl
+	}
+	return nil
 }
 
 // swagger:model
