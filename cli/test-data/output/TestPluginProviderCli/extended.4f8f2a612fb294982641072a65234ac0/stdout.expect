@@ -1,45 +1,54 @@
 {
   "Available": {
+    "Regex": false,
     "Type": "boolean",
     "Unique": false,
     "Unordered": true
   },
   "CanMilk": {
+    "Regex": false,
     "Type": "boolean",
     "Unique": false,
     "Unordered": true
   },
   "Id": {
+    "Regex": true,
     "Type": "string",
     "Unique": false,
     "Unordered": false
   },
   "Key": {
+    "Regex": true,
     "Type": "string",
     "Unique": true,
     "Unordered": false
   },
   "Location": {
+    "Regex": true,
     "Type": "string",
     "Unique": false,
     "Unordered": false
   },
   "ReadOnly": {
+    "Regex": false,
     "Type": "boolean",
     "Unique": false,
     "Unordered": true
   },
   "Spotted": {
+    "Regex": false,
     "Type": "boolean",
     "Unique": false,
     "Unordered": true
   },
   "Type": {
+    "Regex": true,
     "Type": "string",
     "Unique": false,
     "Unordered": false
   },
   "Valid": {
+    "Regex": false,
     "Type": "boolean",
     "Unique": false,
     "Unordered": true

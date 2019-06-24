@@ -109,6 +109,7 @@ func (i *Info) Fill() {
 			"stage-paramer",
 			"auto-boot-target",
 			"partial-objects",
+			"regex-string-filters",
 		}
 	}
 	if i.Scopes == nil {

@@ -72,6 +72,7 @@ func TestInfo(t *testing.T) {
 				"stage-paramer",
 				"auto-boot-target",
 				"partial-objects",
+				"regex-string-filters",
 			},
 			License: models.LicenseBundle{Licenses: []models.License{}},
 			Scopes: map[string]map[string]struct{}{

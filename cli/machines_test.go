@@ -501,6 +501,7 @@ func TestMachineProfilesAndParams(t *testing.T) {
 	cliTest(false, false, "machines", "list", "Profiles", "Nin", "foo,bar", "sort", "Name").run(t)
 	cliTest(false, false, "machines", "list", "Name", "In", "fred,bob", "sort", "Name").run(t)
 	cliTest(false, false, "machines", "list", "Name", "Nin", "fred,bob", "sort", "Name").run(t)
+	cliTest(false, false, "machines", "list", "Name", "Re", "fred|bob", "sort", "Name").run(t)
 	cliTest(false, false, "machines", "destroy", "Name:bob").run(t)
 	cliTest(false, false, "machines", "destroy", "Name:fred").run(t)
 	cliTest(false, false, "machines", "destroy", "Name:julius").run(t)

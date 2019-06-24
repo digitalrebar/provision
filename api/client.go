@@ -339,6 +339,9 @@ func (r *R) Params(args ...string) *R {
 //        to skip <number> of results before returning
 //    "indexName" "Eq/Lt/Lte/Gt/Gte/Ne" "value"
 //        to return results Equal, Less Than, Less Than Or Equal, Greater Than, Greater Than Or Equal, or Not Equal to value according to IndexName
+//    "indexName" "Re" "re2 compatible regular expression"
+//        to return results where values in indexName match the passed-in regular expression.
+//        The index must have the Regex flag equal to True
 //    "indexName" "Between/Except" "lowerBound" "upperBound"
 //        to return values Between(inclusive) lowerBound and Upperbound or its complement for Except.
 //    "indexName" "In/Nin" "comma,separated,list,of,values"
@@ -370,7 +373,7 @@ func (r *R) Filter(prefix string, filterArgs ...string) *R {
 			op := strings.Title(strings.ToLower(filterArgs[i+1]))
 			i += 2
 			switch op {
-			case "Eq", "Lt", "Lte", "Gt", "Gte", "Ne", "In", "Nin":
+			case "Eq", "Lt", "Lte", "Gt", "Gte", "Ne", "In", "Nin", "Re":
 				if len(filterArgs)-i < 1 {
 					r.err.Errorf("Invalid Filter: %s op %s requires 1 parameter", filter, op)
 					return r
