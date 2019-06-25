@@ -8,7 +8,7 @@ import (
 	"strconv"
 
 	"github.com/digitalrebar/provision/api"
-	"github.com/digitalrebar/store"
+	"github.com/digitalrebar/provision/store"
 )
 
 func outputBuffer(filename string, buf []byte) error {
