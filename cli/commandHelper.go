@@ -48,6 +48,10 @@ To filter by indexes, you can use the following stanzas:
   This will return items Greater Than *value* according to *index*
 * *index* Gte *value*
   This will return items Greater Than Or Equal to *value* according to *index*
+* *index* Re *re2 compatible regular expression*
+  This will return items in *index* that match the passed-in regular expression
+  We use the regular expression syntax described at
+  https://github.com/google/re2/wiki/Syntax
 * *index* Between *lower* *upper*
   This will return items Greater Than Or Equal to *lower*
   and Less Than Or Equal to *upper* according to *index*

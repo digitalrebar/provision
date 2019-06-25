@@ -1,30 +1,36 @@
 {
   "Available": {
+    "Regex": false,
     "Type": "boolean",
     "Unique": false,
     "Unordered": true
   },
   "Bundle": {
+    "Regex": true,
     "Type": "string",
     "Unique": false,
     "Unordered": false
   },
   "Key": {
+    "Regex": true,
     "Type": "string",
     "Unique": true,
     "Unordered": false
   },
   "Name": {
+    "Regex": true,
     "Type": "string",
     "Unique": true,
     "Unordered": false
   },
   "ReadOnly": {
+    "Regex": false,
     "Type": "boolean",
     "Unique": false,
     "Unordered": true
   },
   "Valid": {
+    "Regex": false,
     "Type": "boolean",
     "Unique": false,
     "Unordered": true

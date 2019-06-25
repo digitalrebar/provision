@@ -81,7 +81,8 @@ RE:
     "content-prerequisite-version-checking",
     "stage-paramer",
     "auto-boot-target",
-    "partial-objects"
+    "partial-objects",
+    "regex-string-filters"
   \],
   "file_port": 10002,
   "id": "Fred",
