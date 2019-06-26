@@ -23,7 +23,7 @@ func TestIsos(t *testing.T) {
 			expectRes: nil,
 			expectErr: &models.Error{
 				Model:    "isos",
-				Key:      "foo",
+				Key:      "/foo",
 				Type:     "GET",
 				Messages: []string{"Not a regular file"},
 				Code:     404,
@@ -64,9 +64,9 @@ func TestIsos(t *testing.T) {
 			expectRes: nil,
 			expectErr: &models.Error{
 				Model:    "isos",
-				Key:      "foo",
+				Key:      "/foo",
 				Type:     "DELETE",
-				Messages: []string{"no such iso"},
+				Messages: []string{"Unable to delete"},
 				Code:     404,
 			},
 			op: func() (interface{}, error) {

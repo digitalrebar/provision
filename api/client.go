@@ -617,11 +617,12 @@ func (c *Client) Token() string {
 // part of the initial authentication.
 func (c *Client) Info() (*models.Info, error) {
 	c.iMux.Lock()
-	defer c.iMux.Unlock()
 	if c.info != nil {
+		c.iMux.Unlock()
 		return c.info, nil
 	}
 	c.info = &models.Info{}
+	c.iMux.Unlock()
 	return c.info, c.Req().UrlFor("info").Do(c.info)
 }
 
@@ -897,6 +898,7 @@ func UserSessionToken(endpoint, username, password string, usetoken bool) (*Clie
 		return nil, err
 	}
 	if usetoken {
+		c.token = token
 		go func() {
 			ticker := time.NewTicker(300 * time.Second)
 			for {
@@ -921,7 +923,6 @@ func UserSessionToken(endpoint, username, password string, usetoken bool) (*Clie
 				}
 			}
 		}()
-		c.token = token
 	}
 	return c, nil
 }
