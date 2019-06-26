@@ -78,10 +78,8 @@ func registerNet(app *cobra.Command) {
 	wrangle.Flags().StringVar(&bootMac, "bootmac", "", "MAC address of the interface the system booted from.")
 	net.AddCommand(wrangle)
 	generate := &cobra.Command{
-		// for now, until design is finalized and unit test is finished
-		Hidden: true,
-		Use:    "generate [format] for [machine-id] at [dest]",
-		Short:  "Generate network configuration in [format] for [machine-id] at [dest]",
+		Use:   "generate [format] for [machine-id] at [dest]",
+		Short: "Generate network configuration in [format] for [machine-id] at [dest]",
 		Long: fmt.Sprintf(`[format] must be one of: %v
 [machine-id] must me the UUID for the machine in question
 [dest] must be the final location for the network configuration in [format]`, netwrangler.DestFormats),
@@ -168,7 +166,7 @@ func registerNet(app *cobra.Command) {
 					topology.Network.Bridges[k] = to
 				}
 			}
-			if topology.Network.Ethernets != nil {
+			if topology.Network.Ethernets == nil {
 				topology.Network.Ethernets = map[string]interface{}{}
 			}
 			for k := range topology.Network.Ethernets {
