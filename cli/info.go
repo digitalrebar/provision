@@ -30,6 +30,18 @@ func addInfoCommands() (res *cobra.Command) {
 		Use:   name,
 		Short: fmt.Sprintf("Access CLI commands relating to %v", name),
 	}
+
+	res.AddCommand(&cobra.Command{
+		Use:   "check",
+		Short: fmt.Sprintf("Fast API check that returns DRP Version"),
+		Long:  `A helper function to return API response with version of DRP`,
+		Args:  cobra.NoArgs,
+		RunE: func(c *cobra.Command, args []string) error {
+			fmt.Printf("{ \"active\": true }\n")
+			return nil
+		},
+	})
+
 	res.AddCommand(&cobra.Command{
 		Use:   "get",
 		Short: fmt.Sprintf("Get info about DRP"),

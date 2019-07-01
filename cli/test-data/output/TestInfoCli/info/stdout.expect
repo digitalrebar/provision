@@ -4,6 +4,7 @@ Usage:
   drpcli info [command]
 
 Available Commands:
+  check       Fast API check that returns DRP Version
   get         Get info about DRP
   status      Get aliveness status of the various DRP ports
 
