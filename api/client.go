@@ -31,7 +31,7 @@ import (
 const APIPATH = "/api/v3"
 
 // Client wraps *http.Client to include our authentication routines
-// and routines for handling some of the biolerplate CRUD operations
+// and routines for handling some of the boilerplate CRUD operations
 // against digitalrebar provision.
 type Client struct {
 	*http.Client
@@ -460,7 +460,7 @@ func (r *R) FailFast() *R {
 // will be returned and no API interaction will actually take place.
 // Otherwise, Do will generate an http.Request, perform it, and
 // marshal the results to val.  If any errors occur while processing
-// the request, fibbonaci based backoff will be performed up to 6
+// the request, fibonacci based backoff will be performed up to 6
 // times.
 //
 // If val is an io.Writer, the body of the response will be copied
