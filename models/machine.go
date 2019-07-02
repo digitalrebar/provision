@@ -259,7 +259,7 @@ func (b *Machine) ToModels(obj interface{}) []Model {
 	return res
 }
 
-// match Paramer interface
+// match Param interface
 func (b *Machine) GetParams() map[string]interface{} {
 	return copyMap(b.Params)
 }

@@ -219,7 +219,7 @@ func (a *Agent) initOrExit() {
 
 // init resets the Machine Agent back to its initial state.  This
 // consists of marking any current running jobs as Failed and
-// repoening the event stream from dr-provision.
+// reopening the event stream from dr-provision.
 func (a *Agent) init() {
 	if a.err != nil {
 		a.err = nil
@@ -406,7 +406,7 @@ func (a *Agent) rebootOrExit(autoKexec bool) {
 }
 
 // waitOn waits for the machine to match the passed wait
-// conitions.  Once the conditions are met, the agent may transition
+// conditions.  Once the conditions are met, the agent may transition
 // to the following states (in order of priority):
 //
 // * AGENT_EXIT if the machine wants to change from an -install
