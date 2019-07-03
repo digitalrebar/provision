@@ -3,6 +3,7 @@ package api
 import (
 	"net"
 	"runtime"
+	"strings"
 	"testing"
 
 	"github.com/digitalrebar/provision"
@@ -10,6 +11,22 @@ import (
 )
 
 func TestInfo(t *testing.T) {
+	localId := ""
+	intfs, _ := net.Interfaces()
+	for _, intf := range intfs {
+		if (intf.Flags & net.FlagLoopback) == net.FlagLoopback {
+			continue
+		}
+		if (intf.Flags & net.FlagUp) != net.FlagUp {
+			continue
+		}
+		if strings.HasPrefix(intf.Name, "veth") {
+			continue
+		}
+		localId = intf.HardwareAddr.String()
+		break
+	}
+
 	test := &crudTest{
 		name: "get info",
 		expectRes: &models.Info{
@@ -38,6 +55,7 @@ func TestInfo(t *testing.T) {
 			Version: provision.RSVersion,
 			HaId:    "Fred",
 			Id:      "Fred",
+			LocalId: localId,
 			Features: []string{
 				"api-v3",
 				"sane-exit-codes",
@@ -73,6 +91,7 @@ func TestInfo(t *testing.T) {
 				"auto-boot-target",
 				"partial-objects",
 				"regex-string-filters",
+				"file-iso-exists-info-render",
 			},
 			License: models.LicenseBundle{Licenses: []models.License{}},
 			Scopes: map[string]map[string]struct{}{

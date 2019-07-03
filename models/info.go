@@ -29,6 +29,8 @@ type Info struct {
 	// required: true
 	Id string `json:"id"`
 	// required: true
+	LocalId string `json:"local_id"`
+	// required: true
 	HaId string `json:"ha_id"`
 	// required: true
 	ApiPort int `json:"api_port"`
@@ -110,6 +112,7 @@ func (i *Info) Fill() {
 			"auto-boot-target",
 			"partial-objects",
 			"regex-string-filters",
+			"file-iso-exists-info-render",
 		}
 	}
 	if i.Scopes == nil {
