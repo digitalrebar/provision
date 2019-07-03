@@ -82,10 +82,13 @@ RE:
     "stage-paramer",
     "auto-boot-target",
     "partial-objects",
-    "regex-string-filters"
+    "regex-string-filters",
+    "file-iso-exists-info-render"
   \],
   "file_port": 10002,
+  "ha_id": "Fred",
   "id": "Fred",
+  "local_id": "[\s\S]*",
   "os": "[\s\S]*",
   "prov_enabled": true,
   "scopes": {
@@ -159,6 +162,9 @@ RE:
       "update": {},
       "updateSecure": {},
       "updateTaskList": {}
+    },
+    "objects": {
+      "list": {}
     },
     "params": {
       "action": {},
@@ -241,6 +247,9 @@ RE:
       "get": {},
       "list": {},
       "update": {}
+    },
+    "system": {
+      "upgrade": {}
     },
     "tasks": {
       "action": {},
