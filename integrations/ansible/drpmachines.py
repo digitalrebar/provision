@@ -65,7 +65,7 @@ def main():
         if profile != "all_machines":
             URL += "?ansible=Eq(" + profile + ")"
     elif ansible_host:
-        URL = "Name=" + ansible_host
+        URL += "?Name=" + ansible_host
     elif profile != "all_machines":
         URL += "?ansible=Eq(" + profile + ")"
 
