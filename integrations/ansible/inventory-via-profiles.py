@@ -72,7 +72,10 @@ def main():
                 for profile in machine["Profiles"]:
                     profiles[profile].append(name)
             inventory["all"]["hosts"].append(name)
-            inventory["_meta"]["hostvars"][name] = {"ansible_ssh_user": "root", "ansible_host": machine["Address"]} 
+            inventory["_meta"]["hostvars"][name] = {"ansible_ssh_user": "root", "ansible_host": machine["Address"], "rebar_uuid": machine["Uuid"]}
+            for param in machine['Params']:
+                if param != "gohai-inventory":
+                    inventory["_meta"]["hostvars"][name][param] = machine['Params'][param]
     else:
         raise IOError(raw.text)
 
@@ -90,6 +93,10 @@ def main():
                 for param in profiles_vars[profile]:
                     value = profiles_vars[profile][param]
                     section["vars"][param] = value
+        elif 'ansible-children' in profiles_vars[profile].keys():
+            section["children"] = []
+            for child in profiles_vars[profile]['ansible-children']:
+                section["children"].extend([child])
 
         if len(list(section.keys())) > 0:
             inventory[profile] = section
