@@ -71,6 +71,7 @@ def main():
 
     raw = requests.get(URL,headers=Headers,auth=(user,password),verify=False)
 
+    IGNORE_PARAMS = ["gohai-inventory","inventory/data","change-stage/map"]
     if raw.status_code == 200: 
         for machine in raw.json():
             name = machine[u'Name']
@@ -79,7 +80,7 @@ def main():
             myvars["ansible_host"] = machine[u"Address"]
             myvars["rebar_uuid"] = machine[u"Uuid"]
             for k in machine[u'Params']:
-                if ansible_host and k != "gohai-inventory":
+                if k not in IGNORE_PARAMS:
                     myvars[k] = machine[u'Params'][k]
             inventory["_meta"]["hostvars"][name] = myvars
     else:

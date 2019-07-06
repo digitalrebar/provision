@@ -14,7 +14,9 @@ Prereqs
 
 Before starting this process, a Digital Rebar Provision (DRP) server is required, along with the ability to provision machines.  These machines could be VMs, Packet servers or physical servers in a data center.  DRPCLI and Ansible must also be installed on the system.
 
-Root ssh access to the systems is required for the script to work.  At this time, testing is on Centos 7 only using root as the login.  This documentation assumes provisioning has completed and the machines are ready for installation - there is no workflow automation to move from discovery or sledgehammer to the target o/s documented here.
+Root ssh access to the systems is required for the script to work.  Make sure that the correct SSH keys have been installed on the target systems.  Review :ref:`rs_add_ssh` for details.
+
+At this time, testing is on Centos 7 only using root as the login.  This documentation assumes provisioning has completed and the machines are ready for installation - there is no workflow automation to move from discovery or sledgehammer to the target o/s documented here.
 
 Digital Rebar Provision Ansible Configuration
 ---------------------------------------------
