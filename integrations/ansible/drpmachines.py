@@ -30,6 +30,8 @@ def main():
     addr = os.getenv('RS_ENDPOINT', "https://127.0.0.1:8092")
     ups = os.getenv('RS_KEY', "rocketskates:r0cketsk8ts")
     profile = os.getenv('RS_ANSIBLE', "all_machines")
+    host_address = os.getenv('RS_HOST_ADDRESS', "internal")
+    ansible_user = os.getenv('RS_ANSIBLE_USER_', "root")
     parent_key = os.getenv('RS_ANSIBLE_PARENT', "ansible/children")
     arr = ups.split(":")
     user = arr[0]
@@ -49,11 +51,10 @@ def main():
 
     Headers = {'content-type': 'application/json'}
     urllib3.disable_warnings()
+    inventory = {'all': { 'hosts': [] }, '_meta': { 'all': { 'children': {} }, 'hostvars': {}} }
     inventory["_meta"]["rebar_url"] = addr
     inventory["_meta"]["rebar_user"] = user
     inventory["_meta"]["rebar_profile"] = profile
-    inventory["_meta"]["rebar_profile"] = profile
-    inventory["_meta"]["all"] = {'hosts': [], 'children': {}}
 
     groups = []
     profiles = {}
@@ -64,10 +65,12 @@ def main():
     if list_inventory:
         if profile != "all_machines":
             URL += "?ansible=Eq(" + profile + ")"
-    elif ansible_host:
-        URL += "?Name=" + ansible_host
-    elif profile != "all_machines":
-        URL += "?ansible=Eq(" + profile + ")"
+    else:
+        if ansible_host:
+            URL += "?Name=" + ansible_host
+        else:
+            if profile != "all_machines":
+                URL += "?ansible=Eq(" + profile + ")"
 
     raw = requests.get(URL,headers=Headers,auth=(user,password),verify=False)
 
@@ -75,9 +78,13 @@ def main():
     if raw.status_code == 200: 
         for machine in raw.json():
             name = machine[u'Name']
-            inventory["_meta"]["all"]["hosts"].extend([name])
+            inventory["all"]["hosts"].extend([name])
             myvars = hostvars.copy()
-            myvars["ansible_host"] = machine[u"Address"]
+            if host_address == "internal":
+                myvars["ansible_host"] = machine[u"Address"]
+            else:
+                myvars["ansible_host"] = machine[u"Params"][host_address]
+            myvars["ansible_user"] = ansible_user
             myvars["rebar_uuid"] = machine[u"Uuid"]
             for k in machine[u'Params']:
                 if k not in IGNORE_PARAMS:
@@ -110,7 +117,7 @@ def main():
         else:
             raise IOError(groups.text)        
 
-    print json.dumps(inventory)
+    print(json.dumps(inventory))
 
 if __name__ == "__main__":
     main()  

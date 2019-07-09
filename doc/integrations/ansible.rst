@@ -56,6 +56,27 @@ In order to test the Ansible integration, use the ping command.  If everything i
 
     ansible all -i drpmachines.py -m ping
 
+.. note:: You may want to set `export ANSIBLE_HOST_KEY_CHECKING=False` to bypass the SSH key validation
+
+Use non-root Login
+------------------
+
+By default, the internal `ansible_user` will be set to `root`.  You can override this by setting the `RS_ANSIBLE_USER` value.
+
+  ::
+
+    RS_ANSIBLE_USER="username"
+
+
+Use Alternative Host Address
+----------------------------
+
+By default, the internal Machine.Address value is used.  If this address does not work (e.g. Cloud IPs) then you can specify a parameter as the source of the IP address using the `RS_HOST_ADDRESS` value.
+
+  ::
+
+    export RS_HOST_ADDRESS="cloud/public-ipv4"
+
 Summary
 -------
 
