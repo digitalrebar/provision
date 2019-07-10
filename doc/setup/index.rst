@@ -13,5 +13,6 @@ This document indexes resources for setting up specific environments for
 use or testing of Digital Rebar Provision with various tools. 
 
   * :ref:`rs_setup_packet`
+  * :ref:`rs_setup_aws`
   * VirtualBox _(not completed yet)_
   * Local KVM _(not completed yet)_

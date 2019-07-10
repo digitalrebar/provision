@@ -14,7 +14,9 @@ Prereqs
 
 Before starting this process, a Digital Rebar Provision (DRP) server is required, along with the ability to provision machines.  These machines could be VMs, Packet servers or physical servers in a data center.  DRPCLI and Ansible must also be installed on the system.
 
-Root ssh access to the systems is required for the script to work.  At this time, testing is on Centos 7 only using root as the login.  This documentation assumes provisioning has completed and the machines are ready for installation - there is no workflow automation to move from discovery or sledgehammer to the target o/s documented here.
+Root ssh access to the systems is required for the script to work.  Make sure that the correct SSH keys have been installed on the target systems.  Review :ref:`rs_add_ssh` for details.
+
+At this time, testing is on Centos 7 only using root as the login.  This documentation assumes provisioning has completed and the machines are ready for installation - there is no workflow automation to move from discovery or sledgehammer to the target o/s documented here.
 
 Digital Rebar Provision Ansible Configuration
 ---------------------------------------------
@@ -53,6 +55,27 @@ In order to test the Ansible integration, use the ping command.  If everything i
   ::
 
     ansible all -i drpmachines.py -m ping
+
+.. note:: You may want to set `export ANSIBLE_HOST_KEY_CHECKING=False` to bypass the SSH key validation
+
+Use non-root Login
+------------------
+
+By default, the internal `ansible_user` will be set to `root`.  You can override this by setting the `RS_ANSIBLE_USER` value.
+
+  ::
+
+    RS_ANSIBLE_USER="username"
+
+
+Use Alternative Host Address
+----------------------------
+
+By default, the internal Machine.Address value is used.  If this address does not work (e.g. Cloud IPs) then you can specify a parameter as the source of the IP address using the `RS_HOST_ADDRESS` value.
+
+  ::
+
+    export RS_HOST_ADDRESS="cloud/public-ipv4"
 
 Summary
 -------
