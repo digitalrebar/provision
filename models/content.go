@@ -160,12 +160,8 @@ func (c *Content) ToStore(dest store.Store) error {
 		}
 	}
 	for section, vals := range c.Sections {
-		sub, err := dest.MakeSub(section)
-		if err != nil {
-			return err
-		}
 		for k, v := range vals {
-			if err := sub.Save(k, v); err != nil {
+			if err := dest.Save(section, k, v); err != nil {
 				return err
 			}
 		}
@@ -232,11 +228,15 @@ func (c *Content) FromStore(src store.Store) error {
 			}
 		}
 	}
-	for section, subStore := range src.Subs() {
+	sections, err := src.Prefixes()
+	if err != nil {
+		return err
+	}
+	for _, section := range sections {
 		if _, err := New(section); err != nil {
 			continue
 		}
-		keys, err := subStore.Keys()
+		keys, err := src.Keys(section)
 		if err != nil {
 			return err
 		}
@@ -246,7 +246,7 @@ func (c *Content) FromStore(src store.Store) error {
 			if f, ok := val.(Filler); ok {
 				f.Fill()
 			}
-			if err := subStore.Load(key, val); err != nil {
+			if err := src.Load(section, key, val); err != nil {
 				return err
 			}
 			c.Sections[section][key] = val
@@ -341,8 +341,12 @@ func (c *ContentSummary) FromStore(src store.Store) {
 			}
 		}
 	}
-	for section, subStore := range src.Subs() {
-		keys, err := subStore.Keys()
+	sections, err := src.Prefixes()
+	if err != nil {
+		return
+	}
+	for _, section := range sections {
+		keys, err := src.Keys(section)
 		if err != nil {
 			continue
 		}

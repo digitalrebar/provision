@@ -11,22 +11,11 @@ func TestContentCrud(t *testing.T) {
 	summary := `
 - Counts:
     bootenvs: 0
-    jobs: 0
-    leases: 0
-    machines: 0
-    params: 0
-    plugins: 0
     preferences: 13
     profiles: 1
-    reservations: 0
-    roles: 0
     stages: 0
-    subnets: 0
-    tasks: 0
     templates: 0
-    tenants: 0
     users: 1
-    workflows: 0
   Warnings: []
   meta:
     Description: Writable backing store
@@ -107,11 +96,6 @@ meta:
   Writable: true
 sections:
   bootenvs: {}
-  jobs: {}
-  leases: {}
-  machines: {}
-  params: {}
-  plugins: {}
   preferences:
     baseTokenSecret:
       Meta: {}
@@ -182,13 +166,8 @@ sections:
       Partial: false
       ReadOnly: false
       Validated: false
-  reservations: {}
-  roles: {}
   stages: {}
-  subnets: {}
-  tasks: {}
   templates: {}
-  tenants: {}
   users:
     rocketskates:
       Available: false
@@ -204,7 +183,6 @@ sections:
       - superuser
       Secret: elided
       Validated: false
-  workflows: {}
 `
 	bs := &models.Content{}
 	if err := DecodeYaml([]byte(backingStore), bs); err != nil {

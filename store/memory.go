@@ -6,7 +6,7 @@ import "os"
 // for testing purposes
 type Memory struct {
 	storeBase
-	v    map[string][]byte
+	v    map[string]map[string][]byte
 	meta map[string]string
 }
 
@@ -17,9 +17,6 @@ func (m *Memory) Type() string {
 func (m *Memory) MetaData() map[string]string {
 	m.RLock()
 	defer m.RUnlock()
-	if m.parentStore != nil {
-		return m.parentStore.(*Memory).MetaData()
-	}
 	res := map[string]string{}
 	for k, v := range m.meta {
 		res[k] = v
@@ -30,9 +27,6 @@ func (m *Memory) MetaData() map[string]string {
 func (m *Memory) SetMetaData(vals map[string]string) error {
 	m.Lock()
 	defer m.Unlock()
-	if m.parentStore != nil {
-		return m.parentStore.(*Memory).SetMetaData(vals)
-	}
 	m.meta = map[string]string{}
 	for k, v := range vals {
 		m.meta[k] = v
@@ -51,7 +45,7 @@ func (m *Memory) Open(codec Codec) error {
 	m.closer = func() {
 		m.v = nil
 	}
-	m.v = map[string][]byte{}
+	m.v = map[string]map[string][]byte{}
 	m.opened = true
 	md := m.MetaData()
 	if n, ok := md["Name"]; ok {
@@ -60,39 +54,52 @@ func (m *Memory) Open(codec Codec) error {
 	return nil
 }
 
-func (m *Memory) MakeSub(loc string) (Store, error) {
-	m.Lock()
-	defer m.Unlock()
-	m.panicIfClosed()
-	if res, ok := m.subStores[loc]; ok {
-		return res, nil
-	}
-	res := &Memory{}
-	res.Open(m.Codec)
-	addSub(m, res, loc)
-	return res, nil
-}
-
-func (m *Memory) Keys() ([]string, error) {
+func (m *Memory) Prefixes() ([]string, error) {
 	m.RLock()
+	defer m.RUnlock()
 	m.panicIfClosed()
-	res := make([]string, 0, len(m.v))
+	res := []string{}
 	for k := range m.v {
 		res = append(res, k)
 	}
-	m.RUnlock()
 	return res, nil
 }
 
-func (m *Memory) Load(key string, val interface{}) error {
+func (m *Memory) Keys(prefix string) ([]string, error) {
 	m.RLock()
 	m.panicIfClosed()
-	v, ok := m.v[key]
-	m.RUnlock()
+	defer m.RUnlock()
+	res := []string{}
+	vals, ok := m.v[prefix]
 	if !ok {
+		return res, nil
+	}
+	for k := range vals {
+		res = append(res, k)
+	}
+	return res, nil
+}
+
+func (m *Memory) Exists(prefix, key string) bool {
+	m.RLock()
+	defer m.RUnlock()
+	m.panicIfClosed()
+	_, ok := m.v[prefix]
+	if !ok {
+		return ok
+	}
+	_, ok = m.v[prefix][key]
+	return ok
+}
+
+func (m *Memory) Load(prefix, key string, val interface{}) error {
+	m.RLock()
+	defer m.RUnlock()
+	m.panicIfClosed()
+	if !m.Exists(prefix, key) {
 		return os.ErrNotExist
 	}
-	if err := m.Decode(v, val); err != nil {
+	if err := m.Decode(m.v[prefix][key], &val); err != nil {
 		return err
 	}
 	if ro, ok := val.(ReadOnlySetter); ok {
@@ -107,7 +114,7 @@ func (m *Memory) Load(key string, val interface{}) error {
 	return nil
 }
 
-func (m *Memory) Save(key string, val interface{}) error {
+func (m *Memory) Save(prefix, key string, val interface{}) error {
 	m.Lock()
 	defer m.Unlock()
 	m.panicIfClosed()
@@ -118,21 +125,26 @@ func (m *Memory) Save(key string, val interface{}) error {
 	if err != nil {
 		return err
 	}
-	m.v[key] = buf
+	if _, ok := m.v[prefix]; !ok {
+		m.v[prefix] = map[string][]byte{}
+	}
+	m.v[prefix][key] = buf
 	return nil
 }
 
-func (m *Memory) Remove(key string) error {
+func (m *Memory) Remove(prefix, key string) error {
 	m.Lock()
 	defer m.Unlock()
 	m.panicIfClosed()
-	_, ok := m.v[key]
-	if ok {
-		if m.readOnly {
-			return UnWritable(key)
-		}
-		delete(m.v, key)
-		return nil
+	if _, ok := m.v[prefix]; !ok {
+		return os.ErrNotExist
 	}
-	return os.ErrNotExist
+	if _, ok := m.v[prefix][key]; !ok {
+		return os.ErrNotExist
+	}
+	if m.readOnly {
+		return UnWritable(key)
+	}
+	delete(m.v[prefix], key)
+	return nil
 }

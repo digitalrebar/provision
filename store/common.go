@@ -1,6 +1,7 @@
 package store
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/url"
 	"os"
@@ -9,6 +10,9 @@ import (
 )
 
 func safeReplace(name string, contents []byte) error {
+	if err := os.MkdirAll(path.Dir(name), 0700); err != nil {
+		return err
+	}
 	tmpName := path.Join(path.Dir(name), ".new."+path.Base(name))
 	f, err := os.OpenFile(tmpName, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0640)
 	if err != nil {
@@ -110,26 +114,19 @@ type Store interface {
 	Open(Codec) error
 	// GetCodec returns the codec that the open store uses for marshalling and unmarshalling data
 	GetCodec() Codec
-	// GetSub fetches an already-existing substore.  nil means there is no such substore.
-	GetSub(string) Store
-	// MakeSub returns a Store that is subordinate to this one.
-	// What exactly that means depends on the simplestore in question,
-	// but it should wind up sharing the same backing store (directory,
-	// database, etcd cluster, whatever)
-	MakeSub(string) (Store, error)
-	// Parent fetches the parent of this store, if any.
-	Parent() Store
 	// Keys returns the list of keys that this store has in no
 	// particular order.
-	Keys() ([]string, error)
+	Keys(string) ([]string, error)
 	// Subs returns a map all of the substores for this store.
-	Subs() map[string]Store
+	Prefixes() ([]string, error)
+	// Test to see if a given entry exists
+	Exists(string, string) bool
 	// Load the data for a particular key
-	Load(string, interface{}) error
+	Load(string, string, interface{}) error
 	// Save data for a key
-	Save(string, interface{}) error
+	Save(string, string, interface{}) error
 	// Remove a key/value pair.
-	Remove(string) error
+	Remove(string, string) error
 	// ReadOnly returns whether a store is set to be read-only.
 	ReadOnly() bool
 	// SetReadOnly sets the store into read-only mode.  This is a
@@ -167,37 +164,26 @@ func Copy(dst, src Store) error {
 			return err
 		}
 	}
-	keys, err := src.Keys()
+	prefixes, err := src.Prefixes()
 	if err != nil {
 		return err
 	}
-	for _, key := range keys {
-		var val interface{}
-		if err := src.Load(key, &val); err != nil {
-			return err
-		}
-		if err := dst.Save(key, val); err != nil {
-			return err
-		}
-	}
-	for k, sub := range src.Subs() {
-		subDst, err := dst.MakeSub(k)
+	for _, prefix := range prefixes {
+		keys, err := src.Keys(prefix)
 		if err != nil {
 			return err
 		}
-		if err := Copy(subDst, sub); err != nil {
-			return err
+		for _, key := range keys {
+			var val interface{}
+			if err := src.Load(prefix, key, &val); err != nil {
+				return err
+			}
+			if err := dst.Save(prefix, key, val); err != nil {
+				return err
+			}
 		}
 	}
 	return nil
-}
-
-type parentSetter interface {
-	setParent(Store)
-}
-
-type childSetter interface {
-	addChild(string, Store)
 }
 
 type forceCloser interface {
@@ -235,7 +221,7 @@ func (s *storeBase) Name() string {
 	return s.name
 }
 
-func (s *storeBase) forceClose() {
+func (s *storeBase) Close() {
 	s.Lock()
 	defer s.Unlock()
 	if !s.opened {
@@ -245,22 +231,6 @@ func (s *storeBase) forceClose() {
 		s.closer()
 	}
 	s.opened = false
-}
-
-func (s *storeBase) Close() {
-	s.Lock()
-	if s.parentStore == nil {
-		s.Unlock()
-		s.forceClose()
-		for _, sub := range s.subStores {
-			sub.(forceCloser).forceClose()
-		}
-		return
-	}
-	parent := s.parentStore
-	s.Unlock()
-	parent.Close()
-	return
 }
 
 func (s *storeBase) GetCodec() Codec {
@@ -294,50 +264,14 @@ func (s *storeBase) SetReadOnly() bool {
 	return true
 }
 
-func (s *storeBase) GetSub(name string) Store {
-	s.RLock()
-	defer s.RUnlock()
-	s.panicIfClosed()
-	if s.subStores == nil {
-		return nil
-	}
-	return s.subStores[name]
-}
-
-func (s *storeBase) Subs() map[string]Store {
-	s.RLock()
-	defer s.RUnlock()
-	s.panicIfClosed()
-	res := map[string]Store{}
-	for k, v := range s.subStores {
-		res[k] = v
-	}
-	return res
-}
-
-func (s *storeBase) Parent() Store {
-	s.RLock()
-	defer s.RUnlock()
-	s.panicIfClosed()
-	return s.parentStore.(Store)
-}
-
 func (s *storeBase) Closed() bool {
 	return !s.opened
 }
 
-func (s *storeBase) setParent(p Store) {
-	s.parentStore = p
-}
-
-func (s *storeBase) addChild(name string, c Store) {
-	if s.subStores == nil {
-		s.subStores = map[string]Store{}
+func remarshal(src, dest interface{}) error {
+	buf, err := json.Marshal(src)
+	if err == nil {
+		err = json.Unmarshal(buf, dest)
 	}
-	s.subStores[name] = c
-}
-
-func addSub(parent, child Store, name string) {
-	parent.(childSetter).addChild(name, child)
-	child.(parentSetter).setParent(parent)
+	return err
 }

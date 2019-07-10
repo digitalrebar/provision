@@ -96,10 +96,6 @@ func (c *Client) BundleContent(src string, dst store.Store, params map[string]st
 			// Skip things we can instantiate
 			continue
 		}
-		sub, err := dst.MakeSub(prefix)
-		if err != nil {
-			return fmt.Errorf("Cannot make substore %s: %v", prefix, err)
-		}
 		items, err := ioutil.ReadDir(path.Join(src, prefix))
 		if err != nil {
 			return fmt.Errorf("Cannot read substore %s: %v", prefix, err)
@@ -131,7 +127,7 @@ func (c *Client) BundleContent(src string, dst store.Store, params map[string]st
 					return fmt.Errorf("No idea how to decode %s into %s", itemName, item.Prefix())
 				}
 			}
-			if err := sub.Save(item.Key(), item); err != nil {
+			if err := dst.Save(prefix, item.Key(), item); err != nil {
 				return fmt.Errorf("Failed to save %s:%s: %v", item.Prefix(), item.Key(), err)
 			}
 		}
@@ -159,7 +155,11 @@ func (c *Client) UnbundleContent(content store.Store, dst string) error {
 			}
 		}
 	}
-	for prefix, sub := range content.Subs() {
+	prefixes, err := content.Prefixes()
+	if err != nil {
+		return err
+	}
+	for _, prefix := range prefixes {
 		if err := os.MkdirAll(path.Join(dst, prefix), 0750); err != nil {
 			return err
 		}
@@ -167,14 +167,14 @@ func (c *Client) UnbundleContent(content store.Store, dst string) error {
 		if err != nil {
 			return fmt.Errorf("Store contains model of type %s the we don't know about", prefix)
 		}
-		keys, err := sub.Keys()
+		keys, err := content.Keys(prefix)
 		if err != nil {
 			return fmt.Errorf("Failed to retrieve keys for substore %s: %v", prefix, err)
 		}
 		codec := content.GetCodec()
 		for _, key := range keys {
 			item, _ := models.New(prefix)
-			if err := sub.Load(key, item); err != nil {
+			if err := content.Load(prefix, key, item); err != nil {
 				return fmt.Errorf("Failed to load %s:%s: %v", prefix, key, err)
 			}
 			var buf []byte

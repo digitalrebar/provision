@@ -3,21 +3,15 @@
     "Counts": {
       "bootenvs": 0,
       "jobs": 0,
-      "leases": 0,
       "machines": 0,
-      "params": 0,
-      "plugins": 0,
       "preferences": 1,
       "profiles": 1,
-      "reservations": 0,
       "roles": 0,
       "stages": 0,
-      "subnets": 0,
       "tasks": 0,
       "templates": 0,
       "tenants": 0,
-      "users": 1,
-      "workflows": 0
+      "users": 1
     },
     "Warnings": [],
     "meta": {

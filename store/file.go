@@ -6,14 +6,15 @@ import (
 	"os"
 	"path"
 	"path/filepath"
-	"sync"
 )
 
 type File struct {
 	storeBase
 	Path string
-	vals map[string][]byte
-	meta map[string]string
+	data struct {
+		Sections map[string]map[string]interface{} `json:"sections,omitempty"`
+		Meta     map[string]string                 `json:"meta,omitempty"`
+	}
 }
 
 func (f *File) Type() string {
@@ -23,11 +24,8 @@ func (f *File) Type() string {
 func (f *File) MetaData() map[string]string {
 	f.RLock()
 	defer f.RUnlock()
-	if f.parentStore != nil {
-		return f.parentStore.(*File).MetaData()
-	}
 	res := map[string]string{}
-	for k, v := range f.meta {
+	for k, v := range f.data.Meta {
 		res[k] = v
 	}
 	return res
@@ -36,92 +34,19 @@ func (f *File) MetaData() map[string]string {
 func (f *File) SetMetaData(vals map[string]string) error {
 	f.Lock()
 	defer f.Unlock()
-	if f.parentStore != nil {
-		return f.parentStore.(*File).SetMetaData(vals)
-	}
-	oldMeta := f.meta
-	f.meta = map[string]string{}
+	oldMeta := f.data.Meta
+	f.data.Meta = map[string]string{}
 	for k, v := range vals {
-		f.meta[k] = v
+		f.data.Meta[k] = v
 	}
 	err := f.save()
 	if err != nil {
-		f.meta = oldMeta
+		f.data.Meta = oldMeta
 	}
 	if n, ok := vals["Name"]; ok {
 		f.name = n
 	}
 	return err
-}
-
-func (f *File) MakeSub(path string) (Store, error) {
-	f.Lock()
-	defer f.Unlock()
-	f.panicIfClosed()
-	if child, ok := f.subStores[path]; ok {
-		return child, nil
-	}
-	sub := &File{}
-	sub.Codec = f.Codec
-	sub.vals = map[string][]byte{}
-	sub.opened = true
-	addSub(f, sub, path)
-	return sub, nil
-}
-
-func (f *File) mux() *sync.RWMutex {
-	f.RLock()
-	defer f.RUnlock()
-	if f.parentStore != nil {
-		return f.parentStore.(*File).mux()
-	}
-	return &f.RWMutex
-}
-
-func (f *File) open(vals map[string]interface{}) error {
-	f.vals = map[string][]byte{}
-	f.meta = map[string]string{}
-	for k, v := range vals {
-		switch k {
-		case "sections":
-			subSections, ok := v.(map[string]interface{})
-			if !ok {
-				return fmt.Errorf("Invalid sections declaration: %#v", v)
-			}
-			for subName, subVals := range subSections {
-				sub := &File{}
-				sub.Codec = f.Codec
-				if err := sub.open(subVals.(map[string]interface{})); err != nil {
-					return err
-				}
-				addSub(f, sub, subName)
-			}
-		case "meta":
-			metaData, ok := v.(map[string]interface{})
-			if !ok {
-				return fmt.Errorf("Invalid metadata declaration: %#v", v)
-			}
-			for metaName, metaVal := range metaData {
-				if val, ok := metaVal.(string); ok {
-					f.meta[metaName] = val
-				} else {
-					return fmt.Errorf("Metadata value %#v is not a string", metaVal)
-				}
-			}
-		default:
-			buf, err := f.Encode(v)
-			if err != nil {
-				return err
-			}
-			f.vals[k] = buf
-		}
-	}
-	f.opened = true
-	md := f.MetaData()
-	if n, ok := md["Name"]; ok {
-		f.name = n
-	}
-	return nil
 }
 
 func (f *File) Open(codec Codec) error {
@@ -136,7 +61,6 @@ func (f *File) Open(codec Codec) error {
 		codec = DefaultCodec
 	}
 	f.Codec = codec
-	vals := map[string]interface{}{}
 	if err := os.MkdirAll(path.Dir(fullPath), 0755); err != nil {
 		return err
 	}
@@ -145,118 +69,110 @@ func (f *File) Open(codec Codec) error {
 	if err != nil && !os.IsNotExist(err) {
 		return err
 	}
+	f.data.Meta = map[string]string{}
+	f.data.Sections = map[string]map[string]interface{}{}
 	if buf != nil {
-		if err := f.Decode(buf, &vals); err != nil {
+		if err := f.Decode(buf, &f.data); err != nil {
 			return err
 		}
 	}
-	return f.open(vals)
+	f.opened = true
+	return nil
 }
 
-func (f *File) Keys() ([]string, error) {
-	mux := f.mux()
-	mux.RLock()
-	defer mux.RUnlock()
-	f.panicIfClosed()
-	res := make([]string, 0, len(f.vals))
-	for k := range f.vals {
+func (f *File) Prefixes() ([]string, error) {
+	f.RLock()
+	defer f.RUnlock()
+	res := []string{}
+	for k := range f.data.Sections {
 		res = append(res, k)
 	}
 	return res, nil
 }
 
-func (f *File) Load(key string, val interface{}) error {
-	mux := f.mux()
-	mux.RLock()
-	defer mux.RUnlock()
+func (f *File) Keys(prefix string) ([]string, error) {
+	f.RLock()
+	defer f.RUnlock()
 	f.panicIfClosed()
-	buf, ok := f.vals[key]
-	if ok {
-		if err := f.Decode(buf, val); err != nil {
-			return err
-		}
-		if ro, ok := val.(ReadOnlySetter); ok {
-			ro.SetReadOnly(f.ReadOnly())
-		}
-		if bb, ok := val.(BundleSetter); ok {
-			n := f.Name()
-			if n != "" {
-				bb.SetBundle(n)
-			}
-		}
-		return nil
+	vals, ok := f.data.Sections[prefix]
+	if !ok {
+		return []string{}, nil
 	}
-	return os.ErrNotExist
-}
-
-func (f *File) prepSave() (map[string]interface{}, error) {
-	res := map[string]interface{}{}
-	for k, v := range f.vals {
-		var obj interface{}
-		if err := f.Decode(v, &obj); err != nil {
-			return nil, err
-		}
-		res[k] = obj
-	}
-	if len(f.subStores) > 0 {
-		subs := map[string]interface{}{}
-		for subName, subStore := range f.subStores {
-			subVals, err := subStore.(*File).prepSave()
-			if err != nil {
-				return nil, err
-			}
-			subs[subName] = subVals
-		}
-		res["sections"] = subs
-	}
-	if len(f.meta) > 0 {
-		res["meta"] = f.meta
+	res := make([]string, 0, len(vals))
+	for k := range vals {
+		res = append(res, k)
 	}
 	return res, nil
 }
 
-func (f *File) save() error {
+func (f *File) Exists(prefix, key string) bool {
+	f.RLock()
+	defer f.RUnlock()
 	f.panicIfClosed()
-	if f.parentStore != nil {
-		parent := f.parentStore.(*File)
-		return parent.save()
+	vals, ok := f.data.Sections[prefix]
+	if !ok {
+		return ok
 	}
-	toSave, err := f.prepSave()
-	if err != nil {
+	_, ok = vals[key]
+	return ok
+}
+
+func (f *File) Load(prefix, key string, val interface{}) error {
+	f.RLock()
+	defer f.RUnlock()
+	f.panicIfClosed()
+	if !f.Exists(prefix, key) {
+		return os.ErrNotExist
+	}
+	if err := remarshal(f.data.Sections[prefix][key], &val); err != nil {
 		return err
 	}
-	buf, err := f.Encode(toSave)
+	if ro, ok := val.(ReadOnlySetter); ok {
+		ro.SetReadOnly(f.ReadOnly())
+	}
+	if bb, ok := val.(BundleSetter); ok {
+		n := f.Name()
+		if n != "" {
+			bb.SetBundle(n)
+		}
+	}
+	return nil
+}
+
+func (f *File) save() error {
+	f.panicIfClosed()
+	buf, err := f.Encode(f.data)
 	if err != nil {
 		return err
 	}
 	return safeReplace(f.Path, buf)
 }
 
-func (f *File) Save(key string, val interface{}) error {
-	mux := f.mux()
-	mux.Lock()
-	defer mux.Unlock()
+func (f *File) Save(prefix, key string, val interface{}) error {
+	f.Lock()
+	defer f.Unlock()
 	if f.readOnly {
 		return UnWritable(key)
 	}
-	buf, err := f.Encode(val)
-	if err != nil {
-		return err
+	if _, ok := f.data.Sections[prefix]; !ok {
+		f.data.Sections[prefix] = map[string]interface{}{}
 	}
-	f.vals[key] = buf
+	f.data.Sections[prefix][key] = val
 	return f.save()
 }
 
-func (f *File) Remove(key string) error {
-	mux := f.mux()
-	mux.Lock()
-	defer mux.Unlock()
+func (f *File) Remove(prefix, key string) error {
+	f.Lock()
+	defer f.Unlock()
 	if f.readOnly {
 		return UnWritable(key)
 	}
-	if _, ok := f.vals[key]; !ok {
+	if _, ok := f.data.Sections[prefix]; !ok {
 		return os.ErrNotExist
 	}
-	delete(f.vals, key)
+	if _, ok := f.data.Sections[prefix][key]; !ok {
+		return os.ErrNotExist
+	}
+	delete(f.data.Sections[prefix], key)
 	return f.save()
 }
