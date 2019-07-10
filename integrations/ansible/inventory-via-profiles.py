@@ -16,20 +16,9 @@
 # pip install requests
 import requests, argparse, json, urllib3, os
 
-'''
-Usage: https://github.com/digitalrebar/provision/tree/master/integration/ansible
-
-example: ansible -i inventory.py all -a "uname -a"
-'''
-
-# Children Group Support
-#   1. Create a "ansible-children" parameter
-#   2. Add that parameter to the parent profile
-#   3. Set the "ansible-children" parameter in the parent profile to the list of children's profiles
-    
 def main():
 
-    inventory = { "_meta": { "hostvars": {} } }
+    inventory = { "all": { "hosts": [] }, "_meta": { "hostvars": {} } }
 
     # change these values to match your DigitalRebar installation
     addr = os.getenv('RS_ENDPOINT', "https://127.0.0.1:8092")
@@ -60,8 +49,8 @@ def main():
     profiles_raw = requests.get(addr + "/api/v3/profiles",headers=Headers,auth=(user,password),verify=False)
     if profiles_raw.status_code == 200: 
         for profile in profiles_raw.json():
-            profiles[profile[u"Name"]] = []
-            profiles_vars[profile[u"Name"]] = profile[u"Params"] 
+            profiles[profile["Name"]] = []
+            profiles_vars[profile["Name"]] = profile["Params"] 
     else:
         raise IOError(profiles_raw.text)
 
@@ -76,13 +65,17 @@ def main():
 
     if raw.status_code == 200: 
         for machine in raw.json():
-            name = machine[u'Name']
+            name = machine['Name']
             # TODO, should we only show machines that are in local bootenv?  others could be transistioning
             # if the machine has profiles, collect them
-            if machine[u"Profiles"]:
-                for profile in machine[u"Profiles"]:
+            if machine["Profiles"]:
+                for profile in machine["Profiles"]:
                     profiles[profile].append(name)
-            inventory["_meta"]["hostvars"][name] = {"ansible_ssh_user": "root", "ansible_host": machine[u"Address"]} 
+            inventory["all"]["hosts"].append(name)
+            inventory["_meta"]["hostvars"][name] = {"ansible_ssh_user": "root", "ansible_host": machine["Address"], "rebar_uuid": machine["Uuid"]}
+            for param in machine['Params']:
+                if param != "gohai-inventory":
+                    inventory["_meta"]["hostvars"][name][param] = machine['Params'][param]
     else:
         raise IOError(raw.text)
 
@@ -93,23 +86,23 @@ def main():
             for machine in profiles[profile]:
                 section["hosts"].extend([machine])
 
-        if profiles_vars[profile] is None:
-            pass # so nothing
-        elif u'ansible-children' in profiles_vars[profile].keys():
+            if profiles_vars[profile] is None:
+                pass # so nothing
+            elif len(profiles_vars[profile]) > 0:
+                section["vars"] = {}
+                for param in profiles_vars[profile]:
+                    value = profiles_vars[profile][param]
+                    section["vars"][param] = value
+        elif 'ansible-children' in profiles_vars[profile].keys():
             section["children"] = []
-            for child in profiles_vars[profile][u'ansible-children']:
+            for child in profiles_vars[profile]['ansible-children']:
                 section["children"].extend([child])
-        elif len(profiles_vars[profile]) > 0:
-            section["vars"] = {}
-            for param in profiles_vars[profile]:
-                value = profiles_vars[profile][param]
-                section["vars"][param] = value
 
-        if len(section.keys()) > 0:
+        if len(list(section.keys())) > 0:
             inventory[profile] = section
 
 
-    print json.dumps(inventory)
+    print(json.dumps(inventory))
 
 if __name__ == "__main__":
     main()  
