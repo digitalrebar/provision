@@ -31,7 +31,7 @@ def main():
     ups = os.getenv('RS_KEY', "rocketskates:r0cketsk8ts")
     profile = os.getenv('RS_ANSIBLE', "all_machines")
     host_address = os.getenv('RS_HOST_ADDRESS', "internal")
-    ansible_user = os.getenv('RS_ANSIBLE_USER_', "root")
+    ansible_user = os.getenv('RS_ANSIBLE_USER', "root")
     parent_key = os.getenv('RS_ANSIBLE_PARENT', "ansible/children")
     arr = ups.split(":")
     user = arr[0]

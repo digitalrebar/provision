@@ -33,6 +33,21 @@ Note: Ansible dynamic inventory requires JSON output instead of YAML and the for
 Optionally, parent groups can be configured by adding the `ansible/children` Param to any profile.  The Param is a simple list of groups to be listed in the Groups children.
 
 
+DRP Environment Variables
+-------------------------
+
+The Ansible inventory assumes that you have correctly set the standard DRP environment variables for access: 
+
+  * RS_ENDPOINT for the endpoint [default "https://127.0.0.1:8092"]
+  * RS_KEY for authentication [default "rocketskates:r0cketsk8ts"]
+
+You can also define specialized behavior for the Ansible inventory
+ 
+  * RS_ANSIBLE will filter machines for the matching Ansible [default "all_machines" disables filter]
+  * RS_HOST_ADDRESS see below
+  * RS_ANSIBLE_USER see below
+  * RS_ANSIBLE_PARENT is used to define the parameter that flags Profiles as Group parents [default "ansible/children"]
+
 Ansible Dynamic Inventory from Digital Rebar Provision
 ------------------------------------------------------
 
@@ -67,6 +82,8 @@ By default, the internal `ansible_user` will be set to `root`.  You can override
 
     RS_ANSIBLE_USER="username"
 
+
+.. _rs_ansible_aws:
 
 Use Alternative Host Address
 ----------------------------
