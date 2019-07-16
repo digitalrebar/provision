@@ -21,7 +21,7 @@ You can use the Amazon Linux AMI.  While more is recommended, make sure that you
 
     #!/bin/bash
     sudo yum install bsdtar -y
-    curl -fsSL get.rebar.digital/tip | bash -s -- install --systemd
+    curl -fsSL get.rebar.digital/tip | bash -s -- install --systemd --version=tip --drp-password=r0cketsk8ts
 
     ### Install Content and Configure Discovery
     drpcli contents upload catalog:task-library-tip

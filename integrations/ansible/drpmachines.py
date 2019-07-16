@@ -31,7 +31,7 @@ def main():
     ups = os.getenv('RS_KEY', "rocketskates:r0cketsk8ts")
     profile = os.getenv('RS_ANSIBLE', "all_machines")
     host_address = os.getenv('RS_HOST_ADDRESS', "internal")
-    ansible_user = os.getenv('RS_ANSIBLE_USER_', "root")
+    ansible_user = os.getenv('RS_ANSIBLE_USER', "root")
     parent_key = os.getenv('RS_ANSIBLE_PARENT', "ansible/children")
     arr = ups.split(":")
     user = arr[0]
@@ -51,7 +51,7 @@ def main():
 
     Headers = {'content-type': 'application/json'}
     urllib3.disable_warnings()
-    inventory = {'all': { 'hosts': [] }, '_meta': { 'all': { 'children': {} }, 'hostvars': {}} }
+    inventory = {'all': { 'hosts': [] }, '_meta': { 'hostvars': {}} }
     inventory["_meta"]["rebar_url"] = addr
     inventory["_meta"]["rebar_user"] = user
     inventory["_meta"]["rebar_profile"] = profile
@@ -99,21 +99,21 @@ def main():
             for group in groups.json():
                 name = group[u'Name']
                 if name != "global" and name != "rackn-license":
-                    inventory["_meta"]["all"]["children"][name] = { "vars": [] }
+                    inventory[name] = { "hosts": [], "vars": [] }
                     gvars = hostvars.copy()
                     for k in group[u'Params']:
                         v = group[u'Params'][k]
                         if k == parent_key:
-                            inventory["_meta"]["all"]["children"][name]["children"] = v
+                            inventory[name]["children"] = v
                         else:
                             gvars[k] = v
-                    inventory["_meta"]["all"]["children"][name]["vars"] = gvars
+                    inventory[name]["vars"] = gvars
                     hosts = requests.get(addr + "/api/v3/machines?slim=Params&Profiles=In("+name+")",headers=Headers,auth=(user,password),verify=False)
                     if hosts.status_code == 200:
-                        inventory["_meta"]["all"]["children"][name]["hosts"] = []
+                        inventory[name]["hosts"] = []
                         for host in hosts.json():
                             hostname = host[u'Name']
-                            inventory["_meta"]["all"]["children"][name]["hosts"].extend([hostname])
+                            inventory[name]["hosts"].extend([hostname])
         else:
             raise IOError(groups.text)        
 
