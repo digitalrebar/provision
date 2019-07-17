@@ -10,6 +10,8 @@ Existing machines can use the `join-up.sh` script to join a DRP endpoint without
 
 These instructions can also be adapted to work on GCE or other cloud infrastructure.
 
+The following video shows the process: https://youtu.be/e4Vp3quzlhM
+
 Stackstripts
 ------------
 
