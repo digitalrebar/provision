@@ -51,7 +51,7 @@ You can use the Amazon Linux AMI.  While more is recommended, make sure that you
 
     ### Capture Node Info 
     drpcli profiles create '{"Name":"linode"}'
-    drpcli profiles set linode param cloud/vendor to "LINODE"
+    drpcli profiles set linode param cloud/provider to "LINODE"
     drpcli machines set linode param cloud/instance-id to "\"${LINODE_ID}\""
     drpcli profiles set linode param cloud/username to "${LINODE_LISHUSERNAME}"
     drpcli profiles set linode param cloud/instance-type to "\"${LINODE_RAM}\""
