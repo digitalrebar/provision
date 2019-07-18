@@ -113,6 +113,7 @@ func (i *Info) Fill() {
 			"partial-objects",
 			"regex-string-filters",
 			"file-iso-exists-info-render",
+			"log-has-head-method",
 		}
 	}
 	if i.Scopes == nil {

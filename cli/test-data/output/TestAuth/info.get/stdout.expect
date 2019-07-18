@@ -83,7 +83,8 @@ RE:
     "auto-boot-target",
     "partial-objects",
     "regex-string-filters",
-    "file-iso-exists-info-render"
+    "file-iso-exists-info-render",
+    "log-has-head-method"
   \],
   "file_port": 10002,
   "ha_id": "Fred",
