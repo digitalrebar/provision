@@ -92,6 +92,7 @@ func TestInfo(t *testing.T) {
 				"partial-objects",
 				"regex-string-filters",
 				"file-iso-exists-info-render",
+				"log-has-head-method",
 			},
 			License: models.LicenseBundle{Licenses: []models.License{}},
 			Scopes: map[string]map[string]struct{}{
