@@ -44,7 +44,7 @@
   "Machine": {
     "Regex": false,
     "Type": "UUID string",
-    "Unique": true,
+    "Unique": false,
     "Unordered": false
   },
   "Previous": {
