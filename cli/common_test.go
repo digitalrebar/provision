@@ -186,11 +186,7 @@ func (c *CliTest) loc(prefix string) string {
 			str := strings.Join(c.args[i:], ".")
 			sum.Write([]byte(str))
 		default:
-			s := strings.Replace(arg, "\n", "nl", -1)
-			s = strings.Replace(s, ":", ".", -1)
-			s = strings.Replace(s, "\"", "dquote", -1)
-			s = strings.Replace(s, "'", "squote", -1)
-			res = append(res, s)
+			res = append(res, arg)
 		}
 		if haveSum {
 			break
@@ -204,6 +200,14 @@ func (c *CliTest) loc(prefix string) string {
 		res = append(res, fmt.Sprintf("%x", sum.Sum(nil)))
 	}
 	ret := path.Join(prefix, strings.Join(res, "."))
+	ret = strings.Replace(ret, "\n", "nl", -1)
+	ret = strings.Replace(ret, ":", ".", -1)
+	ret = strings.Replace(ret, "|", "pipe", -1)
+	ret = strings.Replace(ret, "\"", "dquote", -1)
+	ret = strings.Replace(ret, "'", "squote", -1)
+	ret = regexp.MustCompile(`\.+`).ReplaceAllString(ret, `.`)
+	ret = regexp.MustCompile(`\.?/\.?`).ReplaceAllString(ret, `/`)
+	ret = strings.Trim(ret, ".")
 	tnmMux.Lock()
 	defer tnmMux.Unlock()
 	if idx, ok := tnm[ret]; !ok {
