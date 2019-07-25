@@ -217,7 +217,9 @@ RenderData includes the following helper methods:
 - **.GenerateInfiniteToken** works like **.GenerateToken**, but creates
   a token with a 3 year timeout.
 - **.ParseURL <segment> <url>** parses the specified URL and return the
-  segment requested.
+  segment requested.  Supported segments can be one of *scheme* (eg "https"),
+  *host* (eg "drp.example.com:8092"), or *path* (eg "/api/v3/machines").
+  (note: *host* does not separate name and port)
 - **template <string> .** includes the template specified by the string.
   String can NOT be a variable and note that template does NOT have a dot
   (.) in front.
