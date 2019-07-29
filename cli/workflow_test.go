@@ -184,7 +184,7 @@ Templates:
       else
         LOS=linux
       fi
-      DRPCLI="$GOPATH/src/github.com/digitalrebar/provision/bin/$LOS/amd64/drpcli"
+      DRPCLI="$GOPATH/src/github.com/digitalrebar/provision/v4/bin/$LOS/amd64/drpcli"
       if [[ ! -x $DRPCLI ]]; then
          echo "Missing drpcli.  Please run tools/build.sh before running tests"
          exit 1

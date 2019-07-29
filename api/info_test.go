@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/digitalrebar/provision"
-	"github.com/digitalrebar/provision/models"
+	"github.com/digitalrebar/provision/v4"
+	"github.com/digitalrebar/provision/v4/models"
 )
 
 func TestInfo(t *testing.T) {
@@ -52,7 +52,7 @@ func TestInfo(t *testing.T) {
 			},
 			Arch:    runtime.GOARCH,
 			Os:      runtime.GOOS,
-			Version: provision.RSVersion,
+			Version: v4.RSVersion,
 			HaId:    "Fred",
 			Id:      "Fred",
 			LocalId: localId,

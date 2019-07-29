@@ -15,8 +15,8 @@ import (
 	"time"
 
 	"github.com/VictorLowther/jsonpatch2"
-	"github.com/digitalrebar/provision/api"
-	"github.com/digitalrebar/provision/models"
+	"github.com/digitalrebar/provision/v4/api"
+	"github.com/digitalrebar/provision/v4/models"
 )
 
 // jobLog gets the log for a specific Job and writes it to the passed

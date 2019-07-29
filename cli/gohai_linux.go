@@ -3,7 +3,7 @@
 package cli
 
 import (
-	"github.com/digitalrebar/provision/models"
+	"github.com/digitalrebar/provision/v4/models"
 	"github.com/rackn/gohai/plugins/dmi"
 	"github.com/rackn/gohai/plugins/net"
 	"github.com/rackn/gohai/plugins/storage"

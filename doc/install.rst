@@ -15,7 +15,7 @@ Get Code
 --------
 
 The code is delivered by zip file with a sha256sum to validate contents.  These are in github under the
-`releases <https://github.com/digitalrebar/provision/releases>`_ tab for the Digital Rebar Provision project.
+`releases <https://github.com/digitalrebar/provision/v4/releases>`_ tab for the Digital Rebar Provision project.
 
 There are at least 3 releases to choose from:
 
@@ -35,8 +35,8 @@ An example command sequence for Linux would be:
 
     mkdir dr-provision-install
     cd dr-provision-install
-    curl -fsSL https://github.com/digitalrebar/provision/releases/download/tip/dr-provision.zip -o dr-provision.zip
-    curl -fsSL https://github.com/digitalrebar/provision/releases/download/tip/dr-provision.sha256 -o dr-provision.sha256
+    curl -fsSL https://github.com/digitalrebar/provision/v4/releases/download/tip/dr-provision.zip -o dr-provision.zip
+    curl -fsSL https://github.com/digitalrebar/provision/v4/releases/download/tip/dr-provision.sha256 -o dr-provision.sha256
     sha256sum -c dr-provision.sha256
     unzip dr-provision.zip
 

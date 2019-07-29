@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/digitalrebar/provision/store"
+	"github.com/digitalrebar/provision/v4/store"
 	"github.com/gofunky/semver"
 )
 

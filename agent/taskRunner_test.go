@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/digitalrebar/provision/api"
-	"github.com/digitalrebar/provision/models"
+	"github.com/digitalrebar/provision/v4/api"
+	"github.com/digitalrebar/provision/v4/models"
 )
 
 func runAgent(t *testing.T, mi *models.Machine, lastTask, lastState, lastExitState string) (m *models.Machine) {

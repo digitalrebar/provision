@@ -73,7 +73,7 @@ The following steps will install the required plugins and content for KRIB
     drpcli plugins show certs | jq .Available
 
     # Get code
-    git clone https://github.com/digitalrebar/provision-content
+    git clone https://github.com/digitalrebar/provision/v4-content
     cd provision-content/krib
 
     # KRIB content install

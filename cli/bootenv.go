@@ -7,7 +7,7 @@ import (
 	"os"
 	"path"
 
-	"github.com/digitalrebar/provision/models"
+	"github.com/digitalrebar/provision/v4/models"
 	"github.com/spf13/cobra"
 )
 

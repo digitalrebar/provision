@@ -62,7 +62,7 @@ func TestContentCli(t *testing.T) {
 	cliTest(false, true, "contents", "create").run(t)
 	cliTest(false, true, "contents", "create", "john", "john2").run(t)
 	cliTest(false, true, "contents", "create", "https://gi333thub.com/digitalrebar/provision-content/releases/download/v1.3.0/drp-community-content.yamljj").run(t)
-	cliTest(false, false, "contents", "create", "https://github.com/digitalrebar/provision-content/releases/download/v1.3.0/drp-community-content.yaml").run(t)
+	cliTest(false, false, "contents", "create", "https://github.com/digitalrebar/provision/v4-content/releases/download/v1.3.0/drp-community-content.yaml").run(t)
 	cliTest(false, false, "contents", "destroy", "drp-community-content").run(t)
 	cliTest(false, true, "contents", "create", "test-data/content.yaml").run(t)
 	cliTest(false, true, "contents", "destroy", "drp-community-contrib").run(t)

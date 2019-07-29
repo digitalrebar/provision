@@ -32,7 +32,7 @@ Once the script is complete, it is possible to change the directory to the sourc
   ::
 
     export GOPATH=${GOPATH:-$HOME/go}
-    cd "$GOPATH/src/github.com/digitalrebar/provision"
+    cd "$GOPATH/src/github.com/digitalrebar/provision/v4"
 
 
 If more details on how to run the result are needed, consult the :ref:`rs_install` section.  The **install.sh** script

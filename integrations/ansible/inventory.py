@@ -17,7 +17,7 @@
 import requests, argparse, json, urllib3, os
 
 '''
-Usage: https://github.com/digitalrebar/provision/tree/master/integration/ansible
+Usage: https://github.com/digitalrebar/provision/v4/tree/master/integration/ansible
 
 example: ansible -i inventory.py all -a "uname -a"
 '''

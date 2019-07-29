@@ -4,7 +4,7 @@ import (
 	"log"
 	"testing"
 
-	"github.com/digitalrebar/provision/models"
+	"github.com/digitalrebar/provision/v4/models"
 )
 
 func TestContentCrud(t *testing.T) {

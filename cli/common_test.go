@@ -15,8 +15,8 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/digitalrebar/provision/api"
-	"github.com/digitalrebar/provision/models"
+	"github.com/digitalrebar/provision/v4/api"
+	"github.com/digitalrebar/provision/v4/models"
 )
 
 var (

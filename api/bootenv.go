@@ -9,7 +9,7 @@ import (
 	"path"
 	"strings"
 
-	"github.com/digitalrebar/provision/models"
+	"github.com/digitalrebar/provision/v4/models"
 )
 
 func (c *Client) InstallRawTemplateFromFile(src string) (*models.Template, error) {

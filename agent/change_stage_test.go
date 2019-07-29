@@ -5,8 +5,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/digitalrebar/provision/api"
-	"github.com/digitalrebar/provision/models"
+	"github.com/digitalrebar/provision/v4/api"
+	"github.com/digitalrebar/provision/v4/models"
 )
 
 func TestChangeStage(t *testing.T) {

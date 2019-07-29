@@ -23,7 +23,7 @@ import (
 	"github.com/VictorLowther/jsonpatch2"
 
 	"github.com/digitalrebar/logger"
-	"github.com/digitalrebar/provision/models"
+	"github.com/digitalrebar/provision/v4/models"
 )
 
 // APIPATH is the base path for all API endpoints that digitalrebar

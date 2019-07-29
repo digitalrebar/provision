@@ -8,16 +8,16 @@ import (
 	"path"
 	"strings"
 
-	"github.com/digitalrebar/provision"
-	"github.com/digitalrebar/provision/api"
-	"github.com/digitalrebar/provision/models"
+	"github.com/digitalrebar/provision/v4"
+	"github.com/digitalrebar/provision/v4/api"
+	"github.com/digitalrebar/provision/v4/models"
 	"github.com/spf13/cobra"
 )
 
 type registerSection func(*cobra.Command)
 
 var (
-	version          = provision.RSVersion
+	version          = v4.RSVersion
 	debug            = false
 	catalog          = "https://repo.rackn.io"
 	default_catalog  = "https://repo.rackn.io"

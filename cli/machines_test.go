@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/digitalrebar/provision/api"
-	"github.com/digitalrebar/provision/models"
+	"github.com/digitalrebar/provision/v4/api"
+	"github.com/digitalrebar/provision/v4/models"
 	"github.com/pborman/uuid"
 )
 

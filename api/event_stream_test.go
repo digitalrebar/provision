@@ -3,7 +3,7 @@ package api
 import (
 	"testing"
 
-	"github.com/digitalrebar/provision/models"
+	"github.com/digitalrebar/provision/v4/models"
 )
 
 func testFunc(t *testing.T, m interface{}, fn TestFunc, result, haveError bool) {

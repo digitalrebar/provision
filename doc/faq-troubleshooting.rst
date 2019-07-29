@@ -49,7 +49,7 @@ error messages may appear similarly to:
 
   ::
 
-    May 24 13:48:22 ubuntu dr-provision[7092]: dr-provision2018/05/24 20:48:22.006224 [280:13]static [error]: /home/travis/gopath/src/github.com/digitalrebar/provision/midlayer/tftp.go:82
+    May 24 13:48:22 ubuntu dr-provision[7092]: dr-provision2018/05/24 20:48:22.006224 [280:13]static [error]: /home/travis/gopath/src/github.com/digitalrebar/provision/v4/midlayer/tftp.go:82
     May 24 13:48:22 ubuntu dr-provision[7092]: [280:13]TFTP: lpxelinux.0: transfer error: sending block 0: code=0, error: TFTP Aborted
 
 
@@ -410,7 +410,7 @@ Get our new version (in this example, explicitly set version to ``v1.5.0``.  How
   ::
 
     export VER="v1.5.0"
-    curl -sfL -o drp-cc.yaml https://github.com/digitalrebar/provision-content/releases/download/${VER}/drp-community-content.yaml
+    curl -sfL -o drp-cc.yaml https://github.com/digitalrebar/provision/v4-content/releases/download/${VER}/drp-community-content.yaml
 
 It is suggested that you view this file and ensure it contains the content/changes you are expecting.
 

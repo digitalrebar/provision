@@ -10,14 +10,14 @@ import (
 
 	"github.com/VictorLowther/jsonpatch2/utils"
 	"github.com/digitalrebar/logger"
-	"github.com/digitalrebar/provision"
-	"github.com/digitalrebar/provision/api"
-	"github.com/digitalrebar/provision/models"
-	"github.com/digitalrebar/provision/plugin"
+	"github.com/digitalrebar/provision/v4"
+	"github.com/digitalrebar/provision/v4/api"
+	"github.com/digitalrebar/provision/v4/models"
+	"github.com/digitalrebar/provision/v4/plugin"
 )
 
 var (
-	version = provision.RSVersion
+	version = v4.RSVersion
 	def     = models.PluginProvider{
 		Name:          "incrementer",
 		Version:       version,

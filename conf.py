@@ -352,10 +352,10 @@ urls=[
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/ux-views.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/virtualbox-ipmi.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/vmware.rst",
-    "https://github.com/digitalrebar/provision-content/releases/download/tip/drp-community-content.rst",
-    "https://github.com/digitalrebar/provision-content/releases/download/tip/drp-community-contrib.rst",
-    "https://github.com/digitalrebar/provision-content/releases/download/tip/krib.rst",
-    "https://github.com/digitalrebar/provision-content/releases/download/tip/sledgehammer-builder.rst",
+    "https://github.com/digitalrebar/provision/v4-content/releases/download/tip/drp-community-content.rst",
+    "https://github.com/digitalrebar/provision/v4-content/releases/download/tip/drp-community-contrib.rst",
+    "https://github.com/digitalrebar/provision/v4-content/releases/download/tip/krib.rst",
+    "https://github.com/digitalrebar/provision/v4-content/releases/download/tip/sledgehammer-builder.rst",
 ]
 for url in urls:
     filename = url.rsplit('/', 1)[-1]

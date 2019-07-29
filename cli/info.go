@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/digitalrebar/tftp"
+	tftp "github.com/digitalrebar/tftp/v3"
 	dhcp "github.com/krolaw/dhcp4"
 	"github.com/spf13/cobra"
 )

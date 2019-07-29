@@ -11,9 +11,9 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/digitalrebar/provision/api"
-	"github.com/digitalrebar/provision/models"
-	"github.com/digitalrebar/provision/store"
+	"github.com/digitalrebar/provision/v4/api"
+	"github.com/digitalrebar/provision/v4/models"
+	"github.com/digitalrebar/provision/v4/store"
 	"github.com/spf13/cobra"
 	"golang.org/x/crypto/nacl/box"
 )

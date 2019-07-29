@@ -126,7 +126,7 @@ Version to Version Notes
 
 In this section, notes about migrating from one release to another will be added.
 
-Release Notes for each version can be found at:  https://github.com/digitalrebar/provision/releases
+Release Notes for each version can be found at:  https://github.com/digitalrebar/provision/v4/releases
 
 v3.0.0 to v3.0.1
 ----------------
@@ -167,7 +167,7 @@ Nothing needs to be done.
 
 v3.0.5 to v3.1.0
 ----------------
-`Release Notes for v3.1.0 <https://github.com/digitalrebar/provision/releases/tag/v3.1.0>`_
+`Release Notes for v3.1.0 <https://github.com/digitalrebar/provision/v4/releases/tag/v3.1.0>`_
 
 The v3.1.0 ``install.sh`` script now supports an ``--upgrade`` flag.  Depending on your installation method (eg ``isolated`` or ``production`` mode), the behavior of the flag will alter the installation process slightly.  Please ensure you `Backup`_ your content and configurations first just in case.
 
@@ -220,7 +220,7 @@ Replace *subnet1* with the name of your subnet.  You may obtain a list of config
 v3.1.0 to v3.2.0
 ----------------
 
-`Release Notes for v3.2.0 <https://github.com/digitalrebar/provision/releases/tag/v3.2.0>`_
+`Release Notes for v3.2.0 <https://github.com/digitalrebar/provision/v4/releases/tag/v3.2.0>`_
 
 There are fairly significant updates to the DRP Contents structure and layout in v3.2.0.  If you are upgrading to v3.2.0 you must remove any Digital Rebar and RackN content that you have installed in your Provisioning endpoint.  The following outline will help you understand the necessary steps.  If you have any issues with the upgrade process, please drop by the Slack #community channel for additional help.
 
@@ -351,14 +351,14 @@ Please read the steps through carefully, and make note of the current contents/p
 v3.2.0 to v3.3.0
 ----------------
 
-`Release Notes for v3.3.0 <https://github.com/digitalrebar/provision/releases/tag/v3.3.0>`_
+`Release Notes for v3.3.0 <https://github.com/digitalrebar/provision/v4/releases/tag/v3.3.0>`_
 
 No aditional steps required.
 
 v3.3.0 to v3.4.0
 ----------------
 
-`Release Notes for v3.4.0 <https://github.com/digitalrebar/provision/releases/tag/v3.4.0>`_
+`Release Notes for v3.4.0 <https://github.com/digitalrebar/provision/v4/releases/tag/v3.4.0>`_
 
 Content Changes
 +++++++++++++++
@@ -387,7 +387,7 @@ It is entirely possible that the ``Meta`` field is completely missing.  If so - 
 ``drpcli`` changes
 ++++++++++++++++++
 
-Please see the `Release Notes <https://github.com/digitalrebar/provision/releases/tag/v3.4.0>`_ for information related to the ``drpcli`` command line changes.  The most notable changes that may impact your use (eg in existing scripts) of the tool:
+Please see the `Release Notes <https://github.com/digitalrebar/provision/v4/releases/tag/v3.4.0>`_ for information related to the ``drpcli`` command line changes.  The most notable changes that may impact your use (eg in existing scripts) of the tool:
 
 #. Plugin upload method changed:
 
@@ -405,21 +405,21 @@ Please see the `Release Notes <https://github.com/digitalrebar/provision/release
 v3.4.0 to v3.5.0
 ----------------
 
-`Release Notes for v3.5.0 <https://github.com/digitalrebar/provision/releases/tag/v3.5.0>`_
+`Release Notes for v3.5.0 <https://github.com/digitalrebar/provision/v4/releases/tag/v3.5.0>`_
 
 No additional changes necessary.
 
 v3.5.0 to v3.6.0
 ----------------
 
-`Release Notes for v3.6.0 <https://github.com/digitalrebar/provision/releases/tag/v3.6.0>`_
+`Release Notes for v3.6.0 <https://github.com/digitalrebar/provision/v4/releases/tag/v3.6.0>`_
 
 No additional changes necessary.
 
 v3.6.0 to v3.7.0
 ----------------
 
-`Release Notes for v3.7.0 <https://github.com/digitalrebar/provision/releases/tag/v3.7.0>`_
+`Release Notes for v3.7.0 <https://github.com/digitalrebar/provision/v4/releases/tag/v3.7.0>`_
 
 The plugin system has been updated to a new version.  All plugins have been updated to
 use the new version.  After updating to *v3.7.0*, all plugins must be updated to function.
@@ -436,14 +436,14 @@ This will result in more stable UX experience.
 v3.7.0 to v3.8.0
 ----------------
 
-`Release Notes for v3.8.0 <https://github.com/digitalrebar/provision/releases/tag/v3.8.0>`_
+`Release Notes for v3.8.0 <https://github.com/digitalrebar/provision/v4/releases/tag/v3.8.0>`_
 
 No additional changes necessary.
 
 v3.8.0 to v3.9.0
 ----------------
 
-`Release Notes for v3.9.0 <https://github.com/digitalrebar/provision/releases/tag/v3.9.0>`_
+`Release Notes for v3.9.0 <https://github.com/digitalrebar/provision/v4/releases/tag/v3.9.0>`_
 
 No additional changes necessary.
 

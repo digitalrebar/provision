@@ -16,7 +16,7 @@ import (
 	"time"
 
 	"github.com/VictorLowther/jsonpatch2/utils"
-	"github.com/digitalrebar/provision/models"
+	"github.com/digitalrebar/provision/v4/models"
 	"github.com/gorilla/websocket"
 )
 

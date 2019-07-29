@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/digitalrebar/provision/models"
+	"github.com/digitalrebar/provision/v4/models"
 )
 
 func TestEvents(t *testing.T) {

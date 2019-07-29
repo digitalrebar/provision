@@ -4,7 +4,7 @@ import (
 	"log"
 	"strings"
 
-	"github.com/digitalrebar/provision/cli"
+	"github.com/digitalrebar/provision/v4/cli"
 	"github.com/spf13/cobra/doc"
 )
 

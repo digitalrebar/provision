@@ -10,7 +10,7 @@ import (
 	"syscall"
 	"testing"
 
-	"github.com/digitalrebar/provision/models"
+	"github.com/digitalrebar/provision/v4/models"
 	"github.com/ghodss/yaml"
 )
 

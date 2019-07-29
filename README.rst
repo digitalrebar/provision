@@ -35,7 +35,7 @@ Key Features:
    :align:   right
    :width: 200 px
    :alt: Digital Rebar Provision
-   :target: https://github.com/digitalrebar/provision
+   :target: https://github.com/digitalrebar/provision/v4
 
 .. _rs_community:
 
@@ -50,12 +50,12 @@ Community Resources from https://rebar.digital
   :target: https://codecov.io/gh/digitalrebar/provision
   :alt: codecov
 
-.. image:: https://goreportcard.com/badge/github.com/digitalrebar/provision
-  :target: https://goreportcard.com/report/github.com/digitalrebar/provision
+.. image:: https://goreportcard.com/badge/github.com/digitalrebar/provision/v4
+  :target: https://goreportcard.com/report/github.com/digitalrebar/provision/v4
   :alt: Go Report Card
 
-.. image:: https://godoc.org/github.com/digitalrebar/provision?status.svg
-  :target: https://godoc.org/github.com/digitalrebar/provision
+.. image:: https://godoc.org/github.com/digitalrebar/provision/v4?status.svg
+  :target: https://godoc.org/github.com/digitalrebar/provision/v4
   :alt: GoDoc
 
 .. image:: https://readthedocs.org/projects/provision/badge/?version=stable
@@ -68,8 +68,8 @@ Community Resources from https://rebar.digital
 
 
 * Chat/messaging via the Digital Rebar ``#community`` channel is our preferred communication method.  If you do not have a Slack invite to our channel, you can `Request a Slack Invite <http://www.rackn.com/support/slack/>`_
-* `Issues and Features <https://github.com/digitalrebar/provision/issues>`_
-* Full `Documentation <http://provision.readthedocs.io/en/tip/>`_ (Github `/doc <https://github.com/digitalrebar/provision/tree/master/doc>`_ sources are updatable via pull request).
+* `Issues and Features <https://github.com/digitalrebar/provision/v4/issues>`_
+* Full `Documentation <http://provision.readthedocs.io/en/tip/>`_ (Github `/doc <https://github.com/digitalrebar/provision/v4/tree/master/doc>`_ sources are updatable via pull request).
 * Videos on the `DR Provision Playlist <https://www.youtube.com/playlist?list=PLXPBeIrpXjfilUi7Qj1Sl0UhjxNRSC7nx>`_ provide both specific and general background information.
 
 

@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/digitalrebar/tftp"
+	tftp "github.com/digitalrebar/tftp/v3"
 )
 
 func TestBootEnvCli(t *testing.T) {

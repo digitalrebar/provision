@@ -3,7 +3,7 @@ package models
 import (
 	"fmt"
 
-	"github.com/digitalrebar/provision/store"
+	"github.com/digitalrebar/provision/v4/store"
 )
 
 // Plugin Provider describes the available functions that could be

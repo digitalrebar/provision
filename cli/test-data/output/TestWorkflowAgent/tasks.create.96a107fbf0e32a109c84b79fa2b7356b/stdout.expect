@@ -15,7 +15,7 @@
   "RequiredParams": [],
   "Templates": [
     {
-      "Contents": "#!/usr/bin/env bash\nif [[ $(uname -s) == Darwin ]] ; then\n  LOS=darwin\nelse\n  LOS=linux\nfi\nDRPCLI=\"$GOPATH/src/github.com/digitalrebar/provision/bin/$LOS/amd64/drpcli\"\nif [[ ! -x $DRPCLI ]]; then\n   echo \"Missing drpcli.  Please run tools/build.sh before running tests\"\n   exit 1\nfi\n\"$DRPCLI\" machines workflow Name:m1 wf2 \u0026\u003e/dev/null\n",
+      "Contents": "#!/usr/bin/env bash\nif [[ $(uname -s) == Darwin ]] ; then\n  LOS=darwin\nelse\n  LOS=linux\nfi\nDRPCLI=\"$GOPATH/src/github.com/digitalrebar/provision/v4/bin/$LOS/amd64/drpcli\"\nif [[ ! -x $DRPCLI ]]; then\n   echo \"Missing drpcli.  Please run tools/build.sh before running tests\"\n   exit 1\nfi\n\"$DRPCLI\" machines workflow Name:m1 wf2 \u0026\u003e/dev/null\n",
       "ID": "",
       "Meta": {},
       "Name": "task2",

@@ -13,7 +13,7 @@ import (
 	rt "runtime/debug"
 
 	"github.com/digitalrebar/logger"
-	"github.com/digitalrebar/provision/models"
+	"github.com/digitalrebar/provision/v4/models"
 )
 
 // JsonResponse returns a JSON object on the http writer.

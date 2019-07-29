@@ -16,8 +16,8 @@ import (
 	"strings"
 
 	"github.com/VictorLowther/jsonpatch2/utils"
-	"github.com/digitalrebar/provision/api"
-	"github.com/digitalrebar/provision/models"
+	"github.com/digitalrebar/provision/v4/api"
+	"github.com/digitalrebar/provision/v4/models"
 )
 
 var encodeJsonPtr = strings.NewReplacer("~", "~0", "/", "~1")

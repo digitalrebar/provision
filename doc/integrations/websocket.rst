@@ -31,7 +31,7 @@ The fields are:
   * Key - the specific key of the object (e.g. machine uuid, profile name, ...)
 
 Some simple example are provided in the
-`DRP source tree: <https://github.com/digitalrebar/provision/tree/master/integrations/websockets/>`_
+`DRP source tree: <https://github.com/digitalrebar/provision/v4/tree/master/integrations/websockets/>`_
 
 Deregister Events
 -----------------
@@ -67,7 +67,7 @@ success:
 
 There is a simple sample Python script available in the Digital Rebar Provision
 repo for reference, see the
-`Websocket Integrations: <https://github.com/digitalrebar/provision/tree/master/integrations/websockets/>`_
+`Websocket Integrations: <https://github.com/digitalrebar/provision/v4/tree/master/integrations/websockets/>`_
 page for further details.
 
 Example Information

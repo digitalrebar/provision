@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/digitalrebar/provision/cli"
+	"github.com/digitalrebar/provision/v4/cli"
 )
 
 func main() {
