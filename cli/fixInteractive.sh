@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 src="test-data"
 
+pp="$(readlink -f "$PWD/../bin/$(go env GOOS)/$(go env GOARCH)")"
+if [[ $PATH != ${pp}:* ]]; then
+    export PATH="$pp:$PATH"
+fi
+
 readarray -d $'\0' dirs < <(find "$src" -type d -print0 |sort -z)
 
 for dir in "${dirs[@]}"; do
@@ -53,7 +58,7 @@ for line in "${log_lines[@]}"; do
            fi
         fi
         if grep -q '^RE:' "$dir/$ft".expect; then
-            go run ../cmds/regex_test/testRe.go "$dir/$ft".expect "$dir/$ft".actual && continue
+            go run ../tools/testRe.go "$dir/$ft".expect "$dir/$ft".actual && continue
             edit
             continue
         fi

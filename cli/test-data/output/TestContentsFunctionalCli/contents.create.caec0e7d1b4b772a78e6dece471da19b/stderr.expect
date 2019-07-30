@@ -1,5 +1,3 @@
 Error: Failed to load backing objects from cache
-  Error fetching keys for profiles: open ../test-data/etc/dr-provision/profiles: no such file or directory
-  This is likely not recoverable, and you should restore from backup.
   Store profiles item p1-bad failed to load from layer content-PackBad: json: cannot unmarshal number into Go struct field Profile.Params of type map[string]interface {}
   Try manually replacing content layer PackBad

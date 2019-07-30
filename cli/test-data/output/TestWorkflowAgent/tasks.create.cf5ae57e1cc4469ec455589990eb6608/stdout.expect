@@ -1,0 +1,26 @@
+{
+  "Available": true,
+  "Bundle": "",
+  "Description": "",
+  "Documentation": "",
+  "Endpoint": "",
+  "Errors": [],
+  "Meta": {
+    "feature-flags": "sane-exit-codes"
+  },
+  "Name": "task2",
+  "OptionalParams": [],
+  "Prerequisites": [],
+  "ReadOnly": false,
+  "RequiredParams": [],
+  "Templates": [
+    {
+      "Contents": "#!/usr/bin/env bash\nif ! which drpcli \u0026\u003e/dev/null; then\n   echo \"Missing drpcli.  Please run tools/build.sh before running tests\"\n   exit 1\nfi\ndrpcli machines workflow Name:m1 wf2 \u0026\u003e/dev/null\n",
+      "ID": "",
+      "Meta": {},
+      "Name": "task2",
+      "Path": ""
+    }
+  ],
+  "Validated": true
+}

@@ -312,5 +312,5 @@ RE:
   \],
   "tftp_enabled": true,
   "tftp_port": 10003,
-  "version": "v3.10.1000-pre-alpha-NotSet"
+  "version": "v4\.[0-9]+\.[0-9]+.*"
 }

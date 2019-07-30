@@ -1,2 +1,2 @@
-Error: Failed to generate changed machines:3e7031fe-3062-45f1-835c-92541bc9cbd3 object: Unable to unmarshal reference object: error unmarshaling JSON: while decoding JSON: json: cannot unmarshal string into Go value of type map[string]interface {}
+Error: Failed to generate changed machines:3e7031fe-3062-45f1-835c-92541bc9cbd3 object: Unable to unmarshal reference object: error unmarshaling JSON: json: cannot unmarshal string into Go value of type map[string]interface {}
 

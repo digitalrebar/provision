@@ -1,5 +1,5 @@
+RE:
 {
-  "baseTokenSecret": "token-secret-token-secret-token1",
   "debugBootEnv": "warn",
   "debugDhcp": "warn",
   "debugFrontend": "warn",
@@ -9,7 +9,6 @@
   "defaultStage": "none",
   "knownTokenTimeout": "5000",
   "logLevel": "warn",
-  "systemGrantorSecret": "system-grantor-secret",
   "unknownBootEnv": "ignore",
   "unknownTokenTimeout": "600"
 }

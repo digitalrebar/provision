@@ -4,7 +4,7 @@
       "bootenvs": 0,
       "jobs": 0,
       "machines": 0,
-      "preferences": 1,
+      "preferences": 13,
       "profiles": 1,
       "roles": 0,
       "stages": 0,
@@ -38,34 +38,6 @@
     }
   },
   {
-    "Counts": {
-      "templates": 1
-    },
-    "Warnings": [],
-    "meta": {
-      "Author": "",
-      "CodeSource": "",
-      "Color": "",
-      "Copyright": "",
-      "Description": "Local Override Store",
-      "DisplayName": "",
-      "DocUrl": "",
-      "Documentation": "",
-      "Icon": "",
-      "License": "",
-      "Name": "LocalStore",
-      "Order": "",
-      "Overwritable": true,
-      "Prerequisites": "",
-      "RequiredFeatures": "",
-      "Source": "",
-      "Tags": "",
-      "Type": "local",
-      "Version": "0.0.0",
-      "Writable": false
-    }
-  },
-  {
     "Counts": {},
     "Warnings": [],
     "meta": {
@@ -93,34 +65,6 @@
   },
   {
     "Counts": {
-      "templates": 1
-    },
-    "Warnings": [],
-    "meta": {
-      "Author": "",
-      "CodeSource": "",
-      "Color": "",
-      "Copyright": "",
-      "Description": "Initial Default Content",
-      "DisplayName": "",
-      "DocUrl": "",
-      "Documentation": "",
-      "Icon": "",
-      "License": "",
-      "Name": "DefaultStore",
-      "Order": "",
-      "Overwritable": true,
-      "Prerequisites": "",
-      "RequiredFeatures": "",
-      "Source": "",
-      "Tags": "",
-      "Type": "default",
-      "Version": "0.0.0",
-      "Writable": false
-    }
-  },
-  {
-    "Counts": {
       "params": 5
     },
     "Warnings": [],
@@ -143,7 +87,7 @@
       "Source": "FromPluginProvider",
       "Tags": "",
       "Type": "plugin",
-      "Version": "v3.10.1000-pre-alpha-NotSet",
+      "Version": "v4.0.0-pre.0+gd9313b7be05d714552617ffc0844dc88dcfec889",
       "Writable": false
     }
   },

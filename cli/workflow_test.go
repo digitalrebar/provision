@@ -179,17 +179,11 @@ Name: task2
 Templates:
   - Contents: |
       #!/usr/bin/env bash
-      if [[ $(uname -s) == Darwin ]] ; then
-        LOS=darwin
-      else
-        LOS=linux
-      fi
-      DRPCLI="$GOPATH/src/github.com/digitalrebar/provision/v4/bin/$LOS/amd64/drpcli"
-      if [[ ! -x $DRPCLI ]]; then
+      if ! which drpcli &>/dev/null; then
          echo "Missing drpcli.  Please run tools/build.sh before running tests"
          exit 1
       fi
-      "$DRPCLI" machines workflow Name:m1 wf2 &>/dev/null
+      drpcli machines workflow Name:m1 wf2 &>/dev/null
     Name: task2`).run(t)
 	cliTest(false, false, "tasks", "create", "-").Stdin(`---
 Name: task3

@@ -1,18 +1,6 @@
 [
   {
     "Available": true,
-    "Bundle": "LocalStore",
-    "Contents": "etc\n",
-    "Description": "A test template for LocalStore testing",
-    "Endpoint": "",
-    "Errors": [],
-    "ID": "etc",
-    "Meta": {},
-    "ReadOnly": true,
-    "Validated": true
-  },
-  {
-    "Available": true,
     "Bundle": "",
     "Contents": "John Rules",
     "Description": "",
@@ -21,18 +9,6 @@
     "ID": "john",
     "Meta": {},
     "ReadOnly": false,
-    "Validated": true
-  },
-  {
-    "Available": true,
-    "Bundle": "DefaultStore",
-    "Contents": "usrshare\n",
-    "Description": "A test template for DefaultStore testing",
-    "Endpoint": "",
-    "Errors": [],
-    "ID": "usrshare",
-    "Meta": {},
-    "ReadOnly": true,
     "Validated": true
   }
 ]
