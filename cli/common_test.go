@@ -14,12 +14,16 @@ import (
 	"strings"
 	"sync"
 	"testing"
+	"time"
 
 	"github.com/digitalrebar/provision/v4/api"
 	"github.com/digitalrebar/provision/v4/models"
+	"github.com/digitalrebar/provision/v4/test"
 )
 
 var (
+	tmpDir  string
+	myToken string
 	running bool
 )
 
@@ -481,7 +485,29 @@ func TestMain(m *testing.M) {
 		log.Printf("Creating temp dir for file root failed: %v", err)
 		os.Exit(1)
 	}
-
+	defer os.RemoveAll(tmpDir)
+	if err := test.StartServer(tmpDir); err != nil {
+		log.Printf("Error starting dr-provision: %v", err)
+		os.RemoveAll(tmpDir)
+		os.Exit(1)
+	}
+	count := 0
+	for count < 30 {
+		session, err = api.UserSession("https://127.0.0.1:10001", "rocketskates", "r0cketsk8ts")
+		if err == nil {
+			break
+		}
+		time.Sleep(1 * time.Second)
+		count++
+	}
+	if session == nil {
+		err = fmt.Errorf("Failed to create UserSession: %v", err)
+	}
+	if err != nil {
+		log.Printf("Error starting test run: %v", err)
+		os.RemoveAll(tmpDir)
+		os.Exit(1)
+	}
 	ret := m.Run()
 
 	err = os.RemoveAll(tmpDir)

@@ -1,12 +1,12 @@
 package cli
 
 import (
+	"path"
+	"runtime"
 	"testing"
 )
 
-func TestFirst(t *testing.T) {
-	err := fakeServer()
-	if err != nil {
-		t.Errorf("Failed with error: %v", err)
-	}
+func TestLoadIncrementer(t *testing.T) {
+	cliTest(false, false,
+		"plugin_providers", "upload", "incrementer", "from", path.Join("../bin", runtime.GOOS, runtime.GOARCH, "incrementer")).run(t)
 }

@@ -6,7 +6,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/digitalrebar/provision/v4"
 	"github.com/digitalrebar/provision/v4/models"
 )
 
@@ -31,11 +30,11 @@ func TestInfo(t *testing.T) {
 		name: "get info",
 		expectRes: &models.Info{
 			Address:            net.IPv4(127, 0, 0, 1),
-			ApiPort:            10011,
-			FilePort:           10012,
-			BinlPort:           10015,
-			DhcpPort:           10014,
-			TftpPort:           10013,
+			ApiPort:            10001,
+			FilePort:           10002,
+			BinlPort:           10005,
+			DhcpPort:           10004,
+			TftpPort:           10003,
 			ProvisionerEnabled: true,
 			TftpEnabled:        true,
 			BinlEnabled:        true,
@@ -52,7 +51,7 @@ func TestInfo(t *testing.T) {
 			},
 			Arch:    runtime.GOARCH,
 			Os:      runtime.GOOS,
-			Version: v4.RSVersion,
+			Version: "",
 			HaId:    "Fred",
 			Id:      "Fred",
 			LocalId: localId,
@@ -306,7 +305,11 @@ func TestInfo(t *testing.T) {
 		},
 		expectErr: nil,
 		op: func() (interface{}, error) {
-			return session.Info()
+			info, err := session.Info()
+			if info != nil {
+				info.Version = ""
+			}
+			return info, err
 		},
 	}
 	test.run(t)

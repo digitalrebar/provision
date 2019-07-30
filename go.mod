@@ -9,6 +9,7 @@ require (
 	github.com/StackExchange/wmi v0.0.0-20190523213315-cbe66965904d // indirect
 	github.com/VictorLowther/jsonpatch2 v1.0.0
 	github.com/cpuguy83/go-md2man v1.0.10 // indirect
+	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/digitalrebar/logger v0.3.0
 	github.com/digitalrebar/tftp/v3 v3.0.0
 	github.com/elithrar/simple-scrypt v1.3.0
@@ -37,4 +38,5 @@ require (
 	github.com/xeipuuv/gojsonschema v1.1.0
 	golang.org/x/crypto v0.0.0-20190701094942-4def268fd1a4
 	golang.org/x/sys v0.0.0-20190726091711-fc99dfbffb4e
+	gopkg.in/yaml.v2 v2.2.2
 )

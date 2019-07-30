@@ -27,44 +27,6 @@ func TestContentCrud(t *testing.T) {
     Version: 0.0.0
     Writable: true
 - Counts:
-    templates: 1
-  Warnings: []
-  meta:
-    Description: Local Override Store
-    Meta: {}
-    Name: LocalStore
-    Overwritable: true
-    Source: ""
-    Type: local
-    Version: 0.0.0
-    Writable: false
-- Counts:
-    templates: 1
-  Warnings: []
-  meta:
-    Description: Initial Default Content
-    Meta: {}
-    Name: DefaultStore
-    Overwritable: true
-    Source: ""
-    Type: default
-    Version: 0.0.0
-    Writable: false
-- Counts:
-    params: 5
-  Warnings: []
-  meta:
-    Description: Test Plugin for DRP
-    Meta: {}
-    Name: incrementer
-    Overwritable: false
-    Prerequisites: ""
-    RequiredFeatures: ""
-    Source: FromPluginProvider
-    Type: plugin
-    Version: v3.10.1000-pre-alpha-NotSet
-    Writable: false
-- Counts:
     bootenvs: 2
     roles: 1
     params: 1

@@ -527,7 +527,7 @@ Kernel: vmlinuz0
 Name: fredhammer
 OS:
   IsoFile: sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar
-  IsoUrl: http://127.0.0.1:10012/files/sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar
+  IsoUrl: http://127.0.0.1:10002/files/sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar
   Name: sledgehammer/708de8b878e3818b1c1bb598a56de968939f9d4b
 OptionalParams:
 - ntp_servers
@@ -653,7 +653,7 @@ Validated: true`),
 		nil,
 		&models.Error{
 			Model:    "isos",
-			Key:      "http://127.0.0.1:10012/files/sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar",
+			Key:      "http://127.0.0.1:10002/files/sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar",
 			Type:     "DOWNLOAD_FAILED",
 			Messages: []string{"open /no/iso/here/sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar: no such file or directory"},
 		},
@@ -670,9 +670,9 @@ Validated: true`),
 		nil,
 		&models.Error{
 			Model:    "isos",
-			Key:      "http://127.0.0.1:10012/files/sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar",
+			Key:      "http://127.0.0.1:10002/files/sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar",
 			Type:     "DOWNLOAD_FAILED",
-			Messages: []string{"Unable to start download of http://127.0.0.1:10012/files/sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar: 404 Not Found"},
+			Messages: []string{"Unable to start download of http://127.0.0.1:10002/files/sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar: 404 Not Found"},
 		},
 		func() (interface{}, error) {
 			return nil, session.InstallISOForBootenv(fredhammer, tmpDir, true)
@@ -727,7 +727,7 @@ OS:
   Family: ""
   IsoFile: sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar
   IsoSha256: ""
-  IsoUrl: http://127.0.0.1:10012/files/sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar
+  IsoUrl: http://127.0.0.1:10002/files/sledgehammer-708de8b878e3818b1c1bb598a56de968939f9d4b.tar
   Name: sledgehammer/708de8b878e3818b1c1bb598a56de968939f9d4b
   SupportedArchitectures: {}
   Version: ""
