@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 . tools/version.sh >/dev/null
+[[ $BUILDSTAMP ]] || export BUILDSTAMP=$(date -u '+%Y-%m-%d_%I:%M:%S%p')
 [[ $GOOS ]] || export GOOS=$(go env GOOS)
 [[ $GOARCH ]] || export GOARCH=$(go env GOARCH)
 [[ $GOARCH = arm ]] && export GOARM=7
@@ -15,8 +16,7 @@ export VERFLAGS="-s -w \
           -X github.com/digitalrebar/provision/v4.RSMinorVersion=$MinorV \
           -X github.com/digitalrebar/provision/v4.RSPatchVersion=$PatchV \
           -X github.com/digitalrebar/provision/v4.RSExtra=$Extra \
-          -X github.com/digitalrebar/provision/v4.BuildStamp=`date -u '+%Y-%m-%d_%I:%M:%S%p'` \
-          -X github.com/digitalrebar/provision/v4.GitHash=$GITHASH"
+          -X github.com/digitalrebar/provision/v4.BuildStamp=$BUILDSTAMP"
 set -e
 cd "$1"
 if grep -qs 'go:generate' *; then
