@@ -1,4 +1,5 @@
-[
+RE:
+\[
   {
     "Counts": {
       "bootenvs": 0,
@@ -13,7 +14,7 @@
       "tenants": 0,
       "users": 1
     },
-    "Warnings": [],
+    "Warnings": \[\],
     "meta": {
       "Author": "",
       "CodeSource": "",
@@ -41,7 +42,7 @@
     "Counts": {
       "params": 5
     },
-    "Warnings": [],
+    "Warnings": \[\],
     "meta": {
       "Author": "",
       "CodeSource": "",
@@ -61,7 +62,7 @@
       "Source": "FromPluginProvider",
       "Tags": "",
       "Type": "plugin",
-      "Version": "v4.0.0-pre.0+gd9313b7be05d714552617ffc0844dc88dcfec889",
+      "Version": "v4\..*",
       "Writable": false
     }
   },
@@ -72,7 +73,7 @@
       "roles": 1,
       "stages": 2
     },
-    "Warnings": [],
+    "Warnings": \[\],
     "meta": {
       "Author": "",
       "CodeSource": "",
@@ -96,4 +97,4 @@
       "Writable": false
     }
   }
-]
+\]

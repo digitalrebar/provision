@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-PATH="$PWD/bin/$(go env GOOS)/$(go env GOARCH):$PATH"
-
+set -e
+export PATH="$PWD/bin/$(go env GOOS)/$(go env GOARCH):$PATH"
+export GO111MODULE=on
 if ! which dr-provision &>/dev/null; then
     echo "No dr-provision binary to run tests against"
     exit 1
@@ -10,6 +11,9 @@ if ! [[ $(dr-provision --version 2>&1) =~ $ver_re ]]; then
     echo "Make sure a dr-provision binary of at least v4.0.0 or later is in your PATH"
     exit 1
 fi
+
+tools/build-one.sh cmds/drpcli
+tools/build-one.sh cmds/incrementer
 
 echo Running with $(which dr-provision) version $BASH_REMATCH
 
