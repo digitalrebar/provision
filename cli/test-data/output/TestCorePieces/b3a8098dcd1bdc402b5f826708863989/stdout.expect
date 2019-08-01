@@ -1,1 +1,2 @@
-Version: v4.0.0-pre+NotSet
+RE:
+Version: v4\.[0-9]+\.[0-9]+.*

@@ -77,44 +77,7 @@ func (i *Info) Fill() {
 		i.Stats = make([]Stat, 0, 0)
 	}
 	if i.Features == nil {
-		i.Features = []string{
-			"api-v3",
-			"sane-exit-codes",
-			"common-blob-size",
-			"change-stage-map",
-			"job-exit-states",
-			"package-repository-handling",
-			"profileless-machine",
-			"threaded-log-levels",
-			"plugin-v2",
-			"fsm-runner",
-			"plugin-v2-safe-config",
-			"workflows",
-			"default-workflow",
-			"http-range-header",
-			"roles",
-			"tenants",
-			"secure-params",
-			"separate-meta-api",
-			"slim-objects",
-			"secure-param-upgrade",
-			"sprig",
-			"multiarch",
-			"actions-in-task-list",
-			"endpoint-refs",
-			"endpoint-proxy",
-			"inline-upgrade",
-			"bundle-objects",
-			"secure-params-in-content-packs",
-			"task-prerequisites",
-			"content-prerequisite-version-checking",
-			"stage-paramer",
-			"auto-boot-target",
-			"partial-objects",
-			"regex-string-filters",
-			"file-iso-exists-info-render",
-			"log-has-head-method",
-		}
+		i.Features = []string{}
 	}
 	if i.Scopes == nil {
 		scopes := map[string]map[string]struct{}{}
