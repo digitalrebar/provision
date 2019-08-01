@@ -485,6 +485,18 @@ func TestMain(m *testing.M) {
 		log.Printf("Creating temp dir for file root failed: %v", err)
 		os.Exit(1)
 	}
+	if err := os.MkdirAll(path.Join(tmpDir, "tftpboot"), 0700); err != nil {
+		log.Printf("Creating tftpboot dir failed: %v", err)
+		os.RemoveAll(tmpDir)
+		os.Exit(1)
+	}
+	out, err := exec.Command("cp", "-a", "test-data/hammertime", path.Join(tmpDir, "tftpboot")).CombinedOutput()
+	if err != nil {
+		log.Printf("Error copying hammertime: %v", err)
+		log.Printf("%s", string(out))
+		os.RemoveAll(tmpDir)
+		os.Exit(1)
+	}
 	defer os.RemoveAll(tmpDir)
 	if err := test.StartServer(tmpDir); err != nil {
 		log.Printf("Error starting dr-provision: %v", err)

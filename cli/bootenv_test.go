@@ -119,7 +119,7 @@ func TestBootEnvLookaside(t *testing.T) {
     - "sledgehammer/708de8b878e3818b1c1bb598a56de968939f9d4b"
   installSource: true
   arch: amd64
-  url: "http://127.0.0.1:10003/hammertime"
+  url: "http://127.0.0.1:10002/hammertime"
 `).run(t)
 	cliTest(false, false, "bootenvs", "install", "test-data/no-phredhammer.yml").run(t)
 	cliTest(false, false, "bootenvs", "install", "test-data/phredhammer.yml").run(t)
@@ -134,41 +134,40 @@ func TestBootEnvLookaside(t *testing.T) {
 		t.Errorf("http: Invalid status code looking for phredhammer files: %d", resp.StatusCode)
 	} else if resp.ContentLength != 14 {
 		t.Errorf("http: Expected size 14, not %d", resp.ContentLength)
+	}
+	body, _ := ioutil.ReadAll(resp.Body)
+	resp.Body.Close()
+	if string(body) != expected {
+		t.Errorf("http: Wanted body\n`%s`\nnot\n`%s`\n", expected, string(body))
 	} else {
-		body, _ := ioutil.ReadAll(resp.Body)
-		resp.Body.Close()
-		if string(body) != expected {
-			t.Errorf("http: Wanted body\n`%s`\nnot\n`%s`\n", expected, string(body))
-		} else {
-			t.Logf(`http: Lookaside from 
+		t.Logf(`http: Lookaside from 
 http://127.0.0.1:10002/sledgehammer/708de8b878e3818b1c1bb598a56de968939f9d4b/
 to
-http://127.0.0.1:10003/hammertime
+http://127.0.0.1:10002/hammertime
 worked`)
-		}
 	}
 	c, err := tftp.NewClient("127.0.0.1:10003")
 	if err == nil {
 		c.RequestTSize(true)
-		if src, err := c.Receive(testFile, ""); err != nil {
+		src, err := c.Receive(testFile, "")
+		if err != nil {
 			t.Errorf("tftp: Error fetching: %v", err)
 		} else if n, ok := src.(tftp.IncomingTransfer); !ok {
 			t.Errorf("tftp: Expected to get a sized answer, but did not")
 		} else if sz, _ := n.Size(); sz != 14 {
 			t.Errorf("tftp: Expected size 14, got %d", sz)
+		}
+		buf := &bytes.Buffer{}
+		src.WriteTo(buf)
+		body := buf.String()
+		if body != expected {
+			t.Errorf("tftp: Wanted body\n`%s`\nnot\n`%s`\n", expected, body)
 		} else {
-			buf := &bytes.Buffer{}
-			src.WriteTo(buf)
-			body := buf.String()
-			if body != expected {
-				t.Errorf("tftp: Wanted body\n`%s`\nnot\n`%s`\n", expected, body)
-			} else {
-				t.Logf(`tftp: Lookaside from 
+			t.Logf(`tftp: Lookaside from 
 sledgehammer/708de8b878e3818b1c1bb598a56de968939f9d4b/vmlinuz0
 to
 http://127.0.0.1:10003/hammertime/vmlinuz0
 worked`)
-			}
 		}
 	}
 	cliTest(false, false, "profiles", "remove", "global", "param", "package-repositories").run(t)
