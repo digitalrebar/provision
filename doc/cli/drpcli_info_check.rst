@@ -1,19 +1,23 @@
-drpcli info
------------
+drpcli info check
+-----------------
 
-Access CLI commands relating to info
+Fast API check that returns DRP Version
 
 Synopsis
 ~~~~~~~~
 
-Access CLI commands relating to info
+A helper function to return API response with version of DRP
+
+::
+
+   drpcli info check [flags]
 
 Options
 ~~~~~~~
 
 ::
 
-     -h, --help   help for info
+     -h, --help   help for check
 
 Options inherited from parent commands
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -36,10 +40,5 @@ Options inherited from parent commands
 SEE ALSO
 ~~~~~~~~
 
--  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
-   DigitalRebar Provision API
--  `drpcli info check <drpcli_info_check.html>`__ - Fast API check that
-   returns DRP Version
--  `drpcli info get <drpcli_info_get.html>`__ - Get info about DRP
--  `drpcli info status <drpcli_info_status.html>`__ - Get aliveness
-   status of the various DRP ports
+-  `drpcli info <drpcli_info.html>`__ - Access CLI commands relating to
+   info
