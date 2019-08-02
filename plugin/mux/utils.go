@@ -78,7 +78,7 @@ func AssureDecode(w http.ResponseWriter, r *http.Request, val interface{}) bool 
 // Get provides a path for the Plugin to get data from
 // DRP over the Plugin Server RestFUL API.
 func Get(client *http.Client, path string) ([]byte, error) {
-	resp, err := client.Get(fmt.Sprintf("http://unix/api-server-plugin/v3%s", path))
+	resp, err := client.Get(fmt.Sprintf("http://unix/api-server-plugin/v4%s", path))
 	if err != nil {
 		return nil, err
 	}
@@ -106,7 +106,7 @@ func Post(client *http.Client, path string, indata interface{}) ([]byte, error) 
 		return nil, err
 	}
 	resp, err := client.Post(
-		fmt.Sprintf("http://unix/api-server-plugin/v3%s", path),
+		fmt.Sprintf("http://unix/api-server-plugin/v4%s", path),
 		"application/json",
 		strings.NewReader(string(data)))
 	if err != nil {
@@ -132,7 +132,7 @@ func Post(client *http.Client, path string, indata interface{}) ([]byte, error) 
 // DRP over the Plugin Server RestFUL API.
 func Delete(client *http.Client, path string) error {
 	req, err := http.NewRequest("DELETE",
-		fmt.Sprintf("http://unix/api-server-plugin/v3%s", path),
+		fmt.Sprintf("http://unix/api-server-plugin/v4%s", path),
 		nil)
 	if err != nil {
 		return err

@@ -38,6 +38,5 @@ func StartServer(tmpDir string) error {
 }
 
 func StopServer() error {
-	server.Process.Signal(os.Kill)
-	return server.Wait()
+	return nil
 }

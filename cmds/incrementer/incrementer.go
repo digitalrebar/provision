@@ -21,7 +21,7 @@ var (
 	def     = models.PluginProvider{
 		Name:          "incrementer",
 		Version:       version,
-		PluginVersion: 2,
+		PluginVersion: 4,
 		HasPublish:    true,
 		AvailableActions: []models.AvailableAction{
 			{Command: "increment",

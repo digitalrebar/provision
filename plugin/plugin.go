@@ -227,23 +227,23 @@ func run(toPath, fromPath string, pc PluginConfig) error {
 		},
 	}
 	pmux := mux.New(thelog)
-	pmux.Handle("/api-plugin/v3/config",
+	pmux.Handle("/api-plugin/v4/config",
 		func(w http.ResponseWriter, r *http.Request) { configHandler(w, r, pc) })
 	if ps, ok := pc.(PluginStop); ok {
-		pmux.Handle("/api-plugin/v3/stop",
+		pmux.Handle("/api-plugin/v4/stop",
 			func(w http.ResponseWriter, r *http.Request) { stopHandler(w, r, ps) })
 	} else {
-		pmux.Handle("/api-plugin/v3/stop",
+		pmux.Handle("/api-plugin/v4/stop",
 			func(w http.ResponseWriter, r *http.Request) { stopHandler(w, r, nil) })
 	}
 
 	// Optional Pieces
 	if pp, ok := pc.(PluginPublisher); ok {
-		pmux.Handle("/api-plugin/v3/publish",
+		pmux.Handle("/api-plugin/v4/publish",
 			func(w http.ResponseWriter, r *http.Request) { publishHandler(w, r, pp) })
 	}
 	if pa, ok := pc.(PluginActor); ok {
-		pmux.Handle("/api-plugin/v3/action",
+		pmux.Handle("/api-plugin/v4/action",
 			func(w http.ResponseWriter, r *http.Request) { actionHandler(w, r, pa) })
 	}
 	os.Remove(toPath)

@@ -517,10 +517,13 @@ func TestMain(m *testing.M) {
 	}
 	if err != nil {
 		log.Printf("Error starting test run: %v", err)
+		test.StopServer()
 		os.RemoveAll(tmpDir)
 		os.Exit(1)
 	}
 	ret := m.Run()
+
+	test.StopServer()
 
 	err = os.RemoveAll(tmpDir)
 	if err != nil {

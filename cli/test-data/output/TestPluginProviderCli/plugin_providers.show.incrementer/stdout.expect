@@ -37,7 +37,7 @@ RE:
     "Color": "",
     "Copyright": "",
     "Description": "Test Plugin for DRP",
-    "DisplayName": "",
+    "DisplayName": "Incrementer Test Plugin",
     "DocUrl": "",
     "Documentation": "",
     "Icon": "",
@@ -55,7 +55,7 @@ RE:
   },
   "Name": "incrementer",
   "OptionalParams": \[\],
-  "PluginVersion": 2,
+  "PluginVersion": 4,
   "RequiredParams": \[\],
   "StoreObjects": {
     "cows": {},
