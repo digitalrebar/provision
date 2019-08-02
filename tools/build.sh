@@ -20,12 +20,6 @@ tools/build-one.sh cmds/drbundler
 # set our arch:os build pairs to compile for
 builds="amd64:linux amd64:darwin amd64:windows arm64:linux arm:linux"
 
-[[ $GOOS ]] || export GOOS=$(go env GOOS)
-[[ $GOARCH ]] || export GOARCH=$(go env GOARCH)
-[[ $GOARCH = arm ]] && export GOARM=7
-binpath="$PWD/bin/$GOOS/${GOARCH}${GOARM+v${GOARM}}"
-export PATH="$PWD/$binpath:$PATH"
-
 # anything on command line will override our pairs listed above
 [[ $* ]] && builds="$*"
 
