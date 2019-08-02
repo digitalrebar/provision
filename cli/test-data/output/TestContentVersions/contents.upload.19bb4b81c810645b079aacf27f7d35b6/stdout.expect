@@ -1,3 +1,6 @@
+Counts: {}
+Warnings:
+- Layer basic has foo as a prerequisite, but foo does not exist!
 meta:
   Author: ""
   CodeSource: ""
@@ -19,5 +22,4 @@ meta:
   Type: dynamic
   Version: 1.2.4
   Writable: false
-sections: {}
 

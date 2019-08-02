@@ -1,3 +1,6 @@
+Counts: {}
+Warnings:
+- Layer basic prerequisite test on BasicStore failed
 meta:
   Author: ""
   CodeSource: ""
@@ -12,12 +15,11 @@ meta:
   Name: basic
   Order: ""
   Overwritable: false
-  Prerequisites: 'foo, BasicStore: >=3.12.x'
+  Prerequisites: 'BasicStore: >=9.99.0'
   RequiredFeatures: ""
   Source: ""
   Tags: ""
   Type: dynamic
-  Version: 1.2.4
+  Version: 1.2.3
   Writable: false
-sections: {}
 

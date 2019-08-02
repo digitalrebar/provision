@@ -8,7 +8,7 @@ meta:
   Name: basic
   Version: 1.2.3
   Prerequisites: "BasicStore: >=3.12.0"`).run(t)
-	cliTest(false, true, "contents", "upload", "--format", "yaml", "-").Stdin(`
+	cliTest(false, false, "contents", "upload", "--format", "yaml", "-").Stdin(`
 meta:
   Name: basic
   Version: 1.2.3
@@ -33,7 +33,7 @@ meta:
   Name: basic
   Version: 1.2.4
   Prerequisites: 'BasicStore: >=3.12.foo'`).run(t)
-	cliTest(false, true, "contents", "upload", "--format", "yaml", "-").Stdin(`
+	cliTest(false, false, "contents", "upload", "--format", "yaml", "-").Stdin(`
 meta:
   Name: basic
   Version: 1.2.4
