@@ -5,7 +5,7 @@
 [[ $GOARCH ]] || export GOARCH=$(go env GOARCH)
 [[ $GOARCH = arm ]] && export GOARM=7
 binpath="$PWD/bin/$GOOS/${GOARCH}${GOARM+v${GOARM}}"
-export PATH="$PWD/$binpath:$PATH"
+export PATH="$PWD/bin/$(go version | awk '{ print $4 }'):$PATH"
 exename="${1##*/}"
 [[ $GOOS = "windows" ]] && exename="${exename}.exe"
 mkdir -p "$binpath"

@@ -2,6 +2,8 @@
 
 set -e
 
+export GO111MODULE=on
+
 # Work out the GO version we are working with:
 GO_VERSION=$(go version | awk '{ print $3 }' | sed 's/go//')
 WANTED_VER=(1 12)
