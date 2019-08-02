@@ -308,6 +308,7 @@ func TestInfo(t *testing.T) {
 			info, err := session.Info()
 			if info != nil {
 				info.Version = ""
+				info.License = models.LicenseBundle{Licenses: []models.License{}}
 			}
 			return info, err
 		},

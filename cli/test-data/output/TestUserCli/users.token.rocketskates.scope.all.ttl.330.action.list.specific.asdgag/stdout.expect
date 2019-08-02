@@ -2,13 +2,136 @@ RE:
 \{
   "Info": \{
     "License": {
-      "Contact": "",
+      "Contact": "Personal Use User",
       "ContactEmail": "",
       "ContactId": "",
+      "Endpoints": \[
+        "Fred"
+      \],
       "GenerationVersion": "",
-      "Grantor": "",
-      "GrantorEmail": "",
-      "Licenses": \[\],
+      "Grantor": "RackN Inc.",
+      "GrantorEmail": "support@rackn.com",
+      "Licenses": \[
+        {
+          "Active": true,
+          "Data": {
+            "machines": 20
+          },
+          "Expired": false,
+          "HardExpireDate": "9999-01-01T01:01:01Z",
+          "LongLicense": "RackN Automatic Personal Use License",
+          "Name": "upto-nodes",
+          "PurchaseDate": "0001-01-01T00:00:00Z",
+          "ShortLicense": "Personal Use Only",
+          "SoftExpireDate": "4000-01-01T01:01:01Z",
+          "StartDate": "0001-01-01T00:00:00Z",
+          "Version": ""
+        },
+        {
+          "Active": false,
+          "Data": null,
+          "Expired": true,
+          "HardExpireDate": "0001-01-01T00:00:00Z",
+          "LongLicense": "Contact support@rackn.com for ActiveDirectory integration",
+          "Name": "ad-auth",
+          "PurchaseDate": "0001-01-01T00:00:00Z",
+          "ShortLicense": "Restricted",
+          "SoftExpireDate": "0001-01-01T00:00:00Z",
+          "StartDate": "0001-01-01T00:00:00Z",
+          "Version": ""
+        },
+        {
+          "Active": false,
+          "Data": null,
+          "Expired": true,
+          "HardExpireDate": "0001-01-01T00:00:00Z",
+          "LongLicense": "Contact support@rackn.com for PayGo billing",
+          "Name": "billing",
+          "PurchaseDate": "0001-01-01T00:00:00Z",
+          "ShortLicense": "Restricted",
+          "SoftExpireDate": "0001-01-01T00:00:00Z",
+          "StartDate": "0001-01-01T00:00:00Z",
+          "Version": ""
+        },
+        {
+          "Active": false,
+          "Data": null,
+          "Expired": true,
+          "HardExpireDate": "0001-01-01T00:00:00Z",
+          "LongLicense": "Contact support@rackn.com for external service integration",
+          "Name": "callback",
+          "PurchaseDate": "0001-01-01T00:00:00Z",
+          "ShortLicense": "Restricted",
+          "SoftExpireDate": "0001-01-01T00:00:00Z",
+          "StartDate": "0001-01-01T00:00:00Z",
+          "Version": ""
+        },
+        {
+          "Active": false,
+          "Data": null,
+          "Expired": true,
+          "HardExpireDate": "0001-01-01T00:00:00Z",
+          "LongLicense": "Contact support@rackn.com for unified multi-DRP management",
+          "Name": "manager",
+          "PurchaseDate": "0001-01-01T00:00:00Z",
+          "ShortLicense": "Restricted",
+          "SoftExpireDate": "0001-01-01T00:00:00Z",
+          "StartDate": "0001-01-01T00:00:00Z",
+          "Version": ""
+        },
+        {
+          "Active": false,
+          "Data": null,
+          "Expired": true,
+          "HardExpireDate": "0001-01-01T00:00:00Z",
+          "LongLicense": "Contact support@rackn.com for machine pooling API support",
+          "Name": "pool",
+          "PurchaseDate": "0001-01-01T00:00:00Z",
+          "ShortLicense": "Restricted",
+          "SoftExpireDate": "0001-01-01T00:00:00Z",
+          "StartDate": "0001-01-01T00:00:00Z",
+          "Version": ""
+        },
+        {
+          "Active": false,
+          "Data": null,
+          "Expired": true,
+          "HardExpireDate": "0001-01-01T00:00:00Z",
+          "LongLicense": "Contact support@rackn.com for whole-rack integration",
+          "Name": "rack",
+          "PurchaseDate": "0001-01-01T00:00:00Z",
+          "ShortLicense": "Restricted",
+          "SoftExpireDate": "0001-01-01T00:00:00Z",
+          "StartDate": "0001-01-01T00:00:00Z",
+          "Version": ""
+        },
+        {
+          "Active": false,
+          "Data": null,
+          "Expired": true,
+          "HardExpireDate": "0001-01-01T00:00:00Z",
+          "LongLicense": "Contact support@rackn.com for fine-grained access control",
+          "Name": "rbac",
+          "PurchaseDate": "0001-01-01T00:00:00Z",
+          "ShortLicense": "Restricted",
+          "SoftExpireDate": "0001-01-01T00:00:00Z",
+          "StartDate": "0001-01-01T00:00:00Z",
+          "Version": ""
+        },
+        {
+          "Active": false,
+          "Data": null,
+          "Expired": true,
+          "HardExpireDate": "0001-01-01T00:00:00Z",
+          "LongLicense": "Contact support@rackn.com for custom user interface views",
+          "Name": "ux-views",
+          "PurchaseDate": "0001-01-01T00:00:00Z",
+          "ShortLicense": "Restricted",
+          "SoftExpireDate": "0001-01-01T00:00:00Z",
+          "StartDate": "0001-01-01T00:00:00Z",
+          "Version": ""
+        }
+      \],
       "Owner": "",
       "OwnerEmail": "",
       "OwnerId": "",

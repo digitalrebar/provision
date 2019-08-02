@@ -1,3 +1,4 @@
-Error: AUTH
-  Cannot access /api/v3/roles
-  roles create is a licensed enterprise feature.  Contact support@rackn.com
+Error: LICENSE_EXCEEDED: rbac
+  rbac is a licensed enterprise feature.
+  Contact support@rackn.com
+  Access to /api/v3/roles denied
