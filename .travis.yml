@@ -11,43 +11,7 @@ git:
 install:
 - "./tools/build.sh"
 script:
-- "./tools/test.sh"
-# after_success:
-# - bash <(curl -s https://codecov.io/bash) -t 6259c706-5c1d-471f-b62b-4f908ea1801d
-# after_script:
-# - tools/notify.sh digitalrebar/provision
-# notifications:
-#   slack:
-#     secure: Imuptg78FWWZlGVb8LBuwn45CeMfnHgf+pXbftR8mSGFRsg08jw38MIRtw/MAET3RJsciwDXf22AkgM8WgZ+fcUbJI4MGn2IvnM40T/imc5deqlMn1QdE5HasWrrBwfyY7hDu8XBexit+2fmYLGGrHX2fsbvUJepT4xOV8MZbZWMYueoBuL2bxNRR+lhjqVsKMq+/8q4g7hsKxYOdStEOZQIM13qI8dbIIQK4cCPQGtdNMGlNSX0a/nEFZmxDKh3WILssZcRst7SW3QldYppJO21PcTmY/zCTLJ5b7izweLczDmV77ckv61X50B8iaarhwEMFYs9Icg8U69mAkbqeU5HsWy1d2VDPDG+QW32VMTU371pVEzsmBVzArSXvldULmRzYcA+9LoYb5P6LNbq2y7tdimETOElbkMyw53hnb4ZPiypLWlwusZibCxGsJMp41MgbxxaMKxUgrBsAY9nSBg/oj7ixditveXm5IjqBJXfFyxuxfvcxssT15AiqFI3z+Mpoarq233V7E/c0AwdYc/iJKPtW8DG2uSjb0EMIKopXjEi/tz8ykVQH1UbKww5PvGfzCw2mCNF+Bc925coTs8gwaU+XOnqQesggUheAmpaQhbdPGpNYecbLgtQ3kafEBllTrgLyTqISkXlDMZybItP1C8GrEEshGWSEzBAEGU=
-# deploy:
-# - provider: releases
-#   overwrite: true
-#   api_key:
-#     secure: qdX7rFhTWwwKCFNTAofzV+ln67fnn/ANDqfKcowjJAVWcv6cJ56Rg5Q9N0lL9y0wBzxRHM5yRCJKJGp432VC89l9ZWN2sSoNcZbQt/hLBAymP4F3KhGDQWFgKVo+JbzHvYCFuLm3pyyAZ8HrhOZZgv8vW76AXtFNhDmM7fB+LpkBHaFx/T2MiabAm1O2CLZJbk4AGq/Ach42FjGRSMxIIcsR3Ud82zrqjktgXm3jiv9t4aCghkiBh5JqisDhBVAFtfmAncgKhjBqMG5K4R2LpVhlFPLs9Y+kEE02/8c089gHPNYhDwZLbfyUF72lyuQ5H0sqSe/JGKUOgpGcSiafCy0gYGiLEH1vqxqkfdcGybS67dv09pPTos4ke0Nv+7feFFEzE6eplT1r2sDadIxFfp8e8mgW+NsbSY/Pgs7hGvi8K/qc2Zy/PRCZzAAOI3/QhpsxAowv+7TG27y1Z6SYTvqpJRL4Hr61P0UA8EUDeYTn5jdQKJss2kDB8QfNwyshDBR56rAlDZQoYuYl8w7hLLpUhdcQjnDQ3126f9EVDVgwYL43NIUehWoSU0Fq+5oGykn6bDY8QkPBUa3vpBrtRZmt3zF4OOlP8Kn9gc9Xr1+8ItBh3bXJFuHm4CN6JFCGS4aamEYQA/CK5x5WquA+ezyUbKVaKrfsBXGg5gKONZQ=
-#   file_glob: true
-#   file:
-#   - dr-provision.zip
-#   - dr-provision.sha256
-#   - embedded/assets/swagger.json
-#   - dr-provision-hash.*
-#   - bin/linux/amd64/drbundler
-#   - bin/linux/amd64/drpcli
-#   skip_cleanup: true
-#   on:
-#     repo: digitalrebar/provision
-#     tags: true
-# - provider: s3
-#   access_key_id: AKIAJY25W4N3CA7NRHJQ
-#   secret_access_key:
-#     secure: wm44jblhYwkhRGUg8x55MJP3Sj8ZUVRvoM5gymJnL/DSfhkPKmnFUnJpd7RNnQDAMw57JdM+fFIOIHagU7eorfPVOBAJp/Ml2hhiRchQBlligHMZD7e6MWjMwDnW5w8nmJSY2Qmy/rNHg1KguG1MW7uPJUMTLFPexAz0OPFS782VtQxR0S6PIF2dEqDiw7fiydKFqsXjH0t8mfxOH0yo2pcelwNpG1IjLHTOhUn0mZaUosXnT1seUBJEAcpKVs9C5k+f5WMe2LHlJwBowgqGsj7J1exYhfhP1vAgpt3LytHsX4EmsGyFEfm0y3pYElZtruzKUEd/8+vKYwnngaCUZqLRS3wlz+F3wJgKHXCrBmzB1NY5fWKwWjZAT1TzdwEpKTnoxCGg/xbY5YzkFdUe8nXnEbk0oxehwGBwlvWU1aCGeov0rlKjQDBiZSkO0PKgSdnvDvyE69HP88EMq9ZgDn/R3iPtT49Pr/nfb3LPYZZfAvYva98beAnlX7aahbcrZuVvy05oEUP40CPbVzkzoHADk+OXPdKAxDVzYR/UHmvGVNJmBy5xtPxLeOt27uH7whk79tqZch37smkDgI5K2bgyrqxj9SJ04vyoufaRpSV5Nhpjgh2AxdFMQwsjfdyc051d7fcgwhjczS2bdAjx10SzNCdhXtM4gULgv0Yi7qQ=
-#   bucket: rebar-catalog
-#   local-dir: rebar-catalog
-#   region: us-west-2
-#   acl: public_read
-#   skip_cleanup: true
-#   on:
-#     repo: digitalrebar/provision
-#     tags: true
-# env:
-#   global:
-#     secure: KW3gFvw2PdPuVIDNxD+TOfug7A3gFbC3SIVe+iAeED79i+T1ouQOlxhNAWxu6vAeIPoqCy6FzwWYTsBlJcOuTbhM1cz2zXXjsvI+uBgIcydcM0lgWWMQ1utcn0HOF9l8Q83IeCJGG3LQRBw/V5oxIUgskteJeLwyR0m5r0vsDDeI8rFAMN4psY+0jmfZT/K06XMMIjLwBKKgfUAiXRcltHr4FNUFNq0Rha40YXIcuv5JhrjOQyBEUsEUoMm2kWGqWiT4qZD6At3pUUMQHFBaYZMR6DuwBlIX9LOZiP5YLdKs4+sMmFiU+qUzojw6e1eyDOJ9OfUgjVX+f5ufZI143rbugjHBFEhYHra1HSjZU5UHwrQeHc5N9JEx26xzuHGo2Nk5WLhdh1dTFNWjemAwkRUt+IcQHuh02bAYhwy5aKuMEdNk/tZXDWKzrWTrtm4AHBCOFVGkeyb2iquprP33Q9JQKbjXhSDLpoIPh7fhVfguBPqFLOJzucf5FHfa/ACFsV5D++HFbxkhzceTwJJvXaBwuiWsByIuT93Aw2NR4b/59QdQSfiJwBPy+Bv3Se12637g3ApCEz9/WV6s77xnw1qNbtZhJGI9lUUOY5KbNOvi8v5xJh20ttdHWZSWfd36TV2qGQNhgqAP2y71UX8i4bpf4ivP/cBgx8r38YvP92A=
+- "./tools/test-noop.sh"
+notifications:
+  slack:
+    secure: Imuptg78FWWZlGVb8LBuwn45CeMfnHgf+pXbftR8mSGFRsg08jw38MIRtw/MAET3RJsciwDXf22AkgM8WgZ+fcUbJI4MGn2IvnM40T/imc5deqlMn1QdE5HasWrrBwfyY7hDu8XBexit+2fmYLGGrHX2fsbvUJepT4xOV8MZbZWMYueoBuL2bxNRR+lhjqVsKMq+/8q4g7hsKxYOdStEOZQIM13qI8dbIIQK4cCPQGtdNMGlNSX0a/nEFZmxDKh3WILssZcRst7SW3QldYppJO21PcTmY/zCTLJ5b7izweLczDmV77ckv61X50B8iaarhwEMFYs9Icg8U69mAkbqeU5HsWy1d2VDPDG+QW32VMTU371pVEzsmBVzArSXvldULmRzYcA+9LoYb5P6LNbq2y7tdimETOElbkMyw53hnb4ZPiypLWlwusZibCxGsJMp41MgbxxaMKxUgrBsAY9nSBg/oj7ixditveXm5IjqBJXfFyxuxfvcxssT15AiqFI3z+Mpoarq233V7E/c0AwdYc/iJKPtW8DG2uSjb0EMIKopXjEi/tz8ykVQH1UbKww5PvGfzCw2mCNF+Bc925coTs8gwaU+XOnqQesggUheAmpaQhbdPGpNYecbLgtQ3kafEBllTrgLyTqISkXlDMZybItP1C8GrEEshGWSEzBAEGU=
