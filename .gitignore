@@ -47,3 +47,4 @@ test-data/etc/dr-provision/._Version.meta
 # documentation
 builddir/
 _build/
+profile*.txt
