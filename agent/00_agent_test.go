@@ -159,7 +159,7 @@ func TestMain(m *testing.M) {
 		log.Printf("Creating temp dir for file root failed: %v", err)
 		os.Exit(1)
 	}
-	if err := test.StartServer(tmpDir); err != nil {
+	if err := test.StartServer(tmpDir, 10021); err != nil {
 		log.Printf("Error starting dr-provision: %v", err)
 		os.RemoveAll(tmpDir)
 		os.Exit(1)
@@ -168,7 +168,7 @@ func TestMain(m *testing.M) {
 	count := 0
 	for count < 30 {
 		var apierr error
-		session, apierr = api.UserSession("https://127.0.0.1:10001", "rocketskates", "r0cketsk8ts")
+		session, apierr = api.UserSession("https://127.0.0.1:10021", "rocketskates", "r0cketsk8ts")
 		if apierr == nil {
 			break
 		}

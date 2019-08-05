@@ -498,7 +498,7 @@ func TestMain(m *testing.M) {
 		os.Exit(1)
 	}
 	defer os.RemoveAll(tmpDir)
-	if err := test.StartServer(tmpDir); err != nil {
+	if err := test.StartServer(tmpDir, 10001); err != nil {
 		log.Printf("Error starting dr-provision: %v", err)
 		os.RemoveAll(tmpDir)
 		os.Exit(1)

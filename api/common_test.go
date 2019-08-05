@@ -156,14 +156,14 @@ func TestMain(m *testing.M) {
 		os.Exit(1)
 	}
 	defer os.RemoveAll(tmpDir)
-	if err := test.StartServer(tmpDir); err != nil {
+	if err := test.StartServer(tmpDir, 10011); err != nil {
 		log.Printf("Error starting dr-provision: %v", err)
 		os.RemoveAll(tmpDir)
 		os.Exit(1)
 	}
 	count := 0
 	for count < 30 {
-		session, err = UserSession("https://127.0.0.1:10001", "rocketskates", "r0cketsk8ts")
+		session, err = UserSession("https://127.0.0.1:10011", "rocketskates", "r0cketsk8ts")
 		if err == nil {
 			break
 		}
