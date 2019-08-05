@@ -12,7 +12,7 @@ var (
 	server *exec.Cmd
 )
 
-func StartServer(tmpDir string) error {
+func StartServer(tmpDir string, basePort int) error {
 	apiPort := fmt.Sprintf("%d", basePort)
 	staticPort := fmt.Sprintf("%d", basePort+1)
 	tftpPort := fmt.Sprintf("%d", basePort+2)
