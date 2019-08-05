@@ -46,5 +46,7 @@ func StartServer(tmpDir string, basePort int) error {
 }
 
 func StopServer() error {
+	server.Process.Signal(os.Kill)
+	server.Process.Kill()
 	return nil
 }
