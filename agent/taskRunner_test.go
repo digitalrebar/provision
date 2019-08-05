@@ -70,7 +70,7 @@ func TestJobs(t *testing.T) {
 	defer os.RemoveAll(tjd)
 	os.Setenv("JT", tjd)
 	if session == nil {
-		session, err = api.UserSession("https://127.0.0.1:10001", "rocketskates", "r0cketsk8ts")
+		session, err = api.UserSession("https://127.0.0.1:10021", "rocketskates", "r0cketsk8ts")
 		if err != nil {
 			t.Errorf("Error creating session: %v", err)
 			return
