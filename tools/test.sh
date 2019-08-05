@@ -29,7 +29,7 @@ github.com/digitalrebar/provision/v4/agent\
 i=0
 for d in $(go list ./... 2>/dev/null | egrep -v 'cmds|test') ; do
     echo "----------- TESTING $d -----------"
-    time go test -timeout 30m -race -covermode=atomic -coverpkg=$packages -coverprofile="profile${i}-c.txt" "$d" || FAILED=true
+    time go test -v -timeout 30m -race -covermode=atomic -coverpkg=$packages -coverprofile="profile${i}-c.txt" "$d" || FAILED=true
     i=$((i+1))
 done
 
