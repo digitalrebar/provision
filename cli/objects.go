@@ -28,7 +28,7 @@ func addObjectCommands() (res *cobra.Command) {
 		Long:  `A helper function to return object types in DRP`,
 		Args:  cobra.NoArgs,
 		RunE: func(c *cobra.Command, args []string) error {
-			d, err := session.Objects()
+			d, err := Session.Objects()
 			if err != nil {
 				return generateError(err, "Failed to fetch info on %v", singularName)
 			}

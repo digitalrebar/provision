@@ -1,1 +1,0 @@
-Error: ValidationError: reservations/C0A87B1E: Address 192.168.123.30 is not in a defined Subnet, and Scoped is true.

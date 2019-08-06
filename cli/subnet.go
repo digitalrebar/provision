@@ -231,7 +231,7 @@ func registerSubnet(app *cobra.Command) {
 			}
 			getVal := byte(gv)
 			sub := &models.Subnet{}
-			if e := session.FillModel(sub, subName); e != nil {
+			if e := Session.FillModel(sub, subName); e != nil {
 				return e
 			}
 

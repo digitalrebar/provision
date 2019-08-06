@@ -30,7 +30,7 @@ func registerEvent(app *cobra.Command) {
 			if err := into(args[0], evt); err != nil {
 				return fmt.Errorf("Invalid event: %v\n", err)
 			}
-			return session.PostEvent(evt)
+			return Session.PostEvent(evt)
 		},
 	})
 	res.AddCommand(&cobra.Command{
@@ -43,7 +43,7 @@ func registerEvent(app *cobra.Command) {
 			return nil
 		},
 		RunE: func(c *cobra.Command, args []string) error {
-			stream, err := session.Events()
+			stream, err := Session.Events()
 			if err != nil {
 				return err
 			}

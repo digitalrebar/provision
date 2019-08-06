@@ -23,7 +23,7 @@ func init() {
 }
 
 func decryptForUpload(c *models.Content, key string) error {
-	if s, e := session.Info(); e != nil || !s.HasFeature("secure-params-in-content-packs") {
+	if s, e := Session.Info(); e != nil || !s.HasFeature("secure-params-in-content-packs") {
 		return nil
 	}
 	if key == "" {
@@ -63,11 +63,11 @@ func decryptForUpload(c *models.Content, key string) error {
 }
 
 func encryptAfterDownload(c *models.Content) (key []byte, err error) {
-	if s, e := session.Info(); e != nil || !s.HasFeature("secure-params-in-content-packs") {
+	if s, e := Session.Info(); e != nil || !s.HasFeature("secure-params-in-content-packs") {
 		return
 	}
 	sp := []models.Param{}
-	if err = session.Req().Filter("params", "Secure", "Eq", "true").Do(&sp); err != nil {
+	if err = Session.Req().Filter("params", "Secure", "Eq", "true").Do(&sp); err != nil {
 		return
 	}
 	if len(sp) == 0 {
@@ -128,7 +128,7 @@ func replaceContent(path, key string) error {
 	if err := decryptForUpload(layer, key); err != nil {
 		return generateError(err, "Error preparing layer")
 	}
-	summary, err := session.GetContentSummary()
+	summary, err := Session.GetContentSummary()
 	if err != nil {
 		return generateError(err, "Error uploading layer")
 	}
@@ -141,9 +141,9 @@ func replaceContent(path, key string) error {
 	}
 	var res interface{}
 	if exists {
-		res, err = session.ReplaceContent(layer)
+		res, err = Session.ReplaceContent(layer)
 	} else {
-		res, err = session.CreateContent(layer)
+		res, err = Session.CreateContent(layer)
 	}
 	if err == nil {
 		return prettyPrint(res)
@@ -169,7 +169,7 @@ func registerContent(app *cobra.Command) {
 			return fmt.Errorf("%v does not support filtering", c.UseLine())
 		},
 		RunE: func(c *cobra.Command, args []string) error {
-			summary, err := session.GetContentSummary()
+			summary, err := Session.GetContentSummary()
 			if err != nil {
 				return generateError(err, "listing contents")
 			}
@@ -186,7 +186,7 @@ func registerContent(app *cobra.Command) {
 			return nil
 		},
 		RunE: func(c *cobra.Command, args []string) error {
-			layer, err := session.GetContentItem(args[0])
+			layer, err := Session.GetContentItem(args[0])
 			if err != nil {
 				return generateError(err, "Failed to fetch content: %s", args[0])
 			}
@@ -217,7 +217,7 @@ func registerContent(app *cobra.Command) {
 			return nil
 		},
 		RunE: func(c *cobra.Command, args []string) error {
-			_, err := session.GetContentItem(args[0])
+			_, err := Session.GetContentItem(args[0])
 			if err != nil {
 				return fmt.Errorf("content:%s does not exist", args[0])
 			}
@@ -241,7 +241,7 @@ func registerContent(app *cobra.Command) {
 			if err := decryptForUpload(layer, key); err != nil {
 				return generateError(err, "Error preparing layer")
 			}
-			if res, err := session.CreateContent(layer); err != nil {
+			if res, err := Session.CreateContent(layer); err != nil {
 				return generateError(err, "Error adding content layer")
 			} else {
 				return prettyPrint(res)
@@ -271,7 +271,7 @@ func registerContent(app *cobra.Command) {
 			if id != layer.Meta.Name {
 				return fmt.Errorf("Passed ID %s does not match layer ID %s", id, layer.Meta.Name)
 			}
-			if res, err := session.ReplaceContent(layer); err != nil {
+			if res, err := Session.ReplaceContent(layer); err != nil {
 				return generateError(err, "Error replacing content layer")
 			} else {
 				return prettyPrint(res)
@@ -305,7 +305,7 @@ func registerContent(app *cobra.Command) {
 			return nil
 		},
 		RunE: func(c *cobra.Command, args []string) error {
-			if err := session.DeleteContent(args[0]); err != nil {
+			if err := Session.DeleteContent(args[0]); err != nil {
 				return generateError(err, "Error deleting content layer")
 			}
 			fmt.Printf("Deleted content %s", args[0])
@@ -474,7 +474,7 @@ func registerContent(app *cobra.Command) {
 					if strings.ContainsAny(lookupKey, "=") {
 						listArgs := strings.SplitN(lookupKey, "=", 2)
 						listArgs = append(listArgs, "decode", "true")
-						items, err := session.ListModel(prefix, listArgs...)
+						items, err := Session.ListModel(prefix, listArgs...)
 						if err != nil {
 							return fmt.Errorf("Failed to list: %s: %v", lookupKey, err)
 						}
@@ -484,7 +484,7 @@ func registerContent(app *cobra.Command) {
 						}
 					} else {
 						item, _ := models.New(prefix)
-						if err := session.Req().UrlFor(prefix, lookupKey).Params("decode", "true").Do(&item); err != nil {
+						if err := Session.Req().UrlFor(prefix, lookupKey).Params("decode", "true").Do(&item); err != nil {
 							return fmt.Errorf("Failed to get: %s: %v", lookupKey, err)
 						}
 						content.Sections[prefix][item.Key()] = item
@@ -539,7 +539,7 @@ func registerContent(app *cobra.Command) {
 						continue
 					}
 					for _, lookupKey := range list {
-						if _, err := session.DeleteModel(prefix, lookupKey); err != nil {
+						if _, err := Session.DeleteModel(prefix, lookupKey); err != nil {
 							return fmt.Errorf("Failed to delete %s:%s: %v", prefix, lookupKey, err)
 						}
 					}
@@ -598,7 +598,7 @@ func registerContent(app *cobra.Command) {
 					if err := models.Remarshal(v, item); err != nil {
 						return fmt.Errorf("Failed to remarshal %s:%v: %v", prefix, v, err)
 					}
-					if err := session.CreateModel(item); err != nil {
+					if err := Session.CreateModel(item); err != nil {
 						return fmt.Errorf("Failed to create %s:%v: %v", prefix, v, err)
 					}
 				}

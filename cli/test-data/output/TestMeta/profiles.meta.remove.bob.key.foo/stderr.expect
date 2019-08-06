@@ -1,3 +1,0 @@
-Error: PATCH: profiles/bob
-  Patch failed to apply at line 0
-  `/foo` does not point to an existing location

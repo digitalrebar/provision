@@ -1,2 +1,0 @@
-RE:
-Error: ValidationError: machines/[\s\S]*: Invalid Name `test-data/base/machines/bad.json`

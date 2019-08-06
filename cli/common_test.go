@@ -123,9 +123,9 @@ func runCliCommand(t *testing.T, args []string, stdin, realOut, realErr string, 
 		app.SilenceUsage = false
 		app.SetArgs(args)
 		err := app.Execute()
-		if session != nil {
-			session.Close()
-			session = nil
+		if Session != nil {
+			Session.Close()
+			Session = nil
 		}
 		return err
 	} else {
@@ -347,9 +347,9 @@ func testCli(t *testing.T, test CliTest) {
 		if test.trace != "" {
 			args = append(args, "--trace", test.trace, "--traceToken", loc)
 		}
-		if session != nil {
-			session.Close()
-			session = nil
+		if Session != nil {
+			Session.Close()
+			Session = nil
 		}
 	}
 
@@ -477,8 +477,8 @@ func TestCorePieces(t *testing.T) {
 
 func TestMain(m *testing.M) {
 	var err error
-	actuallyPowerThings = false
-	defaultStateLoc = ""
+	ActuallyPowerThings = false
+	DefaultStateLoc = ""
 
 	tmpDir, err = ioutil.TempDir("", "cli-")
 	if err != nil {
@@ -505,14 +505,14 @@ func TestMain(m *testing.M) {
 	}
 	count := 0
 	for count < 30 {
-		session, err = api.UserSession("https://127.0.0.1:10001", "rocketskates", "r0cketsk8ts")
+		Session, err = api.UserSession("https://127.0.0.1:10001", "rocketskates", "r0cketsk8ts")
 		if err == nil {
 			break
 		}
 		time.Sleep(1 * time.Second)
 		count++
 	}
-	if session == nil {
+	if Session == nil {
 		err = fmt.Errorf("Failed to create UserSession: %v", err)
 	}
 	if err != nil {

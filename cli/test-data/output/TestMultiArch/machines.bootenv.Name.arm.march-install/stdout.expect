@@ -1,7 +1,0 @@
-RE:
-  "Arch": "arm",
-  "Available": false,
-  "BootEnv": "march-install",
-  "Name": "arm",
-  "OS": "march",
-  "Validated": true,

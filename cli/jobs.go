@@ -42,15 +42,15 @@ You may also pass in a machine UUID or Name to create a new job on that Name.
 			if err := into(args[0], ref); err != nil {
 				if args[0] != "-" {
 					m := &models.Machine{}
-					if err := session.FillModel(m, args[0]); err != nil {
-						if err := session.FillModel(m, "Name:"+args[0]); err != nil {
+					if err := Session.FillModel(m, args[0]); err != nil {
+						if err := Session.FillModel(m, "Name:"+args[0]); err != nil {
 							return fmt.Errorf("Unable to create new Job: Invalid machine %s", args[0])
 						}
 					}
 					ref.Machine = m.Uuid
 				}
 			}
-			if err := session.CreateModel(ref); err != nil {
+			if err := Session.CreateModel(ref); err != nil {
 				return generateError(err, "Unable to create new %v", op.singleName)
 			}
 			return prettyPrint(ref)
@@ -69,7 +69,7 @@ You may also pass in a machine UUID or Name to create a new job on that Name.
 		RunE: func(c *cobra.Command, args []string) error {
 			uuid := args[0]
 			res := models.JobActions{}
-			if err := session.Req().UrlFor("jobs", uuid, "actions").
+			if err := Session.Req().UrlFor("jobs", uuid, "actions").
 				Params("os", actionsFor).Do(&res); err != nil {
 				return generateError(err, "Error running action")
 			}
@@ -93,7 +93,7 @@ You may also pass in a machine UUID or Name to create a new job on that Name.
 		RunE: func(c *cobra.Command, args []string) error {
 			uuid := args[0]
 			if len(args) == 1 {
-				if err := session.Req().UrlFor("jobs", uuid, "log").Do(os.Stdout); err != nil {
+				if err := Session.Req().UrlFor("jobs", uuid, "log").Do(os.Stdout); err != nil {
 					return generateError(err, "Error getting log")
 				}
 				return nil
@@ -104,7 +104,7 @@ You may also pass in a machine UUID or Name to create a new job on that Name.
 			} else {
 				src = bytes.NewBufferString(args[1])
 			}
-			if err := session.Req().Put(src).UrlFor("jobs", uuid, "log").Do(nil); err != nil {
+			if err := Session.Req().Put(src).UrlFor("jobs", uuid, "log").Do(nil); err != nil {
 				return generateError(err, "Error appending to log")
 			}
 			return nil

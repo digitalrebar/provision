@@ -24,14 +24,14 @@ func maybeEncryptParam(param string,
 	prefix, key string,
 	val interface{}) (interface{}, error) {
 	p := &models.Param{}
-	if err := session.FillModel(p, param); err != nil {
+	if err := Session.FillModel(p, param); err != nil {
 		return val, nil
 	}
 	if !p.Secure {
 		return val, nil
 	}
 	k := []byte{}
-	if err := session.Req().UrlFor(prefix, key, "pubkey").Do(&k); err != nil {
+	if err := Session.Req().UrlFor(prefix, key, "pubkey").Do(&k); err != nil {
 		return nil, err
 	}
 
@@ -46,7 +46,7 @@ func (o *ops) refOrFill(key string) (data models.Model, err error) {
 	}
 
 	if ref == "" {
-		if err = session.FillModel(data, key); err != nil {
+		if err = Session.FillModel(data, key); err != nil {
 			return
 		}
 	} else {

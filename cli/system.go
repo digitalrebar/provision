@@ -46,7 +46,7 @@ func addSystemCommands() (res *cobra.Command) {
 				return fmt.Errorf("Error opening %s: %v", filePath, err)
 			}
 			defer fi.Close()
-			if info, err := session.PostBlob(fi, "system", "upgrade"); err != nil {
+			if info, err := Session.PostBlob(fi, "system", "upgrade"); err != nil {
 				return generateError(err, "Failed to post upgrade: %v", filePath)
 			} else {
 				return prettyPrint(info)

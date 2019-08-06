@@ -12,7 +12,7 @@ func registerLog(app *cobra.Command) {
 		Short: "Watch log entrys as they come in real time",
 		Args:  cobra.NoArgs,
 		RunE: func(c *cobra.Command, args []string) error {
-			stream, err := session.Events()
+			stream, err := Session.Events()
 			if err != nil {
 				return err
 			}
@@ -35,7 +35,7 @@ func registerLog(app *cobra.Command) {
 		Short: "Get the currently buffered log entries from dr-provision",
 		Args:  cobra.NoArgs,
 		RunE: func(c *cobra.Command, args []string) error {
-			res, err := session.Logs()
+			res, err := Session.Logs()
 			if err != nil {
 				return err
 			}

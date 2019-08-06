@@ -25,17 +25,17 @@ func writeNetCfg(machine, format, dest string, bindMac bool) error {
 	topology := &netplan.Netplan{}
 	addressing := map[string]interface{}{}
 	bootMac := ""
-	if err := session.Req().
+	if err := Session.Req().
 		UrlFor("machines", machine, "params", "net/interface-topology").
 		Params("aggregate", "true").Do(topology); err != nil {
 		return err
 	}
-	if err := session.Req().
+	if err := Session.Req().
 		UrlFor("machines", machine, "params", "net/interface-config").
 		Params("aggregate", "true").Do(&addressing); err != nil {
 		return err
 	}
-	if err := session.Req().
+	if err := Session.Req().
 		UrlFor("machines", machine, "params", "last-boot-macaddr").
 		Do(&bootMac); err != nil {
 		return err

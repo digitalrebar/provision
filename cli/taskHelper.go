@@ -26,7 +26,7 @@ func (o *ops) tasks() {
 			}
 			ex := models.Clone(data).(models.Tasker)
 			ex.SetTasks(append(ex.GetTasks(), args[1]))
-			res, err := session.PatchToFull(data, ex, ref != "")
+			res, err := Session.PatchToFull(data, ex, ref != "")
 			if err != nil {
 				return generateError(err, "Unable to update %s: %v", o.singleName, args[0])
 			}
@@ -58,7 +58,7 @@ func (o *ops) tasks() {
 				newTasks = append(newTasks, s)
 			}
 			ex.SetTasks(newTasks)
-			res, err := session.PatchToFull(data, ex, ref != "")
+			res, err := Session.PatchToFull(data, ex, ref != "")
 			if err != nil {
 				return generateError(err, "Unable to update %s: %v", o.singleName, args[0])
 			}
@@ -122,7 +122,7 @@ func (o *ops) tasks() {
 					mutable = append(head, tail...)
 				}
 				ex.SetTasks(append(immutable, mutable...))
-				res, err := session.PatchToFull(data, ex, ref != "")
+				res, err := Session.PatchToFull(data, ex, ref != "")
 				if err != nil {
 					return generateError(err, "Unable to update %s: %v", o.singleName, args[0])
 				}

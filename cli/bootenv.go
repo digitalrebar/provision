@@ -54,7 +54,7 @@ using isos upload.git `,
 			if len(args) == 2 {
 				isoCache = args[1]
 			}
-			bootEnv, err := session.InstallBootEnvFromFile(args[0])
+			bootEnv, err := Session.InstallBootEnvFromFile(args[0])
 			if err != nil {
 				return generateError(err, "Failed to install bootenv")
 			}
@@ -62,7 +62,7 @@ using isos upload.git `,
 				if err = os.MkdirAll(isoCache, 0755); err != nil {
 					return fmt.Errorf("Error ensuring ISO cache exists: %s", err)
 				}
-				if err := session.InstallISOForBootenv(bootEnv, isoCache, !installSkipDownloadIsos); err != nil {
+				if err := Session.InstallISOForBootenv(bootEnv, isoCache, !installSkipDownloadIsos); err != nil {
 					return generateError(err, "Error uploading %s", isoCache)
 				}
 			}
@@ -87,7 +87,7 @@ It will attempt to perform a direct copy without saving the ISO locally.`,
 		},
 		RunE: func(c *cobra.Command, args []string) error {
 			bootEnv := &models.BootEnv{}
-			if err := session.FillModel(bootEnv, args[0]); err != nil {
+			if err := Session.FillModel(bootEnv, args[0]); err != nil {
 				return generateError(err, "Failed to fetch %v: %v", op.singleName, args[0])
 			}
 			isoFiles := map[string]string{}
@@ -102,7 +102,7 @@ It will attempt to perform a direct copy without saving the ISO locally.`,
 			if len(isoFiles) == 0 {
 				return fmt.Errorf("BootEnv %s does not require an iso", bootEnv.Name)
 			}
-			isos, err := session.ListBlobs("isos")
+			isos, err := Session.ListBlobs("isos")
 			if err != nil {
 				return fmt.Errorf("BootEnv %s Unable to determine what ISO files are already present", bootEnv.Name)
 			}
@@ -132,7 +132,7 @@ It will attempt to perform a direct copy without saving the ISO locally.`,
 				}
 				func() {
 					defer isoDlResp.Body.Close()
-					if info, err := session.PostBlob(isoDlResp.Body, "isos", isoFile); err != nil {
+					if info, err := Session.PostBlob(isoDlResp.Body, "isos", isoFile); err != nil {
 						log.Printf("%v", generateError(err, "Error uploading %s", isoUrl))
 					} else {
 						log.Printf("%v", prettyPrint(info))

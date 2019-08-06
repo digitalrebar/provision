@@ -1,3 +1,0 @@
-Error: Failed to load backing objects from cache
-  Store profiles item p1-bad failed to load from layer content-PackBad: json: cannot unmarshal number into Go struct field Profile.Params of type map[string]interface {}
-  Try manually replacing content layer PackBad

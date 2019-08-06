@@ -50,9 +50,9 @@ func (o *ops) actions() {
 			id := "system"
 			if argCount == 1 {
 				id = args[0]
-				req = session.Req().UrlFor(prefix, id, actionsName)
+				req = Session.Req().UrlFor(prefix, id, actionsName)
 			} else {
-				req = session.Req().UrlFor(prefix, actionsName)
+				req = Session.Req().UrlFor(prefix, actionsName)
 			}
 			if plugin != "" {
 				req = req.Params("plugin", plugin)
@@ -83,9 +83,9 @@ func (o *ops) actions() {
 			id := "system"
 			if argCount == 1 {
 				id = args[0]
-				req = session.Req().UrlFor(prefix, id, actionsName, action)
+				req = Session.Req().UrlFor(prefix, id, actionsName, action)
 			} else {
-				req = session.Req().UrlFor(prefix, actionsName, action)
+				req = Session.Req().UrlFor(prefix, actionsName, action)
 			}
 			if plugin != "" {
 				req = req.Params("plugin", plugin)
@@ -133,9 +133,9 @@ func (o *ops) actions() {
 			var req *api.R
 			if argCount == 1 {
 				id := args[0]
-				req = session.Req().Post(actionParams).UrlFor(prefix, id, actionsName, command)
+				req = Session.Req().Post(actionParams).UrlFor(prefix, id, actionsName, command)
 			} else {
-				req = session.Req().Post(actionParams).UrlFor(prefix, actionsName, command)
+				req = Session.Req().Post(actionParams).UrlFor(prefix, actionsName, command)
 			}
 			if plugin != "" {
 				req = req.Params("plugin", plugin)

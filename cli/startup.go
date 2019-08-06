@@ -8,7 +8,7 @@ import (
 	"path"
 	"strings"
 
-	"github.com/digitalrebar/provision/v4"
+	v4 "github.com/digitalrebar/provision/v4"
 	"github.com/digitalrebar/provision/v4/api"
 	"github.com/digitalrebar/provision/v4/models"
 	"github.com/spf13/cobra"
@@ -30,7 +30,7 @@ var (
 	password         = "r0cketsk8ts"
 	default_password = "r0cketsk8ts"
 	format           = "json"
-	session          *api.Client
+	Session          *api.Client
 	noToken          = false
 	force            = false
 	noPretty         = false
@@ -47,10 +47,10 @@ func addRegistrar(rs registerSection) {
 
 var ppr = func(c *cobra.Command, a []string) error {
 	c.SilenceUsage = true
-	if session == nil {
+	if Session == nil {
 		var err error
 		if token != "" {
-			session, err = api.TokenSession(endpoint, token)
+			Session, err = api.TokenSession(endpoint, token)
 		} else {
 			home := os.ExpandEnv("${HOME}")
 			tPath := os.ExpandEnv("${RS_TOKEN_CACHE}")
@@ -61,24 +61,24 @@ var ppr = func(c *cobra.Command, a []string) error {
 			if !noToken && tPath != "" {
 				if err := os.MkdirAll(tPath, 0700); err == nil {
 					if tokenStr, err := ioutil.ReadFile(tokenFile); err == nil {
-						session, err = api.TokenSession(endpoint, string(tokenStr))
+						Session, err = api.TokenSession(endpoint, string(tokenStr))
 						if err == nil {
-							if _, err := session.Info(); err == nil {
-								session.Trace(trace)
-								session.TraceToken(traceToken)
+							if _, err := Session.Info(); err == nil {
+								Session.Trace(trace)
+								Session.TraceToken(traceToken)
 								return nil
 							}
-							session.Close()
-							session = nil
+							Session.Close()
+							Session = nil
 						}
 					}
 				}
 			}
-			session, err = api.UserSessionToken(endpoint, username, password, !noToken)
+			Session, err = api.UserSessionToken(endpoint, username, password, !noToken)
 			if !noToken && tPath != "" && err == nil {
 				if err := os.MkdirAll(tPath, 700); err == nil {
 					tok := &models.UserToken{}
-					if err := session.
+					if err := Session.
 						Req().UrlFor("users", username, "token").
 						Params("ttl", "7200").Do(&tok); err == nil {
 						ioutil.WriteFile(tokenFile, []byte(tok.Token), 0600)
@@ -87,11 +87,11 @@ var ppr = func(c *cobra.Command, a []string) error {
 			}
 		}
 		if err != nil {
-			return fmt.Errorf("Error creating session: %v", err)
+			return fmt.Errorf("Error creating Session: %v", err)
 		}
 	}
-	session.Trace(trace)
-	session.TraceToken(traceToken)
+	Session.Trace(trace)
+	Session.TraceToken(traceToken)
 	return nil
 }
 

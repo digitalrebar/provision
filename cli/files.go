@@ -25,7 +25,7 @@ func blobCommands(bt string) *cobra.Command {
 			return fmt.Errorf("%v: Expected 0 or 1 argument", c.UseLine())
 		},
 		RunE: func(c *cobra.Command, args []string) error {
-			req := session.Req().List(bt)
+			req := Session.Req().List(bt)
 			if len(args) == 1 {
 				req.Params("path", args[0])
 			}
@@ -57,7 +57,7 @@ func blobCommands(bt string) *cobra.Command {
 					return fmt.Errorf("Error opening dest file %s: %v", args[1], err)
 				}
 			}
-			if err := session.GetBlob(dest, bt, args[0]); err != nil {
+			if err := Session.GetBlob(dest, bt, args[0]); err != nil {
 				return generateError(err, "Failed to fetch %v: %v", bt, args[0])
 			}
 			return nil
@@ -73,7 +73,7 @@ func blobCommands(bt string) *cobra.Command {
 			return fmt.Errorf("%v requires 1", c.UseLine())
 		},
 		RunE: func(c *cobra.Command, args []string) error {
-			sum, err := session.GetBlobSum(bt, args[0])
+			sum, err := Session.GetBlobSum(bt, args[0])
 			if err != nil {
 				return generateError(err, "Failed to exists %v: %v", bt, args[0])
 			}
@@ -92,7 +92,7 @@ func blobCommands(bt string) *cobra.Command {
 			return nil
 		},
 		RunE: func(c *cobra.Command, args []string) error {
-			rd, err := session.File(args[0])
+			rd, err := Session.File(args[0])
 			if rd != nil {
 				defer rd.Close()
 			}
@@ -124,7 +124,7 @@ func blobCommands(bt string) *cobra.Command {
 				return fmt.Errorf("Error opening src file %s: %v", item, err)
 			}
 			defer data.Close()
-			if info, err := session.PostBlobExplode(data, explode, bt, dest); err != nil {
+			if info, err := Session.PostBlobExplode(data, explode, bt, dest); err != nil {
 				return generateError(err, "Failed to post %v: %v", bt, dest)
 			} else {
 				return prettyPrint(info)
@@ -144,7 +144,7 @@ func blobCommands(bt string) *cobra.Command {
 			return fmt.Errorf("%v requires 1 argument", c.UseLine())
 		},
 		RunE: func(c *cobra.Command, args []string) error {
-			if err := session.DeleteBlob(bt, args[0]); err != nil {
+			if err := Session.DeleteBlob(bt, args[0]); err != nil {
 				return generateError(err, "Failed to delete %v: %v", bt, args[0])
 			}
 			fmt.Printf("Deleted %s", args[0])

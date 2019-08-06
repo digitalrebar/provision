@@ -1,3 +1,0 @@
-Error: ValidationError: tasks/badfoo
-  Task badfoo depends on itself!
-  badfoo: badbaz: badbar: badfoo (cycle at 0)

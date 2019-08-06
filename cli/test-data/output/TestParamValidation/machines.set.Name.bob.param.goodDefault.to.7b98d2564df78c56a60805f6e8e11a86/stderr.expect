@@ -1,1 +1,0 @@
-Error: POST: machines/Name:bob: Key 'goodDefault': invalid val '[5]': : (root): Invalid type. Expected: string, given: array

@@ -1,3 +1,0 @@
-Error: ValidationError: tasks/multiBadCommaOS
-  Template[1]: Invalid OS value sithisOS
-  Valid values are: any,darwin,freebsd,linux,netbsd,openbsd,solaris,windows

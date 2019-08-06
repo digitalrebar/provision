@@ -13,17 +13,17 @@ import (
 )
 
 var (
-	actuallyPowerThings = true
-	defaultStateLoc     string
+	ActuallyPowerThings = true
+	DefaultStateLoc     string
 )
 
 func init() {
-	if defaultStateLoc == "" {
+	if DefaultStateLoc == "" {
 		switch runtime.GOOS {
 		case "windows":
-			defaultStateLoc = os.ExpandEnv("${APPDATA}/drp-agent")
+			DefaultStateLoc = os.ExpandEnv("${APPDATA}/drp-agent")
 		default:
-			defaultStateLoc = "/var/lib/drp-agent"
+			DefaultStateLoc = "/var/lib/drp-agent"
 		}
 	}
 	addRegistrar(registerMachine)
@@ -52,7 +52,7 @@ func registerMachine(app *cobra.Command) {
 			}
 			clone := models.Clone(m).(*models.Machine)
 			clone.Workflow = args[1]
-			req := session.Req().ParanoidPatch().PatchTo(m, clone)
+			req := Session.Req().ParanoidPatch().PatchTo(m, clone)
 			if force {
 				req.Params("force", "true")
 			}
@@ -79,7 +79,7 @@ func registerMachine(app *cobra.Command) {
 			}
 			clone := models.Clone(m).(*models.Machine)
 			clone.Stage = args[1]
-			req := session.Req().ParanoidPatch().PatchTo(m, clone)
+			req := Session.Req().ParanoidPatch().PatchTo(m, clone)
 			if force {
 				req.Params("force", "true")
 			}
@@ -112,7 +112,7 @@ func registerMachine(app *cobra.Command) {
 			job := &models.Job{}
 			j2 := &models.Job{}
 			job.Machine = machine.Uuid
-			if err := session.Req().Post(job).UrlFor("jobs").Do(j2); err != nil {
+			if err := Session.Req().Post(job).UrlFor("jobs").Do(j2); err != nil {
 				return generateError(err, "Failed to create job for %v: %v", op.singleName, id)
 			}
 			return prettyPrint(j2)
@@ -138,7 +138,7 @@ func registerMachine(app *cobra.Command) {
 				return fmt.Errorf("No current job on machine %v", m.Key())
 			}
 			job := &models.Job{}
-			if err := session.Req().UrlFor("jobs", machine.CurrentJob.String()).Do(job); err != nil {
+			if err := Session.Req().UrlFor("jobs", machine.CurrentJob.String()).Do(job); err != nil {
 				return generateError(err, "Failed to fetch current job for %v: %v", op.singleName, id)
 			}
 			return prettyPrint(job)
@@ -165,12 +165,12 @@ func registerMachine(app *cobra.Command) {
 				return fmt.Errorf("No current job on machine %v", m.Key())
 			}
 			job := &models.Job{}
-			if err := session.Req().UrlFor("jobs", machine.CurrentJob.String()).Do(job); err != nil {
+			if err := Session.Req().UrlFor("jobs", machine.CurrentJob.String()).Do(job); err != nil {
 				return generateError(err, "Failed to fetch current job for %v: %v", op.singleName, id)
 			}
 			j2 := models.Clone(job).(*models.Job)
 			j2.State = state
-			j3, err := session.PatchTo(job, j2)
+			j3, err := Session.PatchTo(job, j2)
 			if err != nil {
 				return generateError(err, "Failed to mark job %s as %s", job.Uuid, state)
 			}
@@ -192,7 +192,7 @@ func registerMachine(app *cobra.Command) {
 			if err != nil {
 				return generateError(err, "Failed to fetch %v: %v", op.singleName, args[0])
 			}
-			return session.Req().UrlFor("jobs", m.(*models.Machine).CurrentJob.String(), "log").Do(os.Stdout)
+			return Session.Req().UrlFor("jobs", m.(*models.Machine).CurrentJob.String(), "log").Do(os.Stdout)
 		},
 	})
 	op.addCommand(&cobra.Command{
@@ -210,14 +210,14 @@ func registerMachine(app *cobra.Command) {
 				return generateError(err, "Failed to fetch %v: %v", op.singleName, args[0])
 			}
 			jobs := []*models.Job{}
-			if err := session.Req().Filter("jobs",
+			if err := Session.Req().Filter("jobs",
 				"Machine", "Eq", m.Key(),
 				"sort", "StartTime",
 				"reverse").Do(&jobs); err != nil {
 				return generateError(err, "Failed to fetch jobs for %s: %v", op.singleName, args[0])
 			}
 			for _, job := range jobs {
-				if _, err := session.DeleteModel("jobs", job.Key()); err != nil {
+				if _, err := Session.DeleteModel("jobs", job.Key()); err != nil {
 					return generateError(err, "Failed to delete Job %s", job.Key())
 				} else {
 					fmt.Printf("Deleted Job %s", job.Key())
@@ -269,7 +269,7 @@ are not accepted.`,
 			if err := m.AddTasks(offset, tasks...); err != nil {
 				generateError(err, "Cannot add tasks")
 			}
-			if err := session.Req().PatchTo(obj, m).Do(&m); err != nil {
+			if err := Session.Req().PatchTo(obj, m).Do(&m); err != nil {
 				return err
 			}
 			return prettyPrint(m)
@@ -296,7 +296,7 @@ pass in more than one task.`,
 			}
 			m := models.Clone(obj).(*models.Machine)
 			m.DelTasks(tasks...)
-			if err := session.Req().PatchTo(obj, m).Do(&m); err != nil {
+			if err := Session.Req().PatchTo(obj, m).Do(&m); err != nil {
 				return err
 			}
 			return prettyPrint(m)
@@ -324,18 +324,18 @@ the stage runner wait flag.
 		RunE: func(c *cobra.Command, args []string) error {
 			uuid := args[0]
 			m := &models.Machine{}
-			if err := session.FillModel(m, uuid); err != nil {
+			if err := Session.FillModel(m, uuid); err != nil {
 				return err
 			}
 			if runStateLoc == "" {
-				runStateLoc = defaultStateLoc
+				runStateLoc = DefaultStateLoc
 			}
 			if runStateLoc != "" {
 				if err := os.MkdirAll(runStateLoc, 0700); err != nil {
 					return fmt.Errorf("Unable to create state directory %s: %v", runStateLoc, err)
 				}
 			}
-			agent, err := agent.New(session, m, oneShot, exitOnFailure, actuallyPowerThings, os.Stdout)
+			agent, err := agent.New(Session, m, oneShot, exitOnFailure, ActuallyPowerThings, os.Stdout)
 			if err != nil {
 				return err
 			}

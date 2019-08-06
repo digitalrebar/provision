@@ -49,7 +49,7 @@ func addInfoCommands() (res *cobra.Command) {
 		Args:  cobra.NoArgs,
 		RunE: func(c *cobra.Command, args []string) error {
 
-			d, err := session.Info()
+			d, err := Session.Info()
 			if err != nil {
 				return generateError(err, "Failed to fetch info %v", singularName)
 			}
@@ -62,7 +62,7 @@ func addInfoCommands() (res *cobra.Command) {
 		Short: "Get aliveness status of the various DRP ports",
 		Args:  cobra.NoArgs,
 		RunE: func(c *cobra.Command, args []string) error {
-			d, err := session.Info()
+			d, err := Session.Info()
 			if err != nil {
 				return generateError(err, "Failed to fetch port information")
 			}

@@ -27,7 +27,7 @@ func addPrefCommands() (res *cobra.Command) {
 		Short: "List all preferences",
 		RunE: func(c *cobra.Command, args []string) error {
 			prefs := map[string]string{}
-			if err := session.Req().UrlFor("prefs").Do(&prefs); err != nil {
+			if err := Session.Req().UrlFor("prefs").Do(&prefs); err != nil {
 				return generateError(err, "Error listing prefs")
 			}
 			return prettyPrint(prefs)
@@ -55,7 +55,7 @@ func addPrefCommands() (res *cobra.Command) {
 		},
 		RunE: func(c *cobra.Command, args []string) error {
 			prefs := map[string]string{}
-			if err := session.Req().Post(prefsMap).UrlFor("prefs").Do(&prefs); err != nil {
+			if err := Session.Req().Post(prefsMap).UrlFor("prefs").Do(&prefs); err != nil {
 				return generateError(err, "Error setting prefs")
 			}
 			return prettyPrint(prefs)

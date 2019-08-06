@@ -27,7 +27,7 @@ func registerTemplate(app *cobra.Command) {
 			return nil
 		},
 		RunE: func(c *cobra.Command, args []string) error {
-			tmpl, err := session.InstallRawTemplateFromFileWithId(args[0], args[2])
+			tmpl, err := Session.InstallRawTemplateFromFileWithId(args[0], args[2])
 			if err != nil {
 				return err
 			}

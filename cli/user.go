@@ -30,7 +30,7 @@ func registerUser(app *cobra.Command) {
 		RunE: func(c *cobra.Command, args []string) error {
 			pwd := &models.UserPassword{Password: args[1]}
 			res := &models.User{}
-			if err := session.Req().Put(pwd).UrlFor("users", args[0], "password").Do(res); err != nil {
+			if err := Session.Req().Put(pwd).UrlFor("users", args[0], "password").Do(res); err != nil {
 				return generateError(err, "Error: putUserPassword: %v", err)
 			}
 			return prettyPrint(res)
@@ -82,7 +82,7 @@ func registerUser(app *cobra.Command) {
 		},
 		RunE: func(c *cobra.Command, args []string) error {
 			res := &models.UserToken{}
-			if err := session.Req().UrlFor("users", args[0], "token").Params(tokenArgs...).Do(res); err != nil {
+			if err := Session.Req().UrlFor("users", args[0], "token").Params(tokenArgs...).Do(res); err != nil {
 				return generateError(err, "Error: getToken: %v", err)
 			}
 			return prettyPrint(res)

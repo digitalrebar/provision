@@ -1,8 +1,0 @@
-RE:
-  "Available": true,
-  "BootEnv": "local",
-  "Name": "bob",
-  "Params": \{\},
-  "Runnable": true,
-  "Stage": "none",
-  "Validated": true,

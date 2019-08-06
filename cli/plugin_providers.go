@@ -37,7 +37,7 @@ func registerPluginProvider(app *cobra.Command) {
 			}
 			defer fi.Close()
 			res := &models.PluginProviderUploadInfo{}
-			if err := session.Req().Post(fi).UrlFor(op.name, name).Do(res); err != nil {
+			if err := Session.Req().Post(fi).UrlFor(op.name, name).Do(res); err != nil {
 				return err
 			}
 			return prettyPrint(res)

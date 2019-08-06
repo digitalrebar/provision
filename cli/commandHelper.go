@@ -89,7 +89,7 @@ further tweak how the results are returned using the following meta-filters:
 			return nil
 		},
 		RunE: func(c *cobra.Command, args []string) error {
-			req := session.Req().List(o.name)
+			req := Session.Req().List(o.name)
 			if len(args) > 0 && strings.Contains(args[0], "=") {
 				// Old-style structured args
 				if listLimit != -1 {
@@ -131,7 +131,7 @@ further tweak how the results are returned using the following meta-filters:
 					args = append(args, "decode")
 				}
 				if len(args) > 0 {
-					req = session.Req().Filter(o.name, args...)
+					req = Session.Req().Filter(o.name, args...)
 				}
 			}
 			data := []interface{}{}
@@ -170,7 +170,7 @@ further tweak how the results are returned using the following meta-filters:
 		Long:  fmt.Sprintf("Different object types can have indexes on various fields."),
 		Args:  cobra.NoArgs,
 		RunE: func(c *cobra.Command, args []string) error {
-			indexes, err := session.Indexes(o.name)
+			indexes, err := Session.Indexes(o.name)
 			if err != nil {
 				return generateError(err, "Error fetching indexes")
 			}
@@ -192,7 +192,7 @@ format id as *index*:*value*
 		},
 		RunE: func(c *cobra.Command, args []string) error {
 			data := o.example()
-			req := session.Req().UrlFor(o.name, args[0])
+			req := Session.Req().UrlFor(o.name, args[0])
 			if slim != "" {
 				req = req.Params("slim", slim)
 			}
@@ -240,7 +240,7 @@ format id as *index*:*value*
 			return nil
 		},
 		RunE: func(c *cobra.Command, args []string) error {
-			exists, err := session.ExistsModel(o.name, args[0])
+			exists, err := Session.ExistsModel(o.name, args[0])
 			if err != nil {
 				return generateError(err, "Failed to test %v: %v", o.name, args[0])
 			}
@@ -280,7 +280,7 @@ empty object of that type.  For User, BootEnv, Machine, and Profile, it will be 
 						return fmt.Errorf("Unable to create a new %s: %v", o.singleName, err)
 					}
 				}
-				req := session.Req().Post(ref).UrlFor(ref.Prefix())
+				req := Session.Req().Post(ref).UrlFor(ref.Prefix())
 				if force {
 					req.Params("force", "true")
 				}
@@ -312,7 +312,7 @@ empty object of that type.  For User, BootEnv, Machine, and Profile, it will be 
 					if err != nil {
 						return generateError(err, "Failed to generate changed %s:%s object", o.name, args[0])
 					}
-					req := session.Req().Put(toPut).UrlForM(toPut)
+					req := Session.Req().Put(toPut).UrlForM(toPut)
 					if force {
 						req.Params("force", "true")
 					}
@@ -342,7 +342,7 @@ empty object of that type.  For User, BootEnv, Machine, and Profile, it will be 
 					if err != nil {
 						return generateError(err, "Failed to generate changed %s:%s object", o.name, args[0])
 					}
-					req := session.Req()
+					req := Session.Req()
 					if force {
 						req.Params("force", "true")
 					}
@@ -367,7 +367,7 @@ empty object of that type.  For User, BootEnv, Machine, and Profile, it will be 
 				return nil
 			},
 			RunE: func(c *cobra.Command, args []string) error {
-				_, err := session.DeleteModel(o.name, args[0])
+				_, err := Session.DeleteModel(o.name, args[0])
 				if err != nil {
 					return generateError(err, "Unable to destroy %v %v", o.singleName, args[0])
 				}
@@ -415,7 +415,7 @@ Returns the following strings:
 				if err != nil {
 					return err
 				}
-				es, err := session.Events()
+				es, err := Session.Events()
 				if err != nil {
 					return err
 				}

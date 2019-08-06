@@ -1,3 +1,0 @@
-Error: AUTH
-  Cannot access /api/v3/profiles?decode=true
-  Requires: profiles getSecure 

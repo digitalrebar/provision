@@ -10,7 +10,7 @@ import (
 
 func (o *ops) meta() {
 	getMeta := func(objType, id string) (map[string]string, error) {
-		req := session.Req().UrlFor("meta", objType, id)
+		req := Session.Req().UrlFor("meta", objType, id)
 		res := map[string]string{}
 		if err := req.Do(&res); err != nil {
 			return nil, generateError(err, "Failed to fetch meta %v: %v", o.singleName, id)
@@ -97,7 +97,7 @@ func (o *ops) meta() {
 				{Op: "test", Path: "", Value: res},
 				{Op: "add", Path: path, Value: value},
 			}
-			if err := session.Req().Patch(patch).UrlFor("meta", o.name, id).Do(&meta); err != nil {
+			if err := Session.Req().Patch(patch).UrlFor("meta", o.name, id).Do(&meta); err != nil {
 				return generateError(err, "Failed to fetch meta %v: %v", o.singleName, id)
 			}
 			return prettyPrint(value)
@@ -141,7 +141,7 @@ func (o *ops) meta() {
 				patch = append(patch, jsonpatch2.Operation{Op: "test", Path: path, Value: meta})
 			}
 			patch = append(patch, jsonpatch2.Operation{Op: "add", Path: path, Value: value})
-			if err := session.Req().Patch(patch).UrlFor("meta", o.name, id).Do(nil); err != nil {
+			if err := Session.Req().Patch(patch).UrlFor("meta", o.name, id).Do(nil); err != nil {
 				return generateError(err, "Failed to fetch meta %v: %v", o.singleName, id)
 			}
 			return prettyPrint(value)
@@ -185,7 +185,7 @@ func (o *ops) meta() {
 					},
 				}
 			}
-			if err := session.Req().Patch(patch).UrlFor("meta", o.name, id).Do(nil); err != nil {
+			if err := Session.Req().Patch(patch).UrlFor("meta", o.name, id).Do(nil); err != nil {
 				return generateError(err, "Failed to fetch meta %v: %v", o.singleName, id)
 			}
 			return nil

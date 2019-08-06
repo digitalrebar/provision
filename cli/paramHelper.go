@@ -24,7 +24,7 @@ func (o *ops) params() {
 		RunE: func(c *cobra.Command, args []string) error {
 			uuid := args[0]
 			if len(args) == 1 {
-				req := session.Req().UrlFor(o.name, args[0], "params")
+				req := Session.Req().UrlFor(o.name, args[0], "params")
 				if aggregate {
 					req.Params("aggregate", "true")
 				}
@@ -46,7 +46,7 @@ func (o *ops) params() {
 			}
 			res := map[string]interface{}{}
 			if ref == "" {
-				if err := session.Req().Post(val).UrlFor(o.name, args[0], "params").Do(&res); err != nil {
+				if err := Session.Req().Post(val).UrlFor(o.name, args[0], "params").Do(&res); err != nil {
 					return generateError(err, "Failed to fetch params %v: %v", o.singleName, uuid)
 				}
 			} else {
@@ -54,7 +54,7 @@ func (o *ops) params() {
 				if err := bufOrFileDecode(ref, &data); err != nil {
 					return generateError(err, "Failed to parse ref %s: %v", o.singleName, err)
 				}
-				if err := session.Req().ParanoidPatch().PatchObj(data, val).UrlFor(o.name, args[0], "params").Do(&res); err != nil {
+				if err := Session.Req().ParanoidPatch().PatchObj(data, val).UrlFor(o.name, args[0], "params").Do(&res); err != nil {
 					return generateError(err, "Failed to fetch params %v: %v", o.singleName, uuid)
 				}
 			}
@@ -82,7 +82,7 @@ func (o *ops) params() {
 			uuid := args[0]
 			key := args[2]
 			var res interface{}
-			req := session.Req().UrlFor(o.name, uuid, "params", key)
+			req := Session.Req().UrlFor(o.name, uuid, "params", key)
 			if aggregate {
 				req.Params("aggregate", "true")
 			}
@@ -124,7 +124,7 @@ func (o *ops) params() {
 
 			res := map[string]interface{}{}
 			if ref == "" {
-				if err := session.Req().UrlFor(o.name, uuid, "params").Do(&res); err != nil {
+				if err := Session.Req().UrlFor(o.name, uuid, "params").Do(&res); err != nil {
 					return generateError(err, "Failed to fetch params %v: %v", o.singleName, uuid)
 				}
 			} else {
@@ -151,7 +151,7 @@ func (o *ops) params() {
 					Value: value,
 				},
 			}
-			if err := session.Req().Patch(patch).UrlFor(o.name, uuid, "params").Do(&params); err != nil {
+			if err := Session.Req().Patch(patch).UrlFor(o.name, uuid, "params").Do(&params); err != nil {
 				return generateError(err, "Failed to fetch params %v: %v", o.singleName, uuid)
 			}
 			return prettyPrint(value)
@@ -182,7 +182,7 @@ func (o *ops) params() {
 			}
 			var params interface{}
 			if ref == "" {
-				if err := session.Req().Post(value).UrlFor(o.name, uuid, "params", key).Do(&params); err != nil {
+				if err := Session.Req().Post(value).UrlFor(o.name, uuid, "params", key).Do(&params); err != nil {
 					return generateError(err, "Failed to fetch params %v: %v", o.singleName, uuid)
 				}
 			} else {
@@ -203,7 +203,7 @@ func (o *ops) params() {
 						Value: value,
 					},
 				}
-				if err := session.Req().Patch(patch).UrlFor(o.name, uuid, "params").Do(&params); err != nil {
+				if err := Session.Req().Patch(patch).UrlFor(o.name, uuid, "params").Do(&params); err != nil {
 					return generateError(err, "Failed to fetch params %v: %v", o.singleName, uuid)
 				}
 			}
@@ -225,7 +225,7 @@ func (o *ops) params() {
 			key := args[2]
 			var param interface{}
 			if ref == "" {
-				err := session.Req().Del().UrlFor(o.name, uuid, "params", key).Do(&param)
+				err := Session.Req().Del().UrlFor(o.name, uuid, "params", key).Do(&param)
 				if err != nil {
 					return generateError(err, "Failed to delete param %v: %v", key, uuid)
 				}
@@ -246,7 +246,7 @@ func (o *ops) params() {
 						Path: path,
 					},
 				}
-				if err := session.Req().Patch(patch).UrlFor(o.name, uuid, "params").Do(&param); err != nil {
+				if err := Session.Req().Patch(patch).UrlFor(o.name, uuid, "params").Do(&param); err != nil {
 					return generateError(err, "Failed to fetch params %v: %v", o.singleName, uuid)
 				}
 			}

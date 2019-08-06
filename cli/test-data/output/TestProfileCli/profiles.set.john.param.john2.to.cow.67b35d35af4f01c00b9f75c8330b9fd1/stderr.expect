@@ -1,4 +1,0 @@
-RE:
-Error: PATCH: profiles/john
-  Patch failed to apply at line 0
-  Selector john2 not a member of map\[string\]interface [^\n]+

@@ -1,1 +1,0 @@
-Error: Error parsing layer: error unmarshaling JSON: json: cannot unmarshal array into Go value of type models.Content

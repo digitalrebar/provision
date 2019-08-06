@@ -1,3 +1,0 @@
-Error: ValidationError: tasks/badbar
-  Task badbar depends on itself!
-  badbar: badbaz: badbar (cycle at 0)

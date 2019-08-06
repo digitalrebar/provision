@@ -25,7 +25,7 @@ func (o *ops) bootenv() {
 			}
 			ex := models.Clone(data).(models.BootEnver)
 			ex.SetBootEnv(args[1])
-			res, err := session.PatchToFull(data, ex, ref != "")
+			res, err := Session.PatchToFull(data, ex, ref != "")
 			if err != nil {
 				return generateError(err, "Unable to update %s: %v", o.singleName, args[0])
 			}
