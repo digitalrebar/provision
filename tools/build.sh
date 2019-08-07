@@ -15,10 +15,13 @@ elif ! (( ${BASH_REMATCH[1]} > ${WANTED_VER[0]} || ${BASH_REMATCH[2]} >= ${WANTE
     exit -1
 fi
 
-while ! go mod download
-do
-        echo "get mods failed - trying again"
-done
+if [[ $TRAVIS = true ]]; then
+    # Sigh.  Work around some rate-limiting hoodoo, hopefully
+    for i in 1 2 3 4 5; do
+        go mod download && break
+        sleep $i
+    done
+fi
 
 go build -o drpcli-docs cmds/drpcli-docs/drpcli-docs.go
 tools/build-one.sh cmds/drbundler

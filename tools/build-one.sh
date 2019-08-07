@@ -19,6 +19,13 @@ export VERFLAGS="-s -w \
           -X github.com/digitalrebar/provision/v4.BuildStamp=$BUILDSTAMP"
 set -e
 cd "$1"
+if [[ $TRAVIS = true ]]; then
+    # Sigh.  Work around some rate-limiting hoodoo, hopefully
+    for i in 1 2 3 4 5; do
+        go mod download && break
+        sleep $i
+    done
+fi
 if grep -qs 'go:generate' *; then
     go generate
 fi
