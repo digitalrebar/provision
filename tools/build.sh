@@ -15,6 +15,11 @@ elif ! (( ${BASH_REMATCH[1]} > ${WANTED_VER[0]} || ${BASH_REMATCH[2]} >= ${WANTE
     exit -1
 fi
 
+while ! go mod download
+do
+        echo "get mods failed - trying again"
+done
+
 go build -o drpcli-docs cmds/drpcli-docs/drpcli-docs.go
 tools/build-one.sh cmds/drbundler
 # set our arch:os build pairs to compile for
