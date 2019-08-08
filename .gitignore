@@ -43,6 +43,7 @@ src
 test-data/etc/dr-provision/._Description.meta
 test-data/etc/dr-provision/._Name.meta
 test-data/etc/dr-provision/._Version.meta
+rebar-catalog
 
 # documentation
 builddir/
