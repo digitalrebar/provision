@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+set -e
+
+usage() {
+    echo "drbundler <directory> <file>"
+    echo
+    echo "drbundler is deprecated - use this instead:"
+    echo "  cd <directory>"
+    echo "  drpcli contents bundle <file>"
+    echo
+    exit 1
+}
+
+if [[ $# -ne 2 ]] ; then
+    echo "drbundler: requires two arguments - directory and file"
+    echo
+    usage
+fi
+
+DIR=$1
+FILE=$(readlink -f $2)
+
+if [[ ! -d $DIR ]] ; then
+    echo "drbundler: directory missing"
+    echo
+    usage
+fi
+
+
+cd $DIR
+drpcli contents bundle $FILE
