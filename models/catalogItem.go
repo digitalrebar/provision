@@ -90,6 +90,11 @@ func (ci *CatalogItem) DownloadUrl(arch, os string) string {
 	switch ci.ContentType {
 	case "PluginProvider":
 		res = res + path.Join("/", arch, os, ci.Name)
+	case "DRPCLI":
+		res = res + path.Join("/", arch, os, ci.Name)
+		if os == "windows" {
+			res = res + ".exe"
+		}
 	}
 	return res
 }
