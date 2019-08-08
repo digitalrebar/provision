@@ -20,14 +20,14 @@ The code is delivered by zip file with a sha256sum to validate contents.  These 
 There are at least 3 releases to choose from:
 
   * **tip** - This is the most recent code.  This is the latest build of master.  It is bleeding edge and while the project attempts to be very stable with master, it can have issues.
-  * **stable** - This is the most recent **stable** code.  This is a tag that tracks the version-based tag.
-  * **v3.0.0** - There will be a set of Semantic Versioning (aka semver) named releases.
+  * **stable** - This is the most recent **stable** code.
+  * **v4.0.1** - There will be a set of Semantic Versioning (aka semver) named releases.
 
 Previous releases will continue to be available in tag/release history.  For additional information, see
 :ref:`rs_release_process`.
 
 When using the **install.sh** script, the version can be specified by the **--drp-version** flag,
-e.g. *--drp-version=v3.0.0*.
+e.g. *--drp-version=v4.0.1*.
 
 An example command sequence for Linux would be:
 
@@ -35,8 +35,8 @@ An example command sequence for Linux would be:
 
     mkdir dr-provision-install
     cd dr-provision-install
-    curl -fsSL https://github.com/digitalrebar/provision/v4/releases/download/tip/dr-provision.zip -o dr-provision.zip
-    curl -fsSL https://github.com/digitalrebar/provision/v4/releases/download/tip/dr-provision.sha256 -o dr-provision.sha256
+    curl -fsSL https://rebar-catalog.s3-us-west-2.amazonaws.com/drp/v4.0.1.zip -o dr-provision.zip
+    curl -fsSL https://rebar-catalog.s3-us-west-2.amazonaws.com/drp/v4.0.1.sha256 -o dr-provision.sha256
     sha256sum -c dr-provision.sha256
     unzip dr-provision.zip
 

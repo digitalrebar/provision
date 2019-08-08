@@ -69,7 +69,7 @@ Community Resources from https://rebar.digital
 
 * Chat/messaging via the Digital Rebar ``#community`` channel is our preferred communication method.  If you do not have a Slack invite to our channel, you can `Request a Slack Invite <http://www.rackn.com/support/slack/>`_
 * `Issues and Features <https://github.com/digitalrebar/provision/v4/issues>`_
-* Full `Documentation <http://provision.readthedocs.io/en/tip/>`_ (Github `/doc <https://github.com/digitalrebar/provision/v4/tree/master/doc>`_ sources are updatable via pull request).
+* Full `Documentation <http://provision.readthedocs.io/en/latest/>`_ (Github `/doc <https://github.com/digitalrebar/provision/v4/tree/master/doc>`_ sources are updatable via pull request).
 * Videos on the `DR Provision Playlist <https://www.youtube.com/playlist?list=PLXPBeIrpXjfilUi7Qj1Sl0UhjxNRSC7nx>`_ provide both specific and general background information.
 
 
@@ -80,9 +80,7 @@ Install & Quick Start
 
 .. note::  We HIGHLY recommend using the ``latest`` version of the documentation, as it contains the most up to date information.  Use the version selector in the lower right corner of your browser.
 
-Our `Stable Quick Start <http://provision.readthedocs.io/en/stable/doc/quickstart.html>`_ has fast play-with-it steps.  Don't worry, they are very simple and take 10 to 20 minutes.
-
-Want the `Latest Quick Start <http://provision.readthedocs.io/en/tip/doc/quickstart.html>`_? You'll have access to the newest features in tested work for the next release.  This is NOT the bleeding edge!
+Our `Quick Start <http://provision.readthedocs.io/en/latest/doc/quickstart.html>`_ has fast play-with-it steps.  Don't worry, they are very simple and take 10 to 20 minutes.  You can choose from stable or tip.  Tip is the very bleeding edge of development.
 
 Regular `Install <http://provision.readthedocs.io/en/latest/doc/install.html>`_ for more details on the install steps.  These include production options. (`Previous Version Docs <http://provision.readthedocs.io/en/latest/doc/quickstart.html>`_)
 

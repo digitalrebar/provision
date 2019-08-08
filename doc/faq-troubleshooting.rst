@@ -359,28 +359,15 @@ Of course, you can apply a Param to a Profile, and apply that Profile to a group
 Download Content and Plugins via Command Line
 ---------------------------------------------
 
-RackN maintains a catalog of open and proprietary Digital Rebar extensions at ``https://api.rackn.io/catalog``.  In both examples, providing ``?version=[version]`` on the query path will specify a version.  No version gives ``stable``.
+RackN maintains a catalog of open and proprietary Digital Rebar extensions at ``https://repo.rackn.io``.
 
 Content downloads directly from the Catalog as JSON and can be imported directly using the DRP CLI.
   ::
-      drpcli contents upload https://api.rackn.io/catalog/content/task-library?version=tip
+      drpcli contents upload catalog:task-library-tip
 
-Plugin downloads require two steps.  First, use the Catalog to locate the correct download URL based on our DRP Endpoint OS and Architecture. Second, request the plugin binary from the given URL.
+Plugin downloads directly from the Catalog work as follows:
   ::
-
-      # set our DRP OS and ARCH type
-      export DRP_ARCH="amd64"
-      export DRP_OS="linux"
-
-      # set our catalog location
-      URL="https://api.rackn.io/catalog/plugins/ipmi"
-
-      # obtain our parts for the final plugin download
-      PART=`curl -sfSL $URL | jq -r ".$DRP_ARCH.$DRP_OS"`
-      BASE=`curl -sfSL $URL | jq -r '.base'`
-
-      # download the plugin - AWS cares about extra slashes ... blech
-      curl -s ${BASE}${PART} -o drp-plugin-ipmi
+      drpcli plugin_providers upload raid from catalog:raid-stable
 
 .. _rs_plugin_providers_license:
 
@@ -396,7 +383,7 @@ Install the license content pack and try again.  If you've saved the `rackn-lice
 Update Community Content via Command Line
 -----------------------------------------
 
-Here's a brief example of how to upgrade the Community Content installed in a DRP Endpoint using the command line.  Please note that some RackN specific content requires authentication to download, while community content does not.   See :ref:`rs_download_rackn_content` for additional steps with RackN content.
+Here's a brief example of how to upgrade the Community Content installed in a DRP Endpoint using the command line.  See :ref:`rs_download_rackn_content` for additional steps with RackN content.
 
 Perform the following steps to obtain new content.
 
@@ -406,30 +393,10 @@ View our currently installed Content version:
     $ drpcli contents show drp-community-content | jq .meta.Version
       "v1.4.0-0-ec1a3fa94e41a2d6a83fe8e6c9c0e99c5a039f79"
 
-Get our new version (in this example, explicitly set version to ``v1.5.0``.  However, you may also specify ``stable``, or ``tip``, and do not require specific version numbers for those.
+Get and upload our new version (in this example, explicitly set version to ``v1.5.0``.  However, you may also specify ``stable``, or ``tip``, and do not require specific version numbers for those.
   ::
 
-    export VER="v1.5.0"
-    curl -sfL -o drp-cc.yaml https://github.com/digitalrebar/provision/v4-content/releases/download/${VER}/drp-community-content.yaml
-
-It is suggested that you view this file and ensure it contains the content/changes you are expecting.
-
-Now update the content.
-
-.. note:: Content that is marked *writable* (field ``"ReadOnly": false``) may need to be destroyed, and recreated if it's currently in use on other objects.  For *read only* content you can safely update the content.
-
-  ::
-
-    $ drpcli contents update drp-community-content -< drp-cc.yaml
-      {
-        "Counts": {
-          "bootenvs": 7,
-          "params": 18,
-          "profiles": 1,
-          "stages": 13,
-          "tasks": 7,
-          "templates": 15
-      <...snip...>
+    drpcli contents upload catalog:drp-community-content-v1.5.0
 
 Now verify that our installed content matches the new vesion we expected ...
   ::
