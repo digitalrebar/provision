@@ -270,8 +270,8 @@ discovered machine.
 .. note:: **.Machine.Path** is particularly useful for ensuring that
   templates are expanded into a unique file space for each machine.
   An example of this is per machine kickstart files.  These can be
-  seen in the `assets/bootenvs/ubuntu-16.04.yml
-  <https://github.com/digitalrebar/provision/v4/blob/master/assets/bootenvs/ubuntu-16.04.yml>`_.
+  seen in the `content/bootenvs/ubuntu-16.04.yml
+  <https://github.com/digitalrebar/provision-content/blob/v4/content/bootenvs/ubuntu-16.04.yml>`_.
 
 With regard to the **.Param** and **.ParamExists** functions, these
 return the parameter or existence of the parameter specified by the

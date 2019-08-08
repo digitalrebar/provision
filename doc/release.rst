@@ -52,11 +52,11 @@ The *drpcli* client reports its version by running:
 Release Process
 ---------------
 
-The team will regularly move the **tip** tag to track the leading edge of the **master** branch.  This will make
-the resulting build available in the `releases <https://github.com/digitalrebar/provision/v4/releases>`_ tab.
+Each dev build will generate a new **tip** release and report that in the catalog.  These builds will be available through
+the catalog as well.
 
-Additionally, as releases cut at stable points, the **stable** tag will be set to the new most recent milestone.
-Release notes and comments will be added to the github release page.
+Additionally, as releases cut at stable points, the **stable** build in the catalog will update to the most recent tagged build.
+Both the **stable** and tagged build will be available through the catalog.
 
 Release Notes
 -------------

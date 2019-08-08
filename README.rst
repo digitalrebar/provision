@@ -35,18 +35,18 @@ Key Features:
    :align:   right
    :width: 200 px
    :alt: Digital Rebar Provision
-   :target: https://github.com/digitalrebar/provision/v4
+   :target: https://github.com/digitalrebar/provision
 
 .. _rs_community:
 
 Community Resources from https://rebar.digital
 ----------------------------------------------
 
-.. image:: https://travis-ci.org/digitalrebar/provision.svg?branch=master
+.. image:: https://travis-ci.org/digitalrebar/provision.svg?branch=v4
   :target: https://travis-ci.org/digitalrebar/provision
   :alt: Build Status
 
-.. image:: https://codecov.io/gh/digitalrebar/provision/branch/master/graph/badge.svg
+.. image:: https://codecov.io/gh/digitalrebar/provision/branch/v4/graph/badge.svg
   :target: https://codecov.io/gh/digitalrebar/provision
   :alt: codecov
 
@@ -58,18 +58,14 @@ Community Resources from https://rebar.digital
   :target: https://godoc.org/github.com/digitalrebar/provision/v4
   :alt: GoDoc
 
-.. image:: https://readthedocs.org/projects/provision/badge/?version=stable
-  :target: http://provision.readthedocs.io/en/stable/?badge=stable
-  :alt: Documentation STABLE Status
-
 .. image:: https://readthedocs.org/projects/provision/badge/?version=latest
   :target: http://provision.readthedocs.io/en/latest/?badge=latest
   :alt: Documentation Latest Status
 
 
 * Chat/messaging via the Digital Rebar ``#community`` channel is our preferred communication method.  If you do not have a Slack invite to our channel, you can `Request a Slack Invite <http://www.rackn.com/support/slack/>`_
-* `Issues and Features <https://github.com/digitalrebar/provision/v4/issues>`_
-* Full `Documentation <http://provision.readthedocs.io/en/latest/>`_ (Github `/doc <https://github.com/digitalrebar/provision/v4/tree/master/doc>`_ sources are updatable via pull request).
+* `Issues and Features <https://github.com/digitalrebar/provision/issues>`_
+* Full `Documentation <http://provision.readthedocs.io/en/latest/>`_ (Github `/doc <https://github.com/digitalrebar/provision/tree/v4/doc>`_ sources are updatable via pull request).
 * Videos on the `DR Provision Playlist <https://www.youtube.com/playlist?list=PLXPBeIrpXjfilUi7Qj1Sl0UhjxNRSC7nx>`_ provide both specific and general background information.
 
 

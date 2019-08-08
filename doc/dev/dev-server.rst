@@ -22,7 +22,7 @@ To get started quickly, all the installation steps are rolled into a script.  Th
 
   ::
 
-    curl -fsSL https://raw.githubusercontent.com/digitalrebar/provision/master/tools/build.sh | bash
+    curl -fsSL https://raw.githubusercontent.com/digitalrebar/provision/v4/tools/build.sh | bash
 
 The script will use the current **GOPATH** variable for placing the code.  If **GOPATH** isn't set,
 it will be set to *$HOME/go*.
@@ -32,7 +32,7 @@ Once the script is complete, it is possible to change the directory to the sourc
   ::
 
     export GOPATH=${GOPATH:-$HOME/go}
-    cd "$GOPATH/src/github.com/digitalrebar/provision/v4"
+    cd "$GOPATH/src/github.com/digitalrebar/provision"
 
 
 If more details on how to run the result are needed, consult the :ref:`rs_install` section.  The **install.sh** script
@@ -40,8 +40,8 @@ can be used to install from the source directory after a build.
 
 .. _rs_dev_build:
 
-Building The Server
--------------------
+Building The API
+----------------
 
 After the code and assets have been obtained once, the process can be repeated from the project root with the following command:
 

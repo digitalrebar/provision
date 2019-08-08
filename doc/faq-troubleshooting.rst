@@ -49,7 +49,7 @@ error messages may appear similarly to:
 
   ::
 
-    May 24 13:48:22 ubuntu dr-provision[7092]: dr-provision2018/05/24 20:48:22.006224 [280:13]static [error]: /home/travis/gopath/src/github.com/digitalrebar/provision/v4/midlayer/tftp.go:82
+    May 24 13:48:22 ubuntu dr-provision[7092]: dr-provision2018/05/24 20:48:22.006224 [280:13]static [error]: /home/travis/gopath/src/github.com/rackn/provision-server/v4/midlayer/tftp.go:82
     May 24 13:48:22 ubuntu dr-provision[7092]: [280:13]TFTP: lpxelinux.0: transfer error: sending block 0: code=0, error: TFTP Aborted
 
 

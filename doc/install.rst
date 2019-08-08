@@ -14,8 +14,8 @@ The install script does the following steps (in a slightly different order).  Se
 Get Code
 --------
 
-The code is delivered by zip file with a sha256sum to validate contents.  These are in github under the
-`releases <https://github.com/digitalrebar/provision/v4/releases>`_ tab for the Digital Rebar Provision project.
+The code is delivered by zip file with a sha256sum to validate contents.  These are in AWS and referenced by the catalog found
+at `catalog <https://repo.rackn.io/>`_.
 
 There are at least 3 releases to choose from:
 
