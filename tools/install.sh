@@ -6,7 +6,7 @@ DEFAULT_DRP_VERSION=${DEFAULT_DRP_VERSION:-"stable"}
 
 usage() {
 cat <<EOFUSAGE
-Usage: $0 [--version=<Version to install>] [--no-content] [--commit=<githash>]
+Usage: $0 [--version=<Version to install>] [--no-content]
           [--isolate] [--ipaddr=<ip>] install | upgrade | remove
 
 Options:
@@ -23,8 +23,6 @@ Options:
                             # will attempt to discover the value if not specified
     --version=<string>      # Version identifier if downloading; stable, tip, or
                             # specific version label, defaults to: $DEFAULT_DRP_VERSION
-    --commit=<string>       # github commit file to wait for; unset assumes the files
-                            # are in place
     --remove-data           # Remove data as well as program pieces
     --skip-run-check        # Skip the process check for 'dr-provision' on new install
                             # only valid in '--isolated' install mode
@@ -91,9 +89,10 @@ CLI="/usr/local/bin/drpcli"
 CLI_BKUP="/usr/local/bin/drpcli.drp-installer.backup"
 
 # download URL locations; overridable via ENV variables
-URL_BASE=${URL_BASE:-"https://github.com/digitalrebar/"}
-URL_BASE_DRP=${URL_BASE_DRP:-"$URL_BASE/provision/releases/download"}
-URL_BASE_CONTENT=${URL_BASE_CONTENT:-"$URL_BASE/provision-content/releases/download"}
+URL_BASE=${URL_BASE:-"https://rebar-catalog.s3-us-west-2.amazonaws.com"}
+URL_BASE_DRP=${URL_BASE_DRP:-"$URL_BASE/drp"}
+URL_BASE_CONTENT=${URL_BASE_CONTENT:-"$URL_BASE/drp-community-content"}
+DRP_CATALOG=${DRP_CATALOG:-"$URL_BASE/rackn-catalog.json"}
 
 args=()
 while (( $# > 0 )); do
@@ -134,7 +133,7 @@ while (( $# > 0 )); do
             REMOVE_DATA=true
             ;;
         --commit)
-            COMMIT=${arg_data}
+            # UNUSED NOW
             ;;
         --upgrade)
             UPGRADE=true
@@ -191,6 +190,10 @@ done
 set -- "${args[@]}"
 
 DRP_VERSION=${DRP_VERSION:-"$DEFAULT_DRP_VERSION"}
+DRP_CONTENT_VERSION=stable
+if [[ $DRP_VERSION == tip ]]; then
+    DRP_CONTENT_VERSION=tip
+fi
 [[ "$ISOLATED" == "true" ]] && KEEP_INSTALLER=true
 
 [[ $DBG == true ]] && set -x
@@ -403,14 +406,26 @@ FASTMSG
 }
 
 # main
+LOCAL_JQ=$(which jq)
 arch=$(uname -m)
 case $arch in
-  x86_64|amd64) arch=amd64  ;;
+  x86_64|amd64)
+                if [[ $LOCAL_JQ == "" ]] ; then
+                    get https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64
+                    LOCAL_JQ=$(pwd)/jq-linux64
+                    chmod +x $LOCAL_JQ
+                fi
+                arch=amd64  ;;
   aarch64)      arch=arm64  ;;
   armv7l)       arch=arm_v7 ;;
   *)            echo "FATAL: architecture ('$arch') not supported"
                 exit 1;;
 esac
+
+if [[ $LOCAL_JQ == "" ]] ; then
+        echo "Must have jq installed to install"
+        exit 1
+fi
 
 case $(uname -s) in
     Darwin)
@@ -451,16 +466,6 @@ case $(uname -s) in
         echo "No idea how to check sha256sums"
         exit 1;;
 esac
-
-if [[ $COMMIT != "" ]] ; then
-    set +e
-    DRP_CMT=dr-provision-hash.$COMMIT
-    while ! get $URL_BASE_DRP/$DRP_VERSION/$DRP_CMT ; do
-            echo "Waiting for dr-provision-hash.$COMMIT"
-            sleep 60
-    done
-    set -e
-fi
 
 MODE=$1
 if [[ "$MODE" == "upgrade" ]]
@@ -513,8 +518,22 @@ case $MODE in
                        echo "WARNING:  No sha256sum check performed for '--zip-file' mode."
                        echo "          We assume you've already verified your download file."
                      else
-                       get $URL_BASE_DRP/$DRP_VERSION/$ZIP $URL_BASE_DRP/$DRP_VERSION/$SHA
-                       $shasum -c dr-provision.sha256
+                       if [[ $DRP_VERSION == tip ]] || [[ $DRP_VERSION == stable ]] ; then
+                               get $DRP_CATALOG
+                               mv rackn-catalog.json rackn-catalog.json.gz
+                               gunzip rackn-catalog.json.gz
+                               DDV=$($LOCAL_JQ -r ".sections.catalog_items[\"drp-$DRP_VERSION\"].ActualVersion" rackn-catalog.json)
+                       else
+                           DDV=$DRP_VERSION
+                       fi
+
+                       get $URL_BASE_DRP/$DDV.zip
+                       mv $DDV.zip $ZIP
+
+                       # XXX: Put sha back one day
+                       #get $URL_BASE_DRP/$DDV.sha256
+                       #mv $DDV.sha256 $SHA
+                       #$shasum -c dr-provision.sha256
                      fi
                      $tar -xf dr-provision.zip
                  fi
@@ -522,19 +541,23 @@ case $MODE in
              fi
 
              if [[ $NO_CONTENT == false ]]; then
-                 DRP_CONTENT_VERSION=stable
-                 if [[ $DRP_VERSION == tip ]]; then
-                     DRP_CONTENT_VERSION=tip
-                 fi
                  echo "Installing Version $DRP_CONTENT_VERSION of Digital Rebar Provision Community Content"
                  if [[ -n "$ZIP_FILE" ]]; then
                    echo "WARNING: '--zip-file' specified, still trying to download community content..."
                    echo "         (specify '--no-content' to skip download of community content"
                  fi
-                 CC_YML=drp-community-content.yaml
-                 CC_SHA=drp-community-content.sha256
-                 get $URL_BASE_CONTENT/$DRP_CONTENT_VERSION/$CC_YML $URL_BASE_CONTENT/$DRP_CONTENT_VERSION/$CC_SHA
-                 $shasum -c $CC_SHA
+
+                 if [[ ! -e rackn-catalog.json ]] ; then
+                     get $DRP_CATALOG
+                     mv rackn-catalog.json rackn-catalog.json.gz
+                     gunzip rackn-catalog.json.gz
+                 fi
+                 CC_VERSION=$($LOCAL_JQ -r ".sections.catalog_items[\"drp-community-content-$DRP_CONTENT_VERSION\"].ActualVersion" rackn-catalog.json)
+
+                 CC_JSON=${CC_VERSION}.json
+                 get $URL_BASE_CONTENT/$CC_JSON
+                 mv $CC_JSON drp-community-content.json
+                 # XXX: Add back in sha
              fi
 
              if [[ $ISOLATED == false ]]; then
@@ -593,8 +616,8 @@ case $MODE in
 
                  $_sudo mkdir -p /usr/share/dr-provision
                  if [[ $NO_CONTENT == false ]] ; then
-                     DEFAULT_CONTENT_FILE="/usr/share/dr-provision/default.yaml"
-                     $_sudo mv drp-community-content.yaml $DEFAULT_CONTENT_FILE
+                     DEFAULT_CONTENT_FILE="/usr/share/dr-provision/default.json"
+                     $_sudo mv drp-community-content.json $DEFAULT_CONTENT_FILE
                  fi
 
                  if [[ $SYSTEMD == true ]] ; then
@@ -672,12 +695,9 @@ EOF
                  TFTP_DIR="`pwd`/drp-data/tftpboot"
 
                  # Make local links for execs
-                 rm -f drpcli dr-provision drbundler drpjoin
+                 rm -f drpcli dr-provision drpjoin
                  ln -s $binpath/drpcli drpcli
                  ln -s $binpath/dr-provision dr-provision
-                 if [[ -e $binpath/drbundler ]] ; then
-                     ln -s $binpath/drbundler drbundler
-                 fi
                  if [[ -e $binpath/drpjoin ]] ; then
                      ln -s $binpath/drpjoin drpjoin
                  fi
@@ -732,12 +752,12 @@ EOF
                  fi
 
 #SYG
-                 STARTER="$_sudo ./dr-provision --base-root=`pwd`/drp-data --local-content=\"\" --default-content=\"\" > drp.log 2>&1 &"
+                 STARTER="$_sudo ./dr-provision --base-root=`pwd`/drp-data > drp.log 2>&1 &"
                  [[ "$STARTUP" == "false" ]] && echo "$STARTER"
                  mkdir -p "`pwd`/drp-data/saas-content"
                  if [[ $NO_CONTENT == false ]] ; then
-                     DEFAULT_CONTENT_FILE="`pwd`/drp-data/saas-content/default.yaml"
-                     mv drp-community-content.yaml $DEFAULT_CONTENT_FILE
+                     DEFAULT_CONTENT_FILE="`pwd`/drp-data/saas-content/default.json"
+                     mv drp-community-content.json $DEFAULT_CONTENT_FILE
                  fi
 
                  if [[ "$STARTUP" == "true" ]]; then
@@ -757,7 +777,7 @@ EOF
 
              if [[ $NO_CONTENT == true ]] ; then
                  echo "# Add common utilities (sourced from RackN)"
-                 echo "  ${EP}drpcli contents upload https://api.rackn.io/catalog/content/task-library"
+                 echo "  ${EP}drpcli contents upload catalog:task-library-$DRP_CONTENT_VERSION"
              fi
              echo
              echo "# Optionally, locally cache the isos for common community operating systems"
