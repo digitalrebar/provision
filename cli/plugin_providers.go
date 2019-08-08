@@ -2,6 +2,7 @@ package cli
 
 import (
 	"fmt"
+	"path"
 
 	"github.com/digitalrebar/provision/v4/models"
 	"github.com/spf13/cobra"
@@ -20,17 +21,26 @@ func registerPluginProvider(app *cobra.Command) {
 		noUpdate:   true,
 	}
 	op.addCommand(&cobra.Command{
-		Use:   "upload [name] from [file]",
+		Use:   "upload [name] (from [file])",
 		Short: "Upload a program to act as a plugin_provider",
+		Long: `Uploads a program to act as a plugin_provider.
+If the final name of the plugin_provider is the same as the name of the file being uploaded,
+then the (from [file]) part may be omitted, and [name] should be the path to the plugin_provider.`,
 		Args: func(c *cobra.Command, args []string) error {
-			if len(args) != 3 {
-				return fmt.Errorf("%v requires 2 arguments", c.UseLine())
+			if len(args) != 3 && len(args) != 1 {
+				return fmt.Errorf("%v requires 1 or 2 arguments", c.UseLine())
 			}
 			return nil
 		},
 		RunE: func(c *cobra.Command, args []string) error {
-			name := args[0]
-			filePath := args[2]
+			var name, filePath string
+			if len(args) == 1 {
+				filePath = args[0]
+				name = path.Base(args[0])
+			} else {
+				name = args[0]
+				filePath = args[2]
+			}
 			fi, err := urlOrFileAsReadCloser(filePath)
 			if err != nil {
 				return fmt.Errorf("Error opening %s: %v", filePath, err)
