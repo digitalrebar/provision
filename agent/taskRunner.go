@@ -64,6 +64,9 @@ type runner struct {
 // one), and handles making sure that all relevant output is written
 // to the job log as well as local stderr
 func newRunner(c *api.Client, m *models.Machine, agentDir, chrootDir string, logger io.Writer) (*runner, error) {
+	if err := os.MkdirAll(agentDir, 0755); err != nil {
+		return nil, err
+	}
 	if logger == nil {
 		logger = ioutil.Discard
 	}
