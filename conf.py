@@ -68,7 +68,7 @@ master_doc = 'README'
 
 # General information about the project.
 project = u'Digital Rebar'
-copyright = u'2018, RackN team'
+copyright = u'2019, RackN team'
 license = u'Apache v2'
 author = u'RackN team'
 

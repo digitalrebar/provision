@@ -5,7 +5,7 @@ NOTICE: Moving to :ref:`component_terraform`.  Please update references.
 
 DOC SOURCE: https://github.com/rackn/provision-content/blob/master/terraform/._Documentation.meta
 
-ADDITIONAL MATERIAL: https://provision.readthedocs.io/en/tip/doc/content-packages/terraform.html
+ADDITIONAL MATERIAL: https://provision.readthedocs.io/en/latest/doc/content-packages/terraform.html
 
 .. _rs_terraform:
 

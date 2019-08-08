@@ -529,9 +529,9 @@ contains the following fields:
   otherwise their Paths should expand to an approriate location to be
   used as a boot file for the loader based on the IP address of the
   machine.  Good examples for each are the `discovery
-  <https://github.com/digitalrebar/provision/v4-content/blob/master/content/bootenvs/discovery.yml>`_
+  <https://github.com/digitalrebar/provision-content/blob/v4/content/bootenvs/discovery.yml>`_
   and the `sledgehammer
-  <https://github.com/digitalrebar/provision/v4-content/blob/master/content/bootenvs/sledgehammer.yml>`_
+  <https://github.com/digitalrebar/provision-content/blob/v4/content/bootenvs/sledgehammer.yml>`_
   bootenvs.
 
 Rendering the unknownBootEnv

@@ -54,7 +54,7 @@ Digital Rebar Provision can operate in a permissive reservation mode or require 
 
 In additional to serving IPs, DHCP servers provide critical configuration (aka `DHCP Options <https://en.wikipedia.org/wiki/Dynamic_Host_Configuration_Protocol#DHCP_options>`_) information to the clients.  Setting Option 67, Next Boot, is essential for Digital Rebar Provision to operate as a Provisioner.  This information includes next boot (67), gateway (3), domain name (15), DNS (6) and other important information.  It is encoded in the responses according to `IETF RFC 2132 <https://tools.ietf.org/html/rfc2132>`_
 
-Consult the `Godocs <https://godoc.org/github.com/digitalrebar/provision/v4/backend#Subnet>`_ for more details about the specific fields. 
+Consult the `Godocs <https://godoc.org/github.com/digitalrebar/provision/v4/models#Subnet>`_ for more details about the specific fields. 
 
 
 Leases

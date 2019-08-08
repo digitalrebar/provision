@@ -63,17 +63,6 @@ that the data stays consistent.  The backend also provides a
 RequestTracker to ensure that logging and locking on a per-request
 basis is consistent.
 
-Pluggable Storage
-^^^^^^^^^^^^^^^^^
-
-The mechanism for storing persistent data should be pluggable, and
-only rely on basic key/value store semantics in the absence of
-transactions.  The backend relies on an external Go package
-(https://github.com/digitalrebar/provision/v4/store) to abstract some basic
-behaviour on top of various key-value type stores.  Adding support for
-new storage types will be a matter of adding them to that package, not
-to dr-provison itself.
-
 Single Point of Validation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 

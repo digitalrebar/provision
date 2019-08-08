@@ -31,7 +31,7 @@ Overview
 
 This document refers to the ``drpcli`` command line tool for manipulating the ``dr-provision`` service.  We do not specify any paths in the documentation.  However, in our default quickstart for *isolated* mode, the ``drpcli`` tool will NOT be installed in any system PATH locations.  You must do this, or you may use the local setup symbolic link.  For example - simply change ``drpcli`` to ``./drpcli`` in the documentation below.  Or ... copy the binary to a PATH location.
 
-You can perform all of the actions outlined in this document via the hosted web UX Portal.  If you choose to use the web Portal, please ensure the setup is completed by reviewing the output of the ``Info & Preferences`` panel named *System Wizard* are completed successfully.  Basic `documentation on the Web Portal <http://provision.readthedocs.io/en/tip/doc/ux/portal/systemux.html#machines>`_ UX is available. 
+You can perform all of the actions outlined in this document via the hosted web UX Portal.  If you choose to use the web Portal, please ensure the setup is completed by reviewing the output of the ``Info & Preferences`` panel named *System Wizard* are completed successfully.  Basic `documentation on the Web Portal <http://provision.readthedocs.io/en/latest/doc/ux/portal/systemux.html#machines>`_ UX is available. 
 
 .. _rs_qs_preparation:
 
