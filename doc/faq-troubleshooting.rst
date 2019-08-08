@@ -365,9 +365,17 @@ Content downloads directly from the Catalog as JSON and can be imported directly
   ::
       drpcli contents upload catalog:task-library-tip
 
+or
+
+  ::
+      drpcli catalog item install task-library --version tip
 Plugin downloads directly from the Catalog work as follows:
   ::
       drpcli plugin_providers upload raid from catalog:raid-stable
+
+or
+  ::
+      drpcli catalog item install raid
 
 .. _rs_plugin_providers_license:
 
@@ -397,6 +405,10 @@ Get and upload our new version (in this example, explicitly set version to ``v1.
   ::
 
     drpcli contents upload catalog:drp-community-content-v1.5.0
+
+or
+  ::
+      drpcli catalog item install drp-community-content --version v1.5.0
 
 Now verify that our installed content matches the new vesion we expected ...
   ::
