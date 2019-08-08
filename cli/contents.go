@@ -120,11 +120,7 @@ func encryptAfterDownload(c *models.Content) (key []byte, err error) {
 	return
 }
 
-func replaceContent(path, key string) error {
-	layer := &models.Content{}
-	if err := into(path, layer); err != nil {
-		return generateError(err, "Error parsing layer")
-	}
+func doReplaceContent(layer *models.Content, key string) error {
 	if err := decryptForUpload(layer, key); err != nil {
 		return generateError(err, "Error preparing layer")
 	}
@@ -150,6 +146,14 @@ func replaceContent(path, key string) error {
 	} else {
 		return generateError(err, "Error uploading layer")
 	}
+}
+
+func replaceContent(path, key string) error {
+	layer := &models.Content{}
+	if err := into(path, layer); err != nil {
+		return generateError(err, "Error parsing layer")
+	}
+	return doReplaceContent(layer, key)
 }
 
 func registerContent(app *cobra.Command) {

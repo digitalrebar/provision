@@ -65,23 +65,14 @@ func getCatalogSource(nv string) (string, error) {
 		return "", fmt.Errorf("Catalog item: %s not found", nv)
 	}
 
-	ci := map[string]interface{}{}
+	ci := &models.CatalogItem{}
 	if err := utils.Remarshal(elem, &ci); err != nil {
 		return "", fmt.Errorf("Catalog item: %s can not be remarshaled: %v", nv, err)
 	}
-
-	src, ok := ci["Source"].(string)
-	if !ok {
+	if ci.Source == "" {
 		return "", fmt.Errorf("Catalog item: %s does not have a source: %v", nv, ci)
 	}
-
-	t, _ := ci["ContentType"].(string)
-	if t == "PluginProvider" {
-		n := ci["Name"].(string)
-		src = fmt.Sprintf("%s/%s/%s/%s", src, runtime.GOARCH, runtime.GOOS, n)
-	}
-
-	return src, nil
+	return ci.DownloadUrl(runtime.GOOS, runtime.GOARCH), nil
 }
 
 func urlOrFileAsReadCloser(src string) (io.ReadCloser, error) {
