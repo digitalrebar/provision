@@ -406,7 +406,7 @@ FASTMSG
 }
 
 # main
-LOCAL_JQ=$(which jq)
+LOCAL_JQ=$(which jq || :)
 arch=$(uname -m)
 case $arch in
   x86_64|amd64)
