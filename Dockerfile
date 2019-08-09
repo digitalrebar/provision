@@ -16,7 +16,7 @@ RUN echo "DRP_VERSION=${DRP_VERSION}" && \
 
 # Copy binaries following symlinks. This is used for easier copying from builder image.
 RUN mkdir /provision/binaries && \
-    cp -L /provision/dr-provision /provision/drbundler /provision/drpcli /provision/drpjoin /provision/binaries/
+    cp -L /provision/dr-provision /provision/drpcli /provision/drpjoin /provision/binaries/
 
 # Build final container
 FROM debian:stable-slim
