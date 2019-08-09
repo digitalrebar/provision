@@ -35,6 +35,8 @@ SEE ALSO
    be installed)
 -  `drpcli bootenvs <drpcli_bootenvs.html>`__ - Access CLI commands
    relating to bootenvs
+-  `drpcli catalog <drpcli_catalog.html>`__ - Access commands related to
+   catalog manipulation
 -  `drpcli certs <drpcli_certs.html>`__ - Access CLI commands relating
    to certs
 -  `drpcli contents <drpcli_contents.html>`__ - Access CLI commands
@@ -60,6 +62,8 @@ SEE ALSO
 -  `drpcli logs <drpcli_logs.html>`__ - Access commands relating to logs
 -  `drpcli machines <drpcli_machines.html>`__ - Access CLI commands
    relating to machines
+-  `drpcli net <drpcli_net.html>`__ - Command for local network
+   management
 -  `drpcli objects <drpcli_objects.html>`__ - Access CLI commands
    relating to objects
 -  `drpcli params <drpcli_params.html>`__ - Access CLI commands relating
