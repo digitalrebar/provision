@@ -614,9 +614,9 @@ case $MODE in
                      $_sudo mv /var/lib/tftpboot /var/lib/dr-provision/
                  fi
 
-                 $_sudo mkdir -p /usr/share/dr-provision
                  if [[ $NO_CONTENT == false ]] ; then
-                     DEFAULT_CONTENT_FILE="/usr/share/dr-provision/default.json"
+                     $_sudo mkdir -p /var/lib/dr-provision/saas-content
+                     DEFAULT_CONTENT_FILE="/var/lib/dr-provision/saas-content/drp-community-content.json"
                      $_sudo mv drp-community-content.json $DEFAULT_CONTENT_FILE
                  fi
 
