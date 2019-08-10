@@ -13,7 +13,6 @@ if ! [[ $(dr-provision --version 2>&1) =~ $ver_re ]]; then
 fi
 
 tools/build-one.sh cmds/drpcli
-tools/build-one.sh cmds/drbundler
 tools/build-one.sh cmds/incrementer
 
 echo Running with $(which dr-provision) version $BASH_REMATCH

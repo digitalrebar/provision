@@ -24,7 +24,6 @@ if [[ $TRAVIS = true ]]; then
 fi
 
 go build -o drpcli-docs cmds/drpcli-docs/drpcli-docs.go
-tools/build-one.sh cmds/drbundler
 # set our arch:os build pairs to compile for
 builds="amd64:linux amd64:darwin amd64:windows arm64:linux arm:linux"
 
@@ -33,6 +32,7 @@ builds="amd64:linux amd64:darwin amd64:windows arm64:linux arm:linux"
 
 for tool in cmds/*; do
     [[ -d $tool ]] || continue
+    [[ $tool != cmds/drbundler ]] || continue
     printf 'Building %s for' "$tool"
     for build in ${builds}; do
         export GOOS="${build##*:}" GOARCH="${build%:*}"
