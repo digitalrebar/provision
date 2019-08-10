@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
+	"strconv"
 	"strings"
 	"text/template"
 
@@ -20,6 +21,11 @@ import (
 
 func init() {
 	addRegistrar(registerContent)
+}
+
+func outputGoBuffer(filename string, buf []byte) error {
+	s := fmt.Sprintf("package main\n\nvar contentYamlString = %s\n", strconv.Quote(string(buf)))
+	return ioutil.WriteFile(filename, []byte(s), 0644)
 }
 
 func decryptForUpload(c *models.Content, key string) error {
@@ -354,12 +360,23 @@ func registerContent(app *cobra.Command) {
 				return fmt.Errorf("Failed to open store %s: %v", target, err)
 			}
 			defer os.Remove(target + ".tmp")
-			defer s.Close()
 			cc := &api.Client{}
 			if err := cc.BundleContent(".", s, params); err != nil {
 				return fmt.Errorf("Failed to load: %v", err)
 			}
-			os.Rename(target+".tmp", target)
+			s.Close()
+
+			if ext == ".go" {
+				if contents, err := ioutil.ReadFile(target + ".tmp"); err != nil {
+					return fmt.Errorf("Failed to readfile: %v\n", err)
+				} else {
+					if err := outputGoBuffer(target, contents); err != nil {
+						return fmt.Errorf("Failed to write file: %v\n", err)
+					}
+				}
+			} else {
+				os.Rename(target+".tmp", target)
+			}
 			return nil
 		},
 	})
