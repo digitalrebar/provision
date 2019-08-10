@@ -149,7 +149,7 @@ and wind up in a file with the same name as the item + the default file extensio
 			}
 			fi, err := os.OpenFile(target, os.O_RDWR|os.O_CREATE|os.O_TRUNC, mode)
 			if err != nil {
-				return fmt.Errorf("Unable to create %s: %v", err)
+				return fmt.Errorf("Unable to create %s: %v", target, err)
 			}
 			defer fi.Close()
 			_, err = io.Copy(fi, src)

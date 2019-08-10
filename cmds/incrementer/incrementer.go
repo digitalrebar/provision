@@ -1,6 +1,6 @@
 package main
 
-//go:generate drbundler content content.go
+//go:generate sh -c "cd content ; drpcli contents bundle ../content.go"
 
 import (
 	"fmt"
