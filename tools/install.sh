@@ -84,9 +84,12 @@ STARTUP=false
 REMOVE_RS=false
 LOCAL_UI=false
 KEEP_INSTALLER=false
+BIN_DIR=/usr/local/bin
+DRP_HOME_DIR=/var/lib/dr-provision
+
 _sudo="sudo"
-CLI="/usr/local/bin/drpcli"
-CLI_BKUP="/usr/local/bin/drpcli.drp-installer.backup"
+CLI="${BIN_DIR}/drpcli"
+CLI_BKUP="${BIN_DIR}/drpcli.drp-installer.backup"
 
 # download URL locations; overridable via ENV variables
 URL_BASE=${URL_BASE:-"https://rebar-catalog.s3-us-west-2.amazonaws.com"}
@@ -430,13 +433,13 @@ fi
 case $(uname -s) in
     Darwin)
         binpath="bin/darwin/$arch"
-        bindest="/usr/local/bin"
+        bindest="${BIN_DIR}"
         tar="command bsdtar"
         # Someday, handle adding all the launchd stuff we will need.
         shasum="command shasum -a 256";;
     Linux)
         binpath="bin/linux/$arch"
-        bindest="/usr/local/bin"
+        bindest="${BIN_DIR}"
         tar="command bsdtar"
         if [[ -d /etc/systemd/system ]]; then
             # SystemD
@@ -561,7 +564,7 @@ case $MODE in
              fi
 
              if [[ $ISOLATED == false ]]; then
-                 INST="/usr/local/bin/drp-install.sh"
+                 INST="${BIN_DIR}/drp-install.sh"
                  $_sudo cp $TMP_INST $INST && $_sudo chmod 755 $INST
                  echo "Install script saved to '$INST'"
                  echo "(run '$INST remove' to uninstall DRP)"
@@ -569,11 +572,11 @@ case $MODE in
                  # move aside/preserve an existing drpcli - this machine might be under
                  # control of another DRP Endpoint, and this will break the installer (text file busy)
                  if [[ -f "$CLI" ]]; then
-                     echo "SAVING '/usr/local/bin/drpcli' to backup file ($CLI_BKUP)"
+                     echo "SAVING '${BIN_DIR}/drpcli' to backup file ($CLI_BKUP)"
                      $_sudo mv "$CLI" "$CLI_BKUP"
                  fi
 
-                 TFTP_DIR="/var/lib/dr-provision/tftpboot"
+                 TFTP_DIR="${DRP_HOME_DIR}/tftpboot"
                  $_sudo cp "$binpath"/* "$bindest"
                  if [[ $initfile ]]; then
                      if [[ -r $initdest ]]
@@ -602,21 +605,21 @@ case $MODE in
                  fi
 
                  # handle the v3.0.X to v3.1.0 directory structure.
-                 if [[ ! -e /var/lib/dr-provision/digitalrebar && -e /var/lib/dr-provision ]] ; then
+                 if [[ ! -e ${DRP_HOME_DIR}/digitalrebar && -e ${DRP_HOME_DIR} ]] ; then
                      DIR=$(mktemp -d)
-                     $_sudo mv /var/lib/dr-provision $DIR
-                     $_sudo mkdir -p /var/lib/dr-provision
-                     $_sudo mv $DIR/* /var/lib/dr-provision/digitalrebar
+                     $_sudo mv ${DRP_HOME_DIR} $DIR
+                     $_sudo mkdir -p ${DRP_HOME_DIR}
+                     $_sudo mv $DIR/* ${DRP_HOME_DIR}/digitalrebar
                  fi
 
-                 if [[ ! -e /var/lib/dr-provision/digitalrebar/tftpboot && -e /var/lib/tftpboot ]] ; then
-                     echo "MOVING /var/lib/tftpboot to /var/lib/dr-provision/tftpboot location ... "
-                     $_sudo mv /var/lib/tftpboot /var/lib/dr-provision/
+                 if [[ ! -e ${DRP_HOME_DIR}/digitalrebar/tftpboot && -e /var/lib/tftpboot ]] ; then
+                     echo "MOVING /var/lib/tftpboot to ${DRP_HOME_DIR}/tftpboot location ... "
+                     $_sudo mv /var/lib/tftpboot ${DRP_HOME_DIR}
                  fi
 
                  if [[ $NO_CONTENT == false ]] ; then
-                     $_sudo mkdir -p /var/lib/dr-provision/saas-content
-                     DEFAULT_CONTENT_FILE="/var/lib/dr-provision/saas-content/drp-community-content.json"
+                     $_sudo mkdir -p ${DRP_HOME_DIR}/saas-content
+                     DEFAULT_CONTENT_FILE="${DRP_HOME_DIR}/saas-content/drp-community-content.json"
                      $_sudo mv drp-community-content.json $DEFAULT_CONTENT_FILE
                  fi
 
@@ -802,10 +805,10 @@ EOF
          echo "Removing program and service files"
          $_sudo rm -f "$bindest/dr-provision" "$bindest/drpcli" "$initdest"
          [[ -d /etc/systemd/system/dr-provision.service.d ]] && rm -rf /etc/systemd/system/dr-provision.service.d
-         [[ -f /usr/local/bin/drp-install.sh ]] && rm -f /usr/local/bin/drp-install.sh
+         [[ -f ${BIN_DIR}/drp-install.sh ]] && rm -f ${BIN_DIR}/drp-install.sh
          if [[ $REMOVE_DATA == true ]] ; then
              echo "Removing data files"
-             $_sudo rm -rf "/usr/share/dr-provision" "/etc/dr-provision" "/var/lib/dr-provision"
+             $_sudo rm -rf "/usr/share/dr-provision" "/etc/dr-provision" "${DRP_HOME_DIR}"
          fi
          ;;
      *)
