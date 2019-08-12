@@ -157,8 +157,9 @@ and wind up in a file with the same name as the item + the default file extensio
 		},
 	})
 	itemCmd.AddCommand(&cobra.Command{
-		Use:   "install [item]",
-		Short: "Installs [item] from the catalog on the current dr-provision endpoint",
+		Use:               "install [item]",
+		Short:             "Installs [item] from the catalog on the current dr-provision endpoint",
+		PersistentPreRunE: ppr,
 		Args: func(cmd *cobra.Command, args []string) error {
 			if len(args) != 1 {
 				return fmt.Errorf("item install requires 1 argument")

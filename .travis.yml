@@ -12,7 +12,7 @@ install:
 - "./tools/build.sh"
 - "./tools/publish.sh"
 script:
-- "./tools/test-noop.sh"
+- "./tools/test.sh"
 notifications:
   slack:
     secure: Imuptg78FWWZlGVb8LBuwn45CeMfnHgf+pXbftR8mSGFRsg08jw38MIRtw/MAET3RJsciwDXf22AkgM8WgZ+fcUbJI4MGn2IvnM40T/imc5deqlMn1QdE5HasWrrBwfyY7hDu8XBexit+2fmYLGGrHX2fsbvUJepT4xOV8MZbZWMYueoBuL2bxNRR+lhjqVsKMq+/8q4g7hsKxYOdStEOZQIM13qI8dbIIQK4cCPQGtdNMGlNSX0a/nEFZmxDKh3WILssZcRst7SW3QldYppJO21PcTmY/zCTLJ5b7izweLczDmV77ckv61X50B8iaarhwEMFYs9Icg8U69mAkbqeU5HsWy1d2VDPDG+QW32VMTU371pVEzsmBVzArSXvldULmRzYcA+9LoYb5P6LNbq2y7tdimETOElbkMyw53hnb4ZPiypLWlwusZibCxGsJMp41MgbxxaMKxUgrBsAY9nSBg/oj7ixditveXm5IjqBJXfFyxuxfvcxssT15AiqFI3z+Mpoarq233V7E/c0AwdYc/iJKPtW8DG2uSjb0EMIKopXjEi/tz8ykVQH1UbKww5PvGfzCw2mCNF+Bc925coTs8gwaU+XOnqQesggUheAmpaQhbdPGpNYecbLgtQ3kafEBllTrgLyTqISkXlDMZybItP1C8GrEEshGWSEzBAEGU=

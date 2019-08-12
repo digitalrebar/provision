@@ -192,7 +192,9 @@ func NewApp() *cobra.Command {
 
 	for _, c := range app.Commands() {
 		// contents needs some help.
-		if c.Use == "contents" {
+		switch c.Use {
+		case "catalog":
+		case "contents":
 			for _, sc := range c.Commands() {
 				if !strings.HasPrefix(sc.Use, "bundle") &&
 					!strings.HasPrefix(sc.Use, "unbundle") &&
@@ -200,13 +202,13 @@ func NewApp() *cobra.Command {
 					sc.PersistentPreRunE = ppr
 				}
 			}
-		} else if c.Use == "users" {
+		case "users":
 			for _, sc := range c.Commands() {
 				if !strings.HasPrefix(sc.Use, "passwordhash") {
 					sc.PersistentPreRunE = ppr
 				}
 			}
-		} else {
+		default:
 			c.PersistentPreRunE = ppr
 		}
 	}
