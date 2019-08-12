@@ -138,9 +138,8 @@ further tweak how the results are returned using the following meta-filters:
 			err := req.Do(&data)
 			if err != nil {
 				return generateError(err, "listing %v", o.name)
-			} else {
-				return prettyPrint(data)
 			}
+			return prettyPrint(data)
 		},
 	}
 	cmds = append(cmds, listCmd)
@@ -204,9 +203,8 @@ format id as *index*:*value*
 			}
 			if err := req.Do(&data); err != nil {
 				return generateError(err, "Failed to fetch %v: %v", o.singleName, args[0])
-			} else {
-				return prettyPrint(data)
 			}
+			return prettyPrint(data)
 		},
 	}
 	if canSlim {
@@ -342,15 +340,19 @@ empty object of that type.  For User, BootEnv, Machine, and Profile, it will be 
 					if err != nil {
 						return generateError(err, "Failed to generate changed %s:%s object", o.name, args[0])
 					}
+					res := models.Clone(refObj)
 					req := Session.Req()
+					if ref != "" {
+						req = req.ParanoidPatch()
+					}
+					req = req.PatchTo(refObj, toPut)
 					if force {
-						req.Params("force", "true")
+						req = req.Params("force", "true")
 					}
-					if res, err := req.PatchToFull(refObj, toPut, ref != ""); err != nil {
+					if err := req.Do(&res); err != nil {
 						return generateError(err, "Unable to update %v", args[0])
-					} else {
-						return prettyPrint(res)
 					}
+					return prettyPrint(res)
 				},
 			})
 		}
