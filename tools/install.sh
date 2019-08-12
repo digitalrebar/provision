@@ -212,6 +212,17 @@ fi
 
 [[ $DBG == true ]] && set -x
 
+
+if [[ $EUID -eq 0 ]]; then
+   _sudo=""
+fi
+
+if [[ -x "$(command -v sudo)" && $_sudo != "" ]]; then
+  echo "Script is not running as root and sudo command is not found. Please be root"
+  exit 1
+fi
+
+
 # Figure out what Linux distro we are running on.
 export OS_TYPE= OS_VER= OS_NAME= OS_FAMILY=
 
