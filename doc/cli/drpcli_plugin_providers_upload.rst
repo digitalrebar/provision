@@ -6,11 +6,14 @@ Upload a program to act as a plugin_provider
 Synopsis
 ~~~~~~~~
 
-Upload a program to act as a plugin_provider
+Uploads a program to act as a plugin_provider. If the final name of the
+plugin_provider is the same as the name of the file being uploaded, then
+the (from [file]) part may be omitted, and [name] should be the path to
+the plugin_provider.
 
 ::
 
-   drpcli plugin_providers upload [name] from [file] [flags]
+   drpcli plugin_providers upload [name] (from [file]) [flags]
 
 Options
 ~~~~~~~
