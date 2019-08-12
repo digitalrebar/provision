@@ -38,5 +38,5 @@ for d in $(go list ./... 2>/dev/null | egrep -v 'cmds|test') ; do
     time go test -timeout 30m -race -covermode=atomic -coverpkg=$packages -coverprofile="profile${i}-c.txt" "$d" || FAILED=true
     i=$((i+1))
 done
-rm bin/$(go env GOOS)/$(go env GOARCH)/dr-provision" || :
+rm "bin/$(go env GOOS)/$(go env GOARCH)/dr-provision" || :
 [[ ! $FAILED ]]
