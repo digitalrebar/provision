@@ -38,6 +38,8 @@ Options:
     --drp-password=<string> # DRP user passowrd to set after system start (only with --systemd)
     --remove-rocketskates   # Remove the rocketskates user after system start (only with --systemd)
     --local-ui              # Set up DRP to server a local UI
+    --system-user           # System user account to create for DRP to run as
+    --system-group          # System group name
 
     install                 # Sets up an isolated or system 'production' enabled install.
     upgrade                 # Sets the installer to upgrade an existing 'dr-provision'
@@ -54,7 +56,8 @@ Defaults are:
     drp-id              = unset            ha-id               = unset
     drp-user            = rocketskates     drp-password        = r0cketsk8ts
     startup             = false            keep-installer      = false
-    local-ui            = false
+    local-ui            = false            system-user         = root
+    system-group        = root
 
     * version examples: 'tip', 'v3.13.6' or 'stable'
 
@@ -96,6 +99,8 @@ URL_BASE=${URL_BASE:-"https://rebar-catalog.s3-us-west-2.amazonaws.com"}
 URL_BASE_DRP=${URL_BASE_DRP:-"$URL_BASE/drp"}
 URL_BASE_CONTENT=${URL_BASE_CONTENT:-"$URL_BASE/drp-community-content"}
 DRP_CATALOG=${DRP_CATALOG:-"$URL_BASE/rackn-catalog.json"}
+SYSTEM_USER=root
+SYSTEM_GROUP=root
 
 args=()
 while (( $# > 0 )); do
@@ -175,6 +180,12 @@ while (( $# > 0 )); do
             ;;
         --ha-id)
             HA_ID="${arg_data}"
+            ;;
+        --system-user)
+            SYSTEM_USER="${arg_data}"
+            ;;
+        --system-group)
+            SYSTEM_GROUP="${arg_data}"
             ;;
         --*)
             arg_key="${arg_key#--}"
@@ -280,6 +291,39 @@ get() {
         echo ">>> Downloading file:  $FILE"
         $GET -o $FILE $URL
     done
+}
+
+
+# setup the system user for drp to run as
+setup_system_user() {
+    if [[ ${SYSTEM_USER} == "root" ]]; then
+        return
+    fi
+    # 0 or 9 here is fine on Deb or RHEL
+    # 0 is success 9 means the account already
+    # exists which is expected
+    RC=0
+    groupadd --system ${SYSTEM_GROUP} || RC=$?
+    if [[ ${RC} != 0 && ${RC} != 9 ]]; then
+        exit ${RC}
+    fi
+    if [[ ${OS_FAMILY} == "debian" ]]; then
+        adduser --system --home ${DRP_HOME_DIR} --quiet --group ${SYSTEM_USER}
+        return
+    else
+        RC=0
+        if [[ ${OS_FAMILY} == "rhel" ]]; then
+            adduser --system -d ${DRP_HOME_DIR} -m --shell /sbin/nologin || RC=$?
+        fi
+    fi
+    if [[ ${RC} == 0 || $? == 9 ]]; then
+        return
+    fi
+    exit $?
+}
+
+set_ownership_of_drp() {
+    chown -R ${SYSTEM_USER}:${SYSTEM_GROUP} ${DRP_HOME_DIR}
 }
 
 ensure_packages() {
@@ -443,6 +487,7 @@ case $(uname -s) in
         tar="command bsdtar"
         if [[ -d /etc/systemd/system ]]; then
             # SystemD
+            SYSTEMD=true
             initfile="assets/startup/dr-provision.service"
             initdest="/etc/systemd/system/dr-provision.service"
             starter="$_sudo systemctl daemon-reload && $_sudo systemctl start dr-provision"
@@ -575,6 +620,8 @@ case $MODE in
                      echo "SAVING '${BIN_DIR}/drpcli' to backup file ($CLI_BKUP)"
                      $_sudo mv "$CLI" "$CLI_BKUP"
                  fi
+                 setup_system_user
+                 set_ownership_of_drp
 
                  TFTP_DIR="${DRP_HOME_DIR}/tftpboot"
                  $_sudo cp "$binpath"/* "$bindest"
@@ -625,6 +672,11 @@ case $MODE in
 
                  if [[ $SYSTEMD == true ]] ; then
                      mkdir -p /etc/systemd/system/dr-provision.service.d
+                     cat > /etc/systemd/system/dr-provision.service.d/user.conf <<EOF
+[Service]
+User=${SYSTEM_USER}
+Group=${SYSTEM_GROUP}
+EOF
                      if [[ $DRP_ID ]] ; then
                        cat > /etc/systemd/system/dr-provision.service.d/drpid.conf <<EOF
 [Service]
