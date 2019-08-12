@@ -93,6 +93,7 @@ DRP_HOME_DIR=/var/lib/dr-provision
 _sudo="sudo"
 CLI="${BIN_DIR}/drpcli"
 CLI_BKUP="${BIN_DIR}/drpcli.drp-installer.backup"
+PROVISION="${BIN_DIR}/dr-provision"
 
 # download URL locations; overridable via ENV variables
 URL_BASE=${URL_BASE:-"https://rebar-catalog.s3-us-west-2.amazonaws.com"}
@@ -314,27 +315,52 @@ setup_system_user() {
     # 0 is success 9 means the account already
     # exists which is expected
     RC=0
-    groupadd --system ${SYSTEM_GROUP} || RC=$?
+    $_sudo groupadd --system ${SYSTEM_GROUP} || RC=$?
     if [[ ${RC} != 0 && ${RC} != 9 ]]; then
+        echo "Unable to create system group ${SYSTEM_GROUP}"
         exit ${RC}
     fi
     if [[ ${OS_FAMILY} == "debian" ]]; then
-        adduser --system --home ${DRP_HOME_DIR} --quiet --group ${SYSTEM_USER}
+        $_sudo adduser --system --home ${DRP_HOME_DIR} --quiet --group ${SYSTEM_USER}
         return
     else
         RC=0
         if [[ ${OS_FAMILY} == "rhel" ]]; then
-            adduser --system -d ${DRP_HOME_DIR} --gid ${SYSTEM_GROUP} -m --shell /sbin/nologin ${SYSTEM_USER} || RC=$?
+            $_sudo adduser --system -d ${DRP_HOME_DIR} --gid ${SYSTEM_GROUP} -m --shell /sbin/nologin ${SYSTEM_USER} || RC=$?
         fi
     fi
-    if [[ ${RC} == 0 || $? == 9 ]]; then
+    if [[ ${RC} == 0 || ${RC} == 9 ]]; then
         return
     fi
-    exit $?
+    echo "Unable to create system user ${SYSTEM_USER}"
+    exit ${RC}
 }
 
 set_ownership_of_drp() {
-    chown -R ${SYSTEM_USER}:${SYSTEM_GROUP} ${DRP_HOME_DIR}
+    # It is possible for the home directory to not exist if
+    # a non-root user was specified but already created.
+    # Make sure a directory is created so DRP does not hit
+    # permissions errors trying to use the home directory.
+    if [ ! -d "${DRP_HOME_DIR}" ]; then
+        echo "DRP Home directory ${DRP_HOME_DIR} did not exist - creating..."
+        $_sudo mkdir -p ${DRP_HOME_DIR}
+    fi
+    $_sudo chown -R ${SYSTEM_USER}:${SYSTEM_GROUP} ${DRP_HOME_DIR}
+}
+
+setcap_drp_binary() {
+    if [[ ${SYSTEM_USER} != "root" ]]; then
+        case ${OS_FAMILY} in
+            rhel|debian)
+                $_sudo setcap "cap_net_raw,cap_net_bind_service=+ep" ${PROVISION}
+            ;;
+            *)
+                echo "Your OS Family ${OS_FAMILY} does not support setcap" \
+                     "and may not be able to bind privileged ports when" \
+                     "running as non-root user ${SYSTEM_USER}"
+            ;;
+        esac
+    fi
 }
 
 ensure_packages() {
@@ -631,11 +657,14 @@ case $MODE in
                      echo "SAVING '${BIN_DIR}/drpcli' to backup file ($CLI_BKUP)"
                      $_sudo mv "$CLI" "$CLI_BKUP"
                  fi
+
                  setup_system_user
-                 set_ownership_of_drp
 
                  TFTP_DIR="${DRP_HOME_DIR}/tftpboot"
                  $_sudo cp "$binpath"/* "$bindest"
+
+                 setcap_drp_binary
+
                  if [[ $initfile ]]; then
                      if [[ -r $initdest ]]
                      then
@@ -680,6 +709,8 @@ case $MODE in
                      DEFAULT_CONTENT_FILE="${DRP_HOME_DIR}/saas-content/drp-community-content.json"
                      $_sudo mv drp-community-content.json $DEFAULT_CONTENT_FILE
                  fi
+
+                 set_ownership_of_drp
 
                  if [[ $SYSTEMD == true ]] ; then
                      mkdir -p /etc/systemd/system/dr-provision.service.d
