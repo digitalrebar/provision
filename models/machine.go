@@ -317,7 +317,7 @@ func (b *Machine) SplitTasks() (thePast []string, thePresent []string, theFuture
 	}
 	if b.CurrentTask == -1 {
 		thePresent = b.Tasks[:]
-	} else if b.CurrentTask == len(b.Tasks) {
+	} else if b.CurrentTask >= len(b.Tasks) {
 		thePast = b.Tasks[:]
 	} else {
 		thePast = b.Tasks[:b.CurrentTask+1]
