@@ -8,6 +8,7 @@ import (
 )
 
 func (o *ops) params() {
+	compose := false
 	aggregate := false
 	decode := false
 	params := ""
@@ -89,6 +90,9 @@ func (o *ops) params() {
 			if decode {
 				req.Params("decode", "true")
 			}
+			if compose {
+				req.Params("compose", "true")
+			}
 			if err := req.Do(&res); err != nil {
 				return generateError(err, "Failed to fetch params %v: %v", o.singleName, uuid)
 			}
@@ -96,6 +100,7 @@ func (o *ops) params() {
 		},
 	}
 	getParam.Flags().BoolVar(&aggregate, "aggregate", false, "Should return aggregated view")
+	getParam.Flags().BoolVar(&compose, "compose", false, "Should merge map and array objects together")
 	getParam.Flags().BoolVar(&decode, "decode", false, "Should return decoded secure params")
 	o.addCommand(getParam)
 	o.addCommand(&cobra.Command{
