@@ -324,7 +324,7 @@ setup_system_user() {
     else
         RC=0
         if [[ ${OS_FAMILY} == "rhel" ]]; then
-            adduser --system -d ${DRP_HOME_DIR} -m --shell /sbin/nologin || RC=$?
+            adduser --system -d ${DRP_HOME_DIR} --gid ${SYSTEM_GROUP} -m --shell /sbin/nologin ${SYSTEM_USER} || RC=$?
         fi
     fi
     if [[ ${RC} == 0 || $? == 9 ]]; then
