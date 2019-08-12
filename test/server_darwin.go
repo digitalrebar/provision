@@ -24,8 +24,8 @@ func StartServer(tmpDir string, basePort int) error {
 
 	server = exec.Command("dr-provision",
 		"--base-root", tmpDir,
-		"--tls-key", tmpDir+"/server.key",
-		"--tls-cert", tmpDir+"/server.crt",
+		"--tls-key", "server.key",
+		"--tls-cert", "server.crt",
 		"--api-port", apiPort,
 		"--static-port", staticPort,
 		"--tftp-port", tftpPort,
