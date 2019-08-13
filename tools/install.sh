@@ -40,7 +40,10 @@ Options:
     --local-ui              # Set up DRP to server a local UI
     --system-user           # System user account to create for DRP to run as
     --system-group          # System group name
-
+    --drp-home-dir          # Use with system-user and system-group to set the home directory
+                            # for the system-user. This path is where most important drp files live
+                            # including the tftp root
+                            #
     install                 # Sets up an isolated or system 'production' enabled install.
     upgrade                 # Sets the installer to upgrade an existing 'dr-provision'
     remove                  # Removes the system enabled install.  Requires no other flags
@@ -57,7 +60,7 @@ Defaults are:
     drp-user            = rocketskates     drp-password        = r0cketsk8ts
     startup             = false            keep-installer      = false
     local-ui            = false            system-user         = root
-    system-group        = root
+    system-group        = root             drp-home-dir        = /var/lib/dr-provision
 
     * version examples: 'tip', 'v3.13.6' or 'stable'
 
@@ -187,6 +190,9 @@ while (( $# > 0 )); do
             ;;
         --system-group)
             SYSTEM_GROUP="${arg_data}"
+            ;;
+        --drp-home-dir)
+            DRP_HOME_DIR="${arg_data}"
             ;;
         --*)
             arg_key="${arg_key#--}"
@@ -719,6 +725,14 @@ case $MODE in
 User=${SYSTEM_USER}
 Group=${SYSTEM_GROUP}
 EOF
+                     if [[ ${SYSTEM_USER} != "root" ]]; then
+                        cat > /etc/systemd/system/dr-provision.service.d/setcap.conf <<EOF
+[Service]
+ExecStartPre=-/usr/bin/env setcap "cap_net_raw,cap_net_bind_service=+ep" ${PROVISION}
+Environment=RS_EXIT_ON_CHANGE=true
+Environment=RS_PLUGIN_COMM_ROOT=pcr
+EOF
+                     fi
                      if [[ $DRP_ID ]] ; then
                        cat > /etc/systemd/system/dr-provision.service.d/drpid.conf <<EOF
 [Service]
