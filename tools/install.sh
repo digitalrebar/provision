@@ -43,6 +43,7 @@ Options:
     --drp-home-dir          # Use with system-user and system-group to set the home directory
                             # for the system-user. This path is where most important drp files live
                             # including the tftp root
+    --bin-dir               # Use this as the local of the binaries.  Required for non-root upgrades
                             #
     install                 # Sets up an isolated or system 'production' enabled install.
     upgrade                 # Sets the installer to upgrade an existing 'dr-provision'
@@ -61,6 +62,7 @@ Defaults are:
     startup             = false            keep-installer      = false
     local-ui            = false            system-user         = root
     system-group        = root             drp-home-dir        = /var/lib/dr-provision
+    bin-dir             = /usr/local/bin
 
     * version examples: 'tip', 'v3.13.6' or 'stable'
 
@@ -94,9 +96,6 @@ BIN_DIR=/usr/local/bin
 DRP_HOME_DIR=/var/lib/dr-provision
 
 _sudo="sudo"
-CLI="${BIN_DIR}/drpcli"
-CLI_BKUP="${BIN_DIR}/drpcli.drp-installer.backup"
-PROVISION="${BIN_DIR}/dr-provision"
 
 # download URL locations; overridable via ENV variables
 URL_BASE=${URL_BASE:-"https://rebar-catalog.s3-us-west-2.amazonaws.com"}
@@ -209,6 +208,12 @@ while (( $# > 0 )); do
     shift
 done
 set -- "${args[@]}"
+
+CLI="${BIN_DIR}/drpcli"
+CLI_BKUP="${BIN_DIR}/drpcli.drp-installer.backup"
+PROVISION="${BIN_DIR}/dr-provision"
+DRBUNDLER="${BIN_DIR}/drbundler"
+PATH=$PATH:${BIN_DIR}
 
 DRP_VERSION=${DRP_VERSION:-"$DEFAULT_DRP_VERSION"}
 DRP_CONTENT_VERSION=stable
@@ -352,8 +357,11 @@ set_ownership_of_drp() {
         $_sudo mkdir -p ${DRP_HOME_DIR}
     fi
     $_sudo chown -R ${SYSTEM_USER}:${SYSTEM_GROUP} ${DRP_HOME_DIR}
-    $_sudo chown -R ${SYSTEM_USER}:${SYSTEM_GROUP} ${PROVISION}
-    $_sudo chown -R ${SYSTEM_USER}:${SYSTEM_GROUP} ${CLI}
+
+    for i in ${PROVISION} ${CLI} ${DRBUNDLER} ${PROVISION}.bak ${CLI}.bak ${DRBUNDLER}.bak ${PROVISION}.new ${CLI}.new ${DRBUNDLER}.new ; do
+        $_sudo touch $i
+        $_sudo chown -R ${SYSTEM_USER}:${SYSTEM_GROUP} $i
+    done
 }
 
 setcap_drp_binary() {
@@ -654,24 +662,12 @@ case $MODE in
              fi
 
              if [[ $ISOLATED == false ]]; then
+                 setup_system_user
+
                  INST="${BIN_DIR}/drp-install.sh"
                  $_sudo cp $TMP_INST $INST && $_sudo chmod 755 $INST
                  echo "Install script saved to '$INST'"
                  echo "(run '$INST remove' to uninstall DRP)"
-
-                 # move aside/preserve an existing drpcli - this machine might be under
-                 # control of another DRP Endpoint, and this will break the installer (text file busy)
-                 if [[ -f "$CLI" ]]; then
-                     echo "SAVING '${BIN_DIR}/drpcli' to backup file ($CLI_BKUP)"
-                     $_sudo mv "$CLI" "$CLI_BKUP"
-                 fi
-
-                 setup_system_user
-
-                 TFTP_DIR="${DRP_HOME_DIR}/tftpboot"
-                 $_sudo cp "$binpath"/* "$bindest"
-
-                 setcap_drp_binary
 
                  if [[ $initfile ]]; then
                      if [[ -r $initdest ]]
@@ -683,7 +679,7 @@ case $MODE in
                          echo ""
                          echo "specifically verify: '--file-root=<tftpboot directory>'"
                      else
-                         $_sudo cp "$initfile" "$initdest"
+                         $_sudo sed "s:/usr/local/bin/dr-provision:$PROVISION:g" "$initfile" > "$initdest"
                      fi
                      # output our startup helper messages only if SYSTEMD isn't specified
                      if [[ "$SYSTEMD" == "false" || "$STARTUP" == "false" ]]; then
@@ -718,12 +714,29 @@ case $MODE in
                      $_sudo mv drp-community-content.json $DEFAULT_CONTENT_FILE
                  fi
 
+                 # Make sure bindest exists
+                 $_sudo mkdir -p "$bindest"
+
+                 # move aside/preserve an existing drpcli - this machine might be under
+                 # control of another DRP Endpoint, and this will break the installer (text file busy)
+                 if [[ -f "$CLI" ]]; then
+                     echo "SAVING '${BIN_DIR}/drpcli' to backup file ($CLI_BKUP)"
+                     $_sudo mv "$CLI" "$CLI_BKUP"
+                 fi
+
+                 TFTP_DIR="${DRP_HOME_DIR}/tftpboot"
+                 $_sudo cp "$binpath"/* "$bindest"
+
+                 setcap_drp_binary
+
+
                  set_ownership_of_drp
 
                  if [[ $SYSTEMD == true ]] ; then
                      mkdir -p /etc/systemd/system/dr-provision.service.d
                      cat > /etc/systemd/system/dr-provision.service.d/user.conf <<EOF
 [Service]
+Restart=always
 User=${SYSTEM_USER}
 Group=${SYSTEM_GROUP}
 Environment=RS_BASE_ROOT=${DRP_HOME_DIR}
@@ -731,7 +744,7 @@ EOF
                      if [[ ${SYSTEM_USER} != "root" ]]; then
                         cat > /etc/systemd/system/dr-provision.service.d/setcap.conf <<EOF
 [Service]
-Environment=PermissionsStartOnly=true
+PermissionsStartOnly=true
 ExecStartPre=-/usr/bin/env setcap "cap_net_raw,cap_net_bind_service=+ep" ${PROVISION}
 Environment=RS_EXIT_ON_CHANGE=true
 Environment=RS_PLUGIN_COMM_ROOT=pcr
