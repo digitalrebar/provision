@@ -724,6 +724,7 @@ case $MODE in
 [Service]
 User=${SYSTEM_USER}
 Group=${SYSTEM_GROUP}
+Environment=RS_BASE_ROOT=${DRP_HOME_DIR}
 EOF
                      if [[ ${SYSTEM_USER} != "root" ]]; then
                         cat > /etc/systemd/system/dr-provision.service.d/setcap.conf <<EOF
