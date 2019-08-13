@@ -724,10 +724,12 @@ case $MODE in
 [Service]
 User=${SYSTEM_USER}
 Group=${SYSTEM_GROUP}
+Environment=RS_BASE_ROOT=${DRP_HOME_DIR}
 EOF
                      if [[ ${SYSTEM_USER} != "root" ]]; then
                         cat > /etc/systemd/system/dr-provision.service.d/setcap.conf <<EOF
 [Service]
+Environment=PermissionsStartOnly=true
 ExecStartPre=-/usr/bin/env setcap "cap_net_raw,cap_net_bind_service=+ep" ${PROVISION}
 Environment=RS_EXIT_ON_CHANGE=true
 Environment=RS_PLUGIN_COMM_ROOT=pcr
