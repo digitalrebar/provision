@@ -352,6 +352,8 @@ set_ownership_of_drp() {
         $_sudo mkdir -p ${DRP_HOME_DIR}
     fi
     $_sudo chown -R ${SYSTEM_USER}:${SYSTEM_GROUP} ${DRP_HOME_DIR}
+    $_sudo chown -R ${SYSTEM_USER}:${SYSTEM_GROUP} ${PROVISION}
+    $_sudo chown -R ${SYSTEM_USER}:${SYSTEM_GROUP} ${CLI}
 }
 
 setcap_drp_binary() {
