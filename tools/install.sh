@@ -4,6 +4,11 @@ set -e
 
 DEFAULT_DRP_VERSION=${DEFAULT_DRP_VERSION:-"stable"}
 
+exit_cleanup() {
+  rm -rf $(pwd)/jq-linux64
+  exit $1
+}
+
 usage() {
 cat <<EOFUSAGE
 Usage: $0 [--version=<Version to install>] [--no-content]
@@ -75,7 +80,7 @@ Prerequisites:
     OPTIONAL: aria2c (if using experimental "fast downloader")
 EOFUSAGE
 
-exit 0
+exit_cleanup 0
 }
 
 # control flags
@@ -113,7 +118,7 @@ while (( $# > 0 )); do
     case $arg_key in
         --help|-h)
             usage
-            exit 0
+            exit_cleanup 0
             ;;
         --debug)
             DBG=true
@@ -231,7 +236,7 @@ fi
 
 if [[ -x "$(command -v sudo)" && $_sudo != "" ]]; then
   echo "Script is not running as root and sudo command is not found. Please be root"
-  exit 1
+  exit_cleanup 1
 fi
 
 
@@ -256,7 +261,7 @@ elif [[ -f /etc/centos-release || -f /etc/fedora-release || -f /etc/redhat-relea
 
     if [[ ! $OS_TYPE ]]; then
         echo "Cannot determine Linux version we are running on!"
-        exit 1
+        exit_cleanup 1
     fi
 elif [[ -f /etc/debian_version ]]; then
     OS_TYPE=debian
@@ -291,7 +296,7 @@ install_epel() {
 get() {
     if [[ -z "$*" ]]; then
         echo "Internal error, get() expects files to get"
-        exit 1
+        exit_cleanup 1
     fi
 
     if [[ "$FAST_DOWNLOADER" == "true" ]]; then
@@ -299,14 +304,14 @@ get() {
             GET="aria2c --quiet=true --continue=true --max-concurrent-downloads=10 --max-connection-per-server=16 --max-tries=0"
         else
             echo "'--fast-downloader' specified, but couldn't find tool ('aria2c')."
-            exit 1
+            exit_cleanup 1
         fi
     else
         if which curl > /dev/null; then
             GET="curl -sfL"
         else
             echo "Unable to find downloader tool ('curl')."
-            exit 1
+            exit_cleanup 1
         fi
     fi
     for URL in $*; do
@@ -329,7 +334,7 @@ setup_system_user() {
     $_sudo groupadd --system ${SYSTEM_GROUP} || RC=$?
     if [[ ${RC} != 0 && ${RC} != 9 ]]; then
         echo "Unable to create system group ${SYSTEM_GROUP}"
-        exit ${RC}
+        exit_cleanup ${RC}
     fi
     if [[ ${OS_FAMILY} == "debian" ]]; then
         $_sudo adduser --system --home ${DRP_HOME_DIR} --quiet --group ${SYSTEM_USER}
@@ -344,7 +349,7 @@ setup_system_user() {
         return
     fi
     echo "Unable to create system user ${SYSTEM_USER}"
-    exit ${RC}
+    exit_cleanup ${RC}
 }
 
 set_ownership_of_drp() {
@@ -423,7 +428,7 @@ ensure_packages() {
             echo "After install missing components, restart the terminal to pick"
             echo "up the newly installed commands."
             echo
-            exit 1
+            exit_cleanup 1
         fi
     else
         if ! which bsdtar &>/dev/null; then
@@ -519,12 +524,12 @@ case $arch in
   aarch64)      arch=arm64  ;;
   armv7l)       arch=arm_v7 ;;
   *)            echo "FATAL: architecture ('$arch') not supported"
-                exit 1;;
+                exit_cleanup 1;;
 esac
 
 if [[ $LOCAL_JQ == "" ]] ; then
         echo "Must have jq installed to install"
-        exit 1
+        exit_cleanup 1
 fi
 
 case $(uname -s) in
@@ -559,13 +564,13 @@ case $(uname -s) in
             enabler="/etc/init.d/dr-provision enable"
         else
             echo "No idea how to install startup stuff -- not using systemd, upstart, or sysv init"
-            exit 1
+            exit_cleanup 1
         fi
         shasum="command sha256sum";;
     *)
         # Someday, support installing on Windows.  Service creation could be tricky.
         echo "No idea how to check sha256sums"
-        exit 1;;
+        exit_cleanup 1;;
 esac
 
 MODE=$1
@@ -581,7 +586,7 @@ case $MODE in
              if [[ "$ISOLATED" == "false" || "$SKIP_RUN_CHECK" == "false" ]]; then
                  if pgrep dr-provision; then
                      echo "'dr-provision' service is running, CAN NOT upgrade ... please stop service first"
-                     exit 9
+                     exit_cleanup 9
                  else
                      echo "'dr-provision' service is not running, beginning install process ... "
                  fi
@@ -604,7 +609,7 @@ case $MODE in
                  if [ ! -e bin/linux/amd64/drpcli ] ; then
                      echo "It appears that nothing has been built."
                      echo "Please run tools/build.sh and then rerun this command".
-                     exit 1
+                     exit_cleanup 1
                  fi
              else
                  # We aren't a build tree, but are we extracted install yet?
@@ -638,7 +643,7 @@ case $MODE in
                      fi
                      $tar -xf dr-provision.zip
                  fi
-                 $shasum -c sha256sums || exit 1
+                 $shasum -c sha256sums || exit_clenaup 1
              fi
 
              if [[ $NO_CONTENT == false ]]; then
@@ -770,7 +775,7 @@ Environment=RS_STATIC_IP=$IPADDR
 Environment=RS_FORCE_STATIC=true
 EOF
                      fi
-                     if [[ $LOCAL_UI ]] ; then
+                     if [[ $LOCAL_UI == true ]] ; then
                        cat > /etc/systemd/system/dr-provision.service.d/local-ui.conf <<EOF
 [Service]
 Environment=RS_LOCAL_UI=tftpboot/files/ux
@@ -918,11 +923,11 @@ EOF
      remove)
          if [[ $ISOLATED == true ]] ; then
              echo "Remove the directory that the initial isolated install was done in."
-             exit 0
+             exit_cleanup 0
          fi
          if pgrep dr-provision; then
              echo "'dr-provision' service is running, CAN NOT remove ... please stop service first"
-             exit 9
+             exit_cleanup 9
          else
              echo "'dr-provision' service is not running, beginning removal process ... "
          fi
@@ -940,4 +945,4 @@ EOF
          echo "Unknown action \"$1\". Please use 'install', 'upgrade', or 'remove'";;
 esac
 
-exit 0
+exit_cleanup 0
