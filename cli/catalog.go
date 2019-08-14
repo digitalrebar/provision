@@ -206,6 +206,44 @@ and wind up in a file with the same name as the item + the default file extensio
 			}
 		},
 	})
+	itemCmd.AddCommand(&cobra.Command{
+		Use:   "show [item]",
+		Short: "Shows available versions for [item]",
+		Args: func(cmd *cobra.Command, args []string) error {
+			if len(args) != 1 {
+				return fmt.Errorf("item show requires 1 argument")
+			}
+			return nil
+		},
+		RunE: func(c *cobra.Command, args []string) error {
+			catalog, err := fetchCatalog()
+			if err != nil {
+				return err
+			}
+
+			items := map[string]catItem{}
+			for _, v := range itemsFromCatalog(catalog, args[0]) {
+				item := &models.CatalogItem{}
+				if err := models.Remarshal(v, &item); err != nil {
+					continue
+				}
+				if _, ok := items[item.Name]; !ok {
+					items[item.Name] = catItem{Type: item.ContentType, Versions: []string{item.Version}}
+				} else {
+					cat := items[item.Name]
+					cat.Versions = append(cat.Versions, item.Version)
+					items[item.Name] = cat
+				}
+			}
+			if len(items) == 0 {
+				return fmt.Errorf("No item named %s in the catalog", args[0])
+			}
+			for k := range items {
+				sort.Strings(items[k].Versions)
+			}
+			return prettyPrint(items[args[0]])
+		},
+	})
 	cmd.AddCommand(itemCmd)
 	return cmd
 }
