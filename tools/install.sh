@@ -669,11 +669,6 @@ case $MODE in
              if [[ $ISOLATED == false ]]; then
                  setup_system_user
 
-                 INST="${BIN_DIR}/drp-install.sh"
-                 $_sudo cp $TMP_INST $INST && $_sudo chmod 755 $INST
-                 echo "Install script saved to '$INST'"
-                 echo "(run '$INST remove' to uninstall DRP)"
-
                  if [[ $initfile ]]; then
                      if [[ -r $initdest ]]
                      then
@@ -728,6 +723,11 @@ case $MODE in
                      echo "SAVING '${BIN_DIR}/drpcli' to backup file ($CLI_BKUP)"
                      $_sudo mv "$CLI" "$CLI_BKUP"
                  fi
+
+                 INST="${BIN_DIR}/drp-install.sh"
+                 $_sudo cp $TMP_INST $INST && $_sudo chmod 755 $INST
+                 echo "Install script saved to '$INST'"
+                 echo "(run '$_sudo $INST remove' to uninstall DRP - must be root)"
 
                  TFTP_DIR="${DRP_HOME_DIR}/tftpboot"
                  $_sudo cp "$binpath"/* "$bindest"
