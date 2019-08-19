@@ -786,6 +786,17 @@ EOF
                      eval "$enabler"
                      eval "$starter"
 
+                     COUNT=0
+                     while ! drpcli info get 2>/dev/null >/dev/null ; do
+                         echo "DRP is not up yet, waiting ($COUNT) ..."
+                         sleep 2
+                         ((COUNT++))
+                         if (( $COUNT > 10 )) ; then
+                             echo "DRP Failed to start"
+                             exit_cleanup 1
+                         fi
+                     done
+
                      if [[ $NO_CONTENT == false ]] ; then
                          drpcli contents upload catalog:task-library-${DRP_CONTENT_VERSION}
                      fi
@@ -803,6 +814,17 @@ EOF
                          echo "######### Attempting startup of 'dr-provision' ('--startup' specified)"
                          eval "$enabler"
                          eval "$starter"
+
+                         COUNT=0
+                         while ! drpcli info get 2>/dev/null >/dev/null ; do
+                             echo "DRP is not up yet, waiting ($COUNT) ..."
+                             sleep 2
+                             ((COUNT++))
+                             if (( $COUNT > 10 )) ; then
+                                 echo "DRP Failed to start"
+                                 exit_cleanup 1
+                             fi
+                         done
 
                          drpcli info get > /dev/null 2>&1
                          START_CHECK=$?
