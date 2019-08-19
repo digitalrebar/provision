@@ -278,6 +278,21 @@ case $OS_TYPE in
     *) OS_FAMILY=$OS_TYPE;;
 esac
 
+# Wait until DRP is ready, or exit
+check_drp_ready() {
+    COUNT=0
+    while ! drpcli info get 2>/dev/null >/dev/null ; do
+        echo "DRP is not up yet, waiting ($COUNT) ..."
+        sleep 2
+        # Pre-increment for compatibility with Bash 4.1+
+        ((++COUNT))
+        if (( $COUNT > 10 )) ; then
+            echo "DRP Failed to start"
+            exit_cleanup 1
+        fi
+    done
+}
+
 # install the EPEL repo if appropriate, and not enabled already
 install_epel() {
     if [[ $OS_FAMILY == rhel ]] ; then
@@ -786,27 +801,24 @@ EOF
                      eval "$enabler"
                      eval "$starter"
 
-                     COUNT=0
-                     while ! drpcli info get 2>/dev/null >/dev/null ; do
-                         echo "DRP is not up yet, waiting ($COUNT) ..."
-                         sleep 2
-                         ((COUNT++))
-                         if (( $COUNT > 10 )) ; then
-                             echo "DRP Failed to start"
-                             exit_cleanup 1
-                         fi
-                     done
 
-                     if [[ $NO_CONTENT == false ]] ; then
-                         drpcli contents upload catalog:task-library-${DRP_CONTENT_VERSION}
-                     fi
-
-                     if [[ $DRP_USER ]] ; then
-                         drpcli users create "{ \"Name\": \"$DRP_USER\", \"Roles\": [ \"superuser\" ] }"
-                         drpcli users password $DRP_USER "$DRP_PASSWORD"
+                     # If upgrading, assume DRP user already created
+                     if [[ "$UPGRADE" == "true" ]]; then
                          export RS_KEY="$DRP_USER:$DRP_PASSWORD"
-                         if [[ $REMOVE_RS == true ]] ; then
-                             drpcli users destroy rocketskates
+                         check_drp_ready
+                     else
+                         check_drp_ready
+                         if [[ $NO_CONTENT == false ]] ; then
+                             drpcli contents upload catalog:task-library-${DRP_CONTENT_VERSION}
+                         fi
+
+                         if [[ $DRP_USER ]] ; then
+                             drpcli users create "{ \"Name\": \"$DRP_USER\", \"Roles\": [ \"superuser\" ] }"
+                             drpcli users password $DRP_USER "$DRP_PASSWORD"
+                             export RS_KEY="$DRP_USER:$DRP_PASSWORD"
+                             if [[ $REMOVE_RS == true ]] ; then
+                                 drpcli users destroy rocketskates
+                             fi
                          fi
                      fi
                  else
@@ -815,21 +827,9 @@ EOF
                          eval "$enabler"
                          eval "$starter"
 
-                         COUNT=0
-                         while ! drpcli info get 2>/dev/null >/dev/null ; do
-                             echo "DRP is not up yet, waiting ($COUNT) ..."
-                             sleep 2
-                             ((COUNT++))
-                             if (( $COUNT > 10 )) ; then
-                                 echo "DRP Failed to start"
-                                 exit_cleanup 1
-                             fi
-                         done
+                         check_drp_ready
 
-                         drpcli info get > /dev/null 2>&1
-                         START_CHECK=$?
-
-                         if [[ "$NO_CONTENT" == "false" && "$START_CHECK" == "0" ]] ; then
+                         if [[ "$NO_CONTENT" == "false" ]] ; then
                              drpcli contents upload catalog:task-library-${DRP_CONTENT_VERSION}
                          fi
                      fi
