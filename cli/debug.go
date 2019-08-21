@@ -13,7 +13,7 @@ func init() {
 }
 
 func registerDebug(app *cobra.Command) {
-	timeout := 0
+	seconds := 0
 	debug := &cobra.Command{
 		Use:   "debug [type] [target]",
 		Short: "Gather [type] of debug information and save it to [target]",
@@ -22,10 +22,10 @@ dr-provision server, provided it has the /api/v3/debug endpoints.  The types of 
 
     profile: CPU utilization profile information.  Tracks how much CPU time is being used in which
              functions, based on sampling which functions are running every 10 ms.  If the
-             -window flag is unspecified, profile will gather 30 seconds worth of data.
+             --seconds flag is unspecified, profile will gather 30 seconds worth of data.
 
     trace: Execution trace information, including information on where execution is blocked on
-           various types of IO and synchronization primitives.  If the -window flag is unspecified,
+           various types of IO and synchronization primitives.  If the --seconds flag is unspecified,
            trace will gather 1 second of data.
 
     heap: Memory tracing information for all live data in memory. heap is always point-in-time data.
@@ -49,17 +49,17 @@ dr-provision server, provided it has the /api/v3/debug endpoints.  The types of 
 			return nil
 		},
 		RunE: func(c *cobra.Command, args []string) error {
-			useTimeout := false
+			useseconds := false
 			switch args[0] {
 			case "profile":
-				useTimeout = true
-				if timeout == 0 {
-					timeout = 30
+				useseconds = true
+				if seconds == 0 {
+					seconds = 30
 				}
 			case "trace":
-				useTimeout = true
-				if timeout == 0 {
-					timeout = 1
+				useseconds = true
+				if seconds == 0 {
+					seconds = 1
 				}
 			case "heap", "allocs", "block", "mutex", "threadcreate", "goroutine":
 			default:
@@ -71,11 +71,11 @@ dr-provision server, provided it has the /api/v3/debug endpoints.  The types of 
 			}
 			defer target.Close()
 			req := Session.Req().UrlFor("debug", args[0])
-			if useTimeout && timeout > 0 {
-				req = req.Params("timeout", fmt.Sprintf("%d", timeout))
+			if useseconds && seconds > 0 {
+				req = req.Params("seconds", fmt.Sprintf("%d", seconds))
 			}
-			if useTimeout {
-				log.Printf("Gathering %s debug data for %d seconds to %s", args[0], timeout, args[1])
+			if useseconds {
+				log.Printf("Gathering %s debug data for %d seconds to %s", args[0], seconds, args[1])
 			} else {
 				log.Printf("Gathering %s debug data to %s", args[0], args[1])
 			}
@@ -86,6 +86,6 @@ dr-provision server, provided it has the /api/v3/debug endpoints.  The types of 
 			return nil
 		},
 	}
-	debug.Flags().IntVar(&timeout, "window", 0, "How much debug data to gather, for types that gather data over time.")
+	debug.Flags().IntVar(&seconds, "seconds", 0, "How much debug data to gather, for types that gather data over time.")
 	app.AddCommand(debug)
 }
