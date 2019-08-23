@@ -97,10 +97,6 @@ type Machine struct {
 	// An array of profiles to apply to this machine in order when looking
 	// for a parameter during rendering.
 	Profiles []string
-	// The Machine specific Profile Data - only used for the map (name and other
-	// fields not used - THIS IS DEPRECATED AND WILL GO AWAY.
-	// Data will migrated from this struct to Params and then cleared.
-	Profile Profile
 	// The Parameters that have been directly set on the Machine.
 	Params map[string]interface{}
 	// The tasks this machine has to run.
