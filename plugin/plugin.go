@@ -6,7 +6,6 @@ package plugin
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -19,8 +18,11 @@ import (
 	"github.com/digitalrebar/provision/v4/api"
 	"github.com/digitalrebar/provision/v4/models"
 	"github.com/digitalrebar/provision/v4/plugin/mux"
+	"github.com/json-iterator/go"
 	"github.com/spf13/cobra"
 )
+
+var json = jsoniter.ConfigFastest
 
 // PluginStop defines the Stop routine used to inform a plugin
 // that it should stop.
