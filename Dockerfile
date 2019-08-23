@@ -28,6 +28,7 @@ RUN apt-get update && \
     mkdir -p /provision/drp-data
 
 COPY --from=builder /provision/binaries/ /usr/bin/
+RUN chmod +x /usr/bin/dr*
 
 # run the api server so we can install sledgehammer image
 RUN dr-provision --version || true
