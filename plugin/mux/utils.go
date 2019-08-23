@@ -3,7 +3,6 @@ package mux
 import (
 	"bufio"
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -14,7 +13,10 @@ import (
 
 	"github.com/digitalrebar/logger"
 	"github.com/digitalrebar/provision/v4/models"
+	"github.com/json-iterator/go"
 )
+
+var json = jsoniter.ConfigFastest
 
 // JsonResponse returns a JSON object on the http writer.
 // Setting the code and encoding the provided object.
