@@ -20,6 +20,8 @@ import (
 	"sync"
 	"time"
 
+	"golang.org/x/net/http2"
+
 	"github.com/VictorLowther/jsonpatch2"
 
 	"github.com/digitalrebar/logger"
@@ -839,6 +841,9 @@ func TokenSession(endpoint, token string) (*Client, error) {
 		TLSHandshakeTimeout:   10 * time.Second,
 		ExpectContinueTimeout: 1 * time.Second,
 	}
+	if err := http2.ConfigureTransport(tr); err != nil {
+		return nil, err
+	}
 	c := &Client{
 		mux:      &sync.Mutex{},
 		endpoint: endpoint,
@@ -879,6 +884,9 @@ func UserSessionToken(endpoint, username, password string, usetoken bool) (*Clie
 		TLSHandshakeTimeout:   10 * time.Second,
 		ExpectContinueTimeout: 1 * time.Second,
 		TLSClientConfig:       &tls.Config{InsecureSkipVerify: true},
+	}
+	if err := http2.ConfigureTransport(tr); err != nil {
+		return nil, err
 	}
 	c := &Client{
 		mux:      &sync.Mutex{},
