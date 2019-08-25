@@ -116,15 +116,7 @@ func New(c *api.Client, m *models.Machine,
 	if res.logger == nil {
 		res.logger = os.Stderr
 	}
-	rdExists := false
 	res.runnerDir = os.Getenv("RS_RUNNER_DIR")
-	if res.runnerDir != "" {
-		if fi, err := os.Stat(res.runnerDir); err == nil {
-			if fi.IsDir() {
-				rdExists = true
-			}
-		}
-	}
 	bt, err := host.BootTime()
 	if err != nil {
 		return nil, err
@@ -151,11 +143,6 @@ func New(c *api.Client, m *models.Machine,
 			return nil, err
 		}
 		res.runnerDir = runnerDir
-	}
-	if !rdExists {
-		if err := os.MkdirAll(res.runnerDir, 0755); err != nil {
-			return nil, err
-		}
 	}
 	return res, nil
 }
@@ -702,6 +689,12 @@ func (a *Agent) Run() error {
 	}
 	a.loadState()
 	for {
+		if err := os.MkdirAll(a.runnerDir, 0755); err != nil {
+			return err
+		}
+		if err := a.client.MakeProxy(path.Join(a.runnerDir, ".sock")); err != nil {
+			return err
+		}
 		switch a.state {
 		case AGENT_INIT:
 			a.logf("Agent in init\n")

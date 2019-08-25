@@ -6,8 +6,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 	"os"
 	"os/signal"
+	"path"
 	"reflect"
 	"sort"
 	"strings"
@@ -87,7 +89,7 @@ func EqualItem(field string, value interface{}) TestFunc {
 }
 
 func (c *Client) ws() (*websocket.Conn, error) {
-	ep, err := c.UrlFor("ws")
+	ep, err := url.ParseRequestURI(c.endpoint + path.Join(APIPATH, "ws"))
 	if err != nil {
 		return nil, err
 	}

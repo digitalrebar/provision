@@ -521,6 +521,12 @@ func TestMain(m *testing.M) {
 		os.RemoveAll(tmpDir)
 		os.Exit(1)
 	}
+	if err := Session.MakeProxy(path.Join(tmpDir, ".socket")); err != nil {
+		log.Printf("failed to create local proxy socket: %v", err)
+		test.StopServer()
+		os.RemoveAll(tmpDir)
+		os.Exit(1)
+	}
 	ret := m.Run()
 
 	test.StopServer()
