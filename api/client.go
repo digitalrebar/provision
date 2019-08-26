@@ -841,9 +841,12 @@ func (c *Client) PutModel(obj models.Model) error {
 }
 
 var weAreTheProxy bool
+var localProxyMux = &sync.Mutex{}
 
 func (c *Client) MakeProxy(socketPath string) error {
-	if weAreTheProxy {
+	localProxyMux.Lock()
+	defer localProxyMux.Unlock()
+	if weAreTheProxy || locallyProxied() != "" {
 		return nil
 	}
 	src, err := url.Parse(c.endpoint)
@@ -872,8 +875,11 @@ func (c *Client) MakeProxy(socketPath string) error {
 		for {
 			log.Printf("Proxy error: %v", server.Serve(listener))
 			if fi, err := os.Stat(socketPath); err != nil || fi.Mode()&os.ModeSocket == 0 {
+				localProxyMux.Lock()
+				defer localProxyMux.Unlock()
 				log.Printf("Proxy socket vanished!")
 				os.Unsetenv(("RS_LOCAL_PROXY"))
+				os.Remove(socketPath)
 				c.Client.Transport = rp.Transport
 				weAreTheProxy = false
 				return
