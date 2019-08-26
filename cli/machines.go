@@ -52,7 +52,7 @@ func registerMachine(app *cobra.Command) {
 			}
 			clone := models.Clone(m).(*models.Machine)
 			clone.Workflow = args[1]
-			req := Session.Req().ParanoidPatch().PatchTo(m, clone)
+			req := Session.Req().PatchTo(m, clone)
 			if force {
 				req.Params("force", "true")
 			}
@@ -79,7 +79,7 @@ func registerMachine(app *cobra.Command) {
 			}
 			clone := models.Clone(m).(*models.Machine)
 			clone.Stage = args[1]
-			req := Session.Req().ParanoidPatch().PatchTo(m, clone)
+			req := Session.Req().PatchTo(m, clone)
 			if force {
 				req.Params("force", "true")
 			}
