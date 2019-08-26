@@ -10,7 +10,7 @@ Digital Rebar Provision
 
 *simple, fast and open API-driven server provisioning.*
 
-`Digital Rebar Provision (DRP) <https://rebar.digital>`_ is a `APLv2 <https://raw.githubusercontent.com/digitalrebar/provision/master/LICENSE>`_ simple Golang executable that provides a simple yet complete API-driven DHCP/PXE/TFTP provisioning and workflow system.
+`Digital Rebar Provision (DRP) <https://rebar.digital>`_ is a `APLv2 <https://raw.githubusercontent.com/digitalrebar/provision/v4/LICENSE>`_ simple Golang executable that provides a simple yet complete API-driven DHCP/PXE/TFTP provisioning and workflow system.
 
 DRP is designed to be a complete data center provisioning, content scaffolding and infrastructure workflow platform with a cloud native architecture that completely replaces Cobbler, Foreman, MaaS or similar technologies. DRP offers a single golang binary (less than 30MB) with no dependencies capable of installation on a laptop, RPi or switch supporting both bare metal and virtualized infrastructure.
 
@@ -90,7 +90,7 @@ Digital Rebar Provision is composable by design.  Much of our advanced funtional
 Table of Contents
 -----------------
 
-**Reading on Github?** Visit `Generated Docs <http://provision.readthedocs.io/en/stable/README.html#rs_toc>`_ for a generated ToC.
+**Reading on Github?** Visit `Generated Docs <http://provision.readthedocs.io/>`_ for a generated ToC.
 
 .. toctree::
    :includehidden:
@@ -130,7 +130,7 @@ Table of Contents
 
 License
 -------
-DigitalRebar Provision code is available from multiple authors under the `Apache 2 license <https://raw.githubusercontent.com/digitalrebar/provision/master/LICENSE>`_.
+DigitalRebar Provision code is available from multiple authors under the `Apache 2 license <https://raw.githubusercontent.com/digitalrebar/provision/v4/LICENSE>`_.
 
 Digital Rebar Provision documentation is available from multiple authors under the `Creative Commons license <https://en.wikipedia.org/wiki/Creative_Commons_license>`_ with Attribution.
 
