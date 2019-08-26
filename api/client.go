@@ -4,6 +4,7 @@ package api
 
 import (
 	"bytes"
+	"context"
 	"crypto/tls"
 	"encoding/base64"
 	"encoding/json"
@@ -15,10 +16,13 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"net/url"
+	"os"
 	"path"
 	"strings"
 	"sync"
 	"time"
+
+	"golang.org/x/net/http2"
 
 	"github.com/VictorLowther/jsonpatch2"
 
@@ -39,11 +43,18 @@ type Client struct {
 	endpoint, username, password string
 	token                        *models.UserToken
 	closer                       chan struct{}
-	closed                       bool
+	closed, locallyProxied       bool
 	traceLvl                     string
 	traceToken                   string
 	info                         *models.Info
 	iMux                         *sync.Mutex
+}
+
+func (c *Client) realEndpoint() string {
+	if locallyProxied() == "" {
+		return c.endpoint
+	}
+	return "http://unix"
 }
 
 // Endpoint returns the address of the dr-provision API endpoint that
@@ -61,9 +72,9 @@ func (c *Client) Username() string {
 
 func (c *Client) UrlForProxy(proxy string, args ...string) (*url.URL, error) {
 	if proxy == "" {
-		return url.ParseRequestURI(c.endpoint + path.Join(APIPATH, path.Join(args...)))
+		return url.ParseRequestURI(c.realEndpoint() + path.Join(APIPATH, path.Join(args...)))
 	}
-	return url.ParseRequestURI(c.endpoint + "/" + proxy + path.Join(APIPATH, path.Join(args...)))
+	return url.ParseRequestURI(c.realEndpoint() + "/" + proxy + path.Join(APIPATH, path.Join(args...)))
 }
 
 func (c *Client) UrlFor(args ...string) (*url.URL, error) {
@@ -829,16 +840,102 @@ func (c *Client) PutModel(obj models.Model) error {
 	return c.Req().Put(obj).UrlForM(obj).Do(&obj)
 }
 
+var weAreTheProxy bool
+var localProxyMux = &sync.Mutex{}
+
+func (c *Client) MakeProxy(socketPath string) error {
+	localProxyMux.Lock()
+	defer localProxyMux.Unlock()
+	if weAreTheProxy || locallyProxied() != "" {
+		return nil
+	}
+	src, err := url.Parse(c.endpoint)
+	if err != nil {
+		return err
+	}
+	rp := &httputil.ReverseProxy{
+		Director: func(req *http.Request) {
+			req.URL.Scheme = src.Scheme
+			req.URL.Host = src.Host
+		},
+		Transport:      c.Client.Transport,
+		FlushInterval:  0,
+		ErrorLog:       nil,
+		BufferPool:     nil,
+		ModifyResponse: nil,
+		ErrorHandler:   nil,
+	}
+	listener, err := net.Listen("unix", socketPath)
+	if err != nil {
+		return err
+	}
+	server := &http.Server{Handler: rp}
+	weAreTheProxy = true
+	go func() {
+		for {
+			log.Printf("Proxy error: %v", server.Serve(listener))
+			if fi, err := os.Stat(socketPath); err != nil || fi.Mode()&os.ModeSocket == 0 {
+				localProxyMux.Lock()
+				defer localProxyMux.Unlock()
+				log.Printf("Proxy socket vanished!")
+				os.Unsetenv(("RS_LOCAL_PROXY"))
+				os.Remove(socketPath)
+				c.Client.Transport = rp.Transport
+				weAreTheProxy = false
+				return
+			}
+		}
+	}()
+	os.Setenv("RS_LOCAL_PROXY", socketPath)
+	c.Client.Transport = transport()
+	return nil
+}
+
+func locallyProxied() string {
+	if socketPath := os.Getenv("RS_LOCAL_PROXY"); socketPath != "" {
+		if fi, err := os.Stat(socketPath); err == nil && fi.Mode()&os.ModeSocket > 0 {
+			return socketPath
+		}
+	}
+	return ""
+}
+
+func transport() *http.Transport {
+	dialer := &net.Dialer{
+		Timeout:   30 * time.Second,
+		KeepAlive: 30 * time.Second,
+	}
+	var tr *http.Transport
+	lp := locallyProxied()
+	if lp == "" {
+		tr = &http.Transport{
+			TLSClientConfig:       &tls.Config{InsecureSkipVerify: true},
+			MaxIdleConns:          10,
+			IdleConnTimeout:       90 * time.Second,
+			TLSHandshakeTimeout:   10 * time.Second,
+			ExpectContinueTimeout: 1 * time.Second,
+			DialContext: func(ctx context.Context, net, addr string) (net.Conn, error) {
+				return dialer.DialContext(ctx, net, addr)
+			},
+		}
+		http2.ConfigureTransport(tr)
+	} else {
+		tr = &http.Transport{
+			MaxIdleConns:          10,
+			IdleConnTimeout:       90 * time.Second,
+			ExpectContinueTimeout: 1 * time.Second,
+			DialContext: func(ctx context.Context, net, addr string) (net.Conn, error) {
+				return dialer.DialContext(ctx, "unix", lp)
+			},
+		}
+	}
+	return tr
+}
+
 // TokenSession creates a new api.Client that will use the passed-in Token for authentication.
 // It should be used whenever the API is not acting on behalf of a user.
 func TokenSession(endpoint, token string) (*Client, error) {
-	tr := &http.Transport{
-		TLSClientConfig:       &tls.Config{InsecureSkipVerify: true},
-		MaxIdleConns:          100,
-		IdleConnTimeout:       90 * time.Second,
-		TLSHandshakeTimeout:   10 * time.Second,
-		ExpectContinueTimeout: 1 * time.Second,
-	}
+	tr := transport()
 	c := &Client{
 		mux:      &sync.Mutex{},
 		endpoint: endpoint,
@@ -867,19 +964,7 @@ func UserSession(endpoint, username, password string) (*Client, error) {
 
 // UserSessionToken allows for the token conversion turned off.
 func UserSessionToken(endpoint, username, password string, usetoken bool) (*Client, error) {
-	tr := &http.Transport{
-		Proxy: http.ProxyFromEnvironment,
-		DialContext: (&net.Dialer{
-			Timeout:   30 * time.Second,
-			KeepAlive: 30 * time.Second,
-			DualStack: true,
-		}).DialContext,
-		MaxIdleConns:          100,
-		IdleConnTimeout:       90 * time.Second,
-		TLSHandshakeTimeout:   10 * time.Second,
-		ExpectContinueTimeout: 1 * time.Second,
-		TLSClientConfig:       &tls.Config{InsecureSkipVerify: true},
-	}
+	tr := transport()
 	c := &Client{
 		mux:      &sync.Mutex{},
 		endpoint: endpoint,

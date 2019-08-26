@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"path"
 	"reflect"
 	"syscall"
 	"testing"
@@ -175,6 +176,13 @@ func TestMain(m *testing.M) {
 	}
 	if err != nil {
 		log.Printf("Error starting test run: %v", err)
+		test.StopServer()
+		os.RemoveAll(tmpDir)
+		os.Exit(1)
+	}
+	if err := session.MakeProxy(path.Join(tmpDir, ".socket")); err != nil {
+		log.Printf("failed to create local proxy socket: %v", err)
+		test.StopServer()
 		os.RemoveAll(tmpDir)
 		os.Exit(1)
 	}
