@@ -54,7 +54,7 @@ func (c *Client) realEndpoint() string {
 	if locallyProxied() == "" {
 		return c.endpoint
 	}
-	return "http://unix/"
+	return "http://unix"
 }
 
 // Endpoint returns the address of the dr-provision API endpoint that
