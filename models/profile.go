@@ -31,47 +31,35 @@ type Profile struct {
 	// for BootEnv, as documented by that boot environment's
 	// RequiredParams and OptionalParams.
 	Params map[string]interface{}
-	// Additional Profiles that should be considered for parameters
-	Profiles []string
 }
 
-// GetMeta returns the meta data for this profile
 func (p *Profile) GetMeta() Meta {
 	return p.Meta
 }
 
-// SetMeta sets the meta data for this profile
 func (p *Profile) SetMeta(d Meta) {
 	p.Meta = d
 }
 
-// Validate makes sure that the object is valid (outside of references)
 func (p *Profile) Validate() {
 	p.AddError(ValidName("Invalid Name", p.Name))
 	for k := range p.Params {
 		p.AddError(ValidParamName("Invalid Param Name", k))
 	}
-	for _, v := range p.Profiles {
-		p.AddError(ValidName("Invalid Profile Name", v))
-	}
 }
 
-// Prefix returns the object type
 func (p *Profile) Prefix() string {
 	return "profiles"
 }
 
-// Key returns the primary index for this object
 func (p *Profile) Key() string {
 	return p.Name
 }
 
-// KeyName returns the field of the object that is used as the primary key
 func (p *Profile) KeyName() string {
 	return "Name"
 }
 
-// Fill initializes the object
 func (p *Profile) Fill() {
 	p.Validation.fill()
 	if p.Meta == nil {
@@ -80,23 +68,17 @@ func (p *Profile) Fill() {
 	if p.Params == nil {
 		p.Params = map[string]interface{}{}
 	}
-	if p.Profiles == nil {
-		p.Profiles = []string{}
-	}
 }
 
-// AuthKey returns the value that should be validated against claims
 func (p *Profile) AuthKey() string {
 	return p.Key()
 }
 
-// SliceOf returns an empty slice of this type of objects
 func (p *Profile) SliceOf() interface{} {
 	s := []*Profile{}
 	return &s
 }
 
-// ToModels converts a slice of these specific objects to a slice of Model interfaces
 func (p *Profile) ToModels(obj interface{}) []Model {
 	items := obj.(*[]*Profile)
 	res := make([]Model, len(*items))
@@ -106,36 +88,19 @@ func (p *Profile) ToModels(obj interface{}) []Model {
 	return res
 }
 
-// GetParams returns the current parameters for this profile
-// matches Paramer interface
+// match Paramer interface
 func (p *Profile) GetParams() map[string]interface{} {
 	return copyMap(p.Params)
 }
 
-// SetParams sets the current parameters for this profile
-// matches Paramer interface
 func (p *Profile) SetParams(pl map[string]interface{}) {
 	p.Params = copyMap(pl)
 }
 
-// SetName changes the name of the profile
 func (p *Profile) SetName(n string) {
 	p.Name = n
 }
 
-// CanHaveActions indicates if the object is allowed to have actions
 func (p *Profile) CanHaveActions() bool {
 	return true
-}
-
-// match Profiler interface
-
-// GetProfiles returns the profiles on this profile
-func (p *Profile) GetProfiles() []string {
-	return p.Profiles
-}
-
-// SetProfiles sets the profiles on this profile
-func (p *Profile) SetProfiles(np []string) {
-	p.Profiles = np
 }

@@ -65,22 +65,18 @@ type Stage struct {
 	RunnerWait bool
 }
 
-// GetMeta gets the meta data for this object
 func (s *Stage) GetMeta() Meta {
 	return s.Meta
 }
 
-// SetMeta sets the meta data for this object
 func (s *Stage) SetMeta(d Meta) {
 	s.Meta = d
 }
 
-// GetDocumentation returns the documentation on this object.
 func (s *Stage) GetDocumentation() string {
 	return s.Documentation
 }
 
-// Validate makes sure that the object is valid (outside of references)
 func (s *Stage) Validate() {
 	s.AddError(ValidName("Invalid Name", s.Name))
 	if s.BootEnv != "" {
@@ -129,22 +125,18 @@ func (s *Stage) Validate() {
 	}
 }
 
-// Prefix returns the object type
 func (s *Stage) Prefix() string {
 	return "stages"
 }
 
-// Key returns the primary index for this object
 func (s *Stage) Key() string {
 	return s.Name
 }
 
-// KeyName returns the field of the object that is used as the primary key
 func (s *Stage) KeyName() string {
 	return "Name"
 }
 
-// Fill initializes the object
 func (s *Stage) Fill() {
 	s.Validation.fill()
 	if s.Meta == nil {
@@ -170,18 +162,15 @@ func (s *Stage) Fill() {
 	}
 }
 
-// AuthKey returns the value that should be validated against claims
 func (s *Stage) AuthKey() string {
 	return s.Key()
 }
 
-// SliceOf returns an empty slice of this type of objects
 func (s *Stage) SliceOf() interface{} {
 	s2 := []*Stage{}
 	return &s2
 }
 
-// ToModels converts a slice of these specific objects to a slice of Model interfaces
 func (s *Stage) ToModels(obj interface{}) []Model {
 	items := obj.(*[]*Stage)
 	res := make([]Model, len(*items))
@@ -192,59 +181,45 @@ func (s *Stage) ToModels(obj interface{}) []Model {
 }
 
 // match Profiler interface
-
-// GetProfiles gets the profiles on this stage
 func (s *Stage) GetProfiles() []string {
 	return s.Profiles
 }
 
-// SetProfiles sets the profiles on this stage
 func (s *Stage) SetProfiles(p []string) {
 	s.Profiles = p
 }
 
 // match Paramer interface
-
-// GetParams gets the parameters on this stage
 func (s *Stage) GetParams() map[string]interface{} {
 	return copyMap(s.Params)
 }
 
-// SetParams sets the parameters on this stage
 func (s *Stage) SetParams(p map[string]interface{}) {
 	s.Params = copyMap(p)
 }
 
 // match BootEnver interface
-
-// GetBootEnv gets the name of the bootenv on this stage
 func (s *Stage) GetBootEnv() string {
 	return s.BootEnv
 }
 
-// SetBootEnv sets the bootenv on the stage
 func (s *Stage) SetBootEnv(be string) {
 	s.BootEnv = be
 }
 
 // match TaskRunner interface
-
-// GetTasks returns the tasks associated with this stage
 func (s *Stage) GetTasks() []string {
 	return s.Tasks
 }
 
-// SetTasks sets the tasks in this stage
 func (s *Stage) SetTasks(t []string) {
 	s.Tasks = t
 }
 
-// SetName sets the name of the object
 func (s *Stage) SetName(n string) {
 	s.Name = n
 }
 
-// CanHaveActions returns if the object can have actions from plugins
 func (s *Stage) CanHaveActions() bool {
 	return true
 }

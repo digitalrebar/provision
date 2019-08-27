@@ -48,13 +48,11 @@ type Model interface {
 	KeyName() string
 }
 
-// Filler interface defines if a model can be filled/initialized
 type Filler interface {
 	Model
 	Fill()
 }
 
-// Slicer interface defines is a model can be operated on as slices
 type Slicer interface {
 	Filler
 	SliceOf() interface{}
@@ -148,74 +146,63 @@ func validMatch(msg, s string, re *regexp.Regexp) error {
 	return fmt.Errorf("%s `%s`", msg, s)
 }
 
-// ValidMachineName validates that the string is a valid Machine Name
 func ValidMachineName(msg, s string) error {
 	return validMatch(msg, s, validMachineName)
 }
 
-// ValidName validates that the string is a valid Name
 func ValidName(msg, s string) error {
 	return validMatch(msg, s, validName)
 }
 
-// ValidParamName validates that the string is a valid Param Name
 func ValidParamName(msg, s string) error {
 	return validMatch(msg, s, validParamName)
 }
 
-// NameSetter interface if the model can change names
 type NameSetter interface {
 	Model
 	SetName(string)
 }
 
-// Paramer interface defines if the model has parameters
 type Paramer interface {
 	Model
 	GetParams() map[string]interface{}
 	SetParams(map[string]interface{})
 }
 
-// Profiler interface defines if the model has profiles
 type Profiler interface {
 	Model
 	GetProfiles() []string
 	SetProfiles([]string)
 }
 
-// BootEnver interface defines if the model has a boot env
 type BootEnver interface {
 	Model
 	GetBootEnv() string
 	SetBootEnv(string)
 }
 
-// Tasker interface defines if the model has a task list
 type Tasker interface {
 	Model
 	GetTasks() []string
 	SetTasks([]string)
 }
 
-// TaskRunner interface defines if the object can run tasks
 type TaskRunner interface {
 	Tasker
 	RunningTask() int
 }
 
-// Docer interface defines if the object has a documentation field
 type Docer interface {
 	Model
 	GetDocumentation() string
 }
 
-// Actor interface should be implemented this if you want actions
+// Only implement this if you want actions
 type Actor interface {
 	Model
 	CanHaveActions() bool
 }
 
-// FibBackoff takes function and retries it in a fibonacci backup sequence
 func FibBackoff(thunk func() error) {
 	timeouts := []time.Duration{
 		time.Second,
@@ -269,8 +256,6 @@ func Remarshal(src, dest interface{}) error {
 	return err
 }
 
-// RandString returns a random string of n characters
-// The range of characters is limited to the base64 set
 func RandString(n int) string {
 	b := make([]byte, n)
 	_, err := rand.Read(b)
