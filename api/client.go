@@ -843,15 +843,10 @@ func (c *Client) PutModel(obj models.Model) error {
 var weAreTheProxy bool
 var localProxyMux = &sync.Mutex{}
 
-func (c *Client) MakeProxy(socketPath string) error {
-	localProxyMux.Lock()
-	defer localProxyMux.Unlock()
-	if weAreTheProxy || locallyProxied() != "" {
-		return nil
-	}
+func (c *Client) makeProxy(socketPath string) (*http.Server, net.Listener, error) {
 	src, err := url.Parse(c.endpoint)
 	if err != nil {
-		return err
+		return nil, nil, err
 	}
 	rp := &httputil.ReverseProxy{
 		Director: func(req *http.Request) {
@@ -867,9 +862,31 @@ func (c *Client) MakeProxy(socketPath string) error {
 	}
 	listener, err := net.Listen("unix", socketPath)
 	if err != nil {
+		return nil, nil, err
+	}
+	return &http.Server{Handler: rp}, listener, nil
+}
+
+func (c *Client) RunProxy(socketPath string) error {
+	os.Remove(socketPath)
+	server, listener, err := c.makeProxy(socketPath)
+	if err != nil {
 		return err
 	}
-	server := &http.Server{Handler: rp}
+	return server.Serve(listener)
+}
+
+func (c *Client) MakeProxy(socketPath string) error {
+	if weAreTheProxy || locallyProxied() != "" {
+		return nil
+	}
+	localProxyMux.Lock()
+	defer localProxyMux.Unlock()
+	server, listener, err := c.makeProxy(socketPath)
+	if err != nil {
+		return err
+	}
+	trans := c.Client.Transport
 	weAreTheProxy = true
 	go func() {
 		for {
@@ -880,7 +897,7 @@ func (c *Client) MakeProxy(socketPath string) error {
 				log.Printf("Proxy socket vanished!")
 				os.Unsetenv(("RS_LOCAL_PROXY"))
 				os.Remove(socketPath)
-				c.Client.Transport = rp.Transport
+				c.Client.Transport = trans
 				weAreTheProxy = false
 				return
 			}

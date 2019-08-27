@@ -185,6 +185,19 @@ func NewApp() *cobra.Command {
 	app.PersistentFlags().BoolVarP(&noToken,
 		"noToken", "x", noToken,
 		"Do not use token auth or token cache")
+	app.AddCommand(&cobra.Command{
+		Use:   "proxy [socket]",
+		Short: "Run a local UNIX socket proxy for further drpcli commands.  Requires RS_LOCAL_PROXY to be set in the env.",
+		RunE: func(c *cobra.Command, args []string) error {
+			if len(args) != 1 {
+				return fmt.Errorf("No location for the local proxy socket")
+			}
+			if pl := os.Getenv("RS_LOCAL_PROXY"); pl != "" {
+				return fmt.Errorf("Local proxy already running at %s", pl)
+			}
+			return Session.RunProxy(args[0])
+		},
+	})
 
 	for _, rs := range registrations {
 		rs(app)
