@@ -11,6 +11,7 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
+	"sync"
 	"syscall"
 	"time"
 
@@ -18,12 +19,6 @@ import (
 	"github.com/digitalrebar/provision/v4/api"
 	"github.com/digitalrebar/provision/v4/models"
 )
-
-// jobLog gets the log for a specific Job and writes it to the passed
-// io.Writer
-func jobLog(c *api.Client, j *models.Job, dst io.Writer) error {
-	return c.Req().UrlFor("jobs", j.Key(), "log").Do(dst)
-}
 
 // jobActions returns the expanded list of templates that should be
 // written or executed for a specific Job.
@@ -53,8 +48,10 @@ type runner struct {
 	// It writes to stderr and to the Job on the server.
 	in io.Writer
 	// The write side of the pipe that communicates to the servver.
-	// Closing this will flush any data left in the pipe.
+	// Closing this will flush any data left in the pipe.\
 	pipeWriter                  net.Conn
+	cmd                         *exec.Cmd
+	cmdMux                      *sync.Mutex
 	agentDir, jobDir, chrootDir string
 	logger                      io.Writer
 }
@@ -75,6 +72,7 @@ func newRunner(c *api.Client, m *models.Machine, agentDir, chrootDir string, log
 		m:        m,
 		agentDir: agentDir,
 		logger:   logger,
+		cmdMux:   &sync.Mutex{},
 	}
 	job := &models.Job{Machine: m.Uuid}
 	if err := c.CreateModel(job); err != nil && err != io.EOF {
@@ -98,6 +96,14 @@ func newRunner(c *api.Client, m *models.Machine, agentDir, chrootDir string, log
 		res.t = t
 	}
 	return res, nil
+}
+
+func (r *runner) kill() {
+	r.cmdMux.Lock()
+	defer r.cmdMux.Unlock()
+	if r.cmd != nil && r.cmd.Process != nil {
+		r.cmd.Process.Kill()
+	}
 }
 
 // Close() shuts down the writer side of the logging pipe.
@@ -167,37 +173,40 @@ func (r *runner) perform(action *models.JobAction, taskDir string) error {
 		cmdArray = append(cmdArray, "-File")
 	}
 	cmdArray = append(cmdArray, "./"+path.Base(taskFile))
-	cmd := exec.Command(cmdArray[0], cmdArray[1:]...)
-	cmd.Dir = taskDir
-	cmd.Env = append(os.Environ(), "RS_TASK_DIR="+taskDir)
-	for _, e := range []string{"RS_UUID", "RS_ENDPOINT", "RS_TOKEN"} {
-		if os.Getenv(e) == "" {
-			switch e {
-			case "RS_UUID":
-				cmd.Env = append(cmd.Env, e+"="+r.m.Key())
-			case "RS_ENDPOINT":
-				cmd.Env = append(cmd.Env, e+"="+r.c.Endpoint())
-			case "RS_TOKEN":
-				cmd.Env = append(cmd.Env, e+"="+r.c.Token())
-			}
-		}
-	}
-	cmd.Stdout = r.in
-	cmd.Stderr = r.in
-	if err := r.enterChroot(cmd); err != nil {
+	r.cmdMux.Lock()
+	r.cmd = exec.Command(cmdArray[0], cmdArray[1:]...)
+	r.cmd.Dir = taskDir
+	r.cmd.Env = append(os.Environ(),
+		"TMPDIR="+path.Dir(r.agentDir),
+		"TMP="+path.Dir(r.agentDir),
+		"RS_RUNNER_DIR="+r.agentDir,
+		"RS_TASK_DIR="+taskDir,
+		"RS_UUID="+r.m.Key(),
+		"RS_ENDPOINT"+r.c.Endpoint(),
+		"RS_TOKEN"+r.c.Token(),
+	)
+	r.cmd.Stdout = r.in
+	r.cmd.Stderr = r.in
+	if err := r.enterChroot(r.cmd); err != nil {
 		r.log("Command failed to set up chroot: %v", err)
+		r.cmdMux.Unlock()
 		return err
 	}
-	r.log("Starting command %s\n\n", cmd.Path)
-	if err := cmd.Start(); err != nil {
+	r.log("Starting command %s\n\n", r.cmd.Path)
+	if err := r.cmd.Start(); err != nil {
 		r.log("Command failed to start: %v", err)
+		r.cmdMux.Unlock()
 		return err
 	}
+	r.cmdMux.Unlock()
 	// Wait on the process, not the command to exit.
 	// We don't want to auto-close stdout and stderr,
 	// as we will continue to use them.
 	r.log("Command running")
-	pState, _ := cmd.Process.Wait()
+	pState, _ := r.cmd.Process.Wait()
+	r.cmdMux.Lock()
+	r.cmd = nil
+	r.cmdMux.Unlock()
 	r.exitChroot()
 	status := pState.Sys().(syscall.WaitStatus)
 	sane := r.t.HasFeature("sane-exit-codes")

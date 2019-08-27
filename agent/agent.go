@@ -13,6 +13,7 @@ import (
 	"path"
 	"runtime"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/VictorLowther/jsonpatch2/utils"
@@ -67,10 +68,15 @@ type Agent struct {
 	events                                    *api.EventStream
 	machine                                   *models.Machine
 	runnerDir, chrootDir, stateDir            string
+	context                                   string
 	doPower, exitOnNotRunnable, exitOnFailure bool
 	logger                                    io.Writer
 	bootTime                                  uint64
 	err                                       error
+	task                                      *runner
+	taskMux                                   *sync.Mutex
+	exitNow                                   bool
+	kill                                      chan error
 }
 
 func (a *Agent) saveState() error {
@@ -98,6 +104,10 @@ func (a *Agent) saveState() error {
 	return os.Rename(saveFile, strings.TrimSuffix(saveFile, ".new"))
 }
 
+func (a *Agent) tmpDir() string {
+	return path.Dir(a.runnerDir)
+}
+
 // New creates a new FSM based Machine Agent that starts out in
 // the AGENT_INIT state.
 func New(c *api.Client, m *models.Machine,
@@ -112,38 +122,16 @@ func New(c *api.Client, m *models.Machine,
 		exitOnNotRunnable: exitOnNotRunnable,
 		logger:            logger,
 		waitTimeout:       1 * time.Hour,
+		taskMux:           &sync.Mutex{},
 	}
 	if res.logger == nil {
 		res.logger = os.Stderr
 	}
-	res.runnerDir = os.Getenv("RS_RUNNER_DIR")
 	bt, err := host.BootTime()
 	if err != nil {
 		return nil, err
 	}
 	res.bootTime = bt
-	if res.runnerDir == "" {
-		var td string
-		if err := c.Req().UrlForM(m, "params", "runner-tmpdir").Params("aggregate", "true").Do(&td); err == nil && td != "" {
-			if err = mktd(td); err != nil {
-				return nil, err
-			}
-			if err = os.Setenv("TMPDIR", td); err != nil {
-				return nil, err
-			}
-			if err = os.Setenv("TMP", td); err != nil {
-				return nil, err
-			}
-		}
-		runnerDir, err := ioutil.TempDir("", "runner-")
-		if err != nil {
-			return nil, err
-		}
-		if err := os.Setenv("RS_RUNNER_DIR", runnerDir); err != nil {
-			return nil, err
-		}
-		res.runnerDir = runnerDir
-	}
 	return res, nil
 }
 
@@ -165,8 +153,22 @@ func (a *Agent) StateLoc(s string) *Agent {
 	return a
 }
 
+func (a *Agent) Context(s string) *Agent {
+	a.context = s
+	return a
+}
+
+func (a *Agent) RunnerDir(s string) *Agent {
+	a.runnerDir = s
+	return a
+}
+
 func (a *Agent) power(cmdLine string) error {
 	if !a.doPower {
+		return nil
+	}
+	if a.context != "" {
+		a.state = AGENT_EXIT
 		return nil
 	}
 	if info, err := a.client.Info(); err == nil && !info.HasFeature("auto-boot-target") {
@@ -217,7 +219,8 @@ func (a *Agent) init() {
 	}
 	var err error
 	currentJob := &models.Job{Uuid: a.machine.CurrentJob}
-	if a.client.Req().Fill(currentJob) == nil {
+	if a.client.Req().Fill(currentJob) == nil && currentJob.Context == a.context {
+		// Only reset job state if we were responsible for creating it in the first place.
 		if currentJob.State == "running" || currentJob.State == "created" {
 			cj := models.Clone(currentJob).(*models.Job)
 			cj.State = "failed"
@@ -267,7 +270,7 @@ func (a *Agent) loadKexec() {
 	if kexecLoaded() {
 		return
 	}
-	tmpDir, err := ioutil.TempDir("", "drp-agent-kexec")
+	tmpDir, err := ioutil.TempDir(a.tmpDir(), "drp-agent-kexec")
 	if err != nil {
 		a.logf("Failed to make tmpdir for kexec\n")
 		return
@@ -361,7 +364,12 @@ func (a *Agent) loadKexec() {
 }
 
 func (a *Agent) doKexec() {
-	a.state = AGENT_REBOOT
+	if a.context == "" {
+		a.state = AGENT_REBOOT
+	} else {
+		a.state = AGENT_EXIT
+		return
+	}
 	var cmdErr error
 	if _, err := exec.LookPath("systemctl"); err == nil {
 		cmdErr = exec.Command("systemctl", "kexec").Run()
@@ -405,7 +413,12 @@ func (a *Agent) rebootOrExit(autoKexec bool) {
 //
 // * AGENT_WAIT_FOR_RUNNABLE if the machine is not runnable.
 func (a *Agent) waitOn(m *models.Machine, cond api.TestFunc) {
-	found, err := a.events.WaitFor(m, api.AndItems(api.EqualItem("Available", true), cond), a.waitTimeout)
+	found, err := a.events.WaitFor(m,
+		api.AndItems(
+			api.EqualItem("Available", true),
+			api.EqualItem("Context", a.context),
+			cond),
+		a.waitTimeout)
 	if err != nil {
 		a.err = err
 		a.initOrExit()
@@ -461,13 +474,20 @@ func (a *Agent) waitRunnable() {
 //
 // * AGENT_WAIT_FOR_RUNNABLE if no other conditions were met.
 func (a *Agent) runTask() {
-	runner, err := newRunner(a.client, a.machine, a.runnerDir, a.chrootDir, a.logger)
+	var err error
+	a.taskMux.Lock()
+	if a.exitNow {
+		a.taskMux.Unlock()
+		return
+	}
+	a.task, err = newRunner(a.client, a.machine, a.runnerDir, a.chrootDir, a.logger)
+	a.taskMux.Unlock()
 	if err != nil {
 		a.err = err
 		a.initOrExit()
 		return
 	}
-	if runner == nil {
+	if a.task == nil {
 		if a.chrootDir != "" {
 			a.logf("Current tasks finished, exiting chroot\n")
 			a.state = AGENT_EXIT
@@ -482,45 +502,46 @@ func (a *Agent) runTask() {
 		a.state = AGENT_WAIT_FOR_CHANGE_STAGE
 		return
 	}
+	defer func() { a.taskMux.Lock(); defer a.taskMux.Unlock(); a.task = nil }()
 	a.logf("Runner created for task %s:%s:%s (%d:%d)\n",
-		runner.j.Workflow,
-		runner.j.Stage,
-		runner.j.Task,
-		runner.j.CurrentIndex,
-		runner.j.NextIndex)
-	if runner.wantChroot {
-		a.chrootDir = runner.jobDir
+		a.task.j.Workflow,
+		a.task.j.Stage,
+		a.task.j.Task,
+		a.task.j.CurrentIndex,
+		a.task.j.NextIndex)
+	if a.task.wantChroot {
+		a.chrootDir = a.task.jobDir
 		a.state = AGENT_WAIT_FOR_RUNNABLE
-		runner.Close()
+		a.task.Close()
 		return
 	}
-	if err := runner.run(); err != nil {
+	if err := a.task.run(); err != nil {
 		a.err = err
 		a.initOrExit()
 		return
 	}
 	a.state = AGENT_WAIT_FOR_RUNNABLE
-	if runner.t != nil {
-		defer runner.Close()
-		if runner.reboot {
-			runner.log("Task signalled runner to reboot")
+	if a.task.t != nil {
+		defer a.task.Close()
+		if a.task.reboot {
+			a.task.log("Task signalled runner to reboot")
 			a.rebootOrExit(false)
-		} else if runner.poweroff {
-			runner.log("Task signalled runner to poweroff")
+		} else if a.task.poweroff {
+			a.task.log("Task signalled runner to poweroff")
 			a.state = AGENT_POWEROFF
-		} else if runner.stop {
-			runner.log("Task signalled runner to stop")
+		} else if a.task.stop {
+			a.task.log("Task signalled runner to stop")
 			a.state = AGENT_EXIT
-		} else if runner.failed {
-			runner.log("Task signalled that it failed")
+		} else if a.task.failed {
+			a.task.log("Task signalled that it failed")
 			if a.exitOnFailure {
 				a.state = AGENT_EXIT
 			}
 		}
-		if runner.incomplete {
-			runner.log("Task signalled that it was incomplete")
-		} else if !runner.failed {
-			runner.log("Task signalled that it finished normally")
+		if a.task.incomplete {
+			a.task.log("Task signalled that it was incomplete")
+		} else if !a.task.failed {
+			a.task.log("Task signalled that it finished normally")
 		}
 	}
 }
@@ -668,10 +689,24 @@ func (a *Agent) loadState() {
 	}
 }
 
+func (a *Agent) Kill() error {
+	a.logf("Agent signalled to exit")
+	a.taskMux.Lock()
+	a.kill = make(chan error)
+	a.exitNow = true
+	a.events.Kill()
+	if a.task != nil {
+		a.task.log("Agent signalled to exit")
+		a.task.kill()
+	}
+	a.taskMux.Unlock()
+	return <-a.kill
+}
+
 // Run kicks off the state machine for this agent.
 func (a *Agent) Run() error {
-	if a.machine.HasFeature("original-change-stage") ||
-		!a.machine.HasFeature("change-stage-v2") {
+	if a.context == "" && (a.machine.HasFeature("original-change-stage") ||
+		!a.machine.HasFeature("change-stage-v2")) {
 		newM := models.Clone(a.machine).(*models.Machine)
 		newM.Runnable = true
 		if err := a.client.Req().PatchTo(a.machine, newM).Do(&newM); err == nil {
@@ -687,8 +722,29 @@ func (a *Agent) Run() error {
 			return res
 		}
 	}
+	if a.runnerDir == "" {
+		a.runnerDir = os.Getenv("RS_RUNNER_DIR")
+	}
+	if a.runnerDir == "" {
+		var td string
+		if err := a.client.Req().UrlForM(a.machine, "params", "runner-tmpdir").Params("aggregate", "true").Do(&td); err == nil && td != "" {
+			if err = mktd(td); err != nil {
+				return err
+			}
+		}
+		runnerDir, err := ioutil.TempDir(td, "runner-")
+		if err != nil {
+			return err
+		}
+		a.runnerDir = runnerDir
+	}
 	a.loadState()
 	for {
+		a.taskMux.Lock()
+		if a.exitNow {
+			a.state = AGENT_EXIT
+		}
+		a.taskMux.Unlock()
 		if err := os.MkdirAll(a.runnerDir, 0755); err != nil {
 			return err
 		}
@@ -718,6 +774,11 @@ func (a *Agent) Run() error {
 				a.waitRunnable()
 			} else {
 				a.logf("Agent exiting\n")
+				a.taskMux.Lock()
+				if a.exitNow {
+					a.kill <- a.err
+				}
+				a.taskMux.Unlock()
 				return a.err
 			}
 		case AGENT_KEXEC:

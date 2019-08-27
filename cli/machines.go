@@ -305,7 +305,9 @@ pass in more than one task.`,
 	op.addCommand(tasks)
 	var exitOnFailure = false
 	var oneShot = false
+	var skipPower = false
 	var runStateLoc string
+	var runContext string
 	processJobs := &cobra.Command{
 		Use:   "processjobs [id]",
 		Short: "For the given machine, process pending jobs until done.",
@@ -316,13 +318,16 @@ completion, optionally wait for additional jobs as specified by
 the stage runner wait flag.
 `,
 		Args: func(c *cobra.Command, args []string) error {
-			if len(args) != 1 {
+			if len(args) > 1 {
 				return fmt.Errorf("%v requires 1 argument", c.UseLine())
 			}
 			return nil
 		},
 		RunE: func(c *cobra.Command, args []string) error {
-			uuid := args[0]
+			uuid := os.Getenv("RS_UUID")
+			if len(args) == 1 {
+				uuid = args[0]
+			}
 			m := &models.Machine{}
 			if err := Session.FillModel(m, uuid); err != nil {
 				return err
@@ -335,19 +340,24 @@ the stage runner wait flag.
 					return fmt.Errorf("Unable to create state directory %s: %v", runStateLoc, err)
 				}
 			}
-			agent, err := agent.New(Session, m, oneShot, exitOnFailure, ActuallyPowerThings, os.Stdout)
+			if runContext == "" {
+				runContext = os.Getenv("RS_CONTEXT")
+			}
+			agent, err := agent.New(Session, m, oneShot, exitOnFailure, ActuallyPowerThings && !skipPower, os.Stdout)
 			if err != nil {
 				return err
 			}
 			if oneShot {
 				agent = agent.Timeout(time.Second)
 			}
-			return agent.StateLoc(runStateLoc).Run()
+			return agent.StateLoc(runStateLoc).Context(runContext).Run()
 		},
 	}
 	processJobs.Flags().BoolVar(&exitOnFailure, "exit-on-failure", false, "Exit on failure of a task")
 	processJobs.Flags().BoolVar(&oneShot, "oneshot", false, "Do not wait for additional tasks to appear")
+	processJobs.Flags().BoolVar(&skipPower, "skipPower", false, "Skip any power cycle actions")
 	processJobs.Flags().StringVar(&runStateLoc, "stateDir", "", "Location to save agent runtime state")
+	processJobs.Flags().StringVar(&runContext, "context", "", "Execution context this agent should pay attention to jobs in")
 	op.addCommand(processJobs)
 	op.command(app)
 }
