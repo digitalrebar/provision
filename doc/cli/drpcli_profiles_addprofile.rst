@@ -1,26 +1,23 @@
-drpcli profiles get
--------------------
+drpcli profiles addprofile
+--------------------------
 
-Get a parameter from the profile
+Add profile to the machine’s profile list
 
 Synopsis
 ~~~~~~~~
 
-A helper function to return the value of the parameter on the profile
+Helper function to add a profile to the machine’s profile list.
 
 ::
 
-   drpcli profiles get [id] param [key] [flags]
+   drpcli profiles addprofile [id] [profile] [flags]
 
 Options
 ~~~~~~~
 
 ::
 
-         --aggregate   Should return aggregated view
-         --compose     Should merge map and array objects together
-         --decode      Should return decoded secure params
-     -h, --help        help for get
+     -h, --help   help for addprofile
 
 Options inherited from parent commands
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

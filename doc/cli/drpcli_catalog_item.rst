@@ -1,26 +1,22 @@
-drpcli profiles get
+drpcli catalog item
 -------------------
 
-Get a parameter from the profile
+Commands to act on individual catalog items
 
 Synopsis
 ~~~~~~~~
 
-A helper function to return the value of the parameter on the profile
-
-::
-
-   drpcli profiles get [id] param [key] [flags]
+Commands to act on individual catalog items
 
 Options
 ~~~~~~~
 
 ::
 
-         --aggregate   Should return aggregated view
-         --compose     Should merge map and array objects together
-         --decode      Should return decoded secure params
-     -h, --help        help for get
+         --arch string      Architecture of the item to work with when downloading a plugin provider (default "amd64")
+     -h, --help             help for item
+         --os string        OS of the item to work with when downloading a plugin provider (default "darwin")
+         --version string   Version of the item to work with (default "stable")
 
 Options inherited from parent commands
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -43,5 +39,11 @@ Options inherited from parent commands
 SEE ALSO
 ~~~~~~~~
 
--  `drpcli profiles <drpcli_profiles.html>`__ - Access CLI commands
-   relating to profiles
+-  `drpcli catalog <drpcli_catalog.html>`__ - Access commands related to
+   catalog manipulation
+-  `drpcli catalog item download <drpcli_catalog_item_download.html>`__
+   - Downloads [item] to [file]
+-  `drpcli catalog item install <drpcli_catalog_item_install.html>`__ -
+   Installs [item] from the catalog on the current dr-provision endpoint
+-  `drpcli catalog item show <drpcli_catalog_item_show.html>`__ - Shows
+   available versions for [item]

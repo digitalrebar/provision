@@ -41,6 +41,8 @@ SEE ALSO
    to certs
 -  `drpcli contents <drpcli_contents.html>`__ - Access CLI commands
    relating to content
+-  `drpcli debug <drpcli_debug.html>`__ - Gather [type] of debug
+   information and save it to [target]
 -  `drpcli events <drpcli_events.html>`__ - DigitalRebar Provision Event
    Commands
 -  `drpcli extended <drpcli_extended.html>`__ - Access CLI commands
@@ -62,8 +64,6 @@ SEE ALSO
 -  `drpcli logs <drpcli_logs.html>`__ - Access commands relating to logs
 -  `drpcli machines <drpcli_machines.html>`__ - Access CLI commands
    relating to machines
--  `drpcli net <drpcli_net.html>`__ - Command for local network
-   management
 -  `drpcli objects <drpcli_objects.html>`__ - Access CLI commands
    relating to objects
 -  `drpcli params <drpcli_params.html>`__ - Access CLI commands relating

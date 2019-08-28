@@ -18,6 +18,7 @@ Options
 ::
 
          --aggregate   Should return aggregated view
+         --compose     Should merge map and array objects together
          --decode      Should return decoded secure params
      -h, --help        help for get
 

@@ -1,26 +1,23 @@
-drpcli profiles get
--------------------
+drpcli catalog items
+--------------------
 
-Get a parameter from the profile
+Show the items available in the catalog
 
 Synopsis
 ~~~~~~~~
 
-A helper function to return the value of the parameter on the profile
+Show the items available in the catalog
 
 ::
 
-   drpcli profiles get [id] param [key] [flags]
+   drpcli catalog items [flags]
 
 Options
 ~~~~~~~
 
 ::
 
-         --aggregate   Should return aggregated view
-         --compose     Should merge map and array objects together
-         --decode      Should return decoded secure params
-     -h, --help        help for get
+     -h, --help   help for items
 
 Options inherited from parent commands
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -43,5 +40,5 @@ Options inherited from parent commands
 SEE ALSO
 ~~~~~~~~
 
--  `drpcli profiles <drpcli_profiles.html>`__ - Access CLI commands
-   relating to profiles
+-  `drpcli catalog <drpcli_catalog.html>`__ - Access commands related to
+   catalog manipulation
