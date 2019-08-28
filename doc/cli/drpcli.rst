@@ -76,6 +76,9 @@ SEE ALSO
    Provision operational preferences
 -  `drpcli profiles <drpcli_profiles.html>`__ - Access CLI commands
    relating to profiles
+-  `drpcli proxy <drpcli_proxy.html>`__ - Run a local UNIX socket proxy
+   for further drpcli commands. Requires RS_LOCAL_PROXY to be set in the
+   env.
 -  `drpcli reservations <drpcli_reservations.html>`__ - Access CLI
    commands relating to reservations
 -  `drpcli roles <drpcli_roles.html>`__ - Access CLI commands relating
