@@ -44,6 +44,8 @@ SEE ALSO
    actions for this profile
 -  `drpcli profiles add <drpcli_profiles_add.html>`__ - Add the profiles
    param *key* to *blob*
+-  `drpcli profiles addprofile <drpcli_profiles_addprofile.html>`__ -
+   Add profile to the machine’s profile list
 -  `drpcli profiles create <drpcli_profiles_create.html>`__ - Create a
    new profile with the passed-in JSON or string key
 -  `drpcli profiles destroy <drpcli_profiles_destroy.html>`__ - Destroy
@@ -62,6 +64,9 @@ SEE ALSO
    all parameters for the profile
 -  `drpcli profiles remove <drpcli_profiles_remove.html>`__ - Remove the
    param *key* from profiles
+-  `drpcli profiles
+   removeprofile <drpcli_profiles_removeprofile.html>`__ - Remove a
+   profile from the machine’s list
 -  `drpcli profiles runaction <drpcli_profiles_runaction.html>`__ - Run
    action on object from plugin
 -  `drpcli profiles set <drpcli_profiles_set.html>`__ - Set the profiles

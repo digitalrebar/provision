@@ -1,26 +1,23 @@
-drpcli profiles get
--------------------
+drpcli profiles removeprofile
+-----------------------------
 
-Get a parameter from the profile
+Remove a profile from the machine’s list
 
 Synopsis
 ~~~~~~~~
 
-A helper function to return the value of the parameter on the profile
+Helper function to update the machine’s profile list by removing one.
 
 ::
 
-   drpcli profiles get [id] param [key] [flags]
+   drpcli profiles removeprofile [id] [profile] [flags]
 
 Options
 ~~~~~~~
 
 ::
 
-         --aggregate   Should return aggregated view
-         --compose     Should merge map and array objects together
-         --decode      Should return decoded secure params
-     -h, --help        help for get
+     -h, --help   help for removeprofile
 
 Options inherited from parent commands
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
