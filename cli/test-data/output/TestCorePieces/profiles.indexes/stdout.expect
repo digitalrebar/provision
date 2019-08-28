@@ -29,6 +29,12 @@
     "Unique": false,
     "Unordered": true
   },
+  "Profiles": {
+    "Regex": false,
+    "Type": "list",
+    "Unique": false,
+    "Unordered": true
+  },
   "ReadOnly": {
     "Regex": false,
     "Type": "boolean",
