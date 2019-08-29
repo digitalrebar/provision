@@ -926,6 +926,7 @@ func transport() *http.Transport {
 	lp := locallyProxied()
 	if lp == "" {
 		tr = &http.Transport{
+			Proxy:                 http.ProxyFromEnvironment,
 			TLSClientConfig:       &tls.Config{InsecureSkipVerify: true},
 			MaxIdleConns:          10,
 			IdleConnTimeout:       90 * time.Second,

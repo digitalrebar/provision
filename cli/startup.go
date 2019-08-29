@@ -17,28 +17,28 @@ import (
 type registerSection func(*cobra.Command)
 
 var (
-	version          = v4.RSVersion
-	debug            = false
-	catalog          = "https://repo.rackn.io"
-	default_catalog  = "https://repo.rackn.io"
-	endpoint         = "https://127.0.0.1:8092"
-	default_endpoint = "https://127.0.0.1:8092"
-	token            = ""
-	default_token    = ""
-	username         = "rocketskates"
-	default_username = "rocketskates"
-	password         = "r0cketsk8ts"
-	default_password = "r0cketsk8ts"
-	format           = "json"
-	Session          *api.Client
-	noToken          = false
-	force            = false
-	noPretty         = false
-	ref              = ""
-	default_ref      = ""
-	trace            = ""
-	traceToken       = ""
-	registrations    = []registerSection{}
+	version           = v4.RSVersion
+	debug             = false
+	catalog           = "https://repo.rackn.io"
+	default_catalog   = "https://repo.rackn.io"
+	endpoint          = "https://127.0.0.1:8092"
+	default_endpoints = []string{"https://127.0.0.1:8092"}
+	token             = ""
+	default_token     = ""
+	username          = "rocketskates"
+	default_username  = "rocketskates"
+	password          = "r0cketsk8ts"
+	default_password  = "r0cketsk8ts"
+	format            = "json"
+	Session           *api.Client
+	noToken           = false
+	force             = false
+	noPretty          = false
+	ref               = ""
+	default_ref       = ""
+	trace             = ""
+	traceToken        = ""
+	registrations     = []registerSection{}
 )
 
 func addRegistrar(rs registerSection) {
@@ -48,46 +48,61 @@ func addRegistrar(rs registerSection) {
 var ppr = func(c *cobra.Command, a []string) error {
 	c.SilenceUsage = true
 	if Session == nil {
-		var err error
-		if token != "" {
-			Session, err = api.TokenSession(endpoint, token)
-		} else {
-			home := os.ExpandEnv("${HOME}")
-			tPath := os.ExpandEnv("${RS_TOKEN_CACHE}")
-			if tPath == "" && home != "" {
-				tPath = path.Join(home, ".cache", "drpcli", "tokens")
+		epInList := false
+		for i := range default_endpoints {
+			if default_endpoints[i] == endpoint {
+				epInList = true
+				break
 			}
-			tokenFile := path.Join(tPath, "."+username+".token")
-			if !noToken && tPath != "" {
-				if err := os.MkdirAll(tPath, 0700); err == nil {
-					if tokenStr, err := ioutil.ReadFile(tokenFile); err == nil {
-						Session, err = api.TokenSession(endpoint, string(tokenStr))
-						if err == nil {
-							if _, err := Session.Info(); err == nil {
-								Session.Trace(trace)
-								Session.TraceToken(traceToken)
-								return nil
+		}
+		if !epInList {
+			l := len(default_endpoints) - 1
+			default_endpoints = append(default_endpoints, endpoint)
+			default_endpoints[0], default_endpoints[l] = default_endpoints[l], default_endpoints[0]
+		}
+		var sessErr error
+		for _, endpoint = range default_endpoints {
+			if token != "" {
+				Session, sessErr = api.TokenSession(endpoint, token)
+			} else {
+				home := os.ExpandEnv("${HOME}")
+				tPath := os.ExpandEnv("${RS_TOKEN_CACHE}")
+				if tPath == "" && home != "" {
+					tPath = path.Join(home, ".cache", "drpcli", "tokens")
+				}
+				tokenFile := path.Join(tPath, "."+username+".token")
+				if !noToken && tPath != "" {
+					if err := os.MkdirAll(tPath, 0700); err == nil {
+						if tokenStr, err := ioutil.ReadFile(tokenFile); err == nil {
+							Session, sessErr = api.TokenSession(endpoint, string(tokenStr))
+							if sessErr == nil {
+								if _, err := Session.Info(); err == nil {
+									Session.Trace(trace)
+									Session.TraceToken(traceToken)
+									break
+								}
 							}
-							Session.Close()
-							Session = nil
+						}
+					}
+				}
+				Session, sessErr = api.UserSessionToken(endpoint, username, password, !noToken)
+				if !noToken && tPath != "" && sessErr == nil {
+					if err := os.MkdirAll(tPath, 700); err == nil {
+						tok := &models.UserToken{}
+						if err := Session.
+							Req().UrlFor("users", username, "token").
+							Params("ttl", "7200").Do(&tok); err == nil {
+							ioutil.WriteFile(tokenFile, []byte(tok.Token), 0600)
 						}
 					}
 				}
 			}
-			Session, err = api.UserSessionToken(endpoint, username, password, !noToken)
-			if !noToken && tPath != "" && err == nil {
-				if err := os.MkdirAll(tPath, 700); err == nil {
-					tok := &models.UserToken{}
-					if err := Session.
-						Req().UrlFor("users", username, "token").
-						Params("ttl", "7200").Do(&tok); err == nil {
-						ioutil.WriteFile(tokenFile, []byte(tok.Token), 0600)
-					}
-				}
+			if sessErr == nil {
+				break
 			}
 		}
-		if err != nil {
-			return fmt.Errorf("Error creating Session: %v", err)
+		if sessErr != nil {
+			return fmt.Errorf("Error creating Session: %v", sessErr)
 		}
 	}
 	Session.Trace(trace)
@@ -100,8 +115,11 @@ func NewApp() *cobra.Command {
 		Use:   "drpcli",
 		Short: "A CLI application for interacting with the DigitalRebar Provision API",
 	}
+	if dep := os.Getenv("RS_ENDPOINTS"); dep != "" {
+		default_endpoints = strings.Split(dep, " ")
+	}
 	if ep := os.Getenv("RS_ENDPOINT"); ep != "" {
-		default_endpoint = ep
+		default_endpoints = []string{ep}
 	}
 	if tk := os.Getenv("RS_TOKEN"); tk != "" {
 		default_token = tk
@@ -129,7 +147,7 @@ func NewApp() *cobra.Command {
 
 			switch parts[0] {
 			case "RS_ENDPOINT":
-				default_endpoint = parts[1]
+				default_endpoints = []string{parts[1]}
 			case "RS_TOKEN":
 				default_token = parts[1]
 			case "RS_USERNAME":
@@ -150,7 +168,7 @@ func NewApp() *cobra.Command {
 		}
 	}
 	app.PersistentFlags().StringVarP(&endpoint,
-		"endpoint", "E", default_endpoint,
+		"endpoint", "E", default_endpoints[0],
 		"The Digital Rebar Provision API endpoint to talk to")
 	app.PersistentFlags().StringVarP(&username,
 		"username", "U", default_username,
