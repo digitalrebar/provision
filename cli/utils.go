@@ -20,23 +20,23 @@ import (
 	"github.com/digitalrebar/provision/v4/models"
 )
 
-var encodeJsonPtr = strings.NewReplacer("~", "~0", "/", "~1")
+var encodeJSONPtr = strings.NewReplacer("~", "~0", "/", "~1")
 
 // String translates a pointerSegment into a regular string, encoding it as we go.
-func makeJsonPtr(s string) string {
-	return encodeJsonPtr.Replace(string(s))
+func makeJSONPtr(s string) string {
+	return encodeJSONPtr.Replace(string(s))
 }
 
 func bufOrFileDecode(ref string, data interface{}) (err error) {
-	if buf, terr := bufOrStdin(ref); terr != nil {
-		err = fmt.Errorf("Unable to process reference object: %v\n", terr)
+	buf, terr := bufOrStdin(ref)
+	if terr != nil {
+		err = fmt.Errorf("Unable to process reference object: %v", terr)
 		return
-	} else {
-		err = api.DecodeYaml(buf, &data)
-		if err != nil {
-			err = fmt.Errorf("Unable to unmarshal reference object: %v\n", err)
-			return
-		}
+	}
+	err = api.DecodeYaml(buf, &data)
+	if err != nil {
+		err = fmt.Errorf("Unable to unmarshal reference object: %v", err)
+		return
 	}
 	return
 }
@@ -94,12 +94,18 @@ func urlOrFileAsReadCloser(src string) (io.ReadCloser, error) {
 		tr := &http.Transport{
 			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 		}
-		client := &http.Client{Transport: tr}
-		if res, err := client.Get(src); err != nil {
-			return nil, err
-		} else {
-			return res.Body, nil
+		if downloadProxy != "" {
+			proxyURL, err := url.Parse(downloadProxy)
+			if err == nil {
+				tr.Proxy = http.ProxyURL(proxyURL)
+			}
 		}
+		client := &http.Client{Transport: tr}
+		res, err := client.Get(src)
+		if err != nil {
+			return nil, err
+		}
+		return res.Body, nil
 	} else if err == nil && u.Scheme == "file" {
 		return nil, fmt.Errorf("file:// scheme not supported")
 	}
@@ -121,14 +127,20 @@ func bufOrFile(src string) ([]byte, error) {
 		tr := &http.Transport{
 			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 		}
-		client := &http.Client{Transport: tr}
-		if res, err := client.Get(src); err != nil {
-			return nil, err
-		} else {
-			defer res.Body.Close()
-			body, err := ioutil.ReadAll(res.Body)
-			return []byte(body), err
+		if downloadProxy != "" {
+			proxyURL, err := url.Parse(downloadProxy)
+			if err == nil {
+				tr.Proxy = http.ProxyURL(proxyURL)
+			}
 		}
+		client := &http.Client{Transport: tr}
+		res, err := client.Get(src)
+		if err != nil {
+			return nil, err
+		}
+		defer res.Body.Close()
+		body, err := ioutil.ReadAll(res.Body)
+		return []byte(body), err
 	} else if err == nil && u.Scheme == "file" {
 		return nil, fmt.Errorf("file:// scheme not supported")
 	}
@@ -237,10 +249,10 @@ func prettyPrint(o interface{}) (err error) {
 		fmt.Printf("%v", o)
 		return nil
 	}
-	if buf, err := prettyPrintBuf(o); err != nil {
+	buf, err := prettyPrintBuf(o)
+	if err != nil {
 		return err
-	} else {
-		fmt.Println(string(buf))
 	}
+	fmt.Println(string(buf))
 	return nil
 }

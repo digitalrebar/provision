@@ -74,7 +74,7 @@ func (o *ops) meta() {
 			var value string
 			err := into(newValue, &value)
 			if err != nil {
-				return fmt.Errorf("Unable to unmarshal input stream: %v\n", err)
+				return fmt.Errorf("Unable to unmarshal input stream: %v", err)
 			}
 			res := models.Meta{}
 			if ref == "" {
@@ -92,7 +92,7 @@ func (o *ops) meta() {
 			}
 
 			var meta interface{}
-			path := fmt.Sprintf("/%s", makeJsonPtr(key))
+			path := fmt.Sprintf("/%s", makeJSONPtr(key))
 			patch := jsonpatch2.Patch{
 				{Op: "test", Path: "", Value: res},
 				{Op: "add", Path: path, Value: value},
@@ -119,10 +119,10 @@ func (o *ops) meta() {
 			var value string
 			err := into(newValue, &value)
 			if err != nil {
-				return fmt.Errorf("Unable to unmarshal input stream: %v\n", err)
+				return fmt.Errorf("Unable to unmarshal input stream: %v", err)
 			}
 			patch := jsonpatch2.Patch{}
-			path := fmt.Sprintf("/%s", makeJsonPtr(key))
+			path := fmt.Sprintf("/%s", makeJSONPtr(key))
 			if ref == "" {
 				md, err := getMeta(o.name, id)
 				if err != nil {
@@ -159,7 +159,7 @@ func (o *ops) meta() {
 		RunE: func(c *cobra.Command, args []string) error {
 			id := args[0]
 			key := args[2]
-			path := fmt.Sprintf("/%s", makeJsonPtr(key))
+			path := fmt.Sprintf("/%s", makeJSONPtr(key))
 			var patch jsonpatch2.Patch
 			if ref == "" {
 				patch = jsonpatch2.Patch{
