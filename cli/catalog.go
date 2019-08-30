@@ -1,17 +1,61 @@
 package cli
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
+	"net/url"
 	"os"
 	"runtime"
 	"sort"
+	"strings"
+
+	"github.com/Masterminds/semver"
 
 	"github.com/digitalrebar/provision/v4/models"
-
 	"github.com/spf13/cobra"
 )
+
+func getLocalCatalog() (res *models.Content, err error) {
+	req := Session.Req().List("files")
+	req.Params("path", "rebar-catalog/rackn-catalog")
+	data := []interface{}{}
+	err = req.Do(&data)
+	if err != nil {
+		return
+	}
+
+	if len(data) == 0 {
+		err = fmt.Errorf("Failed to find local catalog")
+		return
+	}
+
+	vs := make([]*semver.Version, len(data))
+	vmap := map[string]string{}
+	for i, obj := range data {
+		r := obj.(string)
+		v, verr := semver.NewVersion(strings.TrimSuffix(r, ".json"))
+		if verr != nil {
+			err = verr
+			return
+		}
+		vs[i] = v
+		vmap[v.String()] = r
+	}
+	sort.Sort(sort.Reverse(semver.Collection(vs)))
+
+	var buf bytes.Buffer
+	path := fmt.Sprintf("rebar-catalog/rackn-catalog/%s", vmap[vs[0].String()])
+	fmt.Printf("Using catalog: %s\n", path)
+	if gerr := Session.GetBlob(&buf, "files", path); gerr != nil {
+		err = fmt.Errorf("Failed to fetch %v: %v: %v", "files", path, gerr)
+		return
+	}
+
+	err = json.Unmarshal(buf.Bytes(), &res)
+	return
+}
 
 func catalogCommands() *cobra.Command {
 
@@ -245,6 +289,65 @@ and wind up in a file with the same name as the item + the default file extensio
 		},
 	})
 	cmd.AddCommand(itemCmd)
+
+	updateCmd := &cobra.Command{
+		Use:   "updateLocal",
+		Short: "Update the local catalog from the upstream catalog",
+		Args:  cobra.NoArgs,
+		RunE: func(c *cobra.Command, args []string) error {
+			srcCatalog, err := fetchCatalog()
+			if err != nil {
+				return err
+			}
+
+			localCatalog, err := getLocalCatalog()
+			if err != nil {
+				return err
+			}
+
+			srcItems := itemsFromCatalog(srcCatalog, "")
+			localItems := itemsFromCatalog(localCatalog, "")
+
+			for k, v := range srcItems {
+				// Only get things that aren't tip or stable
+				if strings.HasSuffix(k, "-tip") || strings.HasSuffix(k, "-stable") {
+					continue
+				}
+
+				// Get things that aren't in local
+				if _, ok := localItems[k]; !ok {
+					parts := map[string]string{}
+					i := strings.Index(v.Source, "/rebar-catalog/")
+					switch v.ContentType {
+					case "PluginProvider", "DRPCLI":
+						for arch := range v.Shasum256 {
+							ts := fmt.Sprintf("%s/%s/%s", v.Source, arch, v.Name)
+							qs, _ := url.QueryUnescape(v.Source[i+1:])
+							td := fmt.Sprintf("%s/%s/%s", qs, arch, v.Name)
+							parts[ts] = td
+						}
+					default:
+						parts[v.Source], _ = url.QueryUnescape(v.Source[i+1:])
+					}
+
+					for s, d := range parts {
+						fmt.Printf("Downloading %s to store at %s\n", s, d)
+						data, err := urlOrFileAsReadCloser(s)
+						if err != nil {
+							return fmt.Errorf("Error opening src file %s: %v", s, err)
+						}
+						defer data.Close()
+						if _, err := Session.PostBlobExplode(data, false, "files", d); err != nil {
+							return generateError(err, "Failed to post %v: %v", "files", d)
+						}
+					}
+				}
+			}
+			return nil
+		},
+	}
+	cmd.AddCommand(updateCmd)
+
 	return cmd
 }
 

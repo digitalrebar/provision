@@ -17,28 +17,32 @@ import (
 type registerSection func(*cobra.Command)
 
 var (
-	version           = v4.RSVersion
-	debug             = false
-	catalog           = "https://repo.rackn.io"
-	default_catalog   = "https://repo.rackn.io"
-	endpoint          = "https://127.0.0.1:8092"
-	default_endpoints = []string{"https://127.0.0.1:8092"}
-	token             = ""
-	default_token     = ""
-	username          = "rocketskates"
-	default_username  = "rocketskates"
-	password          = "r0cketsk8ts"
-	default_password  = "r0cketsk8ts"
-	format            = "json"
-	Session           *api.Client
-	noToken           = false
-	force             = false
-	noPretty          = false
-	ref               = ""
-	default_ref       = ""
-	trace             = ""
-	traceToken        = ""
-	registrations     = []registerSection{}
+	version              = v4.RSVersion
+	debug                = false
+	catalog              = "https://repo.rackn.io"
+	defaultCatalog       = "https://repo.rackn.io"
+	endpoint             = "https://127.0.0.1:8092"
+	defaultEndpoint      = "https://127.0.0.1:8092"
+	defaultEndpoints     = []string{"https://127.0.0.1:8092"}
+	token                = ""
+	defaultToken         = ""
+	username             = "rocketskates"
+	defaultUsername      = "rocketskates"
+	password             = "r0cketsk8ts"
+	defaultPassword      = "r0cketsk8ts"
+	downloadProxy        = ""
+	defaultDownloadProxy = ""
+	format               = "json"
+	// Session is the global client access session
+	Session       *api.Client
+	noToken       = false
+	force         = false
+	noPretty      = false
+	ref           = ""
+	defaultRef    = ""
+	trace         = ""
+	traceToken    = ""
+	registrations = []registerSection{}
 )
 
 func addRegistrar(rs registerSection) {
@@ -49,19 +53,19 @@ var ppr = func(c *cobra.Command, a []string) error {
 	c.SilenceUsage = true
 	if Session == nil {
 		epInList := false
-		for i := range default_endpoints {
-			if default_endpoints[i] == endpoint {
+		for i := range defaultEndpoints {
+			if defaultEndpoints[i] == endpoint {
 				epInList = true
 				break
 			}
 		}
 		if !epInList {
-			l := len(default_endpoints) - 1
-			default_endpoints = append(default_endpoints, endpoint)
-			default_endpoints[0], default_endpoints[l] = default_endpoints[l], default_endpoints[0]
+			l := len(defaultEndpoints) - 1
+			defaultEndpoints = append(defaultEndpoints, endpoint)
+			defaultEndpoints[0], defaultEndpoints[l] = defaultEndpoints[l], defaultEndpoints[0]
 		}
 		var sessErr error
-		for _, endpoint = range default_endpoints {
+		for _, endpoint = range defaultEndpoints {
 			if token != "" {
 				Session, sessErr = api.TokenSession(endpoint, token)
 			} else {
@@ -110,22 +114,23 @@ var ppr = func(c *cobra.Command, a []string) error {
 	return nil
 }
 
+// NewApp is the app start function
 func NewApp() *cobra.Command {
 	app := &cobra.Command{
 		Use:   "drpcli",
 		Short: "A CLI application for interacting with the DigitalRebar Provision API",
 	}
 	if dep := os.Getenv("RS_ENDPOINTS"); dep != "" {
-		default_endpoints = strings.Split(dep, " ")
+		defaultEndpoints = strings.Split(dep, " ")
 	}
 	if ep := os.Getenv("RS_ENDPOINT"); ep != "" {
-		default_endpoints = []string{ep}
+		defaultEndpoints = []string{ep}
 	}
 	if tk := os.Getenv("RS_TOKEN"); tk != "" {
-		default_token = tk
+		defaultToken = tk
 	}
 	if tk := os.Getenv("RS_CATALOG"); tk != "" {
-		default_catalog = tk
+		defaultCatalog = tk
 	}
 	if kv := os.Getenv("RS_KEY"); kv != "" {
 		key := strings.SplitN(kv, ":", 2)
@@ -135,8 +140,8 @@ func NewApp() *cobra.Command {
 		if key[0] == "" || key[1] == "" {
 			log.Fatal("RS_KEY contains an invalid username:password pair!")
 		}
-		default_username = key[0]
-		default_password = key[1]
+		defaultUsername = key[0]
+		defaultPassword = key[1]
 	}
 	home := os.ExpandEnv("${HOME}")
 	if data, err := ioutil.ReadFile(fmt.Sprintf("%s/.drpclirc", home)); err == nil {
@@ -147,13 +152,15 @@ func NewApp() *cobra.Command {
 
 			switch parts[0] {
 			case "RS_ENDPOINT":
-				default_endpoints = []string{parts[1]}
+				defaultEndpoints = []string{parts[1]}
 			case "RS_TOKEN":
-				default_token = parts[1]
+				defaultToken = parts[1]
 			case "RS_USERNAME":
-				default_username = parts[1]
+				defaultUsername = parts[1]
 			case "RS_PASSWORD":
-				default_password = parts[1]
+				defaultPassword = parts[1]
+			case "RS_DOWNLOAD_PROXY":
+				defaultDownloadProxy = parts[1]
 			case "RS_KEY":
 				key := strings.SplitN(parts[1], ":", 2)
 				if len(key) < 2 {
@@ -162,22 +169,22 @@ func NewApp() *cobra.Command {
 				if key[0] == "" || key[1] == "" {
 					continue
 				}
-				default_username = key[0]
-				default_password = key[1]
+				defaultUsername = key[0]
+				defaultPassword = key[1]
 			}
 		}
 	}
 	app.PersistentFlags().StringVarP(&endpoint,
-		"endpoint", "E", default_endpoints[0],
+		"endpoint", "E", defaultEndpoints[0],
 		"The Digital Rebar Provision API endpoint to talk to")
 	app.PersistentFlags().StringVarP(&username,
-		"username", "U", default_username,
+		"username", "U", defaultUsername,
 		"Name of the Digital Rebar Provision user to talk to")
 	app.PersistentFlags().StringVarP(&password,
-		"password", "P", default_password,
+		"password", "P", defaultPassword,
 		"password of the Digital Rebar Provision user")
 	app.PersistentFlags().StringVarP(&token,
-		"token", "T", default_token,
+		"token", "T", defaultToken,
 		"token of the Digital Rebar Provision access")
 	app.PersistentFlags().BoolVarP(&debug,
 		"debug", "d", false,
@@ -189,7 +196,7 @@ func NewApp() *cobra.Command {
 		"force", "f", false,
 		"When needed, attempt to force the operation - used on some update/patch calls")
 	app.PersistentFlags().StringVarP(&ref,
-		"ref", "r", default_ref,
+		"ref", "r", defaultRef,
 		"A reference object for update commands that can be a file name, yaml, or json blob")
 	app.PersistentFlags().StringVarP(&trace,
 		"trace", "t", "",
@@ -198,8 +205,11 @@ func NewApp() *cobra.Command {
 		"traceToken", "Z", "",
 		"A token that individual traced requests should report in the server logs")
 	app.PersistentFlags().StringVarP(&catalog,
-		"catalog", "c", default_catalog,
+		"catalog", "c", defaultCatalog,
 		"The catalog file to use to get product information")
+	app.PersistentFlags().StringVarP(&downloadProxy,
+		"download-proxy", "D", defaultDownloadProxy,
+		"HTTP Proxy to use for downloading catalog and content")
 	app.PersistentFlags().BoolVarP(&noToken,
 		"noToken", "x", noToken,
 		"Do not use token auth or token cache")
@@ -225,6 +235,11 @@ func NewApp() *cobra.Command {
 		// contents needs some help.
 		switch c.Use {
 		case "catalog":
+			for _, sc := range c.Commands() {
+				if strings.HasPrefix(sc.Use, "updateLocal") {
+					sc.PersistentPreRunE = ppr
+				}
+			}
 		case "contents":
 			for _, sc := range c.Commands() {
 				if !strings.HasPrefix(sc.Use, "bundle") &&

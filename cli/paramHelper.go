@@ -43,7 +43,7 @@ func (o *ops) params() {
 			}
 			val := map[string]interface{}{}
 			if err := into(args[1], &val); err != nil {
-				return fmt.Errorf("Unable to unmarshal input stream: %v\n", err)
+				return fmt.Errorf("Unable to unmarshal input stream: %v", err)
 			}
 			res := map[string]interface{}{}
 			if ref == "" {
@@ -120,7 +120,7 @@ func (o *ops) params() {
 			var value interface{}
 			err := into(newValue, &value)
 			if err != nil {
-				return fmt.Errorf("Unable to unmarshal input stream: %v\n", err)
+				return fmt.Errorf("Unable to unmarshal input stream: %v", err)
 			}
 			value, err = maybeEncryptParam(key, o.name, uuid, value)
 			if err != nil {
@@ -143,7 +143,7 @@ func (o *ops) params() {
 			}
 
 			var params interface{}
-			path := fmt.Sprintf("/%s", makeJsonPtr(key))
+			path := fmt.Sprintf("/%s", makeJSONPtr(key))
 			patch := jsonpatch2.Patch{
 				jsonpatch2.Operation{
 					Op:    "test",
@@ -179,7 +179,7 @@ func (o *ops) params() {
 			var value interface{}
 			err := into(newValue, &value)
 			if err != nil {
-				return fmt.Errorf("Unable to unmarshal input stream: %v\n", err)
+				return fmt.Errorf("Unable to unmarshal input stream: %v", err)
 			}
 			value, err = maybeEncryptParam(key, o.name, uuid, value)
 			if err != nil {
@@ -195,7 +195,7 @@ func (o *ops) params() {
 				if err := bufOrFileDecode(ref, &data); err != nil {
 					return generateError(err, "Failed to parse ref %s: %v", o.singleName, err)
 				}
-				path := fmt.Sprintf("/%s", makeJsonPtr(key))
+				path := fmt.Sprintf("/%s", makeJSONPtr(key))
 				patch := jsonpatch2.Patch{
 					jsonpatch2.Operation{
 						Op:    "test",
@@ -239,7 +239,7 @@ func (o *ops) params() {
 				if err := bufOrFileDecode(ref, &data); err != nil {
 					return generateError(err, "Failed to parse ref %s: %v", o.singleName, err)
 				}
-				path := fmt.Sprintf("/%s", makeJsonPtr(key))
+				path := fmt.Sprintf("/%s", makeJSONPtr(key))
 				patch := jsonpatch2.Patch{
 					jsonpatch2.Operation{
 						Op:    "test",
