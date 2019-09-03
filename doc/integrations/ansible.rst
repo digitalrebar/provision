@@ -46,7 +46,6 @@ You can also define specialized behavior for the Ansible inventory
   * RS_ANSIBLE will filter machines for the matching Ansible [default "all_machines" disables filter]
   * RS_HOST_ADDRESS see below
   * RS_ANSIBLE_USER see below
-  * RS_ANSIBLE_PARENT is used to define the parameter that flags Profiles as Group parents [default "ansible/children"]
 
 Ansible Dynamic Inventory from Digital Rebar Provision
 ------------------------------------------------------
@@ -72,6 +71,11 @@ In order to test the Ansible integration, use the ping command.  If everything i
     ansible all -i drpmachines.py -m ping
 
 .. note:: You may want to set `export ANSIBLE_HOST_KEY_CHECKING=False` to bypass the SSH key validation
+
+Parent Children Groups
+----------------------
+
+Version 4.1 has a simple mapping for Parent groups: use the Profile.Profiles value to list the children groups of the desired parent group.  This is a direct 1 to 1 mapping with Ansible.
 
 Use non-root Login
 ------------------
