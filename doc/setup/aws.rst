@@ -16,6 +16,8 @@ Install DRP in AWS
 
 You can use the Amazon Linux AMI.  While more is recommended, make sure that you have at least 1 GB of RAM.  You should open ports `8091` and `8092` to access the DRP server.
 
+For Kubernetes, make sure to also open ports `6443` and `10250`
+
 
   ::
 

@@ -101,6 +101,8 @@ def main():
                 if name != "global" and name != "rackn-license":
                     inventory[name] = { "hosts": [], "vars": [] }
                     gvars = hostvars.copy()
+                    if 'Profiles' in group.keys() and len(group[u'Profiles'])>0:
+                        inventory[name]["children"] = group[u'Profiles']
                     for k in group[u'Params']:
                         v = group[u'Params'][k]
                         if k == parent_key:
