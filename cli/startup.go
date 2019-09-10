@@ -60,7 +60,7 @@ var ppr = func(c *cobra.Command, a []string) error {
 			}
 		}
 		if !epInList {
-			l := len(defaultEndpoints) - 1
+			l := len(defaultEndpoints)
 			defaultEndpoints = append(defaultEndpoints, endpoint)
 			defaultEndpoints[0], defaultEndpoints[l] = defaultEndpoints[l], defaultEndpoints[0]
 		}
