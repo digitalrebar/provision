@@ -5,7 +5,31 @@
     "Unique": false,
     "Unordered": true
   },
+  "Bundle": {
+    "Regex": true,
+    "Type": "string",
+    "Unique": false,
+    "Unordered": false
+  },
+  "Engine": {
+    "Regex": true,
+    "Type": "string",
+    "Unique": false,
+    "Unordered": false
+  },
+  "Image": {
+    "Regex": true,
+    "Type": "string",
+    "Unique": false,
+    "Unordered": false
+  },
   "Key": {
+    "Regex": true,
+    "Type": "string",
+    "Unique": true,
+    "Unordered": false
+  },
+  "Name": {
     "Regex": true,
     "Type": "string",
     "Unique": true,
