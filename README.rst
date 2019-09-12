@@ -118,6 +118,7 @@ Table of Contents
    doc/api
    doc/dev/dev-server
    doc/dev/dev-cli
+   doc/dev/dev-plugins
    doc/dev/dev-docs
    doc/faq-troubleshooting
    doc/arch
