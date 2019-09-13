@@ -137,6 +137,7 @@ type EventStream struct {
 	subscriptions map[string][]int64
 	receivers     map[int64]chan RecievedEvent
 	mux           *sync.Mutex
+	kill          chan struct{}
 	rchan         chan RecievedEvent
 }
 
@@ -192,6 +193,7 @@ func (c *Client) Events() (*EventStream, error) {
 		subscriptions: map[string][]int64{},
 		receivers:     map[int64]chan RecievedEvent{},
 		mux:           &sync.Mutex{},
+		kill:          make(chan struct{}, 1),
 	}
 	newID := atomic.AddInt64(&res.handleId, 1)
 	res.rchan = make(chan RecievedEvent, 100)
@@ -331,6 +333,10 @@ func (es *EventStream) Deregister(handle int64) error {
 	return err
 }
 
+func (es *EventStream) Kill() {
+	es.kill <- struct{}{}
+}
+
 // WaitFor waits for an item to match test.  It subscribes to an
 // EventStream that watches all update and save envents for the object
 // in question, and returns a string indicating whether the match
@@ -379,6 +385,8 @@ func (es *EventStream) WaitFor(
 			return fmt.Sprintf("test: %v", err), err
 		}
 		select {
+		case <-es.kill:
+			return "interrupt", nil
 		case evt := <-ch:
 			if evt.Err != nil {
 				return fmt.Sprintf("read: %v", err), err

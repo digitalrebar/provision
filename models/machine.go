@@ -141,6 +141,11 @@ type Machine struct {
 	//
 	// required: true
 	Locked bool
+	// Contexts contains the name of the current execution context for the machine.
+	// An empty string indicates that the agent running on the machine should be executing tasks,
+	// and any other value means that an agent running with its context set for this value should
+	// be executing tasks.
+	Context string
 }
 
 func (n *Machine) IsLocked() bool {
@@ -178,7 +183,7 @@ func (n *Machine) Validate() {
 				n.AddError(ValidName("Invalid Stage", parts[1]))
 			case "bootenv":
 				n.AddError(ValidName("Invalid BootEnv", parts[1]))
-			case "chroot":
+			case "chroot", "context":
 			case "action":
 				pparts := strings.SplitN(parts[1], ":", 2)
 				if len(pparts) == 2 {

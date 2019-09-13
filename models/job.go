@@ -87,6 +87,8 @@ type Job struct {
 	// The stage that the task was created in.
 	// read only: true
 	Stage string
+	// Context is the context the job was created to run in.
+	Context string
 	// The state the job is in.  Must be one of "created", "running", "failed", "finished", "incomplete"
 	// required: true
 	State string

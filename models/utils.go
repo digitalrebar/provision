@@ -69,6 +69,7 @@ func All() []Model {
 		&Interface{},
 		&Job{},
 		&Lease{},
+		&Context{},
 		&Machine{},
 		&Param{},
 		&PluginProvider{},

@@ -78,7 +78,7 @@ func (e *Error) AddError(src error) {
 	}
 	switch other := src.(type) {
 	case *Error:
-		if other.Messages != nil {
+		if other != nil && other.Messages != nil {
 			e.Messages = append(e.Messages, other.Messages...)
 		}
 	case *Validation:
