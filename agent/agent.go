@@ -166,7 +166,7 @@ func (a *Agent) RunnerDir(s string) *Agent {
 }
 
 func (a *Agent) markNotRunnable() {
-	if a.context != "" {
+	if !(a.machine.Context == "" && a.context == "") {
 		return
 	}
 	m := &models.Machine{}
