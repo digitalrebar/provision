@@ -9,6 +9,7 @@ func TestObject(t *testing.T) {
 		name: "get objects",
 		expectRes: []string{
 			"bootenvs",
+			"contexts",
 			"jobs",
 			"leases",
 			"machines",

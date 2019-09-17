@@ -16,6 +16,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/VictorLowther/jsonpatch2"
+
 	"github.com/VictorLowther/jsonpatch2/utils"
 	"github.com/digitalrebar/provision/v4/api"
 	"github.com/digitalrebar/provision/v4/models"
@@ -163,11 +165,23 @@ func (a *Agent) RunnerDir(s string) *Agent {
 	return a
 }
 
-func (a *Agent) power(cmdLine string) error {
-	if !a.doPower {
-		return nil
+func (a *Agent) markNotRunnable() {
+	if !(a.machine.Context == "" && a.context == "") {
+		return
 	}
-	if a.context != "" {
+	m := &models.Machine{}
+	p := jsonpatch2.Patch{
+		{Op: "replace", Path: "/Runnable", Value: false},
+	}
+	for err := a.client.Req().Patch(p).UrlForM(a.machine).Do(m); err != nil; {
+		a.logf("Failed to mark machine %s not runnable: %v", a.machine.Key(), err)
+		a.machine = m
+		time.Sleep(5 * time.Minute)
+	}
+}
+
+func (a *Agent) power(cmdLine string) error {
+	if !(a.doPower && a.context == "") {
 		a.state = AGENT_EXIT
 		return nil
 	}
@@ -180,6 +194,7 @@ func (a *Agent) power(cmdLine string) error {
 				UrlForM(a.machine, "actions", "nextbootpxe").Do(nil)
 		}
 	}
+	a.markNotRunnable()
 	cmd := exec.Command(cmdLine)
 	cmd.Stderr = os.Stderr
 	cmd.Stdout = os.Stdout
@@ -386,6 +401,7 @@ func (a *Agent) doKexec() {
 }
 
 func (a *Agent) rebootOrExit(autoKexec bool) {
+	a.markNotRunnable()
 	if strings.HasSuffix(a.machine.BootEnv, "-install") {
 		a.state = AGENT_EXIT
 		return
@@ -413,10 +429,17 @@ func (a *Agent) rebootOrExit(autoKexec bool) {
 //
 // * AGENT_WAIT_FOR_RUNNABLE if the machine is not runnable.
 func (a *Agent) waitOn(m *models.Machine, cond api.TestFunc) {
+	// No matter what else happens, we only respond when:
+	// * The machine is available, and
+	// * The ancilliary condition is met, and
+	// * Either the machine context matches the one the agent cares about, or
+	// * The bootenv changed.
 	found, err := a.events.WaitFor(m,
 		api.AndItems(
 			api.EqualItem("Available", true),
-			api.EqualItem("Context", a.context),
+			api.OrItems(
+				api.EqualItem("Context", a.context),
+				api.NotItem(api.EqualItem("BootEnv", a.machine.BootEnv))),
 			cond),
 		a.waitTimeout)
 	if err != nil {
@@ -434,12 +457,14 @@ func (a *Agent) waitOn(m *models.Machine, cond api.TestFunc) {
 	case "interrupt":
 		a.state = AGENT_EXIT
 	case "complete":
-		if m.BootEnv != a.machine.BootEnv {
+		if m.BootEnv != a.machine.BootEnv && a.context == "" {
 			a.rebootOrExit(true)
-		} else if m.Runnable {
-			a.state = AGENT_RUN_TASK
-		} else {
-			a.state = AGENT_WAIT_FOR_RUNNABLE
+		} else if a.context == m.Context {
+			if m.Runnable {
+				a.state = AGENT_RUN_TASK
+			} else {
+				a.state = AGENT_WAIT_FOR_RUNNABLE
+			}
 		}
 	default:
 		err := &models.Error{
