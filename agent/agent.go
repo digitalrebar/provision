@@ -458,6 +458,7 @@ func (a *Agent) waitOn(m *models.Machine, cond api.TestFunc) {
 		a.state = AGENT_EXIT
 	case "complete":
 		if m.BootEnv != a.machine.BootEnv && a.context == "" {
+			a.machine = m
 			a.rebootOrExit(true)
 		} else if a.context == m.Context {
 			if m.Runnable {
@@ -706,10 +707,11 @@ func (a *Agent) loadState() {
 		return
 	}
 	if ss.BootTime == a.bootTime && a.machine.Key() == ss.Machine.Key() {
+		a.machine = ss.Machine
 		if a.machine.BootEnv != ss.Machine.BootEnv {
 			a.rebootOrExit(true)
 		}
-		a.machine = ss.Machine
+
 		return
 	}
 }
