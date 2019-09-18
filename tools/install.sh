@@ -104,7 +104,6 @@ _sudo="sudo"
 
 # download URL locations; overridable via ENV variables
 URL_BASE=${URL_BASE:-"https://rebar-catalog.s3-us-west-2.amazonaws.com"}
-URL_BASE_DRP=${URL_BASE_DRP:-"$URL_BASE/drp"}
 URL_BASE_CONTENT=${URL_BASE_CONTENT:-"$URL_BASE/drp-community-content"}
 DRP_CATALOG=${DRP_CATALOG:-"$URL_BASE/rackn-catalog.json"}
 SYSTEM_USER=root
@@ -639,22 +638,18 @@ case $MODE in
                        echo "WARNING:  No sha256sum check performed for '--zip-file' mode."
                        echo "          We assume you've already verified your download file."
                      else
-                       if [[ $DRP_VERSION == tip ]] || [[ $DRP_VERSION == stable ]] ; then
-                               get $DRP_CATALOG
-                               mv rackn-catalog.json rackn-catalog.json.gz
-                               gunzip rackn-catalog.json.gz
-                               DDV=$($LOCAL_JQ -r ".sections.catalog_items[\"drp-$DRP_VERSION\"].ActualVersion" rackn-catalog.json)
-                       else
-                           DDV=$DRP_VERSION
+                       if [[ ! -e rackn-catalog.json ]] ; then
+                         get $DRP_CATALOG
+                         mv rackn-catalog.json rackn-catalog.json.gz
+                         gunzip rackn-catalog.json.gz
                        fi
+                       SOURCE=$($LOCAL_JQ -r ".sections.catalog_items[\"drp-$DRP_VERSION\"].Source" rackn-catalog.json)
 
-                       get $URL_BASE_DRP/$DDV.zip
-                       mv $DDV.zip $ZIP
+                       get $SOURCE
+                       FILE=${SOURCE##*/}
+                       mv $FILE $ZIP
 
                        # XXX: Put sha back one day
-                       #get $URL_BASE_DRP/$DDV.sha256
-                       #mv $DDV.sha256 $SHA
-                       #$shasum -c dr-provision.sha256
                      fi
                      $tar -xf dr-provision.zip
                  fi
@@ -673,11 +668,11 @@ case $MODE in
                      mv rackn-catalog.json rackn-catalog.json.gz
                      gunzip rackn-catalog.json.gz
                  fi
-                 CC_VERSION=$($LOCAL_JQ -r ".sections.catalog_items[\"drp-community-content-$DRP_CONTENT_VERSION\"].ActualVersion" rackn-catalog.json)
+                 SOURCE=$($LOCAL_JQ -r ".sections.catalog_items[\"drp-community-content-$DRP_CONTENT_VERSION\"].Source" rackn-catalog.json)
 
-                 CC_JSON=${CC_VERSION}.json
-                 get $URL_BASE_CONTENT/$CC_JSON
-                 mv $CC_JSON drp-community-content.json
+                 get $SOURCE
+                 FILE=${SOURCE##*/}
+                 mv $FILE drp-community-content.json
                  # XXX: Add back in sha
              fi
 
