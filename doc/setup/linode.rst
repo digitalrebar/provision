@@ -34,7 +34,7 @@ You can use the Amazon Linux AMI.  While more is recommended, make sure that you
     #!/bin/bash
 
     ### Install DRP from Tip
-    curl -fsSL get.rebar.digital/tip | bash -s -- install --systemd --version=tip --drp-password=r0cketsk8ts
+    curl -fsSL get.rebar.digital/tip | bash -s -- install --systemd --version=stable --drp-password=r0cketsk8ts
 
     ### Now open the right firewall ports for DRP
     firewall-cmd --permanent --add-port=8092/tcp
@@ -42,8 +42,8 @@ You can use the Amazon Linux AMI.  While more is recommended, make sure that you
     firewall-cmd --reload
 
     ### Install Content and Configure Discovery
-    drpcli contents upload catalog:task-library-tip
-    drpcli contents upload catalog:drp-community-content-tip
+    drpcli contents upload catalog:task-library-stable
+    drpcli contents upload catalog:drp-community-content-stable
     drpcli workflows create '{"Name": "discover-linode", "Stages":
       ["discover", "runner-service", "complete"]
     }'
