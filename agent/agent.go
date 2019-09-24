@@ -171,12 +171,11 @@ func (a *Agent) markNotRunnable() {
 	}
 	m := &models.Machine{}
 	p := jsonpatch2.Patch{
+		{Op: "test", Path: "/Context", Value: ""},
 		{Op: "replace", Path: "/Runnable", Value: false},
 	}
-	for err := a.client.Req().Patch(p).UrlForM(a.machine).Do(m); err != nil; {
-		a.logf("Failed to mark machine %s not runnable: %v", a.machine.Key(), err)
-		a.machine = m
-		time.Sleep(5 * time.Minute)
+	if err := a.client.Req().Patch(p).UrlForM(a.machine).Do(m); err != nil {
+		a.logf("Failed to mark machine not runnable: %v\n", err)
 	}
 }
 
@@ -458,7 +457,6 @@ func (a *Agent) waitOn(m *models.Machine, cond api.TestFunc) {
 		a.state = AGENT_EXIT
 	case "complete":
 		if m.BootEnv != a.machine.BootEnv && a.context == "" {
-			a.machine = m
 			a.rebootOrExit(true)
 		} else if a.context == m.Context {
 			if m.Runnable {
@@ -707,11 +705,10 @@ func (a *Agent) loadState() {
 		return
 	}
 	if ss.BootTime == a.bootTime && a.machine.Key() == ss.Machine.Key() {
-		a.machine = ss.Machine
-		if a.machine.BootEnv != ss.Machine.BootEnv {
+		if a.machine.BootEnv != ss.Machine.BootEnv && a.context == "" {
 			a.rebootOrExit(true)
 		}
-
+		a.machine = ss.Machine
 		return
 	}
 }
