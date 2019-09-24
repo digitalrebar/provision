@@ -13,8 +13,10 @@ import (
 )
 
 var (
+	// ActuallyPowerThings is a boolean to use in testing to keep from power off the test machine
 	ActuallyPowerThings = true
-	DefaultStateLoc     string
+	// DefaultStateLoc is the default location to save agent state
+	DefaultStateLoc string
 )
 
 func init() {
@@ -219,9 +221,8 @@ func registerMachine(app *cobra.Command) {
 			for _, job := range jobs {
 				if _, err := Session.DeleteModel("jobs", job.Key()); err != nil {
 					return generateError(err, "Failed to delete Job %s", job.Key())
-				} else {
-					fmt.Printf("Deleted Job %s", job.Key())
 				}
+				fmt.Printf("Deleted Job %s", job.Key())
 			}
 			return nil
 		},
@@ -359,5 +360,6 @@ the stage runner wait flag.
 	processJobs.Flags().StringVar(&runStateLoc, "stateDir", "", "Location to save agent runtime state")
 	processJobs.Flags().StringVar(&runContext, "context", "", "Execution context this agent should pay attention to jobs in")
 	op.addCommand(processJobs)
+	op.addCommand(inspectCommands())
 	op.command(app)
 }
