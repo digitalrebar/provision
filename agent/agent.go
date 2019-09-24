@@ -77,7 +77,7 @@ type Agent struct {
 	err                                       error
 	task                                      *runner
 	taskMux                                   *sync.Mutex
-	exitNow                                   bool
+	exitNow, toggleRunnable                   bool
 	kill                                      chan error
 }
 
@@ -166,7 +166,7 @@ func (a *Agent) RunnerDir(s string) *Agent {
 }
 
 func (a *Agent) markNotRunnable() {
-	if !(a.machine.Context == "" && a.context == "") {
+	if a.toggleRunnable {
 		return
 	}
 	m := &models.Machine{}
@@ -181,7 +181,12 @@ func (a *Agent) markNotRunnable() {
 }
 
 func (a *Agent) power(cmdLine string) error {
-	if !(a.doPower && a.context == "") {
+	if a.context != "" {
+		a.logf("Agent asked to perform power operation %s, but is in context %s. Refused", cmdLine, a.context)
+		a.state = AGENT_INIT
+		return nil
+	}
+	if !a.doPower {
 		a.state = AGENT_EXIT
 		return nil
 	}
@@ -382,7 +387,8 @@ func (a *Agent) doKexec() {
 	if a.context == "" {
 		a.state = AGENT_REBOOT
 	} else {
-		a.state = AGENT_EXIT
+		a.logf("Agent in context %s asked to kexec, that makes no sense. ", a.context)
+		a.state = AGENT_INIT
 		return
 	}
 	var cmdErr error
@@ -401,6 +407,11 @@ func (a *Agent) doKexec() {
 }
 
 func (a *Agent) rebootOrExit(autoKexec bool) {
+	if a.context != "" {
+		a.logf("Agent signalled to reboot, but agent running in context %s.  Refused.", a.context)
+		a.state = AGENT_INIT
+		return
+	}
 	a.markNotRunnable()
 	if strings.HasSuffix(a.machine.BootEnv, "-install") {
 		a.state = AGENT_EXIT
@@ -458,7 +469,7 @@ func (a *Agent) waitOn(m *models.Machine, cond api.TestFunc) {
 		a.state = AGENT_EXIT
 	case "complete":
 		if m.BootEnv != a.machine.BootEnv && a.context == "" {
-			a.machine = m
+			a.toggleRunnable = m.Context == ""
 			a.rebootOrExit(true)
 		} else if a.context == m.Context {
 			if m.Runnable {
@@ -707,11 +718,10 @@ func (a *Agent) loadState() {
 		return
 	}
 	if ss.BootTime == a.bootTime && a.machine.Key() == ss.Machine.Key() {
-		a.machine = ss.Machine
 		if a.machine.BootEnv != ss.Machine.BootEnv {
+			a.toggleRunnable = a.context == "" && a.machine.Context == ""
 			a.rebootOrExit(true)
 		}
-
 		return
 	}
 }
@@ -723,7 +733,6 @@ func (a *Agent) Kill() error {
 	a.exitNow = true
 	a.events.Kill()
 	if a.task != nil {
-		a.task.log("Agent signalled to exit")
 		a.task.kill()
 	}
 	a.taskMux.Unlock()
