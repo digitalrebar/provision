@@ -60,7 +60,7 @@ type runner struct {
 // It creates the matching Job (or resumes the previous incomplete
 // one), and handles making sure that all relevant output is written
 // to the job log as well as local stderr
-func newRunner(c *api.Client, m *models.Machine, agentDir, chrootDir string, logger io.Writer) (*runner, error) {
+func newRunner(a *Agent, m *models.Machine, agentDir, chrootDir string, logger io.Writer) (*runner, error) {
 	if err := os.MkdirAll(agentDir, 0755); err != nil {
 		return nil, err
 	}
@@ -68,14 +68,14 @@ func newRunner(c *api.Client, m *models.Machine, agentDir, chrootDir string, log
 		logger = ioutil.Discard
 	}
 	res := &runner{
-		c:        c,
+		c:        a.client,
 		m:        m,
 		agentDir: agentDir,
 		logger:   logger,
 		cmdMux:   &sync.Mutex{},
 	}
-	job := &models.Job{Machine: m.Uuid}
-	if err := c.CreateModel(job); err != nil && err != io.EOF {
+	job := &models.Job{Machine: m.Uuid, Context: a.context}
+	if err := a.client.CreateModel(job); err != nil && err != io.EOF {
 		return nil, err
 	}
 	if job.State == "" {
@@ -90,7 +90,7 @@ func newRunner(c *api.Client, m *models.Machine, agentDir, chrootDir string, log
 	}
 	if !strings.Contains(job.Task, ":") {
 		t := &models.Task{Name: job.Task}
-		if err := c.Req().Fill(t); err != nil {
+		if err := a.client.Req().Fill(t); err != nil {
 			return nil, err
 		}
 		res.t = t

@@ -504,7 +504,7 @@ func (a *Agent) runTask() {
 		a.taskMux.Unlock()
 		return
 	}
-	a.task, err = newRunner(a.client, a.machine, a.runnerDir, a.chrootDir, a.logger)
+	a.task, err = newRunner(a, a.machine, a.runnerDir, a.chrootDir, a.logger)
 	a.taskMux.Unlock()
 	if err != nil {
 		a.err = err
