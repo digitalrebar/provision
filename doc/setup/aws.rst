@@ -23,11 +23,11 @@ For Kubernetes, make sure to also open ports `6443` and `10250`
 
     #!/bin/bash
     sudo yum install bsdtar -y
-    curl -fsSL get.rebar.digital/tip | bash -s -- install --systemd --version=tip --drp-password=r0cketsk8ts
+    curl -fsSL get.rebar.digital/tip | bash -s -- install --systemd --version=stable --drp-password=r0cketsk8ts
 
     ### Install Content and Configure Discovery
-    drpcli contents upload catalog:task-library-tip
-    drpcli contents upload catalog:drp-community-content-tip
+    drpcli contents upload catalog:task-library-stable
+    drpcli contents upload catalog:drp-community-content-stable
     drpcli workflows create '{"Name": "discover-aws", "Stages":
       ["discover","aws-discover", "runner-service", "complete"]
     }'
@@ -35,8 +35,8 @@ For Kubernetes, make sure to also open ports `6443` and `10250`
 
 
     ### Optional: add some Kubernetes magic
-    drpcli plugin_providers upload certs from catalog:certs-tip
-    drpcli contents upload catalog:krib-tip
+    drpcli plugin_providers upload certs from catalog:certs-stable
+    drpcli contents upload catalog:krib-stable
     drpcli profiles create '{"Name":"krib", "Meta": {
         "render": "krib", "reset-keeps": "krib/cluster-profile,etcd/cluster-profile",
       }
@@ -60,7 +60,10 @@ Once you have a DRP endpoint installed in AWS
   ::
 
     #!/bin/bash
-    curl -fsSL [DRP Address]:8091/machines/join-up.sh | sudo bash --
+    export drp=[DRP ADDRESS]
+    timeout 300 bash -c 'while [[ "$(curl -fsSL -o /dev/null -w %{http_code} $drp:8091/machines/join-up.sh)" != "200" ]]; do sleep 5; done' || false
+
+    curl -fsSL $drp:8091/machines/join-up.sh | sudo bash --
 
 
 The machines started using this process will register with their internal IP address.  By including the `aws-discover` stage, the machines will log their external IP address to the `cloud/public-ipv4` parameter.
