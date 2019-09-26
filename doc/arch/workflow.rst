@@ -120,10 +120,13 @@ AGENT_INIT
   AGENT_WAIT_FOR_RUNNABLE.
 
 AGENT_WAIT_FOR_RUNNABLE
-  Waits for the Machine to be both Available
-  and Runnable. Once it is, the Agent transitions to AGENT_REBOOT if
-  the machine changed BootEnv, AGENT_EXIT if the Agent recieved a
-  termination signal, AGENT_INIT if there was an error waiting for the
+  Waits for the Machine to be both Available and Runnable, and for
+  either the machine Context to equal the context the Agent is paying
+  attention to, or for the machine BootEnv to change.
+  Once it is, the Agent transitions to AGENT_REBOOT if the machine
+  changed BootEnv and the Agent is running in the empty ("")
+  context, AGENT_EXIT if the Agent recieved a termination signal,
+  AGENT_INIT if there was an error waiting for the
   state change, and AGENT_RUN_TASK otherwise.
 
 AGENT_RUN_TASK
@@ -163,11 +166,18 @@ AGENT_WAIT_FOR_STAGE_CHANGE
   - Runnable
   - BootEnv
   - Stage
+  - Context
 
   Once those conditions are met, follows the same rules as
   AGENT_WAIT_FOR_RUNNABLE.
 
-AGENT_CHANGE_STAGE
+AGENT_CHANGE_STAGE (DEPRECATED)
+
+  dr-provision no longer honors or generates change-stage/map
+  Params for the Machine as of 4.0.0, so this state is always processed
+  as if it always had an empty change-stage/map.  If you were reliant on
+  change-stage/map, use Workflows instead.
+
   Checks the change-stage/map to determine what
   (and how) to transition to the next Stage when AGENT_RUN_TASK does
   not get a Job to run from dr-provision.
@@ -208,21 +218,30 @@ AGENT_EXIT
   Exits the Agent.
 
 AGENT_REBOOT
-  Reboots the system.
+  Reboots the system if running in the empty ("") context, otherwise
+  exits the Agent.
 
 AGENT_POWEROFF
-  Cleanly shuts the system down.
+  Cleanly shuts the system down if running in the empty ("") context,
+  otherwise exits the Agent.
 
 .. _rs_workflow_reboot:
 
 Reboot! Using Agent State Changes in Scripts
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-These functions are implemented in the community content shared template accessed by adding `{{ template "setup.tmpl" }}` in your content. 
+These functions are implemented in the community content shared
+template accessed by adding `{{ template "setup.tmpl" }}` in your
+content.
 
-By adding this library, you can call the functions ```exit, exit_incomplete, exit_reboot, exit_shutdown, exit_stop, exit_incomplete_reboot, exit_incomplete_shutdown``` to access the agent states.
+By adding this library, you can call the functions ```exit,
+exit_incomplete, exit_reboot, exit_shutdown, exit_stop,
+exit_incomplete_reboot, exit_incomplete_shutdown``` to access the
+agent states.
 
-Script authors can also force behaviors using specialized ``exit`` code in their routines. While ``exit 0`` provides a regular clean exit, non-0 values provide enhanced functionality:
+Script authors can also force behaviors using specialized ``exit``
+code in their routines. While ``exit 0`` provides a regular clean
+exit, non-0 values provide enhanced functionality:
 
   * ``exit 16`` stops the script
   * ``exit 32`` triggers a shutdown
@@ -231,7 +250,8 @@ Script authors can also force behaviors using specialized ``exit`` code in their
   * ``exit 192`` means task is incomplete AND system should reboot
   * ``exit 160`` means task is incomplete AND system should shutdown.
 
-The codes are based on intpretation of bit position left as a trivial exercise to the reader until someone updates the documentation.
+The codes are based on intpretation of bit position left as a trivial
+exercise to the reader until someone updates the documentation.
 
 .. _rs_workflow_server:
 
@@ -275,7 +295,7 @@ what (if any) is the next Job that should be provided to the Machine
 Agent.  It encapsulates the following logic:
 
 #. dr-provision recieves an incoming POST on `/api/v3/jobs` that
-   contains a Job with just the Machine filled out.
+   contains a Job with the Machine and Context fields filled out.
 
    If the Machine does not exist, the endpoint returns an
    Unprocessable Entity HTTP status code.
@@ -285,9 +305,10 @@ Agent.  It encapsulates the following logic:
 
    If the Machine has no more runnable Tasks (as indicated by
    CurrentTask being greater than or equal to the length of the
-   Machine Tasks list), the endpoint returns a No Content status code,
-   indicating to the Machine Agent that there are no more tasks to
-   run.
+   Machine Tasks list), or the current Context on the Machine is not
+   equal to the Context of the new Job, the endpoint returns a No
+   Content status code, indicating to the Machine Agent that there are
+   no more tasks to run.
 
 #. dr-provision retrieves the CurrentJob for the Machine.  If the
    Machine does not have a CurrentJob, we create a fake one in the
@@ -302,11 +323,13 @@ Agent.  It encapsulates the following logic:
 
 #. If CurrentTask is set to -1, we update it to 0 and set `nextTask` to 0.
 
-#. If CurrentTask points to a `stage:` or a `bootenv:` entry in the
-   Tasks list, and the Machine is not already in the appropriate Stage
-   or BootEnv, we skip the next step. Otherwise we skip past these
-   entries in the Tasks list until we get to an entry that refers to a
-   Task and update CurrentTask and `nextTask` to point to that entry.
+#. If CurrentTask points to a `stage:`, `context:` or a `bootenv:` entry in the
+   Tasks list, we roll forward on the Tasks list until we get to an entry that
+   does not contain a `stage:`, `context:`, or `bootenv:` entry, gathering machine
+   changes as we go.  If the changes we gather result in any changes to the Machine
+   object, we generate a new Job encapsualting all the changes we gathered, set it
+   to the `finished` state, save the gathered machine changes and the job, and skip
+   to the final step in this list.
 
 #. Depending on the State of the CurrentJob, we take one of the following actions:
 
@@ -325,9 +348,7 @@ Agent.  It encapsulates the following logic:
      the current Task in the Tasks list.
 
 #. dr-provision creates a new Job for the Task in the Tasks list
-   pointed to by CurrentTask.  If CurrentTask points to a `stage:` or
-   a `bootenv:` task entry, the new Job is created in the `finished`
-   state, otherwise it is created in the `created` state. The Machine
+   pointed to by CurrentTask in the `created` state. The Machine
    CurrentJob is updated with the UUID of the new Job.  The new Job
    and the Machine are saved.
 
@@ -338,7 +359,7 @@ Agent.  It encapsulates the following logic:
    (optionally using the specified `plugin`).  If the plugin
    invocation succeeds, the results of the invocation are saved in the
    log, the Job is set to `finished`, and returned along with the
-   Created HTTP status coe.  If the plugin invocation fails for any
+   Created HTTP status code.  If the plugin invocation fails for any
    reason, the reason it failed is saved in the log along with any
    diagnostic output from the plugin, the job is set to `failed`, and
    nothing is returned along with the NoContent status code.
@@ -373,6 +394,10 @@ Changing a Workflow on the Machine has the following effects:
   processing a Workflow do not affect the Tasks list or the
   CurrentTask index.
 
+- The Context field on the Machine is set to the value of the BaseContext
+  Meta field on the Machine, or the empty string if that Meta field
+  does not exist on the Machine.
+
 .. _rs_workflow_removing:
 
 Removing a Workflow from a Machine
@@ -380,7 +405,10 @@ Removing a Workflow from a Machine
 
 To remove a workflow from a Machine, set the Workflow field to the
 empty string.  The Stage field on the Machine is set to `none`, the
-Tasks list is emptied, and the CurrentTask index is set back to -1.
+Tasks list is emptied, the CurrentTask index is set back to -1, and
+the Context field on the Machine is set to the value of the
+BaseContext Meta field on the Machine, or the empty string if that
+Meta field does not exist on the Machine.
 
 Changing the Stage on a Machine
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -398,10 +426,15 @@ the API and the Machine does not have a Workflow:
 
 - If the Machine has a different BootEnv now, it is marked as not Runnable.
 
+- The Context field on the Machine is set to the value of the BaseContext
+  Meta field on the Machine, or the empty string if that Meta field
+  does not exist on the Machine.
+
 Resetting the CurrentTask index to -1
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If the Machine does not have a Workflow, the CurrentTask index is
 simply set to -1.  Otherwise. it is set to the most recent entry that
 would not occur in a different BootEnv from the machine's current
-BootEnv.
+BootEnv.  In both cases, the Context field on the Machine is reset
+appropriately for the Task position.

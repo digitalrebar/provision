@@ -15,6 +15,7 @@ managing Machines in *dr-provision*. This includes:
 - Controlling what OS environment any given Machine will boot to over
   the network.
 - Managing the order in which Tasks will be run on Machines.
+- Managing the Context in which machine tasks will be run.
 - Making sure that any files that are needed to complete the
   provisioning process are available and valid.
 
@@ -87,7 +88,7 @@ template.  RenderData has the following fields:
     a unique file space for each machine by using it in a TemplateInfo
     Path field.
 
-  - **.Machine.Address** returns the IP address of the Machine as 
+  - **.Machine.Address** returns the IP address of the Machine as
     recorded in the Lease or Reservation.
 
   - **.Machine.HexAddress** returns the IP address of the Machine in hex
@@ -449,6 +450,118 @@ other by their ID (if referring to a Template object directly), or by
 the TemplateInfo Name (if the TemplateInfo object), in addition to all
 the Template objects by ID.
 
+.. _rs_data_context:
+
+Context
+-------
+
+Contexts allow dr-provision to encapsulate the idea that we can run
+Tasks for a Machine in several different places, of which the default
+is on the Machine itself.  Contexts have the following fields:
+
+- **Name**: The unique name of the Context.
+
+- **Engine**: The name of the Plugin that provides the functionality
+  needed to manage the execution environment that Tasks run in on
+  behalf of a given Machine in the Context.  An Engine could be a
+  Plugin that interfaces with Docker or Podman locally, Kubernetes,
+  Rancher, or AWS, or any number of other things.
+
+- **Image**: The name of the template that the Engine should use to create
+  execution environments for this Context when Tasks should run on behalf
+  of a Machine.  Images must contain all the tools needed to run the Tasks
+  that are designed to run in them, as well as a version of drpcli
+  with a context-aware `machines processjobs` command.
+
+Plugins that provide Engines
+============================
+
+By convention, a Plugin that provides support for using Contexts must support the
+following Actions:
+
+- **imageUpload**: This Action runs against the Plugin, and takes two arguments:
+
+  - **context/image-name** which is a string containing the name of
+    the Image being uploaded
+
+  - **context/image-path** which is a string containing the location
+    the image is being uploaded from.
+
+  This action must result in the artifact at context/image-path being
+  made available to create execution environments from using
+  context/image-name.
+
+  In general, context/image-path should either be a URL that points to
+  the location of the artifact, or a relative path indicating where
+  the artifact is located at on dr-provision's static file server.
+
+  By convention, images stored on the static file server should be
+  stored at `files/contexts/<plugin-name>/<image-name>`, with no extra
+  file extensions.  Doing so will allow the **agentStart** Action to
+  automatically load the Image on demand, otherwise the image must
+  have already been uploaded before executing the **agentStart**
+  action.
+
+- **imageExists**: This Action runs against the Plugin, and takes one
+  argument:
+
+  - **context/image-name**, which is the name of the image we testing
+    to see if it already exists.
+
+  This action returns `true` if the image exists, `false` if it does
+  not.
+
+- **imageRemove**: This Action runs against the Plugin, and takes one
+  argument:
+
+  - **context/image-name**, which is the name of the image to remove.
+
+  This action returns true if either the image was removed or the
+  image did not exist, false and an error otherwise.
+
+- **agentStart**: This Action runs against the Machine, and takes two
+  arguments:
+
+  - **context/image-name**, which is the name of the image to use
+
+  - **context/name**, which is the name of the Context that should be
+    used to run Tasks for the Machine the Action was invoked with.
+
+  This action should cause the Engine to start a new execution context
+  based on the Image, and arrange for `drpcli processjobs` to be
+  called with the following environment variables set:
+
+  - **RS__UUID**: the UUID of the Machine the Action was invoked with.
+
+  - **RS__TOKEN**: an auth token suitable for Machines running Tasks
+    against themselves.  Unless otherwise required by the jobs to be
+    run in the Context, this token should be the results of calling
+    `/api/v3/machines/<uuid>/token?ttl=3y` when the agentStart Action
+    is called.
+
+  - **RS__CONTEXT**: The name of the Context that the Agent should use
+    when listening for machine state changes and job creation
+    requests.
+
+  - **RS__ENDPOINTS**: A space-seperated list of all the endpoints
+    that the Agent should try to use when connecting to the
+    dr-provision endpoint.  The Agent will stop at the first one that it
+    successfully connects to.
+
+- **agentStop**: This Action runs against the Machine, and takes one
+  argument:
+
+  - **context/name**, which is the name of the Context used in the
+    corresponding agentStart action.
+
+  This action should tear down the execution context created by the
+  corresponding agentStart Action.
+
+Additionally, all plugins that provide support for Contexts must
+subscribe to the event stream that dr-provision emits.  They must
+watch for machine delete, create, update, and save events to set up
+and tear down execution environments as appropriate.
+
 .. _rs_data_bootenv:
 
 BootEnv
@@ -523,7 +636,7 @@ contains the following fields:
   this list must have the following fields:
 
   All bootenvs should include entries in their Templates list for the
-  `pxelinux`, `elilo`, and `ipxe` bootloaders.  If the OnlyUnknown
+  `pxelinux`, `grub`, and `ipxe` bootloaders.  If the OnlyUnknown
   flag is set, their Paths should expand to an appropriate location to
   be loaded as the fallback config file for each bootloader type,
   otherwise their Paths should expand to an approriate location to be
@@ -700,6 +813,19 @@ Machine objects have many fields used for different tasks:
   Note that the Stage field is read-only when the Workflow field is
   non-empty.
 
+- **Context**: The name of the Context that tasks for the machine
+  should execute in.  When this field is the empty string (""), then
+  the agent running on the machine itself is the one that should be
+  running tasks.  The Context field on a Machine can be set either via
+  a machine PATCH or PUT, or as a side effect of processing an entry
+  in the Tasks list in the format of 'context:new-context'.
+
+  When the Tasks list on a machine is replaced as a side effect of a
+  Workflow or Stage change, the Context field of the Machine will be
+  reset to the value of the BaseContext Meta field on the Machine, or
+  to the empty ("") string if that Meta field is not present on the
+  Machine.
+
 .. _rs_data_job:
 
 Job
@@ -725,6 +851,8 @@ fields:
 - **Stage**: The name of the Stage that the job was created in.
 
 - **BootEnv**: The name of the BootEnv that the job was created in.
+
+- **Context**: The name of the Context the Job was created for.
 
 - **State**: The state of the Job.  State must be one of the following:
 
