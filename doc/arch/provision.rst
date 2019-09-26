@@ -502,6 +502,21 @@ following Actions:
   have already been uploaded before executing the **agentStart**
   action.
 
+  Examples:
+
+  `drpcli plugins runaction docker-context imageUpload
+  context/image-name foo:latest context/image-path
+  https://your.image.repo/path/to/foo:latest` will have the
+  `docker-context` plugin load the image `foo:latest` from the
+  upstreeam repo.
+
+  `drpcli plugins runaction docker-context imageUpload
+  context/image-name foo:latest context/image-path
+  files/contexts/docker-context/foo:latest` will have the
+  `docker-context` plugin load the image `foo:latest` from
+  dr-provision's static file server at
+  `files/contexts/docker-context/foo:latest`
+
 - **imageExists**: This Action runs against the Plugin, and takes one
   argument:
 
@@ -511,6 +526,12 @@ following Actions:
   This action returns `true` if the image exists, `false` if it does
   not.
 
+  Example:
+
+  `drpcli plugins runaction docker-context imageExists
+  context/image-name foo:latest` will return `true` if `foo:latest` is
+  present, and `false` if it is not.
+
 - **imageRemove**: This Action runs against the Plugin, and takes one
   argument:
 
@@ -518,6 +539,12 @@ following Actions:
 
   This action returns true if either the image was removed or the
   image did not exist, false and an error otherwise.
+
+  Example:
+
+  `drpcli plugins runaction docker-context imageRemove
+  context/image-name foo:latest` will have `docker-context` remove the
+  image `foo:latest` if it exists.
 
 - **agentStart**: This Action runs against the Machine, and takes two
   arguments:
@@ -527,9 +554,9 @@ following Actions:
   - **context/name**, which is the name of the Context that should be
     used to run Tasks for the Machine the Action was invoked with.
 
-  This action should cause the Engine to start a new execution context
-  based on the Image, and arrange for `drpcli processjobs` to be
-  called with the following environment variables set:
+  This action causes the Engine to start a new execution context based
+  on the Image, and arrange for `drpcli processjobs` to be called with
+  the following environment variables set:
 
   - **RS_UUID**: the UUID of the Machine the Action was invoked with.
 
@@ -548,14 +575,33 @@ following Actions:
     dr-provision endpoint.  The Agent will stop at the first one that it
     successfully connects to.
 
+  In general, you should only need to invoke this action manually when
+  testing new images or testing a new plugin.  In the normal course of
+  operation, plugins handle starting and stopping agents automatically
+  based on changes on machine Context fields.
+
+  Example:
+
+  `drpcli machines runaction Name:test agentStart context/image-name
+  foo:latest context/name foo` will start an agent for the machine
+  running in the `foo` context on the `foo:latest` image.
+
 - **agentStop**: This Action runs against the Machine, and takes one
   argument:
 
   - **context/name**, which is the name of the Context used in the
     corresponding agentStart action.
 
-  This action should tear down the execution context created by the
-  corresponding agentStart Action.
+  This action tears down the execution context created by the
+  corresponding agentStart Action.  In general, you should only need
+  to invoke this action manually in the course of testing a new
+  plugin, plugins handle stopping agents automatically based on
+  Machine Context field state changes.
+
+  Example:
+
+  `drpcli machines runaction Name:test agentStop context/name foo`
+  will stop the agent running in the `foo` context for the machine.
 
 Additionally, all plugins that provide support for Contexts must
 subscribe to the event stream that dr-provision emits.  They must
