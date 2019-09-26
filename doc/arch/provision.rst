@@ -531,19 +531,19 @@ following Actions:
   based on the Image, and arrange for `drpcli processjobs` to be
   called with the following environment variables set:
 
-  - **RS__UUID**: the UUID of the Machine the Action was invoked with.
+  - **RS_UUID**: the UUID of the Machine the Action was invoked with.
 
-  - **RS__TOKEN**: an auth token suitable for Machines running Tasks
+  - **RS_TOKEN**: an auth token suitable for Machines running Tasks
     against themselves.  Unless otherwise required by the jobs to be
     run in the Context, this token should be the results of calling
     `/api/v3/machines/<uuid>/token?ttl=3y` when the agentStart Action
     is called.
 
-  - **RS__CONTEXT**: The name of the Context that the Agent should use
+  - **RS_CONTEXT**: The name of the Context that the Agent should use
     when listening for machine state changes and job creation
     requests.
 
-  - **RS__ENDPOINTS**: A space-seperated list of all the endpoints
+  - **RS_ENDPOINTS**: A space-seperated list of all the endpoints
     that the Agent should try to use when connecting to the
     dr-provision endpoint.  The Agent will stop at the first one that it
     successfully connects to.
