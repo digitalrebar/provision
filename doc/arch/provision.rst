@@ -700,6 +700,13 @@ Machine objects have many fields used for different tasks:
   Note that the Stage field is read-only when the Workflow field is
   non-empty.
 
+- **Context**: The name of the Context that tasks for the machine
+  should execute in.  When this field is the empty string (""), then
+  the agent running on the machine itself is the one that should be
+  running tasks.  The Context field on a Machine can be set either via
+  a machine PATCH or PUT, or as a side effect of processing an entry
+  in the Tasks list in the format of 'context:new-context'.
+
 .. _rs_data_job:
 
 Job
