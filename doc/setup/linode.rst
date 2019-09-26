@@ -32,30 +32,27 @@ You can use the Amazon Linux AMI.  While more is recommended, make sure that you
   ::
 
     #!/bin/bash
-
+    # <UDF name="drp_version" Label="Version to Install" default="stable" example="tip, stable, v3.13, ..." />
+    # <UDF name="drp_password" Label="Admin Password" default="r0cketsk8ts" example="password" />
+    
     ### Install DRP from Tip
-    curl -fsSL get.rebar.digital/tip | bash -s -- install --systemd --version=stable --drp-password=r0cketsk8ts
-
+    curl -fsSL get.rebar.digital/tip | bash -s -- install --systemd --version=$DRP_VERSION --drp-password=$DRP_PASSWORD
+    
     ### Now open the right firewall ports for DRP
     firewall-cmd --permanent --add-port=8092/tcp
     firewall-cmd --permanent --add-port=8091/tcp
     firewall-cmd --reload
-
+    
     ### Install Content and Configure Discovery
-    drpcli contents upload catalog:task-library-stable
-    drpcli contents upload catalog:drp-community-content-stable
+    drpcli catalog item install task-library --version=$DRP_VERSION
+    drpcli catalog item install drp-community-content --version=$DRP_VERSION
     drpcli workflows create '{"Name": "discover-linode", "Stages":
-      ["discover", "runner-service", "complete"]
+      ["discover", "network-firewalld", "runner-service", "complete"]
     }'
+    drpcli profiles set global param "network/firewalld-ports" to '[
+      "22/tcp", "6443/tcp", "8379/tcp",  "8380/tcp", "10250/tcp"
+    ]'
     drpcli prefs set defaultWorkflow discover-linode unknownBootEnv discovery
-
-    ### Capture Node Info 
-    drpcli profiles create '{"Name":"linode"}'
-    drpcli profiles set linode param cloud/provider to "LINODE"
-    drpcli machines set linode param cloud/instance-id to "\"${LINODE_ID}\""
-    drpcli profiles set linode param cloud/username to "${LINODE_LISHUSERNAME}"
-    drpcli profiles set linode param cloud/instance-type to "\"${LINODE_RAM}\""
-    drpcli profiles set linode param cloud/placement/availability-zone to "\"${LINODE_DATACENTERID}\""
 
 Once the system is online, you can access DRP using https://[DRP public address]:8092.
 
@@ -68,4 +65,16 @@ Once you have a DRP endpoint installed in Linode
   ::
 
     #!/bin/bash
+    # <UDF name="drp_ip" Label="IP Address of the DRP Endpoint" default="" example="192.168.1.100" />
+    # <UDF name="drp_port" Label="Provisioning Port of the DRP Endpoint (not API port)" default="8091" example="8091" />
+    # <UDF name="open_ports" Label="Ports to open on the machine" default="22 2379 2380 6443 10250" example="22 6443 10250" />
+
+    for PORT in ${OPEN_PORTS}; do
+       firewall-cmd --permanent --add-port=${PORT}/tcp
+    done 
+    firewall-cmd --reload    
+
+    timeout 300 bash -c 'while [[ "$(curl -fsSL -o /dev/null -w %{http_code} ${DRP_IP}:${DRP_PORT}/machines/join-up.sh)" != "200" ]]; do sleep 5; done' || false
+    
     curl -fsSL ${DRP_IP}:${DRP_PORT}/machines/join-up.sh | sudo bash --
+    

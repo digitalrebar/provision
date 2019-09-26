@@ -60,7 +60,10 @@ Once you have a DRP endpoint installed in AWS
   ::
 
     #!/bin/bash
-    curl -fsSL [DRP Address]:8091/machines/join-up.sh | sudo bash --
+    export drp=[DRP ADDRESS]
+    timeout 300 bash -c 'while [[ "$(curl -fsSL -o /dev/null -w %{http_code} $drp:8091/machines/join-up.sh)" != "200" ]]; do sleep 5; done' || false
+
+    curl -fsSL $drp:8091/machines/join-up.sh | sudo bash --
 
 
 The machines started using this process will register with their internal IP address.  By including the `aws-discover` stage, the machines will log their external IP address to the `cloud/public-ipv4` parameter.
