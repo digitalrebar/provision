@@ -136,8 +136,14 @@ func (s *Subnet) SetMeta(d Meta) {
 	s.Meta = d
 }
 
+// GetDocumentaiton returns the object's Documentation
 func (s *Subnet) GetDocumentation() string {
 	return s.Documentation
+}
+
+// GetDescription returns the object's Description
+func (s *Subnet) GetDescription() string {
+	return s.Description
 }
 
 func (s *Subnet) Validate() {

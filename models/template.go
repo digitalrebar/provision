@@ -47,6 +47,11 @@ func (t *Template) KeyName() string {
 	return "ID"
 }
 
+// GetDescription returns the object's Description
+func (t *Template) GetDescription() string {
+	return t.Description
+}
+
 func (t *Template) Fill() {
 	t.Validation.fill()
 	if t.Meta == nil {

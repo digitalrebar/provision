@@ -210,6 +210,12 @@ type Docer interface {
 	GetDocumentation() string
 }
 
+// Descer interface defines if the object has a description field
+type Descer interface {
+	Model
+	GetDescription() string
+}
+
 // Actor interface should be implemented this if you want actions
 type Actor interface {
 	Model

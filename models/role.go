@@ -313,8 +313,14 @@ func (r *Role) SetMeta(d Meta) {
 	r.Meta = d
 }
 
+// GetDocumentaiton returns the object's Documentation
 func (r *Role) GetDocumentation() string {
 	return r.Documentation
+}
+
+// GetDescription returns the object's Description
+func (r *Role) GetDescription() string {
+	return r.Description
 }
 
 func (r *Role) Fill() {
