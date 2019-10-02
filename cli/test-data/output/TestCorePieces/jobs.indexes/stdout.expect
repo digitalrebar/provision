@@ -41,6 +41,12 @@
     "Unique": false,
     "Unordered": false
   },
+  "Endpoint": {
+    "Regex": true,
+    "Type": "string",
+    "Unique": false,
+    "Unordered": false
+  },
   "Key": {
     "Regex": true,
     "Type": "string",

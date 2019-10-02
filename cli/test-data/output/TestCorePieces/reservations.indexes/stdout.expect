@@ -17,6 +17,24 @@
     "Unique": false,
     "Unordered": false
   },
+  "Description": {
+    "Regex": true,
+    "Type": "string",
+    "Unique": false,
+    "Unordered": false
+  },
+  "Documentation": {
+    "Regex": true,
+    "Type": "string",
+    "Unique": false,
+    "Unordered": false
+  },
+  "Endpoint": {
+    "Regex": true,
+    "Type": "string",
+    "Unique": false,
+    "Unordered": false
+  },
   "Key": {
     "Regex": true,
     "Type": "string",
