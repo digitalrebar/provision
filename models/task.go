@@ -69,8 +69,14 @@ func (t *Task) SetMeta(d Meta) {
 	t.Meta = d
 }
 
+// GetDocumentaiton returns the object's Documentation
 func (t *Task) GetDocumentation() string {
 	return t.Documentation
+}
+
+// GetDescription returns the object's Description
+func (t *Task) GetDescription() string {
+	return t.Description
 }
 
 func (t *Task) Validate() {

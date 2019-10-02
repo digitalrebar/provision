@@ -24,8 +24,14 @@ func (w *Workflow) SetMeta(d Meta) {
 	w.Meta = d
 }
 
+// GetDocumentaiton returns the object's Documentation
 func (w *Workflow) GetDocumentation() string {
 	return w.Documentation
+}
+
+// GetDescription returns the object's Description
+func (w *Workflow) GetDescription() string {
+	return w.Description
 }
 
 func (w *Workflow) Prefix() string {

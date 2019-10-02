@@ -71,6 +71,16 @@ func (p *Profile) KeyName() string {
 	return "Name"
 }
 
+// GetDocumentation returns the object's documentation
+func (p *Profile) GetDocumentation() string {
+	return p.Documentation
+}
+
+// GetDescription returns the object's description
+func (p *Profile) GetDescription() string {
+	return p.Description
+}
+
 // Fill initializes the object
 func (p *Profile) Fill() {
 	p.Validation.fill()

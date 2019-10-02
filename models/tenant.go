@@ -38,8 +38,14 @@ func (t *Tenant) SetMeta(d Meta) {
 	t.Meta = d
 }
 
+// GetDocumentaiton returns the object's Documentation
 func (t *Tenant) GetDocumentation() string {
 	return t.Documentation
+}
+
+// GetDescription returns the object's Description
+func (t *Tenant) GetDescription() string {
+	return t.Description
 }
 
 func (t *Tenant) Validate() {

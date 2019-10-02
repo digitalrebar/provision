@@ -75,9 +75,14 @@ func (s *Stage) SetMeta(d Meta) {
 	s.Meta = d
 }
 
-// GetDocumentation returns the documentation on this object.
+// GetDocumentaiton returns the object's Documentation
 func (s *Stage) GetDocumentation() string {
 	return s.Documentation
+}
+
+// GetDescription returns the object's Description
+func (s *Stage) GetDescription() string {
+	return s.Description
 }
 
 // Validate makes sure that the object is valid (outside of references)

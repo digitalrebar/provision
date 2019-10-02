@@ -254,6 +254,10 @@ func (b *BootEnv) GetDocumentation() string {
 	return b.Documentation
 }
 
+func (b *BootEnv) GetDescription() string {
+	return b.Description
+}
+
 // IsoFor is a helper function used by the backend to locate the ISO
 // file that should be expanded to provide the install tree required
 // for the bootenv to function.

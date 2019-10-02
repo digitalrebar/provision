@@ -282,6 +282,14 @@ func (c *Content) AuthKey() string {
 	return c.Key()
 }
 
+func (c *Content) GetDocumentation() string {
+	return c.Meta.Documentation
+}
+
+func (c *Content) GetDescription() string {
+	return c.Meta.Description
+}
+
 // swagger:model
 type ContentSummary struct {
 	Meta     ContentMetaData `json:"meta"`

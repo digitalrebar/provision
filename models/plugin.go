@@ -46,6 +46,10 @@ func (p *Plugin) GetDocumentation() string {
 	return p.Documentation
 }
 
+func (p *Plugin) GetDescription() string {
+	return p.Description
+}
+
 func (p *Plugin) Validate() {
 	p.AddError(ValidName("Invalid Name", p.Name))
 	p.AddError(ValidName("Invalid Provider", p.Provider))

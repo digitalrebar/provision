@@ -55,6 +55,11 @@ func (u *User) KeyName() string {
 	return "Name"
 }
 
+// GetDescription returns the object's Description
+func (u *User) GetDescription() string {
+	return u.Description
+}
+
 func (u *User) Fill() {
 	u.Validation.fill()
 	if u.Meta == nil {

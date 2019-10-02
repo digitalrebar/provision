@@ -64,8 +64,14 @@ func (r *Reservation) SetMeta(d Meta) {
 	r.Meta = d
 }
 
+// GetDocumentation returns the object's documentation
 func (r *Reservation) GetDocumentation() string {
 	return r.Documentation
+}
+
+// GetDescription returns the object's description
+func (r *Reservation) GetDescription() string {
+	return r.Description
 }
 
 func (r *Reservation) Prefix() string {
