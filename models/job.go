@@ -128,6 +128,14 @@ type Job struct {
 	// The bootenv that the task was created in.
 	// read only: true
 	BootEnv string
+	// ExtraClaims is the expanded list of extra Claims that were added to the
+	// default machine Claims via the ExtraRoles field on the Task that the Job
+	// was created to run.
+	ExtraClaims []*Claim `json:"ExtraClaims,omitempty"`
+	// Token is the JWT token that should be used when running this Job.  If not
+	// present or empty, the Agent running the Job will use its ambient Token
+	// instead.  If set, the Token will only be valid for the current Job.
+	Token string `json:"Token, omitempty"`
 }
 
 func (j *Job) GetMeta() Meta {

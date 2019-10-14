@@ -31,6 +31,16 @@ func jobActions(c *api.Client, j *models.Job, targetOS string) (models.JobAction
 	return res, req.Do(&res)
 }
 
+type jcl []*models.Claim
+
+func (j jcl) String() string {
+	res := make([]string, 0, len(j))
+	for _, k := range j {
+		res = append(res, `"`+k.String()+`"`)
+	}
+	return fmt.Sprintf("[%s]", strings.Join(res, `, `))
+}
+
 // runner is responsible for expanding templates and running
 // scripts for a single task.
 type runner struct {
@@ -54,6 +64,8 @@ type runner struct {
 	cmdMux                      *sync.Mutex
 	agentDir, jobDir, chrootDir string
 	logger                      io.Writer
+	token                       string
+	extraPerms                  jcl
 }
 
 // newRunner creates a new TaskRunner for the passed-in machine.
@@ -82,6 +94,8 @@ func newRunner(a *Agent, m *models.Machine, agentDir, chrootDir string, logger i
 		// Nothing to do.  Not an error
 		return nil, nil
 	}
+	res.token = job.Token
+	res.extraPerms = job.ExtraClaims
 	res.j = job
 	if strings.HasPrefix(job.Task, "chroot:") {
 		res.jobDir = strings.TrimPrefix(job.Task, "chroot:")
@@ -182,9 +196,13 @@ func (r *runner) perform(action *models.JobAction, taskDir string) error {
 		"RS_RUNNER_DIR="+r.agentDir,
 		"RS_TASK_DIR="+taskDir,
 		"RS_UUID="+r.m.Key(),
-		"RS_ENDPOINT"+r.c.Endpoint(),
-		"RS_TOKEN"+r.c.Token(),
+		"RS_ENDPOINT="+r.c.Endpoint(),
 	)
+	if r.token != "" {
+		r.cmd.Env = append(r.cmd.Env, "RS_TOKEN="+r.token)
+	} else {
+		r.cmd.Env = append(r.cmd.Env, "RS_TOKEN="+r.c.Token())
+	}
 	r.cmd.Stdout = r.in
 	r.cmd.Stderr = r.in
 	if err := r.enterChroot(r.cmd); err != nil {
@@ -371,6 +389,9 @@ func (r *runner) run() error {
 	}
 	r.j = obj.(*models.Job)
 	r.log("Starting task %s:%s:%s on %s", r.j.Workflow, r.j.Stage, r.j.Task, r.m.Name)
+	if r.token != "" {
+		r.log("Job %s is running with elevated permissions %s\n", r.j.Key(), r.extraPerms)
+	}
 	// At this point, we are running.
 	var actions models.JobActions
 	if allActions, err := jobActions(r.c, r.j, runtime.GOOS); err != nil {

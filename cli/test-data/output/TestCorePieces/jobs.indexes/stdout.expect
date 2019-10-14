@@ -35,6 +35,12 @@
     "Unique": false,
     "Unordered": false
   },
+  "Elevated": {
+    "Regex": false,
+    "Type": "boolean",
+    "Unique": false,
+    "Unordered": true
+  },
   "EndTime": {
     "Regex": false,
     "Type": "dateTime",

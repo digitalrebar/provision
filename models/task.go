@@ -39,6 +39,13 @@ type Task struct {
 	// Prerequisites are tasks that must have been run in the current
 	// BootEnv before this task can be run.
 	Prerequisites []string
+	// ExtraRoles is a list of Roles whose Claims should be added to the default
+	// set of allowable Claims when a Job based on this task is running.
+	ExtraRoles []string `json:"ExtraRoles,omitempty"`
+	// ExtraClaims is a raw list of Claims that should be added to the default
+	// set of allowable Claims when a Job based on this task is running.
+	// Any extra claims added here will be added _after_ any added by ExtraRoles
+	ExtraClaims []*Claim `json:"ExtraClaims,omitempty"`
 }
 
 var (
@@ -160,6 +167,12 @@ func (t *Task) Fill() {
 	}
 	if t.Prerequisites == nil {
 		t.Prerequisites = []string{}
+	}
+	if t.ExtraRoles == nil {
+		t.ExtraRoles = []string{}
+	}
+	if t.ExtraClaims == nil {
+		t.ExtraClaims = []*Claim{}
 	}
 }
 
