@@ -40,7 +40,7 @@ Options:
     --drp-id=<string>       # String to use as the DRP Identifier (only with --systemd)
     --ha-id=<string>        # String to use as the HA Identifier (only with --systemd)
     --drp-user=<string>     # DRP user to create after system start (only with --systemd)
-    --drp-password=<string> # DRP user passowrd to set after system start (only with --systemd)
+    --drp-password=<string> # DRP user password to set after system start (only with --systemd)
     --remove-rocketskates   # Remove the rocketskates user after system start (only with --systemd)
     --local-ui              # Set up DRP to server a local UI
     --system-user           # System user account to create for DRP to run as
@@ -653,7 +653,7 @@ case $MODE in
                      fi
                      $tar -xf dr-provision.zip
                  fi
-                 $shasum -c sha256sums || exit_clenaup 1
+                 $shasum -c sha256sums || exit_cleanup 1
              fi
 
              if [[ $NO_CONTENT == false ]]; then
