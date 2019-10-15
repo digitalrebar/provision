@@ -8,28 +8,28 @@
 Digital Rebar Provision
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-*simple, fast and open API-driven server provisioning.*
+*simple, fast and open-ecosystem server provisioning that is API-driven.*
 
-`Digital Rebar Provision (DRP) <https://rebar.digital>`_ is a `APLv2 <https://raw.githubusercontent.com/digitalrebar/provision/v4/LICENSE>`_ simple Golang executable that provides a simple yet complete API-driven DHCP/PXE/TFTP provisioning and workflow system.
+`Digital Rebar Platform (DRP) <https://rebar.digital>`_ is a `APLv2 <https://raw.githubusercontent.com/digitalrebar/provision/v4/LICENSE>`_ simple Golang executable that provides a simple yet complete API-driven DHCP/PXE/TFTP provisioning and workflow system.
 
 DRP is designed to be a complete data center provisioning, content scaffolding and infrastructure workflow platform with a cloud native architecture that completely replaces Cobbler, Foreman, MaaS or similar technologies. DRP offers a single golang binary (less than 30MB) with no dependencies capable of installation on a laptop, RPi or switch supporting both bare metal and virtualized infrastructure.
 
 Key Features:
 
-  Open Core Capabilities:
+  Platform Capabilities:
     * API-driven infrastructure-as-code automation
     * Multi-boot workflows using composable and reusable building blocks
     * Event driven actions via Websockets API
     * Extensible Plug-in Model for public, vendor and internal enhancements
+    * Dynamic Workflow Contexts (allows using APIs when agents cannot be run)
+    * Distributed Multi-Site Management
     * Supports ALL orchestration tools including Chef, Puppet, Ansible, SaltStack, Bosh, Terraform, etc
 
-  Via Commercial Plugins:
+  Open Ecosystem Plugins:
     * RAID, IPMI, and BIOS Configuration (via commercial plugins)
     * Cloud-like pooling capabilities
     * Classification engine for automated workflow
     * High Availability modes (via commercial plugin)
-    * Multi-site federated management architecture (via commercial plugin)
-    * more ...
 
 .. figure::  doc/images/dr_provision.png
    :align:   right
