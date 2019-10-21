@@ -6,7 +6,10 @@ DEFAULT_DRP_VERSION=${DEFAULT_DRP_VERSION:-"stable"}
 
 exit_cleanup() {
   rm -rf $(pwd)/jq-linux64
-  exit $1
+  local _x=$1
+  shift
+  [[ -n "$*" ]] && echo "EXIT MESSAGE: $*"
+  exit $_x
 }
 
 usage() {
@@ -49,25 +52,36 @@ Options:
                             # for the system-user. This path is where most important drp files live
                             # including the tftp root
     --bin-dir               # Use this as the local of the binaries.  Required for non-root upgrades
+    --container             # Force to install as a container, not zipfile
+    --container-type=<string>
+                            # Container install type, defaults to "$CNT_TYPE"
+    --container-name=<string>
+                            # Set the "docker run" container name, defaults to "$CNT_NAME"
+    --container-volume=<string>
+                            # Volume name to use for backing persistent storage, default "$CNT_VOL"
+    --container-registry="drp.example.com:5000"
+                            # Alternate registry to get container images from, default "$CNT_REGISTRY"
                             #
     install                 # Sets up an isolated or system 'production' enabled install.
     upgrade                 # Sets the installer to upgrade an existing 'dr-provision'
     remove                  # Removes the system enabled install.  Requires no other flags
 
 Defaults are:
-    option:               value:           option:               value:
-    -------------------   ------------     ------------------    ------------
-    remove-rocketskates = false            version (*)         = $DEFAULT_DRP_VERSION
-    isolated            = false            nocontent           = false
-    upgrade             = false            force               = false
-    debug               = false            skip-run-check      = false
-    skip-prereqs        = false            systemd             = false
-    drp-id              = unset            ha-id               = unset
-    drp-user            = rocketskates     drp-password        = r0cketsk8ts
-    startup             = false            keep-installer      = false
-    local-ui            = false            system-user         = root
-    system-group        = root             drp-home-dir        = /var/lib/dr-provision
-    bin-dir             = /usr/local/bin
+    |  option:               value:           |  option:               value:
+    |  -------------------   ------------     |  ------------------    ------------
+    |  remove-rocketskates = false            |  version (*)         = $DEFAULT_DRP_VERSION
+    |  isolated            = false            |  nocontent           = false
+    |  upgrade             = false            |  force               = false
+    |  debug               = false            |  skip-run-check      = false
+    |  skip-prereqs        = false            |  systemd             = false
+    |  drp-id              = unset            |  ha-id               = unset
+    |  drp-user            = rocketskates     |  drp-password        = r0cketsk8ts
+    |  startup             = false            |  keep-installer      = false
+    |  local-ui            = false            |  system-user         = root
+    |  system-group        = root             |  drp-home-dir        = /var/lib/dr-provision
+    |  bin-dir             = /usr/local/bin   |  container           = false
+    |  container-volume    = $CNT_VOL         |  container-registry  = $CNT_REGISTRY
+    |  container-type      = $CNT_TYPE        |  container-name      = $CNT_NAME
 
     * version examples: 'tip', 'v3.13.6' or 'stable'
 
@@ -76,12 +90,10 @@ Prerequisites:
           manually install these first on a Mac OS X system. Package names may vary
           depending on your operating system version/distro packaging naming scheme.
 
-    REQUIRED: 7zip, curl, jq, bsdtar
+    REQUIRED: curl, jq, bsdtar
     OPTIONAL: aria2c (if using experimental "fast downloader")
 EOFUSAGE
-
-exit_cleanup 0
-}
+} # end usage()
 
 # control flags
 ISOLATED=false
@@ -97,15 +109,21 @@ STARTUP=false
 REMOVE_RS=false
 LOCAL_UI=false
 KEEP_INSTALLER=false
-BIN_DIR=/usr/local/bin
-DRP_HOME_DIR=/var/lib/dr-provision
-
-_sudo="sudo"
+CONTAINER=false
 
 # download URL locations; overridable via ENV variables
 URL_BASE=${URL_BASE:-"https://rebar-catalog.s3-us-west-2.amazonaws.com"}
 URL_BASE_CONTENT=${URL_BASE_CONTENT:-"$URL_BASE/drp-community-content"}
 DRP_CATALOG=${DRP_CATALOG:-"$URL_BASE/rackn-catalog.json"}
+
+# set some builtin default values
+_sudo="sudo"
+BIN_DIR=/usr/local/bin
+DRP_HOME_DIR=/var/lib/dr-provision
+CNT_TYPE=docker
+CNT_NAME=drp
+CNT_VOL=drp-data
+CNT_REGISTRY=index.docker.io
 SYSTEM_USER=root
 SYSTEM_GROUP=root
 
@@ -115,87 +133,38 @@ while (( $# > 0 )); do
     arg_key="${arg%%=*}"
     arg_data="${arg#*=}"
     case $arg_key in
-        --help|-h)
-            usage
-            exit_cleanup 0
-            ;;
-        --debug)
-            DBG=true
-            ;;
-        --version|--drp-version)
-            DRP_VERSION=${arg_data}
-            ;;
+        --help|-h)                  usage; exit_cleanup 0      ;;
+        --debug)                    DBG=true                   ;;
+        --version|--drp-version)    DRP_VERSION=${arg_data}    ;;
+        --isolated)                 ISOLATED=true              ;;
+        --skip-run-check)           SKIP_RUN_CHECK=true        ;;
+        --skip-dep*|--skip-prereq*) SKIP_DEPENDS=true          ;;
+        --fast-downloader)          FAST_DOWNLOADER=true       ;;
+        --force)                    force=true                 ;;
+        --remove-data)              REMOVE_DATA=true           ;;
+        --upgrade)                  UPGRADE=true; force=true   ;;
+        --nocontent|--no-content)   NO_CONTENT=true            ;;
+        --no-sudo)                  _sudo=""                   ;;
+        --keep-installer)           KEEP_INSTALLER=true        ;;
+        --startup)                  STARTUP=true; SYSTEMD=true ;;
+        --systemd)                  SYSTEMD=true               ;;
+        --local-ui)                 LOCAL_UI=true              ;;
+        --remove-rocketskates)      REMOVE_RS=true             ;;
+        --drp-user)                 DRP_USER=${arg_data}       ;;
+        --drp-password)             DRP_PASSWORD="${arg_data}" ;;
+        --drp-id)                   DRP_ID="${arg_data}"       ;;
+        --ha-id)                    HA_ID="${arg_data}"        ;;
+        --system-user)              SYSTEM_USER="${arg_data}"  ;;
+        --system-group)             SYSTEM_GROUP="${arg_data}" ;;
+        --drp-home-dir)             DRP_HOME_DIR="${arg_data}" ;;
+        --container)                CONTAINER=true             ;;
+        --container-type)           CNT_TYPE="${arg_data}"     ;;
+        --container-name)           CNT_NAME="${arg_data}"     ;;
+        --container-volume)         CNT_VOL="${arg_data}"      ;;
+        --container-registry)       CNT_REGISTRY="${arg_data}" ;;
         --zip-file)
             ZF=${arg_data}
             ZIP_FILE=$(echo "$(cd $(dirname $ZF) && pwd)/$(basename $ZF)")
-            ;;
-        --isolated)
-            ISOLATED=true
-            ;;
-        --skip-run-check)
-            SKIP_RUN_CHECK=true
-            ;;
-        --skip-dep*|--skip-prereq*)
-            SKIP_DEPENDS=true
-            ;;
-        --fast-downloader)
-            FAST_DOWNLOADER=true
-            ;;
-        --force)
-            force=true
-            ;;
-        --remove-data)
-            REMOVE_DATA=true
-            ;;
-        --commit)
-            # UNUSED NOW
-            ;;
-        --upgrade)
-            UPGRADE=true
-            force=true
-            ;;
-        --nocontent|--no-content)
-            NO_CONTENT=true
-            ;;
-        --no-sudo)
-            _sudo=""
-            ;;
-        --keep-installer)
-            KEEP_INSTALLER=true
-            ;;
-        --startup)
-            STARTUP=true
-            SYSTEMD=true
-            ;;
-        --systemd)
-            SYSTEMD=true
-            ;;
-        --local-ui)
-            LOCAL_UI=true
-            ;;
-        --remove-rocketskates)
-            REMOVE_RS=true
-            ;;
-        --drp-user)
-            DRP_USER=${arg_data}
-            ;;
-        --drp-password)
-            DRP_PASSWORD="${arg_data}"
-            ;;
-        --drp-id)
-            DRP_ID="${arg_data}"
-            ;;
-        --ha-id)
-            HA_ID="${arg_data}"
-            ;;
-        --system-user)
-            SYSTEM_USER="${arg_data}"
-            ;;
-        --system-group)
-            SYSTEM_GROUP="${arg_data}"
-            ;;
-        --drp-home-dir)
-            DRP_HOME_DIR="${arg_data}"
             ;;
         --*)
             arg_key="${arg_key#--}"
@@ -228,16 +197,13 @@ fi
 
 [[ $DBG == true ]] && set -x
 
-
 if [[ $EUID -eq 0 ]]; then
    _sudo=""
 fi
 
 if [[ -x "$(command -v sudo)" && $_sudo != "" ]]; then
-  echo "Script is not running as root and sudo command is not found. Please be root"
-  exit_cleanup 1
+  exit_cleanup 1 "FATAL: Script is not running as root and sudo command is not found. Please be root"
 fi
-
 
 # Figure out what Linux distro we are running on.
 export OS_TYPE= OS_VER= OS_NAME= OS_FAMILY=
@@ -259,8 +225,7 @@ elif [[ -f /etc/centos-release || -f /etc/fedora-release || -f /etc/redhat-relea
     done
 
     if [[ ! $OS_TYPE ]]; then
-        echo "Cannot determine Linux version we are running on!"
-        exit_cleanup 1
+        exit_cleanup 1 "FATAL: Cannot determine Linux version we are running on!"
     fi
 elif [[ -f /etc/debian_version ]]; then
     OS_TYPE=debian
@@ -272,9 +237,10 @@ fi
 OS_NAME="$OS_TYPE-$OS_VER"
 
 case $OS_TYPE in
-    centos|redhat|fedora) OS_FAMILY="rhel";;
-    debian|ubuntu) OS_FAMILY="debian";;
-    *) OS_FAMILY=$OS_TYPE;;
+    centos|redhat|fedora) OS_FAMILY="rhel"      ;;
+    debian|ubuntu)        OS_FAMILY="debian"    ;;
+    coreos)               OS_FAMILY="container" ;;
+    *)                    OS_FAMILY="$OS_TYPE"  ;;
 esac
 
 # Wait until DRP is ready, or exit
@@ -286,8 +252,7 @@ check_drp_ready() {
         # Pre-increment for compatibility with Bash 4.1+
         ((++COUNT))
         if (( $COUNT > 10 )) ; then
-            echo "DRP Failed to start"
-            exit_cleanup 1
+            exit_cleanup 1 "FATAL: DRP Failed to start"
         fi
     done
 }
@@ -308,24 +273,19 @@ install_epel() {
 # set our downloader GET variable appropriately - supports standard
 # (curl) downloader or (experimental) aria2c fast downloader
 get() {
-    if [[ -z "$*" ]]; then
-        echo "Internal error, get() expects files to get"
-        exit_cleanup 1
-    fi
+    [[ -z "$*" ]] && exit_cleanup 1 "FATAL: Internal error, get() expects files to get"
 
     if [[ "$FAST_DOWNLOADER" == "true" ]]; then
         if which aria2c > /dev/null; then
             GET="aria2c --quiet=true --continue=true --max-concurrent-downloads=10 --max-connection-per-server=16 --max-tries=0"
         else
-            echo "'--fast-downloader' specified, but couldn't find tool ('aria2c')."
-            exit_cleanup 1
+            exit_cleanup 1 "FATAL: '--fast-downloader' specified, but couldn't find tool ('aria2c')."
         fi
     else
         if which curl > /dev/null; then
             GET="curl -sfL"
         else
-            echo "Unable to find downloader tool ('curl')."
-            exit_cleanup 1
+            exit_cleanup 1 "FATAL: Unable to find downloader tool ('curl')."
         fi
     fi
     for URL in $*; do
@@ -347,8 +307,7 @@ setup_system_user() {
     RC=0
     $_sudo groupadd --system ${SYSTEM_GROUP} || RC=$?
     if [[ ${RC} != 0 && ${RC} != 9 ]]; then
-        echo "Unable to create system group ${SYSTEM_GROUP}"
-        exit_cleanup ${RC}
+        exit_cleanup ${RC} "FATAL: Unable to create system group ${SYSTEM_GROUP}"
     fi
     if [[ ${OS_FAMILY} == "debian" ]]; then
         $_sudo adduser --system --home ${DRP_HOME_DIR} --quiet --group ${SYSTEM_USER}
@@ -362,8 +321,7 @@ setup_system_user() {
     if [[ ${RC} == 0 || ${RC} == 9 ]]; then
         return
     fi
-    echo "Unable to create system user ${SYSTEM_USER}"
-    exit_cleanup ${RC}
+    exit_cleanup ${RC} "FATAL: Unable to create system user ${SYSTEM_USER}"
 }
 
 set_ownership_of_drp() {
@@ -398,101 +356,83 @@ setcap_drp_binary() {
     fi
 }
 
+check_bins_darwin() {
+  local _bin=$1
+     case $_bin in
+        bsdtar)
+            local _ver=$(tar -h | grep "bsdtar " | awk '{ print $2 }' | awk -F. '{ print $1 }')
+            local _msg="Must have tar greater than 3.0.0. (eg 'brew install libarchive --force; brew link libarchive --force')"
+            [[ $_ver -ge 3 ]] && { echo $_msg; error=1; }
+          ;;
+        aria2c)
+            if [[ "$FAST_DOWNLOADER" == "true" ]]; then
+                _bin="aria2"
+                if ! which $_bin > /dev/null 2>&1; then
+                    echo "Must have binary '$_bin' installed."
+                    echo "eg:   brew install $_bin"
+                    error=1
+                fi
+            fi
+          ;;
+        *)
+            if ! which $_bin > /dev/null 2>&1; then
+                echo "Must have binary '$_bin' installed."
+                echo "eg:   brew install $_bin"
+                error 1
+            fi
+         ;;
+     esac
+} # end check_bins_darwin()
+
+# handle RHEL and Debian types
+check_pkgs_linux() {
+    # assumes binary and package name are same
+    local _pkg=$1
+        if ! which $_pkg &>/dev/null; then
+            [[ $_pkg == "aria2" && "$FAST_DOWNLOADER" != "true" ]] && return 0
+            echo "Missing dependency '$_pkg', attempting to install it... "
+            if [[ $OS_FAMILY == rhel ]] ; then
+                echo $IN_EPEL | grep -q $_pkg && install_epel
+                $_sudo yum install -y $_pkg
+            elif [[ $OS_FAMILY == debian ]] ; then
+                $_sudo apt-get install -y $_pkg
+            fi
+        fi
+} # end check_pkgs_linux()
+
 ensure_packages() {
     echo "Ensuring required tools are installed"
-    if [[ $OS_FAMILY == darwin ]] ; then
-        error=0
-        VER=$(tar -h | grep "bsdtar " | awk '{ print $2 }' | awk -F. '{ print $1 }')
-        if [[ $VER != 3 ]] ; then
-            echo "Please update tar to greater than 3.0.0"
-            echo
-            echo "E.g: "
-            echo "  brew install libarchive --force"
-            echo "  brew link libarchive --force"
-            echo
-            error=1
-        fi
-        if ! which 7z &>/dev/null; then
-            echo "Must have 7z"
-            echo "E.g: brew install p7zip"
-            echo
-            error=1
-        fi
-        if ! which jq &>/dev/null; then
-            echo "Must have jq installed"
-            echo "E.g: brew install jq"
-            echo
-            error=1
-        fi
-        if ! which curl &>/dev/null; then
-            echo "Must have curl installed"
-            echo "E.g: brew install curl"
-            echo
-            error=1
-        fi
-        if [[ "$FAST_DOWNLOADER" == "true" ]]; then
-          if ! which aria2c  &>/dev/null; then
-            echo "Install 'aria2' package"
-            echo
-            echo "E.g: "
-            echo "  brew install aria2"
-          fi
-        fi
-        if [[ $error == 1 ]] ; then
-            echo "After install missing components, restart the terminal to pick"
-            echo "up the newly installed commands."
-            echo
-            exit_cleanup 1
-        fi
-    else
-        if ! which bsdtar &>/dev/null; then
-            echo "Installing bsdtar"
-            if [[ $OS_FAMILY == rhel ]] ; then
-                $_sudo yum install -y bsdtar
-            elif [[ $OS_FAMILY == debian ]] ; then
-                $_sudo apt-get install -y bsdtar
+    case $OS_FAMILY in
+        darwin)
+            error=0
+            BINS="bsdtar jq curl aria2c"
+            for BIN in $BINS; do
+                check_bins_darwin $BIN
+            done
+
+            if [[ $error == 1 ]] ; then
+                echo "After install missing components, restart the terminal to pick"
+                echo "up the newly installed commands, and re-run the installer."
+                echo
+                exit_cleanup 1
             fi
-        fi
-        if ! which jq &>/dev/null; then
-            echo "Installing jq"
-            if [[ $OS_FAMILY == rhel ]] ; then
-                install_epel
-                $_sudo yum install -y jq
-            elif [[ $OS_FAMILY == debian ]] ; then
-                $_sudo apt-get install -y jq
-            fi
-        fi
-        if ! which curl &>/dev/null; then
-            echo "Installing curl"
-            if [[ $OS_FAMILY == rhel ]] ; then
-                install_epel
-                $_sudo yum install -y curl
-            elif [[ $OS_FAMILY == debian ]] ; then
-                $_sudo apt-get install -y curl
-            fi
-        fi
-        if ! which 7z &>/dev/null; then
-            echo "Installing 7z"
-            if [[ $OS_FAMILY == rhel ]] ; then
-                install_epel
-                $_sudo yum install -y p7zip
-            elif [[ $OS_FAMILY == debian ]] ; then
-                $_sudo apt-get install -y p7zip-full
-            fi
-        fi
-        if [[ "$FAST_DOWNLOADER" == "true" ]]; then
-          if ! which aria2 &>/dev/null; then
-            echo "Installing aria2 for 'fast downloader'"
-            if [[ $OS_FAMILY == rhel ]] ; then
-                install_epel
-                $_sudo yum install -y aria2
-            elif [[ $OS_FAMILY == debian ]] ; then
-                $_sudo apt-get install -y aria2
-            fi
-          fi
-        fi
-    fi
-}
+        ;;
+        rhel|debian)
+            PKGS="bsdtar jq curl aria2"
+            IN_EPEL="jq curl aria2"
+            for PKG in $PKGS; do
+                check_pkgs_linux $PKG
+            done
+        ;;
+        coreos)
+            echo "CoreOS does not require any packages to be installed.  DRP will be"
+            echo "installed from the Docker Hub registry."
+        ;;
+        *)
+            exit_cleanup 1 "FATAL: Unsupported OS Family ($OS_FAMILY)."
+        ;;
+    esac
+} # end ensure_packages()
 
 # output a friendly statement on how to download ISOS via fast downloader
 show_fast_isos() {
@@ -511,8 +451,8 @@ FASTMSG
 
     for BOOTENV in $*
     do
-        echo "  export URL=\`${EP}drpcli bootenvs show $BOOTENV | grep 'IsoUrl' | cut -d '\"' -f 4\`"
-        echo "  export ISO=\`${EP}drpcli bootenvs show $BOOTENV | grep 'IsoFile' | cut -d '\"' -f 4\`"
+        echo "  export URL=$(${EP}drpcli bootenvs show $BOOTENV | grep 'IsoUrl' | cut -d '\"' -f 4)"
+        echo "  export ISO=$(${EP}drpcli bootenvs show $BOOTENV | grep 'IsoFile' | cut -d '\"' -f 4)"
         echo "  \$CMD -o \$ISO \$URL"
     done
     echo "  # this should move the ISOs to the TFTP directory..."
@@ -522,28 +462,68 @@ FASTMSG
     echo "###### END scriptlet"
 
     echo
-}
+} # end show_fast_isos()
+
+install_as_container() {
+    case $CNT_TYPE in
+        docker)
+            ! which docker > /dev/null 2>&1 && exit_cleanup 1 "Container install requested but no 'docker' in PATH ($PATH)."
+            docker volume create $CNT_VOL > /dev/null
+            VOL_MNT=$(docker volume inspect $CNT_VOL | jq '.[].Mountpoint')
+            docker run --volume $CNT_VOL:/provision/drp-data --name $CNT_NAME -itd --net host ${CNT_REGISTRY}/digitalrebar/provision:$DRP_VERSION
+
+            echo ""
+            echo "Digital Rebar Provision container is using backing volume: $CNT_VOL"
+            echo "Volume is backed on host filesystem at: $VOL_MNT"
+            echo ""
+            echo "Docker container run time information:"
+            docker ps --filter name=$CNT_NAME
+            echo ""
+            ;;
+        *)  exit_cleanup 1 "Container type '$CNT_TYPE' not supported in installer."
+            ;;
+    esac
+} # end install_as_container()
 
 # main
+
+MODE=$1
+
+if [[ $OS_FAMILY == "container" || $CONTAINER == "true" ]]; then
+    UPG_MSG="Please upgrade via Portal 'Catalog' menu, or 'drpcli system upgrade ... ' command."
+    RMV_MSG="Remove not supported for container based installer at this time."
+    GEN_MSG="Unsupported mode '$MODE'"
+    case $MODE in
+        install)
+            echo "Installing Digital Rebar Provision as a container."
+            install_as_container
+            exit_cleanup $?
+            ;;
+        upgrade) exit_cleanup 1 "$UPG_MSG"        ;;
+        remove)  exit_cleanup 1 "$RMV_MSG"        ;;
+        *)       usage; exit_cleanup 1 "$GEN_MSG" ;;
+    esac
+fi
+
 LOCAL_JQ=$(which jq || :)
 arch=$(uname -m)
 case $arch in
-  x86_64|amd64)
-                if [[ $LOCAL_JQ == "" ]] ; then
-                    get https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64
-                    LOCAL_JQ=$(pwd)/jq-linux64
-                    chmod +x $LOCAL_JQ
-                fi
-                arch=amd64  ;;
-  aarch64)      arch=arm64  ;;
-  armv7l)       arch=arm_v7 ;;
-  *)            echo "FATAL: architecture ('$arch') not supported"
-                exit_cleanup 1;;
+    x86_64|amd64)
+        if [[ $LOCAL_JQ == "" ]] ; then
+            get https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64
+            LOCAL_JQ=$(pwd)/jq-linux64
+            chmod +x $LOCAL_JQ
+        fi
+        arch=amd64
+        ;;
+    aarch64) arch=arm64  ;;
+    armv7l)  arch=arm_v7 ;;
+    *)       exit_cleanup 1 "FATAL: architecture ('$arch') not supported" ;;
 esac
 
 if [[ $LOCAL_JQ == "" ]] ; then
-        echo "Must have jq installed to install"
-        exit_cleanup 1
+    echo "Must have jq installed to install"
+    exit_cleanup 1
 fi
 
 case $(uname -s) in
@@ -587,7 +567,6 @@ case $(uname -s) in
         exit_cleanup 1;;
 esac
 
-MODE=$1
 if [[ "$MODE" == "upgrade" ]]
 then
     MODE=install
