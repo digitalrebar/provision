@@ -39,6 +39,7 @@ Options:
     --keep-installer        # In Production mode, do not purge the tmp installer artifacts
     --startup               # Attempt to start the dr-provision service
     --systemd               # Run the systemd enabling commands after installation
+    --bootstrap             # Store the install image and the install script in the files bootstrap
     --drp-id=<string>       # String to use as the DRP Identifier (only with --systemd)
     --ha-id=<string>        # String to use as the HA Identifier (only with --systemd)
     --drp-user=<string>     # DRP user to create after system start (only with --systemd)
@@ -81,6 +82,7 @@ Defaults are:
     |  bin-dir             = /usr/local/bin   |  container           = false
     |  container-volume    = $CNT_VOL         |  container-registry  = $CNT_REGISTRY
     |  container-type      = $CNT_TYPE        |  container-name      = $CNT_NAME
+    |  bootstrap           = false            |
 
     * version examples: 'tip', 'v3.13.6' or 'stable'
 
@@ -109,6 +111,7 @@ REMOVE_RS=false
 LOCAL_UI=false
 KEEP_INSTALLER=false
 CONTAINER=false
+BOOTSTRAP=false
 
 # download URL locations; overridable via ENV variables
 URL_BASE=${URL_BASE:-"https://rebar-catalog.s3-us-west-2.amazonaws.com"}
@@ -147,6 +150,7 @@ while (( $# > 0 )); do
         --keep-installer)           KEEP_INSTALLER=true        ;;
         --startup)                  STARTUP=true; SYSTEMD=true ;;
         --systemd)                  SYSTEMD=true               ;;
+        --bootstrap)                BOOTSTRAP=true             ;;
         --local-ui)                 LOCAL_UI=true              ;;
         --remove-rocketskates)      REMOVE_RS=true             ;;
         --drp-user)                 DRP_USER=${arg_data}       ;;
@@ -778,6 +782,10 @@ EOF
                              fi
                          fi
                      fi
+                     if [[ "$BOOTSTRAP" == "true" ]] ; then
+                         drpcli files upload dr-provision.zip as bootstrap/dr-provision.zip
+                         drpcli files upload $TMP_INST as bootstrap/install.sh
+                     fi
                  else
                      if [[ "$STARTUP" == "true" ]]; then
                          echo "######### Attempting startup of 'dr-provision' ('--startup' specified)"
@@ -788,6 +796,10 @@ EOF
 
                          if [[ "$NO_CONTENT" == "false" ]] ; then
                              drpcli contents upload catalog:task-library-${DRP_CONTENT_VERSION}
+                         fi
+                         if [[ "$BOOTSTRAP" == "true" ]] ; then
+                             drpcli files upload dr-provision.zip as bootstrap/dr-provision.zip
+                             drpcli files upload $TMP_INST as bootstrap/install.sh
                          fi
                      fi
                  fi
@@ -877,6 +889,11 @@ EOF
                      echo "'dr-provision' running processes:"
                      ps -eo pid,args -o comm  | grep -v grep | grep dr-provision
                      echo
+
+                     if [[ "$BOOTSTRAP" == "true" ]] ; then
+                         drpcli files upload dr-provision.zip as bootstrap/dr-provision.zip
+                         drpcli files upload tools/install.sh as bootstrap/install.sh
+                     fi
                  fi
 
                  EP="./"
