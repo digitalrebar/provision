@@ -5,7 +5,6 @@ set -e
 DEFAULT_DRP_VERSION=${DEFAULT_DRP_VERSION:-"stable"}
 
 exit_cleanup() {
-  rm -rf $(pwd)/jq-linux64
   local _x=$1
   shift
   [[ -n "$*" ]] && echo "EXIT MESSAGE: $*"
@@ -90,7 +89,7 @@ Prerequisites:
           manually install these first on a Mac OS X system. Package names may vary
           depending on your operating system version/distro packaging naming scheme.
 
-    REQUIRED: curl, jq, bsdtar
+    REQUIRED: curl
     OPTIONAL: aria2c (if using experimental "fast downloader")
 EOFUSAGE
 } # end usage()
@@ -359,11 +358,6 @@ setcap_drp_binary() {
 check_bins_darwin() {
   local _bin=$1
      case $_bin in
-        bsdtar)
-            local _ver=$(tar -h | grep "bsdtar " | awk '{ print $2 }' | awk -F. '{ print $1 }')
-            local _msg="Must have tar greater than 3.0.0. (eg 'brew install libarchive --force; brew link libarchive --force')"
-            [[ $_ver -ge 3 ]] && { echo $_msg; error=1; }
-          ;;
         aria2c)
             if [[ "$FAST_DOWNLOADER" == "true" ]]; then
                 _bin="aria2"
@@ -405,7 +399,7 @@ ensure_packages() {
     case $OS_FAMILY in
         darwin)
             error=0
-            BINS="bsdtar jq curl aria2c"
+            BINS="curl aria2c"
             for BIN in $BINS; do
                 check_bins_darwin $BIN
             done
@@ -418,8 +412,8 @@ ensure_packages() {
             fi
         ;;
         rhel|debian)
-            PKGS="bsdtar jq curl aria2"
-            IN_EPEL="jq curl aria2"
+            PKGS="curl aria2"
+            IN_EPEL="curl aria2"
             for PKG in $PKGS; do
                 check_pkgs_linux $PKG
             done
@@ -469,7 +463,7 @@ install_as_container() {
         docker)
             ! which docker > /dev/null 2>&1 && exit_cleanup 1 "Container install requested but no 'docker' in PATH ($PATH)."
             docker volume create $CNT_VOL > /dev/null
-            VOL_MNT=$(docker volume inspect $CNT_VOL | jq '.[].Mountpoint')
+            VOL_MNT=$(docker volume inspect $CNT_VOL | grep Mountpoint | awk -F\" '{ print $4 }')
             docker run --volume $CNT_VOL:/provision/drp-data --name $CNT_NAME -itd --net host ${CNT_REGISTRY}/digitalrebar/provision:$DRP_VERSION
 
             echo ""
@@ -505,38 +499,25 @@ if [[ $OS_FAMILY == "container" || $CONTAINER == "true" ]]; then
     esac
 fi
 
-LOCAL_JQ=$(which jq || :)
 arch=$(uname -m)
 case $arch in
-    x86_64|amd64)
-        if [[ $LOCAL_JQ == "" ]] ; then
-            get https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64
-            LOCAL_JQ=$(pwd)/jq-linux64
-            chmod +x $LOCAL_JQ
-        fi
-        arch=amd64
-        ;;
-    aarch64) arch=arm64  ;;
-    armv7l)  arch=arm_v7 ;;
-    *)       exit_cleanup 1 "FATAL: architecture ('$arch') not supported" ;;
+    x86_64|amd64) arch=amd64 ;;
+    aarch64)      arch=arm64  ;;
+    armv7l)       arch=arm_v7 ;;
+    *)            exit_cleanup 1 "FATAL: architecture ('$arch') not supported" ;;
 esac
-
-if [[ $LOCAL_JQ == "" ]] ; then
-    echo "Must have jq installed to install"
-    exit_cleanup 1
-fi
 
 case $(uname -s) in
     Darwin)
         binpath="bin/darwin/$arch"
         bindest="${BIN_DIR}"
-        tar="command bsdtar"
+        tar="command tar"
         # Someday, handle adding all the launchd stuff we will need.
         shasum="command shasum -a 256";;
     Linux)
         binpath="bin/linux/$arch"
         bindest="${BIN_DIR}"
-        tar="command bsdtar"
+        tar="command tar"
         if [[ -d /etc/systemd/system ]]; then
             # SystemD
             SYSTEMD=true
@@ -622,7 +603,8 @@ case $MODE in
                          mv rackn-catalog.json rackn-catalog.json.gz
                          gunzip rackn-catalog.json.gz
                        fi
-                       SOURCE=$($LOCAL_JQ -r ".sections.catalog_items[\"drp-$DRP_VERSION\"].Source" rackn-catalog.json)
+                       SOURCE=$(grep "drp-$DRP_VERSION:::" rackn-catalog.json | awk -F\" '{ print $4 }')
+                       SOURCE=${SOURCE##*:::}
 
                        get $SOURCE
                        FILE=${SOURCE##*/}
@@ -647,7 +629,8 @@ case $MODE in
                      mv rackn-catalog.json rackn-catalog.json.gz
                      gunzip rackn-catalog.json.gz
                  fi
-                 SOURCE=$($LOCAL_JQ -r ".sections.catalog_items[\"drp-community-content-$DRP_CONTENT_VERSION\"].Source" rackn-catalog.json)
+                 SOURCE=$(grep "drp-community-content-$DRP_CONTENT_VERSION:::" rackn-catalog.json | awk -F\" '{ print $4 }')
+                 SOURCE=${SOURCE##*:::}
 
                  get $SOURCE
                  FILE=${SOURCE##*/}

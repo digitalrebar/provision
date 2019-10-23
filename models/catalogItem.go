@@ -37,6 +37,7 @@ type CatalogItem struct {
 	ContentType   string
 	Source        string
 	Shasum256     map[string]string
+	NOJQSource    string
 
 	Tip    bool
 	HotFix bool
