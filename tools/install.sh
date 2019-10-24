@@ -61,6 +61,9 @@ Options:
                             # Volume name to use for backing persistent storage, default "$CNT_VOL"
     --container-registry="drp.example.com:5000"
                             # Alternate registry to get container images from, default "$CNT_REGISTRY"
+    --container-env="<string> <string> <string>"
+                            # Define a space separated list of environment variables to pass to the
+                            # container on start (eg "RS_METRICS_PORT=8888 RS_DRP_ID=fred")
                             #
     install                 # Sets up an isolated or system 'production' enabled install.
     upgrade                 # Sets the installer to upgrade an existing 'dr-provision'
@@ -126,6 +129,7 @@ CNT_TYPE=docker
 CNT_NAME=drp
 CNT_VOL=drp-data
 CNT_REGISTRY=index.docker.io
+CNT_ENV=""
 SYSTEM_USER=root
 SYSTEM_GROUP=root
 
@@ -165,6 +169,7 @@ while (( $# > 0 )); do
         --container-name)           CNT_NAME="${arg_data}"     ;;
         --container-volume)         CNT_VOL="${arg_data}"      ;;
         --container-registry)       CNT_REGISTRY="${arg_data}" ;;
+        --container-env)            CNT_ENV="${arg_data}"      ;;
         --zip-file)
             ZF=${arg_data}
             ZIP_FILE=$(echo "$(cd $(dirname $ZF) && pwd)/$(basename $ZF)")
@@ -463,12 +468,22 @@ FASTMSG
 } # end show_fast_isos()
 
 install_as_container() {
+    if [[ -n "$CNT_ENV" ]]; then
+        for ENV in $CNT_ENV; do
+            OPTS="--env $ENV $OPTS"
+        done
+        ENV_OPTS=$(echo $OPTS | sed 's/ $//')
+    fi
     case $CNT_TYPE in
         docker)
             ! which docker > /dev/null 2>&1 && exit_cleanup 1 "Container install requested but no 'docker' in PATH ($PATH)."
             docker volume create $CNT_VOL > /dev/null
             VOL_MNT=$(docker volume inspect $CNT_VOL | grep Mountpoint | awk -F\" '{ print $4 }')
-            docker run --volume $CNT_VOL:/provision/drp-data --name $CNT_NAME -itd --net host ${CNT_REGISTRY}/digitalrebar/provision:$DRP_VERSION
+            echo "Created docker volume named '$CNT_VOL' with mountpoint '$VOL_MNT'"
+            CMD="docker run $ENV_OPTS --volume $CNT_VOL:/provision/drp-data --name $CNT_NAME -itd --net host ${CNT_REGISTRY}/digitalrebar/provision:$DRP_VERSION"
+            echo "Starting container with following run command:"
+            echo "$CMD"
+            eval $CMD
 
             echo ""
             echo "Digital Rebar Provision container is using backing volume: $CNT_VOL"
