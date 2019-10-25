@@ -14,7 +14,7 @@ if ! which dr-provision &>/dev/null; then
   else
       drpcli catalog item download drp
   fi
-  unzip drp.zip "bin/$(go env GOOS)/$(go env GOARCH)/dr-provision"
+  tar -zxvf drp.zip "bin/$(go env GOOS)/$(go env GOARCH)/dr-provision"
   rm drp.zip
 fi
 if ! which dr-provision &>/dev/null; then
