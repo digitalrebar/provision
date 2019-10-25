@@ -631,7 +631,32 @@ case $MODE in
 
                        # XXX: Put sha back one day
                      fi
-                     $tar -xf dr-provision.zip
+
+                     if ! $tar -xf dr-provision.zip; then
+                       # try to fall back to bsdtar
+                       echo "Attempting to auto recover from above 'tar' errors."
+                       echo "Newer 'install.sh' script being used with older dr-provision.zip file."
+                       echo "Attempting to locate and use 'bsdtar' as a fallback..."
+
+                       if which bsdtar > /dev/null; then
+                         if ! bsdtar -xf dr-provision.zip; then
+                           echo "!!!  FAILED to extract 'dr-provision.zip' with installed 'bsdtar'."
+                           echo "!!!  Not cleaning up for forensic analysis."
+                           exit 1
+                         fi
+                       else
+                         echo "'bsdtar' not found in path, attempting to install it... "
+                         if check_pkgs_linux bsdtar; then
+                           if ! bsdtar -xf dr-provision.zip; then
+                             echo "!!!  Last ditch attempt FAILED to unpack 'dr-provision.zip' file."
+                             echo "!!!  Not attempting cleanup for debug and troubleshooting reasons."
+                             exit 1
+                           fi
+                         else
+                           exit_cleanup 1 "FAILED to install 'bsdtar' to satisfy dependencies.  Please install it and retry."
+                         fi
+                       fi
+                     fi
                  fi
                  $shasum -c sha256sums || exit_cleanup 1
              fi
