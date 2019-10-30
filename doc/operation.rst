@@ -742,3 +742,33 @@ A secure pattern would be the following:
     drpcli -T <token> users password fred mypassword
 
 
+
+
+Runbooks
+++++++++
+
+Backup
+------
+
+* Create a backup of a running DRP endpoint. Backs up the system to a single file that can be shipped off to a separate server.
+
+  ::
+
+    drbup backup --source /var/lib/dr-provision --dest /root/dr-provision_backup.tar.bz2
+
+
+
+* Restore the backup file, and start the dr-provision service.
+
+  ::
+
+    systemctl stop dr-provision.service
+    drbup restore --source /root/dr-provision_backup.tar.bz2 --dest /var/lib/dr-provision --start-service
+
+* Sync local DRP to remote DRP2
+
+  ::
+
+    systemctl stop dr-provision.service
+    drbup sync --remote --source /var/lib/dr-provision --dest /var/lib/ --remote-host admin@remote-drp2.internal
+    systemctl start dr-provision.service
