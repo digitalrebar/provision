@@ -209,7 +209,7 @@ if [[ $EUID -eq 0 ]]; then
    _sudo=""
 fi
 
-if [[ -x "$(command -v sudo)" && $_sudo != "" ]]; then
+if [[ ! -x "$(command -v sudo)" || $_sudo == "" ]]; then
   exit_cleanup 1 "FATAL: Script is not running as root and sudo command is not found. Please be root"
 fi
 
