@@ -18,6 +18,7 @@ import (
 	"net/url"
 	"os"
 	"path"
+	"runtime"
 	"strings"
 	"sync"
 	"time"
@@ -877,7 +878,7 @@ func (c *Client) RunProxy(socketPath string) error {
 }
 
 func (c *Client) MakeProxy(socketPath string) error {
-	if weAreTheProxy || locallyProxied() != "" {
+	if weAreTheProxy || locallyProxied() != "" || runtime.GOOS == "windows" {
 		return nil
 	}
 	localProxyMux.Lock()
