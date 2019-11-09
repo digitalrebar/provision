@@ -64,6 +64,9 @@ Options:
     --container-env="<string> <string> <string>"
                             # Define a space separated list of environment variables to pass to the
                             # container on start (eg "RS_METRICS_PORT=8888 RS_DRP_ID=fred")
+    --container-netns="<string>"
+                            # Define Network Namespace to start container in. Defaults to "$CNT_NETNS".
+                            # If set to empty string (""), then disable setting any network namespace.
                             #
     install                 # Sets up an isolated or system 'production' enabled install.
     upgrade                 # Sets the installer to upgrade an existing 'dr-provision'
@@ -84,8 +87,8 @@ Defaults are:
     |  system-group        = root             |  drp-home-dir        = /var/lib/dr-provision
     |  bin-dir             = /usr/local/bin   |  container           = false
     |  container-volume    = $CNT_VOL         |  container-registry  = $CNT_REGISTRY
-    |  container-type      = $CNT_TYPE        |  container-name      = $CNT_NAME
-    |  bootstrap           = false            |
+    |  container-type      = $CNT_TYPE           |  container-name      = $CNT_NAME
+    |  container-netns     = $CNT_NETNS             |  bootstrap           = false
 
     * version examples: 'tip', 'v3.13.6' or 'stable'
 
@@ -129,6 +132,7 @@ CNT_TYPE=docker
 CNT_NAME=drp
 CNT_VOL=drp-data
 CNT_REGISTRY=index.docker.io
+CNT_NETNS=host
 CNT_ENV=""
 SYSTEM_USER=root
 SYSTEM_GROUP=root
@@ -169,6 +173,7 @@ while (( $# > 0 )); do
         --container-name)           CNT_NAME="${arg_data}"     ;;
         --container-volume)         CNT_VOL="${arg_data}"      ;;
         --container-registry)       CNT_REGISTRY="${arg_data}" ;;
+        --container-netns)          CNT_NETNS="${arg_data}"    ;;
         --container-env)            CNT_ENV="${arg_data}"      ;;
         --zip-file)
             ZF=${arg_data}
@@ -480,7 +485,12 @@ install_as_container() {
             docker volume create $CNT_VOL > /dev/null
             VOL_MNT=$(docker volume inspect $CNT_VOL | grep Mountpoint | awk -F\" '{ print $4 }')
             echo "Created docker volume named '$CNT_VOL' with mountpoint '$VOL_MNT'"
-            CMD="docker run $ENV_OPTS --volume $CNT_VOL:/provision/drp-data --name $CNT_NAME -itd --net host ${CNT_REGISTRY}/digitalrebar/provision:$DRP_VERSION"
+            if [[ -z "$CNT_NETNS" ]]; then
+              echo "WARNING:  No network namespace set - you may have issues with DHCP and TFTP depending on your use case."
+            else
+              NETNS="--net $CNT_NETNS"
+            fi
+            CMD="docker run $ENV_OPTS --volume $CNT_VOL:/provision/drp-data --name \"$CNT_NAME\" -itd $NETNS ${CNT_REGISTRY}/digitalrebar/provision:$DRP_VERSION"
             echo "Starting container with following run command:"
             echo "$CMD"
             eval $CMD
