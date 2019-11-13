@@ -131,7 +131,7 @@ func blobCommands(bt string) *cobra.Command {
 			}
 		},
 	}
-	upload.Flags().BoolVar(&explode, "explode", false, "Should the upload file be untarred")
+	upload.Flags().BoolVar(&explode, "explode", false, "After upload, file will be untarred/unzipped in file's local path")
 	cmd.AddCommand(upload)
 
 	cmd.AddCommand(&cobra.Command{

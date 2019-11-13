@@ -213,39 +213,15 @@ Example:
 Please note that you can not use Shell style ``export`` in front of the variable,
 and do NOT surround the value with double or single quotes.
 
-.. _rs_autocomplete:
+CLI FAQ:
+--------
 
-Turn on autocomplete for the CLI
---------------------------------
+The CLI has a dedicated FAQ section.  Please see :ref:`rs_cli_faq`.
 
-The DRP CLI has built in support to generate autocomplete (tab completion) capabilities for the BASH shell.  To enable, you must generate the autocomplete script file, and add it to your system.  This can also be added to your global shell ``rc`` files to enable autocompletion every time you log in.  NOTE that most Linux distros do this slightly differently.  Select the method that works for your distro.
-
-You must specify a filename as an argument to the DRP CLI autocomplete command.  The filename will be created with the autocomplete script.  If you are writing to system areas, you need ``root`` access (eg via `sudo`).
-
-For Debian/Ubuntu and RHEL/CentOS distros:
-  ::
-
-    sudo drpcli autocomplete /etc/bash_completion.d/drpcli
-
-For Mac OSX (Darwin):
-  ::
-
-    sudo drpcli autocomplete /usr/local/etc/bash_completion.d/drpcli
-
-Once the autocomplete file has been created, either log out and log back in, or ``source`` the created file to enable autocomplete in the current shell session (example for Linux distros, adjust accordingly):
-  ::
-
-    source /etc/bash_completion.d/drpcli
-
-.. note:: If you receive an error message when using autocomplete similar to:
-    ::
-
-      bash: _get_comp_words_by_ref: command not found
-
-  Then you will need to install the ``bash-completion`` package (eg. ``sudo yum -y install bash-completion`` or ``sudo apt -y install bash-completion``).
-
-  You will also need to log out and then back in to your shell account to correct the bash_completion issue.
-
+Topics include:
+  * :ref: `rs_autocomplete`
+  * :ref: `rs_cli_faq_zip` 
+  * :ref: `rs_download_rackn_content` 
 
 .. _rs_more_debug:
 
@@ -352,30 +328,6 @@ Starting with ``drp-community-content`` version 1.5.0 and newer, you can now def
 Of course, you can apply a Param to a Profile, and apply that Profile to a group of Machines if desired.
 
 .. note:: The Digital Rebar default kickstart and preseeds have Digital Rebar specific interactions that may be necessary to replicate.  Please review the default kickstart and preseeds for patterns and examples you may need to re-use.   We HIGHLY recommend you start with a `clone` operation of an existing Kickstart/Preseed file; and making appropriate modifications from that as a baseline.
-
-
-.. _rs_download_rackn_content:
-
-Download Content and Plugins via Command Line
----------------------------------------------
-
-RackN maintains a catalog of open and proprietary Digital Rebar extensions at ``https://repo.rackn.io``.
-
-Content downloads directly from the Catalog as JSON and can be imported directly using the DRP CLI.
-  ::
-      drpcli contents upload catalog:task-library-tip
-
-or
-
-  ::
-      drpcli catalog item install task-library --version tip
-Plugin downloads directly from the Catalog work as follows:
-  ::
-      drpcli plugin_providers upload raid from catalog:raid-stable
-
-or
-  ::
-      drpcli catalog item install raid
 
 .. _rs_plugin_providers_license:
 
