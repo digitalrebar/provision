@@ -107,6 +107,23 @@ func blobCommands(bt string) *cobra.Command {
 	upload := &cobra.Command{
 		Use:   "upload [src] as [dest]",
 		Short: fmt.Sprintf("Upload the %v [src] as [dest]", bt),
+		Long: `The DRP files API allows exploding a compressed file, using
+bsdtar, after it has been uploaded.  This can be very
+helpful when multiple files or a full directory tree
+are being uploaded.
+
+This is a two stage process enabled by the --explode
+flag.  The first stage simply uploads the compressed
+file to the target path and location.  The second stage
+explodes the file in that path.
+
+For example: _drpcli files upload my.zip as mypath/my.zip --explode_
+
+The above command will upload the _my.zip_ file to the
+files _mypath_ location.  It will also expand all
+the files in _my.zip_ into _/mypath_ after upload.
+All paths in _my.zip_ will be preserved and created
+relative to _/mypath_.`,
 		Args: func(c *cobra.Command, args []string) error {
 			if len(args) == 1 || len(args) == 3 {
 				return nil
