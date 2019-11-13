@@ -60,7 +60,7 @@ Download the `drpmachines.py` inventory script to the local system to a convenie
 
   ::
 
-    curl -s https://raw.githubusercontent.com/digitalrebar/provision/master/integrations/ansible/drpmachines.py -o drpmachines.py
+    curl -s https://raw.githubusercontent.com/digitalrebar/provision/v4/integrations/ansible/drpmachines.py -o drpmachines.py
     chmod +x drpmachines.py
     ./drpmachines.py | jq
 
