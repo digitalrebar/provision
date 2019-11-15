@@ -60,9 +60,12 @@ Download the `drpmachines.py` inventory script to the local system to a convenie
 
   ::
 
-    curl -s https://raw.githubusercontent.com/digitalrebar/provision/master/integrations/ansible/drpmachines.py -o drpmachines.py
+    curl -s https://raw.githubusercontent.com/digitalrebar/provision/v4/integrations/ansible/drpmachines.py -o drpmachines.py
     chmod +x drpmachines.py
     ./drpmachines.py | jq
+
+.. note:: If you run into problems using the drpmachines.py script try enabling the --debug flag for verbose logging.
+
 
 In order to test the Ansible integration, use the ping command.  If everything is working, all the machines in the system should receive and respond to the ping command.
 
