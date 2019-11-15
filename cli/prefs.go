@@ -37,6 +37,10 @@ func addPrefCommands() (res *cobra.Command) {
 	commands = append(commands, &cobra.Command{
 		Use:   "set [- | JSON or YAML Map of strings | pairs of string args]",
 		Short: "Set preferences",
+		Long: `WARNING! Changing baseTokenSecret or systemGrantorSecret
+will invalidate existing sessions and tokens.  This will require users to
+reauthenticate and may cause active WSS sessions to hang.  Do not change
+these values unless you are able to reset all client sessions.`,
 		Args: func(c *cobra.Command, args []string) error {
 			prefsMap = map[string]string{}
 			if len(args) == 1 {
