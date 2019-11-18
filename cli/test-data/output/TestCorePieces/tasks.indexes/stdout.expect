@@ -35,6 +35,12 @@
     "Unique": false,
     "Unordered": false
   },
+  "ExtraRoles": {
+    "Regex": false,
+    "Type": "list",
+    "Unique": false,
+    "Unordered": true
+  },
   "Key": {
     "Regex": true,
     "Type": "string",

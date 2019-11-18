@@ -83,6 +83,12 @@
     "Unique": false,
     "Unordered": false
   },
+  "Tasks": {
+    "Regex": false,
+    "Type": "list",
+    "Unique": false,
+    "Unordered": true
+  },
   "Uuid": {
     "Regex": false,
     "Type": "UUID string",
