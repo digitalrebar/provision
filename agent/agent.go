@@ -224,6 +224,8 @@ func (a *Agent) initOrExit() {
 // consists of marking any current running jobs as Failed and
 // reopening the event stream from dr-provision.
 func (a *Agent) init() {
+	a.taskMux.Lock()
+	defer a.taskMux.Unlock()
 	if a.err != nil {
 		a.err = nil
 	}
