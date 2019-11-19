@@ -218,11 +218,11 @@ fi
 [[ $DBG == true ]] && set -x
 
 if [[ $EUID -eq 0 ]]; then
-   _sudo=""
-fi
-
-if [[ ! -x "$(command -v sudo)" || $_sudo == "" ]]; then
-  exit_cleanup 1 "FATAL: Script is not running as root and sudo command is not found. Please be root"
+    _sudo=""
+else
+    if [[ ! -x "$(command -v sudo)" ]]; then
+        exit_cleanup 1 "FATAL: Script is not running as root and sudo command is not found. Please be root"
+    fi
 fi
 
 # verify the container restart directives
