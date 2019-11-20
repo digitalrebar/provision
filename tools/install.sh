@@ -57,6 +57,10 @@ Options:
                             # Container install type, defaults to "$CNT_TYPE"
     --container-name=<string>
                             # Set the "docker run" container name, defaults to "$CNT_NAME"
+    --container-restart=<string>
+                            # Set the Docker restart option, defaults to "$CNT_RESTART"
+                            # options are:  no, on-failure, always, unless-stopped
+                            * see: https://docs.docker.com/config/containers/start-containers-automatically/
     --container-volume=<string>
                             # Volume name to use for backing persistent storage, default "$CNT_VOL"
     --container-registry="drp.example.com:5000"
@@ -88,7 +92,8 @@ Defaults are:
     |  bin-dir             = /usr/local/bin   |  container           = false
     |  container-volume    = $CNT_VOL         |  container-registry  = $CNT_REGISTRY
     |  container-type      = $CNT_TYPE           |  container-name      = $CNT_NAME
-    |  container-netns     = $CNT_NETNS             |  bootstrap           = false
+    |  container-netns     = $CNT_NETNS             |  container-restart   = $CNT_RESTART
+    |  bootstrap           = false
 
     * version examples: 'tip', 'v3.13.6' or 'stable'
 
@@ -134,6 +139,7 @@ CNT_VOL=drp-data
 CNT_REGISTRY=index.docker.io
 CNT_NETNS=host
 CNT_ENV=""
+CNT_RESTART="always"
 SYSTEM_USER=root
 SYSTEM_GROUP=root
 
@@ -172,6 +178,7 @@ while (( $# > 0 )); do
         --container-type)           CNT_TYPE="${arg_data}"     ;;
         --container-name)           CNT_NAME="${arg_data}"     ;;
         --container-volume)         CNT_VOL="${arg_data}"      ;;
+        --container-restart)        CNT_RESTART="${arg_data}"  ;;
         --container-registry)       CNT_REGISTRY="${arg_data}" ;;
         --container-netns)          CNT_NETNS="${arg_data}"    ;;
         --container-env)            CNT_ENV="${arg_data}"      ;;
@@ -211,12 +218,19 @@ fi
 [[ $DBG == true ]] && set -x
 
 if [[ $EUID -eq 0 ]]; then
-   _sudo=""
+    _sudo=""
+else
+    if [[ ! -x "$(command -v sudo)" ]]; then
+        exit_cleanup 1 "FATAL: Script is not running as root and sudo command is not found. Please be root"
+    fi
 fi
 
-if [[ ! -x "$(command -v sudo)" || $_sudo == "" ]]; then
-  exit_cleanup 1 "FATAL: Script is not running as root and sudo command is not found. Please be root"
-fi
+# verify the container restart directives
+case $CNT_RESTART in
+  no|on-failure|always|unless-stopped) true ;;
+  *) exit_cleanup 1 "FATAL: Container restart directive ('$CNT_RESTART') is not valid. See '--help' for details."
+    ;;
+esac
 
 # Figure out what Linux distro we are running on.
 export OS_TYPE= OS_VER= OS_NAME= OS_FAMILY=
@@ -490,7 +504,7 @@ install_as_container() {
             else
               NETNS="--net $CNT_NETNS"
             fi
-            CMD="docker run $ENV_OPTS --volume $CNT_VOL:/provision/drp-data --name \"$CNT_NAME\" -itd $NETNS ${CNT_REGISTRY}/digitalrebar/provision:$DRP_VERSION"
+            CMD="docker run $ENV_OPTS --restart "$CNT_RESTART" --volume $CNT_VOL:/provision/drp-data --name \"$CNT_NAME\" -itd $NETNS ${CNT_REGISTRY}/digitalrebar/provision:$DRP_VERSION"
             echo "Starting container with following run command:"
             echo "$CMD"
             eval $CMD
