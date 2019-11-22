@@ -41,12 +41,6 @@
     "Unique": false,
     "Unordered": true
   },
-  "Roles": {
-    "Regex": false,
-    "Type": "list",
-    "Unique": false,
-    "Unordered": true
-  },
   "Valid": {
     "Regex": false,
     "Type": "boolean",
