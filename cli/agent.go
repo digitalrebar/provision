@@ -274,13 +274,13 @@ var agentHandler = &cobra.Command{
 		switch args[0] {
 		case "install":
 			if err := os.MkdirAll(stateLoc, 0700); err != nil {
-				return fmt.Errorf("Error creating state directory for the dr-provision agent: %v", err)
+				log.Fatalf("Error creating state directory for the dr-provision agent: %v", err)
 			}
 			fi, err := os.Open(cfgFileName)
 			if err != nil {
 				fi, err = os.Create(cfgFileName)
 				if err != nil {
-					return fmt.Errorf("Unable to create skeleton config file %s: %v", cfgFileName, err)
+					log.Fatalf("Unable to create skeleton config file %s: %v", cfgFileName, err)
 				}
 				defer fi.Close()
 				agentEndpoint := os.Getenv("RS_ENDPOINT")
@@ -299,7 +299,7 @@ var agentHandler = &cobra.Command{
 							if err == nil {
 								if _, err = fi.Write(buf); err == nil {
 									if err := svc.Install(); err != nil {
-										return fmt.Errorf("Error installing service: %v", err)
+										log.Fatalf("Error installing service: %v", err)
 									}
 									log.Printf("Service installed with auto-generated config %s", cfgFileName)
 									return nil
@@ -311,52 +311,52 @@ var agentHandler = &cobra.Command{
 				}
 
 				if b, err := fi.Write([]byte(agentScratchConfig)); err != nil || b != len(agentScratchConfig) {
-					return fmt.Errorf("Unable to write sample agent config to %s", cfgFileName)
+					log.Fatalf("Unable to write sample agent config to %s", cfgFileName)
 				}
-				return fmt.Errorf(`Skeleton config file created at %v. 
+				log.Fatalf(`Skeleton config file created at %v. 
 Please fill it out with final running values, and rerun drpcli agent install`, cfgFileName)
 			}
-			defer fi.Close()
 			buf, err := ioutil.ReadAll(fi)
+			fi.Close()
 			if err != nil {
-				return fmt.Errorf("Error reading config file %s: %v", cfgFileName, err)
+				log.Fatalf("Error reading config file %s: %v", cfgFileName, err)
 			}
 			if err := models.DecodeYaml(buf, &options); err != nil {
-				return fmt.Errorf("Error loading config file %s: %v", cfgFileName, err)
+				log.Fatalf("Error loading config file %s: %v", cfgFileName, err)
 			}
 			if options.Endpoints == "" || options.MachineID == "" || options.Token == "" {
-				return fmt.Errorf("Config file %s missing a required parameter", cfgFileName)
+				log.Fatalf("Config file %s missing a required parameter", cfgFileName)
 			}
 			Session, err = sessionOrError(options.Token, strings.Split(options.Endpoints, ","))
 			if err != nil {
-				return fmt.Errorf("Unable to establish connection to an endpoint listed in %s: %v", cfgFileName, err)
+				log.Fatalf("Unable to establish connection to an endpoint listed in %s: %v", cfgFileName, err)
 			}
 			if exists, err := Session.ExistsModel("machines", options.MachineID); err != nil || !exists {
-				return fmt.Errorf("Failed to verify that machine %s exists on %s", options.MachineID, Session.Endpoint())
+				log.Fatalf("Failed to verify that machine %s exists on %s", options.MachineID, Session.Endpoint())
 			}
 			if err := svc.Install(); err != nil {
-				return fmt.Errorf("Error installing service: %v", err)
+				log.Fatalf("Error installing service: %v", err)
 			}
 		case "remove":
 			if err := svc.Uninstall(); err != nil {
-				return fmt.Errorf("Error removing service: %v", err)
+				log.Fatalf("Error removing service: %v", err)
 			}
 		case "start":
 			if err := svc.Start(); err != nil {
-				return fmt.Errorf("Error starting service: %v", err)
+				log.Fatalf("Error starting service: %v", err)
 			}
 		case "stop":
 			if err := svc.Stop(); err != nil {
-				return fmt.Errorf("Error stopping service: %v", err)
+				log.Fatalf("Error stopping service: %v", err)
 			}
 		case "restart":
 			if err := svc.Restart(); err != nil {
-				return fmt.Errorf("Error restarting service: %v", err)
+				log.Fatalf("Error restarting service: %v", err)
 			}
 		case "status":
 			status, err := svc.Status()
 			if err != nil {
-				return fmt.Errorf("Error getting service status: %v", err)
+				log.Fatalf("Error getting service status: %v", err)
 			}
 			switch status {
 			case service.StatusRunning:
@@ -364,7 +364,7 @@ Please fill it out with final running values, and rerun drpcli agent install`, c
 			case service.StatusStopped:
 				prettyPrint("stopped")
 			default:
-				return fmt.Errorf("Unknown status %v", status)
+				log.Fatalf("Unknown status %v", status)
 			}
 		}
 		return nil
