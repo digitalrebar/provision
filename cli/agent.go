@@ -55,6 +55,8 @@ Endpoints: "https://endpoint1:8092,https://endpoint2:8092"
 # drpcli machines token <machine-uuid> --ttl 3y
 #
 # That will generate a machine token that expires in 3 years.
+# The token itself is the base64-encoded string in the Token field
+# of the returned JSON object.
 #
 # You must specify a token
 
