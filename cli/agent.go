@@ -94,7 +94,7 @@ func (a *agentProg) Start(s service.Service) error {
 	}
 	Session, err = sessionOrError(a.opts.Token, strings.Split(a.opts.Endpoints, ","))
 	if err != nil {
-		return fmt.Errorf("Unable to create session: %v")
+		return fmt.Errorf("Unable to create session: %v", err)
 	}
 	proxySock := path.Join(a.stateLoc, "agent.sock")
 	os.Remove(proxySock)
