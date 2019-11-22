@@ -373,10 +373,8 @@ urls = [
 
 fetch_n_save(urls, path="doc/content-packages")
 
-# TODO: when DRBUP gets its docs automatically placed on AWS or where ever
-# update the links below, and remove this comment.
 urls = [
-    "http://localhost:8080/docs/source/commands.rst",
+    "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/commands.rst",
 ]
 
 fetch_n_save(urls, path="doc/operations")
