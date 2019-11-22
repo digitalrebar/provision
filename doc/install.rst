@@ -9,7 +9,7 @@
 Install
 ~~~~~~~
 
-The install script does the following steps (in a slightly different order).  See :ref:`rs_quickstart` for details about the script.
+The install script does the following steps (in a slightly different order).  See :ref:`rs_quickstart` for details about the script. For air gap/offline install instructions please see :ref:`this doc <rs_airgap>`
 
 Get Code
 --------

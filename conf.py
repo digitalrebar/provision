@@ -316,7 +316,18 @@ for the_file in os.listdir(folder):
             os.unlink(file_path)
     except Exception as e:
         print(e)
-urls=[
+
+
+def fetch_n_save(urls, path):
+    for url in urls:
+        filename = url.rsplit('/', 1)[-1]
+        r = requests.get(url, verify=False, stream=True)
+        r.raw.decode_content = True
+        with open("{0}/{1}".format(path, filename), 'wb') as f:
+            shutil.copyfileobj(r.raw, f)
+
+
+urls = [
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/ad-auth.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/agent.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/bios.rst",
@@ -359,10 +370,11 @@ urls=[
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/krib.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/sledgehammer-builder.rst",
 ]
-for url in urls:
-    filename = url.rsplit('/', 1)[-1]
-    r = requests.get(url, verify=False, stream=True)
-    r.raw.decode_content = True
-    with open("doc/content-packages/{0}".format(filename), 'wb') as f:
-        shutil.copyfileobj(r.raw, f)
 
+fetch_n_save(urls, path="doc/content-packages")
+
+urls = [
+    "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/commands.rst",
+]
+
+fetch_n_save(urls, path="doc/operations")
