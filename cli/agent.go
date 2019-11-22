@@ -52,7 +52,7 @@ Endpoints: "https://endpoint1:8092,https://endpoint2:8092"
 # recommended), then {{.GenerateInfiniteToken}} will make a suitable
 # token, otherwise the following drpcli command will:
 #
-# drpcli machines token <machine-uuid> -ttl 3y
+# drpcli machines token <machine-uuid> --ttl 3y
 #
 # That will generate a machine token that expires in 3 years.
 #
