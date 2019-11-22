@@ -360,6 +360,28 @@ the stage runner wait flag.
 	processJobs.Flags().StringVar(&runStateLoc, "stateDir", "", "Location to save agent runtime state")
 	processJobs.Flags().StringVar(&runContext, "context", "", "Execution context this agent should pay attention to jobs in")
 	op.addCommand(processJobs)
+	var tokenDuration = ""
+	tokenFetch := &cobra.Command{
+		Hidden: true,
+		Use:    "token [id]",
+		Short:  "Fetch a machine Token",
+		Long:   "Fetch an authentication token for a Machine that has the same access rights the runner uses.",
+		Args: func(c *cobra.Command, args []string) error {
+			if len(args) > 1 {
+				return fmt.Errorf("%v requires 1 argument", c.UseLine())
+			}
+			return nil
+		},
+		RunE: func(c *cobra.Command, args []string) error {
+			res := &models.UserToken{}
+			if err := Session.Req().UrlFor("machines", args[0], "token").Params("ttl", tokenDuration).Do(&res); err != nil {
+				return err
+			}
+			return prettyPrint(res)
+		},
+	}
+	tokenFetch.Flags().StringVar(&tokenDuration, "ttl", "1h", "The time that the retrieved token should be valid.")
+	op.addCommand(tokenFetch)
 	op.addCommand(inspectCommands())
 	op.command(app)
 }

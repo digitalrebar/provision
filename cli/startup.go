@@ -292,6 +292,7 @@ func NewApp() *cobra.Command {
 			return gohai()
 		},
 	})
+	app.AddCommand(agentHandler)
 
 	return app
 }

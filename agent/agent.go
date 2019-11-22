@@ -81,29 +81,34 @@ type Agent struct {
 	kill                                      chan error
 }
 
-func (a *Agent) saveState() error {
+func (a *Agent) saveState() (err error) {
 	if a.stateDir == "" {
 		return nil
 	}
+	var fi *os.File
 	saveFile := path.Join(a.stateDir, a.machine.Key()+".state.new")
-	fi, err := os.Create(saveFile)
+	fi, err = os.Create(saveFile)
 	if err != nil {
-		return err
+		return
 	}
-	defer fi.Close()
 	er := gzip.NewWriter(fi)
-	defer er.Close()
 	enc := json.NewEncoder(er)
+	defer func() {
+		er.Flush()
+		er.Close()
+		fi.Sync()
+		fi.Close()
+		if err == nil {
+			err = os.Rename(saveFile, strings.TrimSuffix(saveFile, ".new"))
+		}
+		os.Remove(saveFile)
+	}()
 	ss := si{
 		BootTime: a.bootTime,
 		Machine:  a.machine,
 	}
-	if err := enc.Encode(&ss); err != nil {
-		return err
-	}
-	er.Flush()
-	fi.Sync()
-	return os.Rename(saveFile, strings.TrimSuffix(saveFile, ".new"))
+	err = enc.Encode(&ss)
+	return
 }
 
 func (a *Agent) tmpDir() string {
@@ -224,6 +229,8 @@ func (a *Agent) initOrExit() {
 // consists of marking any current running jobs as Failed and
 // reopening the event stream from dr-provision.
 func (a *Agent) init() {
+	a.taskMux.Lock()
+	defer a.taskMux.Unlock()
 	if a.err != nil {
 		a.err = nil
 	}

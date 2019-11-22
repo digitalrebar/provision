@@ -21,6 +21,7 @@ require (
 	github.com/imdario/mergo v0.3.7 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.7
+	github.com/kardianos/service v1.0.1-0.20191017145738-4df36c9fc1c6
 	github.com/klauspost/compress v1.7.4 // indirect
 	github.com/klauspost/cpuid v1.2.1 // indirect
 	github.com/klauspost/pgzip v1.2.1
@@ -37,6 +38,6 @@ require (
 	github.com/xeipuuv/gojsonschema v1.1.0
 	golang.org/x/crypto v0.0.0-20190701094942-4def268fd1a4
 	golang.org/x/net v0.0.0-20190724013045-ca1201d0de80
-	golang.org/x/sys v0.0.0-20190726091711-fc99dfbffb4e
+	golang.org/x/sys v0.0.0-20191120155948-bd437916bb0e
 	gopkg.in/yaml.v2 v2.2.2
 )
