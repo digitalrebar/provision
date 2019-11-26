@@ -30,7 +30,7 @@ RE:
     }
   \],
   "Documentation": "",
-  "HasPublish": true,
+  "HasPublish": false,
   "Meta": {
     "Author": "",
     "CodeSource": "",

@@ -10,7 +10,7 @@ import (
 
 	"github.com/VictorLowther/jsonpatch2/utils"
 	"github.com/digitalrebar/logger"
-	"github.com/digitalrebar/provision/v4"
+	v4 "github.com/digitalrebar/provision/v4"
 	"github.com/digitalrebar/provision/v4/api"
 	"github.com/digitalrebar/provision/v4/models"
 	"github.com/digitalrebar/provision/v4/plugin"
@@ -22,7 +22,6 @@ var (
 		Name:          "incrementer",
 		Version:       version,
 		PluginVersion: 4,
-		HasPublish:    true,
 		AvailableActions: []models.AvailableAction{
 			{Command: "increment",
 				Model:          "machines",
@@ -156,13 +155,6 @@ func (p *Plugin) Action(thelog logger.Logger, ma *models.Action) (interface{}, *
 		Key:      "incrementer",
 		Type:     "plugin",
 		Messages: []string{fmt.Sprintf("Unknown command: %s\n", ma.Command)}}
-}
-
-// Publish is the plugin's event publisher entrypoint
-func (p *Plugin) Publish(thelog logger.Logger, e *models.Event) *models.Error {
-	thelog.Debugf("Plugin received: %v\n", e)
-	// Just eat the publish messages.
-	return nil
 }
 
 // Unpack is the plugin's unpack entrypoint
