@@ -368,7 +368,7 @@ func configHandler(w http.ResponseWriter, r *http.Request, pc PluginConfig) {
 					l.Errorf("Error processing event: %v", err)
 				}
 			}
-		}(w.(logger.Logger), events)
+		}(w.(logger.Logger).NoRepublish(), events)
 
 	}
 	mux.JsonResponse(w, resp.Code, resp)
