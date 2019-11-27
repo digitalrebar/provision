@@ -6,7 +6,7 @@ Packet.net
 
 .. _rs_setup_packet:
 
-.. note:: you can use the code `RACKN100` to get a $25 signup discount!
+.. note:: you can use the code 'RACKN100' to get a $25 signup discount!
 
 Install DRP in Packet
 ---------------------
@@ -48,9 +48,9 @@ Join a machine to a DRP Endpoint in Packet
 
 To add machines to the DRP endpoint, we highly recommend using the Plugin process below.  If you'd like to create machines yourself, then the following steps are required to configure the Packet IPXE system.
 
-When creating a machine, you must choose the `custom ipxe` O/S type and set the `IPXE Script URL` to be `http://[DRP IP]:8091/default.ipxe` where you use the IP address of the DRP server.  Packet will confirm this URL is accessible.
+When creating a machine, you must choose the 'custom ipxe' O/S type and set the 'IPXE Script URL' to be 'http://[DRP IP]:8091/default.ipxe' where you use the IP address of the DRP server.  Packet will confirm this URL is accessible.
 
-In addition, you should set `Persist PXE on Reboot` to true under additional settings.  This is very important if you want to be able to reprovision or reboot systems and maintain DRP control.
+In addition, you should set 'Persist PXE on Reboot' to true under additional settings.  This is very important if you want to be able to reprovision or reboot systems and maintain DRP control.
 
 If you use the DRP plugin below, it will make these setting automatically.
 
@@ -65,11 +65,11 @@ From the UX
 
 The following steps add the Packet-IPMI plugin:
 
-   1. From the Plugins page, Add the Packet-IPMI plugin
-   1. From the Packet-IPMI plugin panel, set your API key and Project UUID
-   1. Save
+1. From the Plugins page, Add the Packet-IPMI plugin
+1. From the Packet-IPMI plugin panel, set your API key and Project UUID
+1. Save
 
-After the plugin is created, revisit the Packet-IPMI plugin page.  It will display a `machine create` line that allows you to quickly create machines that have the correct Param settings for adding machines.
+After the plugin is created, revisit the Packet-IPMI plugin page.  It will display a 'machine create' line that allows you to quickly create machines that have the correct Param settings for adding machines.
 
 From the CLI
 ~~~~~~~~~~~~
@@ -91,5 +91,3 @@ Make sure you set your information in the exports!
       }'
      # verify it worked - should return true
      drpcli plugins show packet-ipmi | jq .Available
-
-.. note:: The URLs provided for plugin downloads will change overtime for newer versions
