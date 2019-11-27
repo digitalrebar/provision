@@ -65,9 +65,9 @@ From the UX
 
 The following steps add the Packet-IPMI plugin:
 
-  1. From the Plugins page, Add the Packet-IPMI plugin
-  1. From the Packet-IPMI plugin panel, set your API key and Project UUID
-  1. Save
+   1. From the Plugins page, Add the Packet-IPMI plugin
+   1. From the Packet-IPMI plugin panel, set your API key and Project UUID
+   1. Save
 
 After the plugin is created, revisit the Packet-IPMI plugin page.  It will display a `machine create` line that allows you to quickly create machines that have the correct Param settings for adding machines.
 
