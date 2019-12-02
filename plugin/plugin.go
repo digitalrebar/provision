@@ -18,7 +18,7 @@ import (
 	"github.com/digitalrebar/provision/v4/api"
 	"github.com/digitalrebar/provision/v4/models"
 	"github.com/digitalrebar/provision/v4/plugin/mux"
-	"github.com/json-iterator/go"
+	jsoniter "github.com/json-iterator/go"
 	"github.com/spf13/cobra"
 )
 
@@ -40,6 +40,10 @@ type PluginConfig interface {
 // to a plugin.
 type PluginPublisher interface {
 	Publish(logger.Logger, *models.Event) *models.Error
+}
+
+type PluginEventSelecter interface {
+	SelectEvents() []string
 }
 
 // PluginActor defines the Action routine used to invoke actions
@@ -67,9 +71,12 @@ var (
 		Use:   "replaceme",
 		Short: "Replace ME!",
 	}
-	debug   = false
-	client  *http.Client
-	session *api.Client
+	debug    = false
+	client   *http.Client
+	session  *api.Client
+	es       *api.EventStream
+	esHandle int64
+	events   <-chan api.RecievedEvent
 )
 
 // Publish allows the plugin to generate events back to DRP.
@@ -193,7 +200,7 @@ func InitApp(use, short, version string, def *models.PluginProvider, pc PluginCo
 			return nil
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return run(args[0], args[1], pc)
+			return run(args[0], args[1], pc, def)
 		},
 	})
 	App.AddCommand(&cobra.Command{
@@ -219,7 +226,7 @@ func InitApp(use, short, version string, def *models.PluginProvider, pc PluginCo
 }
 
 // run implements the listen part of the CLI.
-func run(toPath, fromPath string, pc PluginConfig) error {
+func run(toPath, fromPath string, pc PluginConfig, def *models.PluginProvider) error {
 	// Get HTTP2 client on our socket.
 	client = &http.Client{
 		Transport: &http.Transport{
@@ -240,7 +247,8 @@ func run(toPath, fromPath string, pc PluginConfig) error {
 	}
 
 	// Optional Pieces
-	if pp, ok := pc.(PluginPublisher); ok {
+	_, hasPSE := pc.(PluginEventSelecter)
+	if pp, ok := pc.(PluginPublisher); ok && def.HasPublish && !hasPSE {
 		pmux.Handle("/api-plugin/v4/publish",
 			func(w http.ResponseWriter, r *http.Request) { publishHandler(w, r, pp) })
 	}
@@ -316,7 +324,7 @@ func configHandler(w http.ResponseWriter, r *http.Request, pc PluginConfig) {
 	l.Infof("Setting API session\n")
 	session, err2 := buildSession()
 	if err2 != nil {
-		err := &models.Error{Code: 400, Model: "plugin", Key: "incrementer", Type: "plugin", Messages: []string{}}
+		err := &models.Error{Code: 400, Model: "plugin", Key: "unknown", Type: "plugin", Messages: []string{}}
 		err.AddError(err2)
 		mux.JsonResponse(w, err.Code, err)
 		return
@@ -328,6 +336,40 @@ func configHandler(w http.ResponseWriter, r *http.Request, pc PluginConfig) {
 		resp.Code = err.Code
 		b, _ := json.Marshal(err)
 		resp.Messages = append(resp.Messages, string(b))
+	}
+	pse, hasPSE := pc.(PluginEventSelecter)
+	pp, hasPublish := pc.(PluginPublisher)
+	if hasPSE && hasPublish {
+		var esErr error
+		if es != nil {
+			es.Deregister(esHandle)
+			es.Close()
+		}
+		es, esErr = session.Events()
+		if esErr != nil {
+			err := models.NewError("plugins", 500, fmt.Sprintf("Unable to create event stream: %v", esErr))
+			mux.JsonResponse(w, err.Code, err)
+			return
+		}
+		esHandle, events, esErr = es.Register(pse.SelectEvents()...)
+		if esErr != nil {
+			es.Close()
+			err := models.NewError("plugins", 500, fmt.Sprintf("Unable to register for machine events: %v", esErr))
+			mux.JsonResponse(w, err.Code, err)
+			return
+		}
+		go func(l logger.Logger, eventStream <-chan api.RecievedEvent) {
+			for {
+				evt, ok := <-eventStream
+				if !ok {
+					return
+				}
+				if err := pp.Publish(l, &evt.E); err != nil {
+					l.Errorf("Error processing event: %v", err)
+				}
+			}
+		}(w.(logger.Logger).NoRepublish(), events)
+
 	}
 	mux.JsonResponse(w, resp.Code, resp)
 }
