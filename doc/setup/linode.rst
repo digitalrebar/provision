@@ -36,7 +36,7 @@ You can use the Amazon Linux AMI.  While more is recommended, make sure that you
     # <UDF name="drp_password" Label="Admin Password" default="r0cketsk8ts" example="password" />
     
     ### Install DRP from Tip
-    curl -fsSL get.rebar.digital/tip | bash -s -- install --systemd --version=$DRP_VERSION --drp-password=$DRP_PASSWORD
+    curl -fsSL get.rebar.digital/tip | bash -s -- install --systemd --version=$DRP_VERSION --drp-password=$DRP_PASSWORD --ipaddr=[DRP public address]
     
     ### Now open the right firewall ports for DRP
     firewall-cmd --permanent --add-port=8092/tcp
