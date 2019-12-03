@@ -2,6 +2,11 @@ package main
 
 //go:generate sh -c "cd content ; drpcli contents bundle ../content.go"
 
+// Using go generate to package a content bundle into a file we can pull in
+// is a fairly common pattern we use while building plugin providers.  It
+// is an easy method to use to ensure that a plugin provider and the content
+// designed to integrate with it stay in sync.
+
 import (
 	"fmt"
 	"io/ioutil"
@@ -17,21 +22,34 @@ import (
 )
 
 var (
+	// Every plugin provider needs to define its version.
+	// A global variable is as good a place as any.
+
 	version = v4.RSVersion
-	def     = models.PluginProvider{
+
+	// Every plugin provider also needs to be able to define itself
+	// with dr-provision.  models.PluginProvider
+	// is the struct that provides that definition.
+	def = models.PluginProvider{
 		Name:          "incrementer",
 		Version:       version,
 		PluginVersion: 4,
+		AutoStart:     false,
+		HasPublish:    false,
 		AvailableActions: []models.AvailableAction{
-			{Command: "increment",
+			{
+				Command:        "increment",
 				Model:          "machines",
 				OptionalParams: []string{"incrementer/step", "incrementer/parameter"},
 			},
-			{Command: "reset_count",
+			{
+				Command:        "reset_count",
 				Model:          "machines",
 				RequiredParams: []string{"incrementer/touched"},
 			},
-			{Command: "incrstatus"},
+			{
+				Command: "incrstatus",
+			},
 		},
 		StoreObjects: map[string]interface{}{
 			"cows": map[string]interface{}{},
@@ -53,11 +71,20 @@ var (
 )
 
 // Plugin is the base structure for the plugin.
+// By convention, it is named Plugin, although it can be anything.
+// It should hold all the plugin-specific information needed for the plugin
+// to do its job.  In this case, that is just a reference to the API client.
 type Plugin struct {
 	session *api.Client
 }
 
-// Config is the plugin's configuration entrypoint
+// Config is the plugin's configuration entrypoint.  It is responsible
+// for handling any and all configuration changes over the lifecycle
+// of a running plugin, including initialization.
+// You can rely on Config being the first method called.
+//
+// For incrementer, the only thing it has to do is to save a reference to the
+// api client that gets passed in for later.
 func (p *Plugin) Config(thelog logger.Logger, session *api.Client, config map[string]interface{}) *models.Error {
 	thelog.Infof("Config: %v\n", config)
 	p.session = session
@@ -101,7 +128,9 @@ func (p *Plugin) removeParameter(uuid, parameter string) *models.Error {
 	return nil
 }
 
-// Action is the plugin's action entrypoint
+// Action is the plugin's action entrypoint.  It is responsible for handling
+// any actions that the provider declares it can handle via the AvailableActions field
+// in the PluginProvider definition.
 func (p *Plugin) Action(thelog logger.Logger, ma *models.Action) (interface{}, *models.Error) {
 	thelog.Infof("Action: %v\n", ma)
 	var machine models.Machine
@@ -157,11 +186,16 @@ func (p *Plugin) Action(thelog logger.Logger, ma *models.Action) (interface{}, *
 		Messages: []string{fmt.Sprintf("Unknown command: %s\n", ma.Command)}}
 }
 
-// Unpack is the plugin's unpack entrypoint
+// Unpack is the plugin's unpack entrypoint.  It is responsible for
+// unpacking any extra content the plugin provider may require to do its
+// job.
 func (p *Plugin) Unpack(thelog logger.Logger, dir string) error {
 	return ioutil.WriteFile(path.Join(dir, "testFile"), []byte("ImaFile"), 0644)
 }
 
+// The main function of a plugin provider should do the bare minimum to run plugin.InitApp()
+// and then run plugin.App.Execute().  The plugin package provides App as a global variable
+// and will arrange for all the necessary command line and protocol definition interfaces.
 func main() {
 	plugin.InitApp("incrementer", "Increments a parameter on a machine", version, &def, &Plugin{})
 	err := plugin.App.Execute()

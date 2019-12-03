@@ -12,10 +12,18 @@ import (
 type PluginProvider struct {
 	Meta
 
-	Name    string
+	// Name is the unique name of the PluginProvider.
+	// Each Plugin provider must have a unique Name.
+	Name string
+
+	// The version of the PluginProvider.  This is a semver compatible string.
 	Version string
 
 	// This is used to indicate what version the plugin is built for
+	// This is effectively the API version of the protocol that
+	// plugin providers use to communicate with dr-provision.
+	// Right now, all plugin providers must set this to version 4,
+	// which is the only supported protocol version.
 	PluginVersion int
 
 	// If AutoStart is true, a Plugin will be created for this
