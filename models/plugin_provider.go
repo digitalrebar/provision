@@ -18,15 +18,28 @@ type PluginProvider struct {
 	// This is used to indicate what version the plugin is built for
 	PluginVersion int
 
-	AutoStart        bool
-	HasPublish       bool
+	// If AutoStart is true, a Plugin will be created for this
+	// Provider at provider definition time, if one is not already present.
+	AutoStart bool
+
+	// HasPlugin is deprecated, plugin provider binaries should use a websocket
+	// event stream instead.
+	HasPublish bool
+
+	// AvailableActions lists the actions that this PluginProvider
+	// can take.
 	AvailableActions []AvailableAction
 
+	// RequiredParams and OptionalParams
+	// are Params that must be present on a Plugin for the Provider
+	// to operate.
 	RequiredParams []string
 	OptionalParams []string
 
 	// Object prefixes that can be accessed by this plugin.
 	// The interface can be empty struct{} or a JSONSchema draft v4
+	// This allows PluginProviders to define custom Object types that dr-provision will
+	// store and check the validity of.
 	StoreObjects map[string]interface{}
 
 	// Documentation of this plugin provider.  This should tell what

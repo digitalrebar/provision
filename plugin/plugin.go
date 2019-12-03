@@ -18,6 +18,8 @@
 // 4. Listening to the event stream from dr-provision to take action
 //    whenever any number of selected events happen.
 //
+// 5. Define new object types that dr-provision will store and manage.
+//
 // github.com/digitalrebar/provision/cmds/incrementer provides a
 // fully functional implementation of a basic plugin provider that
 // you can use as an example and as a base for implementing your own
@@ -89,7 +91,7 @@
 //  able to handle all of the actions listed in the AvailableActions section
 //  of the definition that the define command returned.
 //
-//  POST /api-plugin/v4/publish (DEPRECATED, use api.EvnetStream instead)
+//  POST /api-plugin/v4/publish (DEPRECATED, use api.EventStream instead)
 //
 //  When a JSON object containing a fully filled out models.Event is POSTed
 //  to this API endpoint, the plugin provider should handle the event as
