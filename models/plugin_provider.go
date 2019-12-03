@@ -12,21 +12,42 @@ import (
 type PluginProvider struct {
 	Meta
 
-	Name    string
+	// Name is the unique name of the PluginProvider.
+	// Each Plugin provider must have a unique Name.
+	Name string
+
+	// The version of the PluginProvider.  This is a semver compatible string.
 	Version string
 
 	// This is used to indicate what version the plugin is built for
+	// This is effectively the API version of the protocol that
+	// plugin providers use to communicate with dr-provision.
+	// Right now, all plugin providers must set this to version 4,
+	// which is the only supported protocol version.
 	PluginVersion int
 
-	AutoStart        bool
-	HasPublish       bool
+	// If AutoStart is true, a Plugin will be created for this
+	// Provider at provider definition time, if one is not already present.
+	AutoStart bool
+
+	// HasPlugin is deprecated, plugin provider binaries should use a websocket
+	// event stream instead.
+	HasPublish bool
+
+	// AvailableActions lists the actions that this PluginProvider
+	// can take.
 	AvailableActions []AvailableAction
 
+	// RequiredParams and OptionalParams
+	// are Params that must be present on a Plugin for the Provider
+	// to operate.
 	RequiredParams []string
 	OptionalParams []string
 
 	// Object prefixes that can be accessed by this plugin.
 	// The interface can be empty struct{} or a JSONSchema draft v4
+	// This allows PluginProviders to define custom Object types that dr-provision will
+	// store and check the validity of.
 	StoreObjects map[string]interface{}
 
 	// Documentation of this plugin provider.  This should tell what

@@ -1,8 +1,127 @@
-package plugin
+// Package plugin is used to write plugin providers in Go.
+// It provides the framework for the rest of the plugin provider code,
+// along with a set of interfaces that you app can satisfy to
+// implement whatever custom behaviour the plugin provider needs to implement.
+//
+// A plugin provider is an executable that provides extensions to the base
+// functionality in dr-provision.  This can be done in several different ways,
+// depending on the functionality the plugin provider needs to implement:
+//
+// 1. Injecting custom content bundles into dr-provision to provide
+//    additional tasks, params, etc.
+//
+// 2. Implementing additional per-object Actions that can be used for
+//    a wide variety of things.
+//
+// 3. Providing additional files in the files/ space of the static file server.
+//
+// 4. Listening to the event stream from dr-provision to take action
+//    whenever any number of selected events happen.
+//
+// 5. Define new object types that dr-provision will store and manage.
+//
+// github.com/digitalrebar/provision/cmds/incrementer provides a
+// fully functional implementation of a basic plugin provider that
+// you can use as an example and as a base for implementing your own
+// plugin providers.
+//
+// github.com/digitalrebar/provision-plugins contains several production
+// ready plugin provider implementations that you can use as a reference
+// for implementing more advanced behaviours.
+//
+// At a higher level, a plugin provider is an application that has 3 ways
+// of being invoked:
+//
+// 1. plugin_provider define
+//
+//    When invoked with a single argument of define, the plugin provider must
+//    print the models.PluginProvider definition for the plugin provider in
+//    JSON format on stdout.
+//
+// 2. plugin_provider unpack /path/to/filespace/for/this/provider
+//
+//    When invoked with unpack /path, the plugin provider must unpack any
+//    embedded assets (extra executables and other artifacts like that) into
+//    the path passed in as the argument.  Note that this does not include
+//    the embedded content pack, which is emitted as part of the define
+//    command.
+//
+// 3. plugin_provider listen /path/to/client/socket /path/to/server/socket
+//
+//    When invoked with listen, the plugin client must open an HTTP client
+//    connection on the client socket to post events and status updates back
+//    to dr-provision, and listen with an HTTP server on the server socket
+//    to receive action requests, stop requests, and events from dr-provision.
+//    Once both sockets are opened up and the plugin provider is ready to
+//    be configured, it should emit `READY!` followed by a newline
+//    on stdout.
+//
+//    In all cases, the following environment variables will be set when
+//    the plugin provider is executed:
+//
+//    RS_ENDPOINT will be a URL to the usual dr-provision API endpoint
+//    RS_TOKEN will be a ling-lived token with superuser access rights
+//    RS_FILESERVER will be a URL to the static file server
+//    RS_WEBROOT will be the filesystem path to static file server space
+//
+//    The plugin provider will be executed with its current directory set
+//    to a scratch directory it can use to hold temporary files.
+//
+// Once the plugin provider is ready, its HTTP server should listen on
+// the following paths:
+//
+//  POST /api-plugin/v4/config
+//
+//  When a JSON object containing the Params field from the Plugin object
+//  this instance of the plugin provider is backing is POSTed to this API
+//  endpoint, the plugin should configure itself accordingly.
+//  This is the first call made into the plugin provider
+//  when it starts, and it can be called any time afterwards.
+//
+//  POST /api-plugin/v4/stop
+//
+//  When this API endpoint is POSTed to, the plugin provider should cleanly
+//  shut down.
+//
+//  POST /api-plugin/v4/action
+//
+//  When a JSON object containing a fully filled out models.Action is POSTed
+//  to this API endpoint, the plugin provider should take the appropriate
+//  action and return the results of the action.  This endpoint must be
+//  able to handle all of the actions listed in the AvailableActions section
+//  of the definition that the define command returned.
+//
+//  POST /api-plugin/v4/publish (DEPRECATED, use api.EventStream instead)
+//
+//  When a JSON object containing a fully filled out models.Event is POSTed
+//  to this API endpoint, the plugin provider should handle the event as
+//  appropriate.  Events will only be published to this endpoint if the
+//  plugin provider definition HasPublish flag is true.
+//
+//  This endpoint is deprecated, as it is synchronous and can cause
+//  performance bottlenecks and potentially deadlocks, along with not
+//  being filterable on the server side.  Using an api.EventStream
+//  is a better solution.
+//
+// The HTTP client can POST back into dr-provision using the following
+// paths on the client socket:
+//
+//  POST /api-plugin-server/v4/publish
+//
+//  The body should be a JSON serialized models.Event, which will be broadcast
+//  to all interested parties.
+//
+//  POST /api-plugin-server/v4/leaving
+//
+//  This will cause dr-provision to cleanly shut down the plugin provider.
+//  The body does not matter.
+//
+//  POST /api-plugin-server/v4/log
+//
+//  The body should be a JSON serialized logger.Line structure, which will be
+//  added to the global dr-provision log.
 
-/*
- * This is used by plugins to define their base App.
- */
+package plugin
 
 import (
 	"context"
@@ -24,46 +143,6 @@ import (
 
 var json = jsoniter.ConfigFastest
 
-// PluginStop defines the Stop routine used to inform a plugin
-// that it should stop.
-type PluginStop interface {
-	Stop(logger.Logger)
-}
-
-// PluginConfig defines the Config routine used to configure a
-// specific instance of a plugin.
-type PluginConfig interface {
-	Config(logger.Logger, *api.Client, map[string]interface{}) *models.Error
-}
-
-// PluginPublisher defines the Publish routine used to send events
-// to a plugin.
-type PluginPublisher interface {
-	Publish(logger.Logger, *models.Event) *models.Error
-}
-
-type PluginEventSelecter interface {
-	SelectEvents() []string
-}
-
-// PluginActor defines the Action routine used to invoke actions
-// by the plugin.
-type PluginActor interface {
-	Action(logger.Logger, *models.Action) (interface{}, *models.Error)
-}
-
-// PluginValidator defines the Validate routine used to ensure that
-// the environment is valid around the define timeframe.
-type PluginValidator interface {
-	Validate(logger.Logger, *api.Client) (interface{}, *models.Error)
-}
-
-// PluginUnpacker defines the Unpack routine used to unpack embedded
-// assets to the specified path.
-type PluginUnpacker interface {
-	Unpack(logger.Logger, string) error
-}
-
 var (
 	thelog logger.Logger
 	// App is the global cobra command structure.
@@ -79,7 +158,7 @@ var (
 	events   <-chan api.RecievedEvent
 )
 
-// Publish allows the plugin to generate events back to DRP.
+// Publish allows the plugin provider to generate events back to DRP.
 func Publish(t, a, k string, o interface{}) {
 	if client == nil {
 		return
@@ -119,7 +198,9 @@ func ListObjects(prefix string) ([]*models.RawModel, *models.Error) {
 }
 
 // InitApp initializes the plugin system and makes the base actions
-// available in cobra CLI.
+// available in cobra CLI.  It provides default implementations of the
+// define, unpack, and listen commands, which will be backed by all the interfaces
+// that whatever is passed in as pc satisfy.
 func InitApp(use, short, version string, def *models.PluginProvider, pc PluginConfig) {
 	App.Use = use
 	App.Short = short
