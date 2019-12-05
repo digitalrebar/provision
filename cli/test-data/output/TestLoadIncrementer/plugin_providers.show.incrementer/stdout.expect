@@ -9,14 +9,14 @@ RE:
         "incrementer/step",
         "incrementer/parameter"
       \],
-      "Provider": "",
-      "RequiredParams": null
+      "Provider": "incrementer",
+      "RequiredParams": \[\]
     },
     {
       "Command": "reset_count",
       "Model": "machines",
-      "OptionalParams": null,
-      "Provider": "",
+      "OptionalParams": \[\],
+      "Provider": "incrementer",
       "RequiredParams": \[
         "incrementer/touched"
       \]
@@ -24,9 +24,9 @@ RE:
     {
       "Command": "incrstatus",
       "Model": "",
-      "OptionalParams": null,
-      "Provider": "",
-      "RequiredParams": null
+      "OptionalParams": \[\],
+      "Provider": "incrementer",
+      "RequiredParams": \[\]
     }
   \],
   "Documentation": "",
