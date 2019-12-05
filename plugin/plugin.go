@@ -60,7 +60,7 @@
 //    the plugin provider is executed:
 //
 //    RS_ENDPOINT will be a URL to the usual dr-provision API endpoint
-//    RS_TOKEN will be a ling-lived token with superuser access rights
+//    RS_TOKEN will be a long-lived token with superuser access rights
 //    RS_FILESERVER will be a URL to the static file server
 //    RS_WEBROOT will be the filesystem path to static file server space
 //
@@ -120,7 +120,6 @@
 //
 //  The body should be a JSON serialized logger.Line structure, which will be
 //  added to the global dr-provision log.
-
 package plugin
 
 import (
