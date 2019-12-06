@@ -7,6 +7,7 @@ import (
 	"os"
 	"path"
 	"runtime"
+	"strconv"
 	"strings"
 
 	v4 "github.com/digitalrebar/provision/v4"
@@ -18,22 +19,29 @@ import (
 type registerSection func(*cobra.Command)
 
 var (
-	version              = v4.RSVersion
-	debug                = false
-	catalog              = "https://repo.rackn.io"
-	defaultCatalog       = "https://repo.rackn.io"
-	endpoint             = "https://127.0.0.1:8092"
-	defaultEndpoint      = "https://127.0.0.1:8092"
-	defaultEndpoints     = []string{"https://127.0.0.1:8092"}
-	token                = ""
-	defaultToken         = ""
-	username             = "rocketskates"
-	defaultUsername      = "rocketskates"
-	password             = "r0cketsk8ts"
-	defaultPassword      = "r0cketsk8ts"
-	downloadProxy        = ""
-	defaultDownloadProxy = ""
-	format               = "json"
+	version               = v4.RSVersion
+	debug                 = false
+	catalog               = "https://repo.rackn.io"
+	defaultCatalog        = "https://repo.rackn.io"
+	endpoint              = "https://127.0.0.1:8092"
+	defaultEndpoint       = "https://127.0.0.1:8092"
+	defaultEndpoints      = []string{"https://127.0.0.1:8092"}
+	token                 = ""
+	defaultToken          = ""
+	username              = "rocketskates"
+	defaultUsername       = "rocketskates"
+	password              = "r0cketsk8ts"
+	defaultPassword       = "r0cketsk8ts"
+	downloadProxy         = ""
+	defaultDownloadProxy  = ""
+	format                = ""
+	defaultFormat         = "json"
+	printFields           = ""
+	defaultPrintFields    = ""
+	defaultTruncateLength = 40
+	truncateLength        = 40
+	noHeader              = false
+	defaultNoHeader       = false
 	// Session is the global client access session
 	Session       *api.Client
 	noToken       = false
@@ -133,6 +141,26 @@ func NewApp() *cobra.Command {
 	if tk := os.Getenv("RS_CATALOG"); tk != "" {
 		defaultCatalog = tk
 	}
+	if tk := os.Getenv("RS_FORMAT"); tk != "" {
+		defaultFormat = tk
+	}
+	if tk := os.Getenv("RS_PRINT_FIELDS"); tk != "" {
+		defaultPrintFields = tk
+	}
+	if tk := os.Getenv("RS_NO_HEADER"); tk != "" {
+		var e error
+		defaultNoHeader, e = strconv.ParseBool(tk)
+		if e != nil {
+			log.Fatal("RS_NO_HEADER should be a boolean value")
+		}
+	}
+	if tk := os.Getenv("RS_TRUNCATE_LENGTH"); tk != "" {
+		var e error
+		defaultTruncateLength, e = strconv.Atoi(tk)
+		if e != nil {
+			log.Fatal("RS_TRUNCATE_LENGTH should be an integer value")
+		}
+	}
 	if kv := os.Getenv("RS_KEY"); kv != "" {
 		key := strings.SplitN(kv, ":", 2)
 		if len(key) < 2 {
@@ -152,6 +180,12 @@ func NewApp() *cobra.Command {
 			parts := strings.SplitN(line, "=", 2)
 
 			switch parts[0] {
+			case "RS_NO_HEADER":
+				var e error
+				defaultNoHeader, e = strconv.ParseBool(parts[1])
+				if e != nil {
+					log.Fatal("RS_NO_HEADER should be a boolean value in drpclirc")
+				}
 			case "RS_ENDPOINT":
 				defaultEndpoints = []string{parts[1]}
 			case "RS_TOKEN":
@@ -162,6 +196,16 @@ func NewApp() *cobra.Command {
 				defaultPassword = parts[1]
 			case "RS_DOWNLOAD_PROXY":
 				defaultDownloadProxy = parts[1]
+			case "RS_FORMAT":
+				defaultFormat = parts[1]
+			case "RS_PRINT_FIELDS":
+				defaultPrintFields = parts[1]
+			case "RS_TRUNCATE_LENGTH":
+				var e error
+				defaultTruncateLength, e = strconv.Atoi(parts[1])
+				if e != nil {
+					log.Fatal("RS_TRUNCATE_LENGTH should be an integer value in drpclirc")
+				}
 			case "RS_KEY":
 				key := strings.SplitN(parts[1], ":", 2)
 				if len(key) < 2 {
@@ -191,8 +235,17 @@ func NewApp() *cobra.Command {
 		"debug", "d", false,
 		"Whether the CLI should run in debug mode")
 	app.PersistentFlags().StringVarP(&format,
-		"format", "F", "json",
-		`The serialzation we expect for output.  Can be "json" or "yaml"`)
+		"format", "F", defaultFormat,
+		`The serialization we expect for output.  Can be "json" or "yaml" or "text" or "table"`)
+	app.PersistentFlags().StringVarP(&printFields,
+		"print-fields", "J", defaultPrintFields,
+		`The fields of the object to display in "text" or "table" mode. Comma separated`)
+	app.PersistentFlags().BoolVarP(&noHeader,
+		"no-header", "H", defaultNoHeader,
+		`Should header be shown in "text" or "table" mode`)
+	app.PersistentFlags().IntVarP(&truncateLength,
+		"truncate-length", "j", defaultTruncateLength,
+		`Truncate columns at this length`)
 	app.PersistentFlags().BoolVarP(&force,
 		"force", "f", false,
 		"When needed, attempt to force the operation - used on some update/patch calls")
