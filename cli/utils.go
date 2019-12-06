@@ -18,6 +18,7 @@ import (
 	"github.com/VictorLowther/jsonpatch2/utils"
 	"github.com/digitalrebar/provision/v4/api"
 	"github.com/digitalrebar/provision/v4/models"
+	"github.com/olekukonko/tablewriter"
 )
 
 var encodeJSONPtr = strings.NewReplacer("~", "~0", "/", "~1")
@@ -236,10 +237,120 @@ func d(msg string, args ...interface{}) {
 	}
 }
 
+func truncateString(str string, num int) string {
+	bnoden := str
+	if len(str) > num {
+		if num > 3 {
+			num -= 3
+		}
+		bnoden = str[0:num] + "..."
+	}
+	return bnoden
+}
+
+func lamePrinter(obj interface{}) []byte {
+	isTable := format == "table"
+
+	if slice, ok := obj.([]interface{}); ok {
+		tableString := &strings.Builder{}
+		table := tablewriter.NewWriter(tableString)
+
+		var theFields []string
+		data := [][]string{}
+
+		for i, v := range slice {
+			if m, ok := v.(map[string]interface{}); ok {
+				if i == 0 {
+					theFields = strings.Split(printFields, ",")
+					if printFields == "" {
+						theFields = []string{}
+						for k := range m {
+							theFields = append(theFields, k)
+						}
+					}
+				}
+				row := []string{}
+				for _, k := range theFields {
+					row = append(row, truncateString(fmt.Sprintf("%v", m[k]), truncateLength))
+				}
+				data = append(data, row)
+			} else {
+				if i == 0 {
+					theFields = []string{"Index", "Value"}
+				}
+				data = append(data, []string{fmt.Sprintf("%d", i), truncateString(fmt.Sprintf("%v", obj), truncateLength)})
+			}
+		}
+
+		if !noHeader {
+			table.SetHeader(theFields)
+			table.SetHeaderAlignment(tablewriter.ALIGN_LEFT)
+			table.SetHeaderLine(isTable)
+		}
+		table.SetAutoWrapText(false)
+		table.SetAlignment(tablewriter.ALIGN_LEFT)
+		if !isTable {
+			table.SetCenterSeparator("")
+			table.SetColumnSeparator("")
+			table.SetRowSeparator("")
+			table.SetTablePadding("\t") // pad with tabs
+			table.SetBorder(false)
+			table.SetNoWhiteSpace(true)
+		}
+		table.AppendBulk(data) // Add Bulk Data
+		table.Render()
+		return []byte(tableString.String())
+	}
+	if m, ok := obj.(map[string]interface{}); ok {
+		theFields := strings.Split(printFields, ",")
+		tableString := &strings.Builder{}
+		table := tablewriter.NewWriter(tableString)
+
+		if !noHeader {
+			table.SetHeader([]string{"Field", "Value"})
+			table.SetHeaderLine(isTable)
+			table.SetHeaderAlignment(tablewriter.ALIGN_LEFT)
+		}
+		table.SetAutoWrapText(false)
+		table.SetAlignment(tablewriter.ALIGN_LEFT)
+		if !isTable {
+			table.SetCenterSeparator("")
+			table.SetColumnSeparator("")
+			table.SetRowSeparator("")
+			table.SetTablePadding("\t") // pad with tabs
+			table.SetBorder(false)
+			table.SetNoWhiteSpace(true)
+		}
+
+		data := [][]string{}
+
+		if printFields != "" {
+			for _, k := range theFields {
+				data = append(data, []string{k, truncateString(fmt.Sprintf("%v", m[k]), truncateLength)})
+			}
+		} else {
+			for k, v := range m {
+				data = append(data, []string{k, truncateString(fmt.Sprintf("%v", v), truncateLength)})
+			}
+		}
+
+		table.AppendBulk(data) // Add Bulk Data
+		table.Render()
+		return []byte(tableString.String())
+	}
+
+	// Default for everything else
+	return []byte(truncateString(fmt.Sprintf("%v", obj), truncateLength))
+}
+
 func prettyPrintBuf(o interface{}) (buf []byte, err error) {
 	var v interface{}
 	if err := utils.Remarshal(o, &v); err != nil {
 		return nil, err
+	}
+
+	if format == "text" || format == "table" {
+		return lamePrinter(v), nil
 	}
 	return api.Pretty(format, v)
 }

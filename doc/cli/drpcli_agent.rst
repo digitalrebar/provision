@@ -1,24 +1,24 @@
-drpcli certs csr
-----------------
+drpcli agent
+------------
 
-Create a CSR and private key
+Manage drpcli running as an agent
 
 Synopsis
 ~~~~~~~~
 
-You must pass the root CA name, the common name, and may add additional
-hosts
+Use this command to install, remove, stop, start, restart drpcli running
+as a task runner
 
 ::
 
-   drpcli certs csr [root] [cn] [hosts...] [flags]
+   drpcli agent [operation] [flags]
 
 Options
 ~~~~~~~
 
 ::
 
-     -h, --help   help for csr
+     -h, --help   help for agent
 
 Options inherited from parent commands
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -45,5 +45,5 @@ Options inherited from parent commands
 SEE ALSO
 ~~~~~~~~
 
--  `drpcli certs <drpcli_certs.html>`__ - Access CLI commands relating
-   to certs
+-  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
+   DigitalRebar Provision API

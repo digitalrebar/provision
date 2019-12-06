@@ -6,7 +6,7 @@ import (
 
 	"github.com/VictorLowther/jsonpatch2"
 	"github.com/digitalrebar/provision/v4/models"
-	yaml "github.com/ghodss/yaml"
+	"github.com/ghodss/yaml"
 )
 
 type Decoder interface {
@@ -30,7 +30,7 @@ func DecodeYaml(buf []byte, ref interface{}) error {
 	return models.DecodeYaml(buf, ref)
 }
 
-// Pretty marshals object acciording to the the fmt, in whatever
+// Pretty marshals object according to the the fmt, in whatever
 // passed for "pretty" according to fmt.
 func Pretty(f string, obj interface{}) ([]byte, error) {
 	switch f {

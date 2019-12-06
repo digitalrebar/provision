@@ -26,6 +26,7 @@ require (
 	github.com/klauspost/cpuid v1.2.1 // indirect
 	github.com/klauspost/pgzip v1.2.1
 	github.com/krolaw/dhcp4 v0.0.0-20190531080455-7b64900047ae
+	github.com/olekukonko/tablewriter v0.0.4
 	github.com/pborman/uuid v1.2.0
 	github.com/rackn/gohai v0.3.0
 	github.com/rackn/netwrangler v0.7.0
