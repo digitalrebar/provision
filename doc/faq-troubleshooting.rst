@@ -191,27 +191,80 @@ For Images with ``cloud-init`` pieces, there often is an injected ``centos`` use
 Using the ``.rsclirc`` File
 ---------------------------
 
-In addition to the environment variables (eg ``RS_ENDPOINT``, ``RS_KEY``, etc) and setting explicit ``drpcli`` values via option flags (eg ``--enpdoint``, ``-E``, etc), you can now use a home _RC_ style configuration file to set these values.  
+In addition to the environment variables (eg ``RS_ENDPOINT``, ``RS_KEY``, etc) and setting explicit ``drpcli`` values via option flags (eg ``--enpdoint``, ``-E``, etc), you can now use a home _RC_ style configuration file to set these values.
 
-To do so, create a file ``$HOME/.drpclirc`` with the following possible values and format:
+To do so, create a file ``$HOME/.rsclirc`` with the following possible values and format:
 
-===============  ==================================================================
-value            notes
-===============  ==================================================================
-``RS_ENDPOINT``  sets the endpoint API location (default: https://10.10.10.10:8092)
-``RS_USERNAME``  sets username to auth to the Endpoint (default: "rocketskates")
-``RS_PASSWORD``  sets the password for the auth (default: "r0cketsk8ts")
-``RS_KEY``       sets user:pass pair for authentication
-``RS_TOKEN``     a precreated Token (which may have a specific use scope)
-===============  ==================================================================
+====================== ============================================================================
+value                  notes
+====================== ============================================================================
+``RS_ENDPOINT``        sets the endpoint API location (default: https://127.0.0.1:8092)
+``RS_USERNAME``        sets username to auth to the Endpoint (default: "rocketskates")
+``RS_PASSWORD``        sets the password for the auth (default: "r0cketsk8ts")
+``RS_KEY``             sets user:pass pair for authentication (default: "rocketskates:r0cketsk8ts")
+``RS_TOKEN``           a precreated Token (which may have a specific use scope)
+``RS_FORMAT``          command line output format to use (json,yaml,text,table)
+``RS_PRINT_FIELDS``    comma separate list of fields to show in output "table" or "text" format
+``RS_NO_HEADER``       remove the header fields from "table" or "text" format output
+``RS_TRUNCATE_LENGTH`` limits the length of fields displayed for "table" or "text" output formats
+====================== ============================================================================
 
 Example:
   ::
+
     RS_ENDPOINT=https://10.10.10.10.8092
     RS_PASSWORD=super_secure_secret_password_don't_share_with_anyone
 
 Please note that you can not use Shell style ``export`` in front of the variable,
 and do NOT surround the value with double or single quotes.
+
+.. note:: The RS_FORMAT, RS_PRINT_FIELDS, RS_NO_HEADER, and RS_TRUNCATE_LENGTH variables are only valid for ``drpcli`` *v4.2.0-beta2.0* or newer versions.
+
+.. _rs_human_formatters:
+
+Using Table/Text Output Formatters
+----------------------------------
+
+As of ``v4.2.0-beta2.0``, the ``drpcli`` client supports additional output formats of *table* and *text* type.
+
+Examples:
+  ::
+
+    drpcli --format table ...
+    # or
+    drpcli --format text ...
+
+These output formats can be configured by setting environment shell variables,
+or use of the .rsclirc (see: :ref:`rs_rsclirc`) file for setting default usage.
+
+The shell environment variables are as follows.
+
+====================== ============================================================================
+value                  notes
+====================== ============================================================================
+``RS_FORMAT``          command line output format to use (json,yaml,text,table)
+``RS_PRINT_FIELDS``    comma separate list of fields to show in output "table" or "text" format
+``RS_NO_HEADER``       remove the header fields from "table" or "text" format output
+``RS_TRUNCATE_LENGTH`` limits the length of fields displayed for "table" or "text" output formats
+====================== ============================================================================
+
+Examples of setting environment variables:
+  ::
+
+    export RS_FORMAT=table
+    export RS_PRINT_FIELDS=Name,Uuid,Workflow,Stage,BootEnv
+    export RS_NO_HEADER=true
+    export RS_TRUNCATE_LENGTH=30
+
+Examples of ``drpcli`` usage:
+  ::
+
+    drpcli subnets list --format table
+    drpcli machines list --format table --print-fields Name,Uuid,Workflow,Stage,BootEnv --no-header
+    drpcli machines list --format table --print-fields Name,Uuid,Workflow,Stage,BootEnv
+    drpcli profiles list --format table --truncate-length 30
+    drpcli machines params Name:jane --format=table --truncate-length=120
+    drpcli extended -l endpoints list --format table --truncate-length 30
 
 CLI FAQ:
 --------
@@ -220,8 +273,8 @@ The CLI has a dedicated FAQ section.  Please see :ref:`rs_cli_faq`.
 
 Topics include:
   * :ref: `rs_autocomplete`
-  * :ref: `rs_cli_faq_zip` 
-  * :ref: `rs_download_rackn_content` 
+  * :ref: `rs_cli_faq_zip`
+  * :ref: `rs_download_rackn_content`
 
 .. _rs_more_debug:
 
