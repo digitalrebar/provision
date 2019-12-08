@@ -20,6 +20,7 @@ require (
 	github.com/huandu/xstrings v1.2.0 // indirect
 	github.com/imdario/mergo v0.3.7 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
+	github.com/itchyny/gojq v0.6.0
 	github.com/json-iterator/go v1.1.7
 	github.com/kardianos/service v1.0.1-0.20191017145738-4df36c9fc1c6
 	github.com/klauspost/compress v1.7.4 // indirect
