@@ -186,7 +186,11 @@ func sessionOrError(token string, endpoints []string) (res *api.Client, err erro
 var agentHandler = &cobra.Command{
 	Use:   "agent [operation]",
 	Short: "Manage drpcli running as an agent",
-	Long:  "Use this command to install, remove, stop, start, restart drpcli running as a task runner",
+	Long:  `Use this command to install, remove, stop, start, restart drpcli running as a task runner
+
+Notes:
+  * RS_ENDPOINT, RS_UUID, and RS_TOKEN are required exports for "drpcli agent install"
+  * Use "drpcli machines token [id]" to generate a valid machine token for RS_TOKEN`,
 	Args: func(c *cobra.Command, args []string) error {
 		if !service.Interactive() {
 			return nil

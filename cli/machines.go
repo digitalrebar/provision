@@ -362,7 +362,6 @@ the stage runner wait flag.
 	op.addCommand(processJobs)
 	var tokenDuration = ""
 	tokenFetch := &cobra.Command{
-		Hidden: true,
 		Use:    "token [id]",
 		Short:  "Fetch a machine Token",
 		Long:   "Fetch an authentication token for a Machine that has the same access rights the runner uses.",
