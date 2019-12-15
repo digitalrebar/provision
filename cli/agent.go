@@ -189,7 +189,7 @@ var agentHandler = &cobra.Command{
 	Long:  `Use this command to install, remove, stop, start, restart drpcli running as a task runner
 
 Notes:
-  * RS_ENDPOINTS, RS_UUID, and RS_TOKEN are required exports for "drpcli agent install"
+  * RS_ENDPOINT, RS_UUID, and RS_TOKEN are required exports for "drpcli agent install"
   * Use "drpcli machines token [id]" to generate a valid machine token for RS_TOKEN`,
 	Args: func(c *cobra.Command, args []string) error {
 		if !service.Interactive() {
