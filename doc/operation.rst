@@ -22,3 +22,4 @@ Some of these operations are in the :ref:`rs_ui`, but not all.  This will focus 
    operations/commands
    operations/runbooks
    operations/airgap
+   operations/contexts
