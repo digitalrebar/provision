@@ -470,7 +470,7 @@ The ``CallTemplate`` construct can be a variable or expression that evaluates to
 How Can I manipulate values during Golang Template rendering?
 -------------------------------------------------------------
 
-The Digital Rebar Provision integrates most of the `Sprig Function Library <_http://masterminds.github.io/sprig/>`_ in the Golang Template rendering operations.  That means that you may include their string, math and flow functions into your pipelines.
+The Digital Rebar Provision integrates most of the `Sprig Function Library <http://masterminds.github.io/sprig/>`_ in the Golang Template rendering operations.  That means that you may include their string, math and flow functions into your pipelines.
 
 For example: `{{.Param "noCamelCase/hashiCorp" | snakecase }}` or `{{.Param "cool/tech" | regexMatch "([DRP]*)"}}`
 

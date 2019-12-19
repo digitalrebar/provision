@@ -149,7 +149,7 @@ template.  RenderData has the following fields:
     install.
 
   - **[Sprig functions]** are string, math, file and flow functions for golang
-    templates from the `Sprig Function Library <_http://masterminds.github.io/sprig/>`_.
+    templates from the `Sprig Function Library <http://masterminds.github.io/sprig/>`_.
     They can be added to pipeline evaluation to perform useful template
     rendering operations.
 
