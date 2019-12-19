@@ -462,6 +462,7 @@ func (a *Agent) waitOn(m *models.Machine, cond api.TestFunc) {
 		}
 	case "interrupt":
 		a.state = AGENT_EXIT
+		a.err = fmt.Errorf("Exiting because of interrupt")
 	case "complete":
 		if m.BootEnv != a.machine.BootEnv && a.context == "" {
 			a.rebootOrExit(true)
