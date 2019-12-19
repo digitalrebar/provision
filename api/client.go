@@ -495,6 +495,7 @@ func (r *R) Do(val interface{}) error {
 	if r.err.ContainsError() {
 		return r.err
 	}
+	r.Headers("Cache-Control", "no-store")
 	if r.traceLvl != "" {
 		r.Headers("X-Log-Request", r.traceLvl)
 		r.Headers("X-Log-Token", r.traceToken)
