@@ -735,6 +735,13 @@ func (a *Agent) Kill() error {
 	return <-a.kill
 }
 
+func (a *Agent) Close() {
+	if a.events != nil {
+		a.events.Close()
+		a.events = nil
+	}
+}
+
 // Run kicks off the state machine for this agent.
 func (a *Agent) Run() error {
 	if a.context == "" && (a.machine.HasFeature("original-change-stage") ||
