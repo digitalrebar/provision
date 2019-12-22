@@ -278,9 +278,7 @@ esac
 # Wait until DRP is ready, or exit
 check_drp_ready() {
     COUNT=0
-    local _RSE
-    [[ -n "$RS_ENDPOINT" ]] && _RSE="-E https://127.0.0.1:8092"
-    while ! drpcli ${_RSE} info get 2>/dev/null >/dev/null ; do
+    while ! drpcli info get > /dev/null 2>&1 ; do
         echo "DRP is not up yet, waiting ($COUNT) ..."
         sleep 2
         # Pre-increment for compatibility with Bash 4.1+
@@ -1015,9 +1013,9 @@ EOF
          [[ -f ${BIN_DIR}/drp-install.sh ]] && rm -f ${BIN_DIR}/drp-install.sh
          if [[ $REMOVE_DATA == true ]] ; then
              printf "Removing data files and directories ... "
-             [[ -d "/usr/share/dr-provision" ]] && RM_DIR="/usr/share/dr-provision "
-             [[ -d "/etc/dr-provision" ]] && RM_DIR+="/etc/dr-provision "
-             [[ -d "${DRP_HOME_DIR}" ]] && RM_DIR+="${DRP_HOME_DIR}"
+             [[ -d "/usr/share/dr-provision" ]] && RM_DIR="/usr/share/dr-provision " || true
+             [[ -d "/etc/dr-provision" ]] && RM_DIR+="/etc/dr-provision " || true
+             [[ -d "${DRP_HOME_DIR}" ]] && RM_DIR+="${DRP_HOME_DIR}" || true
              echo "$RM_DIR"
              $_sudo rm -rf $RM_DIR
          fi
