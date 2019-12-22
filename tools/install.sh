@@ -13,10 +13,11 @@ exit_cleanup() {
 
 usage() {
 cat <<EOFUSAGE
-Usage: $0 [--version=<Version to install>] [--no-content]
-          [--isolate] [--ipaddr=<ip>] install | upgrade | remove
+  USAGE: $0 [ install | upgrade | remove ] [ <options: see below> ]
 
-Options:
+WARNING: 'install' option will OVERWRITE existing installations
+
+OPTIONS:
     --debug=[true|false]    # Enables debug output
     --force=[true|false]    # Forces an overwrite of local install binaries and content
     --upgrade=[true|false]  # Turns on 'force' option to overwrite local binaries/content
@@ -68,15 +69,17 @@ Options:
     --container-env="<string> <string> <string>"
                             # Define a space separated list of environment variables to pass to the
                             # container on start (eg "RS_METRICS_PORT=8888 RS_DRP_ID=fred")
+                            # see 'dr-provision --help' for complete list of startup variables
     --container-netns="<string>"
-                            # Define Network Namespace to start container in. Defaults to "$CNT_NETNS".
-                            # If set to empty string (""), then disable setting any network namespace.
-                            #
-    install                 # Sets up an isolated or system 'production' enabled install.
+                            # Define Network Namespace to start container in. Defaults to "$CNT_NETNS"
+                            # If set to empty string (""), then disable setting any network namespace
+
+    install                 # Sets up an isolated or system 'production' enabled install
     upgrade                 # Sets the installer to upgrade an existing 'dr-provision'
     remove                  # Removes the system enabled install.  Requires no other flags
+                            # optional: '--remove-data' to wipe all installed data
 
-Defaults are:
+DEFAULTS:
     |  option:               value:           |  option:               value:
     |  -------------------   ------------     |  ------------------    ------------
     |  remove-rocketskates = false            |  version (*)         = $DEFAULT_DRP_VERSION
@@ -95,15 +98,17 @@ Defaults are:
     |  container-netns     = $CNT_NETNS             |  container-restart   = $CNT_RESTART
     |  bootstrap           = false
 
-    * version examples: 'tip', 'v3.13.6' or 'stable'
+    * version examples: 'tip', 'v4.1.13', 'v4.2.0-beta7.3', or 'stable'
 
-Prerequisites:
+PREREQUISITES:
     NOTE: By default, prerequisite packages will be installed if possible.  You must
           manually install these first on a Mac OS X system. Package names may vary
           depending on your operating system version/distro packaging naming scheme.
 
     REQUIRED: curl
     OPTIONAL: aria2c (if using experimental "fast downloader")
+
+WARNING: 'install' option will OVERWRITE existing installations
 EOFUSAGE
 } # end usage()
 
@@ -273,7 +278,9 @@ esac
 # Wait until DRP is ready, or exit
 check_drp_ready() {
     COUNT=0
-    while ! drpcli info get 2>/dev/null >/dev/null ; do
+    local _RSE
+    [[ -n "$RS_ENDPOINT" ]] && _RSE="-E https://127.0.0.1:8092"
+    while ! drpcli ${_RSE} info get 2>/dev/null >/dev/null ; do
         echo "DRP is not up yet, waiting ($COUNT) ..."
         sleep 2
         # Pre-increment for compatibility with Bash 4.1+
@@ -363,8 +370,7 @@ set_ownership_of_drp() {
     $_sudo chown -R ${SYSTEM_USER}:${SYSTEM_GROUP} ${DRP_HOME_DIR}
 
     for i in ${PROVISION} ${CLI} ${DRBUNDLER} ${PROVISION}.bak ${CLI}.bak ${DRBUNDLER}.bak ${PROVISION}.new ${CLI}.new ${DRBUNDLER}.new ; do
-        $_sudo touch $i
-        $_sudo chown -R ${SYSTEM_USER}:${SYSTEM_GROUP} $i
+        [[ -r "$i" ]] && $_sudo chown -R ${SYSTEM_USER}:${SYSTEM_GROUP} $i || true
     done
 }
 
@@ -600,6 +606,10 @@ fi
 
 case $MODE in
      install)
+             # a system under control of another DRP endpoint may have RS_ENDPOINT set, and
+             # this will cause various startup check procedures to fail or be wrong
+             export RS_ENDPOINT="https://127.0.0.1:8092"
+
              if [[ "$ISOLATED" == "false" || "$SKIP_RUN_CHECK" == "false" ]]; then
                  if pgrep dr-provision; then
                      echo "'dr-provision' service is running, CAN NOT upgrade ... please stop service first"
@@ -729,9 +739,10 @@ case $MODE in
                         echo "######### You can enable the DigitalRebar Provision service with:"
                         echo "$enabler"
                     else
-                        echo "######### Attempt to execute startup procedures ('--startup' specified)"
+                        echo "######### Will attempt to execute startup procedures ('--startup' specified)"
                         echo "$starter"
                         echo "$enabler"
+
                     fi
                  fi
 
@@ -773,7 +784,6 @@ case $MODE in
                  $_sudo cp "$binpath"/* "$bindest"
 
                  setcap_drp_binary
-
 
                  set_ownership_of_drp
 
@@ -825,7 +835,6 @@ EOF
 
                      eval "$enabler"
                      eval "$starter"
-
 
                      # If upgrading, assume DRP user already created
                      if [[ "$UPGRADE" == "true" ]]; then
@@ -991,14 +1000,26 @@ EOF
          else
              echo "'dr-provision' service is not running, beginning removal process ... "
          fi
-         [[ -f "$CLI_BKUP" ]] && ( echo "Restoring original 'drpcli'."; $_sudo mv "$CLI_BKUP" "$CLI"; )
+         if [[ -f "$CLI_BKUP" ]]
+         then
+           echo "Restoring original 'drpcli'."
+           $_sudo mv "$CLI_BKUP" "$CLI"
+           RM_CLI=""
+         else
+           RM_CLI="$bindest/drpcli"
+           echo "No 'drpcli' backup file found ('$CLI_BKUP')."
+         fi
          echo "Removing program and service files"
-         $_sudo rm -f "$bindest/dr-provision" "$bindest/drpcli" "$initdest"
+         $_sudo rm -f "$bindest/dr-provision" "$RM_CLI" "$initdest"
          [[ -d /etc/systemd/system/dr-provision.service.d ]] && rm -rf /etc/systemd/system/dr-provision.service.d
          [[ -f ${BIN_DIR}/drp-install.sh ]] && rm -f ${BIN_DIR}/drp-install.sh
          if [[ $REMOVE_DATA == true ]] ; then
-             echo "Removing data files"
-             $_sudo rm -rf "/usr/share/dr-provision" "/etc/dr-provision" "${DRP_HOME_DIR}"
+             printf "Removing data files and directories ... "
+             [[ -d "/usr/share/dr-provision" ]] && RM_DIR="/usr/share/dr-provision "
+             [[ -d "/etc/dr-provision" ]] && RM_DIR+="/etc/dr-provision "
+             [[ -d "${DRP_HOME_DIR}" ]] && RM_DIR+="${DRP_HOME_DIR}"
+             echo "$RM_DIR"
+             $_sudo rm -rf $RM_DIR
          fi
          ;;
      *)
