@@ -50,11 +50,11 @@ func blobCommands(bt string) *cobra.Command {
 		},
 		RunE: func(c *cobra.Command, args []string) error {
 			dest := os.Stdout
-			if len(args) == 2 && args[1] != "-" {
+			if len(args) == 3 && args[2] != "-" {
 				var err error
-				dest, err = os.Create(args[1])
+				dest, err = os.Create(args[2])
 				if err != nil {
-					return fmt.Errorf("Error opening dest file %s: %v", args[1], err)
+					return fmt.Errorf("Error opening dest file %s: %v", args[2], err)
 				}
 			}
 			if err := Session.GetBlob(dest, bt, args[0]); err != nil {
