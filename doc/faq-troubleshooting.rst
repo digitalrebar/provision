@@ -478,6 +478,26 @@ Please consult the Sprig website for a full list of functions.
 
 Note: Digital Rebar Provision blocks functions that could be used to operate on the endpoint outside of DRP template rendering for security reasons.
 
+.. _rs_double_brace:
+
+How Can I render Double Curly Braces `{{` and `}}` during Golang Template rendering?
+------------------------------------------------------------------------------------
+
+Golang template complains if you are building a template that also uses double curly brances (e.g. `{{ jinja 2 for ansible }}`) and it can be difficult to properly escape
+these characters.
+
+One possible workaround is to define variables for the double brace and then
+use the variable in the template.  For example:
+  ::
+
+    {{ $openblock := "\x7B\x7B" }}
+    {{ $closeblock := "\x7D\x7D" }}
+
+    - hosts: localhost
+      vars:
+        braceme: "{{ $openblock }} item.Name {{ $closeblock }}"
+
+
 .. _rs_change_machine_name:
 
 Change a Machines Name
