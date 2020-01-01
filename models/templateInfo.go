@@ -37,22 +37,26 @@ type TemplateInfo struct {
 	//
 	// required: true
 	Path string
-	// The ID of the template that should be expanded.  Either
+	// Link optionally references another file to put at
+	// the path location.
+	Link string
+	// ID of the template that should be expanded.  Either
 	// this or Contents should be set
 	//
 	// required: false
 	ID string
-	// The contents that should be used when this template needs
+	// Contents that should be used when this template needs
 	// to be expanded.  Either this or ID should be set.
 	//
 	// required: false
 	Contents string
-	// Metadata for the TemplateInfo.  This can be used by the job running
+	// Meta for the TemplateInfo.  This can be used by the job running
 	// system and the bootenvs to handle OS, arch, and firmware differences.
 	//
 	// required: false
 	Meta     map[string]string
 	pathTmpl *template.Template
+	linkTmpl *template.Template
 }
 
 func (ti *TemplateInfo) Id() string {
@@ -86,6 +90,10 @@ func (ti *TemplateInfo) SanityCheck(idx int, e ErrorAdder, missingPathOK bool) {
 
 func (ti *TemplateInfo) PathTemplate() *template.Template {
 	return ti.pathTmpl
+}
+
+func (ti *TemplateInfo) LinkTemplate() *template.Template {
+	return ti.linkTmpl
 }
 
 func MergeTemplates(root *template.Template, tmpls []TemplateInfo, e ErrorAdder) *template.Template {
@@ -122,6 +130,22 @@ func MergeTemplates(root *template.Template, tmpls []TemplateInfo, e ErrorAdder)
 		if ti.ID != "" {
 			if res.Lookup(ti.ID) == nil {
 				e.Errorf("Templates[%d]: No common template for %s", i, ti.ID)
+			}
+			continue
+		}
+		if ti.Link != "" {
+			if ti.Path == "" {
+				e.Errorf("Templates[%d]: Path is empty but link is specified %s", i, ti.Name)
+				continue
+			}
+			linkTmpl, err := template.New(ti.Name).Funcs(DrpSafeFuncMap()).Parse(ti.Link)
+			if err != nil {
+				e.Errorf("Error compiling link template %s (%s): %v",
+					ti.Name,
+					ti.Link,
+					err)
+			} else {
+				ti.linkTmpl = linkTmpl.Option("missingkey=error")
 			}
 			continue
 		}
