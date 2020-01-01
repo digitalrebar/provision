@@ -77,8 +77,8 @@ func (ti *TemplateInfo) SanityCheck(idx int, e ErrorAdder, missingPathOK bool) {
 			e.Errorf("Template[%d] Path is not a valid text/template: %v", idx, err)
 		}
 	}
-	if ti.Contents == "" && ti.ID == "" {
-		e.Errorf("Template[%d] must have either an ID or Contents set", idx)
+	if ti.Contents == "" && ti.ID == "" && ti.Link == "" {
+		e.Errorf("Template[%d] must have either an ID, a Link, or Contents set", idx)
 	}
 	if ti.Contents != "" && ti.ID != "" {
 		e.Errorf("Template[%d] has both an ID and Contents", idx)
@@ -150,7 +150,7 @@ func MergeTemplates(root *template.Template, tmpls []TemplateInfo, e ErrorAdder)
 			continue
 		}
 		if ti.Contents == "" {
-			e.Errorf("Templates[%d] has both an empty ID and contents", i)
+			e.Errorf("Templates[%d] has both an empty ID, Link, and contents", i)
 		}
 		fmt.Fprintf(buf, `{{define "%s"}}%s{{end}}\n`, ti.Name, ti.Contents)
 	}
