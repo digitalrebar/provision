@@ -12,6 +12,10 @@ import (
 // it is one we know how to normalize.
 func SupportedArch(s string) (string, bool) {
 	switch strings.ToLower(s) {
+	// rpi4 is a hack because it is really arm64, but reports as amd64.
+	// We build a lying bootenv for this purpose.
+	case "rpi4":
+		return "rpi4", true
 	case "amd64", "x86_64":
 		return "amd64", true
 	case "386", "486", "686", "i386", "i486", "i686":
