@@ -40,6 +40,10 @@ OPTIONS:
     --keep-installer        # In Production mode, do not purge the tmp installer artifacts
     --startup               # Attempt to start the dr-provision service
     --systemd               # Run the systemd enabling commands after installation
+    --create-self           # DRP will create a machine that represents itself.
+                            # Only used with startup/systemd parameters.
+    --start-runner          # DRP will start a runner for itself. Implies create self.
+                            # Only used with startup/systemd parameters.
     --bootstrap             # Store the install image and the install script in the files bootstrap
     --drp-id=<string>       # String to use as the DRP Identifier (only with --systemd)
     --ha-id=<string>        # String to use as the HA Identifier (only with --systemd)
@@ -87,6 +91,7 @@ DEFAULTS:
     |  upgrade             = false            |  force               = false
     |  debug               = false            |  skip-run-check      = false
     |  skip-prereqs        = false            |  systemd             = false
+    |  create-self         = false            |  start-runner        = false
     |  drp-id              = unset            |  ha-id               = unset
     |  drp-user            = rocketskates     |  drp-password        = r0cketsk8ts
     |  startup             = false            |  keep-installer      = false
@@ -122,6 +127,8 @@ SKIP_RUN_CHECK=false
 SKIP_DEPENDS=false
 FAST_DOWNLOADER=false
 SYSTEMD=false
+START_RUNNER=false
+CREATE_SELF=false
 STARTUP=false
 REMOVE_RS=false
 LOCAL_UI=false
@@ -154,39 +161,41 @@ while (( $# > 0 )); do
     arg_key="${arg%%=*}"
     arg_data="${arg#*=}"
     case $arg_key in
-        --help|-h)                  usage; exit_cleanup 0      ;;
-        --debug)                    DBG=true                   ;;
-        --version|--drp-version)    DRP_VERSION=${arg_data}    ;;
-        --isolated)                 ISOLATED=true              ;;
-        --skip-run-check)           SKIP_RUN_CHECK=true        ;;
-        --skip-dep*|--skip-prereq*) SKIP_DEPENDS=true          ;;
-        --fast-downloader)          FAST_DOWNLOADER=true       ;;
-        --force)                    force=true                 ;;
-        --remove-data)              REMOVE_DATA=true           ;;
-        --upgrade)                  UPGRADE=true; force=true   ;;
-        --nocontent|--no-content)   NO_CONTENT=true            ;;
-        --no-sudo)                  _sudo=""                   ;;
-        --keep-installer)           KEEP_INSTALLER=true        ;;
-        --startup)                  STARTUP=true; SYSTEMD=true ;;
-        --systemd)                  SYSTEMD=true               ;;
-        --bootstrap)                BOOTSTRAP=true             ;;
-        --local-ui)                 LOCAL_UI=true              ;;
-        --remove-rocketskates)      REMOVE_RS=true             ;;
-        --drp-user)                 DRP_USER=${arg_data}       ;;
-        --drp-password)             DRP_PASSWORD="${arg_data}" ;;
-        --drp-id)                   DRP_ID="${arg_data}"       ;;
-        --ha-id)                    HA_ID="${arg_data}"        ;;
-        --system-user)              SYSTEM_USER="${arg_data}"  ;;
-        --system-group)             SYSTEM_GROUP="${arg_data}" ;;
-        --drp-home-dir)             DRP_HOME_DIR="${arg_data}" ;;
-        --container)                CONTAINER=true             ;;
-        --container-type)           CNT_TYPE="${arg_data}"     ;;
-        --container-name)           CNT_NAME="${arg_data}"     ;;
-        --container-volume)         CNT_VOL="${arg_data}"      ;;
-        --container-restart)        CNT_RESTART="${arg_data}"  ;;
-        --container-registry)       CNT_REGISTRY="${arg_data}" ;;
-        --container-netns)          CNT_NETNS="${arg_data}"    ;;
-        --container-env)            CNT_ENV="${arg_data}"      ;;
+        --help|-h)                  usage; exit_cleanup 0               ;;
+        --debug)                    DBG=true                            ;;
+        --version|--drp-version)    DRP_VERSION=${arg_data}             ;;
+        --isolated)                 ISOLATED=true                       ;;
+        --skip-run-check)           SKIP_RUN_CHECK=true                 ;;
+        --skip-dep*|--skip-prereq*) SKIP_DEPENDS=true                   ;;
+        --fast-downloader)          FAST_DOWNLOADER=true                ;;
+        --force)                    force=true                          ;;
+        --remove-data)              REMOVE_DATA=true                    ;;
+        --upgrade)                  UPGRADE=true; force=true            ;;
+        --nocontent|--no-content)   NO_CONTENT=true                     ;;
+        --no-sudo)                  _sudo=""                            ;;
+        --keep-installer)           KEEP_INSTALLER=true                 ;;
+        --startup)                  STARTUP=true; SYSTEMD=true          ;;
+        --systemd)                  SYSTEMD=true                        ;;
+        --create-self)              CREATE_SELF=true                    ;;
+        --start-runner)             START_RUNNER=true; CREATE_SELF=true ;;
+        --bootstrap)                BOOTSTRAP=true                      ;;
+        --local-ui)                 LOCAL_UI=true                       ;;
+        --remove-rocketskates)      REMOVE_RS=true                      ;;
+        --drp-user)                 DRP_USER=${arg_data}                ;;
+        --drp-password)             DRP_PASSWORD="${arg_data}"          ;;
+        --drp-id)                   DRP_ID="${arg_data}"                ;;
+        --ha-id)                    HA_ID="${arg_data}"                 ;;
+        --system-user)              SYSTEM_USER="${arg_data}"           ;;
+        --system-group)             SYSTEM_GROUP="${arg_data}"          ;;
+        --drp-home-dir)             DRP_HOME_DIR="${arg_data}"          ;;
+        --container)                CONTAINER=true                      ;;
+        --container-type)           CNT_TYPE="${arg_data}"              ;;
+        --container-name)           CNT_NAME="${arg_data}"              ;;
+        --container-volume)         CNT_VOL="${arg_data}"               ;;
+        --container-restart)        CNT_RESTART="${arg_data}"           ;;
+        --container-registry)       CNT_REGISTRY="${arg_data}"          ;;
+        --container-netns)          CNT_NETNS="${arg_data}"             ;;
+        --container-env)            CNT_ENV="${arg_data}"               ;;
         --zip-file)
             ZF=${arg_data}
             ZIP_FILE=$(echo "$(cd $(dirname $ZF) && pwd)/$(basename $ZF)")
@@ -828,6 +837,18 @@ EOF
 [Service]
 Environment=RS_LOCAL_UI=tftpboot/files/ux
 Environment=RS_UI_URL=/ux
+EOF
+                     fi
+                     if [[ $CREATE_SELF ]] ; then
+                       cat > /etc/systemd/system/dr-provision.service.d/create-self.conf <<EOF
+[Service]
+Environment=RS_CREATE_SELF=true
+EOF
+                     fi
+                     if [[ $START_RUNNER ]] ; then
+                       cat > /etc/systemd/system/dr-provision.service.d/start-runner.conf <<EOF
+[Service]
+Environment=RS_START_RUNNER=true
 EOF
                      fi
 
