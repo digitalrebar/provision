@@ -339,6 +339,7 @@ urls = [
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/dell-support.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/dev-library.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/drp-prom-mon.rst",
+    "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/edge-lab.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/eikon.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/endpoint-exec.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/filebeat.rst",
