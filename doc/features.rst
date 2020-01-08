@@ -48,6 +48,8 @@ at Global, Group/Profile and Node level. Properties for templates can
 be managed in a wide range of ways that allows operators to manage
 large groups of servers in consistent ways.
 
+See :ref:`rs_data_template` for about using template expansion variables.
+
 Multi-mode (but optional) DHCP
 ------------------------------
 
@@ -92,3 +94,8 @@ speed with optimized install cycles the improve boot speed by
 switching from PXE TFTP to IPXE HTTP in a two stage process. This
 ensures maximum hardware compatibility without creating excess network
 load.
+
+Context Changing
+----------------
+
+Digital Rebar Workflows allow the operational location of the runner/agent to changed during a workflow.  By default, the runner works on the machine; however, v4.1 and later platforms are able to migrate the context into a container running on the endpoint.  This allows workflows to leverage multiple network and security trust zones.  It also allows them to perform work based on libraries managed in a container.
