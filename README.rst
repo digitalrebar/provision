@@ -5,14 +5,15 @@
 
 .. _rs_welcome:
 
-Digital Rebar Provision
-~~~~~~~~~~~~~~~~~~~~~~~
+Digital Rebar Provision Ecosystem
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-*simple, fast and open-ecosystem server provisioning that is API-driven.*
+*simple, fast and open-ecosystem server provisioning with strong Infrastructure as Code design.*
 
-`Digital Rebar Platform (DRP) <https://rebar.digital>`_ is a `APLv2 <https://raw.githubusercontent.com/digitalrebar/provision/v4/LICENSE>`_ simple Golang executable that provides a simple yet complete API-driven DHCP/PXE/TFTP provisioning and workflow system.
+`Digital Rebar Platform (DRP) Ecosystem <https://rebar.digital>`_ is a suite of `APLv2 <https://raw.githubusercontent.com/digitalrebar/provision/v4/LICENSE>`_ components used with
+the RackN DRP v4 Platform to provides a simple yet complete API-driven DHCP/PXE/TFTP provisioning and workflow system.
 
-DRP is designed to be a complete data center provisioning, content scaffolding and infrastructure workflow platform with a cloud native architecture that completely replaces Cobbler, Foreman, MaaS or similar technologies. DRP offers a single golang binary (less than 30MB) with no dependencies capable of installation on a laptop, RPi or switch supporting both bare metal and virtualized infrastructure.
+DRP Platform and Ecosystem is designed to be a complete data center provisioning, content scaffolding and infrastructure workflow platform with a cloud native architecture that completely replaces Cobbler, Foreman, MaaS, Ironic or similar technologies. DRP offers a single golang binary (less than 30MB) with no dependencies capable of installation on a laptop, RPi or switch supporting both bare metal and virtualized infrastructure.
 
 Key Features:
 
