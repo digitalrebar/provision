@@ -44,6 +44,12 @@ OPTIONS:
                             # Only used with startup/systemd parameters.
     --start-runner          # DRP will start a runner for itself. Implies create self.
                             # Only used with startup/systemd parameters.
+    --initial-workflow=<string>
+                            # Workflow to assign to the DRP's self machine as install finishes
+                            # This is only valid with create-self object
+    --initial-contents=<string>
+                            # Initial content packs to deliver, comma separated list.
+                            # A file, URL, or content-pack name
     --bootstrap             # Store the install image and the install script in the files bootstrap
     --drp-id=<string>       # String to use as the DRP Identifier (only with --systemd)
     --ha-id=<string>        # String to use as the HA Identifier (only with --systemd)
@@ -101,7 +107,8 @@ DEFAULTS:
     |  container-volume    = $CNT_VOL         |  container-registry  = $CNT_REGISTRY
     |  container-type      = $CNT_TYPE           |  container-name      = $CNT_NAME
     |  container-netns     = $CNT_NETNS             |  container-restart   = $CNT_RESTART
-    |  bootstrap           = false
+    |  bootstrap           = false            |  initial-workflow    = unset
+    |  initial-contents    = unset
 
     * version examples: 'tip', 'v4.1.13', 'v4.2.0-beta7.3', or 'stable'
 
@@ -135,6 +142,8 @@ LOCAL_UI=false
 KEEP_INSTALLER=false
 CONTAINER=false
 BOOTSTRAP=false
+INITIAL_WORKFLOW=
+INITIAL_CONTENTS=
 
 # download URL locations; overridable via ENV variables
 URL_BASE=${URL_BASE:-"https://rebar-catalog.s3-us-west-2.amazonaws.com"}
@@ -181,6 +190,8 @@ while (( $# > 0 )); do
         --bootstrap)                BOOTSTRAP=true                      ;;
         --local-ui)                 LOCAL_UI=true                       ;;
         --remove-rocketskates)      REMOVE_RS=true                      ;;
+        --initial-workflow)         INITIAL_WORKFLOW="${arg_data}"      ;;
+        --initial-contents)         INITIAL_CONTENTS="${arg_data}"      ;;
         --drp-user)                 DRP_USER=${arg_data}                ;;
         --drp-password)             DRP_PASSWORD="${arg_data}"          ;;
         --drp-id)                   DRP_ID="${arg_data}"                ;;
@@ -863,6 +874,29 @@ EOF
                          check_drp_ready
                          if [[ $NO_CONTENT == false ]] ; then
                              drpcli contents upload catalog:task-library-${DRP_CONTENT_VERSION}
+
+                             if [[ "$INITIAL_CONTENTS" != "" ]] ; then
+                                 IFS=',' read -ra contents_array <<< "$INITIAL_CONTENTS"
+                                 for i in "${contents_array[@]}" ; do
+                                     if [[ -f ${OLD_PWD}/$i ]] ; then
+                                         drpcli contents upload ${OLD_PWD}/${i}
+                                     elif [[ $i == http* ]] ; then
+                                         drpcli contents upload ${i}
+                                     else
+                                         drpcli catalog item install ${i} --version=${DRP_CONTENT_VERSION}
+                                     fi
+                                 done
+                             fi
+
+                             if [[ "$INITIAL_WORKFLOW" != "" ]] ; then
+                                 if [[ $CREATE_SELF ]] ; then
+                                     cp $(which drpcli) /tmp/jq
+                                     chmod +x /tmp/jq
+                                     ID=$(drpcli info get | /tmp/jq .id -r)
+                                     rm /tmp/jq
+                                     drpcli machines workflow "Name:$ID" "$INITIAL_WORKFLOW" >/dev/null
+                                 fi
+                             fi
                          fi
 
                          if [[ $DRP_USER ]] ; then
@@ -887,7 +921,30 @@ EOF
                          check_drp_ready
 
                          if [[ "$NO_CONTENT" == "false" ]] ; then
-                             drpcli contents upload catalog:task-library-${DRP_CONTENT_VERSION}
+                             drpcli catalog item install task-library --version=${DRP_CONTENT_VERSION}
+
+                             if [[ "$INITIAL_CONTENTS" != "" ]] ; then
+                                 IFS=',' read -ra contents_array <<< "$INITIAL_CONTENTS"
+                                 for i in "${contents_array[@]}" ; do
+                                     if [[ -f ${OLD_PWD}/$i ]] ; then
+                                         drpcli contents upload ${OLD_PWD}/${i}
+                                     elif [[ $i == http* ]] ; then
+                                         drpcli contents upload ${i}
+                                     else
+                                         drpcli catalog item install ${i} --version=${DRP_CONTENT_VERSION}
+                                     fi
+                                 done
+                             fi
+
+                             if [[ "$INITIAL_WORKFLOW" != "" ]] ; then
+                                 if [[ $CREATE_SELF ]] ; then
+                                     cp $(which drpcli) /tmp/jq
+                                     chmod +x /tmp/jq
+                                     ID=$(drpcli info get | /tmp/jq .id -r)
+                                     rm /tmp/jq
+                                     drpcli machines workflow "Name:$ID" "$INITIAL_WORKFLOW" >/dev/null
+                                 fi
+                             fi
                          fi
                          if [[ "$BOOTSTRAP" == "true" ]] ; then
                              drpcli files upload dr-provision.zip as bootstrap/dr-provision.zip
