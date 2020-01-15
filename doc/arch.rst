@@ -15,6 +15,7 @@ dr-provision for developers and power users.
 .. toctree::
 
    arch/design
+   arch/data
    arch/models
    arch/auth
    arch/provision
