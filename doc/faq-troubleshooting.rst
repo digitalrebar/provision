@@ -186,14 +186,14 @@ For ``debian / ubuntu`` bootenvs, the default user (``rocketskates``, can be cha
 
 For Images with ``cloud-init`` pieces, there often is an injected ``centos`` user for CentOS, ``ubuntu`` for Ubuntu, etc. user.  This is controlled by the ``cloud-init`` configurations of the image build process.
 
-.. _rs_rsclirc:
+.. _rs_drpclirc:
 
-Using the ``.rsclirc`` File
+Using the ``.drpclirc`` File
 ---------------------------
 
 In addition to the environment variables (eg ``RS_ENDPOINT``, ``RS_KEY``, etc) and setting explicit ``drpcli`` values via option flags (eg ``--enpdoint``, ``-E``, etc), you can now use a home _RC_ style configuration file to set these values.
 
-To do so, create a file ``$HOME/.rsclirc`` with the following possible values and format:
+To do so, create a file ``$HOME/.drpclirc`` with the following possible values and format:
 
 ====================== ============================================================================
 value                  notes
@@ -235,7 +235,7 @@ Examples:
     drpcli --format text ...
 
 These output formats can be configured by setting environment shell variables,
-or use of the .rsclirc (see: :ref:`rs_rsclirc`) file for setting default usage.
+or use of the .drpclirc (see: :ref:`rs_drpclirc`) file for setting default usage.
 
 The shell environment variables are as follows.
 
@@ -439,7 +439,7 @@ Rebooting without IPMI plugins (without a Task)
 The Runner will automatically reboot the system if the BootEnv changes during a Workflow.  You can force this behavior by changing the BootEnv to `local` on the machine manually then starting a Workflow with a different BootEnv like `discover`.  This will cause the runner to reboot the machine.
 
 
-Steps: 
+Steps:
   #. Clear the Machine Workflow
   #. Set the Machine BootEnv to `local`
   #. Update
