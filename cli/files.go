@@ -52,10 +52,11 @@ func blobCommands(bt string) *cobra.Command {
 			dest := os.Stdout
 			if len(args) == 3 && args[2] != "-" {
 				var err error
-				dest, err = os.Create(args[2])
+				dest, err = os.OpenFile(args[2], os.O_RDWR|os.O_CREATE, 0644)
 				if err != nil {
 					return fmt.Errorf("Error opening dest file %s: %v", args[2], err)
 				}
+				defer dest.Close()
 			}
 			if err := Session.GetBlob(dest, bt, args[0]); err != nil {
 				return generateError(err, "Failed to fetch %v: %v", bt, args[0])

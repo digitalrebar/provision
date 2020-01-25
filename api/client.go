@@ -5,8 +5,10 @@ package api
 import (
 	"bytes"
 	"context"
+	"crypto/sha256"
 	"crypto/tls"
 	"encoding/base64"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -554,13 +556,18 @@ func (r *R) Do(val interface{}) error {
 	if resp != nil {
 		defer resp.Body.Close()
 	}
-	if wr, ok := val.(io.Writer); ok && resp.StatusCode < 300 {
-		_, err := io.Copy(wr, resp.Body)
-		r.err.AddError(err)
-		return r.err.HasError()
+	if wr, ok := val.(io.Writer); ok {
+		if resp.StatusCode == 304 {
+			return nil
+		}
+		if resp.StatusCode < 300 {
+			_, err := io.Copy(wr, resp.Body)
+			r.err.AddError(err)
+			return r.err.HasError()
+		}
 	}
 	if r.method == "HEAD" {
-		if resp.StatusCode <= 300 {
+		if resp.StatusCode <= 300 || resp.StatusCode == 304 {
 			if val != nil {
 				return models.Remarshal(resp.Header, val)
 			}
@@ -674,10 +681,39 @@ func (c *Client) ListBlobs(at string, params ...string) ([]string, error) {
 	return res, c.Req().UrlFor(path.Join("/", at)).Params(params...).Do(&res)
 }
 
+type truncator interface {
+	io.ReadWriteSeeker
+	Truncate(int64) error
+}
+
 // GetBlob fetches a binary blob from the server, writing it to the
-// passed io.Writer.
+// passed io.Writer.  If the io.Writer is actually an io.ReadWriteSeeker
+// with a Truncate method, GetBlob will only download the file
+// if it has changed on the server side.
 func (c *Client) GetBlob(dest io.Writer, at ...string) error {
-	return c.Req().UrlFor(path.Join("/", path.Join(at...))).Do(dest)
+	req := c.Req().UrlFor(path.Join("/", path.Join(at...)))
+	if trunc, ok := dest.(truncator); ok {
+		_, err := trunc.Seek(0, io.SeekStart)
+		if err != nil {
+			return err
+		}
+		hasher := sha256.New()
+		if _, err := io.Copy(hasher, trunc); err != nil {
+			return err
+		}
+		_, err = trunc.Seek(0, io.SeekStart)
+		if err != nil {
+			return err
+		}
+		req.Headers("If-None-Match", `"SHA256:`+hex.EncodeToString(hasher.Sum(nil))+`"`)
+
+	}
+	err := req.Do(dest)
+	if trunc, ok := dest.(truncator); ok && err == nil {
+		sz, _ := trunc.Seek(0, io.SeekCurrent)
+		err = trunc.Truncate(sz)
+	}
+	return err
 }
 
 // GetBlobSum fetches the checksum for the blob
@@ -687,7 +723,15 @@ func (c *Client) GetBlobSum(at ...string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return h.Get("X-DRP-SHA256SUM"), nil
+	sum := h.Get("X-DRP-SHA256SUM")
+	if sum == "" {
+		sum = strings.Trim(h.Get("ETag"), `"`)
+		if parts := strings.SplitN(sum, ":", 2); len(parts) == 2 {
+			sum = parts[1]
+		}
+
+	}
+	return sum, nil
 }
 
 // PostBlobExplode uploads the binary blob contained in the passed io.Reader
