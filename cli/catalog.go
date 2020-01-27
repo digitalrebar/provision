@@ -348,6 +348,34 @@ and wind up in a file with the same name as the item + the default file extensio
 	}
 	cmd.AddCommand(updateCmd)
 
+	// Start of create stuff
+	var pkgVer string
+	createCmd := &cobra.Command{
+		Use:   "create",
+		Short: "Create a custom catalog for Digital Rebar",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			cat, err := fetchCatalog()
+			if err != nil {
+				return err
+			}
+			newMap := map[string]interface{}{}
+			for k, v := range cat.Sections["catalog_items"] {
+				item := &models.CatalogItem{}
+				if err := models.Remarshal(v, &item); err != nil {
+					continue
+				}
+				if item.Version == pkgVer {
+					newMap[k] = item
+				}
+			}
+			cat.Sections["catalog_items"] = newMap
+			return prettyPrint(cat)
+		},
+	}
+	createCmd.Flags().StringVarP(&pkgVer, "pkg-version", "", "", "pkg-version tip|stable (required)")
+	createCmd.MarkFlagRequired("pkg-version")
+	cmd.AddCommand(createCmd)
+
 	return cmd
 }
 
