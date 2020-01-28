@@ -76,12 +76,28 @@ func (r *RawModel) setAvailable(v bool) {
 	}
 	(*r)["Available"] = true
 }
+
 func (r *RawModel) getErrors() []string {
 	e, ok := (*r)["Errors"]
 	if !ok {
 		return []string{}
 	}
-	return e.([]string)
+	switch v := e.(type) {
+	case []string:
+		return v
+	case []interface{}:
+		res := make([]string, len(v))
+		var ok bool
+		for i, val := range v {
+			res[i], ok = val.(string)
+			if !ok {
+				res[i] = fmt.Sprintf("%v", val)
+			}
+		}
+		return res
+	default:
+		return []string{"Errors field exists and cannot be stringified!"}
+	}
 }
 
 // Validator Interface
