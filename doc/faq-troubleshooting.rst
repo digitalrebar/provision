@@ -718,8 +718,6 @@ If you have a task/template that has failed, once it's been run by the Job syste
     json2yaml $JOBID.json > $JOBID.yaml
 
 
-.. _rs_jq_examples:
-
 RBAC - Limit Users to Just Poweron and Poweroff IPMI Controls
 -------------------------------------------------------------
 
@@ -730,6 +728,19 @@ The Role Base Access and Controls subsystem allows an operator to construct user
     drpcli roles update prod-role '"Claims": [{"action": "action:poweron, action:poweroff", "scope": "machines", "specific": "*"}]'
 
 Now simply assign this Role to the given users you wish to limit their permissions on.
+
+.. _rs_unblockRunnable_panic:
+
+unblockRunnable Panic
+---------------------
+
+In some cases, DRP can panic with a message that contains unblockRunnable.  This error DRP protecting itself from an unhandled deadlock in the database system.
+DRP will restart cleanly when restarted.  If run under a service watch system (e.g. systemd), the system will restart and continue.
+
+Please gather the log failure and enter a new issue at `Digital Rebar Github <https://github.com/digitalrebar/provision>`_.
+
+
+.. _rs_jq_examples:
 
 JQ Usage Examples
 -----------------
