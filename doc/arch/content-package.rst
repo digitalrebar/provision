@@ -304,6 +304,7 @@ packs.
 Here are a couple of examples:
 
 .. code-block:: yaml
+
    ---
    meta:
      Name: one
@@ -427,6 +428,7 @@ doesn't. Objects are defined in a content pack in the `sections` part
 as follows:
 
 .. code-block:: yaml
+
   ---
   meta:
     Name: foo
