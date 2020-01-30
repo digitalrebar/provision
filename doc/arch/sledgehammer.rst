@@ -11,8 +11,8 @@ Sledgehammer is our system discovery/inventory/configuration in-memory
 OS image.  It is based on the latest CentOS 7.x live CD, with any
 unneeded content stripped out, tools we usually use preinstalled, and
 rebacled to me more space and network bandwidth efficient.
-https://github.com/digitalrebar/sledgehammer is the Git repo that
-contains the code needed to build Sledgehammer.
+https://github.com/digitalrebar/provision-content/tree/v4/sledgehammer-builder is
+the part of the Git repo that contains the code needed to build Sledgehammer.
 
 Sledgehammer Build
 ------------------
