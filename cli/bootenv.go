@@ -1,9 +1,11 @@
 package cli
 
 import (
+	"crypto/tls"
 	"fmt"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"path"
 
@@ -120,7 +122,17 @@ It will attempt to perform a direct copy without saving the ISO locally.`,
 					log.Printf("Unable to automatically download iso for %s, skipping", bootEnv.Name)
 					continue
 				}
-				isoDlResp, err := http.Get(isoUrl)
+				tr := &http.Transport{
+					TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+				}
+				if downloadProxy != "" {
+					proxyURL, err := url.Parse(downloadProxy)
+					if err == nil {
+						tr.Proxy = http.ProxyURL(proxyURL)
+					}
+				}
+				client := &http.Client{Transport: tr}
+				isoDlResp, err := client.Get(isoUrl)
 				if err != nil {
 					log.Printf("Unable to connect to %s: %v: Skipping", isoUrl, err)
 					continue
