@@ -121,7 +121,7 @@ Install Boot Environments (bootenvs)
 
 With Digital Rebar Provision running; it is now time to install the specialized Digital Rebar Provision content, and the required boot environments (BootEnvs).  We generally refer to this as "content".
 
-.. note:: This documentation assumes you are using the default ``drp-community-content`` pack.
+.. note:: This documentation assumes you are using the default ``drp-community-content`` pack. This is normally installed by ``install.sh`` script, other cases (such as running official Docker image or manual installation) are covered below.
 
 During the install step above, the installer output a message on how to install install BootEnvs.  You must install the ``sledgehammer`` BootEnv for Discovery and Workflow.  You may selectively choose to install one of the Community Content BootEnvs that you wish to install to your Machines.  To obtain a full list of Community Content supported BootEnvs, do:
   ::
@@ -136,13 +136,14 @@ During the install step above, the installer output a message on how to install 
 
 These steps should be performed from the newly installed *dr-provision* endpoint (or via remote *drpcli* binary with the use of the ``--endpoint`` flag):
 
-  ::
+.. code-block:: bash
 
+    drpcli catalog item install drp-community-content # if was not installed previously
     drpcli bootenvs uploadiso sledgehammer
     drpcli prefs set defaultWorkflow discover-base unknownBootEnv discovery
     drpcli contents upload catalog:task-library-stable
-    drpcli bootenvs uploadiso ubuntu-18.04-install
-    drpcli bootenvs uploadiso centos-7-install
+    drpcli bootenvs uploadiso ubuntu-18.04-install # optional
+    drpcli bootenvs uploadiso centos-7-install # optional
 
 The ``uploadiso`` command will fetch the ISO image as specified in the BootEnv JSON spec, download it, and then "explode" it in to the ``drp-data/tftpboot/`` directory for installation use.  You may optionally choose one or both of the CentOS and Ubuntu BootEnvs (or any other Community Content supported BootEnv) to install; depending on which Operating System and Version you wish to test or use.
 
