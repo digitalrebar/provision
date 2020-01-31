@@ -86,6 +86,7 @@ OPTIONS:
 
     install                 # Sets up an isolated or system 'production' enabled install
     upgrade                 # Sets the installer to upgrade an existing 'dr-provision'
+                            # container install kill/rm the DRP container, then upgrade and reattach volume
     remove                  # Removes the system enabled install.  Requires no other flags
                             # optional: '--remove-data' to wipe all installed data
 
@@ -161,6 +162,7 @@ CNT_REGISTRY=index.docker.io
 CNT_NETNS=host
 CNT_ENV=""
 CNT_RESTART="always"
+CNT_VOL_REMOVE=true
 SYSTEM_USER=root
 SYSTEM_GROUP=root
 
@@ -179,7 +181,8 @@ while (( $# > 0 )); do
         --fast-downloader)          FAST_DOWNLOADER=true                ;;
         --force)                    force=true                          ;;
         --remove-data)              REMOVE_DATA=true                    ;;
-        --upgrade)                  UPGRADE=true; force=true            ;;
+        --upgrade)                  UPGRADE=true; force=true
+                                    CNT_VOL_REMOVE=false                ;;
         --nocontent|--no-content)   NO_CONTENT=true                     ;;
         --no-sudo)                  _sudo=""                            ;;
         --keep-installer)           KEEP_INSTALLER=true                 ;;
@@ -510,7 +513,27 @@ FASTMSG
     echo
 } # end show_fast_isos()
 
-install_as_container() {
+remove_container() {
+    case $CNT_TYPE in
+        docker)
+            $_sudo docker kill $CNT_NAME > /dev/null && echo "Killed docker container '$CNT_NAME'"
+            $_sudo docker rm $CNT_NAME > /dev/null && echo "Removed docker container '$CNT_NAME'"
+            if [[ "$CNT_VOL_REMOVE" == "true" ]]; then
+                $_sudo docker volume rm $CNT_VOL > /dev/null && echo "Removed backing volume named '$CNT_VOL'"
+            else
+                echo ">>> Not removing container data volume '$CNT_VOL'"
+                if [[ "$MODE" == "remove" ]]; then
+                    echo "    To remove: '$_sudo docker volume rm $CNT_VOL'"
+                    echo "    or use '--remove-data' next time ... "
+                fi
+            fi
+            ;;
+        *)  exit_cleanup 1 "Container type '$CNT_TYPE' not supported in installer."
+            ;;
+    esac
+} # end remove_container()
+
+install_container() {
     if [[ -n "$CNT_ENV" ]]; then
         for ENV in $CNT_ENV; do
             OPTS="--env $ENV $OPTS"
@@ -520,15 +543,23 @@ install_as_container() {
     case $CNT_TYPE in
         docker)
             ! which docker > /dev/null 2>&1 && exit_cleanup 1 "Container install requested but no 'docker' in PATH ($PATH)."
-            docker volume create $CNT_VOL > /dev/null
-            VOL_MNT=$(docker volume inspect $CNT_VOL | grep Mountpoint | awk -F\" '{ print $4 }')
-            echo "Created docker volume named '$CNT_VOL' with mountpoint '$VOL_MNT'"
+            if [[ "$UPGRADE" != "true" ]]; then
+                $_sudo docker volume create $CNT_VOL > /dev/null
+                VOL_MNT=$($_sudo docker volume inspect $CNT_VOL | grep Mountpoint | awk -F\" '{ print $4 }')
+                echo "Created docker volume named '$CNT_VOL' with mountpoint '$VOL_MNT'"
+            else
+                if $_sudo docker volume inspect $CNT_VOL > /dev/null 2>&1; then
+                    echo "Attempting to reconnect volume '$CNT_VOL'"
+                else
+                    exit_cleanup 1 "No existing volume '$CNT_VOL' found to reconnect."
+                fi
+            fi
             if [[ -z "$CNT_NETNS" ]]; then
               echo "WARNING:  No network namespace set - you may have issues with DHCP and TFTP depending on your use case."
             else
               NETNS="--net $CNT_NETNS"
             fi
-            CMD="docker run $ENV_OPTS --restart "$CNT_RESTART" --volume $CNT_VOL:/provision/drp-data --name \"$CNT_NAME\" -itd $NETNS ${CNT_REGISTRY}/digitalrebar/provision:$DRP_VERSION"
+            CMD="$_sudo docker run $ENV_OPTS --restart "$CNT_RESTART" --volume $CNT_VOL:/provision/drp-data --name \"$CNT_NAME\" -itd $NETNS ${CNT_REGISTRY}/digitalrebar/provision:$DRP_VERSION"
             echo "Starting container with following run command:"
             echo "$CMD"
             eval $CMD
@@ -538,31 +569,37 @@ install_as_container() {
             echo "Volume is backed on host filesystem at: $VOL_MNT"
             echo ""
             echo "Docker container run time information:"
-            docker ps --filter name=$CNT_NAME
+            $_sudo docker ps --filter name=$CNT_NAME
             echo ""
             ;;
         *)  exit_cleanup 1 "Container type '$CNT_TYPE' not supported in installer."
             ;;
     esac
-} # end install_as_container()
+} # end install_container()
 
 # main
 
 MODE=$1
 
 if [[ $OS_FAMILY == "container" || $CONTAINER == "true" ]]; then
-    UPG_MSG="Please upgrade via Portal 'Catalog' menu, or 'drpcli system upgrade ... ' command."
     RMV_MSG="Remove not supported for container based installer at this time."
     GEN_MSG="Unsupported mode '$MODE'"
     case $MODE in
         install)
             echo "Installing Digital Rebar Provision as a container."
-            install_as_container
+            install_container
             exit_cleanup $?
             ;;
-        upgrade) exit_cleanup 1 "$UPG_MSG"        ;;
-        remove)  exit_cleanup 1 "$RMV_MSG"        ;;
-        *)       usage; exit_cleanup 1 "$GEN_MSG" ;;
+        upgrade)
+            echo "Upgrading Digital Rebar Provision as a container."
+            CNT_VOL_REMOVE=false
+            remove_container
+            install_container
+            exit_cleanup $?
+            ;;
+        remove)  [[ "$REMOVE_DATA" == "true" ]] && CNT_VOL_REMOVE="true" || CNT_VOL_REMOVE="false"
+                 remove_container; exit_cleanup $? ;;
+        *)       usage; exit_cleanup 1 "$GEN_MSG"  ;;
     esac
 fi
 
@@ -620,6 +657,7 @@ then
     MODE=install
     UPGRADE=true
     force=true
+    CNT_VOL_REMOVE=false
 fi
 
 case $MODE in
