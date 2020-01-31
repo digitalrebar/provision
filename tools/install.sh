@@ -181,7 +181,7 @@ while (( $# > 0 )); do
         --fast-downloader)          FAST_DOWNLOADER=true                ;;
         --force)                    force=true                          ;;
         --remove-data)              REMOVE_DATA=true                    ;;
-        --upgrade)                  UPGRADE=true; force=true
+        --upgrade)                  UPGRADE=true; force=true            
                                     CNT_VOL_REMOVE=false                ;;
         --nocontent|--no-content)   NO_CONTENT=true                     ;;
         --no-sudo)                  _sudo=""                            ;;
@@ -543,7 +543,7 @@ install_container() {
     case $CNT_TYPE in
         docker)
             ! which docker > /dev/null 2>&1 && exit_cleanup 1 "Container install requested but no 'docker' in PATH ($PATH)."
-            if [[ "$UPGRADE" != "true" ]]; then
+            if [[ "$UPGRADE" == "false" ]]; then
                 $_sudo docker volume create $CNT_VOL > /dev/null
                 VOL_MNT=$($_sudo docker volume inspect $CNT_VOL | grep Mountpoint | awk -F\" '{ print $4 }')
                 echo "Created docker volume named '$CNT_VOL' with mountpoint '$VOL_MNT'"
@@ -592,6 +592,7 @@ if [[ $OS_FAMILY == "container" || $CONTAINER == "true" ]]; then
             ;;
         upgrade)
             echo "Upgrading Digital Rebar Provision as a container."
+            UPGRADE=true
             CNT_VOL_REMOVE=false
             remove_container
             install_container
