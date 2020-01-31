@@ -34,6 +34,7 @@
       {
         "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\n{{.Param \"pxelinux-local-boot\"}}\n",
         "ID": "",
+        "Link": "",
         "Meta": {},
         "Name": "pxelinux",
         "Path": "pxelinux.cfg/default"
@@ -41,6 +42,7 @@
       {
         "Contents": "#!ipxe\nchain {{.ProvisionerURL}}/${netX/mac}.ipxe \u0026\u0026 exit || goto chainip\n:chainip\nchain tftp://{{.ProvisionerAddress}}/${netX/ip}.ipxe || exit\n",
         "ID": "",
+        "Link": "",
         "Meta": {},
         "Name": "ipxe",
         "Path": "default.ipxe"
@@ -48,6 +50,7 @@
       {
         "Contents": "set _kernel=linux\nset _module=initrd\n$_kernel\nif test $? != 18; then\n    set _kernel=linuxefi\n    set _module=initrdefi\nfi\nfunction kernel { $_kernel \"$@\"; }\nfunction module { $_module \"$@\"; }\nif test -s (tftp)/grub/${net_default_mac}.cfg; then\n    echo \"Booting via MAC\"\n    source (tftp)/grub/${net_default_mac}.cfg\n    boot\nelif test -s (tftp)/grub/${net_default_ip}.cfg; then\n    echo \"Booting via IP\"\n    source (tftp)/grub/${net_default_ip}.cfg\n    boot\nelif test $grub_platform == pc; then\n    chainloader (hd0)\nelse\n    bpx=/efi/boot\n    root='' prefix=''\n    search --file --set=root $bpx/bootx64.efi || search --file --set=root $bpx/bootaa64.efi\n    if test x$root == x; then\n        echo \"No EFI boot partiton found.\"\n        echo \"Rebooting in 120 seconds\"\n        sleep 120\n        reboot\n    fi\n    if test -f ($root)/efi/microsoft/boot/bootmgfw.efi; then\n        echo \"Microsoft Windows found, chainloading into it\"\n        chainloader ($root)/efi/microsoft/boot/bootmgfw.efi\n    fi\n    for f in ($root)/efi/*; do\n        if test -f $f/grub.cfg; then\n            prefix=$f\n            break\n        fi\n    done\n    if test x$prefix == x; then\n        echo \"Unable to find grub.cfg\"\n        echo \"Rebooting in 120 seconds\"\n        sleep 120\n        reboot\n    fi\n    configfile $prefix/grub.cfg\nfi\n",
         "ID": "",
+        "Link": "",
         "Meta": {},
         "Name": "grub",
         "Path": "grub/grub.cfg"
@@ -90,6 +93,7 @@
       {
         "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\n{{.Param \"pxelinux-local-boot\"}}\n",
         "ID": "",
+        "Link": "",
         "Meta": {},
         "Name": "pxelinux",
         "Path": "pxelinux.cfg/{{.Machine.HexAddress}}"
@@ -97,6 +101,7 @@
       {
         "Contents": "#!ipxe\nexit\n",
         "ID": "",
+        "Link": "",
         "Meta": {},
         "Name": "ipxe",
         "Path": "{{.Machine.Address}}.ipxe"
@@ -104,6 +109,7 @@
       {
         "Contents": "DEFAULT local\nPROMPT 0\nTIMEOUT 10\nLABEL local\n{{.Param \"pxelinux-local-boot\"}}\n",
         "ID": "",
+        "Link": "",
         "Meta": {},
         "Name": "pxelinux-mac",
         "Path": "pxelinux.cfg/{{.Machine.MacAddr \"pxelinux\"}}"
@@ -111,6 +117,7 @@
       {
         "Contents": "#!ipxe\nexit\n",
         "ID": "",
+        "Link": "",
         "Meta": {},
         "Name": "ipxe-mac",
         "Path": "{{.Machine.MacAddr \"ipxe\"}}.ipxe"
@@ -118,6 +125,7 @@
       {
         "Contents": "if test $grub_platform == pc; then\n    chainloader (hd0)\nelse\n    bpx=/efi/boot\n    root='' prefix=''\n    search --file --set=root $bpx/bootx64.efi || search --file --set=root $bpx/bootaa64.efi\n    if test x$root == x; then\n        echo \"No EFI boot partiton found.\"\n        echo \"Rebooting in 120 seconds\"\n        sleep 120\n        reboot\n    fi\n    if test -f ($root)/efi/microsoft/boot/bootmgfw.efi; then\n        echo \"Microsoft Windows found, chainloading into it\"\n        chainloader ($root)/efi/microsoft/boot/bootmgfw.efi\n    fi\n    for f in ($root)/efi/*; do\n        if test -f $f/grub.cfg; then\n            prefix=$f\n            break\n        fi\n    done\n    if test x$prefix == x; then\n        echo \"Unable to find grub.cfg\"\n        echo \"Rebooting in 120 seconds\"\n        sleep 120\n        reboot\n    fi\n    configfile $prefix/grub.cfg\nfi\n",
         "ID": "",
+        "Link": "",
         "Meta": {},
         "Name": "grub",
         "Path": "grub/{{.Machine.Address}}.cfg"
@@ -125,6 +133,7 @@
       {
         "Contents": "if test $grub_platform == pc; then\n    chainloader (hd0)\nelse\n    bpx=/efi/boot\n    root='' prefix=''\n    search --file --set=root $bpx/bootx64.efi || search --file --set=root $bpx/bootaa64.efi\n    if test x$root == x; then\n        echo \"No EFI boot partiton found.\"\n        echo \"Rebooting in 120 seconds\"\n        sleep 120\n        reboot\n    fi\n    if test -f ($root)/efi/microsoft/boot/bootmgfw.efi; then\n        echo \"Microsoft Windows found, chainloading into it\"\n        chainloader ($root)/efi/microsoft/boot/bootmgfw.efi\n    fi\n    for f in ($root)/efi/*; do\n        if test -f $f/grub.cfg; then\n            prefix=$f\n            break\n        fi\n    done\n    if test x$prefix == x; then\n        echo \"Unable to find grub.cfg\"\n        echo \"Rebooting in 120 seconds\"\n        sleep 120\n        reboot\n    fi\n    configfile $prefix/grub.cfg\nfi\n",
         "ID": "",
+        "Link": "",
         "Meta": {},
         "Name": "grub-mac",
         "Path": "grub/{{.Machine.MacAddr \"grub\"}}.cfg"
