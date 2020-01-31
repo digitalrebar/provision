@@ -2,6 +2,9 @@
 
 set -e
 
+# BUMP version on updates
+VERSION="v20.01.31-1"
+
 DEFAULT_DRP_VERSION=${DEFAULT_DRP_VERSION:-"stable"}
 
 exit_cleanup() {
@@ -13,7 +16,7 @@ exit_cleanup() {
 
 usage() {
 cat <<EOFUSAGE
-  USAGE: $0 [ install | upgrade | remove ] [ <options: see below> ]
+  USAGE: $0 [ install | upgrade | remove | version ] [ <options: see below> ]
 
 WARNING: 'install' option will OVERWRITE existing installations
 
@@ -84,9 +87,10 @@ OPTIONS:
                             # Define Network Namespace to start container in. Defaults to "$CNT_NETNS"
                             # If set to empty string (""), then disable setting any network namespace
 
+    version                 # show install.sh script version and exit
     install                 # Sets up an isolated or system 'production' enabled install
-    upgrade                 # Sets the installer to upgrade an existing 'dr-provision'
-                            # container install kill/rm the DRP container, then upgrade and reattach volume
+    upgrade                 # Sets the installer to upgrade an existing 'dr-provision', for upgrade of
+                            # container; kill/rm the DRP container, then upgrade and reattach data volume
     remove                  # Removes the system enabled install.  Requires no other flags
                             # optional: '--remove-data' to wipe all installed data
 
@@ -122,6 +126,8 @@ PREREQUISITES:
     OPTIONAL: aria2c (if using experimental "fast downloader")
 
 WARNING: 'install' option will OVERWRITE existing installations
+
+INSTALLER VERSION:  $VERSION
 EOFUSAGE
 } # end usage()
 
@@ -1141,6 +1147,7 @@ EOF
              $_sudo rm -rf $RM_DIR
          fi
          ;;
+     version) echo "Installer Version: $VERSION" ;;
      *)
          echo "Unknown action \"$1\". Please use 'install', 'upgrade', or 'remove'";;
 esac
