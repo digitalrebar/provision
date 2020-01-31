@@ -470,43 +470,27 @@ func (r *R) FailFast() *R {
 	return r
 }
 
-// Do attempts to execute the reqest built up by previous method calls
-// on R.  If any errors occurred while building up the request, they
-// will be returned and no API interaction will actually take place.
-// Otherwise, Do will generate an http.Request, perform it, and
-// marshal the results to val.  If any errors occur while processing
-// the request, fibonacci based backoff will be performed up to 6
-// times.
-//
-// If val is an io.Writer, the body of the response will be copied
-// verbatim into val using io.Copy
-//
-// Otherwise, the response body will be unmarshalled into val as
-// directed by the Content-Type header of the response.
-func (r *R) Do(val interface{}) error {
+// Response executes the request and returns a raw http.Response.
+// The caller must close the response body when finished with it.
+func (r *R) Response() (*http.Response, error) {
 	if r.uri == nil {
 		r.err.Errorf("No URL to talk to")
-		return r.err
+		return nil, r.err
 	}
 	r.c.mux.Lock()
 	if r.c.closed {
 		r.c.mux.Unlock()
 		r.err.Errorf("Connection Closed")
-		return r.err
+		return nil, r.err
 	}
 	r.c.mux.Unlock()
 	if r.err.ContainsError() {
-		return r.err
+		return nil, r.err
 	}
 	r.Headers("Cache-Control", "no-store")
 	if r.traceLvl != "" {
 		r.Headers("X-Log-Request", r.traceLvl)
 		r.Headers("X-Log-Token", r.traceToken)
-	}
-	r.Headers("Accept", "application/json")
-	switch val.(type) {
-	case io.Writer:
-		r.Headers("Accept", "application/octet-stream")
 	}
 	timeouts := []time.Duration{
 		time.Second,
@@ -523,7 +507,7 @@ func (r *R) Do(val interface{}) error {
 		req, err = http.NewRequest(r.method, r.uri.String(), r.body)
 		if err != nil {
 			r.err.AddError(err)
-			return r.err
+			return nil, r.err
 		}
 		req.Header = r.header
 		r.Req = req
@@ -551,11 +535,38 @@ func (r *R) Do(val interface{}) error {
 	}
 	if err != nil {
 		r.err.AddError(err)
-		return r.err
+		return nil, r.err
 	}
 	r.Resp = resp
+	return r.Resp, r.err.HasError()
+
+}
+
+// Do attempts to execute the reqest built up by previous method calls
+// on R.  If any errors occurred while building up the request, they
+// will be returned and no API interaction will actually take place.
+// Otherwise, Do will generate an http.Request, perform it, and
+// marshal the results to val.  If any errors occur while processing
+// the request, fibonacci based backoff will be performed up to 6
+// times.
+//
+// If val is an io.Writer, the body of the response will be copied
+// verbatim into val using io.Copy
+//
+// Otherwise, the response body will be unmarshalled into val as
+// directed by the Content-Type header of the response.
+func (r *R) Do(val interface{}) error {
+	r.Headers("Accept", "application/json")
+	switch val.(type) {
+	case io.Writer:
+		r.Headers("Accept", "application/octet-stream")
+	}
+	resp, err := r.Response()
 	if resp != nil {
 		defer resp.Body.Close()
+	}
+	if err != nil {
+		return r.err
 	}
 	if resp.StatusCode >= 400 {
 		buf, err := ioutil.ReadAll(resp.Body)
