@@ -571,6 +571,10 @@ install_container() {
             echo "Docker container run time information:"
             $_sudo docker ps --filter name=$CNT_NAME
             echo ""
+            echo ">>>  NOTICE:  If you intend to upgrade this container, record your 'install.sh' options  <<< "
+            echo ">>>           for the 'upgrade' command - you must reuse the same options to obtain the  <<< "
+            echo ">>>           same installed results in the upgraded container.  You have been warned!   <<< "
+            echo ""
             ;;
         *)  exit_cleanup 1 "Container type '$CNT_TYPE' not supported in installer."
             ;;
