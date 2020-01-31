@@ -14,7 +14,8 @@ func blobCommands(bt string) *cobra.Command {
 		Use:   bt,
 		Short: fmt.Sprintf("Access CLI commands relating to %v", bt),
 	}
-	cmd.AddCommand(&cobra.Command{
+	listAll := false
+	listCmd := &cobra.Command{
 		Use:   "list [path]",
 		Short: fmt.Sprintf("List all %v", bt),
 		Long:  fmt.Sprintf("You can pass an optional path parameter to show just part of the %s", bt),
@@ -29,6 +30,9 @@ func blobCommands(bt string) *cobra.Command {
 			if len(args) == 1 {
 				req.Params("path", args[0])
 			}
+			if listAll {
+				req.Params("all", "true")
+			}
 			data := []interface{}{}
 			err := req.Do(&data)
 			if err != nil {
@@ -37,7 +41,9 @@ func blobCommands(bt string) *cobra.Command {
 				return prettyPrint(data)
 			}
 		},
-	})
+	}
+	listCmd.Flags().BoolVar(&listAll, "recurse", false, "Recursively list all files")
+	cmd.AddCommand(listCmd)
 	cmd.AddCommand(&cobra.Command{
 		Use:     "download [item] to [dest]",
 		Aliases: []string{"show", "get"},

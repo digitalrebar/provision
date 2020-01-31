@@ -12,6 +12,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"log"
 	"mime"
 	"net"
@@ -556,6 +557,20 @@ func (r *R) Do(val interface{}) error {
 	if resp != nil {
 		defer resp.Body.Close()
 	}
+	if resp.StatusCode >= 400 {
+		buf, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			return err
+		}
+		res := &models.Error{}
+		if err := json.Unmarshal(buf, res); err != nil {
+			r.err.Code = resp.StatusCode
+			r.err.AddError(err)
+			r.err.Errorf("Raw response: %s", string(buf))
+			return r.err
+		}
+		return res
+	}
 	if wr, ok := val.(io.Writer); ok {
 		if resp.StatusCode == 304 {
 			return nil
@@ -591,15 +606,6 @@ func (r *R) Do(val interface{}) error {
 	if dec == nil {
 		r.err.Errorf("No decoder for content-type %s", ct)
 		return r.err
-	}
-	if resp.StatusCode >= 400 {
-		res := &models.Error{}
-		if err := dec.Decode(res); err != nil {
-			r.err.Code = resp.StatusCode
-			r.err.AddError(err)
-			return r.err
-		}
-		return res
 	}
 	if val != nil && resp.Body != nil && resp.ContentLength != 0 {
 		r.err.AddError(dec.Decode(val))
