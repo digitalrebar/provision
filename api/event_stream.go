@@ -1,15 +1,10 @@
 package api
 
 import (
-	"crypto/tls"
-	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"net/http"
-	"net/url"
 	"os"
 	"os/signal"
-	"path"
 	"reflect"
 	"sort"
 	"strings"
@@ -89,25 +84,7 @@ func EqualItem(field string, value interface{}) TestFunc {
 }
 
 func (c *Client) ws() (*websocket.Conn, error) {
-	ep, err := url.ParseRequestURI(c.endpoint + path.Join(APIPATH, "ws"))
-	if err != nil {
-		return nil, err
-	}
-	ep.Scheme = "wss"
-	dialer := &websocket.Dialer{
-		Proxy:           http.ProxyFromEnvironment,
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
-	}
-	header := http.Header{}
-	// If we have a token use it, otherwise basic auth
-	if c.Token() != "" {
-		header.Set("Authorization", "Bearer "+c.Token())
-	} else {
-		basicAuth := base64.StdEncoding.EncodeToString([]byte(c.username + ":" + c.password))
-		header.Set("Authorization", "Basic "+basicAuth)
-	}
-	res, _, err := dialer.Dial(ep.String(), header)
-	return res, err
+	return c.Websocket("ws")
 }
 
 // RecievedEvent contains an event received from the digitalrebar

@@ -26,6 +26,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/gorilla/websocket"
+
 	"golang.org/x/net/http2"
 
 	"github.com/VictorLowther/jsonpatch2"
@@ -901,6 +903,28 @@ func (c *Client) PatchToFull(old models.Model, new models.Model, paranoid bool) 
 // multiple sources.
 func (c *Client) PutModel(obj models.Model) error {
 	return c.Req().Put(obj).UrlForM(obj).Do(&obj)
+}
+
+func (c *Client) Websocket(at string) (*websocket.Conn, error) {
+	ep, err := url.ParseRequestURI(c.endpoint + path.Join(APIPATH, at))
+	if err != nil {
+		return nil, err
+	}
+	ep.Scheme = "wss"
+	dialer := &websocket.Dialer{
+		Proxy:           http.ProxyFromEnvironment,
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
+	header := http.Header{}
+	// If we have a token use it, otherwise basic auth
+	if c.Token() != "" {
+		header.Set("Authorization", "Bearer "+c.Token())
+	} else {
+		basicAuth := base64.StdEncoding.EncodeToString([]byte(c.username + ":" + c.password))
+		header.Set("Authorization", "Basic "+basicAuth)
+	}
+	res, _, err := dialer.Dial(ep.String(), header)
+	return res, err
 }
 
 var weAreTheProxy bool
