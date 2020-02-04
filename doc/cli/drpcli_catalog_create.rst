@@ -1,19 +1,24 @@
-drpcli catalog
---------------
+drpcli catalog create
+---------------------
 
-Access commands related to catalog manipulation
+Create a custom catalog for Digital Rebar
 
 Synopsis
 ~~~~~~~~
 
-Access commands related to catalog manipulation
+Create a custom catalog for Digital Rebar
+
+::
+
+   drpcli catalog create [flags]
 
 Options
 ~~~~~~~
 
 ::
 
-     -h, --help   help for catalog
+     -h, --help                 help for create
+         --pkg-version string   pkg-version tip|stable (required)
 
 Options inherited from parent commands
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -40,15 +45,5 @@ Options inherited from parent commands
 SEE ALSO
 ~~~~~~~~
 
--  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
-   DigitalRebar Provision API
--  `drpcli catalog create <drpcli_catalog_create.html>`__ - Create a
-   custom catalog for Digital Rebar
--  `drpcli catalog item <drpcli_catalog_item.html>`__ - Commands to act
-   on individual catalog items
--  `drpcli catalog items <drpcli_catalog_items.html>`__ - Show the items
-   available in the catalog
--  `drpcli catalog show <drpcli_catalog_show.html>`__ - Show the
-   contents of the current catalog
--  `drpcli catalog updateLocal <drpcli_catalog_updateLocal.html>`__ -
-   Update the local catalog from the upstream catalog
+-  `drpcli catalog <drpcli_catalog.html>`__ - Access commands related to
+   catalog manipulation
