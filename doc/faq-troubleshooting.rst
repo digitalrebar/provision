@@ -178,13 +178,18 @@ use                       user          password
 ``most bootenvs`` (*)     root          RocketSkates
 ``debian`` / ``ubuntu``   rocketskates  RocketSkates
 ``cloud-init`` images     <varies> (*)  RocketSkates
+``VMware ESXi``           root          <generated>
 ========================  ============  ============
+
+For more information
 
 .. note:: ``(*)`` "most bootenvs" and ``cloud-init`` images refers to CentOS, Ubuntu, CoreOS, ESXi, etc.  Generally speaking, this is the default "installed" credentials.  Note that each distro has it's own rules about ``root`` versus installed default user accounts.  DRP follows most vendors "patterns" with regards to ``root`` -vs- unprivileged user creation, with the username changed to "rocketskates".  Some vendor specific notes are below.
 
 For ``debian / ubuntu`` bootenvs, the default user (``rocketskates``, can be changed by setting ``provisioner-default-user`` Param), has ``sudo`` privileges.
 
 For Images with ``cloud-init`` pieces, there often is an injected ``centos`` user for CentOS, ``ubuntu`` for Ubuntu, etc. user.  This is controlled by the ``cloud-init`` configurations of the image build process.
+
+For more about VMware, see :ref:`_vmware_esxi_passwords`
 
 .. _rs_drpclirc:
 
