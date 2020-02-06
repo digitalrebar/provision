@@ -12,6 +12,7 @@ require (
 	github.com/digitalrebar/logger v0.3.0
 	github.com/digitalrebar/tftp/v3 v3.0.0
 	github.com/elithrar/simple-scrypt v1.3.0
+	github.com/fastly/go-utils v0.0.0-20180712184237-d95a45783239 // indirect
 	github.com/ghodss/yaml v1.0.0
 	github.com/go-ole/go-ole v1.2.4 // indirect
 	github.com/gofunky/semver v3.5.2+incompatible
@@ -21,6 +22,7 @@ require (
 	github.com/imdario/mergo v0.3.7 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/itchyny/gojq v0.6.0
+	github.com/jehiah/go-strftime v0.0.0-20171201141054-1d33003b3869 // indirect
 	github.com/json-iterator/go v1.1.7
 	github.com/kardianos/service v1.0.1-0.20191017145738-4df36c9fc1c6
 	github.com/klauspost/compress v1.7.4 // indirect
@@ -29,12 +31,14 @@ require (
 	github.com/krolaw/dhcp4 v0.0.0-20190531080455-7b64900047ae
 	github.com/olekukonko/tablewriter v0.0.4
 	github.com/pborman/uuid v1.2.0
+	github.com/pkg/xattr v0.4.1
 	github.com/rackn/gohai v0.3.0
 	github.com/rackn/netwrangler v0.7.0
 	github.com/shirou/gopsutil v2.18.12+incompatible
 	github.com/shirou/w32 v0.0.0-20160930032740-bb4de0191aa4 // indirect
 	github.com/spf13/cobra v0.0.4-0.20180722215644-7c4570c3ebeb
 	github.com/spf13/pflag v1.0.3 // indirect
+	github.com/tebeka/strftime v0.1.3 // indirect
 	github.com/xeipuuv/gojsonpointer v0.0.0-20180127040702-4e3ac2762d5f // indirect
 	github.com/xeipuuv/gojsonreference v0.0.0-20180127040603-bd5ef7bd5415 // indirect
 	github.com/xeipuuv/gojsonschema v1.1.0
