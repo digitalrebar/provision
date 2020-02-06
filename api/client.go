@@ -571,6 +571,11 @@ func (r *R) Do(val interface{}) error {
 		return r.err
 	}
 	if resp.StatusCode >= 400 {
+		if r.method == "HEAD" {
+			r.err.Errorf(http.StatusText(resp.StatusCode))
+			r.err.Code = resp.StatusCode
+			return r.err
+		}
 		buf, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
 			return err
