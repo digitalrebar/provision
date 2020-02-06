@@ -366,6 +366,7 @@ urls = [
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/validation.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/virtualbox-ipmi.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/vmware.rst",
+    "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/vmware-lib.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/drp-community-content.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/drp-community-contrib.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/krib.rst",
