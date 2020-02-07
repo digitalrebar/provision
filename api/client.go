@@ -5,10 +5,8 @@ package api
 import (
 	"bytes"
 	"context"
-	"crypto/sha256"
 	"crypto/tls"
 	"encoding/base64"
-	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -571,6 +569,11 @@ func (r *R) Do(val interface{}) error {
 		return r.err
 	}
 	if resp.StatusCode >= 400 {
+		if r.method == "HEAD" {
+			r.err.Errorf(http.StatusText(resp.StatusCode))
+			r.err.Code = resp.StatusCode
+			return r.err
+		}
 		buf, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
 			return err
@@ -586,6 +589,10 @@ func (r *R) Do(val interface{}) error {
 	}
 	if wr, ok := val.(io.Writer); ok {
 		if resp.StatusCode == 304 {
+			// Pretend we wrote the whole thing.
+			if fi, ok := wr.(io.WriteSeeker); ok {
+				fi.Seek(0, io.SeekEnd)
+			}
 			return nil
 		}
 		if resp.StatusCode < 300 {
@@ -700,39 +707,48 @@ func (c *Client) ListBlobs(at string, params ...string) ([]string, error) {
 	return res, c.Req().UrlFor(path.Join("/", at)).Params(params...).Do(&res)
 }
 
-type truncator interface {
-	io.ReadWriteSeeker
-	Truncate(int64) error
-}
-
 // GetBlob fetches a binary blob from the server, writing it to the
 // passed io.Writer.  If the io.Writer is actually an io.ReadWriteSeeker
 // with a Truncate method, GetBlob will only download the file
 // if it has changed on the server side.
 func (c *Client) GetBlob(dest io.Writer, at ...string) error {
 	req := c.Req().UrlFor(path.Join("/", path.Join(at...)))
-	if trunc, ok := dest.(truncator); ok {
-		_, err := trunc.Seek(0, io.SeekStart)
-		if err != nil {
-			return err
+	shasum := ""
+	var startSz int64
+	if fi, ok := dest.(*os.File); ok {
+		st, err := fi.Stat()
+		if err == nil {
+			startSz = st.Size()
 		}
-		hasher := sha256.New()
-		if _, err := io.Copy(hasher, trunc); err != nil {
-			return err
+		mts := &models.ModTimeSha{}
+		if err := mts.ReadFromXattr(fi); err == nil && mts.UpToDate(fi) {
+			shasum = mts.String()
+		} else if err = mts.Generate(fi); err == nil {
+			shasum = mts.String()
+			mts.SaveToXattr(fi)
 		}
-		_, err = trunc.Seek(0, io.SeekStart)
-		if err != nil {
-			return err
-		}
-		req.Headers("If-None-Match", `"SHA256:`+hex.EncodeToString(hasher.Sum(nil))+`"`)
-
 	}
-	err := req.Do(dest)
-	if trunc, ok := dest.(truncator); ok && err == nil {
-		sz, _ := trunc.Seek(0, io.SeekCurrent)
-		err = trunc.Truncate(sz)
+	if shasum != "" {
+		req.Headers("If-None-Match", `"SHA256:`+shasum+`"`)
 	}
-	return err
+	if err := req.Do(dest); err != nil {
+		return err
+	}
+	if fi, ok := dest.(*os.File); ok {
+		sz, _ := fi.Seek(0, io.SeekCurrent)
+		if sz != startSz {
+			if err := fi.Truncate(sz); err != nil {
+				return err
+			}
+		}
+		mts := &models.ModTimeSha{}
+		if err := mts.ReadFromXattr(fi); err == nil && !mts.UpToDate(fi) {
+			if err := mts.Generate(fi); err == nil {
+				mts.SaveToXattr(fi)
+			}
+		}
+	}
+	return nil
 }
 
 // GetBlobSum fetches the checksum for the blob
