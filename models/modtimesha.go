@@ -5,7 +5,9 @@ import (
 	"encoding/hex"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"os"
+	"runtime"
 	"time"
 
 	"github.com/pkg/xattr"
@@ -66,7 +68,13 @@ func (m *ModTimeSha) Generate(fi *os.File) error {
 }
 
 func (m *ModTimeSha) ReadFromXattr(fi *os.File) error {
-	buf, err := xattr.FGet(fi, "user.drpetag")
+	var buf []byte
+	var err error
+	if runtime.GOOS != "windows" {
+		buf, err = xattr.FGet(fi, "user.drpetag")
+	} else {
+		buf, err = ioutil.ReadFile(fi.Name() + ":drpEtag")
+	}
 	if err != nil {
 		return err
 	}
@@ -75,5 +83,12 @@ func (m *ModTimeSha) ReadFromXattr(fi *os.File) error {
 
 func (m *ModTimeSha) SaveToXattr(fi *os.File) error {
 	xb, _ := m.MarshalBinary()
-	return xattr.FSet(fi, "user.drpetag", xb)
+	var err error
+	if runtime.GOOS != "windows" {
+		err = xattr.FSet(fi, "user.drpetag", xb)
+	} else {
+		err = ioutil.WriteFile(fi.Name()+":drpEtag", xb, 0600)
+	}
+	return err
+
 }
