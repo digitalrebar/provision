@@ -325,7 +325,7 @@ Content documentation section.
 
     * once your machine has booted, and received DHCP from the DRP Endpoint, it will now be "registered" with the Endpoint for installation
     * by default, DRP will NOT attempt an OS install unless you explicitly direct it to (for safety's sake!)
-    * obtain your Machine's ID, you'll use it to define your BootEnv (see :ref:`rs_filter_gohai` for more detailed/cleaner syntax)
+    * obtain your Machine's ID, you'll use it to define your BootEnv (see :ref:`rs_jq_filter_gohai` for more detailed/cleaner syntax)
 
     ::
 

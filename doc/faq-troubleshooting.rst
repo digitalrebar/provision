@@ -5,6 +5,7 @@
   pair: Digital Rebar Provision; FAQ
   pair: Digital Rebar Provision; Troubleshooting
 
+
 .. _rs_faq:
 
 FAQ / Troubleshooting
@@ -13,6 +14,7 @@ FAQ / Troubleshooting
 The following section is designed to answer frequently asked questions and help troubleshoot Digital Rebar Provision installs.
 
 Want ligher reading?  Checkout our :ref:`rs_fun`.
+
 
 .. _rs_bind_error:
 
@@ -29,6 +31,7 @@ Digital Rebar Provision will fail if it cannot attach to one of the required por
   * 67 - dhcp.  Correct with `sudo pkill dnsmasq`
 
 See the port mapping list on start-up for a complete list.
+
 
 .. _rs_tftp_error:
 
@@ -66,6 +69,7 @@ Sometimes the cert/key pair in the github tree is corrupt or not sufficient for 
 
 It may be necessary to install the openssl tools.
 
+
 .. _rs_add_ssh:
 
 Add SSH Keys to Authorized Keys
@@ -91,6 +95,7 @@ The below example adds *User1* and *User2* SSH keys to the profile *my-profile*.
     END_KEYS
 
     drpcli profiles update my-profile keys.json
+
 
 .. _rs_docker_volume:
 
@@ -157,6 +162,7 @@ value                     definition
 ``forced-commands-only``  only allow forced commands to run via remote login
 ========================  ==========================================================
 
+
 .. _rs_default_password:
 
 What are the default passwords?
@@ -191,6 +197,7 @@ For Images with ``cloud-init`` pieces, there often is an injected ``centos`` use
 
 For more about VMware, see :ref:`_vmware_esxi_passwords`
 
+
 .. _rs_drpclirc:
 
 Using the ``.drpclirc`` File
@@ -224,6 +231,7 @@ Please note that you can not use Shell style ``export`` in front of the variable
 and do NOT surround the value with double or single quotes.
 
 .. note:: The RS_FORMAT, RS_PRINT_FIELDS, RS_NO_HEADER, and RS_TRUNCATE_LENGTH variables are only valid for ``drpcli`` *v4.2.0-beta2.0* or newer versions.
+
 
 .. _rs_human_formatters:
 
@@ -281,12 +289,14 @@ Topics include:
   * :ref: `rs_cli_faq_zip`
   * :ref: `rs_download_rackn_content`
 
+
 .. _rs_more_debug:
 
 Turn Up the Debug
 -----------------
 
 To get additional debug from dr-provision, set debug preferences to increase the logging.  See :ref:`rs_model_prefs`.
+
 
 .. _rs_vboxnet:
 
@@ -296,6 +306,7 @@ Missing VBoxNet Network
 Virtual Box does not add host only networks until a VM is attempting to use them.  If you are using the interfaces API (or UX wizard) to find available networks and ``vboxnet0`` does not appear then start your VM and recreate the address.
 
 Virtual Box may also fail to allocate an IP to the host network due to incomplete configuration.  In this case, ``ip addr`` will show the network but no IPv4 address has been allocated; consequently, Digital Rebar will not report this as a working interface.
+
 
 .. _rs_vbox_no_boot:
 
@@ -307,6 +318,7 @@ VirtualBox PXE firmware does not handle PXE chaining effectively.  This happens 
 The workaround is to use DHCP option 67 to supply the correct boot file.  Setting DHCP option 67 to `lpxelinux.0` bypasses the chainloader after the machine has registered.
 
 See also :ref:`rs_uefi_boot_option`
+
 
 .. _rs_debug_sledgehammer:
 
@@ -344,6 +356,7 @@ The contents and structure of these locations is the same.  Follow the below pro
 #. delete the ``drp-data`` directory (suggest retaining the backup copy for later just in case)
 
 .. note::  WARNING:  If you install a new version of the Digital Rebar Provision service, you must verify that there are no Contents differences between the two versions.  Should the ``dr-provision`` service fail to start up; it's entirely likely that there may be some content changes that need to be addressed in the JSON/YAML files prior to the new version being started.  See the :ref:`rs_upgrade` notes for any version-to-version specific documentation.
+
 
 .. _rs_customize_production_mode:
 
@@ -387,6 +400,7 @@ Of course, you can apply a Param to a Profile, and apply that Profile to a group
 
 .. note:: The Digital Rebar default kickstart and preseeds have Digital Rebar specific interactions that may be necessary to replicate.  Please review the default kickstart and preseeds for patterns and examples you may need to re-use.   We HIGHLY recommend you start with a `clone` operation of an existing Kickstart/Preseed file; and making appropriate modifications from that as a baseline.
 
+
 .. _rs_plugin_providers_license:
 
 Import plugin failed pool: define failed
@@ -395,6 +409,7 @@ Import plugin failed pool: define failed
 If you are using the DRPCLI to upload a licensed RackN plugin, the endpoint will reject the upload with a defined failed error.
 
 Install the license content pack and try again.  If you've saved the `rackn-license.json` file then you can use the DRPCLI to upload it via `drpcli contents upload rackn-license.json`.
+
 
 .. _rs_update_content_command_line:
 
@@ -436,6 +451,7 @@ The Runner Task execution system supports many ways to cause a system reboot tha
 
 These options are handled by using script helpers or sending specialized ``exit``codes.  Please see :ref:`rs_workflow_reboot` for comprehensive documentation.
 
+
 .. _rs_reboot_wo_ipmi:
 
 Rebooting without IPMI plugins (without a Task)
@@ -450,6 +466,7 @@ Steps:
   #. Update
   #. Set the Workflow to a workflow with a different BootEnv.
   #. Update and watch machine reboot
+
 
 .. _rs_nested_templates:
 
@@ -470,6 +487,7 @@ The ``template`` construct is a text string that refers to a given template name
 
 The ``CallTemplate`` construct can be a variable or expression that evaluates to a string.
 
+
 .. _rs_sprig:
 
 How Can I manipulate values during Golang Template rendering?
@@ -482,6 +500,7 @@ For example: `{{.Param "noCamelCase/hashiCorp" | snakecase }}` or `{{.Param "coo
 Please consult the Sprig website for a full list of functions.
 
 Note: Digital Rebar Provision blocks functions that could be used to operate on the endpoint outside of DRP template rendering for security reasons.
+
 
 .. _rs_double_brace:
 
@@ -514,6 +533,7 @@ If you wish to update/change a Machine Name, you can do:
     drpcli machines update $UUID '{ "Name": "foobar" }'
 
 .. note:: Note that you can NOT use the ``drpcli machines set ...`` construct as it only sets Param values.  The Machines name is a Field, not a Parameter.  This will NOT work: ``drpcli machines set $UUID param Name to foobar``.
+
 
 .. _rs_reservation_set_hostname:
 
@@ -564,6 +584,7 @@ An example of adding this to your Subnet specification might look something like
 
 .. note:: You should not have to add option 67 unless you are meeting a specific need.  Test without it first!
 
+
 .. _rs_lpxelinux_no_such_file:
 
 lpxelinux.0 error: no such file or directory
@@ -587,6 +608,7 @@ The expected behavior is for a client to attempt to download files in the follow
     #. fall back to the default defined file
 
 Due to this behavior, filenames will be specified that do not exist, and the error message related to that probe request is a normal message.  This is NOT an indicator that provisioning is broken in your environment.
+
 
 .. _rs_different_pxelinux_version:
 
@@ -613,6 +635,7 @@ Second, the lpxelinux.0 file can be replaced.  To do this safely, a couple of st
 #. In the tftpboot directory, copy esxi.0 to lpxelinux.0.
 
 The middle step keeps DRP from overwriting your changes on startup.
+
 
 .. _rs_render_kickstart_preseed:
 
@@ -643,6 +666,7 @@ Example URLs:
 
 .. note:: A simple trick ... you can create a non-existent Machine, and place that machine in different BootEnvs to render provisioning files for testing purposes.  For example, put the non-existent Machine in the ``centos-7-install`` Stage, then render the ``compute.ks`` kickstart URL above.
 
+
 .. _rs_ubuntu_local_repo:
 
 Booting Ubuntu Without External Access
@@ -654,6 +678,7 @@ To workaround this problem, you need to supply a DNS and gateway for your subnet
 
 1. Internal to Digital Rebar: Define Options 3 (Gateway) and 6 (DNS) for your machines' Subnet.
 2. External to Digital Rebar: Adding ``default_route=true`` to the boot parameters and include a DNS server on the local subnet in DHCP.
+
 
 .. _rs_wget_timeout:
 
@@ -734,7 +759,9 @@ The Role Base Access and Controls subsystem allows an operator to construct user
 
 Now simply assign this Role to the given users you wish to limit their permissions on.
 
+
 .. _rs_unblockRunnable_panic:
+
 
 unblockRunnable Panic
 ---------------------
@@ -743,6 +770,47 @@ In some cases, DRP can panic with a message that contains unblockRunnable.  This
 DRP will restart cleanly when restarted.  If run under a service watch system (e.g. systemd), the system will restart and continue.
 
 Please gather the log failure and enter a new issue at `Digital Rebar Github <https://github.com/digitalrebar/provision>`_.
+
+
+.. _rs_manager_system_time
+
+Manager and System Time
+-----------------------
+
+The Multi-site Manager system requires all DRP Endpoints that are being managed to have consistent and accurate
+system clock date and time information.  Generally speaking, all Endpoints should have NTP services running,
+and all RTC clocks set to UTC.  The Authentication Tokens and Secrets used for the token system will by design
+fail if the clocks between two cooperating DRP Endpoint differ more than a few minutes.  This is an intentional
+security measure.
+
+If you encounter any of the following errors on "upstream" DRP Managers, this is often the system clocks being
+out of sync:
+
+  Machine Objects may show the following:
+  ::
+
+    (403) system:
+    Invalid token: No valid key specified
+
+
+  Plugins may show the following:
+  ::
+
+    Unable to create event stream: Bad Request
+
+  or even Golang stack traces in some (eg IPMI plugin):
+  ::
+
+    Panic recovered: invalid WriteHeader code 0
+    Stack trace:
+    goroutine 33 [running]:
+    runtime/debug.Stack(0x991080, 0xc000289510, 0x1)
+	  /home/travis/.gimme/versions/go1.12.7.linux.amd64/src/runtime/debug/stack.go:24 +0x9d
+    ...snip...
+
+In addition, Machine objects may show additional failed validation error messages in the Machine details pages.
+
+To correct the problem, install and verify all DRP Endpoints system clocks are in sync with NTP services.
 
 
 .. _rs_jq_examples:
@@ -758,7 +826,8 @@ Raw JSON output is usefull when passing the results of one ``jq`` command in to 
 
       <some command> | jq -r ...
 
-.. _rs_filter_gohai:
+
+.. _rs_jq_filter_gohai:
 
 Filter Out gohai-inventory
 ==========================
@@ -775,6 +844,9 @@ Subsequently, if you are listing an individual Machine, then you can also filter
 
     drpcli machines show <UUID> | jq 'del(.Params."gohai-inventory")'
 
+
+.. _rs_jq_list_bootenvs:
+
 List BootEnv Names
 ==================
 
@@ -783,6 +855,8 @@ Get list of bootenvs available in the installed content, by name:
 
     drpcli bootenvs list | jq '.[].Name'
 
+
+.. _rs_jq_reformat_output:
 
 Reformat Output With Specific Keys
 ==================================
@@ -801,6 +875,8 @@ Output is printed as follows:
 You can modify the output separator (colon in this example) to suit your needs.
 
 
+.. _rs_jq_extract_keys:
+
 Extract Specific Key From Output
 ================================
 
@@ -810,6 +886,8 @@ Extract Specific Key From Output
     drpcli contents show os-discovery | jq '.sections.bootenvs.discovery.OS.IsoFile'
 
 
+.. _rs_jq_display_job_logs:
+
 Display Job Logs for Specific Machine
 =====================================
 
@@ -818,6 +896,9 @@ The Job Logs provide a lot of information about the provisioning process of your
 
     export UUID=`abcd-efgh-ijkl-mnop-qrps"
     drpcli jobs list | jq ".[] | select(.Machine==\"$UUID\")"
+
+
+.. _rs_jq_list_machines_with_profile:
 
 List Machines with a Given Profile Added to Them
 ================================================
