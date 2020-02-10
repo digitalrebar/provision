@@ -27,16 +27,17 @@ Previous releases will continue to be available in tag/release history.  For add
 :ref:`rs_release_process`.
 
 When using the **install.sh** script, the version can be specified by the **--drp-version** flag,
-e.g. *--drp-version=v4.0.1*.
+e.g. *--drp-version=v4.2.2*.
 
-An example command sequence for Linux would be:
+Updating for current version, an example command sequence for Linux would be:
 
   ::
 
+    export $DRPVERSION="v4.2.4"
     mkdir dr-provision-install
     cd dr-provision-install
-    curl -fsSL https://rebar-catalog.s3-us-west-2.amazonaws.com/drp/v4.0.1.zip -o dr-provision.zip
-    curl -fsSL https://rebar-catalog.s3-us-west-2.amazonaws.com/drp/v4.0.1.sha256 -o dr-provision.sha256
+    curl -fsSL https://rebar-catalog.s3-us-west-2.amazonaws.com/drp/$DRPVERSION.zip -o dr-provision.zip
+    curl -fsSL https://rebar-catalog.s3-us-west-2.amazonaws.com/drp/$DRPVERSION.sha256 -o dr-provision.sha256
     sha256sum -c dr-provision.sha256
     unzip dr-provision.zip
 
@@ -68,32 +69,7 @@ Using ``dr-provision --help`` will provide the most complete list of configurati
       --tls-key=               The TLS Key File (default: server.key)
       --tls-cert=              The TLS Cert File (default: server.crt)
 
-Prerequisites
--------------
-
-**dr-provision** requires two applications to operate correctly, **bsdtar** and **7z**.  These are used to extract the contents
-of iso and tar images to be served by the file server component of **dr-provision**.  The ``install.sh`` script will attempt to ensure these packages are installed by default.  However, if you are installing via manual process or baking your own installer, you must ensure these prerequisistes are met.
-
-For Linux, the **bsdtar** and **p7zip** packages are required.
-
-.. admonition:: ubuntu
-
-  sudo apt-get install -y bsdtar p7zip-full
-
-.. admonition:: centos/redhat
-
-  sudo yum install -y bsdtar p7zip
-
-.. admonition:: Darwin
-
-  The new package, **p7zip** is required, and **tar** must also be updated.  The **tar** program on Darwin is already **bsdtar**
-
-  * 7z - install from homebrew: ``brew install p7zip``
-  * libarchive - update from homebrew to get a functional tar: ``brew install libarchive --force ; brew link libarchive --force``
-
-At this point, the server can be started.
-
-.. note:: In a future release, the required packages may be removed, which will help ensure cross-platform compatibility without relying on these external dependencies.
+.. note:: In pre v4.2 releases, the **dr-provision** requires two applications to operate correctly, **bsdtar** and **7z**.  These are used to extract the contents of iso and tar images to be served by the file server component of **dr-provision**
 
 Running The Server
 ------------------
