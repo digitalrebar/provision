@@ -157,8 +157,7 @@ After you accept the endpoint's self-signed certificate, you will be automatical
 the RackN portal at ``https://portal.rackn.io/`` with your endpoint IP included.
 This will guide you to ``Digital Rebar Endpoint Login`` for your new endpoint's API. Clicking ``defaults`` will populate the login with default credentials.
 
-.. note:: The RackN portal runs as a single-page app *locally* in your browser so all DRP API calls
-remain behind your firewall. RackN *never* has direct access to your DRP endpoint.
+.. note:: The RackN portal runs as a single-page app *locally* in your browser so all DRP API calls remain behind your firewall. RackN *never* has direct access to your DRP endpoint.
 
 .. _rs_qs_subnet:
 
@@ -360,14 +359,7 @@ The above procedure uses manual reboot of Machines, and manual application of th
 Machine Power Management
 ------------------------
 
-Fully automated provisioning control requires use of advanced RackN features (plugins) for Power Management actions.  These are done through the IPMI subsystem, with a specific IPMI plugin for a specific environments.  Some existing plugins exist for environments like:
-
-  * bare metal - hardware based BMC (baseboard management controller) functions that implement the IPMI protocol
-  * Virtual Box
-  * Packet bare metal hosting provider (https://www.packet.net/)
-  * Advanced BMC functions are supported for some hardware vendors (eg Dell, HP, IBM, etc)
-
-`Contact RackN <https://www.rackn.com/company/contact-us/>`_ for additional details and information.
+Fully automated provisioning control requires use of plugins for Power Management actions.  These are done through the IPMI subsystem, with a specific IPMI plugin for a specific environments.  Some existing plugins exist and are documented in :ref:`rs_setup`.
 
 Isolated vs Production Install Mode
 -----------------------------------

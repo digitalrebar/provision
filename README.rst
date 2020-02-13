@@ -100,7 +100,7 @@ Table of Contents
 
    doc/quickstart
    doc/install
-   doc/setup/index
+   doc/environment
    doc/features
    doc/server
    doc/configuring
@@ -109,7 +109,6 @@ Table of Contents
    doc/workflows
    doc/deployment
    doc/operation
-   doc/performance/intro
    doc/os-support
    doc/os-support/linuxkit
    doc/ui
@@ -124,6 +123,7 @@ Table of Contents
    doc/faq-troubleshooting
    doc/arch
    doc/content-packages
+   doc/rackn/license
    CONTRIBUTING
    Trademark
    LICENSE
