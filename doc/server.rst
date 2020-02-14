@@ -83,7 +83,7 @@ Here is an example of Linux based IPTables firewall rules.  Note that you may ne
 		PORT_BINL=4011
 		PORT_PROV=8092
 		PORT_PROM=8080
-    SOURCES=""       # add appropriate "-s IP/netmask" etc statements here
+		SOURCES=""       # add appropriate "-s IP/netmask" etc statements here
 
 		# for local connectivity
 		iptables -A INPUT -i lo -p tcp -m tcp --dport $PORT_FILE -j ACCEPT
