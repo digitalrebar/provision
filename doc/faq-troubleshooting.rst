@@ -110,6 +110,7 @@ can also use any of the container based networked storage solutions to back your
 
 
 1. Create a volume for the container
+
   ::
 
     export VOL="drp-data"
@@ -118,6 +119,7 @@ can also use any of the container based networked storage solutions to back your
     docker volume create $VOL
 
 2. Let's verify that the volume is currently empty
+
   ::
 
     docker volume inspect $VOL | jq '.[].Mountpoint'
@@ -131,12 +133,14 @@ can also use any of the container based networked storage solutions to back your
     # dr-xr-x---. 1 root root 180 Aug 21 00:41 ..
 
 3. Launch DRP, using our newly created volume:
+
   ::
 
     # now run DRP with our volume mapped to /provision/drp-data:
     docker run --volume $VOL:/provision/drp-data --name drp -itd --net host digitalrebar/provision:stable
 
 4. Verify that DRP extracted the assets on the host in the mounted volume location:
+
   ::
 
     # when DRP starts up, it extracts and builds the default assets
@@ -201,7 +205,7 @@ For more about VMware, see :ref:`_vmware_esxi_passwords`
 .. _rs_drpclirc:
 
 Using the ``.drpclirc`` File
----------------------------
+----------------------------
 
 In addition to the environment variables (eg ``RS_ENDPOINT``, ``RS_KEY``, etc) and setting explicit ``drpcli`` values via option flags (eg ``--enpdoint``, ``-E``, etc), you can now use a home _RC_ style configuration file to set these values.
 
@@ -449,7 +453,7 @@ Rebooting inside a Tasks, Stages and Workflows
 
 The Runner Task execution system supports many ways to cause a system reboot that allow for the task being marked as either complete or incomplete (so it can resume).  This can be very important for tasks that require a reboot mid-task.
 
-These options are handled by using script helpers or sending specialized ``exit``codes.  Please see :ref:`rs_workflow_reboot` for comprehensive documentation.
+These options are handled by using script helpers or sending specialized ``exit`` codes.  Please see :ref:`rs_workflow_reboot` for comprehensive documentation.
 
 
 .. _rs_reboot_wo_ipmi:
@@ -512,6 +516,7 @@ these characters.
 
 One possible workaround is to define variables for the double brace and then
 use the variable in the template.  For example:
+
   ::
 
     {{ $openblock := "\x7B\x7B" }}
@@ -751,7 +756,7 @@ If you have a task/template that has failed, once it's been run by the Job syste
 RBAC - Limit Users to Just Poweron and Poweroff IPMI Controls
 -------------------------------------------------------------
 
-The Role Base Access and Controls subsystem allows an operator to construct user account permissions to limit the scope that a user can impact the Digital Rebar Provision system.  Below is an example of how to create a *Claim* that assigns the ``Role`` named ``prod-role`` that limits t to only allow IPMI ``poweron`` and ``poweroff` actions.  These permissions are applied to the _specific_ set of _scope_ *Machines*:
+The Role Base Access and Controls subsystem allows an operator to construct user account permissions to limit the scope that a user can impact the Digital Rebar Provision system.  Below is an example of how to create a *Claim* that assigns the ``Role`` named ``prod-role`` that limits to only allow IPMI ``poweron`` and ``poweroff`` actions.  These permissions are applied to the _specific_ set of _scope_ *Machines*:
 
   ::
 
@@ -772,7 +777,7 @@ DRP will restart cleanly when restarted.  If run under a service watch system (e
 Please gather the log failure and enter a new issue at `Digital Rebar Github <https://github.com/digitalrebar/provision>`_.
 
 
-.. _rs_manager_system_time
+.. _rs_manager_system_time:
 
 Manager and System Time
 -----------------------

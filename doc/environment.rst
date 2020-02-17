@@ -10,10 +10,10 @@ Environment Setup Instructions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This document indexes resources for setting up specific environments for
-use or testing of Digital Rebar Provision with various tools. 
+use or testing of Digital Rebar Provision with various tools.
 
-  * :ref:`rs_setup_packet`
-  * :ref:`rs_setup_aws`
-  * :ref:`rs_setup_linode`
-  * VirtualBox _(not completed yet)_
-  * Local KVM _(not completed yet)_
+.. toctree::
+   :glob:
+   :maxdepth: 1
+
+   setup/*

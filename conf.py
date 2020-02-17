@@ -321,7 +321,7 @@ for the_file in os.listdir(folder):
 def fetch_n_save(urls, path):
     for url in urls:
         filename = url.rsplit('/', 1)[-1]
-        r = requests.get(url, verify=False, stream=True)
+        r = requests.get(url, verify=True, stream=True)
         r.raw.decode_content = True
         with open("{0}/{1}".format(path, filename), 'wb') as f:
             shutil.copyfileobj(r.raw, f)

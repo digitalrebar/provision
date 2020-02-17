@@ -202,11 +202,10 @@ a different endpoint.  This will create a new license that can
 be applied too all endpoints.
 
 With header values exported, an example CURL call would resemble:
-
-  ::
-    curl GET -H "rackn-contactid: $CONTACTID" \
-      -H "rackn-ownerid: $OWNERID" \
-      -H "rackn-endpointid: $ENDPOINTID" \
-      -H "rackn-key: $KEY" \
-      -H "rackn-version: $VERSION" \
-      https://1p0q9a8qob.execute-api.us-west-2.amazonaws.com/v40/license
+::
+ curl GET -H "rackn-contactid: $CONTACTID" \
+   -H "rackn-ownerid: $OWNERID" \
+   -H "rackn-endpointid: $ENDPOINTID" \
+   -H "rackn-key: $KEY" \
+   -H "rackn-version: $VERSION" \
+   https://1p0q9a8qob.execute-api.us-west-2.amazonaws.com/v40/license
