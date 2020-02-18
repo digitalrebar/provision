@@ -120,12 +120,17 @@ def main():
     if raw.status_code == 200:
         for machine in raw.json():
             name = machine[u'Name']
+            if name == '' or name is None:
+                continue
+            if machine[u'Address'] == '' or machine[u'Address'] is None:
+                continue
             inventory["all"]["hosts"].extend([name])
             myvars = hostvars.copy()
             if host_address == "internal":
                 myvars["ansible_host"] = machine[u"Address"]
             else:
                 myvars["ansible_host"] = machine[u"Params"][host_address]
+            ansible_user = machine.get("Params").get("ansible_user", ansible_user)
             myvars["ansible_user"] = ansible_user
             myvars["rebar_uuid"] = machine[u"Uuid"]
             for k in machine[u'Params']:
