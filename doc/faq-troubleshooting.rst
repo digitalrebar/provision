@@ -673,6 +673,16 @@ Solution 2: Is something is really “slower” than sledgehammer expects?
 You could try setting `provisioner.wgetretrycount=60`.  `kernel-console` is a parameter that lets you changing the kernel parameters passed to bootenvs.
 Sometimes it is used to tweak the kernel console that the kernel is using, but it can be used for other values as well.
 
+.. _rs_no_matching_subnet
+
+No matching Subnet (MacOS DHCP)
+-------------------------------
+
+Problem: DHCP will not respond when running DRP from a Mac.  Log provides "No Matching Subnet" warning.
+
+Cause: This is likely caused by not configuring the "MAC DARWIN" route correctly as per :ref:`rs_qs_start`.
+
+Solution: Make sure that the address on the MAC should be outside the range.  Then set the ip, add the route, and then (re)start DRP.  Make sure all the broadcast routes are deleted first using `sudo route delete 255.255.255.255` multiple times.
 
 .. _rs_kubernetes_dashboard:
 
