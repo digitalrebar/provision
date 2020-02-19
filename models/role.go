@@ -29,7 +29,7 @@ var (
 		"files":      "list, get, post, delete",
 		"interfaces": "list, get",
 		"info":       "get",
-		"system":     "upgrade",
+		"system":     "upgrade, replicate",
 		"objects":    "list",
 		"isos":       "list, get, post, delete",
 	}

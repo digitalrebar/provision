@@ -10,24 +10,8 @@
 Integrations
 ~~~~~~~~~~~~
 
-Digital Rebar Provision provides many growing integration points.
+Digital Rebar Provision provides many growing integration points, however these are all controlled in :ref:`rs_content_packages` now.
 
 
 .. toctree::
 
-   integrations/ansible
-   integrations/websocket
-
- .. _rs_terraform:
-
-Terraform Provider for Digital Rebar Provision
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-NOTICE: Moved to :ref:`component_terraform`.  Please update references.
-
-.. _rs_krib:
-
-Moved: KRIB (Kubernetes Rebar Integrated Bootstrapping)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-NOTICE: Moved to :ref:`component_krib`.  Please update references.

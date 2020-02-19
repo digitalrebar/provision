@@ -35,6 +35,7 @@
       LABEL local
       {{.Param "pxelinux-local-boot"}}
     ID: ""
+    Link: ""
     Meta: {}
     Name: pxelinux
     Path: pxelinux.cfg/default
@@ -44,6 +45,7 @@
       :chainip
       chain tftp://{{.ProvisionerAddress}}/${netX/ip}.ipxe || exit
     ID: ""
+    Link: ""
     Meta: {}
     Name: ipxe
     Path: default.ipxe
@@ -96,6 +98,7 @@
           configfile $prefix/grub.cfg
       fi
     ID: ""
+    Link: ""
     Meta: {}
     Name: grub
     Path: grub/grub.cfg
@@ -137,6 +140,7 @@
       LABEL local
       {{.Param "pxelinux-local-boot"}}
     ID: ""
+    Link: ""
     Meta: {}
     Name: pxelinux
     Path: pxelinux.cfg/{{.Machine.HexAddress}}
@@ -144,6 +148,7 @@
       #!ipxe
       exit
     ID: ""
+    Link: ""
     Meta: {}
     Name: ipxe
     Path: '{{.Machine.Address}}.ipxe'
@@ -154,6 +159,7 @@
       LABEL local
       {{.Param "pxelinux-local-boot"}}
     ID: ""
+    Link: ""
     Meta: {}
     Name: pxelinux-mac
     Path: pxelinux.cfg/{{.Machine.MacAddr "pxelinux"}}
@@ -161,6 +167,7 @@
       #!ipxe
       exit
     ID: ""
+    Link: ""
     Meta: {}
     Name: ipxe-mac
     Path: '{{.Machine.MacAddr "ipxe"}}.ipxe'
@@ -196,6 +203,7 @@
           configfile $prefix/grub.cfg
       fi
     ID: ""
+    Link: ""
     Meta: {}
     Name: grub
     Path: grub/{{.Machine.Address}}.cfg
@@ -231,6 +239,7 @@
           configfile $prefix/grub.cfg
       fi
     ID: ""
+    Link: ""
     Meta: {}
     Name: grub-mac
     Path: grub/{{.Machine.MacAddr "grub"}}.cfg

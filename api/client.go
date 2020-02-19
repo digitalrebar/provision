@@ -10,6 +10,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"log"
 	"mime"
 	"net"
@@ -22,6 +23,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/gorilla/websocket"
 
 	"golang.org/x/net/http2"
 
@@ -467,43 +470,27 @@ func (r *R) FailFast() *R {
 	return r
 }
 
-// Do attempts to execute the reqest built up by previous method calls
-// on R.  If any errors occurred while building up the request, they
-// will be returned and no API interaction will actually take place.
-// Otherwise, Do will generate an http.Request, perform it, and
-// marshal the results to val.  If any errors occur while processing
-// the request, fibonacci based backoff will be performed up to 6
-// times.
-//
-// If val is an io.Writer, the body of the response will be copied
-// verbatim into val using io.Copy
-//
-// Otherwise, the response body will be unmarshalled into val as
-// directed by the Content-Type header of the response.
-func (r *R) Do(val interface{}) error {
+// Response executes the request and returns a raw http.Response.
+// The caller must close the response body when finished with it.
+func (r *R) Response() (*http.Response, error) {
 	if r.uri == nil {
 		r.err.Errorf("No URL to talk to")
-		return r.err
+		return nil, r.err
 	}
 	r.c.mux.Lock()
 	if r.c.closed {
 		r.c.mux.Unlock()
 		r.err.Errorf("Connection Closed")
-		return r.err
+		return nil, r.err
 	}
 	r.c.mux.Unlock()
 	if r.err.ContainsError() {
-		return r.err
+		return nil, r.err
 	}
 	r.Headers("Cache-Control", "no-store")
 	if r.traceLvl != "" {
 		r.Headers("X-Log-Request", r.traceLvl)
 		r.Headers("X-Log-Token", r.traceToken)
-	}
-	r.Headers("Accept", "application/json")
-	switch val.(type) {
-	case io.Writer:
-		r.Headers("Accept", "application/octet-stream")
 	}
 	timeouts := []time.Duration{
 		time.Second,
@@ -520,7 +507,7 @@ func (r *R) Do(val interface{}) error {
 		req, err = http.NewRequest(r.method, r.uri.String(), r.body)
 		if err != nil {
 			r.err.AddError(err)
-			return r.err
+			return nil, r.err
 		}
 		req.Header = r.header
 		r.Req = req
@@ -548,19 +535,74 @@ func (r *R) Do(val interface{}) error {
 	}
 	if err != nil {
 		r.err.AddError(err)
-		return r.err
+		return nil, r.err
 	}
 	r.Resp = resp
+	return r.Resp, r.err.HasError()
+
+}
+
+// Do attempts to execute the reqest built up by previous method calls
+// on R.  If any errors occurred while building up the request, they
+// will be returned and no API interaction will actually take place.
+// Otherwise, Do will generate an http.Request, perform it, and
+// marshal the results to val.  If any errors occur while processing
+// the request, fibonacci based backoff will be performed up to 6
+// times.
+//
+// If val is an io.Writer, the body of the response will be copied
+// verbatim into val using io.Copy
+//
+// Otherwise, the response body will be unmarshalled into val as
+// directed by the Content-Type header of the response.
+func (r *R) Do(val interface{}) error {
+	r.Headers("Accept", "application/json")
+	switch val.(type) {
+	case io.Writer:
+		r.Headers("Accept", "application/octet-stream")
+	}
+	resp, err := r.Response()
 	if resp != nil {
 		defer resp.Body.Close()
 	}
-	if wr, ok := val.(io.Writer); ok && resp.StatusCode < 300 {
-		_, err := io.Copy(wr, resp.Body)
-		r.err.AddError(err)
-		return r.err.HasError()
+	if err != nil {
+		return r.err
+	}
+	if resp.StatusCode >= 400 {
+		if r.method == "HEAD" {
+			r.err.Errorf(http.StatusText(resp.StatusCode))
+			r.err.Code = resp.StatusCode
+			return r.err
+		}
+		buf, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			return err
+		}
+		res := &models.Error{}
+		if err := json.Unmarshal(buf, res); err != nil {
+			r.err.Code = resp.StatusCode
+			r.err.AddError(err)
+			r.err.Errorf("Raw response: %s", string(buf))
+			return r.err
+		}
+		return res
+	}
+	if wr, ok := val.(io.Writer); ok {
+		if resp.StatusCode == 304 {
+			// Pretend we wrote the whole thing.
+			if fi, ok := wr.(io.WriteSeeker); ok {
+				fi.Seek(0, io.SeekEnd)
+			}
+			return nil
+		}
+		if resp.StatusCode < 300 {
+			_, err := io.Copy(wr, resp.Body)
+			r.err.AddError(err)
+			return r.err.HasError()
+		}
 	}
 	if r.method == "HEAD" {
-		if resp.StatusCode <= 300 {
+		if resp.StatusCode <= 300 || resp.StatusCode == 304 {
 			if val != nil {
 				return models.Remarshal(resp.Header, val)
 			}
@@ -584,15 +626,6 @@ func (r *R) Do(val interface{}) error {
 	if dec == nil {
 		r.err.Errorf("No decoder for content-type %s", ct)
 		return r.err
-	}
-	if resp.StatusCode >= 400 {
-		res := &models.Error{}
-		if err := dec.Decode(res); err != nil {
-			r.err.Code = resp.StatusCode
-			r.err.AddError(err)
-			return r.err
-		}
-		return res
 	}
 	if val != nil && resp.Body != nil && resp.ContentLength != 0 {
 		r.err.AddError(dec.Decode(val))
@@ -675,9 +708,47 @@ func (c *Client) ListBlobs(at string, params ...string) ([]string, error) {
 }
 
 // GetBlob fetches a binary blob from the server, writing it to the
-// passed io.Writer.
+// passed io.Writer.  If the io.Writer is actually an io.ReadWriteSeeker
+// with a Truncate method, GetBlob will only download the file
+// if it has changed on the server side.
 func (c *Client) GetBlob(dest io.Writer, at ...string) error {
-	return c.Req().UrlFor(path.Join("/", path.Join(at...))).Do(dest)
+	req := c.Req().UrlFor(path.Join("/", path.Join(at...)))
+	shasum := ""
+	var startSz int64
+	if fi, ok := dest.(*os.File); ok {
+		st, err := fi.Stat()
+		if err == nil {
+			startSz = st.Size()
+		}
+		mts := &models.ModTimeSha{}
+		if err := mts.ReadFromXattr(fi); err == nil && mts.UpToDate(fi) {
+			shasum = mts.String()
+		} else if err = mts.Generate(fi); err == nil {
+			shasum = mts.String()
+			mts.SaveToXattr(fi)
+		}
+	}
+	if shasum != "" {
+		req.Headers("If-None-Match", `"SHA256:`+shasum+`"`)
+	}
+	if err := req.Do(dest); err != nil {
+		return err
+	}
+	if fi, ok := dest.(*os.File); ok {
+		sz, _ := fi.Seek(0, io.SeekCurrent)
+		if sz != startSz {
+			if err := fi.Truncate(sz); err != nil {
+				return err
+			}
+		}
+		mts := &models.ModTimeSha{}
+		if err := mts.ReadFromXattr(fi); err == nil && !mts.UpToDate(fi) {
+			if err := mts.Generate(fi); err == nil {
+				mts.SaveToXattr(fi)
+			}
+		}
+	}
+	return nil
 }
 
 // GetBlobSum fetches the checksum for the blob
@@ -687,7 +758,15 @@ func (c *Client) GetBlobSum(at ...string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return h.Get("X-DRP-SHA256SUM"), nil
+	sum := h.Get("X-DRP-SHA256SUM")
+	if sum == "" {
+		sum = strings.Trim(h.Get("ETag"), `"`)
+		if parts := strings.SplitN(sum, ":", 2); len(parts) == 2 {
+			sum = parts[1]
+		}
+
+	}
+	return sum, nil
 }
 
 // PostBlobExplode uploads the binary blob contained in the passed io.Reader
@@ -840,6 +919,28 @@ func (c *Client) PatchToFull(old models.Model, new models.Model, paranoid bool) 
 // multiple sources.
 func (c *Client) PutModel(obj models.Model) error {
 	return c.Req().Put(obj).UrlForM(obj).Do(&obj)
+}
+
+func (c *Client) Websocket(at string) (*websocket.Conn, error) {
+	ep, err := url.ParseRequestURI(c.endpoint + path.Join(APIPATH, at))
+	if err != nil {
+		return nil, err
+	}
+	ep.Scheme = "wss"
+	dialer := &websocket.Dialer{
+		Proxy:           http.ProxyFromEnvironment,
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
+	header := http.Header{}
+	// If we have a token use it, otherwise basic auth
+	if c.Token() != "" {
+		header.Set("Authorization", "Bearer "+c.Token())
+	} else {
+		basicAuth := base64.StdEncoding.EncodeToString([]byte(c.username + ":" + c.password))
+		header.Set("Authorization", "Basic "+basicAuth)
+	}
+	res, _, err := dialer.Dial(ep.String(), header)
+	return res, err
 }
 
 var weAreTheProxy bool
