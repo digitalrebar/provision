@@ -425,7 +425,7 @@ func (b *BootEnv) ToModels(obj interface{}) []Model {
 }
 
 func (b *BootEnv) Fill() {
-	b.Validation.fill()
+	b.Validation.fill(b)
 	if b.Meta == nil {
 		b.Meta = Meta{}
 	}

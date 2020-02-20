@@ -35,7 +35,7 @@ func (c *Context) AuthKey() string {
 }
 
 func (c *Context) Fill() {
-	c.Validation.fill()
+	c.Validation.fill(c)
 	if c.Meta == nil {
 		c.Meta = Meta{}
 	}

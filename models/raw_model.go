@@ -132,7 +132,7 @@ func (r *RawModel) ChangeForced() bool {
 func (r *RawModel) Errorf(fmtStr string, args ...interface{}) {
 	r.setAvailable(false)
 	e := r.getErrors()
-	(*r)["Errors"] = append(e, fmt.Sprintf(fmtStr, args...))
+	(*r)["Errors"] = append(e, r.Key()+": "+fmt.Sprintf(fmtStr, args...))
 }
 
 func (r *RawModel) AddError(err error) {
@@ -144,7 +144,7 @@ func (r *RawModel) AddError(err error) {
 		case *Error:
 			e = append(e, o.Messages...)
 		default:
-			e = append(e, err.Error())
+			e = append(e, r.Key()+": "+err.Error())
 		}
 		(*r)["Errors"] = e
 	}

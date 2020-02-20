@@ -324,7 +324,7 @@ func (r *Role) GetDescription() string {
 }
 
 func (r *Role) Fill() {
-	r.Validation.fill()
+	r.Validation.fill(r)
 	if r.Meta == nil {
 		r.Meta = Meta{}
 	}

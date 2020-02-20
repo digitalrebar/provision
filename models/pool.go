@@ -178,6 +178,7 @@ func (p *Pool) Clone() *Pool {
 }
 
 func (p *Pool) Fill() {
+	p.Validation.fill(p)
 	if p.Meta == nil {
 		p.Meta = Meta{}
 	}

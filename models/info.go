@@ -67,6 +67,8 @@ type Info struct {
 	// required: true
 	Address net.IP `json:"address"`
 	// required: true
+	Manager bool `json:"manager"`
+	// required: true
 	Stats    []Stat                         `json:"stats"`
 	Features []string                       `json:"features"`
 	Scopes   map[string]map[string]struct{} `json:"scopes"`
