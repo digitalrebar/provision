@@ -69,10 +69,9 @@ def main():
     cli_args = setup_parser()
     if cli_args.debug:
         setup_logging()
-    inventory = {"_meta": {"hostvars": {}}}
     # change these values to match your DigitalRebar installation
-    addr = os.getenv('RS_ENDPOINT', "https://127.0.0.1:8092")
-    logging.debug("RS_ENDPOINT: {0}".format(addr))
+    drp_addr = os.getenv('RS_ENDPOINT', "https://127.0.0.1:8092")
+    logging.debug("RS_ENDPOINT: {0}".format(drp_addr))
     ups = os.getenv('RS_KEY', "rocketskates:r0cketsk8ts")
     logging.debug("RS_KEY: {0}".format(ups))
     profile = os.getenv('RS_ANSIBLE', "all_machines")
@@ -89,16 +88,13 @@ def main():
     ansible_host = cli_args.ansible_host
     headers = {'content-type': 'application/json'}
     inventory = {'all': {'hosts': []}, '_meta': {'hostvars': {}}}
-    inventory["_meta"]["rebar_url"] = addr
+    inventory["_meta"]["rebar_url"] = drp_addr
     inventory["_meta"]["rebar_user"] = user
     inventory["_meta"]["rebar_profile"] = profile
 
-    groups = []
-    profiles = {}
-    profiles_vars = {}
     hostvars = {}
 
-    url = addr + "/api/v3/machines"
+    url = drp_addr + "/api/v3/machines"
     if list_inventory:
         if profile != "all_machines":
             url += "?ansible=Eq({0})".format(profile)
@@ -119,6 +115,7 @@ def main():
     ignore_params = ["gohai-inventory", "inventory/data", "change-stage/map"]
     if raw.status_code == 200:
         for machine in raw.json():
+            ansible_user = os.getenv('RS_ANSIBLE_USER', "root")
             name = machine[u'Name']
             if name == '' or name is None:
                 continue
@@ -136,13 +133,18 @@ def main():
             for k in machine[u'Params']:
                 if k not in ignore_params:
                     myvars[k] = machine[u'Params'][k]
+            hvs = machine.get(u'Params').get(u'ansible/hostvars', None)
+            if hvs is not None:
+                for k, v in hvs.items():
+                    myvars[k] = v
+
             inventory["_meta"]["hostvars"][name] = myvars
     else:
         raise IOError(raw.text)
 
     if ansible_host is None:
         groups = requests.get(
-            addr + "/api/v3/profiles",
+            drp_addr + "/api/v3/profiles",
             headers=headers,
             auth=(user, password),
             verify=False
@@ -165,7 +167,7 @@ def main():
                     inventory[name]["vars"] = gvars
                     hosts = requests.get(
                         "{0}/api/v3/machines?slim=Params&Profiles=In({1})".format(
-                            addr, name
+                            drp_addr, name
                         ),
                         headers=headers,
                         auth=(user, password),
