@@ -69,7 +69,6 @@ def main():
     cli_args = setup_parser()
     if cli_args.debug:
         setup_logging()
-    inventory = {"_meta": {"hostvars": {}}}
     # change these values to match your DigitalRebar installation
     addr = os.getenv('RS_ENDPOINT', "https://127.0.0.1:8092")
     logging.debug("RS_ENDPOINT: {0}".format(addr))
@@ -93,9 +92,6 @@ def main():
     inventory["_meta"]["rebar_user"] = user
     inventory["_meta"]["rebar_profile"] = profile
 
-    groups = []
-    profiles = {}
-    profiles_vars = {}
     hostvars = {}
 
     url = addr + "/api/v3/machines"
@@ -119,6 +115,7 @@ def main():
     ignore_params = ["gohai-inventory", "inventory/data", "change-stage/map"]
     if raw.status_code == 200:
         for machine in raw.json():
+            ansible_user = os.getenv('RS_ANSIBLE_USER', "root")
             name = machine[u'Name']
             if name == '' or name is None:
                 continue
