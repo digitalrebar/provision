@@ -100,12 +100,12 @@ Table of Contents
 
    doc/quickstart
    doc/install
+   doc/upgrade
    doc/environment
    doc/features
    doc/server
    doc/configuring
    doc/release
-   doc/upgrade
    doc/workflows
    doc/deployment
    doc/operation

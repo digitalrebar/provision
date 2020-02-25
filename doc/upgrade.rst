@@ -9,7 +9,7 @@
 Upgrade
 ~~~~~~~
 
-While not glamorous, existing code can be overwritten by a new install and 
+While not glamorous, existing code can be overwritten by a new install and
 restart.  That is about it.  Here are a few more details.
 
 We recommend that you backup your existing install as a safey measure.
@@ -18,9 +18,20 @@ We recommend that you backup your existing install as a safey measure.
 Backup
 ======
 
-It's always a good policy to backup any important data, configuration, and 
-content information that may be related to an application before an upgrade.  
+It's always a good policy to backup any important data, configuration, and
+content information that may be related to an application before an upgrade.
 We strongly encourage you to backup your content prior to doing any upgrade activity.
+
+
+Additional References
+---------------------
+
+RackN has some basic backup management process and scripts that it maintains.  Please
+see the following references for these:
+
+  * :ref:`rs_runbook_backup`
+  * :ref:`rs_drbup`
+
 
 Isolated Install
 ----------------
@@ -57,69 +68,180 @@ For "production" install modes (no ``--isolated`` flag provided to ``install.sh`
      mkdir backups
      sudo cp -r /var/lib/dr-provision backups/dr-provision.backup.$D
 
+
 Upgrade Steps
 =============
 
-The basic steps are the same for both Isolated and Production install modes:
+Isolated or Production Installed Modes
+--------------------------------------
 
-  1. stop the existing service
-  2. run the installer with the "upgrade" flag
-  3. restart the service
+The basic steps are the same for both Isolated and Production install modes, the only
+primary difference is adding the ``--isolated`` flag for the ``install.sh`` script if
+you are using the installer upgrade path.  If you are performing in-product upgrades
+(CLI or Web Portal), the steps are the same.
 
-Isolated Install
-----------------
+There are a few different paths for upgrading a DRP Endpoint in.  Note that how you
+originally installed the service may dictate how you need to upgrade.  For some
+environments where several security meausres have been taken (non-root install, for
+example), you may only be able to upgrade via the in-product path.  Upgrades via the
+installer script will require root permissions due to either low port binding
+requirements, or ``setcap`` setup requirements.
 
-For isolated :ref:`rs_install`, update this way:
+1. In-product upgrade from the command line (CLI)
 
-#. Stop dr-provision:
-   ::
+  * See current versions in the catalog:
 
-      killall dr-provision
+    ::
 
-#. Return to the install directory
-#. Run the install again
-   ::
+       drpcli catalog item show drp
 
-     # Remember to use --drp-version to set a version other than stable if desired
-     # Curl/Bash from quickstart if desired, or this:
-     tools/install.sh upgrade --isolated 
+  * Install with Catalog reference (**requires Internet connetion**), or in multiple
+    steps, if you need to acquire the Zip file, and then perform an air-gap (**non
+    Internet connected system**) upgrade.
 
-#. Restart *dr-provision*, as stated by the ``tools/install.sh`` output.
+    * **Internet Connected** - Single Step Upgrade via CLI:
 
-Production Install
-------------------
+      ::
 
-For non-isolated (aka "production mode") :ref:`rs_install`, update this way:
+        # note the item name (drp) has been combined with the selected version
+        # without a version, the latest 'stable' release will be used
 
-#. Stop dr-provision, using the system method of choice
-   ::
+        drpcli system upgrade catalog:drp-v4.3.0-alpha2.18
 
-     systemctl stop dr-provision
+    * **Air-gap** (non-internet connected DRP Endpoint) - Download zip file with an
+      internet connected host then move to air-gap (non Internet connected) DRP
+      endpoint, then perform the upgrade
 
-   or
+      *  Download the DRP zip file for the version you want to upgrade to:
 
-   ::
+        ::
 
-     service dr-provision stop
+          drpcli catalog item download drp --version v4.3.0-alpha2.18
 
-#. Install new code - Use the same install technique as the first install, but change ``install`` to ``upgrade`` option.  :ref:`rs_install`
-   ::
+      * Upgrade from the downloaded zip file:
 
-     tools/install.sh upgrade --isolated
+        ::
 
-#. Start up dr-provision
+          drpcli system upgrade drp.zip
+
+      * Verify newly installed version
+
+        ::
+
+          drpcli info get | jq '.version'
+
+2. Upgrade via the Web Portal
+
+  * navigate to the ``Catalog`` menu item
+  * find the ``Digital Rebar Provision`` entry
+  * select the version you want to Upgrade (or downgrade) to in the *v.Available*
+    (short for *Available Versions*) column
+  * click on the green *Install* icon to the right, or the blue button top center
+    that says *Install*
+  * note that the DRP version zip file has to be downloaded from the RackN hosted
+    catalog location, then uploaded to the DRP Endpoint, it may take a few minutes
+
+3. Upgrade with the ``install.sh`` script
+
+  * Stop dr-provision, using the system method of choice
+
+    ::
+
+      sudo systemctl stop dr-provision
+
+    or
+
+    ::
+
+      sudo service dr-provision stop
+
+    or
+
+    ::
+
+      sudo pkill dr-provision
+
+  * Install new code - Use the same install technique as the first install, but
+    change ``install`` to ``upgrade`` option.  (Reference: :ref:`rs_install`)
+
+    ::
+
+      # you will want to use additional options if you specified them
+      # in your original 'install' steps (eg "--systemd --startup")
+      #
+      # your original install should have saved a copy of the install.sh
+      # script as '/usr/local/bin/drp-install.sh' for this purpose.
+      #
+      # if an Isolated install was performed originally, add '--isolated'
+
+      drp-install.sh upgrade <Other_Options>
+
+      # or, re-get the installer code if it's not available
+
+      curl -s get.rebar.digital/stable | bash -s -- upgrade <Other_Options>
+
+  * Start up dr-provision
+
+    ::
+
+      systemctl start dr-provision
+
+    or
+
+    ::
+
+      service dr-provision start
+
+    or
+
+    Manually restart as per your standard *Isolated* mode install directions.
+
+
+.. _rs_upgrade_container:
+
+Container Upgrade Process
+-------------------------
+
+As of DRP version v4.3.0, container based installs do not support in-product
+upgrade path, the original container must be upgraded via the container
+management system.  RackN releases it's container with a separate data
+volume for storing the backing write layers of the *dr-provision* service.
+
+By default the DRP service container will be named ``drp``, and the backing
+volume will be named ``drp-data``.  Note that you can change these with the
+install time flags if desired.
+
+The upgrade process entails:
+
+  * stop dr-provision service to flush all writable data to disk
+  * kill the container on the container host
+  * start a new container, re-attaching the backing data volume
+
+The installer scripts (``install.sh``) supports these operations.  Review the
+script options with the ``--help`` flag for the most up to date information on
+usage.
+
+.. note:: WARNING: It is important that you retain a copy of the settings used
+          from your original container install.  The upgrade process does not
+          have any awareness of previous container start settings.  It may be
+          possible to parse this from the container environment (eg 'docker
+          inspect drp'), but this has not been determined yet.
+
+Example upgrade of a container based service, based on the following install
+command line options:
 
   ::
 
-    systemctl start dr-provision
+    ./install.sh install --container --container-restart=always --container-netns=host --container-env="RS_METRICS_PORT=8888 RS_BINL_PORT=1104"
 
-  or
+Based on these install options, the upgrade process is as follows:
 
   ::
 
-    service dr-provision start
+    ./install.sh upgrade --container --container-restart=always --container-netns=host --container-env="RS_METRICS_PORT=8888 RS_BINL_PORT=1104"
 
-
+.. note:: The only material differnece is the use of the 'upgrade' argument to the
+          install script for upgrades, instead of 'install' for installation.
 
 Version to Version Notes
 ========================

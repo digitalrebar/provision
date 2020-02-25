@@ -8,6 +8,8 @@
 Runbooks
 ++++++++
 
+.. _rs_runbook_backup:
+
 Backup
 ------
 For the following commands it is assumed you already have ``drbup`` installed and in your PATH. For full documentation on ``drbup`` please see :ref:`the documentation <rs_drbup>`.
