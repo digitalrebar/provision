@@ -14,39 +14,35 @@ The install script does the following steps (in a slightly different order).  Se
 Get Code
 --------
 
-The code is delivered by zip file with a sha256sum to validate contents.  These are in AWS and referenced by the catalog found
-at `catalog <https://repo.rackn.io/>`_.
+The code is delivered by zip file with a sha256sum to validate contents.  These are stored in an AWS S3 bucket and referenced by the catalog found at `catalog <https://repo.rackn.io/>`_.  You can view the Catalog contents with a simple ``curl`` command (``curl -s --compressed https://repo.rackn.io``), and with ``jq``, parse it to find the paths where things are stored.  However, parsing the Catalog file is generally not needed.
 
 There are at least 3 releases to choose from:
 
   * **tip** - This is the most recent code.  This is the latest build of master.  It is bleeding edge and while the project attempts to be very stable with master, it can have issues.
   * **stable** - This is the most recent **stable** code.
-  * **v4.0.1** - There will be a set of Semantic Versioning (aka semver) named releases.
+  * **v4.0.1** - There will be a set of Semantic Versioning (aka semver) named releases.  This is just ane example version string.
 
-Previous releases will continue to be available in tag/release history.  For additional information, see
-:ref:`rs_release_process`.
+Previous releases will continue to be available in tag/release history.  For additional information, see :ref:`rs_release_process`.
 
-When using the **install.sh** script, the version can be specified by the **--drp-version** flag,
-e.g. *--drp-version=v4.0.1*.
+When using the **install.sh** script, the version can be specified by the **--drp-version** flag, e.g. *--drp-version=v4.0.1*.
 
 An example command sequence for Linux would be:
 
   ::
 
-    mkdir dr-provision-install
-    cd dr-provision-install
+    mkdir drp
+    cd drp
     curl -fsSL https://rebar-catalog.s3-us-west-2.amazonaws.com/drp/v4.0.1.zip -o dr-provision.zip
     curl -fsSL https://rebar-catalog.s3-us-west-2.amazonaws.com/drp/v4.0.1.sha256 -o dr-provision.sha256
     sha256sum -c dr-provision.sha256
     unzip dr-provision.zip
 
-At this point, the **install.sh** script is available in the **tools** directory.  It can be used to continue the process or
-continue following the steps in the next sections.  *tools/install.sh --help* will provide help and context information.
+At this point, the **install.sh** script is available in the **tools** directory.  It can be used to continue the process or continue following the steps in the next sections.  *tools/install.sh --help* will provide help and context information.  Specifically, you will need the ``--zipfile`` option for this installation method.
 
-Configuration Options
----------------------
+Install Configuration Options
+-----------------------------
 
-Using ``dr-provision --help`` will provide the most complete list of configuration options.  The following common items are provided for reference.  Please note these may change from version to version, check the current scripts options with the ``--help`` flag to verify current options.
+Using ``dr-provision --help`` will provide the most complete list of configuration options.  The following **common items are provided for reference**.  *Please note these may change from version to version, check the current scripts options with the ``--help`` flag to verify current options.*
 
   ::
 
@@ -71,8 +67,9 @@ Using ``dr-provision --help`` will provide the most complete list of configurati
 Prerequisites
 -------------
 
-**dr-provision** requires two applications to operate correctly, **bsdtar** and **7z**.  These are used to extract the contents
-of iso and tar images to be served by the file server component of **dr-provision**.  The ``install.sh`` script will attempt to ensure these packages are installed by default.  However, if you are installing via manual process or baking your own installer, you must ensure these prerequisistes are met.
+.. note:: As of DRP version v4.2.0, these external dependencies are not required, they are part of the DRP install zip file.
+
+**dr-provision** requires two applications to operate correctly, **bsdtar** and **7z**.  These are used to extract the contents of iso and tar images to be served by the file server component of **dr-provision**.  The ``install.sh`` script will attempt to ensure these packages are installed by default.  However, if you are installing via manual process or baking your own installer, you must ensure these prerequisistes are met.
 
 For Linux, the **bsdtar** and **p7zip** packages are required.
 
@@ -93,19 +90,29 @@ For Linux, the **bsdtar** and **p7zip** packages are required.
 
 At this point, the server can be started.
 
-.. note:: In a future release, the required packages may be removed, which will help ensure cross-platform compatibility without relying on these external dependencies.
+
+Container Environments
+++++++++++++++++++++++
+
+If you intend to install DRP via a container system, you must pre-install the appropriate container solution.  RackN typically only tests and verifies with recent versions of Docker.
+
+.. admonition:: Container Installation
+
+  sudo yum install docker-ce
+
 
 Running The Server
 ------------------
 
 Additional support materials in :ref:`rs_faq`.
 
-The **install.sh** script provides two options for running **dr-provision**.
+The **install.sh** script provides three options for running **dr-provision**.
 
-The default values install the server and cli in /usr/local/bin.  It will also put a service control file in place.  Once that finishes, the appropriate service start method will run the daemon.  The **install.sh** script prints out the command to run
-and enable the service.  The method described in the :ref:`rs_quickstart` can be used to deploy this way if the
-*--isolated* flag is removed from the command line.  Look at the internals of the **install.sh** script to see what
-is going on.
+  #. Production mode installations
+  #. Isolated (generally for testing) mode
+  #. Container based installation
+
+The default values install the server and cli in /usr/local/bin.  It will also put a service control file in place.  Once that finishes, the appropriate service start method will run the daemon.  The **install.sh** script prints out the command to run and enable the service.  The method described in the :ref:`rs_quickstart` can be used to deploy this way if the *--isolated* flag is removed from the command line.  Look at the internals of the **install.sh** script to see what is going on.
 
 .. note:: The default location for storing runtime information is ``/var/lib/dr-provision`` unless overridden by ``--data-root``
 
@@ -144,6 +151,47 @@ If the SSL certificate is not valid, then follow the :ref:`rs_gen_cert` steps.
   ::
 
     sudo route add 255.255.255.255 192.168.100.1
+
+Container Deployments
+---------------------
+
+Installation is perforemed with the ``install.sh`` script with the ``--container`` flag and associated options.  Here are some of the options (please check the latest installer script for updates/details):
+
+  ::
+
+    --container             # Force to install as a container, not zipfile
+    --container-type=<string>
+                            # Container install type, defaults to "docker"
+    --container-name=<string>
+                            # Set the "docker run" container name, defaults to "drp"
+    --container-restart=<string>
+                            # Set the Docker restart option, defaults to "always"
+                            # options are:  no, on-failure, always, unless-stopped
+                            * see: https://docs.docker.com/config/containers/start-containers-automatically/
+    --container-volume=<string>
+                            # Volume name to use for backing persistent storage, default "drp-data"
+    --container-registry="drp.example.com:5000"
+                            # Alternate registry to get container images from, default "index.docker.io"
+    --container-env="<string> <string> <string>"
+                            # Define a space separated list of environment variables to pass to the
+                            # container on start (eg "RS_METRICS_PORT=8888 RS_DRP_ID=fred")
+                            # see 'dr-provision --help' for complete list of startup variables
+    --container-netns="<string>"
+                            # Define Network Namespace to start container in. Defaults to "host"
+                            # If set to empty string (""), then disable setting any network namespace
+
+.. note:: WARNING: If you intend to Upgrade DRP in a container based scenarios, it iS IMPORTANT that you retain a copy of the installation command line flags you use for install time.  These flags will have to be specified for the upgrade command to work correctly.
+
+Container based installations will by default name the container ``drp``, and the data backing volume ``drp-data``.  You can change these with appropriate flags.  The writable data store is located in the backing volume, which helps isolate the binary/service environment from the writable content.  See the :ref:`rs_upgrade_container` for more details.
+
+The ``dr-provision`` service binary utilizes environment variables as a mechanism to support customization of the runtime of the service.  This also allows the operator to start the container and modify the runtime via the use of passing Environment variables in to the container.  Here is an example:
+
+  ::
+
+    ./install.sh install --container --container-restart=always --container-netns=host --container-env="RS_METRICS_PORT=8888"
+
+This example modifies the Metrics port to be changed from the default of ``8080`` to relocate to port ``8888``.  See ``dr-provision --help`` for a list of all environment variable options that can be set.
+
 
 Production Deployments
 ----------------------
@@ -223,31 +271,31 @@ Setting up DRP to host the RackN UX locally is trivial.  The DRP server includes
 
 The RackN UX uses the rackn-license content pack for entitlements so no external login to the RacKN SaaS is required.
 
-The RackN UX will still attempt to connect the RackN SaaS for updates and the catalog; however, the system will operate even if these calls fail.  This can be turned off by setting a parameter in the global profile, `ux-air-gap`, to `true`.
+The RackN UX will still attempt to connect the RackN SaaS for updates and the catalog; however, the system will operate even if these calls fail.  This can be turned off by setting a parameter in the global profile, ``ux-air-gap``, to ``true``.
 
 Setup
 +++++
 
-Before starting, you'll need a copy of the RackN UX and to have installed a `rackn-license.json` content package in the DRP server.  These items require a current RackN license - using them without a valid enterprise or trial license is a copyright violation.
+Before starting, you'll need a copy of the RackN UX and to have installed a ``rackn-license.json`` content package in the DRP server.  These items require a current RackN license - using them without a valid enterprise or trial license is a copyright violation.
 
-Extract the RackN UX files into a directory named `ux` at the same level as the `drp-data` directory.  The account running your `dr-server` must have read permission for this directory.
+Extract the RackN UX files into a directory named ``ux`` at the same level as the ``drp-data`` directory.  The account running your ``dr-server`` must have read permission for this directory.
 
-It is OK to use a different directory - the different directory can be specified with the `--local-ui` command line option for dr-provision.  The option specifies the directory containing the UX files.  If the path is relative, it will be assumed to be relative to the `data-root` option.
+It is OK to use a different directory - the different directory can be specified with the ``--local-ui`` command line option for dr-provision.  The option specifies the directory containing the UX files.  If the path is relative, it will be assumed to be relative to the ``data-root`` option.
 
 
 Running the UX from DRP
 +++++++++++++++++++++++
 
-By unpacking the files in the `ux` directory within the `data-root` directory or specifying the `--local-ui` option, the DRP endpoint will serve that directory as `/local-ui` and `/ux`.
+By unpacking the files in the ``ux`` directory within the ``data-root`` directory or specifying the ``--local-ui`` option, the DRP endpoint will serve that directory as ``/local-ui`` and ``/ux``.
 
 The endpoint will detect file changes so no restart is required if you update or change the RackN UX files.
 
-If you are using the default port, you can access the local UX from `https://127.0.0.1:8092/ux`.  NOTE: This will only serve the files for the UX; it will not ensure that the UX starts connecting to the current DRP instance.  To address that, continue below.
+If you are using the default port, you can access the local UX from ``https://127.0.0.1:8092/ux``.  NOTE: This will only serve the files for the UX; it will not ensure that the UX starts connecting to the current DRP instance.  To address that, continue below.
 
 Redirecting URL
 +++++++++++++++
 
-If you are hosting a local UX, you should change the DRP endpoint UX redirect.  This is the site that is presented if you visit the DRP endpoints root URL, `/`, or the official UI url, `/ui`.  To use the local ux, add `--ui-url=/ux` to the `dr-provision` command line arguments.
+If you are hosting a local UX, you should change the DRP endpoint UX redirect.  This is the site that is presented if you visit the DRP endpoints root URL, ``/``, or the official UI url, ``/ui``.  To use the local ux, add ``--ui-url=/ux`` to the ``dr-provision`` command line arguments.
 
 If you have connect to this DRP Endpoint previously, you may need to clear the browsers permanent redirect cache to start using the new feature.
 
