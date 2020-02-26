@@ -2,7 +2,7 @@
 .. Licensed under the Apache License, Version 2.0 (the "License");
 .. Digital Rebar Provision documentation under Digital Rebar master license
 .. index::
-  pair: Digital Rebar Provision; High Availiability
+  pair: Digital Rebar Provision; High Availability
 
 .. _rs_high_availability:
 
@@ -42,10 +42,10 @@ There are a few conditions that need to be met in order to set up an HA cluster 
 Configuration
 -------------
 
-Aside from settings listed later in this section, any and configuration flags and startup options for the dr-provision
+Aside from settings listed later in this section, configuration flags and startup options for the dr-provision
 services participating in an HA cluster should be identical.  It is not required that the servers participating in the
 HA cluster have identical versions, but they must be running on the same OS and system architecture types.
-If you try to add a server version to a cluster that is incompatible, it will fail to be added with an error telling
+If you try to add a server version to a cluster that is incompatible, it will fail with an error telling
 you what to do to resolve the issue.
 
 High Availability Startup Options
@@ -90,7 +90,7 @@ managed by systemd on a Linux server.
 The Initially Active Node
 =========================
 
-To start bootstrapping an HA cluster, start by installing what you want ot be the default active dr-provision node.
+To start bootstrapping an HA cluster, start by installing what you want to be the default active dr-provision node.
 Once it is up and running, create a file named /etc/systemd/system/dr-provision.service.d/20-ha.conf with
 the following contents::
 
@@ -112,12 +112,12 @@ the following contents::
     Environment=RS_HA_ID=8c:ec:4b:ea:d9:fe
 
     # RS_HA_TOKEN is a long-lived access token that the cluster nodes will use to authenticate with each other.
-    # You can generate a useable token with:
+    # You can generate a usable token with:
     #
     #    $ drpcli users token rocketskates ttl 3y |jq -r '.Token'
     Environment=RS_HA_TOKEN=your-token
 
-Once that file is created, reload the config snre restart dr-provision::
+Once that file is created, reload the config and restart dr-provision::
 
     $ systemctl daemon-reload
     $ systemctl restart dr-provision
@@ -127,7 +127,7 @@ When dr-provision comes back up, it will be running on the IP address you set as
 The Initially Passive Nodes
 ===========================
 
-Perform the same installation steps you used for the initally active node, but add one extra line to
+Perform the same installation steps you used for the initially active node, but add one extra line to
 the /etc/systemd/system/dr-provision.service.d/20-ha.conf file::
 
     Environment=RS_HA_PASSIVE=true
