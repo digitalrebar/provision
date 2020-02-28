@@ -241,8 +241,8 @@ type BootEnv struct {
 	// required: true
 	OnlyUnknown bool
 	// Loaders contains the boot loaders that should be used for various different network
-	// boot scenarios.  It consists of a map of machine type -> partial paths to the bootloaders,
-	// which will undergo template expansion.  Valid machine types are:
+	// boot scenarios.  It consists of a map of machine type -> partial paths to the bootloaders.
+	// Valid machine types are:
 	//
 	// - 386-pcbios for x86 devices using the legacy bios.
 	//
