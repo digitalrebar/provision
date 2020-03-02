@@ -8,6 +8,7 @@
   Errors: []
   Initrds: []
   Kernel: ""
+  Loaders: {}
   Meta:
     color: green
     feature-flags: change-stage-v2
@@ -110,6 +111,7 @@
   Errors: []
   Initrds: []
   Kernel: ""
+  Loaders: {}
   Meta:
     color: green
     feature-flags: change-stage-v2
