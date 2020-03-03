@@ -240,6 +240,39 @@ type BootEnv struct {
 	//
 	// required: true
 	OnlyUnknown bool
+	// Loaders contains the boot loaders that should be used for various different network
+	// boot scenarios.  It consists of a map of machine type -> partial paths to the bootloaders.
+	// Valid machine types are:
+	//
+	// - 386-pcbios for x86 devices using the legacy bios.
+	//
+	// - amd64-uefi for x86 devices operating in UEFI mode
+	//
+	// - arm64-uefi for arm64 devices operating in UEFI mode
+	//
+	// Other machine types will be added as dr-provision gains support for them.
+	//
+	// If this map does not contain an entry for the machine type, the DHCP server will fall back to
+	// the following entries in this order:
+	//
+	// - The Loader specified in the ArchInfo struct from this BootEnv, if it exists.
+	//
+	// - The value specified in the bootloaders param for the machine type specified on the machine, if it exists.
+	//
+	// - The value specified in the bootloaders param in the global profile, if it exists.
+	//
+	// - The value specified in the default value for the bootloaders param.
+	//
+	// - One of the following vaiues:
+	//
+	//   - lpxelinux.0 for 386-pcbios
+	//
+	//   - ipxe.efi for amd64-uefi
+	//
+	//   - ipxe-arm64.efi for arm64-uefi
+	//
+	// required: true
+	Loaders map[string]string
 }
 
 func (b *BootEnv) GetMeta() Meta {
@@ -341,6 +374,13 @@ func (b *BootEnv) Validate() {
 			tmplNames[tmpl.Name] = i
 		}
 	}
+	for k := range b.Loaders {
+		switch k {
+		case "386-pcbios", "amd64-uefi", "arm64-uefi":
+		default:
+			b.Errorf("%s is not a supported loader type", k)
+		}
+	}
 	for k := range b.OS.SupportedArchitectures {
 		if _, ok := SupportedArch(k); !ok {
 			b.Errorf("%s is not a supported architecture", k)
@@ -397,6 +437,9 @@ func (b *BootEnv) Fill() {
 	}
 	if b.OS.SupportedArchitectures == nil {
 		b.OS.SupportedArchitectures = map[string]ArchInfo{}
+	}
+	if b.Loaders == nil {
+		b.Loaders = map[string]string{}
 	}
 	for k, v := range b.OS.SupportedArchitectures {
 		v.Fill()

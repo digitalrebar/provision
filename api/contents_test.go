@@ -41,9 +41,8 @@ func TestContentCrud(t *testing.T) {
 			expectRes: nil,
 			expectErr: &models.Error{
 				Model:    "contents",
-				Key:      "",
 				Type:     "STORE_ERROR",
-				Messages: []string{"Content Store must have a name", "Store at content- has no Name metadata"},
+				Messages: []string{"Store at content- has no Name metadata"},
 				Code:     422,
 			},
 			op: func() (interface{}, error) {
@@ -76,32 +75,14 @@ meta:
 			},
 		},
 		{
-			name:      "Create Duplicate BarkingStore",
+			name:      "Update BarkingStore (that would break layers)",
 			expectRes: nil,
 			expectErr: &models.Error{
 				Model:    "contents",
 				Key:      "BarkingStore",
-				Type:     "POST",
-				Messages: []string{"Content BarkingStore already exists"},
-				Code:     409,
-			},
-			op: func() (interface{}, error) {
-				barking := &models.Content{}
-				barking.Fill()
-				barking.Meta.Name = "BarkingStore"
-				return session.CreateContent(barking)
-			},
-		},
-		{
-			name:      "Update BarkingStore (that would break layers)",
-			expectRes: nil,
-			expectErr: &models.Error{
-				Model: "contents",
-				Key:   "BarkingStore",
-				Type:  "PUT",
-				Messages: []string{
-					"New layer violates key restrictions: keysCannotBeOverridden: global is already in layer 0\n\tkeysCannotOverride: global would be overridden by layer 0"},
-				Code: 500,
+				Type:     "PUT",
+				Messages: []string{"profiles:global in layer writable would override layer content-BarkingStore"},
+				Code:     500,
 			},
 			op: func() (interface{}, error) {
 				barking := &models.Content{}
