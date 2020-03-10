@@ -379,7 +379,7 @@ Then you will need to create a drop-in service file.  For example, to name your 
 
   ::
 
-     [ Service ]
+     [Service]
      Environment=RS_DRP_ID=mydrpserver
 
 Then reload and restart the service.
