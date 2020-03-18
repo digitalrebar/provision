@@ -371,6 +371,7 @@ urls = [
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/drp-community-contrib.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/krib.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/sledgehammer-builder.rst",
+    "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/chef-bootstrap.rst",
 ]
 
 fetch_n_save(urls, path="doc/content-packages")
