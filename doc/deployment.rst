@@ -56,7 +56,8 @@ For example, this snippet works for most systems when using the ISC DHCP Server.
 for legacy, UEFI, or iPXE booting clients and set the next server parameter to *192.168.100.3*.  Place this
 snippet inside a subnet or host definition.
 
-::
+  ::
+
     if exists user-class and option user-class = "iPXE" {
       filename "default.ipxe";
     } else if option arch = 00:07 {
@@ -64,7 +65,7 @@ snippet inside a subnet or host definition.
     } else if option arch = 00:09 {
       filename "ipxe.efi";
     } else {
-      filename "ipxe.ipxe";
+      filename "ipxe.pxe";
     }
     next-server 192.168.100.3;
 
