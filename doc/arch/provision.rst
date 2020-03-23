@@ -150,10 +150,23 @@ template.  RenderData has the following fields:
     repository that contains security updates to apply during OS
     install.
 
-  - **[Sprig functions]** are string, math, file and flow functions for golang
-    templates from the `Sprig Function Library <http://masterminds.github.io/sprig/>`_.
-    They can be added to pipeline evaluation to perform useful template
-    rendering operations.
+- **[Sprig functions]** are string, math, file and flow functions for golang
+  templates from the `Sprig Function Library <http://masterminds.github.io/sprig/>`_.
+  They can be added to pipeline evaluation to perform useful template
+  rendering operations.
+
+- **Provisioner** items are specific to the Provisioner
+
+  - **.ProvisionerAddress** returns the IP address to access
+    the Provisioner based upon the requesting IP address.
+
+  - **.ProvisionerURL**  returns a URL to access the file server part of the server using the
+    requesting IP address as a basis.
+
+  - **.ApiURL** returns a URL to access the api server part of the server using the
+    requesting IP address as a basis.
+
+  - **.Info.** models.Info structure
 
 - **Env**: The BootEnv that we are rendering templates for, if applicable.
   Unless the BootEnv has the OnlyUnknown flag set, RenderData will
