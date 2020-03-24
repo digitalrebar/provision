@@ -213,13 +213,13 @@ func (s *Subnet) Fill() {
 	if s.Strategy == "" {
 		s.Strategy = "MAC"
 	}
-	if s.Pickers == nil || len(s.Pickers) == 0 {
-		if s.OnlyReservations {
-			s.Pickers = []string{"none"}
-		} else {
-			s.Pickers = []string{"hint", "nextFree", "mostExpired"}
-		}
+	
+	if s.OnlyReservations {
+		s.Pickers = []string{"none"}
+	} else {
+		s.Pickers = []string{"hint", "nextFree", "mostExpired"}
 	}
+	
 	if s.ActiveLeaseTime == 0 {
 		s.ActiveLeaseTime = 60
 	}
