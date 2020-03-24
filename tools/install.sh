@@ -3,7 +3,7 @@
 set -e
 
 # BUMP version on updates
-VERSION="v20.01.31-1"
+VERSION="v20.03.23-1"
 
 DEFAULT_DRP_VERSION=${DEFAULT_DRP_VERSION:-"stable"}
 
@@ -899,16 +899,16 @@ Environment=RS_LOCAL_UI=tftpboot/files/ux
 Environment=RS_UI_URL=/ux
 EOF
                      fi
-                     if [[ $CREATE_SELF ]] ; then
+                     if [[ $CREATE_SELF == true ]] ; then
                        cat > /etc/systemd/system/dr-provision.service.d/create-self.conf <<EOF
 [Service]
-Environment=RS_CREATE_SELF=true
+Environment=RS_CREATE_SELF=$CREATE_SELF
 EOF
                      fi
-                     if [[ $START_RUNNER ]] ; then
+                     if [[ $START_RUNNER == true ]] ; then
                        cat > /etc/systemd/system/dr-provision.service.d/start-runner.conf <<EOF
 [Service]
-Environment=RS_START_RUNNER=true
+Environment=RS_START_RUNNER=$START_RUNNER
 EOF
                      fi
 
