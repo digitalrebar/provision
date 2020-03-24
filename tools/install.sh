@@ -3,7 +3,7 @@
 set -e
 
 # BUMP version on updates
-VERSION="v20.01.31-1"
+VERSION="v20.03.23-1"
 
 DEFAULT_DRP_VERSION=${DEFAULT_DRP_VERSION:-"stable"}
 
