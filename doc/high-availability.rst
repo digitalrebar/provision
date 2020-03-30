@@ -143,3 +143,9 @@ Switching from Active to Passive
 
 To switch a dr-provision instance from active to passive, send it the USR2 signal.  To switch it to active, send it the
 USR1 signal.  As of right now, there are no other mechanisms (automated or manual) for changing HA state on a node.
+
+Troubleshooting
+---------------
+
+It is possible for the HA interface to become locked if you have to stop and restart the service during configuration
+testing.  To clear the interface, use ```ip addr del [ha ip] dev [ha interface]```
