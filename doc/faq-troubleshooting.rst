@@ -77,6 +77,8 @@ Add SSH Keys to Authorized Keys
 
 VIDEO TUTORIAL: https://www.youtube.com/watch?v=StQql8Xn08c
 
+NOTE: The UX offers a "Add Key" button on the top of the "Info & Preference" panel that will perform the following steps for you.
+
 To have provisioned operating systems (including discovery/sledgehammer) add SSH keys, you should set the ``access-keys`` parameter with a hash of the desired keys.  This Param should be applied to the Machines you wish to update, either directly via adding the Param to the Machines, or by adding the Param to a Profile that is subsequently added to the Machines.  NOTE that the ``global`` Profile applies to all Machines, and you can add it to ``global`` should you desire to add the set of keys to ALL Machines being provisioned.
 
 The below example adds *User1* and *User2* SSH keys to the profile *my-profile*.  Change appropriately for your enviornment.
