@@ -447,6 +447,18 @@ Now verify that our installed content matches the new vesion we expected ...
     $ drpcli contents show drp-community-content | jq .meta.Version
       "v1.5.0-0-13f1aff688b53d5dfdab9a1a0c1098bd3c6dc76c"
 
+Next check if sledgehammer needs to be updated
+  ::
+
+    drpcli bootenvs uploadiso sledgehammer
+
+This command will update the sledgehammer isos if required. If your output from the above command is
+  ::
+
+    BootEnv sledgehammer already has all required ISO files
+
+ Then your sledgehammer is all up to date.
+
 
 .. _rs_reboot_faq:
 
