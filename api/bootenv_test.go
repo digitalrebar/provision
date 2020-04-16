@@ -560,6 +560,7 @@ Description: ""
 Endpoint: ""
 Errors:
 - BootEnv fredhammer does not exist
+- Error processing templates for stage fred
 Meta: {}
 Name: fred
 OptionalParams: []
