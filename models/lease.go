@@ -71,6 +71,9 @@ type Lease struct {
 	State string
 	// Options are the DHCP options that the Lease is running with.
 	Options []DhcpOption
+	// ProvidedOptions are the DHCP options the last Discover or Offer packet
+	// for this lease provided to us.
+	ProvidedOptions []DhcpOption
 	// SkipBoot indicates that the DHCP system is allowed to offer
 	// boot options for whatever boot protocol the machine wants to
 	// use.
@@ -115,6 +118,9 @@ func (l *Lease) Fill() {
 	}
 	if l.Options == nil {
 		l.Options = []DhcpOption{}
+	}
+	if l.ProvidedOptions == nil {
+		l.ProvidedOptions = []DhcpOption{}
 	}
 	l.Validation.fill()
 }
