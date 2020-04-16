@@ -18,6 +18,13 @@ Want ligher reading?  Checkout our :ref:`rs_fun`.
 
 .. _rs_bind_error:
 
+
+Where can I get the DRPCLI?
+---------------------------
+
+If you need the DRPCLI, follow instructions for :ref:`rs_cli_download`.
+
+
 Bind Error
 ----------
 
@@ -201,13 +208,15 @@ For ``debian / ubuntu`` bootenvs, the default user (``rocketskates``, can be cha
 
 For Images with ``cloud-init`` pieces, there often is an injected ``centos`` user for CentOS, ``ubuntu`` for Ubuntu, etc. user.  This is controlled by the ``cloud-init`` configurations of the image build process.
 
-For more about VMware, see :ref:`_vmware_esxi_passwords`
+For more about VMware, see :ref:`vmware_esxi_passwords`
 
 
 .. _rs_drpclirc:
 
 Using the ``.drpclirc`` File
 ----------------------------
+
+If you need the DRPCLI, follow instructions for :ref:`rs_cli_download`.
 
 In addition to the environment variables (eg ``RS_ENDPOINT``, ``RS_KEY``, etc) and setting explicit ``drpcli`` values via option flags (eg ``--enpdoint``, ``-E``, etc), you can now use a home _RC_ style configuration file to set these values.
 
