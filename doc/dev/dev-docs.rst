@@ -9,7 +9,7 @@
 Developing Documentation
 ========================
 
-As an open source project, we encourage community feedback and involvement.  Docs can be updated by
+As an open ecosystem project, we encourage community feedback and involvement.  Docs can be updated by
 pull requests against the `github <https://github.com/digitalrebar/provision>`_ repository either from a private
 tree or directly against the tree.
 

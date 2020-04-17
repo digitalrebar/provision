@@ -116,10 +116,7 @@ Table of Contents
    doc/Swagger
    doc/cli
    doc/api
-   doc/dev/dev-server
-   doc/dev/dev-cli
-   doc/dev/dev-plugins
-   doc/dev/dev-docs
+   doc/dev/dev-contributing
    doc/faq-troubleshooting
    doc/arch
    doc/content-packages

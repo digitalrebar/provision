@@ -153,7 +153,7 @@ or
 .. _rs_autocomplete:
 
 Turn on autocomplete for the CLI
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--------------------------------
 
 The DRP CLI has built in support to generate autocomplete (tab completion) capabilities for the BASH shell.  To enable, you must generate the autocomplete script file, and add it to your system.  This can also be added to your global shell ``rc`` files to enable autocompletion every time you log in.  NOTE that most Linux distros do this slightly differently.  Select the method that works for your distro.
 
@@ -186,7 +186,7 @@ Once the autocomplete file has been created, either log out and log back in, or 
 .. _rs_cli_faq_zip:
 
 How do I upload multiple files using a zip/tar file?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+----------------------------------------------------
 
 The DRP files API allows exploding a compressed file, using
 bsdtar, after it has been uploaded.  This can be very
