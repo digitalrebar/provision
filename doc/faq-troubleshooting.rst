@@ -694,6 +694,15 @@ Example URLs:
 
 .. note:: A simple trick ... you can create a non-existent Machine, and place that machine in different BootEnvs to render provisioning files for testing purposes.  For example, put the non-existent Machine in the ``centos-7-install`` Stage, then render the ``compute.ks`` kickstart URL above.
 
+. _rs_render_does_not_explode_iso:
+
+BootEnv Does Not "Explode ISO" after upload
+-------------------------------------------
+
+Problem: New or cloned BootEnv does not explode the uploaded ISO components in Digital Rebar after upload.
+
+Solution: Install BootEnvs must end in ``-install``. This is a legacy behavior that is preserved to ensure backwards compatability.  Rename your bootenv to ``[name]-install`` to get the correct behavior.
+
 
 .. _rs_ubuntu_local_repo:
 
