@@ -160,6 +160,9 @@ for this bootenv.  It defines the install ISO, a URL to get the ISO,
 and SHA256 checksum to validate the image.  These are used to provide
 the basic install image, kernel, and base packages for the bootenv.
 
+.. note:: the Name must include the suffix ``-install`` for any BootEnv
+that is expected to explode the ISO contents after being uploaded.
+
 The other primary section is a set of templates that represent files
 in the file server's file space that can served via HTTP or TFTP.  The
 templates can be in-line in the BootEnv object or reference a
@@ -188,6 +191,7 @@ that are specific to a single machine.  A machine boots *local*; an
 unknown machine boots *ignore*.  There can only be one **OnlyUnknown**
 BootEnv active at a time.  This is specified by the
 :ref:`rs_model_prefs` *unknownBootEnv*.
+
 
 .. index::
   pair: Model; Template
