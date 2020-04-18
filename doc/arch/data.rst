@@ -421,7 +421,7 @@ our package repository support.  This support consists of three parts:
    support.
 2. The .Repos, .MachineRepos, and .InstallRepos functions that are
    available at template expansion time.  These return a list of Repo
-   objects, and re described in more detail in the Template section.
+   objects, and are described in more detail in the Template section.
 3. The .Install and .Lines functions available on each Repo object.
 
 The package-repositories Param
