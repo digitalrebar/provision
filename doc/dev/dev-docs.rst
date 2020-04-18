@@ -144,3 +144,98 @@ The last piece of the puzzle, you will want to set your web browser to auto-refr
 
 Simply set your browser tab to refresh every 5 or so seconds.
 
+
+Hints and Tips for Content Packs and Plugin Providers
+-----------------------------------------------------
+
+The file ``._Documentation.meta``, inside a content pack or the content portion of a plugin provider, should be RST format.  The build tools will automatically
+bundle the content pieces into a build product file.  This fill will be upload to an Amazon S3 bucket when the build completes.  The sphinx config file, ``conf.py``,
+controls what gets included from the Amazon S3 bucket and downloaded in the ``content-packages`` directory.  The ``content-packages.rst`` file is a simple
+all-inclusive TOC of files contained in ``content-packages``.
+
+Within the ``._Documenation.meta`` file, section separations must follow this heirarchy because the tools add pieces to the top to make the page consolidate and
+show in the table of contents correctly.
+
+  ::
+
+    ~~~~~~~~~~~ - Reserved for the Title of the content pack or plugin provider
+    ----------- - Next level down - all new sections in ._Documenation.meta should at the level
+    =========== - Next level down - within the higher sections
+    +++++++++++ - Next level down - within the higher sections
+    ^^^^^^^^^^^ - Next level down - within the higher sections
+
+The goal of the ``._Documentation.meta`` insert is that it can add a descriptive set of information at the highest level and then start creating sub-sections as
+needed.  The build process will append second level (``-------------``) sections for all the included object types within the content.
+
+
+Here is an example of a ``._Documentation.meta`` file in the example content package:
+
+  ::
+
+    This is the main descriptive section.
+
+    SubSection1
+    -----------
+
+    SubSection1Sub1
+    ===============
+
+    SubSection1Sub2
+    ===============
+
+    SubSection2
+    -----------
+
+    SubSection2Sub1
+    ===============
+
+
+If the content package, ``example``, were rendered it would produce a single file:
+
+  ::
+
+    .. Copyright (c) 2017 RackN Inc.
+    .. Licensed under the Apache License, Version 2.0 (the "License");
+    .. Digital Rebar Provision documentation under Digital Rebar master license
+    .. index::
+      pair: example; Content Packages
+
+    .. _rs_cp_example:
+
+
+    example
+    ~~~~~~~
+
+    This is the main descriptive section.
+
+    SubSection1
+    -----------
+
+    SubSection1Sub1
+    ===============
+
+    SubSection1Sub2
+    ===============
+
+    SubSection2
+    -----------
+
+    SubSection2Sub1
+    ===============
+
+    params
+    ------
+
+    This content package provides the following params.
+
+    example/cool-param
+    ==================
+
+    Documentation entry from the example-cool-param.yaml file.
+
+
+    <<< for all the included object types >>>
+
+The single file can be built by running, ``drpcli contents document example.yaml``.  The required input is
+a content package bundle file.  This will generate an RST file to stdout.  Use the normal bundling process to
+generate the yaml or json file.
