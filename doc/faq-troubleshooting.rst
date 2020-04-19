@@ -701,8 +701,11 @@ BootEnv Does Not "Explode ISO" after upload
 
 Problem: New or cloned BootEnv does not explode the uploaded ISO components in Digital Rebar after upload.
 
-Solution: Install BootEnvs must end in ``-install``. This is a legacy behavior that is preserved to ensure backwards compatability.  Rename your bootenv to ``[name]-install`` to get the correct behavior.
+Possible Causes:
 
+1. Uploaded ISOs must match shasums in the BootEnv
+1. Install BootEnvs must end in ``-install``. See :ref:`rs_model_bootenv`
+1. BootEnvs intended for network booting, _must_ include netbootable components.
 
 .. _rs_ubuntu_local_repo:
 
