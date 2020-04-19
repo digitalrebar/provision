@@ -50,12 +50,21 @@ Use on of the folowing tags:
 
 Examples are areas include (but are not limited to):
 
-  * core: dr-server
+  * [piece]: Server changes should list specific area. (e.g. dhcp, frontend, backend, wal, ha, manager, ...)
   * api: dr-server api
   * cli: drpcli code
-  * plugin-[name]: plugin module
-  * content-[name]: content directory
+  * [name]: plugin module (e.g. raid, rack, bios, ipmi, ...)
+  * [name]: content directory (e.g. task-library, drp-community-content, ...)
   * ux: rackn ux
+
+The list of things within the area field can be comma separated.
+
+Examples:
+  * feat(dhcp): option 82 processing 
+  * fix(cli): allow list operations to be sorted on return
+  * feat(backend,frontend,wal): manager objects are embedded in core
+  * feat(ux): Search of documentation part of helper bar
+  * doc(vmware): fix alignment of documentation headers.
 
 For background, please review https://medium.com/@menuka/writing-meaningful-git-commit-messages-a62756b65c81.
 
