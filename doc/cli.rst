@@ -19,7 +19,7 @@ Download DRPCLI
 
 If you've already installed the Digital Rebar server, then the CLI is available automatically from the server's files list.  You should download the CLI directly from the server using `https:\\[drpserveraddress]:8092\files\drpcli.amd64.darwin` or similar depending on your OS and architecture.
 
-Note: there is a "</>" button on the UX top right corner that will download the right binary from your endpoint.
+.. note:: There is a "</>" button on the UX top right corner that will download the right binary from your endpoint.
 
 To install without the Digital Rebar server, you should review the catalog at `https://repo.rackn.io` for the desired version (stable is safest) to use.  The following steps can be used to quickly download DRPCLI v4.2 and then use the catalog function to ugprade to the latest version.
 
