@@ -157,8 +157,22 @@ The BootEnv object defines an environment to boot a machine.  It has
 two main components an OS information section and a templates list.
 The OS information section defines what makes up the installation base
 for this bootenv.  It defines the install ISO, a URL to get the ISO,
-and SHA256 checksum to validate the image.  These are used to provide
+and SHA256 checksum to validate the image. These are used to provide
 the basic install image, kernel, and base packages for the bootenv.
+
+.. note:: the Name must include the suffix ``-install`` for any BootEnv
+that is expected to boot into an OS installer because it adds path
+indexing into an install subdirectory.  See details in :ref:`rs_data_bootenv`.
+
+BootEnvs are typically supported file collection(s) uploaded as a Digital Rebar
+ISO.  ISOs are typically, but not necessarily, `` .iso`` files.  For example.
+the ``sledgehammer`` "iso" is actually a tar file.  A single BootEnv
+may also have multiple supporting ISOs based on architecture or other
+factors.
+
+When a matching ISO for a BootEnv is uploaded _and_ its checksums match,
+the ISO will be expanded (aka exploded) into components.  In addition,
+ISOs intended for network booting _must_ contain network bootable pieces.
 
 The other primary section is a set of templates that represent files
 in the file server's file space that can served via HTTP or TFTP.  The
@@ -188,6 +202,7 @@ that are specific to a single machine.  A machine boots *local*; an
 unknown machine boots *ignore*.  There can only be one **OnlyUnknown**
 BootEnv active at a time.  This is specified by the
 :ref:`rs_model_prefs` *unknownBootEnv*.
+
 
 .. index::
   pair: Model; Template

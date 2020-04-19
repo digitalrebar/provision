@@ -117,6 +117,9 @@ the following contents::
     #    $ drpcli users token rocketskates ttl 3y |jq -r '.Token'
     Environment=RS_HA_TOKEN=your-token
 
+    # RS_HA_PASSIVE is an intial flag (not used after synchronization) to identify the active endpoint.
+    Environment=RS_HA_PASSIVE=false
+
 Once that file is created, reload the config and restart dr-provision::
 
     $ systemctl daemon-reload
@@ -127,8 +130,12 @@ When dr-provision comes back up, it will be running on the IP address you set as
 The Initially Passive Nodes
 ===========================
 
-Perform the same installation steps you used for the initially active node, but add one extra line to
-the /etc/systemd/system/dr-provision.service.d/20-ha.conf file::
+WARNING: Do not start a passive endpoint(s) in "normal mode."  When installing a passive endpoint, the active endpoint _must_ be available when the endpoing is started.
+
+Perform the same installation steps you used for the initially active node, but change the `RS_HA_PASSIVE` line to false in
+the `/etc/systemd/system/dr-provision.service.d/20-ha.conf` file
+
+  ::
 
     Environment=RS_HA_PASSIVE=true
 
@@ -144,8 +151,72 @@ Switching from Active to Passive
 To switch a dr-provision instance from active to passive, send it the USR2 signal.  To switch it to active, send it the
 USR1 signal.  As of right now, there are no other mechanisms (automated or manual) for changing HA state on a node.
 
+.. note:: When doing a practice failover, the active endpoint should be stopped first.
+
+To stop the active endpoint (becomes passive):
+
+  ::
+    // deactivate endpoint (goes into passive mode)
+    pkill -USR2 dr-provision
+
+
+To promote a passive endpoint to active
+
+  ::
+    // activate endpoint (goes into active mode)    
+    pkill -USR1 dr-provision
+    
+Install Video
+-------------
+
+This video was created at the time of v4.3 beta: https://youtu.be/xM0Zr3iL5jQ.  Please check for more recent updates.
+
+
 Troubleshooting
 ---------------
 
-It is possible for the HA interface to become locked if you have to stop and restart the service during configuration
-testing.  To clear the interface, use ```ip addr del [ha ip] dev [ha interface]```
+Log Verification
+================
+
+It is normal to see ``Error during replication: read tcp [passive IP]:45786->[cluster IP]:8092: i/o timeout`` on the passive endpoints logs when the active endpoint is killed or switches to passive mode.  This is an indication that the active endpoint has stopped sending updates.
+
+
+Transfer Start-up Time
+======================
+
+It may take up to a minute for a passive endpoint to come online after it has recieved ``-USR1`` signals.
+
+Network Interface Locked
+========================
+
+It is possible for the HA interface to become locked if you have to stop and restart the service during configuration testing.  To clear the interface, use ```ip addr del [ha ip] dev [ha interface]```
+
+This happens because Digital Rebar is attaching to (and detaching from) the cluster IP.  If this process is interrupted, then the association may not be correctly removed.
+
+WAL File Checksums
+==================
+
+When operating correctly, all the WAL files should match on all endpoints.  You can check the signature of the wal files using `hexdump -C`
+
+For example:
+
+  :: 
+
+    cd /var/lib/dr-provision/wal
+    hexdump -C base.0
+
+Active Endpoint File ha-state is Passive:true
+=============================================
+
+Digital Rebar uses the ``ha-state.json`` file in it's root directory (typically ``/var/lib/dr-provision``) to track transitions from active to passive state.
+
+.. note:: removing this file incorrectlycan cause very serious problems!  This is a last resort solution.
+
+The ``ha-state.json`` file has a single item JSON schema that changes from true to false depending on the endpoint HA state.  This file can be updated or change to force a reset.  The dr-provision server must be restarted afterwards.
+
+  ::
+
+    {"Passive":false}
+
+
+When making this changes, stop ALL dr-provision servers in the HA cluster.  Fix the state files for all servers.  Start the selected Active endpoint first.  After it is running, start the passive endpoints.

@@ -12,6 +12,31 @@ Digital Rebar Provision Command Line Interface (CLI)
 
 The Digital Rebar Provision Command Line Interface (drpcli) provides a simplified way to interact with the :ref:`rs_api`.  The command line tool (``drpcli``) is auto-generated from source code via reference of the API.  This means the CLI should implement 100% coverage of the API.
 
+.. _rs_cli_download:
+
+Download DRPCLI
+===============
+
+If you've already installed the Digital Rebar server, then the CLI is available automatically from the server's files list.  You should download the CLI directly from the server using `https:\\[drpserveraddress]:8092\files\drpcli.amd64.darwin` or similar depending on your OS and architecture.
+
+.. note:: There is a "</>" button on the UX top right corner that will download the right binary from your endpoint.
+
+To install without the Digital Rebar server, you should review the catalog at `https://repo.rackn.io` for the desired version (stable is safest) to use.  The following steps can be used to quickly download DRPCLI v4.2 and then use the catalog function to ugprade to the latest version.
+
+  ::
+    // choose your architecture!
+    export arch=amd64
+    export os=linux
+    echo "Downloading v4.2.0 reference DRPCLI"
+    RUN curl -o drpcli420 https://s3-us-west-2.amazonaws.com/rebar-catalog/drpcli/v4.2.0/${arch}/${os}/drpcli
+    chmod 755 drpcli420
+    echo "Downloading latest stable DRPCLI"
+    ./drpcli420 catalog item download drpcli to drpcli
+    chmod 755 drpcli
+    rm drpcli420
+    echo "Installed DRPCLI $(drpcli version)"
+
+
 Overview
 ========
 
@@ -128,7 +153,7 @@ or
 .. _rs_autocomplete:
 
 Turn on autocomplete for the CLI
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--------------------------------
 
 The DRP CLI has built in support to generate autocomplete (tab completion) capabilities for the BASH shell.  To enable, you must generate the autocomplete script file, and add it to your system.  This can also be added to your global shell ``rc`` files to enable autocompletion every time you log in.  NOTE that most Linux distros do this slightly differently.  Select the method that works for your distro.
 
@@ -161,7 +186,7 @@ Once the autocomplete file has been created, either log out and log back in, or 
 .. _rs_cli_faq_zip:
 
 How do I upload multiple files using a zip/tar file?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+----------------------------------------------------
 
 The DRP files API allows exploding a compressed file, using
 bsdtar, after it has been uploaded.  This can be very
