@@ -37,12 +37,15 @@ An example command sequence for Linux would be:
     sha256sum -c dr-provision.sha256
     unzip dr-provision.zip
 
-At this point, the **install.sh** script is available in the **tools** directory.  It can be used to continue the process or continue following the steps in the next sections.  *tools/install.sh --help* will provide help and context information.  Specifically, you will need the ``--zipfile`` option for this installation method.
+At this point, the **install.sh** script is available in the **tools** directory.  It can be used to continue the process or continue following the steps in the next sections.
+
+.. note:: **tools/install.sh --help** will provide help and context information. Specifically, you will need the ``--zipfile`` option for this installation method.
+
 
 Install Configuration Options
 -----------------------------
 
-Using ``dr-provision --help`` will provide the most complete list of configuration options.  The following **common items are provided for reference**.  *Please note these may change from version to version, check the current scripts options with the ``--help`` flag to verify current options.*
+Using ``dr-provision --help`` will provide the most complete list of configuration options.  The following **common items are provided for reference**.  *Please note these may change from version to version*, check the current scripts options with the ``--help`` flag to verify current options.
 
   ::
 
@@ -63,6 +66,8 @@ Using ``dr-provision --help`` will provide the most complete list of configurati
       --debug-renderer=        Debug level for the Template Renderer - 0 = off, 1 = info, 2 = debug (default: 0)
       --tls-key=               The TLS Key File (default: server.key)
       --tls-cert=              The TLS Cert File (default: server.crt)
+      --systemd=               Run the systemd enabling commands after installation
+      --startup=               Attempt to start the dr-provision service
 
 Prerequisites
 -------------
@@ -198,22 +203,23 @@ Production Deployments
 
 The following items should be considered for production deployments.  Recommendations may be missing so operators should use their best judgement.
 
-Start DRP Without Root (or sudo)
-================================
 
-If you are using DHCPD and TFTPD services of DRP, you will need to be able to bind to port 67 and 69 (respectively).  Typically Unix/Linux systems require root privileges to do this.  DRP doesn't start as root, and then drop privileges with a ``fork()`` to another less privileged user by default.
+Start DRP Without Root (or sudo)
+++++++++++++++++++++++++++++++++
+
+If you are using DHCPD and TFTPD services of DRP, you will need to be able to bind to port 67 and 69 (respectively).  Typically Unix/Linux systems require root privileges to do this.
+
+.. note:: DRP doesn't start as root and then drop privileges with a ``fork()`` to another less privileged user by default.
 
 To enable DRP endpoint to run as a non-privileged user and ensure a higher level of security, it's possible to use the Linux "*setcap*" (Capabilities) system to assign rights for the *dr-provision* binary to open low numbered (privileged) ports.  The process is relatively simple, but does (clearly/obviously) require root permissions initially to enable the capabilities for the binary.  Once the capabilities have been set, the *dr-provision* binary can be run as a standard user.
 
 To enable any non-privileged user to start up the dr-provision binary and bind to privileged ports 67 and 69, do the following:
 
-# in "isolated" mode, as the user you installed DRP as:
-  ::
+.. admonition:: "isolated" mode, as the user you installed DRP as
 
     sudo setcap "cap_net_raw,cap_net_bind_service=+ep" $HOME/bin/linux/amd64/dr-provision
 
-or, in "production" mode:
-  ::
+.. admonition:: "production" mode
 
     sudo setcap "cap_net_raw,cap_net_bind_service=+ep" /usr/local/bin/dr-provision
 
@@ -231,19 +237,19 @@ For automated upgrades from within DRP, the user that is running DRP needs to ha
 .. note:: You must run the *setcap* command after very upgrade of DRP, the *setcap* tracks the binary and if it changes, you must rerun for the new binary.
 
 System Logs
-===========
++++++++++++
 
 The Digital Rebar Provision service logs by sending output to standard error.  To capture system logs, SystemD (or Docker) should be configured to direct this output to the desired log management infrastructrure.
 
 Job Log Rotation
-================
+++++++++++++++++
 
 If you are using the jobs system, Digital Rebar Provision stores job logs based on the directory configuration of the system.  This data is considered compliance related information; consequently, the system does not automatically remove these records.
 
 Operators should set up a job log rotation mechanism to ensure that these logs to not exhaust available disk space.
 
 Removal of Digital Rebar Provision
-==================================
+++++++++++++++++++++++++++++++++++
 
 To remove Digital Rebar Provision, you can use the *tools/install.sh* script to remove programs for a ``production`` installs.  The *tools/install.sh* script should be run as root or under sudo unless the ``setcap`` process was used.
 
@@ -265,7 +271,7 @@ For *iolated* installs, remove the directory used to contain the isolated instal
 
 
 Running the RackN UX Locally
-============================
+----------------------------
 
 Setting up DRP to host the RackN UX locally is trivial.  The DRP server includes an embedded web server that can host the UX files from a local directory.  The RackN UX can also be set up using any other HTTP server, however this document only addresses the setup related to using DRP as the HTTP server.
 
@@ -299,5 +305,5 @@ If you are hosting a local UX, you should change the DRP endpoint UX redirect.  
 
 If you have connect to this DRP Endpoint previously, you may need to clear the browsers permanent redirect cache to start using the new feature.
 
-* Air Gap mode - the RackN UX disables all external calls and only operates against the local DRP endpoint.
+* Air Gap mode - the RackN UX disables all external calls and only operates against the local DRP endpoint. See :ref:`rs_airgap` for details on Airgap install.
 
