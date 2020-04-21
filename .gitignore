@@ -23,6 +23,7 @@ drpcli.amd64.darwin
 drpcli.amd64.windows
 drpcli.arm64.linux
 cli/test.log
+doc-override/*
 bin
 vendor
 coverage.txt

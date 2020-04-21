@@ -381,3 +381,18 @@ urls = [
 ]
 
 fetch_n_save(urls, path="doc/operations")
+
+
+dest_folder = 'doc/content-packages'
+src_folder = 'doc-override'
+for the_file in os.listdir(src_folder):
+    if the_file == '.keep-me':
+        continue
+    src_file_path = os.path.join(src_folder, the_file)
+    dest_file_path = os.path.join(dest_folder, the_file)
+    try:
+        if os.path.isfile(dest_file_path):
+            os.unlink(dest_file_path)
+        shutil.copy(src_file_path, dest_file_path)
+    except Exception as e:
+        print(e)
