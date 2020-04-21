@@ -20,19 +20,22 @@ The Overview page shows a live view of all the active machine stages running via
 The top of the page offers the following services via a single blue button for each action:
 
 * Refresh - Refresh the content on the active page
-* Add Machine - Add a new machine via the RackN Portal
-* Add Stage - Add a new stage into the Workflow process
-* Add Profile - Add a new profile to the RackN Portal
+.. * Add Machine - Add a new machine via the RackN Portal
+.. * Add Stage - Add a new stage into the Workflow process
+.. * Add Profile - Add a new profile to the RackN Portal
 
 Machines
 --------
 The Machines page highlights the following information for all machines/nodes the Digital Rebar Provision endpoint is currently aware of. Information shown for each machine:
 
-* Machine Status (Active/Standby) 
+* Machine Runnable Status (Active/Standby)
+* A Per-Machine Customizable Icon based on the meta data section
+* Locked Status of the Machine
 * Name of the Machine 
-* UUID
 * IP Address
-* Workflow Stage
+* Profiles
+* Current Active Context
+* Current Workflow, Stage, and Task
 * BootEnv  
 
 Selecting a machine name will provide additional information in a new screen:
@@ -41,11 +44,13 @@ Selecting a machine name will provide additional information in a new screen:
 * UUID
 * Description
 * IP Address
-* Boot Environment (local/ )
+* Context
+* Workflow
 * Workflow Stage
+* Boot Environment (local/ )
 * Tasks
 * Profiles
-* Additional Parameters 
+* Additional Parameters
 
 The top of the page offers the following services via a single button for each action:
 
@@ -57,22 +62,18 @@ The top of the page offers the following services via a single button for each a
 * Show - This will show additional features for each machine including Plugin, RAM, NICs, CPUs, Make, and Family
 
 Bulk Actions
-------------
-The Bulk Actions page allows the operator to perform a series of changes to a selected machine or group of machines. Available options for machine manipulation include:
+============
+The Bulk Actions section above the machines table allows the operator to perform a series of changes to a selected machine or group of machines. Available options for machine manipulation include:
 
 * Runnable - Select a machine or a set of machines to make them able to run or stop an active process 
-* Profiles - Select a machine or a set of machines to assign a specific profile for processing 
 * Workflows - Select a machine or a set of machines to assign a specific workflow for processing
+* Profiles - Select a machine or a set of machines to assign a specific profile for processing 
+* Params - Select a machine or a set of machines to assign a specific param for processing
 * Stages - Select a machine or a set of machines to assign a specific stage for processing
+* BootEnv - Select a machine or a set of machines to assign a specific boot environment for processing
+* Context - Select a machine or a set of machines to assign a specific context for processing
+* Lock - Select a machine or a set of machines to be locked or unlocked
 * Actions - Select a machine or a set of machines to perform an action such as poweron, poweroff, powercycle, createVM, startVM, stop VM, destroyVM, nextbootpxe or nextbootdisk
-
-The top of the page offers the following services via a single button for each action:
-
-* Refresh - Refresh the content on the page 
-* Filter - Allows the user to show a specific set of machines based on a variety of filters including IP Address, BootEnv, Key, Name, Stage, UUID, Workflow,etc
-* Delete - Delete a machine by selecting a machine listed
-* Bulk Actions 
-* Force 
 
 Plugins
 -------
@@ -80,13 +81,13 @@ The Plugin page lists all currently available plugins in the RackN Portal. For e
 
 * Lock - The plugin is available or disabled/locked for your use
 * Name - The name of the plugin
+* Params - The assigned params for the plugin
 * Description - Details about the plugin 
 * Provider - The name of the Profile that allows a machine to use the plugin
 
 The top of the page offers the following services via a single button for each action:
 
 * Refresh - Refresh the content on the page 
-* Filter - Allows the user to show a specific set of plugins based on a variety of filters including Available, Key, Name, Provider, Read Only and Valid
 * Add - Select a new plugin to add from the Select Plugin Provider page 
 * Clone - Make a duplicate of a specific plugin or set of plugins 
 * Delete - Remove a plugin or set of plugins from the RackN Portal
@@ -105,6 +106,7 @@ This section contains status information on the availability of the RackN Portal
 
 These items are given status for availability:
 
+* Default Password
 * Content 
 * Boot Environment
 * Subnets
