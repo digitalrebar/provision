@@ -9,7 +9,7 @@
 RackN Licensing Overview
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-This document outlines the RackN limited use and commercial licensing information and initial setup steps necessary to access license entitlements.  If you have any questions or concerns, please feel free to contact us on Slack, or email us at support@rackn.com. 
+This document outlines the RackN limited use and commercial licensing information and initial setup steps necessary to access license entitlements.  If you have any questions or concerns, please feel free to contact us on Slack, or email us at support@rackn.com.
 
 *Limited Use licensing* of RackN Digital Rebar Platform is provided for individual users, trial and non-commercial teams.  There are
 two models for this limited use license: embedded and online.
@@ -50,16 +50,16 @@ Overview of Steps
 
 The following are the basic steps you need to perform to generate, enable, and use licensed plugins and contents.
 
-1. Generate a License
-2. Enable DRP Endpoints to use Licensed Content
-4. Install Licensed Catalog Items
+#. Generate a License
+#. Enable DRP Endpoints to use Licensed Content
+#. Install Licensed Catalog Items
 
 .. _rackn_licensing_generate_license:
 
 Generate a License
 ------------------
 
-The first time that you use a license entitlement, you will need to generate a license.  This creates the and starts the license entitlements based on the terms and condidions of your license (content, plugins, duration of license contract, etc.).  You will need to perform this step only once for each Organization that you manage that has a license entitlement. 
+The first time that you use a license entitlement, you will need to generate a license.  This creates the and starts the license entitlements based on the terms and condidions of your license (content, plugins, duration of license contract, etc.).  You will need to perform this step only once for each Organization that you manage that has a license entitlement.
 
 1. Select the Organization in the upper left blue drop down.  For example: "Foo Industries"
 
@@ -146,7 +146,7 @@ The "License Management" page will show an overview of the licensed Contents, Fe
    :alt: License Details
 
 
-The General terms (soft and hard expire dates) will override each individual license expiration terms.  
+The General terms (soft and hard expire dates) will override each individual license expiration terms.
 
 "Soft" expire is when initial warning messages about subsequent de-licensing of a given feature will occur.
 
@@ -162,7 +162,7 @@ The information contained in the license is used to verify your
 entitlements and to authorize an updated license.  It relies on
 online RackN License Management APIs.
 
-To update manually, visit the UX _License Management_ page.
+To update manually, visit the UX *License Management* page.
 Click the "Check and Update License" button in the top right
 corner of the "License Management" panel.  This uses the API
 described below to update your license including adding new
@@ -175,10 +175,10 @@ license is required, it will be automatically generated.
 
 The most required fields are all avilable in the `sections.profiles.Params`
 section of the License JSON file.
-  * `rackn-ownerid` = `[base].rackn/license-object.OwnerId`
-  * `rackn-contactid` = `[base].rackn/license-object.ContactId`
-  * `rackn-key` = `[base].rackn/license`
-  * `rackn-version` = `[base].rackn/license-object.Version`
+* `rackn-ownerid` = `[base].rackn/license-object.OwnerId`
+* `rackn-contactid` = `[base].rackn/license-object.ContactId`
+* `rackn-key` = `[base].rackn/license`
+* `rackn-version` = `[base].rackn/license-object.Version`
 
 The URL for the GET call is subject to change!  The current
 (Nov 2019) URL is `https://1p0q9a8qob.execute-api.us-west-2.amazonaws.com/v40/license`
@@ -188,11 +188,11 @@ with the same headers to validate the license before asking for
 updates.
 
 Required Header Fields:
-  * `rackn-ownerid`: license ownerid / org [or 'unknown']
-  * `rackn-contactid`: license contactid / cognitor userid [or 'unknown']
-  * `rackn-endpointid`: digital rebar endpoint id [or 'unknown']
-  * `rackn-key`: license key [or 'unknown']
-  * `rackn-version`: license version [or 'unknown']
+* `rackn-ownerid`: license ownerid / org [or 'unknown']
+* `rackn-contactid`: license contactid / cognitor userid [or 'unknown']
+* `rackn-endpointid`: digital rebar endpoint id [or 'unknown']
+* `rackn-key`: license key [or 'unknown']
+* `rackn-version`: license version [or 'unknown']
 
 The `rackn-endpointid` is the endpoint id (aka `drpid`) of the
 Digital Rebar Provision endpoint to be licensed.  Licenses are
@@ -202,10 +202,12 @@ a different endpoint.  This will create a new license that can
 be applied too all endpoints.
 
 With header values exported, an example CURL call would resemble:
-::
- curl GET -H "rackn-contactid: $CONTACTID" \
-   -H "rackn-ownerid: $OWNERID" \
-   -H "rackn-endpointid: $ENDPOINTID" \
-   -H "rackn-key: $KEY" \
-   -H "rackn-version: $VERSION" \
-   https://1p0q9a8qob.execute-api.us-west-2.amazonaws.com/v40/license
+
+  ::
+
+    curl GET -H "rackn-contactid: $CONTACTID" \
+      -H "rackn-ownerid: $OWNERID" \
+      -H "rackn-endpointid: $ENDPOINTID" \
+      -H "rackn-key: $KEY" \
+      -H "rackn-version: $VERSION" \
+      https://1p0q9a8qob.execute-api.us-west-2.amazonaws.com/v40/license

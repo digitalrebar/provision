@@ -14,4 +14,8 @@ Digital Rebar Provision provides many growing integration points, however these 
 
 
 .. toctree::
+   :glob:
+   :maxdepth: 1
+
+   integrations/*
 

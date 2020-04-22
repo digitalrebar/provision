@@ -161,8 +161,8 @@ and SHA256 checksum to validate the image. These are used to provide
 the basic install image, kernel, and base packages for the bootenv.
 
 .. note:: the Name must include the suffix ``-install`` for any BootEnv
-that is expected to boot into an OS installer because it adds path
-indexing into an install subdirectory.  See details in :ref:`rs_data_bootenv`.
+          that is expected to boot into an OS installer because it adds path
+          indexing into an install subdirectory.  See details in :ref:`rs_data_bootenv`.
 
 BootEnvs are typically supported file collection(s) uploaded as a Digital Rebar
 ISO.  ISOs are typically, but not necessarily, `` .iso`` files.  For example.

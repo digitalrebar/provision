@@ -35,7 +35,7 @@ The format of the version file is:
 	  "hash": "63bb13b2fbbb4df4251f9bccbc6a43d036d1515e"
 	}
 
-.. _rackn_render_params:	
+.. _rackn_render_params:
 
 Specal Rendering for Params
 ===========================

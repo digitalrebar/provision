@@ -17,7 +17,8 @@ Options
 
 ::
 
-     -h, --help   help for list
+     -h, --help      help for list
+         --recurse   Recursively list all files
 
 Options inherited from parent commands
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

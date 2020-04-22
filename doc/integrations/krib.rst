@@ -1,9 +1,11 @@
+
+.. _rs_krib:
+
 Installing KRIB (Kubernetes Rebar Integrated Bootstrapping)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This is about installing KRIB on an existing DRP endpoint.  See :ref:`component_krib` for instructions on using and extending KRIB.
 
-.. _rs_krib:
 
 Prerequists
 -----------

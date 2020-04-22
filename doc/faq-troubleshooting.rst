@@ -743,7 +743,7 @@ Solution 2: Is something is really “slower” than sledgehammer expects?
 You could try setting `provisioner.wgetretrycount=60`.  `kernel-console` is a parameter that lets you changing the kernel parameters passed to bootenvs.
 Sometimes it is used to tweak the kernel console that the kernel is using, but it can be used for other values as well.
 
-.. _rs_no_matching_subnet
+.. _rs_no_matching_subnet:
 
 No matching Subnet (MacOS DHCP)
 -------------------------------

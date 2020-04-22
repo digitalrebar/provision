@@ -7,7 +7,7 @@
 .. _rs_homeux:
 
 Interface Overview
-=========
+==================
 
 The RackN Portal, or UX, is primarily navigated via the side navigation and in-interface hyperlinks. Below is a labeled screenshot of the Machines page outlining some key features of the interface.
 

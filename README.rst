@@ -109,6 +109,8 @@ Table of Contents
    doc/workflows
    doc/deployment
    doc/operation
+   doc/high-availability
+   doc/integrations
    doc/os-support
    doc/os-support/linuxkit
    doc/ui
@@ -124,6 +126,7 @@ Table of Contents
    CONTRIBUTING
    Trademark
    LICENSE
+   doc/fun-facts
 
 .. _rs_license:
 
