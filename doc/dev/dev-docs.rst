@@ -161,6 +161,43 @@ use the `doc-override` directory to test your built content pack docs.
 Hints and Tips for Content Packs and Plugin Providers
 -----------------------------------------------------
 
+Here are some tips for building and writing documentation for Content Packs and Plugin Providers.
+
+Content Pack RST File
+---------------------
+
+For a content pack, you will need to do the following to get the documentation file from the content pack.  For this example, we will
+assume that your content pack is in the directory, *example*.  You will need to do the following steps.  Only the last is different from
+your probable normal test procedure.  This also assumes that `drpcli` is in your path.
+
+  ::
+
+    cd example
+    drpcli contents bundle ../example.yaml
+    drpcli contents document ../example.yaml > ../example.rst
+
+At this point, you can copy the `../example.rst` file to the `doc-override` directory in your `digitalrebar/provision` tree and follow the same
+build and view process.
+
+
+
+Plugin Provider RST File
+------------------------
+
+For a plugin provider, you will need to use the `tools/build-one.sh` command.  Once you completed editing your content section of your Plugin Provider,
+you will need to build it.  Using `example` again, you would do the following:
+
+  ::
+
+    tools/build-one.sh cmds/example
+
+This will generate an `example.rst` in the `cmds/example` directory.  This file can then be copied to the `doc-override` directory in your
+`digitalrebar/provision` tree and follow the same build and view process.
+
+
+Header Section Levels
+---------------------
+
 The file ``._Documentation.meta``, inside a content pack or the content portion of a plugin provider, should be RST format.  The build tools will automatically
 bundle the content pieces into a build product file.  This fill will be upload to an Amazon S3 bucket when the build completes.  The sphinx config file, ``conf.py``,
 controls what gets included from the Amazon S3 bucket and downloaded in the ``content-packages`` directory.  The ``content-packages.rst`` file is a simple
