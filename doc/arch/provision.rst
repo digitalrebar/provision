@@ -489,7 +489,7 @@ is on the Machine itself.  Contexts have the following fields:
   with a context-aware `machines processjobs` command.
 
 Plugins that provide Engines
-============================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 By convention, a Plugin that provides support for using Contexts must support the
 following Actions:

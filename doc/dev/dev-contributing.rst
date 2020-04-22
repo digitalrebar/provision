@@ -12,13 +12,13 @@ Contributing to Digital Rebar
 As an open ecosystem project, we encourage community contributions.
 
 .. toctree::
-   :numbered:
    :maxdepth: 1
 
-   doc/dev/dev-docs
-   doc/dev/dev-cli
-   doc/dev/dev-plugins
-   doc/dev/dev-server
+   dev-docs
+   dev-cli
+   dev-curl
+   dev-plugins
+   dev-server
 
 .. _rs_dev_coding_practices:
 

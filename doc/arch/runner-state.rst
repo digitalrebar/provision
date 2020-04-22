@@ -24,7 +24,9 @@ injected by DRP when the workflow, stage, or bootenv are set.
 
 When you look at a task list, you might see something like this
 example task list from a VirtualBox discovery workflow.
-    ::
+
+  ::
+
     0: stage:discover
     1: bootenv:sledgehammer
     2: gohai

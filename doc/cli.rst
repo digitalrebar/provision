@@ -129,26 +129,26 @@ Download Content and Plugins via Command Line
 RackN maintains a catalog of open and proprietary Digital Rebar extensions at ``https://repo.rackn.io``.
 
 Content downloads directly from the Catalog as JSON and can be imported directly using the DRP CLI.
-::
-  drpcli contents upload catalog:task-library-tip
+  ::
+    drpcli contents upload catalog:task-library-tip
 
 or
 
-::
+  ::
 
-  drpcli catalog item install task-library --version tip
+    drpcli catalog item install task-library --version tip
 
 Plugin downloads directly from the Catalog work as follows:
 
-::
+  ::
 
-  drpcli plugin_providers upload raid from catalog:raid-stable
+    drpcli plugin_providers upload raid from catalog:raid-stable
 
 or
 
-::
+  ::
 
-  drpcli catalog item install raid
+    drpcli catalog item install raid
 
 .. _rs_autocomplete:
 
