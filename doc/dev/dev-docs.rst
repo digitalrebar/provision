@@ -39,7 +39,7 @@ This process uses the following elements:
 Install and Setup Sphinx and Swagger
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-These setup steps were tested and verified on a Mac platform.  However, they should be the same for Linux. 
+These setup steps were tested and verified on a Mac platform.  However, they should be the same for Linux.
 
 1. Pre-requirement is to have ``pip`` installed:
 
@@ -50,7 +50,7 @@ These setup steps were tested and verified on a Mac platform.  However, they sho
 
 2. Install Sphinx:
 
-  :: 
+  ::
 
     pip install Sphinx
 
@@ -58,11 +58,11 @@ These setup steps were tested and verified on a Mac platform.  However, they sho
   http://www.sphinx-doc.org/en/stable/tutorial.html#install-sphinx
 
 
-3. Install SwaggerDoc Library 
+3. Install SwaggerDoc Library
 
   ::
 
-    sudo -H pip install -r requirements.txt 
+    sudo -H pip install -r requirements.txt
 
 .. note:: If you receive an error message on your first HTML tree build (when you run ``make html``) similar to:
     ::
@@ -89,7 +89,7 @@ Edit the Docs
 
   * Checkout/clone the Digital Rebar Provision repo from Github
   * Modify the doc(s) as appropriate
-  * Verify the modifications are rendered correctly 
+  * Verify the modifications are rendered correctly and fix errors/warnings
   * Create a branch
   * Submit a pull request for your changes
 
@@ -143,6 +143,19 @@ The last piece of the puzzle, you will want to set your web browser to auto-refr
     https://add0n.com/tab-reloader.html
 
 Simply set your browser tab to refresh every 5 or so seconds.
+
+Final Steps Before Committing
+-----------------------------
+
+Once you are statisfied with your changes, you need to do a complete clean build of the doc tree.  To do this, you do the following:
+
+  ::
+
+    rm -rf _build
+    make html
+
+Fix all warnings and errors you introduced.  If you are authoring or fixing docs for content-packages or plugin_providers, remember to
+use the `doc-override` directory to test your built content pack docs.
 
 
 Hints and Tips for Content Packs and Plugin Providers
