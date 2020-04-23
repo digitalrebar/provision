@@ -31,12 +31,13 @@ doc_files.each do |f|
   # Read each file as json
   blob = JSON.parse(open(f, "r").read)
   page = blob["current_page_name"]
-
+  title_raw = Nokogiri::HTML.parse(blob["title"]).text
+  title = title_raw.match(/^((\d+\.)+ )(.*)$/)[3]
   # Extract only the text from the html
   text = Nokogiri::HTML.parse(blob["body"]).text
 
   # Store in the indexes object
-  indexes[page] = text
+  indexes[page] = {title: title, text: text}
 end
 
 # Print out the indexes
