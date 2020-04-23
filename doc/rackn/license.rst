@@ -96,9 +96,7 @@ Log in to your Rackn Account from the "License Manager" page and "Online Activat
 Support" panel.  If you do not have an account, then you will need to create and verify it
 before you can continue.
 
-.. note:: Your RackN Account is different from a Digital Rebar login.  They are only used to create
-or update entitlement files.  RackN can set up multiple accounts for the same organization or
-have a single account that supports multiple organizations.
+.. note:: Your RackN Account is different from a Digital Rebar login.  They are only used to create or update entitlement files.  RackN can set up multiple accounts for the same organization or have a single account that supports multiple organizations.
 
 The first time that you activate a license entitlement, you will need to "Authorize" new license file from the "License" tab.  This creates the `rackn-license` content and then uploads it to your endpoint.  You will need to perform this step only once for each Organization that you manage that has a license entitlement.
 
@@ -195,12 +193,7 @@ Required Header Fields:
 * `rackn-key`: license key [or 'unknown']
 * `rackn-version`: license version [or 'unknown']
 
-.. note:: The `rackn-endpointid` is the endpoint id (aka `drpid`) of the
-Digital Rebar Provision endpoint to be licensed.  Licenses are
-issued per endpoint.  You can add endpoints to a license by
-sending a new endpoint with license information validated for
-a different endpoint.  This will create a new license that can
-be applied too all endpoints.
+.. note:: The `rackn-endpointid` is the endpoint id (aka `drpid`) of the Digital Rebar Provision endpoint to be licensed.  Licenses are issued per endpoint.  You can add endpoints to a license by sending a new endpoint with license information validated for a different endpoint.  This will create a new license that can be applied too all endpoints.
 
 With header values exported, an example CURL call would resemble:
 
