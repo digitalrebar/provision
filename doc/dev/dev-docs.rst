@@ -60,6 +60,8 @@ These setup steps were tested and verified on a Mac platform.  However, they sho
 
 3. Install SwaggerDoc Library
 
+Perform this step from the root of the project
+
   ::
 
     sudo -H pip install -r requirements.txt
