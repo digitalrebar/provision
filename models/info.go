@@ -72,6 +72,10 @@ type Info struct {
 	Scopes   map[string]map[string]struct{} `json:"scopes"`
 	License  LicenseBundle
 
+	// Errors returns the current system errors.
+	// required: true
+	Errors []string `json:"errors"`
+
 	// HaEnabled indicates if High Availability is enabled
 	HaEnabled bool `json:"ha_enabled"`
 	// HaIsActive indicates Active (true) or Passive (false)
