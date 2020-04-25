@@ -61,7 +61,7 @@ func TestInfo(t *testing.T) {
 			HaActiveId:     "Fred",
 			HaEnabled:      false,
 			HaIsActive:     true,
-			HaPassiveState: []models.HaPassiveState{},
+			HaPassiveState: []*models.HaPassiveState{},
 			HaStatus:       "Up",
 			Errors:         []string{},
 		},

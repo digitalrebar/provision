@@ -91,7 +91,7 @@ type Info struct {
 	HaActiveId string `json:"ha_active_id"`
 	// HaPassiveState is a list of passive node's and their current state
 	// This is only valid from the Active node
-	HaPassiveState []HaPassiveState `json:"ha_passive_state"`
+	HaPassiveState []*HaPassiveState `json:"ha_passive_state"`
 }
 
 // HasFeature is a helper function to determine if a requested feature
@@ -120,5 +120,45 @@ func (i *Info) Fill() {
 		defer actionScopeLock.Unlock()
 		Remarshal(allScopes, &scopes)
 		i.Scopes = scopes
+	}
+	if i.Errors == nil {
+		i.Errors = []string{}
+	}
+	if i.HaPassiveState == nil {
+		i.HaPassiveState = []*HaPassiveState{}
+	}
+}
+
+func (i *Info) AddUpdatePassive(id, address, state string) {
+	if i.HaPassiveState == nil {
+		i.HaPassiveState = []*HaPassiveState{&HaPassiveState{Id: id, Address: address, State: state}}
+		return
+	}
+	for _, ps := range i.HaPassiveState {
+		if ps.Id == id {
+			ps.State = state
+			if address != "" {
+				ps.Address = address
+			}
+			return
+		}
+	}
+	i.HaPassiveState = append(i.HaPassiveState, &HaPassiveState{Id: id, Address: address, State: state})
+}
+
+func (i *Info) RemovePassive(id string) {
+	if i.HaPassiveState == nil {
+		return
+	}
+	idx := -1
+	for ii, ps := range i.HaPassiveState {
+		if ps.Id == id {
+			idx = ii
+		}
+	}
+	if idx != -1 {
+		i.HaPassiveState[idx] = i.HaPassiveState[len(i.HaPassiveState)-1]
+		i.HaPassiveState[len(i.HaPassiveState)-1] = nil
+		i.HaPassiveState = i.HaPassiveState[:len(i.HaPassiveState)-1]
 	}
 }
