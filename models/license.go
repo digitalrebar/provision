@@ -15,6 +15,9 @@ type LicenseBundle struct {
 	Version           string
 	GenerationVersion string
 	Endpoints         []string `json:",omitempty"`
+	// MaxDrpVersion is the highest major/minor version to allow.
+	// For example, v4.3 would mean any v4.3.* release or previous.
+	MaxDrpVersion string
 
 	Licenses []License
 }
