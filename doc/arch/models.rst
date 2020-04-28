@@ -30,7 +30,7 @@ icon
   Users can choose icons from http://fontawesome.io/icons/.
 
 color
-  The color the icon will be displayed as
+  The color the icon will be displayed as in the UX
 
 title
   The full name that the UX will use.
@@ -41,6 +41,22 @@ feature-flags
   flags to help the various components and content layers to
   converge on a supported set of avaiable features.
 
+
+.. _rs_data_metadata_params:
+
+Params.Meta has extra special behaviors in the UX
+=================================================
+
+There are several meta fields that can be used to adjust on screen display for params
+
+  * ``icon: [icon name]`` - sets the icon
+  * ``color: [color name]`` - set the color
+  * ``password: [anyvalue]`` - renders as password (NOT encrypted, just obfuscated)
+  * ``readonly: [anyvalue]`` - does not allow UX editing
+  * ``render: raw`` - presents textarea to user instead of regular edit, does not reformat
+  * ``render: link`` - adds an https://[value] link field that opens in a new tab.
+  * ``render: machines-map`` - provides links and icons for machines in a UUID map.
+  * ``download; [file name]`` - provides download link so user can download the param contents as a file.  Name of the file is the value of the Meta.download.
 
 .. _rs_data_validation:
 
