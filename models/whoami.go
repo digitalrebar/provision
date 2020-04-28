@@ -10,7 +10,7 @@ import (
 	"github.com/rackn/gohai/plugins/dmi"
 	ghnet "github.com/rackn/gohai/plugins/net"
 
-	"github.com/google/uuid"
+	"github.com/pborman/uuid"
 )
 
 type Whoami struct {
