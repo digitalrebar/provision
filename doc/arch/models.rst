@@ -12,9 +12,6 @@ Data Models
 Digital Rebar Provision uses several different data models to manage
 the task of discovering and provisioning machines in a data center.
 
-Common Model Fields
-<<<<<<<<<<<<<<<<<<<
-
 .. _rs_data_metadata:
 
 Model Metadata
@@ -45,7 +42,7 @@ feature-flags
 .. _rs_data_metadata_params:
 
 Params.Meta has extra special behaviors in the UX
-=================================================
+-------------------------------------------------
 
 There are several meta fields that can be used to adjust on screen display for params
 
