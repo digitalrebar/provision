@@ -15,7 +15,7 @@ Some of these operations are in the :ref:`rs_ui`, but not all.  This will focus 
 
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :glob:
 
    operations/drpcli
@@ -25,3 +25,5 @@ Some of these operations are in the :ref:`rs_ui`, but not all.  This will focus 
    operations/contexts
    operations/imagedeploy
    operations/esxi-getting-started
+   operations/security
+   operations/scaling

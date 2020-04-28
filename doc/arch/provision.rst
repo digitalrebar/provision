@@ -273,6 +273,8 @@ the following fields:
   schema validation on the server, performing plugin actions, and
   running Tasks on a machine.
 
+.. _rs_data_param_secure:
+
 Secure Params
 ~~~~~~~~~~~~~
 

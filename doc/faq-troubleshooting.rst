@@ -15,15 +15,21 @@ The following section is designed to answer frequently asked questions and help 
 
 Want ligher reading?  Checkout our :ref:`rs_fun`.
 
-
-.. _rs_bind_error:
-
+.. _rs_faq_drpcli:
 
 Where can I get the DRPCLI?
 ---------------------------
 
 If you need the DRPCLI, follow instructions for :ref:`rs_cli_download`.
 
+.. _rs_faq_security:
+
+Where can I learn more about Digital Rebar Security?
+----------------------------------------------------
+
+Please consult the dedicated :ref:`rs_security_faq`.
+
+.. _rs_bind_error:
 
 Bind Error
 ----------
