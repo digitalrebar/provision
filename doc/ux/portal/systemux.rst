@@ -62,7 +62,7 @@ The top of the page offers the following services via a single button for each a
 * Show - This will show additional features for each machine including Plugin, RAM, NICs, CPUs, Make, and Family
 
 Bulk Actions
-============
+~~~~~~~~~~~~
 The Bulk Actions section above the machines table allows the operator to perform a series of changes to a selected machine or group of machines. Available options for machine manipulation include:
 
 * Runnable - Select a machine or a set of machines to make them able to run or stop an active process
@@ -149,4 +149,38 @@ The top of the page offers the following services via a single button for each a
 * Refresh - Refresh the content on the page
 
 
+License Manager
+---------------
+The License Manager page assists in acquiring RackN issued licenses and managing a currently installed license.
 
+.. image:: images/uxlicenseoverview.png
+  :width: 800
+  :alt: Preview of the license manager page
+
+The left panel shows current entitlement information:
+
+* **Header**: License owner, license icon, and license version
+* **License Status**: License verified, registration, and renewal status. If any of these three icons are an X, an updated license may need to be installed either through the "Check and Update License" button in the header or by the "Authorize" button in the License tab of the RackN Service section.
+* **Installed License**: Overviews the terms of the license. Maximum number of machines can be seen next to the # icon in the "Machines" subsection.
+
+A copy of the installed license can be downloaded at any time with the blue "Download License" button at the top of the view.
+
+The right panel manages RackN Service Accounts.
+
+.. image:: images/uxlicensesignin.png
+  :width: 800
+  :alt: Preview of signin page in RackN Account page
+
+The support tab allows users to contact RackN directly. Please provide a means of contact so we can get back to you. RackN support is available Monday thru Friday 8am-5pm CT.
+
+Upon sign up, a Community Slack invitation can be requested in the respective checkbox.
+
+License Authorization
+~~~~~~~~~~~~~~~~~~~~~
+Licenses can be authorized through the License tab on the right side of the License Manager view when signed into a RackN Service Account. Clicking the blue "Authorize" button as shown below will download and synchronize a license from RackN to the endpoint the UX is currently connected to.
+
+.. image:: images/uxlicenseauth.png
+  :width: 800
+  :alt: Preview of the License authorization tab in the RackN Service Section
+
+By default, all licenses generated through this means are 20 machine 90-day trial licenses.
