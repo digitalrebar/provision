@@ -99,13 +99,8 @@ func (w *Whoami) Score(m *Machine) int {
 				matched++
 				break
 			}
-			if cmp == 1 {
-				break
-			}
 		}
 	}
-	res += int((float32(matched) / float32(len(m.Fingerprint.MemoryIds))) * 100)
-	matched = 0
 	for _, probe := range m.HardwareAddrs {
 		for j = range w.MacAddrs {
 			cmp := strings.Compare(w.MacAddrs[j], probe)
@@ -113,17 +108,11 @@ func (w *Whoami) Score(m *Machine) int {
 				matched++
 				break
 			}
-			if cmp == 1 {
-				break
-			}
 		}
 	}
-	res += int((float32(matched) / float32(len(m.HardwareAddrs))) * 100)
+	res += (100 * matched) / (len(m.Fingerprint.MemoryIds) + len(m.HardwareAddrs))
 	if m.UUID() == w.OnDiskUUID {
 		res += 1000
-	}
-	if res < 100 {
-		return 0
 	}
 	return res
 }
