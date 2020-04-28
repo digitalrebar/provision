@@ -656,6 +656,8 @@ func registerContent(app *cobra.Command) {
 
 			tempData := &DocData{
 				Name:          content.Meta.Name,
+				DisplayName:   content.Meta.DisplayName,
+				Full:          fmt.Sprintf("%s - %s", content.Meta.Name, content.Meta.DisplayName),
 				Version:       content.Meta.Version,
 				Documentation: content.Meta.Documentation,
 				Objects:       [][]models.Docer{},
@@ -703,6 +705,8 @@ func registerContent(app *cobra.Command) {
 
 type DocData struct {
 	Name          string
+	DisplayName   string
+	Full          string
 	Version       string
 	Documentation string
 	Objects       [][]models.Docer
@@ -727,26 +731,29 @@ var docTemplate = `
 .. _rs_cp_{{.Name}}:
 
 {{ $topdot := . }}
-{{.Name}}
-{{ .LengthString .Name  "~" }}
+{{.Full}}
+{{ .LengthString .Full  "~" }}
 
-The following documentation is for {{.Name}} content package at version {{.Version}}.
+The following documentation is for {{.DisplayName}} ({{.Name}}) content package at version {{.Version}}.
 
 {{.Documentation}}
+
+Object Specific Documentation
+-----------------------------
 
 {{ range .Objects }}
 {{ $b := index . 0 }}
 {{ $b := $b.Prefix }}
 
 {{$b}}
-{{$topdot.LengthString $b "-"}}
+{{$topdot.LengthString $b "="}}
 
 The content package provides the following {{$b}}.
 
 {{ range . }}
 
 {{.Name}}
-{{$topdot.LengthString .Name "="}}
+{{$topdot.LengthString .Name "+"}}
 
 {{.GetDocumentation}}
 
