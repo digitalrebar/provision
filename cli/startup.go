@@ -345,6 +345,19 @@ func NewApp() *cobra.Command {
 			return gohai()
 		},
 	})
+
+	app.AddCommand(&cobra.Command{
+		Use:   "fingerprint",
+		Short: "Get the machine fingerprint used to determine what machine we are running on",
+		Args:  cobra.NoArgs,
+		RunE: func(c *cobra.Command, args []string) error {
+			w := &models.Whoami{}
+			if err := w.Fill(); err != nil {
+				return err
+			}
+			return prettyPrint(w)
+		},
+	})
 	app.AddCommand(agentHandler)
 
 	return app

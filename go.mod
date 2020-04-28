@@ -16,6 +16,7 @@ require (
 	github.com/ghodss/yaml v1.0.0
 	github.com/go-ole/go-ole v1.2.4 // indirect
 	github.com/gofunky/semver v3.5.2+incompatible
+	github.com/google/uuid v1.0.0
 	github.com/gorilla/websocket v1.4.0
 	github.com/groob/plist v0.0.0-20190114192801-a99fbe489d03
 	github.com/huandu/xstrings v1.2.0 // indirect
