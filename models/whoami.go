@@ -78,41 +78,54 @@ func (w *Whoami) ToMachine(m *Machine) {
 	m.Fingerprint = w.Fingerprint
 }
 
-func (w *Whoami) Score(m *Machine) int {
-	res := 0
-	if len(w.Fingerprint.SSNHash) > 0 && bytes.Equal(w.Fingerprint.SSNHash, m.Fingerprint.SSNHash) {
-		res += 25
+func (w *Whoami) Score(m *Machine) (score int) {
+	if len(m.Fingerprint.SSNHash) > 0 {
+		if bytes.Equal(w.Fingerprint.SSNHash, m.Fingerprint.SSNHash) {
+			score += 25
+		}
 	}
-	if len(w.Fingerprint.CSNHash) > 0 && bytes.Equal(w.Fingerprint.CSNHash, m.Fingerprint.CSNHash) {
-		res += 25
+	if len(m.Fingerprint.CSNHash) > 0 {
+		if bytes.Equal(w.Fingerprint.CSNHash, m.Fingerprint.CSNHash) {
+			score += 25
+		}
 	}
-
-	if w.Fingerprint.SystemUUID != "" && w.Fingerprint.SystemUUID == m.Fingerprint.SystemUUID {
-		res += 50
+	if m.Fingerprint.SystemUUID != "" {
+		if w.Fingerprint.SystemUUID == m.Fingerprint.SystemUUID {
+			score += 50
+		}
 	}
 	var matched int
 	var j int
-	for _, probe := range m.Fingerprint.MemoryIds {
-		for j = range w.Fingerprint.MemoryIds {
-			cmp := bytes.Compare(w.Fingerprint.MemoryIds[j], probe)
-			if cmp == 0 {
-				matched++
-				break
+	if len(m.Fingerprint.MemoryIds) > 0 {
+		for _, probe := range m.Fingerprint.MemoryIds {
+			for j = range w.Fingerprint.MemoryIds {
+				cmp := bytes.Compare(w.Fingerprint.MemoryIds[j], probe)
+				if cmp == 0 {
+					matched++
+					break
+				}
 			}
 		}
+		score += (100 * matched) / len(m.Fingerprint.MemoryIds)
 	}
-	for _, probe := range m.HardwareAddrs {
-		for j = range w.MacAddrs {
-			cmp := strings.Compare(w.MacAddrs[j], probe)
-			if cmp == 0 {
-				matched++
-				break
+	if len(m.HardwareAddrs) > 0 {
+		matched = 0
+		for _, probe := range m.HardwareAddrs {
+			for j = range w.MacAddrs {
+				cmp := strings.Compare(w.MacAddrs[j], probe)
+				if cmp == 0 {
+					matched++
+					break
+				}
 			}
 		}
+		score += (100 * matched) / len(m.HardwareAddrs)
 	}
-	res += (100 * matched) / (len(m.Fingerprint.MemoryIds) + len(m.HardwareAddrs))
 	if m.UUID() == w.OnDiskUUID {
-		res += 1000
+		score += 1000
 	}
-	return res
+	if score < 100 {
+		score = 0
+	}
+	return
 }
