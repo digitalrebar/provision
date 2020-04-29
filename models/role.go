@@ -37,7 +37,7 @@ var (
 	addedActions = map[string]string{
 		"users":     "token, password",
 		"jobs":      "log",
-		"machines":  "getSecure, updateSecure, updateTaskList, token",
+		"machines":  "getSecure, updateSecure, updateTaskList, token, whoami",
 		"plugins":   "getSecure, updateSecure",
 		"profiles":  "getSecure, updateSecure",
 		"stages":    "getSecure, updateSecure",
