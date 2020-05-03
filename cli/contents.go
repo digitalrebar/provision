@@ -656,6 +656,7 @@ func registerContent(app *cobra.Command) {
 
 			tempData := &DocData{
 				Name:          content.Meta.Name,
+				RefName:       strings.ReplaceAll(content.Meta.Name, "-", "_"),
 				DisplayName:   content.Meta.DisplayName,
 				Full:          fmt.Sprintf("%s - %s", content.Meta.Name, content.Meta.DisplayName),
 				Version:       content.Meta.Version,
@@ -705,6 +706,7 @@ func registerContent(app *cobra.Command) {
 
 type DocData struct {
 	Name          string
+	RefName       string
 	DisplayName   string
 	Full          string
 	Version       string
@@ -728,7 +730,7 @@ var docTemplate = `
 .. index::
   pair: {{.Name}}; Content Packages
 
-.. _rs_cp_{{.Name}}:
+.. _rs_cp_{{.RefName}}:
 
 {{ $topdot := . }}
 {{.Full}}
