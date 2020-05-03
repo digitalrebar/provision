@@ -78,6 +78,8 @@ type Info struct {
 
 	// HaEnabled indicates if High Availability is enabled
 	HaEnabled bool `json:"ha_enabled"`
+	// HaVirtualAddress is the Virtual IP Address of the systems
+	HaVirtualAddress string `json:"ha_virtual_address"`
 	// HaIsActive indicates Active (true) or Passive (false)
 	// required: true
 	HaIsActive bool `json:"ha_is_active"`
