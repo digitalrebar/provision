@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"encoding/json"
 	"fmt"
 	"strconv"
 	"strings"
@@ -403,7 +404,7 @@ Returns the following strings:
 			RunE: func(c *cobra.Command, args []string) error {
 				id := args[0]
 				field := args[1]
-				value := args[2]
+				svalue := args[2]
 				timeout := time.Hour * 24
 				if len(args) == 4 {
 					t, e := strconv.ParseInt(args[3], 10, 64)
@@ -412,6 +413,12 @@ Returns the following strings:
 					}
 					timeout = time.Second * time.Duration(t)
 				}
+
+				var value interface{}
+				if err := json.Unmarshal([]byte(svalue), &value); err != nil {
+					value = svalue
+				}
+
 				testfn := api.EqualItem(field, value)
 				item, err := o.refOrFill(id)
 				if err != nil {
