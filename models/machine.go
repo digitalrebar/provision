@@ -50,6 +50,37 @@ func ArchEqual(a, b string) bool {
 	return aok && bok && a1 == b1
 }
 
+type MachineFingerprint struct {
+	// DMI.System.Manufacturer + DMI.System.ProductName + DMI.System.SerialNumber, SHA256 hashed
+	// Hash must not be zero-length to match. 25 points
+	SSNHash []byte
+	// DMI.System.Manufacturer + DMI.System.ProductName + DMI.Chassis[0].SerialNumber, SHA256 hashed
+	// Hash must not be zero-length to match. 25 points
+	CSNHash []byte
+	// DMI.System.UUID, not hashed. Must be non zero length and must be a non-zero UUID. 50 point match
+	SystemUUID string
+	// MemoryIds is an array of SHA256sums if the following fields in each
+	// entry of the DMI.Memory.Devices array concatenated together:
+	//  * Manufacturer
+	//  * PartNumber
+	//  * SerialNumber
+	// Each hash must not be zero length
+	// Score is % matched.
+	MemoryIds [][]byte
+}
+
+func (m *MachineFingerprint) Fill() {
+	if m.SSNHash == nil {
+		m.SSNHash = []byte{}
+	}
+	if m.CSNHash == nil {
+		m.CSNHash = []byte{}
+	}
+	if m.MemoryIds == nil {
+		m.MemoryIds = [][]byte{}
+	}
+}
+
 // Machine represents a single bare-metal system that the provisioner
 // should manage the boot environment for.
 // swagger:model
@@ -150,6 +181,11 @@ type Machine struct {
 	// and any other value means that an agent running with its context set for this value should
 	// be executing tasks.
 	Context string
+	// Fingerprint is a collection of data that can (in theory) be used to uniquely identify
+	// a machine based on various DMI information.  This (in conjunction with HardwareAddrs)
+	// is used to uniquely identify a Machine using a score based on how many total items in the Fingerprint
+	// match.
+	Fingerprint MachineFingerprint
 }
 
 func (n *Machine) IsLocked() bool {
@@ -248,6 +284,7 @@ func (n *Machine) Fill() {
 	if n.Arch == "" {
 		n.Arch = "amd64"
 	}
+	(&n.Fingerprint).Fill()
 }
 
 func (n *Machine) AuthKey() string {
