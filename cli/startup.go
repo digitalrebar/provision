@@ -43,15 +43,17 @@ var (
 	noHeader              = false
 	defaultNoHeader       = false
 	// Session is the global client access session
-	Session       *api.Client
-	noToken       = false
-	force         = false
-	noPretty      = false
-	ref           = ""
-	defaultRef    = ""
-	trace         = ""
-	traceToken    = ""
-	registrations = []registerSection{}
+	Session         *api.Client
+	noToken         = false
+	force           = false
+	noPretty        = false
+	ref             = ""
+	defaultRef      = ""
+	trace           = ""
+	traceToken      = ""
+	defaultUrlProxy = ""
+	urlProxy        = ""
+	registrations   = []registerSection{}
 )
 
 func addRegistrar(rs registerSection) {
@@ -118,6 +120,8 @@ var ppr = func(c *cobra.Command, a []string) error {
 			return fmt.Errorf("Error creating Session: %v", sessErr)
 		}
 	}
+	// We have a session.
+	Session.UrlProxy(urlProxy)
 	Session.Trace(trace)
 	Session.TraceToken(traceToken)
 	return nil
@@ -134,6 +138,9 @@ func NewApp() *cobra.Command {
 	}
 	if ep := os.Getenv("RS_ENDPOINT"); ep != "" {
 		defaultEndpoints = []string{ep}
+	}
+	if ep := os.Getenv("RS_URL_PROXY"); ep != "" {
+		defaultUrlProxy = ep
 	}
 	if tk := os.Getenv("RS_TOKEN"); tk != "" {
 		defaultToken = tk
@@ -194,6 +201,8 @@ func NewApp() *cobra.Command {
 				defaultUsername = parts[1]
 			case "RS_PASSWORD":
 				defaultPassword = parts[1]
+			case "RS_URL_PROXY":
+				defaultUrlProxy = parts[1]
 			case "RS_DOWNLOAD_PROXY":
 				defaultDownloadProxy = parts[1]
 			case "RS_FORMAT":
@@ -267,6 +276,9 @@ func NewApp() *cobra.Command {
 	app.PersistentFlags().BoolVarP(&noToken,
 		"noToken", "x", noToken,
 		"Do not use token auth or token cache")
+	app.PersistentFlags().StringVarP(&urlProxy,
+		"url-proxy", "u", defaultUrlProxy,
+		"URL Proxy for passing actions through another DRP")
 	if runtime.GOOS != "windows" {
 		app.AddCommand(&cobra.Command{
 			Use:   "proxy [socket]",

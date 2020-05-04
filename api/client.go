@@ -53,6 +53,7 @@ type Client struct {
 	traceToken                   string
 	info                         *models.Info
 	iMux                         *sync.Mutex
+	urlProxy                     string
 }
 
 func (c *Client) realEndpoint() string {
@@ -156,6 +157,7 @@ func (c *Client) Req() *R {
 		traceToken: c.traceToken,
 		method:     "GET",
 		header:     http.Header{},
+		proxy:      c.urlProxy,
 		err: &models.Error{
 			Type: "CLIENT_ERROR",
 		},
@@ -923,7 +925,11 @@ func (c *Client) PutModel(obj models.Model) error {
 }
 
 func (c *Client) Websocket(at string) (*websocket.Conn, error) {
-	ep, err := url.ParseRequestURI(c.endpoint + path.Join(APIPATH, at))
+	subpath := path.Join(APIPATH, at)
+	if c.urlProxy != "" {
+		subpath = path.Join(subpath, c.urlProxy)
+	}
+	ep, err := url.ParseRequestURI(c.endpoint + subpath)
 	if err != nil {
 		return nil, err
 	}
@@ -942,6 +948,12 @@ func (c *Client) Websocket(at string) (*websocket.Conn, error) {
 	}
 	res, _, err := dialer.Dial(ep.String(), header)
 	return res, err
+}
+
+// UrlProxy sets the request url proxy (for endpoint chaining)
+func (c *Client) UrlProxy(up string) *Client {
+	c.urlProxy = up
+	return c
 }
 
 var weAreTheProxy bool
