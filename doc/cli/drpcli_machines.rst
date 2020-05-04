@@ -103,5 +103,7 @@ SEE ALSO
    update machine by id with the passed-in JSON
 -  `drpcli machines wait <drpcli_machines_wait.html>`__ - Wait for a
    machine’s field to become a value within a number of seconds
+-  `drpcli machines whoami <drpcli_machines_whoami.html>`__ - Figure out
+   what machine UUID most closely matches the current system
 -  `drpcli machines workflow <drpcli_machines_workflow.html>`__ - Set
    the machine’s workflow
