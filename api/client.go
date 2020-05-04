@@ -1031,7 +1031,7 @@ func transport(useproxy bool) *http.Transport {
 	}
 	var tr *http.Transport
 	lp := locallyProxied(!useproxy)
-	if lp == "" || !useproxy {
+	if lp == "" {
 		tr = &http.Transport{
 			Proxy:                 http.ProxyFromEnvironment,
 			TLSClientConfig:       &tls.Config{InsecureSkipVerify: true},
