@@ -135,4 +135,4 @@ In this final command we apply the new profile to an existing machine named `esx
 Additional Resources
 --------------------
 
-This is the most minimal example of how to get started using the vmware plugin. For a comprehensive document which covers available Params, Stages, and more please see: :ref:`rs_cp_vmware`w
+This is the most minimal example of how to get started using the vmware plugin. For a comprehensive document which covers available Params, Stages, and more please see: :ref:`rs_cp_vmware`

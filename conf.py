@@ -105,6 +105,7 @@ exclude_patterns = [
     'integrations/websockets/README.rst',
     'drp-data',
     'doc-override',
+    'venv',
 ]
 
 # The reST default role (used for this markup: `text`) to use for all
