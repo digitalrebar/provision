@@ -69,6 +69,8 @@ Port access requirements:
 
 In all usage cases (67, 69, 4011, 8091, and 8092) the ports *from* the Machines being provisioned *to* the DRP Endpoint must be accessible.  The DRP Endpont must be able to reach the Machines being provisioned on port 67 for In addition, the API and Swagger-UI port must be accessible to any operator/administrator workstations or systems that are controlling and managing the DRP Endpoint service.  Additionally any services or integrations that interact with the DRP Endpoint (eg IPAM, DCIM, Asset Management, CMS, CMDB, etc) may need access to the API port.  BINL is an optional protocol and only needed if you are using it in place of PXE.
 
+Optionally, the DRP Endpoint *MAY* use the SSH port (22/tcp) to connect to machine remotely.  This is an OUTBOUND port usage.  It is a common usage for Ansible execution from the DRP Endpoint.
+
 Additionally, the DRP Endpoint can export Prometheus metrics, and by default metric service will run on port 8080.  If you wish to scrape DRP metrics, you will need to accommodate this port as well.
 
 Here is an example of Linux based IPTables firewall rules.  Note that you may need or be required to restrict the source IP addresses appropriately for your operational security requirements.  For example, the Machines that will be provisioned need access to all ports, and administrators/operators may need access to the API port for control plane of the DRP Endpoint(s).  You will need to adjust the input interface (``-i eno3``) appropriately for your system.
