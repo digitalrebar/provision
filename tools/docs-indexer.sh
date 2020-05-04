@@ -22,10 +22,13 @@ ruby <<EOF
 require 'nokogiri'
 require 'json'
 
+# Take version from the version tool
+version = "$(tools/version.sh)".split(' = ')[1]
+
 # Find all json doc files
 doc_files = Dir["_build/json/doc/**/*.fjson"]
 
-indexes = {}
+indices = {}
 
 doc_files.each do |f|
   # Read each file as json
@@ -36,10 +39,15 @@ doc_files.each do |f|
   # Extract only the text from the html
   text = Nokogiri::HTML.parse(blob["body"]).text
 
-  # Store in the indexes object
-  indexes[page] = {title: title, text: text}
+  # Store in the indices object
+  indices[page] = {title: title, text: text}
 end
 
-# Print out the indexes
-puts indexes.to_json
+# Print out the indices
+puts ({
+  meta: {
+    version: version,
+  },
+  indices: indices,
+}).to_json
 EOF
