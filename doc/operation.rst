@@ -24,6 +24,7 @@ Some of these operations are in the :ref:`rs_ui`, but not all.  This will focus 
    operations/airgap
    operations/contexts
    operations/imagedeploy
+   operations/pooling
    operations/esxi-getting-started
    operations/security
    operations/scaling

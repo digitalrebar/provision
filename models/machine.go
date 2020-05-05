@@ -201,6 +201,17 @@ type Machine struct {
 	// is used to uniquely identify a Machine using a score based on how many total items in the Fingerprint
 	// match.
 	Fingerprint MachineFingerprint
+	// Pool contains the pool the machine is in.
+	// Unset machines will join the default Pool
+	Pool string
+	// PoolAllocated defines if the machine is allocated in this pool
+	// This is a calculated field.
+	PoolAllocated bool
+	// PoolStatus contains the status of this machine in the Pool.
+	//    Values are defined in Pool.PoolStatuses
+	PoolStatus PoolStatus
+	// WorkflowCopmlete indicates if the workflow is complete
+	WorkflowComplete bool
 }
 
 func (n *Machine) IsLocked() bool {
