@@ -48,6 +48,10 @@ func TestInfo(t *testing.T) {
 					Name:  "subnets.count",
 					Count: 0,
 				},
+				{
+					Name:  "contexts.count",
+					Count: 0,
+				},
 			},
 			Arch:           runtime.GOARCH,
 			Os:             runtime.GOOS,
