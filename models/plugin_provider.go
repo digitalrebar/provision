@@ -102,6 +102,9 @@ func (p *PluginProvider) Fill() {
 	if p.AvailableActions == nil {
 		p.AvailableActions = []AvailableAction{}
 	}
+	if p.StoreObjects == nil {
+		p.StoreObjects = map[string]interface{}{}
+	}
 	for _, a := range p.AvailableActions {
 		a.Fill()
 	}
