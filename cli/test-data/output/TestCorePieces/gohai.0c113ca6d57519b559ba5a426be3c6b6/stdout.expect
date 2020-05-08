@@ -22,4 +22,5 @@ Global Flags:
   -t, --trace string            The log level API requests should be logged at on the server side
   -Z, --traceToken string       A token that individual traced requests should report in the server logs
   -j, --truncate-length int     Truncate columns at this length (default 40)
+  -u, --url-proxy string        URL Proxy for passing actions through another DRP
   -U, --username string         Name of the Digital Rebar Provision user to talk to (default "rocketskates")

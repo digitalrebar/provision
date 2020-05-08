@@ -35,6 +35,7 @@ Options inherited from parent commands
      -t, --trace string            The log level API requests should be logged at on the server side
      -Z, --traceToken string       A token that individual traced requests should report in the server logs
      -j, --truncate-length int     Truncate columns at this length (default 40)
+     -u, --url-proxy string        URL Proxy for passing actions through another DRP
      -U, --username string         Name of the Digital Rebar Provision user to talk to (default "rocketskates")
 
 SEE ALSO
@@ -103,5 +104,7 @@ SEE ALSO
    update machine by id with the passed-in JSON
 -  `drpcli machines wait <drpcli_machines_wait.html>`__ - Wait for a
    machine’s field to become a value within a number of seconds
+-  `drpcli machines whoami <drpcli_machines_whoami.html>`__ - Figure out
+   what machine UUID most closely matches the current system
 -  `drpcli machines workflow <drpcli_machines_workflow.html>`__ - Set
    the machine’s workflow
