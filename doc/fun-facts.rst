@@ -34,6 +34,10 @@ The Digital Rebar mascot is a metal bear named Cloudia.  She loves bare metal in
 
 There are three ways that Cloudia appears: floading on a cloud, as a bear alone and just her head.
 
+First Commit
+------------
+
+The first code commit to Digital Rebar was made by Greg Althaus on Feb 8, 2017.  It was appropriately titled "first commit" and set the README.md to "# rocket-skates".
 
 Rocket Skates?
 --------------
