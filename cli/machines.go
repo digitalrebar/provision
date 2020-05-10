@@ -23,7 +23,7 @@ func init() {
 	if DefaultStateLoc == "" {
 		switch runtime.GOOS {
 		case "windows":
-			DefaultStateLoc = os.ExpandEnv("${APPDATA}/drp-agent")
+			DefaultStateLoc = `C:/Windows/System32/config/systemprofile/AppData/Local/rackn/drp-agent`
 		default:
 			DefaultStateLoc = "/var/lib/drp-agent"
 		}
