@@ -9,7 +9,6 @@ import (
 	"os"
 	"os/exec"
 	"path"
-	"runtime"
 	"strings"
 	"sync"
 	"time"
@@ -202,14 +201,8 @@ var agentHandler = &cobra.Command{
 		return nil
 	},
 	RunE: func(c *cobra.Command, args []string) error {
-		var stateLoc string
+		stateLoc := DefaultStateLoc
 		options := agentOpts{}
-		switch runtime.GOOS {
-		case "windows":
-			stateLoc = `C:/Windows/system32/configs/systemprofile/AppData/Local/rackn/drp-agent`
-		default:
-			stateLoc = "/var/lib/drp-agent"
-		}
 		exePath, err := os.Executable()
 		if err != nil {
 			return fmt.Errorf("Unable to determine executable name: %v", err)
@@ -263,7 +256,6 @@ var agentHandler = &cobra.Command{
 			svc, err := service.New(prog, serviceConfig)
 			if err != nil {
 				return fmt.Errorf("Error creating service: %v", err)
-
 			}
 			return svc.Run()
 		}
