@@ -199,7 +199,17 @@ func (a *Agent) power(cmdLine string) error {
 		}
 	}
 	a.markNotRunnable()
-	cmd := exec.Command(cmdLine)
+	args := []string{}
+	if runtime.GOOS == "windows" {
+		switch cmdLine {
+		case "poweroff":
+			args = []string{"/t", "0", "/d", "p:00:00", "/s"}
+		case "reboot":
+			args = []string{"/t", "0", "/d", "p:00:00", "/r"}
+		}
+		cmdLine = "shutdown"
+	}
+	cmd := exec.Command(cmdLine, args...)
 	cmd.Stderr = os.Stderr
 	cmd.Stdout = os.Stdout
 	if cmd.Run() == nil {
