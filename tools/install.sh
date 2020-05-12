@@ -304,7 +304,7 @@ OS_NAME="$OS_TYPE-$OS_VER"
 
 case $OS_TYPE in
     centos|redhat|fedora) OS_FAMILY="rhel"      ;;
-    debian|ubuntu)        OS_FAMILY="debian"    ;;
+    debian|ubuntu|raspbian)        OS_FAMILY="debian"    ;;
     coreos)               OS_FAMILY="container" ;;
     *)                    OS_FAMILY="$OS_TYPE"  ;;
 esac
