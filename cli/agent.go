@@ -301,7 +301,7 @@ var agentHandler = &cobra.Command{
 							}
 						}
 					}
-					log.Printf("Unable to auto-fill %s, using scratch config instead", cfgFileName)
+					log.Printf("Unable to auto-fill %s, using scratch config instead: %v", cfgFileName, err)
 				}
 
 				if b, err := fi.Write([]byte(agentScratchConfig)); err != nil || b != len(agentScratchConfig) {
