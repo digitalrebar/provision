@@ -187,11 +187,11 @@ var agentHandler = &cobra.Command{
 	Short: "Manage drpcli running as an agent",
 	Long:  "Use this command to install, remove, stop, start, restart drpcli running as a task runner",
 	Args: func(c *cobra.Command, args []string) error {
-		if !service.Interactive() {
-			return nil
+		if len(args) > 1 {
+			return fmt.Errorf("%v needs at at most 1 argument", c.UseLine())
 		}
-		if len(args) != 1 {
-			return fmt.Errorf("%v needs at least 1 argument", c.UseLine())
+		if len(args) == 0 {
+			return nil
 		}
 		switch args[0] {
 		case "install", "remove", "stop", "start", "restart", "status":
@@ -233,7 +233,7 @@ var agentHandler = &cobra.Command{
 			exe:      exePath,
 			stateLoc: stateLoc,
 		}
-		if !service.Interactive() {
+		if len(args) == 0 {
 			fi, err := os.Open(cfgFileName)
 			if err != nil {
 				return fmt.Errorf("Failed to open config file %s: %v", cfgFileName, err)
