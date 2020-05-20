@@ -43,12 +43,16 @@ The filter specification allows more complex filters using functions:
 
 The query string applies ALL parameters are to be applied (as implied by the & separator).  All must match to be returned.
 
+.. _rs_api_param_filter:
+
 Filtering by Param Value
 ------------------------
 
 The API includes specialized filter behavior for Params that allows deep searching models for Param values.
 
 To filter Machines or Profiles by Param values, pass the Param name and value using the normal Field filter specification.  When the Field is not found, the backend will search model's Params keys and evalute the filter against the Param value.
+
+.. _rs_api_slim:
 
 Payload Reduction (slim)
 ------------------------

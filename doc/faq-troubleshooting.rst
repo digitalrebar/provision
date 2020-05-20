@@ -422,6 +422,17 @@ Of course, you can apply a Param to a Profile, and apply that Profile to a group
 .. note:: The Digital Rebar default kickstart and preseeds have Digital Rebar specific interactions that may be necessary to replicate.  Please review the default kickstart and preseeds for patterns and examples you may need to re-use.   We HIGHLY recommend you start with a `clone` operation of an existing Kickstart/Preseed file; and making appropriate modifications from that as a baseline.
 
 
+.. _rs_kexec:
+
+Can I eliminate reboots with kexec?
+-----------------------------------
+
+Yes.  Setting the `kexec-ok` param to `true` on the `global` or machine specific profile allows
+BootEnvs that are kexec enabled to skip rebooting when changing to that BootEnv.  For example,
+Sledgehammer enables kexec and can be started without a reboot from Linux environments.
+
+This is a Linux specific feature.  For more about kexec: https://wiki.archlinux.org/index.php/Kexec
+
 .. _rs_plugin_providers_license:
 
 Import plugin failed pool: define failed
