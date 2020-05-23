@@ -53,6 +53,12 @@
     "Unique": false,
     "Unordered": false
   },
+  "HardwareAddr": {
+    "Regex": false,
+    "Type": "list",
+    "Unique": false,
+    "Unordered": true
+  },
   "HardwareAddrs": {
     "Regex": false,
     "Type": "list",
