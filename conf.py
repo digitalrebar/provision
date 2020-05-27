@@ -360,6 +360,7 @@ urls = [
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/image-deploy.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/ipmi.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/kvm-test.rst",
+    "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/lenovo-support.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/manager.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/os-other.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/packet-ipmi.rst",
