@@ -248,9 +248,9 @@ Expansion                      Description
 .Machine.Path                  A path to a custom machine unique space in the file server name space.
 .Machine.Address               The **Address** field of the Machine
 .Machine.HexAddress            The **Address** field of the Machine in Hex format (useful for elilo config files
-.Machine.URL                   A HTTP URL that references the Machine's specific unique filesystem space.
+.Machine.Url                   A HTTP URL that references the Machine's specific unique filesystem space.
 .Env.PathFor <proto> <file>    This references the boot environment and builds a string that presents a either a tftp or http specifier into exploded ISO space for that file.  *Proto* is **tftp** or **http**.  The *file* is a relative path inside the ISO.
-.Env.InstallURL                An HTTP URL to the base ISO install directory.
+.Env.InstallUrl                An HTTP URL to the base ISO install directory.
 .Env.OS.Family                 An optional string from the BootEnv that is used to represent the OS Family.  Ubuntu preseed uses this to determine debian vs ubuntu as an example.
 .Env.OS.Version                An optional string from the BootEnv that is used to represent the OS Version.  Ubuntu preseed uses this to determine what version of ubuntu is being installed.
 .Env.JoinInitrds <proto>       A comma separated string of all the initrd files specified in the BootEnv reference through the specified proto (**tftp** or **http**)
