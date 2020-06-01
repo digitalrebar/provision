@@ -13,7 +13,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var installSkipDownloadIsos = true
+var (
+	installSkipDownloadIsos = true
+	reexplodeIsos           = false
+)
 
 func init() {
 	addRegistrar(registerBootEnv)
@@ -182,5 +185,29 @@ Both created files will be left in the current working directory.`,
 		},
 		RunE: genEnvAndArchiveFromAppleNBI,
 	})
+	purgeLocal := &cobra.Command{
+		Use:   "purgeLocalInstall [id] [arches...]",
+		Short: "This will have dr-provision purge local install files for the listed arches",
+		Args: func(c *cobra.Command, args []string) error {
+			if len(args) < 2 {
+				return fmt.Errorf("%v requires at least a bootenv name and an arch", c.UseLine())
+			}
+			return nil
+		},
+		RunE: func(c *cobra.Command, args []string) error {
+			id := args[0]
+			arches := args[1:]
+			req := Session.Req().
+				Meth("DELETE").
+				UrlFor("bootenvs", id, "purgeLocal").
+				Body(arches)
+			if reexplodeIsos {
+				req = req.Params("reexplodeIsos", "true")
+			}
+			return req.Do(nil)
+		},
+	}
+	purgeLocal.Flags().BoolVar(&reexplodeIsos, "reexplodeIsos", false, "Recreate local install data from isos instead of deleting isos")
+	op.addCommand(purgeLocal)
 	op.command(app)
 }
