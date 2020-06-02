@@ -49,11 +49,12 @@ There are several meta fields that can be used to adjust on screen display for p
   * ``icon: [icon name]`` - sets the icon
   * ``color: [color name]`` - set the color
   * ``password: [anyvalue]`` - renders as password (NOT encrypted, just obfuscated)
+  * ``clipboard: [anyvalue]`` - provides a copy button so user can copy the param contents to clipboard.
   * ``readonly: [anyvalue]`` - does not allow UX editing
   * ``render: raw`` - presents textarea to user instead of regular edit, does not reformat
   * ``render: link`` - adds an https://[value] link field that opens in a new tab.
   * ``render: machines-map`` - provides links and icons for machines in a UUID map.
-  * ``download; [file name]`` - provides download link so user can download the param contents as a file.  Name of the file is the value of the Meta.download.
+  * ``downloadable: [file name]`` - provides download link so user can download the param contents as a file.  Name of the file is the value of the Meta.downloadable.
 
 .. _rs_data_validation:
 
