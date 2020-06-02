@@ -54,3 +54,4 @@ rebar-catalog
 builddir/
 _build/
 profile*.txt
+rel_notes
