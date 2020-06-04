@@ -64,6 +64,10 @@ SEE ALSO
    bootenvs
 -  `drpcli bootenvs meta <drpcli_bootenvs_meta.html>`__ - Gets metadata
    for the bootenv
+-  `drpcli bootenvs
+   purgeLocalInstall <drpcli_bootenvs_purgeLocalInstall.html>`__ - This
+   will have dr-provision purge local install files for the listed
+   arches
 -  `drpcli bootenvs runaction <drpcli_bootenvs_runaction.html>`__ - Run
    action on object from plugin
 -  `drpcli bootenvs show <drpcli_bootenvs_show.html>`__ - Show a single
