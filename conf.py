@@ -340,6 +340,7 @@ def fetch_n_save(urls, path):
 urls = [
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/ad-auth.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/agent.rst",
+    "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/basic-store.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/bios.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/burnin.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/callback.rst",
