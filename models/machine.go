@@ -69,6 +69,13 @@ type MachineFingerprint struct {
 	MemoryIds [][]byte
 }
 
+// TaskStack contains an task stack for a machine.
+// This is used by the error handling code pieces.
+type TaskStack struct {
+	CurrentTask int
+	TaskList    []string
+}
+
 func (m *MachineFingerprint) Fill() {
 	if m.SSNHash == nil {
 		m.SSNHash = []byte{}
@@ -144,6 +151,14 @@ type Machine struct {
 	//
 	// required: true
 	CurrentTask int
+	// This tracks the number of retry attempts for the current task.
+	// When a task succeeds, the retry value is reset.
+	RetryTaskAttempt int
+	// This list of previous task lists and current tasks to handle errors.
+	// Upon completing the list, the previous task list will be executed.
+	//
+	// This will be capped to a depth of 1.  Error failures are not handled can not be handled.
+	TaskErrorStacks []*TaskStack
 	// Indicates if the machine can run jobs or not.  Failed jobs mark the machine
 	// not runnable.
 	//
@@ -280,6 +295,9 @@ func (n *Machine) Fill() {
 	}
 	if n.HardwareAddrs == nil {
 		n.HardwareAddrs = []string{}
+	}
+	if n.TaskErrorStacks == nil {
+		n.TaskErrorStacks = []*TaskStack{}
 	}
 	if n.Arch == "" {
 		n.Arch = "amd64"
