@@ -33,7 +33,6 @@ Each Subnet contains the following information:
 The top of the page contains a series of blue buttons for additional actions:
 
 * Refresh - Refresh the list of Subnets should a new Subnet be in the system
-* Filter - Select a specific set of Subnets based on the following options: Active Address, Address Available, Enabled, Key, Name, NextServer, Proxy, ReadOnly, Strategy, Subnet CIDR Address, Valid Subnet 
 * Add - Add a new Subnet to the system 
 * Clone - Clone a selected Subnet to add to the system 
 * Delete - Remove all the selected Subnets
@@ -43,7 +42,9 @@ Configure Subnets
 
 Configuring Subnets is a critical first step in Digital Rebar Provision operation.  The basic UI will show all configured subnets and provide an easy way to add broadcast subnets based on the known interfaces.
 
-To edit or delete a subnet, click on the name of the subnet to populate the editing area below the list.  To create a relay subnet, click on the add subnet link.  To create a broadcast subnet, click on the link provided after the name of the unassigned interfaces.
+To create a new subnet, click the "Add" button in the header. To edit an existing subnet, first click on the name hyperlink on the table, then click the "Edit" button on the top right.
+
+To create a broadcast subnet, click on the "Use Interface" buttons in the "Add Subnet" panel.
 
 There are two primary types of subnets: broadcast and relay:
 
@@ -53,9 +54,6 @@ There are two primary types of subnets: broadcast and relay:
 Digital Rebar Provision can operate in a permissive reservation mode or require users to whitelist systems before they are serviced.  The `OnlyReservations` flag will operate as a reservations required (whitelist) mode when true; otherwise, Digital Rebar Provision permissive reservation mode will give out addresses to any valid DHCP request.
 
 In additional to serving IPs, DHCP servers provide critical configuration (aka `DHCP Options <https://en.wikipedia.org/wiki/Dynamic_Host_Configuration_Protocol#DHCP_options>`_) information to the clients.  Setting Option 67, Next Boot, is essential for Digital Rebar Provision to operate as a Provisioner.  This information includes next boot (67), gateway (3), domain name (15), DNS (6) and other important information.  It is encoded in the responses according to `IETF RFC 2132 <https://tools.ietf.org/html/rfc2132>`_
-
-Consult the `Godocs <https://godoc.org/github.com/digitalrebar/provision/v4/models#Subnet>`_ for more details about the specific fields. 
-
 
 Leases
 ------
