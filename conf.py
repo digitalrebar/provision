@@ -105,6 +105,8 @@ exclude_patterns = [
     'integrations/websockets/README.rst',
     'drp-data',
     'doc-override',
+    'rebar-catalog',
+    'rel_notes',
     'venv',
 ]
 
@@ -330,11 +332,21 @@ for the_file in os.listdir(folder):
 
 def fetch_n_save(urls, path):
     for url in urls:
+        url = url.strip()
         filename = url.rsplit('/', 1)[-1]
         r = requests.get(url, verify=True, stream=True)
         r.raw.decode_content = True
         with open("{0}/{1}".format(path, filename), 'wb') as f:
             shutil.copyfileobj(r.raw, f)
+
+def fetch_urls(url):
+    r = requests.get(url, verify=True, stream=True)
+    r.raw.decode_content = True
+    with open("/tmp/tmp.builder", 'wb') as f:
+        shutil.copyfileobj(r.raw, f)
+    with open('/tmp/tmp.builder') as my_file:
+        testsite_array = my_file.readlines()
+    return testsite_array
 
 
 urls = [
@@ -393,6 +405,9 @@ urls = [
 ]
 
 fetch_n_save(urls, path="doc/operations")
+
+urls = fetch_urls("https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/rel-notes/drp.filelist")
+fetch_n_save(urls, path="doc/rel_notes/drp")
 
 
 dest_folder = 'doc/content-packages'
