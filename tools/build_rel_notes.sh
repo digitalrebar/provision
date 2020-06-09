@@ -17,6 +17,7 @@ do
                 revname=$(echo $rev | sed 's/\.0$/.0-release/')
                 replace=${rev//?/=}
                 echo ".. _rs_rel_notes_$rev:" > rel_notes/$revname.rst
+                echo "" >> rel_notes/$revname.rst
                 echo "$rev" >> rel_notes/$revname.rst
                 echo "$replace" >> rel_notes/$revname.rst
                 echo "" >> rel_notes/$revname.rst
@@ -35,6 +36,7 @@ do
         revname=$(echo $rev | sed 's/\.0$/.0-release/')
         replace=${rev//?/=}
         echo ".. _rs_rel_notes_$rev:" > rel_notes/$revname.rst
+        echo "" >> rel_notes/$revname.rst
         echo "$rev" >> rel_notes/$revname.rst
         echo "$replace" >> rel_notes/$revname.rst
         echo "" >> rel_notes/$revname.rst
