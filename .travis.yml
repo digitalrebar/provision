@@ -7,9 +7,13 @@ addons:
 go:
 - '1.13'
 git:
-  depth: 500
+  depth: false
 install:
+- curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
+- unzip awscli-bundle.zip
+- "./awscli-bundle/install -b ~/bin/aws"
 - "./tools/build.sh"
+- "./tools/build_rel_notes.sh"
 - "./tools/publish.sh"
 script:
 - "./tools/test.sh"
