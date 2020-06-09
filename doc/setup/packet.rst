@@ -39,7 +39,7 @@ Once DRP is running, perform added confirmation steps with the CLI:
      drpcli prefs set defaultWorkflow discover-packet unknownBootEnv discovery defaultBootEnv sledgehammer defaultStage discover
      # optional
      drpcli bootenvs uploadiso ubuntu-18.04-install &
-     drpcli bootenvs uploadiso centos-7-install &
+     drpcli bootenvs uploadiso centos-8-install &
      echo "You can now use https://$DRP_IP:8092"
 
 
