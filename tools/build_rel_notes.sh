@@ -1,5 +1,7 @@
 #!/bin/bash
 
+subdir="drp"
+
 rm -rf rel_notes
 mkdir -p rel_notes
 
@@ -35,12 +37,15 @@ do
         rm rel_notes/$rev.txt
 done
 
-mkdir -p rebar-catalog/docs/rel-notes/drp
-cp rel_notes/* rebar-catalog/docs/rel-notes/drp
+mkdir -p rebar-catalog/docs/rel-notes/$subdir
+cp rel_notes/* rebar-catalog/docs/rel-notes/$subdir
 
-aws s3 ls rebar-catalog/docs/rel-notes/drp/ > files.current
-ls rebar-catalog/docs/rel-notes/drp >> files.current
+aws s3 ls rebar-catalog/docs/rel-notes/$subdir/ > files.current
+ls rebar-catalog/docs/rel-notes/$subdir >> files.current
 sort -r -V files.current >> new-files.current
-cp new-files.current rebar-catalog/docs/rel-notes/drp.filelist
-rm -f new-files.current files.current
-
+cat net-files.current | while read f
+do
+    echo "https://rebar-catalog.s3-us-west-2.amazonaws.com/docs/rel-notes/$subdir/$f"
+done > new-files2.current
+cp new-files2.current rebar-catalog/docs/rel-notes/$subdir.filelist
+rm -f new-files.current new-files2.current files.current
