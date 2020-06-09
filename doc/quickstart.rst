@@ -142,8 +142,8 @@ These steps should be performed from the newly installed *dr-provision* endpoint
     drpcli bootenvs uploadiso sledgehammer
     drpcli prefs set defaultWorkflow discover-base unknownBootEnv discovery
     drpcli contents upload catalog:task-library-stable
-    drpcli bootenvs uploadiso ubuntu-18.04-install # optional
-    drpcli bootenvs uploadiso centos-7-install # optional
+    drpcli bootenvs uploadiso ubuntu-18.04-install # optional, requires about 3G of free space
+    drpcli bootenvs uploadiso centos-8-install # optional, requires about 15G of free space
 
 The ``uploadiso`` command will fetch the ISO image as specified in the BootEnv JSON spec, download it, and then "explode" it in to the ``drp-data/tftpboot/`` directory for installation use.  You may optionally choose one or both of the CentOS and Ubuntu BootEnvs (or any other Community Content supported BootEnv) to install; depending on which Operating System and Version you wish to test or use.
 
