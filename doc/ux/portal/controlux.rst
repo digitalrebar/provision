@@ -25,7 +25,6 @@ At the top of the screen are a series of blue boxes offering additional function
 
 * Switch to Change/Stage Map - This screen shows the Workflow processes available and how the process order from one state to the next. Steps can be added to Workflows and a Workflow Wizard is available to create a new Workflow.   
 * Refresh - Update the Workflow list with the latest available Workflows 
-* Filter - Select which Workflow to list by Available, Key, Name, ReadOnly, and Valid
 * Add - Add a new Workflow
 * Clone - Clone a Workflow
 * Delete - Delete a Workflow
@@ -44,7 +43,6 @@ This section lists all available Stages within the DRP system. Each Stage has th
 At the top of the screen are a series of blue boxes offering additional functionality: 
 
 * Refresh - Update the Stages list with the latest available Stages
-* Filter - Select which Stage to list by Available, BootEnv,  Key, Name, ReadOnly, Reboot and Valid
 * Add - Add a new Stage
 * Clone - Clone a Stage
 * Delete - Delete a Stage
@@ -62,7 +60,6 @@ This section lists all available Tasks within the DRP system. Each Task has the 
 At the top of the screen are a series of blue boxes offering additional functionality: 
 
 * Refresh - Update the Task list with the latest available Stages
-* Filter - Select which Task to list by Available, Key, Name, ReadOnly, and Valid
 * Add - Add a new Task
 * Clone - Clone a Task
 * Delete - Delete a Task
