@@ -20,7 +20,6 @@ This section provides a list of all Users currently on the DRP endpoint. Each Us
 Additional functionality is available from a series of blue boxes on the top of the page:
 
 * Refresh - Update the list of Users showing on the page
-* Filter - List the Users based on the following options: Available, Key, Name, ReadOnly, and Valid
 * Add - Add a new User to the DRP endpoint
 * Clone - Clone an existing User on the DRP endpoint
 * Delete - Delete an existing User on the DRP endpoint
