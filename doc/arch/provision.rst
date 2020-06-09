@@ -390,6 +390,53 @@ already appear in the machine task list in the same BootEnv are
 discarded, and the resultant set of prerequisite tasks are inserted
 just before the Task to be inserted.
 
+Task Control Operations
+-----------------------
+
+To help with Task and Workflow debugging or advanced flow control, there are a
+couple of parameters that can help with debug messages and task control.
+
+Single Step
+===========
+
+Setting the Machine parameter ``task-single-step`` to ``true`` will cause
+the system to make the machine not runnable after each task.  Removing the
+parameter or setting it to ``false`` will cause the system to resume normal
+operations.
+
+Stop At
+=======
+
+Setting the Machine parameter ``task-stop-at`` to a list of tasks or
+action entries will cause the system to stop prior to those tasks.  Setting
+the machine to runnable will cause the tasks to continue.
+
+Retry
+=====
+
+Setting the Machine parameter ``task-retry`` to a map of key/value pairs
+where the keys are task names and the values are integer number of times to
+retry the failing task.  The system will retry that number of times before
+failing.  The system will cause an exponential backoff starting at 2 seconds
+between retries.  There is no maximum wait time.
+
+The Machine field ``RetryTaskAttempt`` tracks the retry for the current task.
+This is reset to 0 for every new task.
+
+Error Handlers
+==============
+
+Setting the Machine parameter ``task-error-handlers`` to a map of key/value pairs
+where the keys are task names and the values are lists of task names.  When a task
+fails and all the retries have been attempted, the map will be consulted and if
+present, the task list will be executed to and if successful, the failing task
+will be restarted and retried again with a reset ``RetryTaskAttempt``.  Error
+handling tasks can not be error handled.
+
+The Machine field ``TaskErrorStacks`` is used to track the previous Task list and
+CurrentTask to return to after running the error lists.
+
+
 .. _rs_data_profile:
 
 Profile
