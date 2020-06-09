@@ -760,6 +760,21 @@ Solution 2: Is something is really “slower” than sledgehammer expects?
 You could try setting `provisioner.wgetretrycount=60`.  `kernel-console` is a parameter that lets you changing the kernel parameters passed to bootenvs.
 Sometimes it is used to tweak the kernel console that the kernel is using, but it can be used for other values as well.
 
+
+.. _rs_sledgehammer_no_ip:
+
+Sledgehammer Boots Without IP
+-----------------------------
+
+It is possible to have sledgehammer boot and hang without an IP. This can happen in environments where DRP is NOT the DHCP server and the subnet has
+restricted number IPs with more HOSTs than IPs.  The ipxe and kernel boot components do DHCP releases as they boot.  This releases IPs back to pools.
+In some DHCP servers, the address is immediately available for consumption.  DRP will delay returning the address to the pool for a few seconds to
+prevent this problem.  If this happens as the linux user space of sledgehammer takes over operation, the user space DHCP server may not get an address
+because the pool is empty.  This will make the machine appear as hung or not responsive.
+
+This sometimes resolves itself as IP addresses become available.  Additional fixes including rebooting the machine, increasing DHCP scope, or using DRP as DHCP server.
+
+
 .. _rs_no_matching_subnet:
 
 No matching Subnet (MacOS DHCP)
