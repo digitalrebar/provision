@@ -10,12 +10,6 @@ Networking
 ============
 This section contains information to the DRP endpoint about all networking settings within the available infrastructure. 
 
-Switches
-________
-This section lists all LLDP discovered switches. 
-
-The blue Refresh button will update the list ensuring you have the latest switch information on the network.
-
 Subnets
 -------
 This section lists all Subnets discovered in the network. 
