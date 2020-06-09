@@ -19,8 +19,10 @@ do
                 echo ".. _rs_rel_notes_$rev:" > rel_notes/$revname.rst
                 echo "$rev" >> rel_notes/$revname.rst
                 echo "$replace" >> rel_notes/$revname.rst
-                echo "::" >> rel_notes/$revname.rst
-                cat rel_notes/$rev.txt | sed 's/^/  /' >> rel_notes/$revname.rst
+                echo "" >> rel_notes/$revname.rst
+                echo "  ::" >> rel_notes/$revname.rst
+                echo "" >> rel_notes/$revname.rst
+                cat rel_notes/$rev.txt | sed 's/^/    /' >> rel_notes/$revname.rst
                 echo "" >> rel_notes/$revname.rst
                 rm rel_notes/$rev.txt
         fi
@@ -35,8 +37,10 @@ do
         echo ".. _rs_rel_notes_$rev:" > rel_notes/$revname.rst
         echo "$rev" >> rel_notes/$revname.rst
         echo "$replace" >> rel_notes/$revname.rst
-        echo "::" >> rel_notes/$revname.rst
-        cat rel_notes/$rev.txt | sed 's/^/  /' >> rel_notes/$revname.rst
+        echo "" >> rel_notes/$revname.rst
+        echo "  ::" >> rel_notes/$revname.rst
+        echo "" >> rel_notes/$revname.rst
+        cat rel_notes/$rev.txt | sed 's/^/    /' >> rel_notes/$revname.rst
         echo "" >> rel_notes/$revname.rst
         rm rel_notes/$rev.txt
 done
