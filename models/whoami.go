@@ -36,24 +36,31 @@ func (w *Whoami) Fill() error {
 	if err != nil {
 		return err
 	}
-	if dmiinfo.System.SerialNumber != "" {
-		fmt.Fprint(hasher, dmiinfo.System.Manufacturer, dmiinfo.System.ProductName, dmiinfo.System.SerialNumber)
-		w.Fingerprint.SSNHash = hasher.Sum(nil)
-		hasher.Reset()
-	}
-	if len(dmiinfo.Chassis) > 0 && dmiinfo.Chassis[0].SerialNumber != "" {
-		fmt.Fprint(hasher, dmiinfo.System.Manufacturer, dmiinfo.System.ProductName, dmiinfo.Chassis[0].SerialNumber)
-		w.Fingerprint.CSNHash = hasher.Sum(nil)
-		hasher.Reset()
-	}
-	w.Fingerprint.SystemUUID = dmiinfo.System.UUID
-	for _, mem := range dmiinfo.Memory.Devices {
-		if mem.SerialNumber == "" {
-			continue
+	if dmiinfo.Hypervisor == "" {
+		// we can only trust that this information will be unique and independent from
+		// another if running on physical hardware.  This may be a false positive as
+		// new hypervisors are released, but it detects all the common ones and several
+		// uncommon ones.  Too bad that it means we have to fall back to relying on MAC address
+		// based uniqueness checking, but that is pretty much where we were earlier.
+		if dmiinfo.System.SerialNumber != "" {
+			fmt.Fprint(hasher, dmiinfo.System.Manufacturer, dmiinfo.System.ProductName, dmiinfo.System.SerialNumber)
+			w.Fingerprint.SSNHash = hasher.Sum(nil)
+			hasher.Reset()
 		}
-		fmt.Fprint(hasher, mem.Manufacturer, mem.PartNumber, mem.SerialNumber)
-		w.Fingerprint.MemoryIds = append(w.Fingerprint.MemoryIds, hasher.Sum(nil))
-		hasher.Reset()
+		if len(dmiinfo.Chassis) > 0 && dmiinfo.Chassis[0].SerialNumber != "" {
+			fmt.Fprint(hasher, dmiinfo.System.Manufacturer, dmiinfo.System.ProductName, dmiinfo.Chassis[0].SerialNumber)
+			w.Fingerprint.CSNHash = hasher.Sum(nil)
+			hasher.Reset()
+		}
+		w.Fingerprint.SystemUUID = dmiinfo.System.UUID
+		for _, mem := range dmiinfo.Memory.Devices {
+			if mem.SerialNumber == "" {
+				continue
+			}
+			fmt.Fprint(hasher, mem.Manufacturer, mem.PartNumber, mem.SerialNumber)
+			w.Fingerprint.MemoryIds = append(w.Fingerprint.MemoryIds, hasher.Sum(nil))
+			hasher.Reset()
+		}
 	}
 	sort.Slice(w.Fingerprint.MemoryIds, func(i, j int) bool {
 		return bytes.Compare(w.Fingerprint.MemoryIds[i], w.Fingerprint.MemoryIds[j]) == -1
