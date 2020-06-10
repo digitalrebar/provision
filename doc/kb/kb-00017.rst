@@ -1,0 +1,83 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+:ref:`kb-00017: Custom Kickstart and Preseeds<rs_kickseed>`
+
+.. _rs_kb_00017:
+
+kb-00017: Custom Kickstart and Preseeds
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Description
+-----------
+
+Most Digital Rebar community content Boot Environments (*BootEnvs*) utilize a templatized
+kickstart or preeseed file.  In many cases, an operator may need to provide extensive
+customizations to these templates to meet their operational needs.  These templates can
+be replace "on-the-fly" with in-field custom templates.
+
+.. note:: It is **strongly** encourage that you replicate the two *post* lines that reset
+          workflow, and enable installer based DRP Agent/Runner services, to provide
+          customization and/or notification of completion to the DRP Endpoint.  Failure to
+          do so (or manually arrange advancing the Workflow tasks states), will result
+          in a system install that appears to "hang", or may restart loop and repeat the
+          installation indefinitely.
+
+Solution
+--------
+
+You can now define a custom Kickstart or Preseed (aka *kickseed*) to override the defaults in the selected
+*BootEnv*.  You simply need to only define a single Param (``select-kickseed``) with the name of the
+Kickstart or Preseed you wish to override the default value.
+
+  ::
+
+    # obtain the Machine UUID, or replace $UUID with 'Name:<machine_name>'
+    export UUID="f6ca7bb6-d74f-4bc1-8544-f3df500fb15e"
+    drpcli machines set $UUID param select-kickseed to "my_kickstart.cfg"
+
+Of course, you can apply a Param to a Profile, and apply that Profile to a group of Machines if desired.
+
+.. warning:: The Digital Rebar default kickstart and preseeds have Digital Rebar specific interactions
+             that may be necessary to replicate.  Please review the default kickstart and preseeds for
+             patterns and examples you may need to re-use.   We HIGHLY recommend you start with a
+             `clone` operation of an existing Kickstart/Preseed file; and making appropriate
+             modifications from that as a baseline.
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+  * `Community Content select-kickseed Param <https://provision.readthedocs.io/en/latest/doc/content-packages/drp-community-content.html?highlight=select-kickseed#select-kickseed>`_
+
+
+Versions
+========
+
+  * Starting with ``drp-community-content`` version 1.5.0 and newer
+
+
+Keywords
+========
+
+drp-community-content, content, custom, operating system, kickstart, preseed, template
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00017
+    initial release:  Wed Jun 10 11:31:24 PDT 2020
+    updated release:  Wed Jun 10 11:31:24 PDT 2020
+

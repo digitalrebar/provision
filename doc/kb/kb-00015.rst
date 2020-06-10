@@ -1,0 +1,92 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+:ref:`kb-00015: Convert Isolated Install to Production Mode<rs_convert_to_production_mode>`
+
+.. _rs_kb_00015:
+
+kb-00015: Convert Isolated Install to Production Mode
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Description
+-----------
+
+The *quickstart* documentation suggests setting up an ``Isolated`` mode installation for
+quick PoC and Trial testing.  Should you want to convert to a system managed ``Production``
+install mode, RackN recommends you re-install from scratch.  However, the below article
+may help you convert or migrate should you choose to not do a fresh install.
+
+
+Solution
+--------
+
+There currently is no officually supported *migration* tool to move from an ``Isolated``
+to ``Production`` install mode.  However, any existing customizations, Machines, Leases,
+Reservations, Contents, etc. can be moved over from the Isolated install directory structure
+to a Production install directory, and you should be able to retain your Isolated mode environment.
+
+All customized content is stored in the following default subdirectories as:
+
+* Isolated: in ``drp-data/`` in the Current Working Directory the installation was performed in
+* Production:  in ``/var/lib/dr-provision``
+
+The contents and structure of these locations is the same.  Follow the below procedure to safely
+move from Isolated to Production mode.
+
+#. backup your current ``drp-data`` directory (eg ``tar -czvf /root/drp-isolated-backup.tgz drp-data/``)
+#. ``pkill dr-provision`` service
+#. perform fresh install on same host, without the ``--isolated`` flag
+#. follow the start up scripts setup - BUT do NOT start the ``dr-provision`` service at this point
+#.  copy the ``drp-data/*`` directories recursively to ``/var/lib/dr-provision`` (eg: ``unalias cp; cp -ra drp-data/* /var/lib/dr-provision/``)
+#. make sure your startup scripts are in place for your production mode (eg: ``/etc/systemd/system/dr-provision.service``)
+#. start the new production version with  ``systemctl start dr-provision.service``
+#. verify everything is running fine
+#. delete the ``drp-data`` directory (suggest retaining the backup copy for later just in case)
+
+.. note:: As of DRP Version v4.3.0, content writable objects are no longer stored in raw JSON
+          files in these directories.  They have been moved to new WAL (write-ahead-log)
+          journalled database objects.
+
+.. warning::  If you install a new version of the Digital Rebar Provision service, you
+              must verify that there are no Content differences between the two versions.  Should
+              the ``dr-provision`` service fail to start up; it's entirely likely that there may be
+              some content changes that need to be addressed in the JSON/YAML files prior to the
+              new version being started.  See the :ref:`rs_upgrade` notes for any version-to-version
+              specific documentation.
+
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+
+Versions
+========
+
+v3.x to v4.3.0, but not including v4.3.0
+
+
+Keywords
+========
+
+dr-provision, isolated, production, migration, conversion
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00015
+    initial release:  Wed Jun 10 11:20:19 PDT 2020
+    updated release:  Wed Jun 10 11:20:19 PDT 2020
+

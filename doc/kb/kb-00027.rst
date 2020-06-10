@@ -1,0 +1,82 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+:ref:`kb-00027: Set `hostname` in a DHCP Reservation<rs_reservation_set_hostname>`
+
+.. _rs_kb_00027:
+
+kb-00027: Set `hostname` in a DHCP Reservation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Description
+-----------
+
+This article describes how to use the Digital Rebar DHCP mechanisms to set a Machine name.
+A Machine *Reservation* must be created for the spcific Machine, to allow for custom setting
+values like the Machine Name and a consistent (*"static"*) IP Address assignment.
+
+
+Solution
+--------
+
+If you create a DHCP Reservation for a system (or convert an active Lease to Reservation), you can also set the
+Hostname for the Machine.  If you are pre-creating Reservations, this will allow you to have a pre-set hostname
+when the Machine first comes up.  Additionally, if you create/destroy your machine objects, but would like a
+hostname to persist with the Machine Reservation when the machine returns, you can do this.
+
+.. note:: The UX version (at least as of v1.2.1 and older) does not support setting DHCP options to
+          the Reservation.  You will have to perform these actions using either the CLI or API.  The
+          CLI method is outlined below.
+
+This procedure assumes you have a Reservation created already, and we are going to update the existing
+Reservation.  You can combine this procedure with creating a new Reservation, but only if you perform the
+operation via the CLI or API.
+
+  ::
+
+    # show the current Reservation:
+    drpcli reservations show 192.168.8.100
+
+    # create a Hostname specification in the DHCP Options section of the reservation:
+    drpcli reservations update 192.168.8.100 '{ "Options": [ { "Code": 12, "Value": "pxe-client-8-100" } ] }'
+
+In the above exmaple, we are assuming our DHCP Reservation is for a Reservation identified by the IP Address
+``192.168.8.100``, and that we are setting the hostname (DHCP Option 12) to ``pxe-client-8-100``.
+
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+  * :ref:`rs_arch`
+
+
+Versions
+========
+
+all
+
+Keywords
+========
+
+dhcp, machine name, hostname, static reservation, ip address assignment, option 12
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00027
+    initial release:  Wed Jun 10 12:10:55 PDT 2020
+    updated release:  Wed Jun 10 12:10:55 PDT 2020
+

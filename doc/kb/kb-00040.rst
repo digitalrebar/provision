@@ -1,0 +1,57 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+:ref:`kb-00040: unblockRunnable Panic condition<rs_unblockRunnable_panic>`
+
+.. _rs_kb_00040:
+
+kb-00040: unblockRunnable Panic condition
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Description
+-----------
+
+In some cases, DRP can panic with a message that contains unblockRunnable.  This error DRP protecting itself from an unhandled deadlock in the database system.
+DRP will restart cleanly when restarted.  If run under a service watch system (e.g. systemd), the system will restart and continue.
+
+Solution
+--------
+
+Please gather the log failure and enter a new issue at `Digital Rebar Github <https://github.com/digitalrebar/provision>`_.
+
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+
+Versions
+========
+
+all
+
+
+Keywords
+========
+
+panic, error, unblockrunnable, dr-provision, failure
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00040
+    initial release:  Wed Jun 10 13:01:45 PDT 2020
+    updated release:  Wed Jun 10 13:01:45 PDT 2020
+

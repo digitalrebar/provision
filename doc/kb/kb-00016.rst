@@ -1,0 +1,82 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+:ref:`kb-00016: Customize Production Mode<rs_customize_production_mode>`
+
+.. _rs_kb_00016:
+
+kb-00016: Customize Production Mode
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Description
+-----------
+
+
+Solution
+--------
+
+You can use ``systemd`` configuration to alter dr-provision start up options and runtime
+environment.
+
+To use, determin the environment variables you need to set by checking the help of ``dr-provision``
+service:
+
+  * ``dr-provision -h``
+  * or  ``dr-provision --help``
+
+You will need to create the ``systemd`` drop-in directory if it doesn't exist:
+
+  * ``mkdir -p /etc/systemd/system/dr-provision.service.d``
+
+Then you will need to create a ``systemd`` drop-in service file(s).  For example, to name
+your system endpoint, you would use the recommended file name of ``drpid.conf``, with values:
+
+  ::
+
+     [Service]
+     Environment=RS_DRP_ID=mydrpserver
+
+Then reload and restart the service via ``systemd``.
+
+  * ``sudo systemctl daemon-reload && sudo systemctl restart dr-provision``
+
+This will work with multiple files and any of the defaine startup control variables.
+
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+  * ``dr-provision --help``
+
+
+Versions
+========
+
+v4.0.0 and newer
+
+
+Keywords
+========
+
+dr-provision, systemd, systemctl, restart, customize, startup options
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00016
+    initial release:  Wed Jun 10 11:26:08 PDT 2020
+    updated release:  Wed Jun 10 11:26:08 PDT 2020
+

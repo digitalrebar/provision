@@ -1,0 +1,139 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+:ref:`kb-00042: JQ Usage Examples<rs_jq_examples>`
+
+.. _rs_kb_00042:
+
+kb-00042: JQ Usage Examples
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Description
+-----------
+
+This article describes some examples of using ``jq`` to manipulate standard Digital Rebar JSON
+output objects.
+
+.. note:: Starting with DRP v4.2.0 and newer, the ``drpcli`` tool has full ``jq`` capabilities
+          built in to the CLI.  To use this, create a symbolic link for a filename ending wtih
+          *jq* to the ``drpcli`` binary (eg ``ln -s drpcli drpjq``).  This allows for use of
+          ``jq`` capabilities without requiring installation of a separate tool/binary.
+
+
+Solution
+--------
+
+Here are some various examples of how to use ``jq`` to manipulate standard Digital Rebar
+JSON output.
+
+JQ Raw Mode
+===========
+
+Raw JSON output is usefull when passing the results of one ``jq`` command in to another for scripted interaction.  Be sure to specify "Raw" mode in this case - to prevent colorization and extraneous quotes being wrapped around Key/Value data output.
+  ::
+
+      <some command> | jq -r ...
+
+
+.. _rs_jq_filter_gohai:
+
+Filter Out gohai-inventory
+==========================
+
+The ``gohai-inventory`` module is extremely useful for providing Machine classification information for use by other stages or tasks.  However, it is very long and causes a lot of content to be output to the console when listing Machine information.  Using a simple ``jq`` filter, you can delete the ``gohai-inventory`` content from the output display.
+
+Note that since the Param name is ``gohai-inventory``, we have to provide some quoting of the Param name, since the dash (``-``) has special meaning in JSON parsing.
+  ::
+
+    drpcli machines list | jq 'del(.[].Params."gohai-inventory")'
+
+Subsequently, if you are listing an individual Machine, then you can also filter it's ``gohai-inventory`` output as well, with:
+  ::
+
+    drpcli machines show <UUID> | jq 'del(.Params."gohai-inventory")'
+
+
+.. _rs_jq_list_bootenvs:
+
+List BootEnv Names
+==================
+
+Get list of bootenvs available in the installed content, by name:
+  ::
+
+    drpcli bootenvs list | jq '.[].Name'
+
+
+.. _rs_jq_reformat_output:
+
+Reformat Output With Specific Keys
+==================================
+
+Get list of machines, output "Name:Uuid" pairs from the the JSON output:
+  ::
+
+    drpcli machines list | jq -r '.[] | "\(.Name):\(.Uuid)"'
+
+Output is printed as follows:
+  ::
+
+    machine1:05abe5dc-637a-4952-a1be-5ec85ba00686
+    machine2:0d8b7684-9d0e-4c3e-9f89-eded02357521
+
+You can modify the output separator (colon in this example) to suit your needs.
+
+
+.. _rs_jq_extract_keys:
+
+Extract Specific Key From Output
+================================
+
+``jq`` can also pull out only specific Keys from the JSON input.  Here is an example to get ISO File name for a bootenv:
+  ::
+
+    drpcli contents show os-discovery | jq '.sections.bootenvs.discovery.OS.IsoFile'
+
+
+.. _rs_jq_display_job_logs:
+
+Display Job Logs for Specific Machine
+=====================================
+
+The Job Logs provide a lot of information about the provisioning process of your DRP Endpoint.  However, you often only want to see Job Logs for a specific Machine to evaluate provisioning status.  To get specific Jobs from the job list - based on Machine UUID, do:
+  ::
+
+    export UUID=`abcd-efgh-ijkl-mnop-qrps"
+    drpcli jobs list | jq ".[] | select(.Machine==\"$UUID\")"
+
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+
+Versions
+========
+
+
+Keywords
+========
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00042
+    initial release:  Wed Jun 10 13:12:02 PDT 2020
+    updated release:  Wed Jun 10 13:12:02 PDT 2020
+

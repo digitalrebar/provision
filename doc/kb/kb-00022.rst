@@ -1,0 +1,75 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+:ref:`kb-00022: Rebooting without IPMI plugins (without a Task)<rs_reboot_wo_ipmi>`
+
+.. _rs_kb_00022:
+
+kb-00022: Rebooting without IPMI plugins (without a Task)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Description
+-----------
+
+There are many ways to handle Machine reboots.  This article describes some alternate ways
+that a Machine reboot may be induced in to a running system, without use of an external Baseboard
+Management Controller (BMC) via the IPMI or Redfish protocols.
+
+.. note:: Running tasks in Workflow can cause reboot conditions based on the scripts exit
+          codes.
+
+
+Solution
+--------
+
+The Runner will automatically reboot the system if the BootEnv changes during a Workflow.  You can
+force this behavior by changing the BootEnv to `local` on the machine manually then starting a
+Workflow with a different BootEnv like `discover`.  This will cause the runner to reboot the machine.
+
+Steps:
+  #. Clear the Machine Workflow
+  #. Set the Machine BootEnv to `local`
+  #. Update
+  #. Set the Workflow to a workflow with a different BootEnv.
+  #. Update and watch machine reboot
+
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+  * IPMI *plugin* for BMC / IPMI / Redfish reboot controls
+  * Task exit codes in the :ref:`rs_arch` documentation
+  * :ref:`rs_reboot_faq`
+
+
+Versions
+========
+
+all
+
+
+Keywords
+========
+
+reboot
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00022
+    initial release:  Wed Jun 10 11:52:09 PDT 2020
+    updated release:  Wed Jun 10 11:52:09 PDT 2020
+

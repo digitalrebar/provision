@@ -1,0 +1,99 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+:ref:`kb-00010: Using the .drpclirc File<rs_drpclirc>`
+
+.. _rs_kb_00010:
+
+kb-00010: Using the ``.drpclirc`` File
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Description
+-----------
+
+There are several ways to define the DRP Endpoint, Username, and Password for authentication to
+access DRP.  This article describes how to use the ``.drpclirc`` file to define endpoint and
+authentication credentials.
+
+This method replaces manual specification of the information, which might look like:
+
+  ::
+
+    drpcli -E https://10.10.10.10:8092 -U admin_user -P admin_super_secret_password ...
+
+This method helps prevent authentication secrets from *leaking* in the environment via the process
+table listings, or shell history mechanisms.
+
+
+Solution
+--------
+
+If you need the DRPCLI, follow instructions for :ref:`rs_cli_download`.
+
+In addition to the environment variables (eg ``RS_ENDPOINT``, ``RS_KEY``, etc) and setting explicit ``drpcli``
+values via option flags (eg ``--enpdoint``, ``-E``, etc), you can now use a home _RC_ style configuration
+file to set these values.
+
+To do so, create a file ``$HOME/.drpclirc`` with the following possible values and format:
+
+---------------------- ----------------------------------------------------------------------------
+value                  notes
+---------------------- ----------------------------------------------------------------------------
+``RS_ENDPOINT``        sets the endpoint API location (default: https://127.0.0.1:8092)
+``RS_USERNAME``        sets username to auth to the Endpoint (default: "rocketskates")
+``RS_PASSWORD``        sets the password for the auth (default: "r0cketsk8ts")
+``RS_KEY``             sets user:pass pair for authentication (default: "rocketskates:r0cketsk8ts")
+``RS_TOKEN``           a precreated Token (which may have a specific use scope)
+``RS_FORMAT``          command line output format to use (json,yaml,text,table)
+``RS_PRINT_FIELDS``    comma separate list of fields to show in output "table" or "text" format
+``RS_NO_HEADER``       remove the header fields from "table" or "text" format output
+``RS_TRUNCATE_LENGTH`` limits the length of fields displayed for "table" or "text" output formats
+---------------------- ----------------------------------------------------------------------------
+
+Example:
+  ::
+
+    RS_ENDPOINT=https://10.10.10.10.8092
+    RS_PASSWORD=super_secure_secret_password_do_not_share_with_anyone
+
+.. note:: You can **not** use Shell style ``export`` in front of the variable,
+          and **do NOT** surround the value with double or single quotes.
+
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+  * :ref:`rs_cli_download`
+
+Versions
+========
+
+v4.1.0 or newer
+
+.. note:: The RS_FORMAT, RS_PRINT_FIELDS, RS_NO_HEADER, and RS_TRUNCATE_LENGTH variables are only valid for ``drpcli`` *v4.2.0-beta2.0* or newer versions.
+
+Keywords
+========
+
+dr-provision, drpcli, endpoint, username, password, authentication, drpclirc
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00010
+    initial release:  Wed Jun 10 10:54:36 PDT 2020
+    updated release:  Wed Jun 10 10:54:36 PDT 2020
+

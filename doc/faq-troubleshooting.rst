@@ -5,6 +5,12 @@
   pair: Digital Rebar Provision; FAQ
   pair: Digital Rebar Provision; Troubleshooting
 
+.. warning::
+  This FAQ / Troubleshooting guide is being deprecated.  Please use the new
+  :ref:`rs_knowledge_base` for the most up to date references.
+
+.. All below cross-reference links were commented out, and have been replaced with the appropriate
+   knowledge base cross-reference of the same value.
 
 .. _rs_faq:
 
@@ -15,21 +21,21 @@ The following section is designed to answer frequently asked questions and help 
 
 Want ligher reading?  Checkout our :ref:`rs_fun`.
 
-.. _rs_faq_drpcli:
+.. .. _rs_old_faq_drpcli:
 
 Where can I get the DRPCLI?
 ---------------------------
 
 If you need the DRPCLI, follow instructions for :ref:`rs_cli_download`.
 
-.. _rs_faq_security:
+.. .. _rs_faq_security:
 
 Where can I learn more about Digital Rebar Security?
 ----------------------------------------------------
 
 Please consult the dedicated :ref:`rs_security_faq`.
 
-.. _rs_bind_error:
+.. .. _rs_bind_error:
 
 Bind Error
 ----------
@@ -46,7 +52,7 @@ Digital Rebar Provision will fail if it cannot attach to one of the required por
 See the port mapping list on start-up for a complete list.
 
 
-.. _rs_tftp_error:
+.. .. _rs_tftp_error:
 
 TFTP Error
 ----------
@@ -69,7 +75,7 @@ error messages may appear similarly to:
     May 24 13:48:22 ubuntu dr-provision[7092]: [280:13]TFTP: lpxelinux.0: transfer error: sending block 0: code=0, error: TFTP Aborted
 
 
-.. _rs_gen_cert:
+.. .. _rs_gen_cert:
 
 Generate Certificate
 --------------------
@@ -83,7 +89,7 @@ Sometimes the cert/key pair in the github tree is corrupt or not sufficient for 
 It may be necessary to install the openssl tools.
 
 
-.. _rs_add_ssh:
+.. .. _rs_add_ssh:
 
 Add SSH Keys to Authorized Keys
 -------------------------------
@@ -112,7 +118,7 @@ The below example adds *User1* and *User2* SSH keys to the profile *my-profile*.
     drpcli profiles update my-profile keys.json
 
 
-.. _rs_docker_volume:
+.. .. _rs_docker_volume:
 
 Example Docker Volume Usage
 ---------------------------
@@ -165,7 +171,7 @@ can also use any of the container based networked storage solutions to back your
     # digitalrebar  job-logs  plugins  replace  saas-content  secrets  tftpboot  ux
 
 
-.. _rs_access_ssh_root_mode:
+.. .. _rs_access_ssh_root_mode:
 
 Set SSH Root Mode
 -----------------
@@ -182,7 +188,7 @@ value                     definition
 ========================  ==========================================================
 
 
-.. _rs_default_password:
+.. .. _rs_default_password:
 
 What are the default passwords?
 -------------------------------
@@ -217,7 +223,7 @@ For Images with ``cloud-init`` pieces, there often is an injected ``centos`` use
 For more about VMware, see :ref:`vmware_esxi_passwords`
 
 
-.. _rs_drpclirc:
+.. .. _rs_drpclirc:
 
 Using the ``.drpclirc`` File
 ----------------------------
@@ -254,7 +260,7 @@ and do NOT surround the value with double or single quotes.
 .. note:: The RS_FORMAT, RS_PRINT_FIELDS, RS_NO_HEADER, and RS_TRUNCATE_LENGTH variables are only valid for ``drpcli`` *v4.2.0-beta2.0* or newer versions.
 
 
-.. _rs_human_formatters:
+.. .. _rs_human_formatters:
 
 Using Table/Text Output Formatters
 ----------------------------------
@@ -311,7 +317,7 @@ Topics include:
   * :ref: `rs_download_rackn_content`
 
 
-.. _rs_more_debug:
+.. .. _rs_more_debug:
 
 Turn Up the Debug
 -----------------
@@ -319,7 +325,7 @@ Turn Up the Debug
 To get additional debug from dr-provision, set debug preferences to increase the logging.  See :ref:`rs_model_prefs`.
 
 
-.. _rs_vboxnet:
+.. .. _rs_vboxnet:
 
 Missing VBoxNet Network
 -----------------------
@@ -329,7 +335,7 @@ Virtual Box does not add host only networks until a VM is attempting to use them
 Virtual Box may also fail to allocate an IP to the host network due to incomplete configuration.  In this case, ``ip addr`` will show the network but no IPv4 address has been allocated; consequently, Digital Rebar will not report this as a working interface.
 
 
-.. _rs_vbox_no_boot:
+.. .. _rs_vbox_no_boot:
 
 VirtualBox "no bootable medium" on second boot
 ----------------------------------------------
@@ -341,7 +347,7 @@ The workaround is to use DHCP option 67 to supply the correct boot file.  Settin
 See also :ref:`rs_uefi_boot_option`
 
 
-.. _rs_debug_sledgehammer:
+.. .. _rs_debug_sledgehammer:
 
 Debug Sledgehammer
 ------------------
@@ -352,7 +358,7 @@ If the sledgehammer discovery image should fail to launch Runner jobs successful
       journalctl -u sledgehammer
 
 
-.. _rs_convert_to_production_mode:
+.. .. _rs_convert_to_production_mode:
 
 Convert Isolated Install to Production Mode
 -------------------------------------------
@@ -379,7 +385,7 @@ The contents and structure of these locations is the same.  Follow the below pro
 .. note::  WARNING:  If you install a new version of the Digital Rebar Provision service, you must verify that there are no Contents differences between the two versions.  Should the ``dr-provision`` service fail to start up; it's entirely likely that there may be some content changes that need to be addressed in the JSON/YAML files prior to the new version being started.  See the :ref:`rs_upgrade` notes for any version-to-version specific documentation.
 
 
-.. _rs_customize_production_mode:
+.. .. _rs_customize_production_mode:
 
 Customize Production Mode
 -------------------------
@@ -406,7 +412,7 @@ Then reload and restart the service.
 This will work with multiple files and multiple variables.
 
 
-.. _rs_kickseed:
+.. .. _rs_kickseed:
 
 Custom Kickstart and Preseeds
 -----------------------------
@@ -422,7 +428,7 @@ Of course, you can apply a Param to a Profile, and apply that Profile to a group
 .. note:: The Digital Rebar default kickstart and preseeds have Digital Rebar specific interactions that may be necessary to replicate.  Please review the default kickstart and preseeds for patterns and examples you may need to re-use.   We HIGHLY recommend you start with a `clone` operation of an existing Kickstart/Preseed file; and making appropriate modifications from that as a baseline.
 
 
-.. _rs_kexec:
+.. .. _rs_kexec:
 
 Can I eliminate reboots with kexec?
 -----------------------------------
@@ -433,7 +439,7 @@ Sledgehammer enables kexec and can be started without a reboot from Linux enviro
 
 This is a Linux specific feature.  For more about kexec: https://wiki.archlinux.org/index.php/Kexec
 
-.. _rs_plugin_providers_license:
+.. .. _rs_plugin_providers_license:
 
 Import plugin failed pool: define failed
 ----------------------------------------
@@ -443,7 +449,7 @@ If you are using the DRPCLI to upload a licensed RackN plugin, the endpoint will
 Install the license content pack and try again.  If you've saved the `rackn-license.json` file then you can use the DRPCLI to upload it via `drpcli contents upload rackn-license.json`.
 
 
-.. _rs_update_content_command_line:
+.. .. _rs_update_content_command_line:
 
 Update Community Content via Command Line
 -----------------------------------------
@@ -486,7 +492,7 @@ This command will update the sledgehammer isos if required. If your output from 
  Then your sledgehammer is all up to date.
 
 
-.. _rs_reboot_faq:
+.. .. _rs_reboot_faq:
 
 Rebooting inside a Tasks, Stages and Workflows
 ----------------------------------------------
@@ -496,7 +502,7 @@ The Runner Task execution system supports many ways to cause a system reboot tha
 These options are handled by using script helpers or sending specialized ``exit`` codes.  Please see :ref:`rs_workflow_reboot` for comprehensive documentation.
 
 
-.. _rs_reboot_wo_ipmi:
+.. .. _rs_reboot_wo_ipmi:
 
 Rebooting without IPMI plugins (without a Task)
 -----------------------------------------------
@@ -512,7 +518,7 @@ Steps:
   #. Update and watch machine reboot
 
 
-.. _rs_nested_templates:
+.. .. _rs_nested_templates:
 
 Nested Templates (or "Sub-templates")
 -------------------------------------
@@ -532,7 +538,7 @@ The ``template`` construct is a text string that refers to a given template name
 The ``CallTemplate`` construct can be a variable or expression that evaluates to a string.
 
 
-.. _rs_sprig:
+.. .. _rs_sprig:
 
 How Can I manipulate values during Golang Template rendering?
 -------------------------------------------------------------
@@ -546,7 +552,7 @@ Please consult the Sprig website for a full list of functions.
 Note: Digital Rebar Provision blocks functions that could be used to operate on the endpoint outside of DRP template rendering for security reasons.
 
 
-.. _rs_double_brace:
+.. .. _rs_double_brace:
 
 How Can I render Double Curly Braces `{{` and `}}` during Golang Template rendering?
 ------------------------------------------------------------------------------------
@@ -567,7 +573,7 @@ use the variable in the template.  For example:
         braceme: "{{ $openblock }} item.Name {{ $closeblock }}"
 
 
-.. _rs_change_machine_name:
+.. .. _rs_change_machine_name:
 
 Change a Machines Name
 ----------------------
@@ -580,7 +586,7 @@ If you wish to update/change a Machine Name, you can do:
 .. note:: Note that you can NOT use the ``drpcli machines set ...`` construct as it only sets Param values.  The Machines name is a Field, not a Parameter.  This will NOT work: ``drpcli machines set $UUID param Name to foobar``.
 
 
-.. _rs_reservation_set_hostname:
+.. .. _rs_reservation_set_hostname:
 
 Set `hostname` in a DHCP Reservation
 ------------------------------------
@@ -602,7 +608,7 @@ This procedure assumes you have a Reservation created already, and we are going 
 In the above exmaple, we are assuming our DHCP Reservation is for a Reservation identified by the IP Address ``192.168.8.100``, and that we are setting the hostname (DHCP Option 12) to ``pxe-client-8-100``.
 
 
-.. _rs_uefi_boot_option:
+.. .. _rs_uefi_boot_option:
 
 UEFI Boot Support - Option 67
 -----------------------------
@@ -630,7 +636,7 @@ An example of adding this to your Subnet specification might look something like
 .. note:: You should not have to add option 67 unless you are meeting a specific need.  Test without it first!
 
 
-.. _rs_lpxelinux_no_such_file:
+.. .. _rs_lpxelinux_no_such_file:
 
 lpxelinux.0 error: no such file or directory
 --------------------------------------------
@@ -655,7 +661,7 @@ The expected behavior is for a client to attempt to download files in the follow
 Due to this behavior, filenames will be specified that do not exist, and the error message related to that probe request is a normal message.  This is NOT an indicator that provisioning is broken in your environment.
 
 
-.. _rs_different_pxelinux_version:
+.. .. _rs_different_pxelinux_version:
 
 Change Pxelinux Versions
 ------------------------
@@ -682,14 +688,14 @@ Second, the lpxelinux.0 file can be replaced.  To do this safely, a couple of st
 The middle step keeps DRP from overwriting your changes on startup.
 
 
-.. _rs_render_kickstart_preseed:
+.. .. _rs_render_kickstart_preseed:
 
 Render a Kickstart or Preseed
 -----------------------------
 
 Kickstart and Preseed files only created by request and are not stored on a filesystem that is viewable.  They are dynamically generated on the fly, and served from the virtual Filesystem space of the Digital Rebar HTTP server (on port 8091 by default).  However, it is possible to render a kickstart or preseed to evaluate how it is going to operate, or troubleshoot issues with your config files.
 
-When a machine is in provisioning status, you can view the dynamically generated preseed or kickstart from the TFTP server (or via the HTTP gateway).  Provisioning status means the Machine has been placed into an installable BootEnv via a Stage.  If (for exaxmple) placed in to ``centos-8-install`` Stage, the ``compute.ks`` can be rendered for the machine.  Or, if placed in to ``ubuntu-16.04-install`` Stage, the ``seed`` can be rendered for the machine.
+When a machine is in provisioning status, you can view the dynamically generated preseed or kickstart from the TFTP server (or via the HTTP gateway).  Provisioning status means the Machine has been placed into an installable BootEnv via a Stage.  If (for exaxmple) placed in to ``centos-8-install`` Stage, the ``compute.ks`` can be rendered for the machine.  Or, if placed in to ``ubuntu-18.04-install`` Stage, the ``seed`` can be rendered for the machine.
 
 Get the Machine ID, then use the following constructed URL:
   ::
@@ -724,7 +730,7 @@ Possible Causes:
 1. Install BootEnvs must end in ``-install``. See :ref:`rs_model_bootenv`
 1. BootEnvs intended for network booting, _must_ include netbootable components.
 
-.. _rs_ubuntu_local_repo:
+.. .. _rs_ubuntu_local_repo:
 
 Booting Ubuntu Without External Access
 ---------------------------------------
@@ -737,7 +743,7 @@ To workaround this problem, you need to supply a DNS and gateway for your subnet
 2. External to Digital Rebar: Adding ``default_route=true`` to the boot parameters and include a DNS server on the local subnet in DHCP.
 
 
-.. _rs_wget_timeout:
+.. .. _rs_wget_timeout:
 
 Network Unreachable from Wget / Second Stage Timeout
 ----------------------------------------------------
@@ -761,7 +767,7 @@ You could try setting `provisioner.wgetretrycount=60`.  `kernel-console` is a pa
 Sometimes it is used to tweak the kernel console that the kernel is using, but it can be used for other values as well.
 
 
-.. _rs_sledgehammer_no_ip:
+.. .. _rs_sledgehammer_no_ip:
 
 Sledgehammer Boots Without IP
 -----------------------------
@@ -775,7 +781,7 @@ because the pool is empty.  This will make the machine appear as hung or not res
 This sometimes resolves itself as IP addresses become available.  Additional fixes including rebooting the machine, increasing DHCP scope, or using DRP as DHCP server.
 
 
-.. _rs_no_matching_subnet:
+.. .. _rs_no_matching_subnet:
 
 No matching Subnet (MacOS DHCP)
 -------------------------------
@@ -786,7 +792,7 @@ Cause: This is likely caused by not configuring the "MAC DARWIN" route correctly
 
 Solution: Make sure that the address on the MAC should be outside the range.  Then set the ip, add the route, and then (re)start DRP.  Make sure all the broadcast routes are deleted first using `sudo route delete 255.255.255.255` multiple times.
 
-.. _rs_kubernetes_dashboard:
+.. .. _rs_kubernetes_dashboard:
 
 Kubernetes Dashboard
 --------------------
@@ -809,7 +815,7 @@ Some things that have worked in the past:
   * any other solutions, please let us know... we'll add them here
 
 
-.. _rs_expand_templates:
+.. .. _rs_expand_templates:
 
 Expand Templates from Failed Job
 --------------------------------
@@ -842,7 +848,7 @@ The Role Base Access and Controls subsystem allows an operator to construct user
 Now simply assign this Role to the given users you wish to limit their permissions on.
 
 
-.. _rs_unblockRunnable_panic:
+.. .. _rs_unblockRunnable_panic:
 
 
 unblockRunnable Panic
@@ -854,7 +860,7 @@ DRP will restart cleanly when restarted.  If run under a service watch system (e
 Please gather the log failure and enter a new issue at `Digital Rebar Github <https://github.com/digitalrebar/provision>`_.
 
 
-.. _rs_manager_system_time:
+.. .. _rs_manager_system_time:
 
 Manager and System Time
 -----------------------
@@ -895,7 +901,7 @@ In addition, Machine objects may show additional failed validation error message
 To correct the problem, install and verify all DRP Endpoints system clocks are in sync with NTP services.
 
 
-.. _rs_jq_examples:
+.. .. _rs_jq_examples:
 
 JQ Usage Examples
 -----------------
@@ -909,7 +915,7 @@ Raw JSON output is usefull when passing the results of one ``jq`` command in to 
       <some command> | jq -r ...
 
 
-.. _rs_jq_filter_gohai:
+.. .. _rs_jq_filter_gohai:
 
 Filter Out gohai-inventory
 ==========================
@@ -927,7 +933,7 @@ Subsequently, if you are listing an individual Machine, then you can also filter
     drpcli machines show <UUID> | jq 'del(.Params."gohai-inventory")'
 
 
-.. _rs_jq_list_bootenvs:
+.. .. _rs_jq_list_bootenvs:
 
 List BootEnv Names
 ==================
@@ -938,7 +944,7 @@ Get list of bootenvs available in the installed content, by name:
     drpcli bootenvs list | jq '.[].Name'
 
 
-.. _rs_jq_reformat_output:
+.. .. _rs_jq_reformat_output:
 
 Reformat Output With Specific Keys
 ==================================
@@ -957,7 +963,7 @@ Output is printed as follows:
 You can modify the output separator (colon in this example) to suit your needs.
 
 
-.. _rs_jq_extract_keys:
+.. .. _rs_jq_extract_keys:
 
 Extract Specific Key From Output
 ================================
@@ -968,7 +974,7 @@ Extract Specific Key From Output
     drpcli contents show os-discovery | jq '.sections.bootenvs.discovery.OS.IsoFile'
 
 
-.. _rs_jq_display_job_logs:
+.. .. _rs_jq_display_job_logs:
 
 Display Job Logs for Specific Machine
 =====================================
@@ -980,7 +986,7 @@ The Job Logs provide a lot of information about the provisioning process of your
     drpcli jobs list | jq ".[] | select(.Machine==\"$UUID\")"
 
 
-.. _rs_jq_list_machines_with_profile:
+.. .. _rs_jq_list_machines_with_profile:
 
 List Machines with a Given Profile Added to Them
 ================================================

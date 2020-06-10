@@ -119,10 +119,10 @@ Table of Contents
    doc/api
    doc/dev/dev-contributing
    doc/faq-troubleshooting
+   doc/knowledge-base
    doc/arch
    doc/content-packages
    doc/rackn/license
-   CONTRIBUTING
    Trademark
    LICENSE
    doc/fun-facts

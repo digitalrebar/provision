@@ -1,0 +1,64 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+:ref:`kb-00005: Generate Certificate<rs_gen_cert>`
+
+.. _rs_kb_00005:
+
+kb-00005: Generate Certificate
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Description
+-----------
+
+The generated self signed certificate doesn't appear to be working.  Is it possible to
+generate a new certificate for the system?
+
+
+Solution
+--------
+
+Sometimes the cert/key pair in the github tree is corrupt or not sufficient for the environment.  The following command can be used to rebuild a local cert/key pair.
+
+  ::
+
+    sudo openssl req -new -x509 -keyout server.key -out server.crt -days 365 -nodes
+
+It may be necessary to install the openssl tools.
+
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+
+Versions
+========
+
+all
+
+
+Keywords
+========
+
+dr-provision, ssl, tls, certificate, self-signed
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00005
+    initial release:  Wed Jun 10 10:01:01 PDT 2020
+    updated release:  Wed Jun 10 10:01:01 PDT 2020
+

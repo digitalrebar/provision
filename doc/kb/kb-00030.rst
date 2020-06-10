@@ -1,0 +1,88 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+:ref:`kb-00030: Change Pxelinux Versions<rs_different_pxelinux_version>`
+
+.. _rs_kb_00030:
+
+kb-00030: Change Pxelinux Versions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Description
+-----------
+
+This article describes how to replace the Digital Rebar system provided PXE provisioning
+artifacts (eg ``lpxelinux.0``) with a custom version via the "*replace directory*" feature
+in the ``dr-provision`` service.
+
+Note that this process works for many of the PXE provisioning artifacts.
+
+It may be necessary to do this for non-standard conformant hardware that will not correctly
+PXE boot with the default provided provisioning artifacts in Digital Rebar.
+
+Should you need to use a custom PXE implementation binary, please contact RackN to let them
+know, as the unique hardware requirements may possibly be handled differently, or should be
+directly addressed by the PXE booting process in DRP to handl the system.
+
+
+Solution
+--------
+
+DRP ships with two versions of *PXELinux*, 6.03 and 3.86.  The default operation is to use 6.03 as ``lpxelinux.0`` with
+all the supporting files present in the ``tftpboot`` root directory.  This does not always work for all environments.
+It is sometimes useful to change this.  In general, DRP attempts to serve iPXE based bootloaders through the
+default DHCP operations.  Again, this is not always possible.
+
+The 3.86 version is a single file shipped as ``esxi.0``.
+
+There are couple of ways to change the operation.
+
+First, the file, ``esxi.0``, can be used by changing the bootfile option in DHCP server.  For DRP, this can be at
+the subnet or reservation level.
+
+Second, the ``lpxelinux.0`` file can be replaced.  To do this safely, a couple of steps need to be done.
+
+#. In the ``tftpboot`` directory, copy ``lpxelinux.0`` to ``lpxelinux.0.bak``.
+#. In the ``replace`` direcotry, copy ``esxi.0`` to ``lpxelinux.0``.  The ``replace`` directory is usually a peer to the ``tftpboot`` directory.
+#. In the ``tftpboot`` directory, copy ``esxi.0`` to ``lpxelinux.0``.
+
+The second step keeps DRP from overwriting your changes on startup.
+
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+  * :ref:`rs_arch`
+
+
+Versions
+========
+
+all
+
+
+Keywords
+========
+
+pxe, esxi.0, lpxelinux.0, replace, tftpboot, pxe boot, pxe chaining
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00030
+    initial release:  Wed Jun 10 12:22:24 PDT 2020
+    updated release:  Wed Jun 10 12:22:24 PDT 2020
+

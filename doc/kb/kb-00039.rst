@@ -1,0 +1,71 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+:ref:`kb-00039: RBAC - Limit Users to Just Poweron and Poweroff IPMI Controls<rs_rbac_limited_user>`
+
+.. _rs_kb_00039:
+
+kb-00039: RBAC - Limit Users to Just Poweron and Poweroff IPMI Controls
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Description
+-----------
+
+This article describes how to create a limited *role* with *claims* (rights) to only poweron and poweroff
+Machines.  This example can be used as the foundating to understand how to add additional Roles with
+different Claims capabilities.
+
+
+Solution
+--------
+
+The Role Base Access and Controls subsystem allows an operator to construct user account permissions to limit
+the scope that a user can impact the Digital Rebar Provision system.  Below is an example of how to create
+a *Claim* that assigns the ``Role`` named ``prod-role`` that limits to only allow IPMI ``poweron`` and
+``poweroff`` actions.  These permissions are applied to the _specific_ set of _scope_ *Machines*:
+
+  ::
+
+    drpcli roles update prod-role '"Claims": [{"action": "action:poweron, action:poweroff", "scope": "machines", "specific": "*"}]'
+
+Now simply assign this Role to the given users you wish to limit their permissions on.
+
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+  * :ref:`rs_arch_auth_models`
+  * :ref:`rs_arch`
+
+
+Versions
+========
+
+all
+
+
+Keywords
+========
+
+poweron, poweroff, limited scope user, claims, roles, rbac, role based authentication controls
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00039
+    initial release:  Wed Jun 10 12:54:37 PDT 2020
+    updated release:  Wed Jun 10 12:54:37 PDT 2020
+

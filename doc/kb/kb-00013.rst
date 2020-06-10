@@ -1,0 +1,63 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+:ref:`kb-00013: Turn Up the Debug<rs_more_debug>`
+
+.. _rs_kb_00013:
+
+kb-00013: Turn Up the Debug
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Description
+-----------
+
+Additional informational resources on enabling debugging.
+
+
+Solution
+--------
+
+To get additional debug from ``dr-provision``, set debug preferences to increase the logging.  See :ref:`rs_model_prefs`.
+
+For debugging of Jobs (*Tasks* and *Templates*) during *Workflow* execution, please use the ``rs-debug-enable`` param.
+
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+  * :ref:`rs_model_prefs`
+  * :ref:`rs_debug_sledgehammer`
+  * rs-debug-enable Param
+  * RS_DEBUG_ENABLE BASH Shell Variable (in the ``setup.tmpl``)
+
+
+Versions
+========
+
+all
+
+
+Keywords
+========
+
+dr-provision, sledgehammer, debug, rs-debug-enable, RS_DEBUG_ENABLE
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00013
+    initial release:  Wed Jun 10 11:12:11 PDT 2020
+    updated release:  Wed Jun 10 11:12:11 PDT 2020
+

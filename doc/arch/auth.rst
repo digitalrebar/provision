@@ -4,6 +4,8 @@
 .. index::
   pair: Digital Rebar Provision; Auth Models
 
+.. _rs_arch_auth_models:
+
 Authentication Models
 <<<<<<<<<<<<<<<<<<<<<
 

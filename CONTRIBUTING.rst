@@ -6,6 +6,12 @@ Contributing to Digital Rebar Provision
 
 Before `submitting pull requests <https://help.github.com/articles/using-pull-requests>`_, please make sure to read and understood the Apache license.  Submitting a pull is considered to be accepting the project's license terms.
 
+All contributions require signing the Contributor License Agreement, which can be found at:
+
+  * `RackN Contributor License Agreement <https://gist.github.com/05d0f81a524e6b5228f465c0dcc107fd>`_
+
+On your first code check-in, you will be able to sign the CLA via the use of the CLA-Assistant.
+
 Guidelines for Pull Requests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -27,7 +33,7 @@ We follow typical Github fork/pull request processes.
    -  New technology
 
 -  Pull requests should be against a defined feature branch in the
-   Digital Rebar repo 
+   Digital Rebar repo
 
 Timing
 ^^^^^^

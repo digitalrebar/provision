@@ -1,0 +1,61 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+:ref:`kb-00002: Where can I learn more about Digital Rebar Security?<rs_faq_security>`
+
+.. _rs_kb_00002:
+
+kb-00002: Where can I learn more about Digital Rebar Security?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Description
+-----------
+
+I need to better understand the security architecture and controls of Digital Rebar Platform.
+Where can I find security information?
+
+Solution
+--------
+
+Please consult the dedicated :ref:`rs_security_faq`.
+
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+  * :ref:`rs_security_faq`
+  * :ref:`rs_arch`
+  * :ref: `rs_arch_auth_models`
+
+
+Versions
+========
+
+all
+
+
+Keywords
+========
+
+security, authentication, architecture
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00002
+    initial release:  Wed Jun 10 09:32:39 PDT 2020
+    updated release:  Wed Jun 10 09:32:39 PDT 2020
+

@@ -1,0 +1,81 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+:ref:`kb-00029: lpxelinux.0 error: no such file or directory<rs_lpxelinux_no_such_file>`
+
+.. _rs_kb_00029:
+
+kb-00029: lpxelinux.0 error: no such file or directory
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Description
+-----------
+
+This document describes the logfile "error" messages related to PXE booting that an operator
+might normally see.  This condition does not necessarily indicate any problems with your
+system.
+
+
+Solution
+--------
+
+After TFTPing lpxelinux.0, logs (or network packet traces) may show an error similar to:
+
+  ::
+
+    477    0.378296662    10.10.20.76    10.10.31.96    TFTP    159    Error Code, Code:
+    File not found, Message: open /var/lib/dr-provision/tftpboot/pxelinux.cfg/16089a59-9abd-48c2-850a-2ac3bc134935: no such file or directory``
+
+This is expected behavior that is standard PXE *waterfall* searching for a valid filename to boot from.
+For full reference, please see the `syslinux <http://www.syslinux.org/>`_ reference documentation, at:
+
+  * http://www.syslinux.org/wiki/index.php?title=PXELINUX#Configuration
+
+The expected behavior is for a client to attempt to download files in the following order:
+
+    #. client id (DRP does not use this option, which is what generates the error)
+    #. mac address (in the form of ``01-88-99-aa-bb-cc-dd``)
+    #. ip  address in uppercase Hexadecimal format, stepping through IP, subnet, and classful boundaries
+    #. fall back to the default defined file
+
+Due to this behavior, filenames will be specified that do not exist, and the error message related to that
+probe request is a normal message.  This is **NOT** an indicator that provisioning is broken in your environment.
+
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+  * :ref:`rs_arch`
+  * `SysLinux Reference Documentation <http://www.syslinux.org/wiki/index.php?title=PXELINUX#Configuration>`_
+
+Versions
+========
+
+all
+
+
+Keywords
+========
+
+dhcp, pxe, lpxelinux, pxelinux.cfg, syslinux, pxe waterfall, pxe chaining, pxe boot order
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00029
+    initial release:  Wed Jun 10 12:18:12 PDT 2020
+    updated release:  Wed Jun 10 12:18:12 PDT 2020
+

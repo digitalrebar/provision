@@ -1,0 +1,71 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+:ref:`kb-00003: Bind Error<rs_bind_error>`
+
+.. _rs_kb_00003:
+
+kb-00003: Bind Error
+~~~~~~~~~~~~~~~~~~~~
+
+
+Description
+-----------
+
+The Digital Rebar Provision service (``dr-provision``) failed to start up.  I received an
+error about *address already in use*.
+
+
+Solution
+--------
+
+Digital Rebar Provision will fail if it cannot attach to one of the required ports.
+
+* Typical Error Message: "listen udp4 :67: bind: address already in use"
+* Additional Information: The conflicted port will be included in the error between colons (e.g.: `:67:`)
+* Workaround: If the conflicting service is not required, simply disable that service
+* Resolution: Stop the offending service on the system.  Typical corrective actions are:
+
+  * 67 - dhcp.  Correct with `sudo pkill dnsmasq`
+
+See the port mapping list on start-up of the ``dr-provision`` service for a complete list.
+
+Once ``dr-provision`` is running, you can obtain a list of the ports that it's holding open
+with the following CLI command:
+
+* ``drpcli info status``
+
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+
+Versions
+========
+
+all
+
+Keywords
+========
+
+dhcp, bind address, port, startup
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00003
+    initial release:  Wed Jun 10 09:40:47 PDT 2020
+    updated release:  Wed Jun 10 09:40:47 PDT 2020
+

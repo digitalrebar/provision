@@ -1,0 +1,60 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+:ref:`kb-00035: Sledgehammer Boots Without IP<rs_sledgehammer_no_ip>`
+
+.. _rs_kb_00035:
+
+kb-00035: Sledgehammer Boots Without IP
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Description
+-----------
+
+It is possible to have *sledgehammer* boot and hang without an IP. This can happen in environments where DRP is NOT the DHCP server and the subnet has
+restricted number IPs with more HOSTs than IPs.  The ipxe and kernel boot components do DHCP releases as they boot.  This releases IPs back to pools.
+In some DHCP servers, the address is immediately available for consumption.  DRP will delay returning the address to the pool for a few seconds to
+prevent this problem.  If this happens as the linux user space of *sledgehammer* takes over operation, the user space DHCP server may not get an address
+because the pool is empty.  This will make the machine appear as hung or not responsive.
+
+Solution
+--------
+
+
+This sometimes resolves itself as IP addresses become available.  Additional fixes including rebooting the machine, increasing DHCP scope to add more
+available IP addresses to the pool, or using DRP as DHCP server.
+
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+
+Versions
+========
+
+
+Keywords
+========
+
+sledgehammer, pxe, ip addresses, dhcp pool, dhcp
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00035
+    initial release:  Wed Jun 10 12:45:40 PDT 2020
+    updated release:  Wed Jun 10 12:45:40 PDT 2020
+

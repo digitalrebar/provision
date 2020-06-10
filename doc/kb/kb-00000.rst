@@ -1,0 +1,140 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. _rs_kb_00000:
+
+kb-00000: Contributing to Knowledge Base Articles
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Description
+-----------
+
+This document outlines the process to generate a new Knowledge Base article using
+the provided scripts and documentation system for Digital Rebar.
+
+.. note:: It is **highly** recommended to utilize the ``docs-make-kb.sh`` script
+          to generate a Knowledge Base Article template.
+
+
+Solution
+--------
+
+Knowledge Base articles are Sphinx formatted RST (reStructuredText) mark up files.
+The KB article filenames must conform to the following format:
+
+  * ``kb-NNNNN[=descripoton_text].rst``
+
+Where ``NNNNN`` is an article Index number, and must be a zero padded 5 digit number.
+An optional ``-description_text`` may be appended after the Index number.  Examples:
+
+  * ``kb-99998.rst``
+  * ``kb-99999-example_kb_article.rst``
+
+The Knowledge Base article document must conform to the format found in this document
+for headings and field information.  A shell script tool is available to generate an
+empty template with approrpiate fields and layout.
+
+To generate a new template KB article file, please use the shell script named
+``docs-make-kb.sh``, found in the
+`Digital Rebar github repo <https://github.com/digitalrebar/provision/blob/v4/tools/docs-make-kb.sh>`_.
+See the script usage ``-u`` option flag for details on how to use it.  It will attempt
+to auto-generate a new Index id number for your article, and a prepared template file.
+
+
+Examples
+========
+
+  ::
+
+    git clone https://github.com/digitalrebar/provision.git
+    cd provision
+    tools/docs-make-kb.sh -u
+
+.. warning:: Article Index ID numbers should be numerically incremented, do not choose random Index numbers.
+             Only use the '-i NNNNN' option to fill in deleted (gap) index numbers.
+
+Here are some example usages of the script to generate a template KB article file:
+
+  ::
+
+    # specify the Title and a cross-reference label
+    tools/docs-make-kb.sh -t "My KB Title" -l rs_my_kb
+
+    # specify only the Title, and a cross-reference label will be auto-generated with
+    #   how_to_fix_broken_thing
+    tools/docs-make-kb.sh -t "How to Fix Broken Thing"
+
+    # assuming there is an article number gap (eg an old KB article was deleted), here
+    # we define a specific Article index ID using Shell Varibles with Title as option flag
+    INDEX=00007 tools/docs-make-kb.sh -t "New KB Article"
+
+
+Usage options
+=============
+
+  ::
+
+    USAGE:  $0 [ -n ] | [ -d DOCDIR ] | [ -i INDEX ] [ -t TITLE ]
+       OR:  $0 -u
+
+    WHERE:  -n           DO NOT Attempt to start editor on generated tempalte file
+            -d DOCDIR    Specify the document directory for the KB articles
+                         (defaults to "doc")
+            -k KBDIR     Specify the Knowledge Base subdir in DOCDIR
+                         (defaults to "kb")
+            -i INDEX     Specify the article Index number
+                         (defaults to generate next numerical value found in
+                         the DOCDIR/KBDIR/ directory)
+            -t TITLE     Provide an initial title to set for the KB article.
+                         (none by default)
+            -l LABEL     Provide an initial label for the title (requires TITLE)
+                         (none by default)
+            -u           print this usage statement
+
+    NOTES:  * DOCDIR, KBDIR, INDEX, TITLE, and LABEL can be passed in as command line variables, like:
+
+                # produces path foo/dir/knowledge/
+                DOCDIR=foo/dir KBDIR=knowledge INDEX=00007 TITLE="Foo Title" $0
+
+            * Environment variables override command line flags
+            * Indexes must be 5 digit numbers
+
+Please note the above usage options may change over time.  Refer to the script for the most
+up to date usage options.
+
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+  * :ref:`rs_dev_docs`
+  * :ref:`rs_dev_dev`
+  * `Digital Rebar github repo <https://github.com/digitalrebar/provision/blob/v4/tools/docs-make-kb.sh>`_
+
+
+Versions
+========
+
+This document applies to all version of Digital Rebar.
+
+
+Keywords
+========
+
+documentation, knowledge base, kb, articles, faq, frequently asked questions
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00000
+    initial release:  Tue Jun  9 15:42:37 PDT 2020
+    updated release:  Tue Jun  9 16:42:37 PDT 2020
+
