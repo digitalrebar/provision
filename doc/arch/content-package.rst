@@ -276,7 +276,7 @@ Version
 
 The version of the content package.  Versions are roughly `Semver
 compliant <https://semver.org/>`, except that we allow a leading
-lower-case v and disgregard everything including and after the first
+lower-case v and disregard everything including and after the first
 hyphen.  Version is optional, and if it is missing it is considered to
 be 0.0.0.
 
