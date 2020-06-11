@@ -9,7 +9,7 @@
 Configuration
 =============
 
-This document is an instructional guide for configuration of the RackN Portal. To edit UX configurations, the :ref:`rs_cp_ux-views` plugin must be installed. For more technical documentation of configurations, refer to that document.
+This document is an instructional guide for configuration of the RackN Portal. To edit UX configurations, the :ref:`rs_cp_ux_views` plugin must be installed. For more technical documentation of configurations, refer to that document.
 
 UX Views
 --------
