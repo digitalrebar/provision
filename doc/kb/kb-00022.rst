@@ -5,12 +5,15 @@
 .. REFERENCE kb-00000 for an example and information on how to use this template.
 .. If you make EDITS - ensure you update footer release date information.
 
-:ref:`kb-00022: Rebooting without IPMI plugins (without a Task)<rs_reboot_wo_ipmi>`
-
 .. _rs_kb_00022:
 
-kb-00022: Rebooting without IPMI plugins (without a Task)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+kb-00022
+~~~~~~~~
+
+.. _rs_reboot_wo_ipmi:
+
+Rebooting without IPMI plugins (without a Task)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 Description

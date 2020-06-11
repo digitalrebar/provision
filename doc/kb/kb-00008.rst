@@ -5,12 +5,15 @@
 .. REFERENCE kb-00000 for an example and information on how to use this template.
 .. If you make EDITS - ensure you update footer release date information.
 
-:ref:`kb-00008: Set SSH Root Mode<rs_access_ssh_root_mode>`
-
 .. _rs_kb_00008:
 
-kb-00008: Set SSH Root Mode
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+kb-00008
+~~~~~~~~
+
+.. _rs_access_ssh_root_mode:
+
+Set SSH Root Mode
+~~~~~~~~~~~~~~~~~
 
 
 Description

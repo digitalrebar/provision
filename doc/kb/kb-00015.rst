@@ -5,12 +5,15 @@
 .. REFERENCE kb-00000 for an example and information on how to use this template.
 .. If you make EDITS - ensure you update footer release date information.
 
-:ref:`kb-00015: Convert Isolated Install to Production Mode<rs_convert_to_production_mode>`
-
 .. _rs_kb_00015:
 
-kb-00015: Convert Isolated Install to Production Mode
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+kb-00015
+~~~~~~~~
+
+.. _rs_convert_to_production_mode:
+
+Convert Isolated Install to Production Mode
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 Description

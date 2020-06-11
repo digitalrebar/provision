@@ -5,12 +5,15 @@
 .. REFERENCE kb-00000 for an example and information on how to use this template.
 .. If you make EDITS - ensure you update footer release date information.
 
-:ref:`kb-00006: Add SSH Keys to Authorized Keys<rs_add_ssh>`
-
 .. _rs_kb_00006:
 
-kb-00006: Add SSH Keys to Authorized Keys
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+kb-00006
+~~~~~~~~
+
+.. _rs_add_ssh:
+
+Add SSH Keys to Authorized Keys
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 Description

@@ -5,12 +5,15 @@
 .. REFERENCE kb-00000 for an example and information on how to use this template.
 .. If you make EDITS - ensure you update footer release date information.
 
-:ref:`kb-00016: Customize Production Mode<rs_customize_production_mode>`
-
 .. _rs_kb_00016:
 
-kb-00016: Customize Production Mode
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+kb-00016
+~~~~~~~~
+
+.. _rs_customize_production_mode:
+
+Customize Production Mode
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 Description

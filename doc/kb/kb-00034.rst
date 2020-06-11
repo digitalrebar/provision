@@ -5,12 +5,15 @@
 .. REFERENCE kb-00000 for an example and information on how to use this template.
 .. If you make EDITS - ensure you update footer release date information.
 
-:ref:`kb-00034: Network Unreachable from Wget / Second Stage Timeout<rs_wget_timeout>`
-
 .. _rs_kb_00034:
 
-kb-00034: Network Unreachable from Wget / Second Stage Timeout
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+kb-00034
+~~~~~~~~
+
+.. _rs_wget_timeout:
+
+Network Unreachable from Wget / Second Stage Timeout
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 Description

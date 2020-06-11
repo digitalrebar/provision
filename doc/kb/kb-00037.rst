@@ -5,12 +5,15 @@
 .. REFERENCE kb-00000 for an example and information on how to use this template.
 .. If you make EDITS - ensure you update footer release date information.
 
-:ref:`kb-00037: Kubernetes Dashboard<rs_kubernetes_dashboard>`
-
 .. _rs_kb_00037:
 
-kb-00037: Kubernetes Dashboard
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+kb-00037
+~~~~~~~~
+
+.. _rs_kubernetes_dashboard:
+
+Kubernetes Dashboard
+~~~~~~~~~~~~~~~~~~~~
 
 
 Description

@@ -5,12 +5,15 @@
 .. REFERENCE kb-00000 for an example and information on how to use this template.
 .. If you make EDITS - ensure you update footer release date information.
 
-:ref:`kb-00011: Using Table/Text Output Formatters<rs_human_formatters>`
-
 .. _rs_kb_00011:
 
-kb-00011: Using Table/Text Output Formatters
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+kb-00011
+~~~~~~~~
+
+.. _rs_human_formatters:
+
+Using Table/Text Output Formatters
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 Description

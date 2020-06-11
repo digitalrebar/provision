@@ -5,12 +5,15 @@
 .. REFERENCE kb-00000 for an example and information on how to use this template.
 .. If you make EDITS - ensure you update footer release date information.
 
-:ref:`kb-00024: How Can I manipulate values during Golang Template rendering?<rs_sprig>`
-
 .. _rs_kb_00024:
 
-kb-00024: How Can I manipulate values during Golang Template rendering?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+kb-00024
+~~~~~~~~
+
+.. _rs_sprig:
+
+How Can I manipulate values during Golang Template rendering?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 Description

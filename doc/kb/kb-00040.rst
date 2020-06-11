@@ -5,12 +5,15 @@
 .. REFERENCE kb-00000 for an example and information on how to use this template.
 .. If you make EDITS - ensure you update footer release date information.
 
-:ref:`kb-00040: unblockRunnable Panic condition<rs_unblockRunnable_panic>`
-
 .. _rs_kb_00040:
 
-kb-00040: unblockRunnable Panic condition
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+kb-00040
+~~~~~~~~
+
+.. _rs_unblockRunnable_panic:
+
+unblockRunnable Panic condition
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 Description

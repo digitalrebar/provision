@@ -5,12 +5,15 @@
 .. REFERENCE kb-00000 for an example and information on how to use this template.
 .. If you make EDITS - ensure you update footer release date information.
 
-:ref:`kb-00020: Update Community Content via Command Line<rs_update_content_command_line>`
-
 .. _rs_kb_00020:
 
-kb-00020: Update Community Content via Command Line
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+kb-00020
+~~~~~~~~
+
+.. _rs_update_content_command_line:
+
+Update Community Content via Command Line
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 Description

@@ -5,12 +5,15 @@
 .. REFERENCE kb-00000 for an example and information on how to use this template.
 .. If you make EDITS - ensure you update footer release date information.
 
-:ref:`kb-00021: Rebooting inside a Tasks, Stages and Workflows<rs_reboot_faq>`
-
 .. _rs_kb_00021:
 
-kb-00021: Rebooting inside a Tasks, Stages and Workflows
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+kb-00021
+~~~~~~~~
+
+.. _rs_reboot_faq:
+
+Rebooting inside a Tasks, Stages and Workflows
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 Description

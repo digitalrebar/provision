@@ -5,12 +5,15 @@
 .. REFERENCE kb-00000 for an example and information on how to use this template.
 .. If you make EDITS - ensure you update footer release date information.
 
-:ref:`kb-00018: Can I eliminate reboots with kexec?<rs_kexec>`
-
 .. _rs_kb_00018:
 
-kb-00018: Can I eliminate reboots with kexec?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+kb-00018
+~~~~~~~~
+
+.. _rs_kexec:
+
+Can I eliminate reboots with kexec?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 Description

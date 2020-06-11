@@ -5,12 +5,15 @@
 .. REFERENCE kb-00000 for an example and information on how to use this template.
 .. If you make EDITS - ensure you update footer release date information.
 
-:ref:`kb-00010: Using the .drpclirc File<rs_drpclirc>`
-
 .. _rs_kb_00010:
 
-kb-00010: Using the ``.drpclirc`` File
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+kb-00010
+~~~~~~~~
+
+.. _rs_drpclirc:
+
+Using the ``.drpclirc`` File
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 Description

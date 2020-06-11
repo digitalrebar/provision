@@ -5,12 +5,15 @@
 .. REFERENCE kb-00000 for an example and information on how to use this template.
 .. If you make EDITS - ensure you update footer release date information.
 
-:ref:`kb-00029: lpxelinux.0 error: no such file or directory<rs_lpxelinux_no_such_file>`
-
 .. _rs_kb_00029:
 
-kb-00029: lpxelinux.0 error: no such file or directory
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+kb-00029
+~~~~~~~~
+
+.. _rs_lpxelinux_no_such_file:
+
+lpxelinux.0 error: no such file or directory
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 Description

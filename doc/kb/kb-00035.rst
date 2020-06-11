@@ -5,12 +5,15 @@
 .. REFERENCE kb-00000 for an example and information on how to use this template.
 .. If you make EDITS - ensure you update footer release date information.
 
-:ref:`kb-00035: Sledgehammer Boots Without IP<rs_sledgehammer_no_ip>`
-
 .. _rs_kb_00035:
 
-kb-00035: Sledgehammer Boots Without IP
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+kb-00035
+~~~~~~~~
+
+.. _rs_sledgehammer_no_ip:
+
+Sledgehammer Boots Without IP
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 Description

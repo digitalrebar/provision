@@ -5,12 +5,15 @@
 .. REFERENCE kb-00000 for an example and information on how to use this template.
 .. If you make EDITS - ensure you update footer release date information.
 
-:ref:`kb-00032: BootEnv Does Not "Explode ISO" after upload<rs_render_does_not_explode_iso>`
-
 .. _rs_kb_00032:
 
-kb-00032: BootEnv Does Not "Explode ISO" after upload
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+kb-00032
+~~~~~~~~
+
+.. _rs_render_does_not_explode_iso:
+
+BootEnv Does Not "Explode ISO" after upload
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 Description

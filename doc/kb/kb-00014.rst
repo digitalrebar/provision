@@ -5,12 +5,15 @@
 .. REFERENCE kb-00000 for an example and information on how to use this template.
 .. If you make EDITS - ensure you update footer release date information.
 
-:ref:`kb-00014: Debug Sledgehammer Problems<rs_debug_sledgehammer>`
-
 .. _rs_kb_00014:
 
-kb-00014: Debug Sledgehammer Problems
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+kb-00014
+~~~~~~~~
+
+.. _rs_debug_sledgehammer:
+
+Debug Sledgehammer Problems
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 Description

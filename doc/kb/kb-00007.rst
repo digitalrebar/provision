@@ -5,12 +5,15 @@
 .. REFERENCE kb-00000 for an example and information on how to use this template.
 .. If you make EDITS - ensure you update footer release date information.
 
-:ref:`kb-00007: Example Docker Volume Usage<rs_docker_volume>`
-
 .. _rs_kb_00007:
 
-kb-00007: Example Docker Volume Usage
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+kb-00007
+~~~~~~~~
+
+.. _rs_docker_volume:
+
+Example Docker Volume Usage
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 Description

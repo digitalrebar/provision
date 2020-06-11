@@ -5,12 +5,15 @@
 .. REFERENCE kb-00000 for an example and information on how to use this template.
 .. If you make EDITS - ensure you update footer release date information.
 
-:ref:`kb-00028: UEFI Boot Support - Option 67<rs_uefi_boot_option>`
-
 .. _rs_kb_00028:
 
-kb-00028: UEFI Boot Support - Option 67
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+kb-00028
+~~~~~~~~
+
+.. _rs_uefi_boot_option:
+
+UEFI Boot Support - Option 67
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 Description

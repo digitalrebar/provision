@@ -4,8 +4,14 @@
 
 .. _rs_kb_00000:
 
-kb-00000: Contributing to Knowledge Base Articles
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+kb-00000
+~~~~~~~~
+
+.. _rs_contributing_kb_articles:
+
+Contributing to Knowledge Base Articles
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 
 Description
 -----------

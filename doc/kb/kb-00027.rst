@@ -5,12 +5,15 @@
 .. REFERENCE kb-00000 for an example and information on how to use this template.
 .. If you make EDITS - ensure you update footer release date information.
 
-:ref:`kb-00027: Set `hostname` in a DHCP Reservation<rs_reservation_set_hostname>`
-
 .. _rs_kb_00027:
 
-kb-00027: Set `hostname` in a DHCP Reservation
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+kb-00027
+~~~~~~~~
+
+.. _rs_reservation_set_hostname:
+
+Set `hostname` in a DHCP Reservation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 Description

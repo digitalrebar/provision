@@ -5,12 +5,15 @@
 .. REFERENCE kb-00000 for an example and information on how to use this template.
 .. If you make EDITS - ensure you update footer release date information.
 
-:ref:`kb-00033: Booting Ubuntu Without External Access<rs_ubuntu_local_repo>`
-
 .. _rs_kb_00033:
 
-kb-00033: Booting Ubuntu Without External Access
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+kb-00033
+~~~~~~~~
+
+.. _rs_ubuntu_local_repo:
+
+Booting Ubuntu Without External Access
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 Description

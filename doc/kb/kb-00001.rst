@@ -5,12 +5,15 @@
 .. REFERENCE kb-00000 for an example and information on how to use this template.
 .. If you make EDITS - ensure you update footer release date information.
 
-:ref:`kb-00001: Where can I get the DRPCLI?<rs_faq_drpcli>`
-
 .. _rs_kb_00001:
 
-kb-00001: Where can I get the DRPCLI?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+kb-00001
+~~~~~~~~
+
+.. _rs_faq_drpcli:
+
+Where can I get the DRPCLI?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 Description

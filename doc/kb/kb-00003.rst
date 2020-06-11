@@ -5,12 +5,15 @@
 .. REFERENCE kb-00000 for an example and information on how to use this template.
 .. If you make EDITS - ensure you update footer release date information.
 
-:ref:`kb-00003: Bind Error<rs_bind_error>`
-
 .. _rs_kb_00003:
 
-kb-00003: Bind Error
-~~~~~~~~~~~~~~~~~~~~
+kb-00003
+~~~~~~~~
+
+.. _rs_bind_error:
+
+Bind Error
+~~~~~~~~~~
 
 
 Description

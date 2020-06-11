@@ -5,12 +5,15 @@
 .. REFERENCE kb-00000 for an example and information on how to use this template.
 .. If you make EDITS - ensure you update footer release date information.
 
-:ref:`kb-00004: TFTP Error<rs_tftp_error>`
-
 .. _rs_kb_00004:
 
-kb-00004: TFTP Error
-~~~~~~~~~~~~~~~~~~~~
+kb-00004
+~~~~~~~~
+
+.. _rs_tftp_error:
+
+TFTP Error
+~~~~~~~~~~
 
 
 Description

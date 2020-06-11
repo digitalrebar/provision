@@ -5,12 +5,15 @@
 .. REFERENCE kb-00000 for an example and information on how to use this template.
 .. If you make EDITS - ensure you update footer release date information.
 
-:ref:`kb-00026: Change a Machines Name<rs_change_machine_name>`
-
 .. _rs_kb_00026:
 
-kb-00026: Change a Machines Name
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+kb-00026
+~~~~~~~~
+
+.. _rs_change_machine_name:
+
+Change a Machines Name
+~~~~~~~~~~~~~~~~~~~~~~
 
 
 Description
