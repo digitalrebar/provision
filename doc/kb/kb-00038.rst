@@ -5,15 +5,16 @@
 .. REFERENCE kb-00000 for an example and information on how to use this template.
 .. If you make EDITS - ensure you update footer release date information.
 
+
 .. _rs_kb_00038:
 
-kb-00038
-~~~~~~~~
+kb-00038: Expand Templates from Failed Job
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. _rs_expand_templates:
 
-Expand Templates from Failed Job
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Knowledge Base Article: kb-00038
+--------------------------------
 
 
 Description

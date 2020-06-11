@@ -5,15 +5,16 @@
 .. REFERENCE kb-00000 for an example and information on how to use this template.
 .. If you make EDITS - ensure you update footer release date information.
 
+
 .. _rs_kb_00039:
 
-kb-00039
-~~~~~~~~
+kb-00039: RBAC - Limit Users to Just Poweron and Poweroff IPMI Controls
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. _rs_rbac_limited_user:
 
-RBAC - Limit Users to Just Poweron and Poweroff IPMI Controls
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Knowledge Base Article: kb-00039
+--------------------------------
 
 
 Description

@@ -2,15 +2,16 @@
 .. Licensed under the Apache License, Version 2.0 (the "License");
 .. Digital Rebar Provision documentation under Digital Rebar master license
 
+
 .. _rs_kb_00000:
 
-kb-00000
-~~~~~~~~
+kb-00000: Contributing to Knowledge Base Articles
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. _rs_contributing_kb_articles:
 
-Contributing to Knowledge Base Articles
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Knowledge Base Article: kb-00000
+--------------------------------
 
 
 Description

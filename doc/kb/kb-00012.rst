@@ -5,15 +5,16 @@
 .. REFERENCE kb-00000 for an example and information on how to use this template.
 .. If you make EDITS - ensure you update footer release date information.
 
+
 .. _rs_kb_00012:
 
-kb-00012
-~~~~~~~~
+kb-00012: Command Line Interface FAQ
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. _rs_kb_cli:
+.. _rs_kb_cli_faq:
 
-Command Line Interface FAQ
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+Knowledge Base Article: kb-00012
+--------------------------------
 
 
 Description

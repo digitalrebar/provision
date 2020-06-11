@@ -5,15 +5,16 @@
 .. REFERENCE kb-00000 for an example and information on how to use this template.
 .. If you make EDITS - ensure you update footer release date information.
 
+
 .. _rs_kb_00025:
 
-kb-00025
-~~~~~~~~
+kb-00025: How Can I render Double Curly Braces ``{{`` and ``}}`` during Golang Template rendering?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. _rs_double_brace:
 
-How Can I render Double Curly Braces ``{{`` and ``}}`` during Golang Template rendering?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Knowledge Base Article: kb-00025
+--------------------------------
 
 
 Description

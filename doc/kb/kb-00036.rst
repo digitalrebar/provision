@@ -5,15 +5,16 @@
 .. REFERENCE kb-00000 for an example and information on how to use this template.
 .. If you make EDITS - ensure you update footer release date information.
 
+
 .. _rs_kb_00036:
 
-kb-00036
-~~~~~~~~
+kb-00036: No matching Subnet (MacOS DHCP)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. _rs_no_matching_subnet:
 
-No matching Subnet (MacOS DHCP)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Knowledge Base Article: kb-00036
+--------------------------------
 
 
 Description
