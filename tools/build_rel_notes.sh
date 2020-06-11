@@ -22,9 +22,10 @@ do
                 echo "$replace" >> rel_notes/$revname.rst
                 echo "" >> rel_notes/$revname.rst
                 echo "  ::" >> rel_notes/$revname.rst
-                echo "    End of Note" >> rel_notes/$revname.rst
                 echo "" >> rel_notes/$revname.rst
                 cat rel_notes/$rev.txt | sed 's/^/    /' >> rel_notes/$revname.rst
+                echo "" >> rel_notes/$revname.rst
+                echo "    End of Note" >> rel_notes/$revname.rst
                 echo "" >> rel_notes/$revname.rst
                 rm rel_notes/$rev.txt
         fi
@@ -45,6 +46,8 @@ do
         echo "    End of Note" >> rel_notes/$revname.rst
         echo "" >> rel_notes/$revname.rst
         cat rel_notes/$rev.txt | sed 's/^/    /' >> rel_notes/$revname.rst
+        echo "" >> rel_notes/$revname.rst
+        echo "    End of Note" >> rel_notes/$revname.rst
         echo "" >> rel_notes/$revname.rst
         rm rel_notes/$rev.txt
 done
