@@ -1,0 +1,107 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+
+.. _rs_kb_00011:
+
+kb-00011: Using Table/Text Output Formatters
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. _rs_human_formatters:
+
+Knowledge Base Article: kb-00011
+--------------------------------
+
+
+Description
+-----------
+
+By default, Digital Rebar Platform provides returned output in JSON format.  It's possible to
+have the returned format converted to YAML via the use of ``--format=yaml``.  In addition, more
+*"human readable"* output formats can be specified.  This article describes how to produce
+human readable table output.
+
+.. note::  This feature is experimental and minimally implemented.  If you have issues or
+           enhancements related to this featuere, please contact RackN or file a
+           `new Github issue <https://github.com/digitalrebar/provision/issues/new>`_
+
+Solution
+--------
+
+To access the human readable format output, use the ``--format`` flag to the ``drpcli``
+command line tool.
+
+Examples:
+  ::
+
+    drpcli --format table ...
+    # or
+    drpcli --format text ...
+
+These output formats can be configured by setting environment shell variables,
+or use of the .drpclirc (see: :ref:`rs_drpclirc`) file for setting default usage.
+
+The shell environment variables are as follows.
+
+---------------------- ----------------------------------------------------------------------------
+value                  notes
+---------------------- ----------------------------------------------------------------------------
+``RS_FORMAT``          command line output format to use (json,yaml,text,table)
+``RS_PRINT_FIELDS``    comma separate list of fields to show in output "table" or "text" format
+``RS_NO_HEADER``       remove the header fields from "table" or "text" format output
+``RS_TRUNCATE_LENGTH`` limits the length of fields displayed for "table" or "text" output formats
+---------------------- ----------------------------------------------------------------------------
+
+Examples of setting environment variables:
+  ::
+
+    export RS_FORMAT=table
+    export RS_PRINT_FIELDS=Name,Uuid,Workflow,Stage,BootEnv
+    export RS_NO_HEADER=true
+    export RS_TRUNCATE_LENGTH=30
+
+Examples of ``drpcli`` usage:
+  ::
+
+    drpcli subnets list --format table
+    drpcli machines list --format table --print-fields Name,Uuid,Workflow,Stage,BootEnv --no-header
+    drpcli machines list --format table --print-fields Name,Uuid,Workflow,Stage,BootEnv
+    drpcli profiles list --format table --truncate-length 30
+    drpcli machines params Name:jane --format=table --truncate-length=120
+    drpcli extended -l endpoints list --format table --truncate-length 30
+
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+  * :ref:`rs_drpclirc`
+  * :ref:`rs_default_password`
+
+
+Versions
+========
+
+  * v4.2.0-beta2.0 or newer
+
+Keywords
+========
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00011
+    initial release:  Wed Jun 10 11:01:47 PDT 2020
+    updated release:  Wed Jun 10 11:01:47 PDT 2020
+

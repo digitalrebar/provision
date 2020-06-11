@@ -1,0 +1,77 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+
+.. _rs_kb_00018:
+
+kb-00018: Can I eliminate reboots with kexec?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. _rs_kexec:
+
+Knowledge Base Article: kb-00018
+--------------------------------
+
+
+Description
+-----------
+
+Installing operating systems often times requires a reboot of the Machine several times.  For
+physical (aka *bare*) metal, this reboot cycle can add many minutes (often times 10 or more
+minutes) to the installation process.
+
+When installing Linux operating systems, it may be possible to utilize the Linux Kernel *kexec*
+mechanism to "exec" in to the new Kernel environment without requiring the Machine to pass through
+a full POST cycle.
+
+
+Solution
+--------
+
+Setting the `kexec-ok` param to `true` on the `global` or machine specific profile allows
+BootEnvs that are *kexec* enabled to skip rebooting when changing to that BootEnv.  For example,
+Sledgehammer enables *kexec* and can be started without a reboot from Linux environments.
+
+This is a Linux specific feature.
+
+.. note:: The *kexec* capability is defined by the compiled Linux Kernel configuration.  Some Linux
+          distributions do not enable *kexec* by default.  In these cases, you may have to compile
+          a custom kernel version with *kexec* enabled.  In addition, not all transition states can
+          successfully utilize *kexec* even if it is enabled in the kernel.
+
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+  * https://wiki.archlinux.org/index.php/Kexec
+
+Versions
+========
+
+Enabled in the v3.x versions and newer.
+
+
+Keywords
+========
+
+sledgehammer, kexec, post, reboot
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00018
+    initial release:  Wed Jun 10 11:40:54 PDT 2020
+    updated release:  Wed Jun 10 11:40:54 PDT 2020
+

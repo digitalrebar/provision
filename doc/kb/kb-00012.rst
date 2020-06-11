@@ -1,0 +1,66 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+
+.. _rs_kb_00012:
+
+kb-00012: Command Line Interface FAQ
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. _rs_kb_cli_faq:
+
+Knowledge Base Article: kb-00012
+--------------------------------
+
+
+Description
+-----------
+
+Where to find additional information on use of the ``drpcli`` command line interface?
+
+
+Solution
+--------
+
+The CLI has a dedicated FAQ section.  Please see :ref:`rs_cli_faq`.
+
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+  * :ref:`rs_cli_faq`
+  * :ref:`rs_autocomplete`
+  * :ref:`rs_cli_faq_zip`
+  * :ref:`rs_download_rackn_content`
+
+
+Versions
+========
+
+all
+
+
+Keywords
+========
+
+drpcli, frequently asked questions, faq, command line interface
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00012
+    initial release:  Wed Jun 10 11:10:15 PDT 2020
+    updated release:  Wed Jun 10 11:10:15 PDT 2020
+

@@ -1,0 +1,57 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+
+.. _rs_kb_00019:
+
+kb-00019: Import plugin failed pool: define failed
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. _rs_plugin_providers_license:
+
+Knowledge Base Article: kb-00019
+--------------------------------
+
+
+Description
+-----------
+
+
+Solution
+--------
+
+If you are using the DRPCLI to upload a licensed RackN plugin, the endpoint will reject the upload with a defined failed error.
+
+Install the license content pack and try again.  If you've saved the `rackn-license.json` file then you can use the DRPCLI to upload it via `drpcli contents upload rackn-license.json`.
+
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+
+Versions
+========
+
+
+Keywords
+========
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00019
+    initial release:  Wed Jun 10 11:46:15 PDT 2020
+    updated release:  Wed Jun 10 11:46:15 PDT 2020
+

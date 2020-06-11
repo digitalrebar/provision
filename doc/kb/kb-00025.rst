@@ -1,0 +1,86 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+
+.. _rs_kb_00025:
+
+kb-00025: How Can I render Double Curly Braces ``{{`` and ``}}`` during Golang Template rendering?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. _rs_double_brace:
+
+Knowledge Base Article: kb-00025
+--------------------------------
+
+
+Description
+-----------
+
+Often times, content based Golang templating is used to generate template files used by other
+systems on the target machine (eg Jinja, Ansible, etc.).  Many of these templating systems
+also use double curly braces to signal to the templating engine to perform expansion and
+advanced rendering capabilities.
+
+In these cases, the content author must arrange the DRP Golang based template to protect the
+double curly braces from being intepretted by ``dr-provision`` at render time, so they are
+served as in-tact double curly braces to the target Machine.
+
+Note that this solution is *NOT* an exhaustive reference of how to do this, but does describe
+some possible techniques.
+
+
+Solution
+--------
+
+Golang template complains if you are building a template that also uses double curly brances (e.g.
+``{{ jinja 2 for ansible }}``) and it can be difficult to properly escape these characters.
+
+One possible workaround is to define variables for the double brace and then use the variable in the
+template.
+
+For example:
+
+  ::
+
+    {{ $openblock := "\x7B\x7B" }}
+    {{ $closeblock := "\x7D\x7D" }}
+
+    - hosts: localhost
+      vars:
+        braceme: "{{ $openblock }} item.Name {{ $closeblock }}"
+
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+
+Versions
+========
+
+all
+
+
+Keywords
+========
+
+double curly braces, jinja2, ansible, rendering, template
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00025
+    initial release:  Wed Jun 10 12:03:02 PDT 2020
+    updated release:  Wed Jun 10 12:03:02 PDT 2020
+

@@ -23,6 +23,12 @@ A couple of notes about consistency.
 Otherwise, try and find a good place for what needs to be added.  And Thanks!
 
 
+Developing Knowledge Base Articles
+-----------------------------------
+
+Please see the :ref:`rs_kb_00000` document for information on developing knowledge base articles.
+
+
 Documentation Tooling
 ---------------------
 

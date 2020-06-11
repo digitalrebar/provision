@@ -1,0 +1,75 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+
+.. _rs_kb_00008:
+
+kb-00008: Set SSH Root Mode
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. _rs_access_ssh_root_mode:
+
+Knowledge Base Article: kb-00008
+--------------------------------
+
+
+Description
+-----------
+
+How to configure access in operating systems (including Sledgehammer) to log in with
+a username and password.  By default, most operating system templates are secured to
+not allow user/pass login authentication, requiring SSH public/private keys.
+
+Solution
+--------
+
+The Param ``access-ssh-root-mode`` defines the login policy for the *root* user.  The default
+vaule is ``without-password`` which means the remote SSH *root* user must access must be
+performed with SSH keys (see :ref:`rs_add_ssh`).  Possible values are:
+
+------------------------  ----------------------------------------------------------
+value                     definition
+------------------------  ----------------------------------------------------------
+``without-password``      require SSH public keys for root login, no forced commands
+``yes``                   allow SSH *root* user login with password
+``no``                    do not allow SSH *root* user login at all
+``forced-commands-only``  only allow forced commands to run via remote login
+------------------------  ----------------------------------------------------------
+
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+  * :ref:`rs_add_ssh`
+  * :ref:`rs_kb_00006`
+
+
+Versions
+========
+
+all
+
+Keywords
+========
+
+ssh, password authentication, access-ssh-root-mode, without-password, dr-provision, shell access
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00008
+    initial release:  Wed Jun 10 10:12:40 PDT 2020
+    updated release:  Wed Jun 10 10:12:40 PDT 2020
+

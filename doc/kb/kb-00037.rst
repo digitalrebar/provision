@@ -1,0 +1,79 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+
+.. _rs_kb_00037:
+
+kb-00037: Kubernetes Dashboard
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. _rs_kubernetes_dashboard:
+
+Knowledge Base Article: kb-00037
+--------------------------------
+
+
+Description
+-----------
+
+How to use the Kubernetes Dashboard when provisioning via the *KRIB* content pack.
+
+
+Solution
+--------
+
+For :ref:`rs_krib`, the ``admin.conf`` files is saved into the ``krib/cluster-admin-conf`` profile parameter and can be downloaded after installation is complete.  Using this file ``kubectl --kubeconfig=admin.conf`` allows autheticated access to the cluster.  Please see the KRIB documentation for more details.
+
+For other deployments such as Ansible Kubespray or the Kubeadm deployments of Kubernetes are all maintained by the respective Kubernetes communities.  Digital Rebar simply implements a basic version of those configurations.  Access to the Kubernetes Dashboard is often changing, and being updated by the community.  Please check with the respective communities about how to correctly access the Dashboard.
+
+Some things to note in general:
+
+  * Access is restricted; as well it should
+  * You must configure/enable access to the Dashboard
+  * Our implmentations usually have a mechanism configured, but this changes over time
+
+Some things that have worked in the past:
+
+  * ``kubectl proxy`` - enabled Proxy access to the Kubernetes Master to get to the Dashboard
+  * try stopping the Proxy container, and running ``kubectl proxy --address 0.0.0.0 --accept-hosts '.*'``
+     * carefully consider this implication - you are enable access from all hosts !!!
+  * any other solutions, please let us know... we'll add them here
+
+
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+  * `KRIB Content Pack Documentation <https://provision.readthedocs.io/en/latest/doc/content-packages/krib.html>`_
+
+
+Versions
+========
+
+non-specific
+
+
+Keywords
+========
+
+kubernetes, k8s, krib, admin.conf, dashboard, kubectl, kubeconfig
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00037
+    initial release:  Wed Jun 10 12:50:01 PDT 2020
+    updated release:  Wed Jun 10 12:50:01 PDT 2020
+

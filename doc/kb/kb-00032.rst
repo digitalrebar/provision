@@ -1,0 +1,70 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+
+.. _rs_kb_00032:
+
+kb-00032: BootEnv Does Not "Explode ISO" after upload
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. _rs_render_does_not_explode_iso:
+
+Knowledge Base Article: kb-00032
+--------------------------------
+
+
+Description
+-----------
+
+New or cloned BootEnv does not explode the uploaded ISO components in Digital Rebar after upload
+(eg ``drpcli bootenvs upload iso <BOOTENV>``, or ``drpcli isos upload <ISO>``).
+
+
+Solution
+--------
+
+Possible Causes:
+
+1. Uploaded ISOs must match shasums (sha256sum) listed in the BootEnv
+2. Install BootEnvs must end in ``-install``. See :ref:`rs_model_bootenv`
+3. BootEnvs intended for network booting, *must* include netbootable components
+4. The ISO Filename that is uploaded must exactly match the BootEnv specified name
+
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+  * :ref:`rs_arch`
+  * :ref:`rs_model_bootenv`
+
+
+Versions
+========
+
+all
+
+
+Keywords
+========
+
+content pack, bootenv, iso, sha256sum
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00032
+    initial release:  Wed Jun 10 12:31:44 PDT 2020
+    updated release:  Wed Jun 10 12:31:44 PDT 2020
+

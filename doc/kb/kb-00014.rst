@@ -1,0 +1,74 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+
+.. _rs_kb_00014:
+
+kb-00014: Debug Sledgehammer Problems
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. _rs_debug_sledgehammer:
+
+Knowledge Base Article: kb-00014
+--------------------------------
+
+
+Description
+-----------
+
+From time to time, a Machines environment, hostname, or other factors may cause
+the *Sledgehammer* (also called *Discovery*) BootEnv to fail to boot or start
+*Workflow* successfully.  In these cases, you will need to log in to the Machines
+console, and debug the problem.
+
+Solution
+--------
+
+If the sledgehammer discovery image should fail to launch Runner jobs successfully, or other
+issues arise with the start up sequences, you can debug start up via the systemd logging.  Log
+in to the console of the Machine in question (or if SSH is running and you have ``access-keys``
+setup, you can SSH in), and run the following command to output logging:
+
+  ::
+
+      journalctl -u sledgehammer
+
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+  * :ref:`rs_access_ssh_root_mode`
+  * :ref:`rs_default_password`
+  * :ref:`rs_add_ssh`
+
+
+Versions
+========
+
+all
+
+
+Keywords
+========
+
+dr-provision, sledgehammer, discovery, discover, bootenv, debug
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00014
+    initial release:  Wed Jun 10 11:16:26 PDT 2020
+    updated release:  Wed Jun 10 11:16:26 PDT 2020
+

@@ -1,0 +1,76 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+
+.. _rs_kb_00026:
+
+kb-00026: Change a Machines Name
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. _rs_change_machine_name:
+
+Knowledge Base Article: kb-00026
+--------------------------------
+
+
+Description
+-----------
+
+This article describes how an operator can attempt to change a Machine's defined name, inside
+the deployed Operating System.
+
+.. note:: Machine name changes must be supported by the *Workflow* being executed, to affect the
+          change inside the Operating System.  Most RackN and Digital Rebar provided content
+          supports this methodology.  However, if you are customizing your kickstart or preseed
+          templates, this process may not work if you have not arranged for these Param values
+          to be utilized.
+
+Solution
+--------
+
+If you wish to update/change a Machine Name, you can do:
+
+  ::
+
+    export UUID="abcd-efgh-ijkl-mnop-qrst"
+    drpcli machines update $UUID '{ "Name": "foobar" }'
+
+.. note:: Note that you can NOT use the ``drpcli machines set ...`` construct as it only sets Param values.
+          The Machines name is a Field, not a Parameter.  This will NOT work: ``drpcli machines set $UUID
+          param Name to foobar``.
+
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+
+Versions
+========
+
+all
+
+
+Keywords
+========
+
+content, machine name, change name
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00026
+    initial release:  Wed Jun 10 12:07:40 PDT 2020
+    updated release:  Wed Jun 10 12:07:40 PDT 2020
+

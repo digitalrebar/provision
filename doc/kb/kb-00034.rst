@@ -1,0 +1,89 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+
+.. _rs_kb_00034:
+
+kb-00034: Network Unreachable from Wget / Second Stage Timeout
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. _rs_wget_timeout:
+
+Knowledge Base Article: kb-00034
+--------------------------------
+
+
+Description
+-----------
+
+This article addresses problems with second stage and wget problems during the PXE
+bootstrapping process of an operating system.  Generally speaking, these issues are
+related to the Top-of-Rack switch configuration, causing port blocking delays.
+
+
+Solution
+--------
+
+Throwing a *network unreachable* error from ``wget`` when trying to fetch second stage ``initramfs``; however, by the
+time you get dropped into a root console, eth0 has an IP address and can connect to the server fine.  May also
+see a baremetal PXE boot initial PXE boot works but then it's getting kicked to a shell before it can download
+``root.squashfs``.
+
+Troubleshooting: You can manually grab the file with ``wget`` after it bails, so communications are working fine.
+It just appears it's not waiting long enough for DHCP and then fails to get the file before it gets an IP.
+
+.. note:: You can set these changes the global profile so it will apply everywhere.  It shouldn’t hurt
+          functioning systems (they will escape the loop early) and might fix this system.
+
+
+**Solution 1**: Do you run your switches with Portfast? or Spanning Tree delays?
+
+You add these to your kernel-console parameter to alter the retry and wait times.
+  * ``provisioner.portdelay=<Number of seconds>`` - seconds to wait before bring up link
+  * ``provisioner.postportdelay=<Number of seconds>`` - seconds to wait after bringing up link before dhcp
+  * ``provisioner.wgetretrycount=<Number of retries before failure>`` - wget of squashfs occurs once a second for 10 times by default.
+
+
+**Solution 2**: Is something is really "slower" than sledgehammer expects?
+
+You could try setting ``provisioner.wgetretrycount=60``.  ``kernel-console`` is a parameter that lets you
+changing the kernel parameters passed to bootenvs.  Sometimes it is used to tweak the kernel console that
+the kernel is using, but it can be used for other values as well.
+
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+  * :ref:`rs_arch`
+
+
+Versions
+========
+
+all
+
+
+Keywords
+========
+
+network unreachable, squashfs, initramfs, spanning tree protocol, stp, portfast, portdelay, postportdelay, wgetretrycount, top of rack switch, ToR, switch, port blocking
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00034
+    initial release:  Wed Jun 10 12:40:47 PDT 2020
+    updated release:  Wed Jun 10 12:40:47 PDT 2020
+
