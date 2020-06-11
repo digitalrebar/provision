@@ -10,7 +10,7 @@
 kb-00012
 ~~~~~~~~
 
-.. _rs_cli_faq:
+.. _rs_kb_cli:
 
 Command Line Interface FAQ
 ~~~~~~~~~~~~~~~~~~~~~~~~~~

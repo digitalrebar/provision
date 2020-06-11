@@ -131,7 +131,7 @@ generate_kb(){
   [[ -e "$KB_FILE" ]] && xiterr 1 "Knowledge base file already exists, not overwriting ('$KB_FILE')" || true
   echo ">>> Write template KB file to : '$KB_FILE'"
   YEAR=$(date +%Y)
-  [[ -n "$TITLE" ]] && TITLE="kb-$INDEX: ${TITLE}" || TITLE="kb-$INDEX: TITLE TITLE TITLE"
+  [[ -n "$TITLE" ]] && TITLE="${TITLE}" || TITLE="TITLE TITLE TITLE"
   TLEN=$(echo $(( $(echo "$TITLE" | wc -c) )))
   (( TLEN-- ))
   TILDE=$(eval printf '~%.0s' {1..${TLEN}})
@@ -146,13 +146,16 @@ generate_kb(){
 .. REFERENCE kb-00000 for an example and information on how to use this template.
 .. If you make EDITS - ensure you update footer release date information.
 
-$XREF
 
 .. _rs_kb_${INDEX}:
 
+kb-${INDEX}
+~~~~~~~~
+
+.. _${LABEL}:
+
 $TITLE
 $TILDE
-
 
 Description
 -----------
