@@ -80,6 +80,8 @@ Our `Quick Start <http://provision.readthedocs.io/en/latest/doc/quickstart.html>
 
 Regular `Install <http://provision.readthedocs.io/en/latest/doc/install.html>`_ for more details on the install steps.  These include production options. (`Previous Version Docs <http://provision.readthedocs.io/en/latest/doc/quickstart.html>`_)
 
+Current Stable Line is the v4.3.X releases.  Next Minor Release is planned to be v4.4.0.
+
 Components & Extensions
 -----------------------
 
