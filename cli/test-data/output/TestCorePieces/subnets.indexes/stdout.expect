@@ -3,13 +3,13 @@
     "Regex": false,
     "Type": "IP Address",
     "Unique": false,
-    "Unordered": false
+    "Unordered": true
   },
   "Address": {
     "Regex": false,
     "Type": "IP Address",
     "Unique": false,
-    "Unordered": false
+    "Unordered": true
   },
   "Available": {
     "Regex": false,
