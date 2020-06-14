@@ -83,6 +83,8 @@ SEE ALSO
    CLI commands relating to plugin_providers
 -  `drpcli plugins <drpcli_plugins.html>`__ - Access CLI commands
    relating to plugins
+-  `drpcli pools <drpcli_pools.html>`__ - Access CLI commands relating
+   to pools
 -  `drpcli prefs <drpcli_prefs.html>`__ - List and set DigitalRebar
    Provision operational preferences
 -  `drpcli profiles <drpcli_profiles.html>`__ - Access CLI commands

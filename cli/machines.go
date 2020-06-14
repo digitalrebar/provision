@@ -91,6 +91,72 @@ func registerMachine(app *cobra.Command) {
 			return prettyPrint(clone)
 		},
 	})
+	op.addCommand(&cobra.Command{
+		Use:   "releaseToPool [id]",
+		Short: fmt.Sprintf("Release this machine back to the pool"),
+		Long:  `Release this machine back to the pool`,
+		Args: func(c *cobra.Command, args []string) error {
+			if len(args) != 1 {
+				return fmt.Errorf("%v requires 1 arguments", c.UseLine())
+			}
+			return nil
+		},
+		RunE: func(c *cobra.Command, args []string) error {
+			mid := args[0]
+			r := &[]models.PoolResult{}
+			p := map[string]interface{}{}
+			if err := Session.Req().Post(p).UrlFor("machines", mid, "releaseToPool").Do(r); err != nil {
+				return err
+			}
+			return prettyPrint(r)
+		},
+	})
+	op.addCommand(&cobra.Command{
+		Use:   "run [id]",
+		Short: fmt.Sprintf("Mark the machine as runnable"),
+		Long:  `Set the machine's Runnable flag to true`,
+		Args: func(c *cobra.Command, args []string) error {
+			if len(args) != 1 {
+				return fmt.Errorf("%v requires 1 arguments", c.UseLine())
+			}
+			return nil
+		},
+		RunE: func(c *cobra.Command, args []string) error {
+			m, err := op.refOrFill(args[0])
+			if err != nil {
+				return generateError(err, "Failed to fetch %v: %v", op.singleName, args[0])
+			}
+			clone := models.Clone(m).(*models.Machine)
+			clone.Runnable = true
+			if err := Session.Req().PatchTo(m, clone).Do(&clone); err != nil {
+				return err
+			}
+			return prettyPrint(clone)
+		},
+	})
+	op.addCommand(&cobra.Command{
+		Use:   "pause [id]",
+		Short: fmt.Sprintf("Mark the machine as NOT runnable"),
+		Long:  `Set the machine's Runnable flag to false`,
+		Args: func(c *cobra.Command, args []string) error {
+			if len(args) != 1 {
+				return fmt.Errorf("%v requires 1 arguments", c.UseLine())
+			}
+			return nil
+		},
+		RunE: func(c *cobra.Command, args []string) error {
+			m, err := op.refOrFill(args[0])
+			if err != nil {
+				return generateError(err, "Failed to fetch %v: %v", op.singleName, args[0])
+			}
+			clone := models.Clone(m).(*models.Machine)
+			clone.Runnable = false
+			if err := Session.Req().PatchTo(m, clone).Do(&clone); err != nil {
+				return err
+			}
+			return prettyPrint(clone)
+		},
+	})
 	jobs := &cobra.Command{
 		Use:   "jobs",
 		Short: "Access commands for manipulating the current job",

@@ -81,8 +81,13 @@ SEE ALSO
    for the machine
 -  `drpcli machines params <drpcli_machines_params.html>`__ - Gets/sets
    all parameters for the machine
+-  `drpcli machines pause <drpcli_machines_pause.html>`__ - Mark the
+   machine as NOT runnable
 -  `drpcli machines processjobs <drpcli_machines_processjobs.html>`__ -
    For the given machine, process pending jobs until done.
+-  `drpcli machines
+   releaseToPool <drpcli_machines_releaseToPool.html>`__ - Release this
+   machine back to the pool
 -  `drpcli machines remove <drpcli_machines_remove.html>`__ - Remove the
    param *key* from machines
 -  `drpcli machines
@@ -90,6 +95,8 @@ SEE ALSO
    profile from the machine’s list
 -  `drpcli machines removetask <drpcli_machines_removetask.html>`__ -
    Remove a task from the machine’s list
+-  `drpcli machines run <drpcli_machines_run.html>`__ - Mark the machine
+   as runnable
 -  `drpcli machines runaction <drpcli_machines_runaction.html>`__ - Run
    action on object from plugin
 -  `drpcli machines set <drpcli_machines_set.html>`__ - Set the machines

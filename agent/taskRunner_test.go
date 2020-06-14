@@ -179,7 +179,10 @@ Tasks:
 	machineRes.Secret = ""
 	machineRes.Runnable = true
 	machineRes.Stage = "none"
-	machineRes.CurrentTask = -1
+	machineRes.CurrentTask = 0
+	machineRes.WorkflowComplete = true
+	machineRes.Pool = "default"
+	machineRes.PoolStatus = "Free"
 	rt(t, "Make initial machine", machineRes, nil,
 		func() (interface{}, error) {
 			err := session.CreateModel(machine1)
@@ -214,6 +217,7 @@ Tasks:
 	machineRes.Stage = "stage1"
 	machineRes.Tasks = []string{"task1", "task2"}
 	machineRes.CurrentTask = -1
+	machineRes.WorkflowComplete = false
 	rt(t, "Set machine 1 to stage1", machineRes, nil,
 		func() (interface{}, error) {
 			mc := models.Clone(machine1).(*models.Machine)
@@ -256,6 +260,8 @@ Tasks:
 		}, nil)
 	machineRes = models.Clone(machine1).(*models.Machine)
 	machineRes.Tasks = []string{}
+	machineRes.CurrentTask = 0
+	machineRes.WorkflowComplete = true
 	rt(t, "Try to remove tasks from machine1", machineRes, nil,
 		func() (interface{}, error) {
 			mc := models.Clone(machine1).(*models.Machine)
@@ -268,6 +274,8 @@ Tasks:
 		}, nil)
 	machineRes = models.Clone(machine1).(*models.Machine)
 	machineRes.Tasks = []string{"task2", "task1"}
+	machineRes.CurrentTask = -1
+	machineRes.WorkflowComplete = false
 	rt(t, "Try to change order of tasks on a machine", machineRes, nil,
 		func() (interface{}, error) {
 			mc := models.Clone(machine1).(*models.Machine)
@@ -416,6 +424,7 @@ Tasks:
 	}
 	machineRes = models.Clone(machine1).(*models.Machine)
 	machineRes.CurrentTask = -1
+	machineRes.WorkflowComplete = false
 	rt(t, "Increment machine1's CurrentTask pointer", machineRes, nil,
 		func() (interface{}, error) {
 			mc := models.Clone(machine1).(*models.Machine)
