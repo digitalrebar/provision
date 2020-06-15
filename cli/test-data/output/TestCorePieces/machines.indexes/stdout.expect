@@ -41,6 +41,12 @@
     "Unique": false,
     "Unordered": false
   },
+  "HardwareAddr": {
+    "Regex": false,
+    "Type": "list",
+    "Unique": false,
+    "Unordered": true
+  },
   "Key": {
     "Regex": true,
     "Type": "string",
