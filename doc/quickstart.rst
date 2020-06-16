@@ -47,6 +47,9 @@ Please make sure your environment doesn't have any conflicts or issues that migh
   * Mac OSX may require additional setup (see notes below)
   * we rely heavily on the ``jq`` tool for use with the Command Line tool (``drpcli``) - install it if you don't have it already
 
+For additional information on preparing a *Quickstart* environment, please see the :ref:`rs_setup` for additional
+details.
+
 .. _rs_qs_install:
 
 Install
