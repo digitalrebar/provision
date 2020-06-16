@@ -252,7 +252,7 @@ If you are utilizing virtual machines, you are generally free to size your VMs t
 hardware sizes you need.  However, note that some Operating Systems that you might provision will have
 requirements that may dictate the lower bounds of your VMs sizing configuration.
 
-For example, CentOS/Redhat VMs should be configured with at least 2 GB of vMemory.  This is ar requirement
+For example, CentOS/Redhat VMs should be configured with at least 2 GB of vMemory.  This is a requirement
 of the CentOS installation and *dracut* tooling.  In general, we would recommend not configuring vMemory
 on your Virtual Machines with less than 2 GB as a safety precaution.
 
