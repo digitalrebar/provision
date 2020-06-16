@@ -1,0 +1,14 @@
+###
+#  see FPM install directions at:
+###
+https://fpm.readthedocs.io/en/latest/installing.html
+
+###
+#  for CentOS 7 - had to do following NOT documented steps
+#  due to Ruby 2.3 not available in default repos
+###
+sudo yum install centos-release-scl
+sudo yum install rh-ruby23 rh-ruby23-ruby-devel gcc make rpm-build rubygems
+sudo scl enable rh-ruby23 bash
+sudo gem install fpm
+sudo gem install pleaserun
