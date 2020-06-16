@@ -9,11 +9,7 @@ tools/build-one.sh cmds/incrementer
 . tools/version.sh
 
 if ! which dr-provision &>/dev/null; then
-  if [[ $Extra && $Extra = *beta* ]]; then
-      drpcli catalog item download drp --version=tip
-  else
-      drpcli catalog item download drp
-  fi
+  drpcli catalog item download drp --version=v4.3.2
   tar -zxvf drp.zip "bin/$(go env GOOS)/$(go env GOARCH)/dr-provision"
   rm drp.zip
 fi
