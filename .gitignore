@@ -52,3 +52,6 @@ rebar-catalog
 builddir/
 _build/
 profile*.txt
+venv
+doc-override/*
+rel_notes

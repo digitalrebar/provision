@@ -10,6 +10,7 @@ git:
   depth: 500
 install:
 - "./tools/build.sh"
+- "./tools/build_rel_notes.sh"
 - "./tools/publish.sh"
 script:
 - "./tools/test.sh"
