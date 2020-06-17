@@ -724,11 +724,8 @@ func (c *Client) GetBlob(dest io.Writer, at ...string) error {
 			startSz = st.Size()
 		}
 		mts := &models.ModTimeSha{}
-		if err := mts.ReadFromXattr(fi); err == nil && mts.UpToDate(fi) {
+		if _, err := mts.Regenerate(fi); err != nil {
 			shasum = mts.String()
-		} else if err = mts.Generate(fi); err == nil {
-			shasum = mts.String()
-			mts.SaveToXattr(fi)
 		}
 	}
 	if shasum != "" {
@@ -745,11 +742,7 @@ func (c *Client) GetBlob(dest io.Writer, at ...string) error {
 			}
 		}
 		mts := &models.ModTimeSha{}
-		if err := mts.ReadFromXattr(fi); err == nil && !mts.UpToDate(fi) {
-			if err := mts.Generate(fi); err == nil {
-				mts.SaveToXattr(fi)
-			}
-		}
+		mts.Regenerate(fi)
 	}
 	return nil
 }
