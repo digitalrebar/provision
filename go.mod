@@ -24,7 +24,7 @@ require (
 	github.com/itchyny/gojq v0.6.0
 	github.com/jehiah/go-strftime v0.0.0-20171201141054-1d33003b3869 // indirect
 	github.com/json-iterator/go v1.1.7
-	github.com/kardianos/service v1.0.1-0.20191017145738-4df36c9fc1c6
+	github.com/kardianos/service v1.1.0
 	github.com/klauspost/compress v1.7.4 // indirect
 	github.com/klauspost/cpuid v1.2.1 // indirect
 	github.com/klauspost/pgzip v1.2.1

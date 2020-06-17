@@ -9,6 +9,7 @@ import (
 	"os"
 	"os/exec"
 	"path"
+	"runtime"
 	"strings"
 	"sync"
 	"time"
@@ -24,14 +25,15 @@ import (
 )
 
 type agentOpts struct {
-	Endpoints    string
-	Token        string
-	MachineID    string
-	Context      string
-	Oneshot      bool
-	ExitOnFail   bool
-	SkipPower    bool
-	SkipRunnable bool
+	Endpoints       string
+	Token           string
+	MachineID       string
+	Context         string
+	Oneshot         bool
+	ExitOnFail      bool
+	SkipPower       bool
+	SkipRunnable    bool
+	AllowAutoUpdate bool
 }
 
 var agentScratchConfig = `---
@@ -77,6 +79,11 @@ Context: ''
 # whenever it starts up
 
 SkipRunnable: false
+
+# AllowAutoUpdate allows the agent to try and automatically update itself
+# as needed whenever it is starting up.  This does not work on Windows.
+
+AllowAutoUpdate: true
 `
 
 type agentProg struct {
@@ -246,6 +253,69 @@ var agentHandler = &cobra.Command{
 			if err := models.DecodeYaml(buf, &options); err != nil {
 				return fmt.Errorf("Error loading config file %s: %v", cfgFileName, err)
 			}
+			// Auto-update can only happen on non-Windows, because we need to replace the running binary.
+			func() {
+				if runtime.GOOS == "windows" {
+					log.Printf("Unable to update on Windows")
+					return
+				}
+				if !options.AllowAutoUpdate {
+					log.Printf("Auto update disabled by config directive")
+					return
+				}
+				session, err := sessionOrError(options.Token, strings.Split(options.Endpoints, ","))
+				if err != nil {
+					log.Printf("No session")
+					return
+				}
+				info, err := session.Info()
+				if err != nil || !info.HasFeature("agent-auto-update") {
+					log.Printf("Missing agent-auto-update from dr-provision, will not auto update")
+					return
+				}
+				remoteName := fmt.Sprintf("drpcli.%s.%s", runtime.GOARCH, runtime.GOOS)
+				sum, err := session.GetBlobSum("files", remoteName)
+				if err != nil {
+					log.Printf("No blob sum for %s", remoteName)
+					return
+				}
+				exe, err := os.Open(exePath)
+				if err != nil {
+					log.Printf("No exe at %s", exePath)
+					return
+				}
+				mta := &models.ModTimeSha{}
+				if _, err := mta.Regenerate(exe); err == nil && mta.String() == sum {
+					log.Printf("Sums for %s already match. No update needed", exePath)
+					exe.Close()
+					return
+				}
+				exe.Close()
+				tmpName := exePath + ".new"
+				exe, err = os.OpenFile(tmpName, os.O_CREATE|os.O_RDWR|os.O_TRUNC, 0755)
+				if err != nil {
+					log.Printf("Error opening tmp %s: %v", tmpName, err)
+					return
+				}
+				defer os.Remove(tmpName)
+				if err := session.GetBlob(exe, "files", remoteName); err != nil {
+					log.Printf("Error getting %s: %v", remoteName, err)
+					exe.Close()
+					return
+				}
+				session.Close()
+				exe.Close()
+				testCmd := exec.Command(tmpName, "version")
+				if err := testCmd.Run(); err != nil {
+					log.Printf("Error validating %s version: %v", tmpName, err)
+					return
+				}
+				if err := os.Rename(tmpName, exePath); err != nil {
+					log.Printf("Error renaming %s to %s: %v", tmpName, exePath, err)
+				} else {
+					log.Printf("%s updated from %s to %s", exePath, mta.String(), sum)
+				}
+			}()
 			prog.opts = options
 			prog.cmd = exec.Command(exePath, "machines", "processjobs", "--stateDir", stateLoc)
 			prog.cmd.Env = append(os.Environ(),
@@ -320,13 +390,6 @@ Please fill it out with final running values, and rerun drpcli agent install`, c
 			}
 			if options.Endpoints == "" || options.MachineID == "" || options.Token == "" {
 				log.Fatalf("Config file %s missing a required parameter", cfgFileName)
-			}
-			Session, err = sessionOrError(options.Token, strings.Split(options.Endpoints, ","))
-			if err != nil {
-				log.Fatalf("Unable to establish connection to an endpoint listed in %s: %v", cfgFileName, err)
-			}
-			if exists, err := Session.ExistsModel("machines", options.MachineID); err != nil || !exists {
-				log.Fatalf("Failed to verify that machine %s exists on %s", options.MachineID, Session.Endpoint())
 			}
 			if err := svc.Install(); err != nil {
 				log.Fatalf("Error installing service: %v", err)

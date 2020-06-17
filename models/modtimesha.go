@@ -67,6 +67,18 @@ func (m *ModTimeSha) Generate(fi *os.File) error {
 	return nil
 }
 
+func (m *ModTimeSha) Regenerate(fi *os.File) (bool, error) {
+	present := m.ReadFromXattr(fi)
+	if present == nil && m.UpToDate(fi) {
+		return true, nil
+	}
+	err := m.Generate(fi)
+	if err != nil {
+		return false, err
+	}
+	return false, m.SaveToXattr(fi)
+}
+
 func (m *ModTimeSha) ReadFromXattr(fi *os.File) error {
 	var buf []byte
 	var err error
