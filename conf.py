@@ -420,6 +420,8 @@ urls = fetch_urls("https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/rel-not
 fetch_n_save(urls, path="doc/rel_notes/rackn-cohesity")
 urls = fetch_urls("https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/rel-notes/rackn-solidfire.filelist")
 fetch_n_save(urls, path="doc/rel_notes/rackn-solidfire")
+urls = fetch_urls("https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/rel-notes/rackn-ux.filelist")
+fetch_n_save(urls, path="doc/rel_notes/rackn-ux")
 
 dest_folder = 'doc/content-packages'
 src_folder = 'doc-override'

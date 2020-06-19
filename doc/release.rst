@@ -129,3 +129,12 @@ rackn/solidfire
 
    rel_notes/rackn-solidfire/*
 
+rackn/ux
+========
+
+.. toctree::
+   :maxdepth: 1
+   :glob:
+
+   rel_notes/rackn-ux/*
+
