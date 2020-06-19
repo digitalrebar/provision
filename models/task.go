@@ -58,6 +58,7 @@ var (
 		"openbsd": struct{}{},
 		"solaris": struct{}{},
 		"windows": struct{}{},
+		"esxi":    struct{}{}, // Not really GOOS, but a valid template
 	}
 
 	validGOARCH = map[string]struct{}{
