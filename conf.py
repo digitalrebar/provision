@@ -408,7 +408,18 @@ fetch_n_save(urls, path="doc/operations")
 
 urls = fetch_urls("https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/rel-notes/drp.filelist")
 fetch_n_save(urls, path="doc/rel_notes/drp")
-
+urls = fetch_urls("https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/rel-notes/drp-server.filelist")
+fetch_n_save(urls, path="doc/rel_notes/drp-server")
+urls = fetch_urls("https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/rel-notes/drp-content.filelist")
+fetch_n_save(urls, path="doc/rel_notes/drp-content")
+urls = fetch_urls("https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/rel-notes/drp-plugins.filelist")
+fetch_n_save(urls, path="doc/rel_notes/drp-plugins")
+urls = fetch_urls("https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/rel-notes/rackn-plugins.filelist")
+fetch_n_save(urls, path="doc/rel_notes/rackn-plugins")
+urls = fetch_urls("https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/rel-notes/rackn-cohesity.filelist")
+fetch_n_save(urls, path="doc/rel_notes/rackn-cohesity")
+urls = fetch_urls("https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/rel-notes/rackn-solidfire.filelist")
+fetch_n_save(urls, path="doc/rel_notes/rackn-solidfire")
 
 dest_folder = 'doc/content-packages'
 src_folder = 'doc-override'

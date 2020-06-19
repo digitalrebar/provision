@@ -70,4 +70,62 @@ digitalrebar/provision
 
    rel_notes/drp/*
 
+digitalrebar/provision-server
+=============================
+
+.. toctree::
+   :maxdepth: 1
+   :glob:
+
+   rel_notes/drp-server/*
+
+
+digitalrebar/provision-plugins
+==============================
+
+.. toctree::
+   :maxdepth: 1
+   :glob:
+
+   rel_notes/drp-plugins/*
+
+
+digitalrebar/provision-content
+==============================
+
+.. toctree::
+   :maxdepth: 1
+   :glob:
+
+   rel_notes/drp-content/*
+
+
+rackn/provision-plugins
+=======================
+
+.. toctree::
+   :maxdepth: 1
+   :glob:
+
+   rel_notes/rackn-plugins/*
+
+
+rackn/cohesity
+==============
+
+.. toctree::
+   :maxdepth: 1
+   :glob:
+
+   rel_notes/rackn-cohesity/*
+
+
+rackn/solidfire
+===============
+
+.. toctree::
+   :maxdepth: 1
+   :glob:
+
+   rel_notes/rackn-solidfire/*
 
