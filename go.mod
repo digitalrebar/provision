@@ -3,9 +3,8 @@ module github.com/digitalrebar/provision/v4
 go 1.12
 
 require (
-	github.com/Masterminds/goutils v1.1.0 // indirect
 	github.com/Masterminds/semver v1.4.2
-	github.com/Masterminds/sprig v2.20.0+incompatible
+	github.com/Masterminds/sprig/v3 v3.1.0
 	github.com/StackExchange/wmi v0.0.0-20190523213315-cbe66965904d // indirect
 	github.com/VictorLowther/jsonpatch2 v1.0.0
 	github.com/cpuguy83/go-md2man v1.0.10 // indirect
@@ -18,8 +17,6 @@ require (
 	github.com/gofunky/semver v3.5.2+incompatible
 	github.com/gorilla/websocket v1.4.0
 	github.com/groob/plist v0.0.0-20190114192801-a99fbe489d03
-	github.com/huandu/xstrings v1.2.0 // indirect
-	github.com/imdario/mergo v0.3.7 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/itchyny/gojq v0.6.0
 	github.com/jehiah/go-strftime v0.0.0-20171201141054-1d33003b3869 // indirect
@@ -42,7 +39,7 @@ require (
 	github.com/xeipuuv/gojsonpointer v0.0.0-20180127040702-4e3ac2762d5f // indirect
 	github.com/xeipuuv/gojsonreference v0.0.0-20180127040603-bd5ef7bd5415 // indirect
 	github.com/xeipuuv/gojsonschema v1.1.0
-	golang.org/x/crypto v0.0.0-20190701094942-4def268fd1a4
+	golang.org/x/crypto v0.0.0-20200414173820-0848c9571904
 	golang.org/x/net v0.0.0-20190724013045-ca1201d0de80
 	golang.org/x/sys v0.0.0-20191120155948-bd437916bb0e
 	gopkg.in/yaml.v2 v2.2.2
