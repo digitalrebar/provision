@@ -1,15 +1,15 @@
 package models
 
 import (
-	"bytes"
 	"crypto/rand"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"log"
 	"regexp"
 	"strings"
 	"time"
+
+	"github.com/mohae/deepcopy"
 
 	"github.com/VictorLowther/jsonpatch2"
 	yaml "github.com/ghodss/yaml"
@@ -122,19 +122,7 @@ func Clone(m Model) Model {
 	if m == nil {
 		return nil
 	}
-	res, err := New(m.Prefix())
-	if err != nil {
-		log.Panicf("Failed to make a new %s: %v", m.Prefix(), err)
-	}
-	buf := bytes.Buffer{}
-	enc, dec := json.NewEncoder(&buf), json.NewDecoder(&buf)
-	if err := enc.Encode(m); err != nil {
-		log.Panicf("Failed to encode %s:%s: %v", m.Prefix(), m.Key(), err)
-	}
-	if err := dec.Decode(res); err != nil {
-		log.Panicf("Failed to decode %s:%s: %v", m.Prefix(), m.Key(), err)
-	}
-	return res
+	return deepcopy.Copy(m).(Model)
 }
 
 var (
