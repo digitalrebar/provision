@@ -32,8 +32,8 @@ Set Up Explained
 ----------------
 Following the getting started above should have you at a point of needing DRP and something to provision.
 At this point you need a linux box to install DRP, and it can be a VM. Create a virtual machine in ESXi with 1+
-CPU, and 1G+ mem 20G + storage (for sizing info: :ref:`_rs_scaling`). Once you have your linux dostro installed
-you are ready to follow our :ref:`_rs_install` Now you need a "machine" to provision. This is where the VLAN part
+CPU, and 1G+ mem 20G + storage (for sizing info: :ref:`rs_scaling`). Once you have your linux dostro installed
+you are ready to follow our :ref:`rs_install` Now you need a "machine" to provision. This is where the VLAN part
 is handy from above. You can now provision physical machines on this VALN, or you can add virtual machines to it
 and go into their BIOS settings and adjust them to network boot using either EFI or BIOS, and both work with DRP.
 

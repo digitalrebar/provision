@@ -397,7 +397,7 @@ To help with Task and Workflow debugging or advanced flow control, there are a
 couple of parameters that can help with debug messages and task control.
 
 Single Step
-===========
+~~~~~~~~~~~
 
 Setting the Machine parameter ``task-single-step`` to ``true`` will cause
 the system to make the machine not runnable after each task.  Removing the
@@ -405,14 +405,14 @@ parameter or setting it to ``false`` will cause the system to resume normal
 operations.
 
 Stop At
-=======
+~~~~~~~
 
 Setting the Machine parameter ``task-stop-at`` to a list of tasks or
 action entries will cause the system to stop prior to those tasks.  Setting
 the machine to runnable will cause the tasks to continue.
 
 Retry
-=====
+~~~~~
 
 Setting the Machine parameter ``task-retry`` to a map of key/value pairs
 where the keys are task names and the values are integer number of times to
@@ -424,7 +424,7 @@ The Machine field ``RetryTaskAttempt`` tracks the retry for the current task.
 This is reset to 0 for every new task.
 
 Error Handlers
-==============
+~~~~~~~~~~~~~~
 
 Setting the Machine parameter ``task-error-handlers`` to a map of key/value pairs
 where the keys are task names and the values are lists of task names.  When a task
