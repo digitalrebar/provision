@@ -20,7 +20,7 @@ Please feel free to provide any feedback or alternative setup methods.
 Architecture
 ------------
 
-The goal is to enable the Hyper-V NAT feature on the default "Internal Switch" and then attach a new VM which will run DRP to that. We refer to this as the "DRP VM", this would run any Linux based OS (for this example I will install Debian 10) and would have two two network interfaces. The second network interface would be attached to a "Target Switch" which is a isolated Hyper-V switch. Then we would have a VM which can be used as a target for DRP, which we refer to as the "Target VM". This VM has no OS installed, and a single network connection to the "Target Switch". Here is a simplified diagram: ::
+The goal is to enable the Hyper-V NAT feature on the default "Internal Switch" and then attach a new VM which will run DRP to that. We refer to this as the "DRP VM", this would run any Linux based OS (for this example I will install Debian 10) and would have two network interfaces. The second network interface would be attached to a "Target Switch" which is a isolated Hyper-V switch. Then we would have a VM which can be used as a target for DRP, which we refer to as the "Target VM". This VM has no OS installed, and a single network connection to the "Target Switch". Here is a simplified diagram: ::
 
      +--------------+
      |              |
@@ -165,10 +165,9 @@ Now we need to create the Virtual Machine which will run DRP. This is probably t
 #. Now we can configure unbound to provide DNS for your private network. Edit the configuration file by running ``sudo nano /etc/unbound/unbound.conf.d/targets.conf`` and entering the following shown in :ref:`unbound-target`
 #. Again, adjust your IP information to match what you put in the network configuration in previous steps if necessary. Save your changes like before with Ctrl+W followed by Enter. Then quit the editor with Ctrl+X. Then restart unbound to read the new configuration with ``sudo systemctl restart unbound``
 #. Now we can install DRP with the following command: ``curl -fsSL get.rebar.digital/stable | bash -s -- install``
-#. Once that completes we should run a few DRP setup commands. The first will get the default content packs downloaded: ``drpcli catalog item install drp-community-content```
 #. Next we get the discovery and sledgehammer environments downloaded: ``drpcli bootenvs uploadiso sledgehammer``
 #. Then we configure the default workflow for new machines to use the discovery workflow: ``drpcli prefs set defaultWorkflow discover-base unknownBootEnv discovery``
-#. Now you should be able to connect to the DRP endpoint at https://192.168.122.11:8291 and login to the UI
+#. Now you should be able to connect to the DRP endpoint at https://192.168.122.11:8092 and login to the UI
 #. From here, click on the Subnets option under Networking on the left hand panel, and then press the "Add" button at the top of the right panel. You will be presented with a list of "eth0" and "eth1" with details. Click the "Use Interface" on the card with the eth1 details.
 #. A details page will appear, scroll down to the DNS server option and set that to the same IP address as the default gateway. Then scroll to bottom of the page (the default options are fine) and press "Add". This will cause DRP to now serve DHCP leases to the VMs connected to the Target Network switch.
 
