@@ -34,11 +34,11 @@ The goal is to enable the Hyper-V NAT feature on the default "Internal Switch" a
              |
              |
      +--------------+
-     |     eth0     |
+     |     eth0     | (ex: 192.168.121.11)
      |              |
      |    DRP VM    |
      |              |
-     |     eth1     |
+     |     eth1     | (ex: 10.20.30.1)
      +--------------+
              |
              |
@@ -46,7 +46,7 @@ The goal is to enable the Hyper-V NAT feature on the default "Internal Switch" a
              |
              |
      +--------------+
-     |     eth0     |
+     |     eth0     | (ex: 10.20.30.4)
      |              |
      |  Target VM   |
      |              |
@@ -128,7 +128,7 @@ Now we need to create the Virtual Machine which will run DRP. This is probably t
 #. Enter the IP Address as ``192.168.121.11`` and press Enter
 #. The default subnet mask of ``255.255.255.0`` is correct, just press Enter
 #. The default gateway of ``192.168.121.1`` is correct, press Enter
-#. For nameservers, you need to specify some that will work almost anywhere. I recommend ``1.1.1.1 8.8.8.8 9.9.9.9`` but you can also use your corporate DNS servers is needed. Enter whatever will work for your environment and press Enter.
+#. For nameservers, you need to specify some that will work almost anywhere. I recommend ``1.1.1.1 8.8.8.8 9.9.9.9`` but you can also use your corporate DNS servers if needed. Enter whatever will work for your environment and press Enter.
 #. For a hostname, input what you would like and press Enter (do not use spaces, dash is OK)
 #. For the domain name, you can leave it blank and press Enter
 #. On the next screen you will be prompted for the root password. Simply leave the values blank and click Continue (this will automatically enable sudo for the user account we are about to create)
@@ -164,7 +164,7 @@ Now we need to create the Virtual Machine which will run DRP. This is probably t
 #. Enable the second network interface by running ``sudo ifup eth1``
 #. Now we can configure unbound to provide DNS for your private network. Edit the configuration file by running ``sudo nano /etc/unbound/unbound.conf.d/targets.conf`` and entering the following shown in :ref:`unbound-target`
 #. Again, adjust your IP information to match what you put in the network configuration in previous steps if necessary. Save your changes like before with Ctrl+W followed by Enter. Then quit the editor with Ctrl+X. Then restart unbound to read the new configuration with ``sudo systemctl restart unbound``
-#. Now we can install DRP with the following command: ``curl -fsSL get.rebar.digital/stable | bash -s -- install``
+#. Now we can install DRP with the following command: ``curl -fsSL get.rebar.digital/stable | bash -s -- install --systemd``
 #. Next we get the discovery and sledgehammer environments downloaded: ``drpcli bootenvs uploadiso sledgehammer``
 #. Then we configure the default workflow for new machines to use the discovery workflow: ``drpcli prefs set defaultWorkflow discover-base unknownBootEnv discovery``
 #. Now you should be able to connect to the DRP endpoint at https://192.168.122.11:8092 and login to the UI
