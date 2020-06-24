@@ -24,16 +24,18 @@ There are at least 3 releases to choose from:
 
 Previous releases will continue to be available in tag/release history.  For additional information, see :ref:`rs_release_process`.
 
-When using the **install.sh** script, the version can be specified by the **--drp-version** flag, e.g. *--drp-version=v4.0.1*.
+When using the **install.sh** script, the version can be specified by the **--drp-version** flag,
+e.g. *--drp-version=v4.2.2*.
 
-An example command sequence for Linux would be:
+Updating for current version, an example command sequence for Linux would be:
 
   ::
 
-    mkdir drp
-    cd drp
-    curl -fsSL https://rebar-catalog.s3-us-west-2.amazonaws.com/drp/v4.0.1.zip -o dr-provision.zip
-    curl -fsSL https://rebar-catalog.s3-us-west-2.amazonaws.com/drp/v4.0.1.sha256 -o dr-provision.sha256
+    export $DRPVERSION="v4.2.4"
+    mkdir dr-provision-install
+    cd dr-provision-install
+    curl -fsSL https://rebar-catalog.s3-us-west-2.amazonaws.com/drp/$DRPVERSION.zip -o dr-provision.zip
+    curl -fsSL https://rebar-catalog.s3-us-west-2.amazonaws.com/drp/$DRPVERSION.sha256 -o dr-provision.sha256
     sha256sum -c dr-provision.sha256
     unzip dr-provision.zip
 
@@ -69,42 +71,16 @@ Using ``dr-provision --help`` will provide the most complete list of configurati
       --systemd=               Run the systemd enabling commands after installation
       --startup=               Attempt to start the dr-provision service
 
-Prerequisites
--------------
-
-.. note:: As of DRP version v4.2.0, these external dependencies are not required, they are part of the DRP install zip file.
-
-**dr-provision** requires two applications to operate correctly, **bsdtar** and **7z**.  These are used to extract the contents of iso and tar images to be served by the file server component of **dr-provision**.  The ``install.sh`` script will attempt to ensure these packages are installed by default.  However, if you are installing via manual process or baking your own installer, you must ensure these prerequisistes are met.
-
-For Linux, the **bsdtar** and **p7zip** packages are required.
-
-.. admonition:: ubuntu
-
-  sudo apt-get install -y bsdtar p7zip-full
-
-.. admonition:: centos/redhat
-
-  sudo yum install -y bsdtar p7zip
-
-.. admonition:: Darwin
-
-  The new package, **p7zip** is required, and **tar** must also be updated.  The **tar** program on Darwin is already **bsdtar**
-
-  * 7z - install from homebrew: ``brew install p7zip``
-  * libarchive - update from homebrew to get a functional tar: ``brew install libarchive --force ; brew link libarchive --force``
-
-At this point, the server can be started.
-
+.. note:: In pre v4.2 releases, the **dr-provision** requires two applications to operate correctly, **bsdtar** and **7z**.  These are used to extract the contents of iso and tar images to be served by the file server component of **dr-provision**
 
 Container Environments
-++++++++++++++++++++++
+----------------------
 
 If you intend to install DRP via a container system, you must pre-install the appropriate container solution.  RackN typically only tests and verifies with recent versions of Docker.
 
 .. admonition:: Container Installation
 
   sudo yum install docker-ce
-
 
 Running The Server
 ------------------
