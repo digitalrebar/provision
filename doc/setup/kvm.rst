@@ -562,7 +562,7 @@ There are many more small areas that can be enhanced.  `Please contact RackN <ht
 you have any thoughts or questions to make this better!
 
 
-Example Machine Creation - ``virt-install`
+Example Machine Creation - ``virt-install``
 -------------------------------------------
 
 A simple example of using ``virt-install`` to create a Virtual Machine:
