@@ -86,7 +86,8 @@ This method has a few advantages:
 * Virtual Machine creation/destruction can be performed from Digital Rebar APIs / Control
 * Virtual Machine power operations can be performed form Digital Rebar APIs / Control
 * KVM can replicate many different machine architectures and configurations, Legacy BIOS, UEFI BIOS, etc.
-* The only primarly limitaiton to number of VMs is physical memory, disk space, and your oversubscription comfort levels
+* The primary limitaiton to number of VMs is physical memory, disk space, and your oversubscription comfort levels
+
 
 Prerequisites
 -------------
@@ -150,6 +151,10 @@ Install Digital Rebar based on the :ref:`rs_quickstart` or :ref:`rs_install` doc
 
 * use "production" mode (do not use ``--isolated`` install flag)
 * add ``--systemd`` to enable the SystemD startup unit files
+
+Example installation command line:
+
+* ``curl -s get.rebar.digital/stable | bash -s -- install --systemd``
 
 Once you have a basic DRP Endpoint up and running, add the ``kvm-test`` Plugin Provider
 via the *Catalog* in the UX, or via the following command line usage:
@@ -562,7 +567,7 @@ There are many more small areas that can be enhanced.  `Please contact RackN <ht
 you have any thoughts or questions to make this better!
 
 
-Example Machine Creation - ``virt-install`
+Example Machine Creation - ``virt-install``
 -------------------------------------------
 
 A simple example of using ``virt-install`` to create a Virtual Machine:
