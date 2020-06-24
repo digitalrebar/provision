@@ -3,6 +3,7 @@ package models
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"log"
 )
 
@@ -104,6 +105,31 @@ type PoolResult struct {
 	Uuid      string
 	Allocated bool
 	Status    PoolStatus
+}
+
+func (p *Pool) Validate() {
+	p.AddError(ValidName("Invalid Id", p.Id))
+	if p.ParentPool != "" {
+		p.AddError(ValidName("Invalid ParentPool", p.ParentPool))
+	}
+	for k, v := range map[string]*PoolTransitionActions{
+		"EnterActions":    p.EnterActions,
+		"ExitActions":     p.ExitActions,
+		"AllocateActions": p.AllocateActions,
+		"ReleaseActions":  p.ReleaseActions,
+	} {
+		if v != nil {
+			if v.Workflow != "" {
+				p.AddError(ValidName(fmt.Sprintf("Invalid %s Workflow", k), v.Workflow))
+			}
+			for _, pname := range v.AddProfiles {
+				p.AddError(ValidName(fmt.Sprintf("Invalid %s Add Profile", k), pname))
+			}
+			for _, pname := range v.RemoveProfiles {
+				p.AddError(ValidName(fmt.Sprintf("Invalid %s Remove Profile", k), pname))
+			}
+		}
+	}
 }
 
 func (p *Pool) Key() string {
