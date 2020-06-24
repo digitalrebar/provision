@@ -1,0 +1,78 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+
+.. _rs_kb_00024:
+
+kb-00024: How Can I manipulate values during Golang Template rendering?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. _rs_sprig:
+
+Knowledge Base Article: kb-00024
+--------------------------------
+
+
+Description
+-----------
+
+
+Solution
+--------
+
+The Digital Rebar Provision integrates most of the `Sprig Function Library <http://masterminds.github.io/sprig/>`_
+in the Golang Template rendering operations.  That means that you may include their string, math and flow
+functions into your pipelines.
+
+Some simple examples:
+
+  ::
+
+    {{.Param "noCamelCase/hashiCorp" | snakecase }}
+
+    # or
+    {{.Param "cool/tech" | regexMatch "([DRP]*)"}}
+
+Please consult the `Sprig Function Library <http://masterminds.github.io/sprig/>`_ for a full list of
+functions.
+
+.. note:: Digital Rebar Provision blocks functions that could be used to operate on the endpoint
+          outside of DRP template rendering for security reasons.
+
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+  * `Sprig Function Library <http://masterminds.github.io/sprig/>`_
+
+
+Versions
+========
+
+v4.0 and newer
+
+
+Keywords
+========
+
+sprig, advanced templating, templates, content
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00024
+    initial release:  Wed Jun 10 11:59:35 PDT 2020
+    updated release:  Wed Jun 10 11:59:35 PDT 2020
+

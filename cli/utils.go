@@ -13,6 +13,7 @@ import (
 	"os"
 	"reflect"
 	"runtime"
+	"sort"
 	"strings"
 
 	"github.com/VictorLowther/jsonpatch2/utils"
@@ -329,7 +330,13 @@ func lamePrinter(obj interface{}) []byte {
 				data = append(data, []string{k, truncateString(fmt.Sprintf("%v", m[k]), truncateLength)})
 			}
 		} else {
-			for k, v := range m {
+			index := []string{}
+			for k := range m {
+				index = append(index, k)
+			}
+			sort.Strings(index)
+			for _, k := range index {
+				v := m[k]
 				data = append(data, []string{k, truncateString(fmt.Sprintf("%v", v), truncateLength)})
 			}
 		}

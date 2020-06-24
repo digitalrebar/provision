@@ -96,7 +96,19 @@ language = None
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-exclude_patterns = ['_build','role_errors/*', 'development/testing-bdd/*', 'vendor', 'drp-data']
+exclude_patterns = [
+    '_build',
+    'role_errors/*',
+    'development/testing-bdd/*',
+    'vendor',
+    'src',
+    'integrations/websockets/README.rst',
+    'drp-data',
+    'doc-override',
+    'rebar-catalog',
+    'rel_notes',
+    'venv',
+]
 
 # The reST default role (used for this markup: `text`) to use for all
 # documents.
@@ -320,16 +332,27 @@ for the_file in os.listdir(folder):
 
 def fetch_n_save(urls, path):
     for url in urls:
+        url = url.strip()
         filename = url.rsplit('/', 1)[-1]
-        r = requests.get(url, verify=False, stream=True)
+        r = requests.get(url, verify=True, stream=True)
         r.raw.decode_content = True
         with open("{0}/{1}".format(path, filename), 'wb') as f:
             shutil.copyfileobj(r.raw, f)
+
+def fetch_urls(url):
+    r = requests.get(url, verify=True, stream=True)
+    r.raw.decode_content = True
+    with open("/tmp/tmp.builder", 'wb') as f:
+        shutil.copyfileobj(r.raw, f)
+    with open('/tmp/tmp.builder') as my_file:
+        testsite_array = my_file.readlines()
+    return testsite_array
 
 
 urls = [
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/ad-auth.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/agent.rst",
+    "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/basic-store.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/bios.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/burnin.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/callback.rst",
@@ -350,6 +373,7 @@ urls = [
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/image-deploy.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/ipmi.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/kvm-test.rst",
+    "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/lenovo-support.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/manager.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/os-other.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/packet-ipmi.rst",
@@ -371,6 +395,7 @@ urls = [
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/drp-community-contrib.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/krib.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/sledgehammer-builder.rst",
+    "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/chef-bootstrap.rst",
 ]
 
 fetch_n_save(urls, path="doc/content-packages")
@@ -380,3 +405,34 @@ urls = [
 ]
 
 fetch_n_save(urls, path="doc/operations")
+
+urls = fetch_urls("https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/rel-notes/drp.filelist")
+fetch_n_save(urls, path="doc/rel_notes/drp")
+urls = fetch_urls("https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/rel-notes/drp-server.filelist")
+fetch_n_save(urls, path="doc/rel_notes/drp-server")
+urls = fetch_urls("https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/rel-notes/drp-content.filelist")
+fetch_n_save(urls, path="doc/rel_notes/drp-content")
+urls = fetch_urls("https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/rel-notes/drp-plugins.filelist")
+fetch_n_save(urls, path="doc/rel_notes/drp-plugins")
+urls = fetch_urls("https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/rel-notes/rackn-plugins.filelist")
+fetch_n_save(urls, path="doc/rel_notes/rackn-plugins")
+urls = fetch_urls("https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/rel-notes/rackn-cohesity.filelist")
+fetch_n_save(urls, path="doc/rel_notes/rackn-cohesity")
+urls = fetch_urls("https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/rel-notes/rackn-solidfire.filelist")
+fetch_n_save(urls, path="doc/rel_notes/rackn-solidfire")
+urls = fetch_urls("https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/rel-notes/rackn-ux.filelist")
+fetch_n_save(urls, path="doc/rel_notes/rackn-ux")
+
+dest_folder = 'doc/content-packages'
+src_folder = 'doc-override'
+for the_file in os.listdir(src_folder):
+    if the_file == '.keep-me':
+        continue
+    src_file_path = os.path.join(src_folder, the_file)
+    dest_file_path = os.path.join(dest_folder, the_file)
+    try:
+        if os.path.isfile(dest_file_path):
+            os.unlink(dest_file_path)
+        shutil.copy(src_file_path, dest_file_path)
+    except Exception as e:
+        print(e)

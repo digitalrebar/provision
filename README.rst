@@ -5,15 +5,14 @@
 
 .. _rs_welcome:
 
-Digital Rebar Provision Ecosystem
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Digital Rebar
+~~~~~~~~~~~~~
 
-*simple, fast and open-ecosystem server provisioning with strong Infrastructure as Code design.*
+*simple, fast and open-ecosystem infrastructure automation with strong Infrastructure as Code (IaC) design.*
 
-`Digital Rebar Platform (DRP) Ecosystem <https://rebar.digital>`_ is a suite of `APLv2 <https://raw.githubusercontent.com/digitalrebar/provision/v4/LICENSE>`_ components used with
-the RackN DRP v4 Platform to provides a simple yet complete API-driven DHCP/PXE/TFTP provisioning and workflow system.
+`Digital Rebar (aka DRP) <http://rebar.digital>`_ is a `RackN <https://rackn.com>`_ licensed-core platform with an open ecosystem suite of both licensed and open `APLv2 <https://raw.githubusercontent.com/digitalrebar/provision/v4/LICENSE>`_ components.  The fourth generation platform provides a simple yet complete API-driven DHCP/PXE/TFTP provisioning and workflow system.
 
-DRP Platform and Ecosystem is designed to be a complete data center provisioning, content scaffolding and infrastructure workflow platform with a cloud native architecture that completely replaces Cobbler, Foreman, MaaS, Ironic or similar technologies. DRP offers a single golang binary (less than 30MB) with no dependencies capable of installation on a laptop, RPi or switch supporting both bare metal and virtualized infrastructure.
+Digital Rebar Platform and Ecosystem are designed together to be a complete data center provisioning, content scaffolding and infrastructure workflow platform with a cloud native architecture that completely replaces Cobbler, Foreman, MaaS, Ironic or similar technologies. DRP offers a single golang binary (less than 30MB) with no dependencies capable of installation on a laptop, RPi or switch supporting both bare metal and virtualized infrastructure.
 
 Key Features:
 
@@ -24,13 +23,13 @@ Key Features:
     * Extensible Plug-in Model for public, vendor and internal enhancements
     * Dynamic Workflow Contexts (allows using APIs when agents cannot be run)
     * Distributed Multi-Site Management
+    * Integrated Secure Boot, SSO and Highly Available options.
     * Supports ALL orchestration tools including Chef, Puppet, Ansible, SaltStack, Bosh, Terraform, etc
 
   Open Ecosystem Plugins:
-    * RAID, IPMI, and BIOS Configuration (via commercial plugins)
+    * RAID, IPMI, Redfish, and BIOS Configuration
     * Cloud-like pooling capabilities
     * Classification engine for automated workflow
-    * High Availability modes (via commercial plugin)
 
 .. figure::  doc/images/dr_provision.png
    :align:   right
@@ -81,6 +80,8 @@ Our `Quick Start <http://provision.readthedocs.io/en/latest/doc/quickstart.html>
 
 Regular `Install <http://provision.readthedocs.io/en/latest/doc/install.html>`_ for more details on the install steps.  These include production options. (`Previous Version Docs <http://provision.readthedocs.io/en/latest/doc/quickstart.html>`_)
 
+Current Stable Line is the v4.3.X releases.  Next Minor Release is planned to be v4.4.0.
+
 Components & Extensions
 -----------------------
 
@@ -100,16 +101,17 @@ Table of Contents
 
    doc/quickstart
    doc/install
-   doc/setup/index
+   doc/upgrade
+   doc/environment
    doc/features
    doc/server
    doc/configuring
    doc/release
-   doc/upgrade
    doc/workflows
    doc/deployment
    doc/operation
-   doc/performance/intro
+   doc/high-availability
+   doc/integrations
    doc/os-support
    doc/os-support/linuxkit
    doc/ui
@@ -117,16 +119,15 @@ Table of Contents
    doc/Swagger
    doc/cli
    doc/api
-   doc/dev/dev-server
-   doc/dev/dev-cli
-   doc/dev/dev-plugins
-   doc/dev/dev-docs
+   doc/dev/dev-contributing
    doc/faq-troubleshooting
+   doc/knowledge-base
    doc/arch
    doc/content-packages
-   CONTRIBUTING
+   doc/rackn/license
    Trademark
    LICENSE
+   doc/fun-facts
 
 .. _rs_license:
 

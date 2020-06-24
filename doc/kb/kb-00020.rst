@@ -1,0 +1,102 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+
+.. _rs_kb_00020:
+
+kb-00020: Update Community Content via Command Line
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. _rs_update_content_command_line:
+
+Knowledge Base Article: kb-00020
+--------------------------------
+
+
+Description
+-----------
+
+This article describes how to update or upgrade the Community Content pack via the ``drpcli``
+command line.  This procedure is also true for any content pack that you may wish to update.
+
+Solution
+--------
+
+Here's a brief example of how to upgrade the Community Content installed in a DRP Endpoint
+using the command line.  See :ref:`rs_download_rackn_content` for additional steps with RackN
+content.
+
+Perform the following steps to obtain new content.
+
+View our currently installed Content version:
+  ::
+
+    $ drpcli contents show drp-community-content | jq .meta.Version
+      "v1.4.0-0-ec1a3fa94e41a2d6a83fe8e6c9c0e99c5a039f79"
+
+Get and upload our new version (in this example, explicitly set version to ``v1.5.0``.  However, you may also specify ``stable``, or ``tip``, and do not require specific version numbers for those.
+  ::
+
+    drpcli contents upload catalog:drp-community-content-v1.5.0
+
+or
+  ::
+      drpcli catalog item install drp-community-content --version v1.5.0
+
+Now verify that our installed content matches the new vesion we expected ...
+  ::
+
+    $ drpcli contents show drp-community-content | jq .meta.Version
+      "v1.5.0-0-13f1aff688b53d5dfdab9a1a0c1098bd3c6dc76c"
+
+Next check if sledgehammer needs to be updated
+  ::
+
+    drpcli bootenvs uploadiso sledgehammer
+
+This command will update the sledgehammer isos if required. If your output from the above command is
+  ::
+
+    BootEnv sledgehammer already has all required ISO files
+
+Then your sledgehammer is all up to date.
+
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+  * :ref:`rs_faq_drpcli`
+  * :ref:`rs_drpclirc`
+  * :ref:`rs_download_rackn_content`
+
+
+Versions
+========
+
+all
+
+
+Keywords
+========
+
+content packs, updating, upgrading, command line, drpcli
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00020
+    initial release:  Wed Jun 10 11:47:24 PDT 2020
+    updated release:  Wed Jun 10 11:47:24 PDT 2020
+

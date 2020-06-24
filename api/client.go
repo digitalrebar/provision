@@ -45,17 +45,19 @@ type Client struct {
 	*http.Client
 	mux                          *sync.Mutex
 	endpoint, username, password string
+	neverProxy                   bool
 	token                        *models.UserToken
 	closer                       chan struct{}
-	closed, locallyProxied       bool
+	closed                       bool
 	traceLvl                     string
 	traceToken                   string
 	info                         *models.Info
 	iMux                         *sync.Mutex
+	urlProxy                     string
 }
 
 func (c *Client) realEndpoint() string {
-	if locallyProxied() == "" {
+	if locallyProxied(c.neverProxy) == "" {
 		return c.endpoint
 	}
 	return "http://unix"
@@ -155,6 +157,7 @@ func (c *Client) Req() *R {
 		traceToken: c.traceToken,
 		method:     "GET",
 		header:     http.Header{},
+		proxy:      c.urlProxy,
 		err: &models.Error{
 			Type: "CLIENT_ERROR",
 		},
@@ -721,11 +724,8 @@ func (c *Client) GetBlob(dest io.Writer, at ...string) error {
 			startSz = st.Size()
 		}
 		mts := &models.ModTimeSha{}
-		if err := mts.ReadFromXattr(fi); err == nil && mts.UpToDate(fi) {
+		if _, err := mts.Regenerate(fi); err != nil {
 			shasum = mts.String()
-		} else if err = mts.Generate(fi); err == nil {
-			shasum = mts.String()
-			mts.SaveToXattr(fi)
 		}
 	}
 	if shasum != "" {
@@ -742,11 +742,7 @@ func (c *Client) GetBlob(dest io.Writer, at ...string) error {
 			}
 		}
 		mts := &models.ModTimeSha{}
-		if err := mts.ReadFromXattr(fi); err == nil && !mts.UpToDate(fi) {
-			if err := mts.Generate(fi); err == nil {
-				mts.SaveToXattr(fi)
-			}
-		}
+		mts.Regenerate(fi)
 	}
 	return nil
 }
@@ -922,7 +918,11 @@ func (c *Client) PutModel(obj models.Model) error {
 }
 
 func (c *Client) Websocket(at string) (*websocket.Conn, error) {
-	ep, err := url.ParseRequestURI(c.endpoint + path.Join(APIPATH, at))
+	subpath := path.Join(APIPATH, at)
+	if c.urlProxy != "" {
+		subpath = path.Join(subpath, c.urlProxy)
+	}
+	ep, err := url.ParseRequestURI(c.endpoint + subpath)
 	if err != nil {
 		return nil, err
 	}
@@ -941,6 +941,12 @@ func (c *Client) Websocket(at string) (*websocket.Conn, error) {
 	}
 	res, _, err := dialer.Dial(ep.String(), header)
 	return res, err
+}
+
+// UrlProxy sets the request url proxy (for endpoint chaining)
+func (c *Client) UrlProxy(up string) *Client {
+	c.urlProxy = up
+	return c
 }
 
 var weAreTheProxy bool
@@ -980,7 +986,7 @@ func (c *Client) RunProxy(socketPath string) error {
 }
 
 func (c *Client) MakeProxy(socketPath string) error {
-	if weAreTheProxy || locallyProxied() != "" || runtime.GOOS == "windows" {
+	if weAreTheProxy || locallyProxied(c.neverProxy) != "" || runtime.GOOS == "windows" {
 		return nil
 	}
 	localProxyMux.Lock()
@@ -1007,11 +1013,14 @@ func (c *Client) MakeProxy(socketPath string) error {
 		}
 	}()
 	os.Setenv("RS_LOCAL_PROXY", socketPath)
-	c.Client.Transport = transport()
+	c.Client.Transport = transport(true)
 	return nil
 }
 
-func locallyProxied() string {
+func locallyProxied(neverProxy bool) string {
+	if neverProxy {
+		return ""
+	}
 	if socketPath := os.Getenv("RS_LOCAL_PROXY"); socketPath != "" {
 		if fi, err := os.Stat(socketPath); err == nil && fi.Mode()&os.ModeSocket > 0 {
 			return socketPath
@@ -1020,13 +1029,13 @@ func locallyProxied() string {
 	return ""
 }
 
-func transport() *http.Transport {
+func transport(useproxy bool) *http.Transport {
 	dialer := &net.Dialer{
 		Timeout:   30 * time.Second,
 		KeepAlive: 30 * time.Second,
 	}
 	var tr *http.Transport
-	lp := locallyProxied()
+	lp := locallyProxied(!useproxy)
 	if lp == "" {
 		tr = &http.Transport{
 			Proxy:                 http.ProxyFromEnvironment,
@@ -1055,15 +1064,24 @@ func transport() *http.Transport {
 
 // TokenSession creates a new api.Client that will use the passed-in Token for authentication.
 // It should be used whenever the API is not acting on behalf of a user.
+// Attempts to use/create a proxy session
 func TokenSession(endpoint, token string) (*Client, error) {
-	tr := transport()
+	return TokenSessionProxy(endpoint, token, true)
+}
+
+// TokenSessionProxy creates a new api.Client that will use the passed-in Token for authentication.
+// It should be used whenever the API is not acting on behalf of a user.
+// Allows for choice on session creation or not.
+func TokenSessionProxy(endpoint, token string, proxy bool) (*Client, error) {
+	tr := transport(proxy)
 	c := &Client{
-		mux:      &sync.Mutex{},
-		endpoint: endpoint,
-		Client:   &http.Client{Transport: tr},
-		closer:   make(chan struct{}, 0),
-		token:    &models.UserToken{Token: token},
-		iMux:     &sync.Mutex{},
+		mux:        &sync.Mutex{},
+		endpoint:   endpoint,
+		Client:     &http.Client{Transport: tr},
+		closer:     make(chan struct{}, 0),
+		token:      &models.UserToken{Token: token},
+		iMux:       &sync.Mutex{},
+		neverProxy: !proxy,
 	}
 	go func() {
 		<-c.closer
@@ -1080,20 +1098,27 @@ func TokenSession(endpoint, token string) (*Client, error) {
 // UserSession does not currently attempt to cache tokens to
 // persistent storage, although that may change in the future.
 func UserSession(endpoint, username, password string) (*Client, error) {
-	return UserSessionToken(endpoint, username, password, true)
+	return UserSessionTokenProxy(endpoint, username, password, true, true)
 }
 
 // UserSessionToken allows for the token conversion turned off.
 func UserSessionToken(endpoint, username, password string, usetoken bool) (*Client, error) {
-	tr := transport()
+	return UserSessionTokenProxy(endpoint, username, password, usetoken, true)
+}
+
+// UserSessionTokenProxy allows for the token conversion turned off and turn off local proxy
+func UserSessionTokenProxy(endpoint, username, password string, usetoken, useproxy bool) (*Client, error) {
+	tr := transport(useproxy)
+
 	c := &Client{
-		mux:      &sync.Mutex{},
-		endpoint: endpoint,
-		username: username,
-		password: password,
-		Client:   &http.Client{Transport: tr},
-		closer:   make(chan struct{}, 0),
-		iMux:     &sync.Mutex{},
+		mux:        &sync.Mutex{},
+		endpoint:   endpoint,
+		username:   username,
+		password:   password,
+		Client:     &http.Client{Transport: tr},
+		closer:     make(chan struct{}, 0),
+		iMux:       &sync.Mutex{},
+		neverProxy: !useproxy,
 	}
 	basicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
 	token := &models.UserToken{}

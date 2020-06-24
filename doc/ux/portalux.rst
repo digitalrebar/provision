@@ -21,4 +21,5 @@ The RackN Portal provides a complete graphical solution to manage Digital Rebar 
    portal/controlux
    portal/syncuploadux
    portal/endpointadminux
+   portal/configux
    portal/branded-portal

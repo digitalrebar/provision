@@ -11,9 +11,9 @@ Quick Start
 
 .. note::  We HIGHLY recommend using the ``latest`` version of the documentation, as it contains the most up to date information.  Use the version selector in the lower right corner of your browser.
 
-This quick start guide provides a basic installation and start point for further exploration.  The guide has been designed for UNIX systems: Mac OS, Linux OS, Linux VMs and Linux Packet Servers.  While it is possible to install and run Digital Rebar Provision on a Windows instance, we do not cover that here.  The guide employs Curl and Bash commands which are not typically considered safe, but they do provide a simple and quick process for start up.
+This quick start guide provides a basic installation and start point for further exploration.  The guide has been designed for UNIX systems: Mac OS, Linux OS, Linux VMs and Linux Packet Servers.  The guide employs Curl and Bash commands which are not typically considered safe, but they do provide a simple and quick process for start up.  Installation of the service (``dr-provision``) is not supported or possible on Windows operating systems.
 
-It is possible to install on hypervisors and in virtualized environments (eg. VirtualBox, VMware Workstation/Fusion, KVM, etc.).  Each of these environments requires careful setup up of your network environment and consideration with regard to competing DHCP services.  The setup of these environments is outside the scope of this document.
+It is possible to install on hypervisors and in virtualized environments (eg. VirtualBox, VMware Workstation/Fusion, KVM, etc.), or as a container (from Docker Hub).  Each of these environments requires careful setup up of your network environment and consideration with regard to competing DHCP services.  The setup of these environments is outside the scope of this document.
 
 For a full install, or for installations that require offline setup (no direct access to the internet to install prereqs, or pull down zip files), please see the full :ref:`rs_install` documentation.
 
@@ -46,6 +46,9 @@ Please make sure your environment doesn't have any conflicts or issues that migh
   * you need the network information for the subnet that your target Machines will be on
   * Mac OSX may require additional setup (see notes below)
   * we rely heavily on the ``jq`` tool for use with the Command Line tool (``drpcli``) - install it if you don't have it already
+
+For additional information on preparing a *Quickstart* environment, please see the :ref:`rs_setup` for additional
+details.
 
 .. _rs_qs_install:
 
@@ -142,8 +145,8 @@ These steps should be performed from the newly installed *dr-provision* endpoint
     drpcli bootenvs uploadiso sledgehammer
     drpcli prefs set defaultWorkflow discover-base unknownBootEnv discovery
     drpcli contents upload catalog:task-library-stable
-    drpcli bootenvs uploadiso ubuntu-18.04-install # optional
-    drpcli bootenvs uploadiso centos-7-install # optional
+    drpcli bootenvs uploadiso ubuntu-18.04-install # optional, requires about 3G of free space
+    drpcli bootenvs uploadiso centos-8-install # optional, requires about 15G of free space
 
 The ``uploadiso`` command will fetch the ISO image as specified in the BootEnv JSON spec, download it, and then "explode" it in to the ``drp-data/tftpboot/`` directory for installation use.  You may optionally choose one or both of the CentOS and Ubuntu BootEnvs (or any other Community Content supported BootEnv) to install; depending on which Operating System and Version you wish to test or use.
 
@@ -157,8 +160,7 @@ After you accept the endpoint's self-signed certificate, you will be automatical
 the RackN portal at ``https://portal.rackn.io/`` with your endpoint IP included.
 This will guide you to ``Digital Rebar Endpoint Login`` for your new endpoint's API. Clicking ``defaults`` will populate the login with default credentials.
 
-.. note:: The RackN portal runs as a single-page app *locally* in your browser so all DRP API calls
-remain behind your firewall. RackN *never* has direct access to your DRP endpoint.
+.. note:: The RackN portal runs as a single-page app *locally* in your browser so all DRP API calls remain behind your firewall. RackN *never* has direct access to your DRP endpoint.
 
 .. _rs_qs_subnet:
 
@@ -360,14 +362,7 @@ The above procedure uses manual reboot of Machines, and manual application of th
 Machine Power Management
 ------------------------
 
-Fully automated provisioning control requires use of advanced RackN features (plugins) for Power Management actions.  These are done through the IPMI subsystem, with a specific IPMI plugin for a specific environments.  Some existing plugins exist for environments like:
-
-  * bare metal - hardware based BMC (baseboard management controller) functions that implement the IPMI protocol
-  * Virtual Box
-  * Packet bare metal hosting provider (https://www.packet.net/)
-  * Advanced BMC functions are supported for some hardware vendors (eg Dell, HP, IBM, etc)
-
-`Contact RackN <https://www.rackn.com/company/contact-us/>`_ for additional details and information.
+Fully automated provisioning control requires use of plugins for Power Management actions.  These are done through the IPMI subsystem, with a specific IPMI plugin for a specific environments.  Some existing plugins exist and are documented in :ref:`rs_setup`.
 
 Isolated vs Production Install Mode
 -----------------------------------

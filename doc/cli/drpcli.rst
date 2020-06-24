@@ -29,6 +29,7 @@ Options
      -t, --trace string            The log level API requests should be logged at on the server side
      -Z, --traceToken string       A token that individual traced requests should report in the server logs
      -j, --truncate-length int     Truncate columns at this length (default 40)
+     -u, --url-proxy string        URL Proxy for passing actions through another DRP
      -U, --username string         Name of the Digital Rebar Provision user to talk to (default "rocketskates")
 
 SEE ALSO
@@ -57,6 +58,8 @@ SEE ALSO
    relating to extended
 -  `drpcli files <drpcli_files.html>`__ - Access CLI commands relating
    to files
+-  `drpcli fingerprint <drpcli_fingerprint.html>`__ - Get the machine
+   fingerprint used to determine what machine we are running on
 -  `drpcli gohai <drpcli_gohai.html>`__ - Get basic system information
    as a JSON blob
 -  `drpcli info <drpcli_info.html>`__ - Access CLI commands relating to
@@ -80,6 +83,8 @@ SEE ALSO
    CLI commands relating to plugin_providers
 -  `drpcli plugins <drpcli_plugins.html>`__ - Access CLI commands
    relating to plugins
+-  `drpcli pools <drpcli_pools.html>`__ - Access CLI commands relating
+   to pools
 -  `drpcli prefs <drpcli_prefs.html>`__ - List and set DigitalRebar
    Provision operational preferences
 -  `drpcli profiles <drpcli_profiles.html>`__ - Access CLI commands

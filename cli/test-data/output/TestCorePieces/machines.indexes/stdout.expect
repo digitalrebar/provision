@@ -5,6 +5,12 @@
     "Unique": false,
     "Unordered": false
   },
+  "Arch": {
+    "Regex": true,
+    "Type": "string",
+    "Unique": false,
+    "Unordered": false
+  },
   "Available": {
     "Regex": false,
     "Type": "boolean",
@@ -29,6 +35,12 @@
     "Unique": false,
     "Unordered": false
   },
+  "CurrentJob": {
+    "Regex": false,
+    "Type": "UUID string",
+    "Unique": false,
+    "Unordered": false
+  },
   "Description": {
     "Regex": true,
     "Type": "string",
@@ -41,11 +53,29 @@
     "Unique": false,
     "Unordered": false
   },
+  "HardwareAddr": {
+    "Regex": false,
+    "Type": "list",
+    "Unique": false,
+    "Unordered": true
+  },
+  "HardwareAddrs": {
+    "Regex": false,
+    "Type": "list",
+    "Unique": false,
+    "Unordered": true
+  },
   "Key": {
     "Regex": true,
     "Type": "string",
     "Unique": true,
     "Unordered": false
+  },
+  "Locked": {
+    "Regex": false,
+    "Type": "boolean",
+    "Unique": false,
+    "Unordered": true
   },
   "Name": {
     "Regex": true,
@@ -53,11 +83,35 @@
     "Unique": true,
     "Unordered": false
   },
+  "OS": {
+    "Regex": true,
+    "Type": "string",
+    "Unique": false,
+    "Unordered": false
+  },
   "Params": {
     "Regex": false,
     "Type": "list",
     "Unique": false,
     "Unordered": true
+  },
+  "Pool": {
+    "Regex": true,
+    "Type": "string",
+    "Unique": false,
+    "Unordered": false
+  },
+  "PoolAllocated": {
+    "Regex": false,
+    "Type": "boolean",
+    "Unique": false,
+    "Unordered": true
+  },
+  "PoolStatus": {
+    "Regex": true,
+    "Type": "string",
+    "Unique": false,
+    "Unordered": false
   },
   "Profiles": {
     "Regex": false,
@@ -106,5 +160,11 @@
     "Type": "string",
     "Unique": false,
     "Unordered": false
+  },
+  "WorkflowComplete": {
+    "Regex": false,
+    "Type": "boolean",
+    "Unique": false,
+    "Unordered": true
   }
 }

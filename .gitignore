@@ -11,7 +11,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+/venv
 /.idea/*
+/venv
 drp-data
 /dr-provision
 /drpcli
@@ -23,6 +25,7 @@ drpcli.amd64.darwin
 drpcli.amd64.windows
 drpcli.arm64.linux
 cli/test.log
+doc-override/*
 bin
 vendor
 coverage.txt
@@ -51,3 +54,4 @@ rebar-catalog
 builddir/
 _build/
 profile*.txt
+rel_notes

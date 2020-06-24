@@ -35,6 +35,7 @@ Options inherited from parent commands
      -t, --trace string            The log level API requests should be logged at on the server side
      -Z, --traceToken string       A token that individual traced requests should report in the server logs
      -j, --truncate-length int     Truncate columns at this length (default 40)
+     -u, --url-proxy string        URL Proxy for passing actions through another DRP
      -U, --username string         Name of the Digital Rebar Provision user to talk to (default "rocketskates")
 
 SEE ALSO
@@ -80,8 +81,13 @@ SEE ALSO
    for the machine
 -  `drpcli machines params <drpcli_machines_params.html>`__ - Gets/sets
    all parameters for the machine
+-  `drpcli machines pause <drpcli_machines_pause.html>`__ - Mark the
+   machine as NOT runnable
 -  `drpcli machines processjobs <drpcli_machines_processjobs.html>`__ -
    For the given machine, process pending jobs until done.
+-  `drpcli machines
+   releaseToPool <drpcli_machines_releaseToPool.html>`__ - Release this
+   machine back to the pool
 -  `drpcli machines remove <drpcli_machines_remove.html>`__ - Remove the
    param *key* from machines
 -  `drpcli machines
@@ -89,6 +95,8 @@ SEE ALSO
    profile from the machine’s list
 -  `drpcli machines removetask <drpcli_machines_removetask.html>`__ -
    Remove a task from the machine’s list
+-  `drpcli machines run <drpcli_machines_run.html>`__ - Mark the machine
+   as runnable
 -  `drpcli machines runaction <drpcli_machines_runaction.html>`__ - Run
    action on object from plugin
 -  `drpcli machines set <drpcli_machines_set.html>`__ - Set the machines
@@ -103,5 +111,7 @@ SEE ALSO
    update machine by id with the passed-in JSON
 -  `drpcli machines wait <drpcli_machines_wait.html>`__ - Wait for a
    machine’s field to become a value within a number of seconds
+-  `drpcli machines whoami <drpcli_machines_whoami.html>`__ - Figure out
+   what machine UUID most closely matches the current system
 -  `drpcli machines workflow <drpcli_machines_workflow.html>`__ - Set
    the machine’s workflow

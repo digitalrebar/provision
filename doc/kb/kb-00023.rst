@@ -1,0 +1,81 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+
+.. _rs_kb_00023:
+
+kb-00023: Nested Templates (or "Sub-templates")
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. _rs_nested_templates:
+
+Knowledge Base Article: kb-00023
+--------------------------------
+
+
+Description
+-----------
+
+Understanding how to use templates nested inside of other templates (eg "sub-templates).
+
+
+Solution
+--------
+
+The Golang templating language does not provide a call-out to include another template.  However, at RackN,
+we've added the ability to include *nested templates* (sometimes referred to as *sub-templates*).  In any
+content piece that is valid to use the templating capabilities, simply use the following Template construct
+to refer to another template.  The template referred to will be expanded inline in the calling template.
+
+The nested template example below calls the template named (oddly enough) *nested.tmpl*.
+
+  ::
+
+    {{template "nested.tmpl" .}}
+
+    # or alternatively:
+
+    {{$templateName := (printf "part-seed-%s.tmpl" (.Param "part-scheme")) -}}
+    {{.CallTemplate $templateName .}}
+
+The ``template`` construct is a text string that refers to a given template name which exists already.
+
+The ``CallTemplate`` construct can be a variable or expression that evaluates to a string.
+
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+  * :ref:`rs_arch`
+
+
+Versions
+========
+
+v4.0 and newer
+
+
+Keywords
+========
+
+templates, sub-templates, nested templates, workflow
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00023
+    initial release:  Wed Jun 10 11:56:49 PDT 2020
+    updated release:  Wed Jun 10 11:56:49 PDT 2020
+

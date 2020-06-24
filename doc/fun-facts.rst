@@ -27,6 +27,18 @@ Rebar is also a nod to our Crowbar history.  The project founders were the origi
 
 Rebar also works as a reference to the "bare metal" physical infrastructure that Digital Rebar focused on automating.
 
+Our Metal Bear Mascot
+---------------------
+
+The Digital Rebar mascot is a metal bear named Cloudia.  She loves bare metal infrastructure but is not as crazy about heavy metal music.
+
+There are three ways that Cloudia appears: floading on a cloud, as a bear alone and just her head.
+
+First Commit
+------------
+
+The first code commit to Digital Rebar was made by Greg Althaus on Feb 8, 2017.  It was appropriately titled "first commit" and set the README.md to "# rocket-skates".
+
 Rocket Skates?
 --------------
 

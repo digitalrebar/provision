@@ -184,7 +184,10 @@ Tasks:
 	machineRes.Secret = ""
 	machineRes.Runnable = true
 	machineRes.Stage = "none"
-	machineRes.CurrentTask = -1
+	machineRes.CurrentTask = 0
+	machineRes.WorkflowComplete = true
+	machineRes.Pool = "default"
+	machineRes.PoolStatus = "Free"
 	rt(t, "Make initial machine", machineRes, nil,
 		func() (interface{}, error) {
 			err := session.CreateModel(machine1)
@@ -281,6 +284,7 @@ Tasks:
 	machineRes.Stage = "stageNoWait"
 	machineRes.Tasks = []string{"task1"}
 	machineRes.CurrentTask = -1
+	machineRes.WorkflowComplete = false
 	rt(t, "Set machine 1 to stageNoWait", machineRes, nil,
 		func() (interface{}, error) {
 			mc := models.Clone(machine1).(*models.Machine)
@@ -297,6 +301,7 @@ Tasks:
 	machineRes.Stage = "stageWait"
 	machineRes.Tasks = []string{"task1"}
 	machineRes.CurrentTask = -1
+	machineRes.WorkflowComplete = false
 	rt(t, "Set machine 1 to stageWait", machineRes, nil,
 		func() (interface{}, error) {
 			mc := models.Clone(machine1).(*models.Machine)
@@ -313,6 +318,7 @@ Tasks:
 	machineRes.Stage = "stageNoWait1"
 	machineRes.Tasks = []string{"task1"}
 	machineRes.CurrentTask = -1
+	machineRes.WorkflowComplete = false
 	rt(t, "Set machine 1 to stageNoWait1", machineRes, nil,
 		func() (interface{}, error) {
 			mc := models.Clone(machine1).(*models.Machine)
@@ -329,6 +335,7 @@ Tasks:
 	machineRes.Stage = "stageWait1"
 	machineRes.Tasks = []string{"task1"}
 	machineRes.CurrentTask = -1
+	machineRes.WorkflowComplete = false
 	rt(t, "Set machine 1 to stageWait1", machineRes, nil,
 		func() (interface{}, error) {
 			mc := models.Clone(machine1).(*models.Machine)
@@ -345,6 +352,7 @@ Tasks:
 	machineRes.Stage = "stageReboot"
 	machineRes.Tasks = []string{"task1"}
 	machineRes.CurrentTask = -1
+	machineRes.WorkflowComplete = false
 	rt(t, "Set machine 1 to stageReboot", machineRes, nil,
 		func() (interface{}, error) {
 			mc := models.Clone(machine1).(*models.Machine)
@@ -362,6 +370,7 @@ Tasks:
 	machineRes.Stage = "stageRealReboot"
 	machineRes.Tasks = []string{"task1"}
 	machineRes.CurrentTask = -1
+	machineRes.WorkflowComplete = false
 	rt(t, "Set machine 1 to stageRealReboot", machineRes, nil,
 		func() (interface{}, error) {
 			mc := models.Clone(machine1).(*models.Machine)
@@ -379,6 +388,7 @@ Tasks:
 	machineRes.Stage = "stageRealReboot1"
 	machineRes.Tasks = []string{"task1"}
 	machineRes.CurrentTask = -1
+	machineRes.WorkflowComplete = false
 	rt(t, "Set machine 1 to stageRealReboot1", machineRes, nil,
 		func() (interface{}, error) {
 			mc := models.Clone(machine1).(*models.Machine)
@@ -396,6 +406,7 @@ Tasks:
 	machineRes.Stage = "stageStop"
 	machineRes.Tasks = []string{"task1"}
 	machineRes.CurrentTask = -1
+	machineRes.WorkflowComplete = false
 	rt(t, "Set machine 1 to stageStop", machineRes, nil,
 		func() (interface{}, error) {
 			mc := models.Clone(machine1).(*models.Machine)
@@ -413,6 +424,7 @@ Tasks:
 	machineRes.Stage = "fred-install"
 	machineRes.Tasks = []string{"taskInstall"}
 	machineRes.CurrentTask = -1
+	machineRes.WorkflowComplete = false
 	rt(t, "Set machine 1 to fred-install", machineRes, nil,
 		func() (interface{}, error) {
 			mc := models.Clone(machine1).(*models.Machine)
@@ -430,6 +442,7 @@ Tasks:
 	machineRes.Stage = "greg-install"
 	machineRes.Tasks = []string{"taskInstall"}
 	machineRes.CurrentTask = -1
+	machineRes.WorkflowComplete = false
 	rt(t, "Set machine 1 to greg-install", machineRes, nil,
 		func() (interface{}, error) {
 			mc := models.Clone(machine1).(*models.Machine)

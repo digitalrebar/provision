@@ -1,0 +1,70 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+
+.. _rs_kb_00033:
+
+kb-00033: Booting Ubuntu Without External Access
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. _rs_ubuntu_local_repo:
+
+Knowledge Base Article: kb-00033
+--------------------------------
+
+
+Description
+-----------
+
+How to install Ubuntu without internet access.
+
+
+Solution
+--------
+
+Default Ubuntu ISOs will attempt to check internet repositories, this can cause problems during
+provisioning if your environment does not have outbound access.
+
+To workaround this problem, you need to supply a DNS and gateway for your subnet.  There are
+several ways to do this:
+
+1. Internal to Digital Rebar: Define Options 3 (Gateway) and 6 (DNS) for your Machine Subnet
+2. External to Digital Rebar: Adding ``default_route=true`` to the boot parameters and include a DNS server on the local subnet in DHCP
+
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+  * use of the ``package-repositories`` Param to specify internal Package Repositories
+
+
+Versions
+========
+
+all
+
+
+Keywords
+========
+
+ubuntu, no network access, package repositories, package-repositories, default gateway
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00033
+    initial release:  Wed Jun 10 12:34:39 PDT 2020
+    updated release:  Wed Jun 10 12:34:39 PDT 2020
+

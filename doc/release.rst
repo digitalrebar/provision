@@ -4,11 +4,6 @@
 .. index::
   pair: Digital Rebar Provision; Release Process
 
-.. _rs_release_process:
-
-
-Releases
-~~~~~~~~
 
 
 Version Scheme
@@ -48,6 +43,7 @@ The *drpcli* client reports its version by running:
 
     drpcli version
 
+.. _rs_release_process:
 
 Release Process
 ---------------
@@ -58,10 +54,87 @@ the catalog as well.
 Additionally, as releases cut at stable points, the **stable** build in the catalog will update to the most recent tagged build.
 Both the **stable** and tagged build will be available through the catalog.
 
-Release Notes
--------------
 
-Each of the release specific changes are annotated in the Release Notes documentation.  You can find the release notes
-at:
+Releases
+~~~~~~~~
 
-   https://github.com/digitalrebar/provision/v4/releases
+The following are the release notes for the trees.
+
+
+digitalrebar/provision
+======================
+
+.. toctree::
+   :maxdepth: 1
+   :glob:
+
+   rel_notes/drp/*
+
+digitalrebar/provision-server
+=============================
+
+.. toctree::
+   :maxdepth: 1
+   :glob:
+
+   rel_notes/drp-server/*
+
+
+digitalrebar/provision-plugins
+==============================
+
+.. toctree::
+   :maxdepth: 1
+   :glob:
+
+   rel_notes/drp-plugins/*
+
+
+digitalrebar/provision-content
+==============================
+
+.. toctree::
+   :maxdepth: 1
+   :glob:
+
+   rel_notes/drp-content/*
+
+
+rackn/provision-plugins
+=======================
+
+.. toctree::
+   :maxdepth: 1
+   :glob:
+
+   rel_notes/rackn-plugins/*
+
+
+rackn/cohesity
+==============
+
+.. toctree::
+   :maxdepth: 1
+   :glob:
+
+   rel_notes/rackn-cohesity/*
+
+
+rackn/solidfire
+===============
+
+.. toctree::
+   :maxdepth: 1
+   :glob:
+
+   rel_notes/rackn-solidfire/*
+
+rackn/ux
+========
+
+.. toctree::
+   :maxdepth: 1
+   :glob:
+
+   rel_notes/rackn-ux/*
+

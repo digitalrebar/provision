@@ -15,6 +15,7 @@ func TestObject(t *testing.T) {
 			"machines",
 			"params",
 			"plugins",
+			"pools",
 			"preferences",
 			"profiles",
 			"reservations",

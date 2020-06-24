@@ -103,7 +103,10 @@ Validated: true
 	machineRes.Secret = ""
 	machineRes.Runnable = true
 	machineRes.Stage = "none"
-	machineRes.CurrentTask = -1
+	machineRes.CurrentTask = 0
+	machineRes.Pool = "default"
+	machineRes.PoolStatus = "Free"
+	machineRes.WorkflowComplete = true
 	rt(t, "Make initial machine", machineRes, nil,
 		func() (interface{}, error) {
 			err := session.CreateModel(machine1)

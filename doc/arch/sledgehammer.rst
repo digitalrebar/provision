@@ -10,7 +10,7 @@ Sledgehammer Overview
 Sledgehammer is our system discovery/inventory/configuration in-memory
 OS image.  It is based on the latest CentOS 7.x live CD, with any
 unneeded content stripped out, tools we usually use preinstalled, and
-rebacled to me more space and network bandwidth efficient.
+repacked to me more space and network bandwidth efficient.
 https://github.com/digitalrebar/provision-content/tree/v4/sledgehammer-builder is
 the part of the Git repo that contains the code needed to build Sledgehammer.
 
@@ -22,14 +22,21 @@ properly on the vast majority of x86_64 based servers. However, if you
 need to include support for custom network hardware, you can rebuild
 Sledgehammer to have it include the extra drivers that are needed.
 
-This process should mostly consist of modifying sledgehammer.ks to
-have it pull in any extra drivers or utilities that should be present,
-and then rebuilding Sledgehammer using build_sledgehammer.sh.
+This process should mostly consist of forking the sledgehammer-builder
+content bundle and modifying its install steps to add whatever extra
+drivers and packages you need, then clean up any extra install dependencies.
+
+Care should be taken to ensure that any extra drivers you install are compatible
+with UEFI Secure Boot if you want to be able to operate on systems with
+UEFI Secure Boot enabled.
 
 Sledgehammer Design
 -------------------
 
-Sledgehammer is delivered in three parts:
+Sledgehammer is delivered in four parts:
+
+- The CentOS signed UEFI bootloader components.  These are required to
+  allow sledgehammer to boot on UEFI systems with Secure Boot enabled.
 
 - vmlinuz0: This is the initial kernel that the system PXE boots to
   when booting to Sledgehammer. This file is usually around 5 - 6 megs
@@ -81,8 +88,7 @@ How Sledgehammer Boots
    into Sledgehammer) examines the options that the kernel was booted
    with, sets the system hostname, fetches a copy of drpcli from the
    provisioner, and determines whether it needs to create a machine in
-   dr-provision for this system based on whether a machine UUID was
-   passed as a kernel parameter.  If it was not, a new machine is
+   dr-provision for this system.  If it was not, a new machine is
    created, and has its initial Stage and BootEnv set to the default
    Stage and the default BootEnv.  The machine-specific startup script
    is then downloaded, validated, and executed.
@@ -91,3 +97,52 @@ How Sledgehammer Boots
    sledgehammer bootenv and any bootenv that boots known machines to
    Sledgehammer) then starts the machine agent, which starts executing
    tasks on the machine.
+
+How Sledgehammer Identifies a Machine
+-------------------------------------
+
+There are several methods dr-provision can use to identify what machine
+it is running on, and determine whether it needs to creater a new Machine.
+
+Using drpcli machines whoami
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This method, which was introduced in v4.3, uses a combination of hopefully
+unique attributes pulled from the system to identify the system.  It gathers
+the following information:
+
+1. The system UUID, as provided by the DMI information.
+   If present and used, it will have a weight of 50 points.
+
+2. The system serial number, as provided by the DMI information.
+   If present and used, it will have a weight of 25 points.
+
+3. The chassis serial number, as provided by the DMI information.
+   If present and used, it will have a weight of 25 points
+
+4. The serial number of all the DIMMs installed in the system.
+   If present and used, they will have a collective weight of 100 points.
+
+5. The MAC addresses of all the physical nics in the system.
+   If present and used, they will have a collective weight of 100 points.
+
+On the client side, this information is gathered, hashes generated for everything
+except the MAC addresses, and posted to dr-provision.  On the server side, the fingerprint
+is compared to the saved fingerprints for all systems.  The request is considered to match
+the system with the highest score that is greater than or equal to 100 points.
+
+If drpocli detects it is running under a hypervisor, it will leave everything in the fingerprint
+blank except for the MAC addresses, as vms have even less of a guarantee of having unique
+DMI information than physical systems do.
+
+If whoami does not identify the machine, or if it not available on the server side,
+sledgehammer will fall back to determining what the machine is based on the machine
+UUID sent on the kernel commandline.
+
+Using the kernel command line
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This is the default fallback method for when whoami is not available or (for now)
+when whoami fails to identify a machine.  This method relies on all the
+boot environments rendering appropriate MAC address and/or IP address based paths
+for each machine.

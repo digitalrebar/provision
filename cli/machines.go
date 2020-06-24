@@ -23,7 +23,7 @@ func init() {
 	if DefaultStateLoc == "" {
 		switch runtime.GOOS {
 		case "windows":
-			DefaultStateLoc = os.ExpandEnv("${APPDATA}/drp-agent")
+			DefaultStateLoc = `C:/Windows/System32/config/systemprofile/AppData/Local/rackn/drp-agent`
 		default:
 			DefaultStateLoc = "/var/lib/drp-agent"
 		}
@@ -86,6 +86,72 @@ func registerMachine(app *cobra.Command) {
 				req.Params("force", "true")
 			}
 			if err := req.Do(&clone); err != nil {
+				return err
+			}
+			return prettyPrint(clone)
+		},
+	})
+	op.addCommand(&cobra.Command{
+		Use:   "releaseToPool [id]",
+		Short: fmt.Sprintf("Release this machine back to the pool"),
+		Long:  `Release this machine back to the pool`,
+		Args: func(c *cobra.Command, args []string) error {
+			if len(args) != 1 {
+				return fmt.Errorf("%v requires 1 arguments", c.UseLine())
+			}
+			return nil
+		},
+		RunE: func(c *cobra.Command, args []string) error {
+			mid := args[0]
+			r := &[]models.PoolResult{}
+			p := map[string]interface{}{}
+			if err := Session.Req().Post(p).UrlFor("machines", mid, "releaseToPool").Do(r); err != nil {
+				return err
+			}
+			return prettyPrint(r)
+		},
+	})
+	op.addCommand(&cobra.Command{
+		Use:   "run [id]",
+		Short: fmt.Sprintf("Mark the machine as runnable"),
+		Long:  `Set the machine's Runnable flag to true`,
+		Args: func(c *cobra.Command, args []string) error {
+			if len(args) != 1 {
+				return fmt.Errorf("%v requires 1 arguments", c.UseLine())
+			}
+			return nil
+		},
+		RunE: func(c *cobra.Command, args []string) error {
+			m, err := op.refOrFill(args[0])
+			if err != nil {
+				return generateError(err, "Failed to fetch %v: %v", op.singleName, args[0])
+			}
+			clone := models.Clone(m).(*models.Machine)
+			clone.Runnable = true
+			if err := Session.Req().PatchTo(m, clone).Do(&clone); err != nil {
+				return err
+			}
+			return prettyPrint(clone)
+		},
+	})
+	op.addCommand(&cobra.Command{
+		Use:   "pause [id]",
+		Short: fmt.Sprintf("Mark the machine as NOT runnable"),
+		Long:  `Set the machine's Runnable flag to false`,
+		Args: func(c *cobra.Command, args []string) error {
+			if len(args) != 1 {
+				return fmt.Errorf("%v requires 1 arguments", c.UseLine())
+			}
+			return nil
+		},
+		RunE: func(c *cobra.Command, args []string) error {
+			m, err := op.refOrFill(args[0])
+			if err != nil {
+				return generateError(err, "Failed to fetch %v: %v", op.singleName, args[0])
+			}
+			clone := models.Clone(m).(*models.Machine)
+			clone.Runnable = false
+			if err := Session.Req().PatchTo(m, clone).Do(&clone); err != nil {
 				return err
 			}
 			return prettyPrint(clone)
@@ -380,6 +446,21 @@ the stage runner wait flag.
 			return prettyPrint(res)
 		},
 	}
+	op.addCommand(&cobra.Command{
+		Use:   "whoami",
+		Short: "Figure out what machine UUID most closely matches the current system",
+		Args:  cobra.NoArgs,
+		RunE: func(c *cobra.Command, args []string) error {
+			whoami := &models.Whoami{}
+			if err := whoami.Fill(); err != nil {
+				return err
+			}
+			if err := Session.Req().Post(whoami).UrlFor("whoami").Do(&whoami); err != nil {
+				return err
+			}
+			return prettyPrint(whoami)
+		},
+	})
 	tokenFetch.Flags().StringVar(&tokenDuration, "ttl", "1h", "The time that the retrieved token should be valid.")
 	op.addCommand(tokenFetch)
 	op.addCommand(inspectCommands())

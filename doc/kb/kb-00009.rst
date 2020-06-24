@@ -1,0 +1,91 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+
+.. _rs_kb_00009:
+
+kb-00009: What are the default passwords?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. _rs_default_password:
+
+Knowledge Base Article: kb-00009
+--------------------------------
+
+
+Description
+-----------
+
+A list of the common default passwords you can find in use with Digital Rebar Platform.
+
+Solution
+--------
+
+When using the community BootEnvs for installation, the password is set to a variant of
+``RocketSkates``.  See :ref:`rs_configuring_default` for complete details.
+
+For all bootenvs (sledgehammer, centos, ubuntu, etc.) the default pattern does NOT allow login via Password.  See :ref:`rs_add_ssh` for manaing SSH Authorized Keys login details.
+
+We *strongly* recommend changing this default or, better, using SSH ``without-password`` options as per :ref:`rs_access_ssh_root_mode` details.
+
+A quick reference table for passwords:
+
+------------------------  ------------  ------------
+use                       user          password
+------------------------  ------------  ------------
+``drp endpoint auth``     rocketskates  r0cketsk8ts
+``sledgehammer``          root          rebar1
+``most bootenvs`` (*)     root          RocketSkates
+``debian`` / ``ubuntu``   rocketskates  RocketSkates
+``cloud-init`` images     <varies> (*)  RocketSkates
+``VMware ESXi``           root          <generated>
+------------------------  ------------  ------------
+
+For more information:
+
+.. note:: ``(*)`` "most bootenvs" and ``cloud-init`` images refers to CentOS, Ubuntu, CoreOS, ESXi, etc.  Generally speaking, this is the default "installed" credentials.  Note that each distro has it's own rules about ``root`` versus installed default user accounts.  DRP follows most vendors "patterns" with regards to ``root`` -vs- unprivileged user creation, with the username changed to "rocketskates".  Some vendor specific notes are below.
+
+For ``debian / ubuntu`` bootenvs, the default user (``rocketskates``, can be changed by setting ``provisioner-default-user`` Param), has ``sudo`` privileges.
+
+For Images with ``cloud-init`` pieces, there often is an injected ``centos`` user for CentOS, ``ubuntu`` for Ubuntu, etc. user.  This is controlled by the ``cloud-init`` configurations of the image build process.
+
+For more about VMware, see :ref:`vmware_esxi_passwords`
+
+
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+  * :ref:`rs_add_ssh`
+  * :ref:`rs_configuring_default`
+  * :ref:`rs_access_ssh_root_mode`
+  * :ref:`vmware_esxi_passwords`
+
+Versions
+========
+
+all
+
+Keywords
+========
+
+dr-provision, operating systems, default passwords, default usernames
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00009
+    initial release:  Wed Jun 10 10:49:50 PDT 2020
+    updated release:  Wed Jun 10 10:49:50 PDT 2020
+

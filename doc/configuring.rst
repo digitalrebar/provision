@@ -45,14 +45,14 @@ In addition to the basic *discovery* capability provided by the *sledgehammer* B
 
   ::
 
-    drpcli bootenvs uploadiso centos-7-install
-    drpcli bootenvs uploadiso ubuntu-16.04-install
+    drpcli bootenvs uploadiso centos-8-install
+    drpcli bootenvs uploadiso ubuntu-18.04-install
 
 Each content pack has various supported operating system BootEnv definitions.  The default *drp-community-content* pack contains the following BootEnvs:
 
-  #. centos-7-install: CentOS 7 (most recent released version)
+  #. centos-8-install: CentOS 8 (most recent released version)
   #. centos-7.4.1708-install: Centos 7.4.1708 (this may change as new versions are released)
-  #. ubuntu-16.04-install: Ubuntu 16.04
+  #. ubuntu-18.04-install: Ubuntu 18.04
   #. debian-8: Debian 8 (Jessie) version
   #. debian-9: Debian 9 (Stretch) version
 

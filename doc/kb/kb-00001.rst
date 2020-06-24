@@ -1,0 +1,60 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+
+.. _rs_kb_00001:
+
+kb-00001: Where can I get the DRPCLI?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. _rs_faq_drpcli:
+
+Knowledge Base Article: kb-00001
+--------------------------------
+
+
+Description
+-----------
+
+I need the ``drpcli`` command line tool for my laptop, desktop, or other system.  Where can I get it?
+
+Solution
+--------
+
+If you need the DRPCLI, follow instructions for :ref:`rs_cli_download`.
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+  * :ref:`rs_cli_download`
+
+Versions
+========
+
+all
+
+
+Keywords
+========
+
+drpcli, command line
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00001
+    initial release:  Wed Jun 10 09:06:54 PDT 2020
+    updated release:  Wed Jun 10 09:06:54 PDT 2020
+

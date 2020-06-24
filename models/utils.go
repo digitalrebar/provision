@@ -85,6 +85,7 @@ func All() []Model {
 		&User{},
 		&Workflow{},
 		&Tenant{},
+		&Pool{},
 	}
 }
 

@@ -1,0 +1,80 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+
+.. _rs_kb_00038:
+
+kb-00038: Expand Templates from Failed Job
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. _rs_expand_templates:
+
+Knowledge Base Article: kb-00038
+--------------------------------
+
+
+Description
+-----------
+
+How to expand templates from a task (job) that may have failed.
+
+.. note:: This procedure shows how to do it via API.  The Web Portal will show rendered
+          templates from a Job, in the Jobs Log menu section.
+
+
+Solution
+--------
+
+If you have a task/template that has failed, once it's been run by the Job system, you can collect the rendered
+template.  The rendered template will be in JSON format, so it may be hard to parse.
+
+  ::
+
+    # set Endpoint and User/Pass appropriately for your environment
+    export RS_ENDPOINT="https://127.0.0.1:8092"
+    export RS_KEY="rocketskates:r0cketsk8ts"
+
+    # get your Job ID from the failed job, and set accordingly:
+    JOBID="abcdefghijklmnopqrstuvwxyz"
+    curl -k -u $RS_KEY $RS_ENDPOINT/api/v3/jobs/$JOBID/actions > $JOBID.json
+
+    # optional - if you have the remarshal tools installed:
+    json2yaml $JOBID.json > $JOBID.yaml
+
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+  * Web Portal *Jobs* menu, and rendered templates on each Job Log
+
+
+Versions
+========
+
+all
+
+
+Keywords
+========
+
+rendered templates, jobs, job log
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00038
+    initial release:  Wed Jun 10 12:52:03 PDT 2020
+    updated release:  Wed Jun 10 12:52:03 PDT 2020
+

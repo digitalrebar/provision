@@ -1,0 +1,93 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+
+.. _rs_kb_00041:
+
+kb-00041: Manager and System Time
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. _rs_manager_system_time:
+
+Knowledge Base Article: kb-00041
+--------------------------------
+
+
+Description
+-----------
+
+The Multi-site Manager system requires all DRP Endpoints that are being managed to have consistent and accurate
+system clock date and time information.  Generally speaking, all Endpoints should have NTP services running,
+and all RTC clocks set to UTC.  The Authentication Tokens and Secrets used for the token system will by design
+fail if the clocks between two cooperating DRP Endpoint differ more than a few minutes.  This is an intentional
+security measure.
+
+
+Solution
+--------
+
+If you encounter any of the following errors on "upstream" DRP Managers, this is often the system clocks being
+out of sync:
+
+  Machine Objects may show the following:
+  ::
+
+    (403) system:
+    Invalid token: No valid key specified
+
+
+  Plugins may show the following:
+  ::
+
+    Unable to create event stream: Bad Request
+
+  or even Golang stack traces in some (eg IPMI plugin):
+  ::
+
+    Panic recovered: invalid WriteHeader code 0
+    Stack trace:
+    goroutine 33 [running]:
+    runtime/debug.Stack(0x991080, 0xc000289510, 0x1)
+	  /home/travis/.gimme/versions/go1.12.7.linux.amd64/src/runtime/debug/stack.go:24 +0x9d
+    ...snip...
+
+In addition, Machine objects may show additional failed validation error messages in the Machine details pages.
+
+To correct the problem, install and verify all DRP Endpoints system clocks are in sync with NTP services.
+
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+
+Versions
+========
+
+  * Multi Site Manager plugin prior to v4.3.0
+  * Manager capability in v4.30 and newer
+
+
+Keywords
+========
+
+multi site manager, msm, manager, system time, ntp, cronyd, ntpd
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00041
+    initial release:  Wed Jun 10 13:05:35 PDT 2020
+    updated release:  Wed Jun 10 13:05:35 PDT 2020
+

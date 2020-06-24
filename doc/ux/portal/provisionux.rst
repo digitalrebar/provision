@@ -25,7 +25,6 @@ The UI will show a complete list of potential Boot Environments with the followi
 The top of the page includes a set of additional actions:
 
 * Refresh - Refresh the list of available Boot Environments for the Endpoint to use
-* Filter - Refine the list of Boot Environments based on these options: Available, Key, Name, OnlyUnknown, OSName, ReadOnly, Valid
 * Add - Add a new Boot Environment 
 * Clone - Clone a selected Boot Environment 
 * Delete - Remove a selected Boot Environment
@@ -43,7 +42,6 @@ The UI will show a complete list of Templates with the following information:
 The top of the page includes a set of additional actions:
 
 * Refresh - Refresh the list of available Templates for the Endpoint to use
-* Filter - Refine the list of Templates based on these options: Available, ID, Key, ReadOnly, Valid
 * Add - Add a new Template 
 * Clone - Clone a selected Template 
 * Delete - Remove a selected Template
@@ -62,7 +60,6 @@ The UI will show a complete list of Params with the following information:
 The top of the page includes a set of additional actions:
 
 * Refresh - Refresh the list of available Params for the Endpoint to use
-* Filter - Refine the list of Params based on these options: Available, Key, Name, ReadOnly, Valid
 * Add - Add a new Param        
 * Clone - Clone a selected Param
 * Delete - Remove a selected Param
@@ -80,7 +77,6 @@ The UI will show a complete list of Profiles with the following information:
 The top of the page includes a set of additional actions:
 
 * Refresh - Refresh the list of available Profiles for the Endpoint to use
-* Filter - Refine the list of Params based on these options: Available, Key, Name, ReadOnly, Valid
 * Add - Add a new Profile 
 * Clone - Clone a selected Profile
 * Delete - Remove a selected Profile

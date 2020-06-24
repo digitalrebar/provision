@@ -35,6 +35,7 @@ Options inherited from parent commands
      -t, --trace string            The log level API requests should be logged at on the server side
      -Z, --traceToken string       A token that individual traced requests should report in the server logs
      -j, --truncate-length int     Truncate columns at this length (default 40)
+     -u, --url-proxy string        URL Proxy for passing actions through another DRP
      -U, --username string         Name of the Digital Rebar Provision user to talk to (default "rocketskates")
 
 SEE ALSO
@@ -63,6 +64,10 @@ SEE ALSO
    bootenvs
 -  `drpcli bootenvs meta <drpcli_bootenvs_meta.html>`__ - Gets metadata
    for the bootenv
+-  `drpcli bootenvs
+   purgeLocalInstall <drpcli_bootenvs_purgeLocalInstall.html>`__ - This
+   will have dr-provision purge local install files for the listed
+   arches
 -  `drpcli bootenvs runaction <drpcli_bootenvs_runaction.html>`__ - Run
    action on object from plugin
 -  `drpcli bootenvs show <drpcli_bootenvs_show.html>`__ - Show a single
