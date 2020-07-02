@@ -2,7 +2,7 @@
 .. Licensed under the Apache License, Version 2.0 (the "License");
 .. Digital Rebar Provision documentation under Digital Rebar master license
 .. index::
-  pair: Digital Rebar Provision; Air Gaped Install
+  pair: Digital Rebar Provision; Air Gapped Install
 
 .. _rs_airgap:
 
@@ -13,9 +13,9 @@ Air Gap Install Instructions
 About
 -----
 
-In an air gaped install the DRP endpoint will not have access to the internet. In order to have a functional DRP endpoint you will
+In an air gapped install the DRP endpoint will not have access to the internet. In order to have a functional DRP endpoint you will
 need to pre-fetch some packages from the internet. This document will cover what the minimal requirements will be to get up and running
-in the air gaped environment. We will cover what is needed and where to get it. In this document it will be assumed you will be using
+in the air gapped environment. We will cover what is needed and where to get it. In this document it will be assumed you will be using
 RHEL/CentOS 7 and starting the install of DRP after you have completed at least a "Minimal install" of the operating system. The
 commands being run to pre-fetch content are being run from an Ubuntu workstation machine with internet access, a web browser, and wget,
 but any workstation can be used as long as it has internet access and a way to download and save files from the internet.
@@ -24,17 +24,17 @@ but any workstation can be used as long as it has internet access and a way to d
 Additional Operating System Packages Required
 ---------------------------------------------
 
-The following packages will need to be installed on your air gaped endpoint:
+The following packages will need to be installed on your air gapped endpoint:
 
 * bsdtar
 * libarchive (required by bsdtar)
 
-It is assumed that these packages are already installed on the air gaped DRP endpoint at the time of the DRP install.
+It is assumed that these packages are already installed on the air gapped DRP endpoint at the time of the DRP install.
 
 
 RackN & DRP Requirements
 ------------------------
-The following is a list of DRP and RackN requirements needed for a successful air gaped install.
+The following is a list of DRP and RackN requirements needed for a successful air gapped install.
 
 * DRP
 * DRP Installer
@@ -88,7 +88,7 @@ The last thing required is the RackN License. At this time you need to either ge
 internet accessible DRP endpoint, or by contacting RackN support to have a license generated for you. Once you have the
 license file save it in the `~/air_gap` dir as `rackn-license.json`
 
-Next you need to move the contents of `~/air_gap` to the air gap system. *The next set of commands are run on the air gaped system.*
+Next you need to move the contents of `~/air_gap` to the air gap system. *The next set of commands are run on the air gapped system.*
 
   ::
 
@@ -111,7 +111,7 @@ Next you need to move the contents of `~/air_gap` to the air gap system. *The ne
 
     systemctl start dr-provision
 
-Now to verify the portal is working. On a machine that can access the air gaped endpoint open a web browser and
+Now to verify the portal is working. On a machine that can access the air gapped endpoint open a web browser and
 visit `https://<YOUR IP>:8092/`. By default a self signed cert will need to be accepted (Note that you can provide
 your own certs during deployment.) Log in using the default user and password. Once logged in we will verify the
 portal is functioning properly by doing some final customizations. Set the default preferences for workflow.
@@ -176,6 +176,18 @@ Next you need to configure a subnet.
     Create Subnet From Interface
     Click "Use Interface"
     If defaults are acceptable scroll down and click "Add"
+
+If you plan on using the RackN UX in air gapped mode, you will have to download the :ref:`rs_cp_ux_views` plugin if it is not already installed.
+
+  ::
+
+    Click "Catalog" on the left hand navigation
+    Search for "ux-views"
+    Click the green download button
+    After the plugin finishes installing, refresh the webpage (CTRL+R)
+    Click "UX Config" on the left hand navigation
+    Click the "airgap" row under "Core" in the "UX" section
+    Toggle the "airgap" config switch and click the blue save button.
 
 
 Next its time to power on machine to deploy. Power it on, make sure its setup to PXE boot in the bios as its default
