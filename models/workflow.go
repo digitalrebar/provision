@@ -47,6 +47,7 @@ func (w *Workflow) KeyName() string {
 }
 
 func (w *Workflow) Fill() {
+	w.Validation.fill(w)
 	if w.Meta == nil {
 		w.Meta = Meta{}
 	}

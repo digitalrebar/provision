@@ -23,6 +23,7 @@ type Validation struct {
 	// read only: true
 	Errors      []string
 	forceChange bool
+	self        interface{}
 }
 
 //
@@ -59,10 +60,11 @@ func (v *Validation) ClearValidation() {
 	v.Errors = []string{}
 }
 
-func (v *Validation) fill() {
+func (v *Validation) fill(me interface{}) {
 	if v.Errors == nil {
 		v.Errors = []string{}
 	}
+	v.self = me
 }
 
 type ChangeForcer interface {
@@ -78,12 +80,20 @@ func (v *Validation) ChangeForced() bool {
 	return v != nil && v.forceChange
 }
 
+func (v *Validation) getPrefix() string {
+	prefix := ""
+	if m, ok := v.self.(Model); ok {
+		prefix = m.Key() + ": "
+	}
+	return prefix
+}
+
 func (v *Validation) Errorf(fmtStr string, args ...interface{}) {
 	v.Available = false
 	if v.Errors == nil {
 		v.Errors = []string{}
 	}
-	v.Errors = append(v.Errors, fmt.Sprintf(fmtStr, args...))
+	v.Errors = append(v.Errors, v.getPrefix()+fmt.Sprintf(fmtStr, args...))
 }
 
 func (v *Validation) AddError(err error) {
@@ -97,7 +107,7 @@ func (v *Validation) AddError(err error) {
 		case *Error:
 			v.Errors = append(v.Errors, o.Messages...)
 		default:
-			v.Errors = append(v.Errors, err.Error())
+			v.Errors = append(v.Errors, v.getPrefix()+err.Error())
 		}
 	}
 }

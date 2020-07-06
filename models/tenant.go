@@ -18,7 +18,7 @@ type Tenant struct {
 }
 
 func (t *Tenant) Fill() {
-	t.Validation.fill()
+	t.Validation.fill(t)
 	if t.Meta == nil {
 		t.Meta = Meta{}
 	}

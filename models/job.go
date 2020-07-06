@@ -182,7 +182,7 @@ func (j *Job) Fill() {
 	if j.Meta == nil {
 		j.Meta = Meta{}
 	}
-	j.Validation.fill()
+	j.Validation.fill(j)
 }
 
 func (j *Job) AuthKey() string {

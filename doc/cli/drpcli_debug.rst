@@ -7,8 +7,8 @@ Synopsis
 ~~~~~~~~
 
 This command gathers various different types of runtime profile data
-from a running dr-provision server, provided it has the /api/v3/debug
-endpoints. The types of data that can be gathered are:
+from a running dr-provision server, provided it has the /api/v3/debug or
+/api/v3/drp_debug. The types of data that can be gathered are:
 
 ::
 
@@ -35,6 +35,8 @@ endpoints. The types of data that can be gathered are:
 
    goroutine: Stack traces of all current goroutines. goroutine is always point-in-time data.
 
+   index: Returns the indexes of the stacks with the flags of the object.
+
 ::
 
    drpcli debug [type] [target] [flags]
@@ -44,8 +46,9 @@ Options
 
 ::
 
-     -h, --help          help for debug
-         --seconds int   How much debug data to gather, for types that gather data over time.
+     -h, --help            help for debug
+         --prefix string   Limits the index call to just this prefix type.
+         --seconds int     How much debug data to gather, for types that gather data over time.
 
 Options inherited from parent commands
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

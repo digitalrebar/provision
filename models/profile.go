@@ -83,7 +83,7 @@ func (p *Profile) GetDescription() string {
 
 // Fill initializes the object
 func (p *Profile) Fill() {
-	p.Validation.fill()
+	p.Validation.fill(p)
 	if p.Meta == nil {
 		p.Meta = Meta{}
 	}

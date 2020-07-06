@@ -53,7 +53,7 @@ func (t *Template) GetDescription() string {
 }
 
 func (t *Template) Fill() {
-	t.Validation.fill()
+	t.Validation.fill(t)
 	if t.Meta == nil {
 		t.Meta = Meta{}
 	}

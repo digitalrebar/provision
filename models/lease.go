@@ -122,7 +122,7 @@ func (l *Lease) Fill() {
 	if l.ProvidedOptions == nil {
 		l.ProvidedOptions = []DhcpOption{}
 	}
-	l.Validation.fill()
+	l.Validation.fill(l)
 }
 
 func (l *Lease) AuthKey() string {

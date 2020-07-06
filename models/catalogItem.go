@@ -51,6 +51,10 @@ func (ci *CatalogItem) KeyName() string {
 	return "Id"
 }
 
+func (ci *CatalogItem) AuthKey() string {
+	return ci.Key()
+}
+
 func (ci *CatalogItem) Prefix() string {
 	return "catalog_items"
 }
@@ -70,6 +74,7 @@ func (ci *CatalogItem) Clone() *CatalogItem {
 }
 
 func (ci *CatalogItem) Fill() {
+	ci.Validation.fill(ci)
 	ci.Type = "catalog_items"
 	if ci.Meta == nil {
 		ci.Meta = Meta{}
@@ -110,4 +115,18 @@ func (ci *CatalogItem) FileName() string {
 	default:
 		return ci.Name
 	}
+}
+
+func (ci *CatalogItem) SliceOf() interface{} {
+	s := []*CatalogItem{}
+	return &s
+}
+
+func (ci *CatalogItem) ToModels(obj interface{}) []Model {
+	items := obj.(*[]*CatalogItem)
+	res := make([]Model, len(*items))
+	for i, item := range *items {
+		res[i] = Model(item)
+	}
+	return res
 }

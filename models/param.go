@@ -108,7 +108,7 @@ func (p *Param) Fill() {
 	if p.Meta == nil {
 		p.Meta = Meta{}
 	}
-	p.Validation.fill()
+	p.Validation.fill(p)
 }
 
 func (p *Param) AuthKey() string {
