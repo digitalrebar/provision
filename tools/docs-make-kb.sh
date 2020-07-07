@@ -87,8 +87,7 @@ command_line() {
 
 generate_label(){
   local _label="$*"
-  echo "$_label" | sed -e 's/[^a-zA-Z0-9 ]//g' -e "s/ /_/g"
-  LABEL="$_label"
+  LABEL=$(echo "$_label" | sed -e 's/[^a-zA-Z0-9 ]//g' -e "s/ /_/g" -e "s/^ //g")
 }
 
 editor(){
