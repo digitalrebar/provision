@@ -78,7 +78,7 @@ func (e *Endpoint) SetMeta(d Meta) {
 
 // Validate validates the object
 func (e *Endpoint) Validate() {
-	e.AddError(ValidName("Invalid Id", e.Id))
+	e.AddError(ValidEndpointName("Invalid Id", e.Id))
 }
 
 // Prefix returns the type of object

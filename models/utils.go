@@ -129,9 +129,10 @@ func Clone(m Model) Model {
 }
 
 var (
-	validMachineName = regexp.MustCompile(`^(\pL|\pN)+([- _.]+|\pN+|\pL+)+$`)
-	validName        = regexp.MustCompile(`^\pL+([- _.]+|\pN+|\pL+)+$`)
-	validParamName   = regexp.MustCompile(`^\pL+([- _./]+|\pN+|\pL+)+$`)
+	validMachineName  = regexp.MustCompile(`^(\pL|\pN)+([- _.]+|\pN+|\pL+)+$`)
+	validEndpointName = regexp.MustCompile(`^(\pL|\pN)+([- _.:]+|\pN+|\pL+)+$`)
+	validName         = regexp.MustCompile(`^\pL+([- _.]+|\pN+|\pL+)+$`)
+	validParamName    = regexp.MustCompile(`^\pL+([- _./]+|\pN+|\pL+)+$`)
 )
 
 func validMatch(msg, s string, re *regexp.Regexp) error {
@@ -144,6 +145,11 @@ func validMatch(msg, s string, re *regexp.Regexp) error {
 // ValidMachineName validates that the string is a valid Machine Name
 func ValidMachineName(msg, s string) error {
 	return validMatch(msg, s, validMachineName)
+}
+
+// ValidEndpointName validates that the string is a valid Endpoint Name
+func ValidEndpointName(msg, s string) error {
+	return validMatch(msg, s, validEndpointName)
 }
 
 // ValidName validates that the string is a valid Name
