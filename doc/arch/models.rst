@@ -55,6 +55,7 @@ There are several meta fields that can be used to adjust on screen display for p
   * ``render: link`` - adds an https://[value] link field that opens in a new tab.
   * ``render: machines-map`` - provides links and icons for machines in a UUID map.
   * ``downloadable: [file name]`` - provides download link so user can download the param contents as a file.  Name of the file is the value of the Meta.downloadable.
+  * ``route: [object name]`` - provides a link to an internal object using the param value. For example, Meta.route="templates" with param value "foo" creates an internal link to "#/e/endpoint:8092/templates/foo"
 
 .. _rs_data_validation:
 
