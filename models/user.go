@@ -61,7 +61,7 @@ func (u *User) GetDescription() string {
 }
 
 func (u *User) Fill() {
-	u.Validation.fill()
+	u.Validation.fill(u)
 	if u.Meta == nil {
 		u.Meta = Meta{}
 	}

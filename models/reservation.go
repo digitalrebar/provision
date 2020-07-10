@@ -87,7 +87,7 @@ func (r *Reservation) KeyName() string {
 }
 
 func (r *Reservation) Fill() {
-	r.Validation.fill()
+	r.Validation.fill(r)
 	if r.Meta == nil {
 		r.Meta = Meta{}
 	}

@@ -153,7 +153,7 @@ func (t *Task) KeyName() string {
 }
 
 func (t *Task) Fill() {
-	t.Validation.fill()
+	t.Validation.fill(t)
 	if t.Meta == nil {
 		t.Meta = Meta{}
 	}

@@ -78,7 +78,7 @@ func (n *Plugin) Fill() {
 	if n.Meta == nil {
 		n.Meta = Meta{}
 	}
-	n.Validation.fill()
+	n.Validation.fill(n)
 	if n.Params == nil {
 		n.Params = map[string]interface{}{}
 	}

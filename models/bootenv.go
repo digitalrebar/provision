@@ -172,6 +172,12 @@ func (o OsInfo) VersionEq(other string) bool {
 	return true
 }
 
+type BootEnvOverride struct {
+	Loaders   map[string]string
+	OS        OsInfo
+	Templates []TemplateInfo
+}
+
 // BootEnv encapsulates the machine-agnostic information needed by the
 // provisioner to set up a boot environment.
 //
@@ -419,7 +425,7 @@ func (b *BootEnv) ToModels(obj interface{}) []Model {
 }
 
 func (b *BootEnv) Fill() {
-	b.Validation.fill()
+	b.Validation.fill(b)
 	if b.Meta == nil {
 		b.Meta = Meta{}
 	}
@@ -459,4 +465,86 @@ func (b *BootEnv) CanHaveActions() bool {
 // some other network mechanism.
 func (b *BootEnv) NetBoot() bool {
 	return b.OnlyUnknown || b.Kernel != ""
+}
+
+// MergeOverrides makes a copy of b with the override values in overrides
+// applied in order, which whould be from leaset specific (in the global profile)
+// to the most specific (defined directly on a Machine).
+func (b *BootEnv) MergeOverrides(overrides ...BootEnvOverride) *BootEnv {
+	newEnv := Clone(b).(*BootEnv)
+	newEnv.Fill()
+	if _, ok := newEnv.OS.SupportedArchitectures["amd64"]; !ok && newEnv.Kernel != "" {
+		newEnv.OS.SupportedArchitectures["amd64"] = ArchInfo{
+			Kernel:     newEnv.Kernel,
+			Initrds:    newEnv.Initrds,
+			BootParams: newEnv.BootParams,
+			IsoFile:    newEnv.OS.IsoFile,
+			Sha256:     newEnv.OS.IsoSha256,
+			IsoUrl:     newEnv.OS.IsoUrl,
+		}
+	}
+
+	for i := len(overrides) - 1; i > -1; i-- {
+		override := overrides[i]
+		tMap := map[string]int{}
+		for j := range newEnv.Templates {
+			tMap[newEnv.Templates[j].Name] = j
+		}
+		for _, tmpl := range override.Templates {
+			if j, ok := tMap[tmpl.Name]; ok {
+				newEnv.Templates[j] = tmpl
+			} else {
+				newEnv.Templates = append(newEnv.Templates, tmpl)
+			}
+		}
+		if override.OS.Name != "" {
+			newEnv.OS.Name = override.OS.Name
+		}
+		if override.OS.Family != "" {
+			newEnv.OS.Family = override.OS.Family
+		}
+		if override.OS.Codename != "" {
+			newEnv.OS.Codename = override.OS.Codename
+		}
+		if override.OS.Version != "" {
+			newEnv.OS.Version = override.OS.Version
+		}
+		if newEnv.OS.SupportedArchitectures == nil {
+			newEnv.OS.SupportedArchitectures = map[string]ArchInfo{}
+		}
+		for k, loader := range override.Loaders {
+			newEnv.Loaders[k] = loader
+		}
+		for k, archInfo := range override.OS.SupportedArchitectures {
+			tgtArch, ok := newEnv.OS.SupportedArchitectures[k]
+			if !ok {
+				newEnv.OS.SupportedArchitectures[k] = archInfo
+				continue
+			}
+			if archInfo.IsoFile != "" {
+				tgtArch.IsoFile = archInfo.IsoFile
+			}
+			if archInfo.Sha256 != "" {
+				tgtArch.Sha256 = archInfo.Sha256
+			}
+			if archInfo.IsoUrl != "" {
+				tgtArch.IsoUrl = archInfo.IsoUrl
+			}
+			if archInfo.Kernel != "" {
+				tgtArch.Kernel = archInfo.Kernel
+			}
+			if len(archInfo.Initrds) > 0 {
+				tgtArch.Initrds = archInfo.Initrds
+			}
+			if archInfo.BootParams != "" {
+				tgtArch.BootParams = archInfo.BootParams
+			}
+			if archInfo.Loader != "" {
+				tgtArch.Loader = archInfo.Loader
+			}
+			newEnv.OS.SupportedArchitectures[k] = tgtArch
+		}
+	}
+	newEnv.Fill()
+	return newEnv
 }

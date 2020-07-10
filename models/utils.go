@@ -1,15 +1,15 @@
 package models
 
 import (
-	"bytes"
 	"crypto/rand"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"log"
 	"regexp"
 	"strings"
 	"time"
+
+	"github.com/mohae/deepcopy"
 
 	"github.com/VictorLowther/jsonpatch2"
 	yaml "github.com/ghodss/yaml"
@@ -86,6 +86,9 @@ func All() []Model {
 		&Workflow{},
 		&Tenant{},
 		&Pool{},
+		&Endpoint{},
+		&VersionSet{},
+		&CatalogItem{},
 	}
 }
 
@@ -122,25 +125,14 @@ func Clone(m Model) Model {
 	if m == nil {
 		return nil
 	}
-	res, err := New(m.Prefix())
-	if err != nil {
-		log.Panicf("Failed to make a new %s: %v", m.Prefix(), err)
-	}
-	buf := bytes.Buffer{}
-	enc, dec := json.NewEncoder(&buf), json.NewDecoder(&buf)
-	if err := enc.Encode(m); err != nil {
-		log.Panicf("Failed to encode %s:%s: %v", m.Prefix(), m.Key(), err)
-	}
-	if err := dec.Decode(res); err != nil {
-		log.Panicf("Failed to decode %s:%s: %v", m.Prefix(), m.Key(), err)
-	}
-	return res
+	return deepcopy.Copy(m).(Model)
 }
 
 var (
-	validMachineName = regexp.MustCompile(`^(\pL|\pN)+([- _.]+|\pN+|\pL+)+$`)
-	validName        = regexp.MustCompile(`^\pL+([- _.]+|\pN+|\pL+)+$`)
-	validParamName   = regexp.MustCompile(`^\pL+([- _./]+|\pN+|\pL+)+$`)
+	validMachineName  = regexp.MustCompile(`^(\pL|\pN)+([- _.]+|\pN+|\pL+)+$`)
+	validEndpointName = regexp.MustCompile(`^(\pL|\pN)+([- _.:]+|\pN+|\pL+)+$`)
+	validName         = regexp.MustCompile(`^\pL+([- _.]+|\pN+|\pL+)+$`)
+	validParamName    = regexp.MustCompile(`^\pL+([- _./]+|\pN+|\pL+)+$`)
 )
 
 func validMatch(msg, s string, re *regexp.Regexp) error {
@@ -153,6 +145,11 @@ func validMatch(msg, s string, re *regexp.Regexp) error {
 // ValidMachineName validates that the string is a valid Machine Name
 func ValidMachineName(msg, s string) error {
 	return validMatch(msg, s, validMachineName)
+}
+
+// ValidEndpointName validates that the string is a valid Endpoint Name
+func ValidEndpointName(msg, s string) error {
+	return validMatch(msg, s, validEndpointName)
 }
 
 // ValidName validates that the string is a valid Name

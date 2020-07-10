@@ -294,7 +294,7 @@ func (n *Machine) Fill() {
 	if n.Meta == nil {
 		n.Meta = Meta{}
 	}
-	n.Validation.fill()
+	n.Validation.fill(n)
 	if n.Profiles == nil {
 		n.Profiles = []string{}
 	}

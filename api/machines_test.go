@@ -65,7 +65,7 @@ func TestMachineCrud(t *testing.T) {
 			Model:    "machines",
 			Key:      "24679e38-53a2-4a82-99dd-5280139de00c",
 			Type:     "ValidationError",
-			Messages: []string{"Invalid Name ``"},
+			Messages: []string{"24679e38-53a2-4a82-99dd-5280139de00c: Invalid Name ``"},
 			Code:     422,
 		},
 		func() (interface{}, error) {
@@ -91,7 +91,7 @@ func TestMachineCrud(t *testing.T) {
 			Model:    "machines",
 			Key:      "24679e38-53a2-4a82-99dd-5280139de00c",
 			Type:     "ValidationError",
-			Messages: []string{"Invalid Name `foo\\`"},
+			Messages: []string{"24679e38-53a2-4a82-99dd-5280139de00c: Invalid Name `foo\\`"},
 			Code:     422,
 		},
 		func() (interface{}, error) {
@@ -104,7 +104,7 @@ func TestMachineCrud(t *testing.T) {
 			Model:    "machines",
 			Key:      "24679e38-53a2-4a82-99dd-5280139de00c",
 			Type:     "ValidationError",
-			Messages: []string{"Invalid Name `foo/`"},
+			Messages: []string{"24679e38-53a2-4a82-99dd-5280139de00c: Invalid Name `foo/`"},
 			Code:     422,
 		},
 		func() (interface{}, error) {
@@ -117,7 +117,7 @@ func TestMachineCrud(t *testing.T) {
 			Model:    "machines",
 			Key:      "24679e38-53a2-4a82-99dd-5280139de00c",
 			Type:     "ValidationError",
-			Messages: []string{"Profile foo (at 0) does not exist"},
+			Messages: []string{"24679e38-53a2-4a82-99dd-5280139de00c: Profile foo (at 0) does not exist"},
 			Code:     422,
 		},
 		func() (interface{}, error) {
@@ -131,7 +131,7 @@ func TestMachineCrud(t *testing.T) {
 			Model:    "machines",
 			Key:      "24679e38-53a2-4a82-99dd-5280139de00c",
 			Type:     "ValidationError",
-			Messages: []string{"Duplicate profile jill: at 0 and 1"},
+			Messages: []string{"24679e38-53a2-4a82-99dd-5280139de00c: Duplicate profile jill: at 0 and 1"},
 			Code:     422,
 		},
 		func() (interface{}, error) {
@@ -173,7 +173,7 @@ func TestMachineCrud(t *testing.T) {
 			Model:    "machines",
 			Key:      "24679e38-53a2-4a82-99dd-5280139de00c",
 			Type:     "ValidationError",
-			Messages: []string{"Task foo (at 0) does not exist"},
+			Messages: []string{"24679e38-53a2-4a82-99dd-5280139de00c: Task foo (at 0) does not exist"},
 			Code:     422,
 		},
 		func() (interface{}, error) {

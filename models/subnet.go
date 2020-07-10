@@ -203,7 +203,7 @@ func (s *Subnet) KeyName() string {
 }
 
 func (s *Subnet) Fill() {
-	s.Validation.fill()
+	s.Validation.fill(s)
 	if s.Meta == nil {
 		s.Meta = Meta{}
 	}

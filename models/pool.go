@@ -112,12 +112,19 @@ func (p *Pool) Validate() {
 	if p.ParentPool != "" {
 		p.AddError(ValidName("Invalid ParentPool", p.ParentPool))
 	}
-	for k, v := range map[string]*PoolTransitionActions{
+	tdata := map[string]*PoolTransitionActions{
 		"EnterActions":    p.EnterActions,
 		"ExitActions":     p.ExitActions,
 		"AllocateActions": p.AllocateActions,
 		"ReleaseActions":  p.ReleaseActions,
+	}
+	for _, k := range []string{
+		"EnterActions",
+		"ExitActions",
+		"AllocateActions",
+		"ReleaseActions",
 	} {
+		v := tdata[k]
 		if v != nil {
 			if v.Workflow != "" {
 				p.AddError(ValidName(fmt.Sprintf("Invalid %s Workflow", k), v.Workflow))
@@ -171,6 +178,7 @@ func (p *Pool) Clone() *Pool {
 }
 
 func (p *Pool) Fill() {
+	p.Validation.fill(p)
 	if p.Meta == nil {
 		p.Meta = Meta{}
 	}

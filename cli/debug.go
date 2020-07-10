@@ -14,11 +14,12 @@ func init() {
 
 func registerDebug(app *cobra.Command) {
 	seconds := 0
+	prefix := ""
 	debug := &cobra.Command{
 		Use:   "debug [type] [target]",
 		Short: "Gather [type] of debug information and save it to [target]",
 		Long: `This command gathers various different types of runtime profile data from a running
-dr-provision server, provided it has the /api/v3/debug endpoints.  The types of data that can be gathered are:
+dr-provision server, provided it has the /api/v3/debug or /api/v3/drp_debug.  The types of data that can be gathered are:
 
     profile: CPU utilization profile information.  Tracks how much CPU time is being used in which
              functions, based on sampling which functions are running every 10 ms.  If the
@@ -41,7 +42,10 @@ dr-provision server, provided it has the /api/v3/debug endpoints.  The types of 
     threadcreate: Stack traces of all goroutines that led to the creation of a new OS thread.
                   threadcreate is always point-in-time data.
 
-    goroutine: Stack traces of all current goroutines. goroutine is always point-in-time data.`,
+    goroutine: Stack traces of all current goroutines. goroutine is always point-in-time data.
+
+    index: Returns the indexes of the stacks with the flags of the object.
+`,
 		Args: func(c *cobra.Command, args []string) error {
 			if len(args) != 2 {
 				return fmt.Errorf("%v requires 2 arguments", c.UseLine())
@@ -61,7 +65,7 @@ dr-provision server, provided it has the /api/v3/debug endpoints.  The types of 
 				if seconds == 0 {
 					seconds = 1
 				}
-			case "heap", "allocs", "block", "mutex", "threadcreate", "goroutine":
+			case "heap", "allocs", "block", "mutex", "threadcreate", "goroutine", "index":
 			default:
 				return fmt.Errorf("Unknown debug type %s", args[0])
 			}
@@ -70,7 +74,12 @@ dr-provision server, provided it has the /api/v3/debug endpoints.  The types of 
 				return err
 			}
 			defer target.Close()
-			req := Session.Req().UrlFor("debug", args[0])
+			req := Session.Req()
+			if args[0] == "index" {
+				req = req.UrlFor("drp_debug", args[0], prefix)
+			} else {
+				req = req.UrlFor("debug", args[0])
+			}
 			if useseconds && seconds > 0 {
 				req = req.Params("seconds", fmt.Sprintf("%d", seconds))
 			}
@@ -87,5 +96,6 @@ dr-provision server, provided it has the /api/v3/debug endpoints.  The types of 
 		},
 	}
 	debug.Flags().IntVar(&seconds, "seconds", 0, "How much debug data to gather, for types that gather data over time.")
+	debug.Flags().StringVar(&prefix, "prefix", "", "Limits the index call to just this prefix type.")
 	app.AddCommand(debug)
 }
