@@ -55,8 +55,8 @@ type TemplateInfo struct {
 	//
 	// required: false
 	Meta     map[string]string
-	pathTmpl *template.Template
-	linkTmpl *template.Template
+	PathTmpl *template.Template `json:"-"`
+	LinkTmpl *template.Template `json:"-"`
 }
 
 func (ti *TemplateInfo) Id() string {
@@ -89,11 +89,11 @@ func (ti *TemplateInfo) SanityCheck(idx int, e ErrorAdder, missingPathOK bool) {
 }
 
 func (ti *TemplateInfo) PathTemplate() *template.Template {
-	return ti.pathTmpl
+	return ti.PathTmpl
 }
 
 func (ti *TemplateInfo) LinkTemplate() *template.Template {
-	return ti.linkTmpl
+	return ti.LinkTmpl
 }
 
 func MergeTemplates(root *template.Template, tmpls []TemplateInfo, e ErrorAdder) *template.Template {
@@ -124,7 +124,7 @@ func MergeTemplates(root *template.Template, tmpls []TemplateInfo, e ErrorAdder)
 					err)
 				continue
 			} else {
-				ti.pathTmpl = pathTmpl.Option("missingkey=error")
+				ti.PathTmpl = pathTmpl.Option("missingkey=error")
 			}
 		}
 		if ti.ID != "" {
@@ -145,7 +145,7 @@ func MergeTemplates(root *template.Template, tmpls []TemplateInfo, e ErrorAdder)
 					ti.Link,
 					err)
 			} else {
-				ti.linkTmpl = linkTmpl.Option("missingkey=error")
+				ti.LinkTmpl = linkTmpl.Option("missingkey=error")
 			}
 			continue
 		}
