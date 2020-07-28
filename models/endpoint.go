@@ -103,7 +103,6 @@ func (e *Endpoint) GetDescription() string {
 
 // Fill initials an Endpoint
 func (e *Endpoint) Fill() {
-	e.Validation.fill(e)
 	if e.Meta == nil {
 		e.Meta = Meta{}
 	}

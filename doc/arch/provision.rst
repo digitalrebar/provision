@@ -690,6 +690,25 @@ contains the following fields:
   is tailored for use by unknown machines.  Most boot environments
   will not have this flag.
 
+- **Loaders**: A map of indicated PXE boot architecture to the bootloader
+  that should be used for that architecture.  Unlike the per-arch Loader
+  field, this one is relative to the path the BootEnv is expanded to, and
+  distinguishes between amd64 legacy boot and amd64 UEFI boot.
+
+  Allowable keys:
+
+  - **amd64-uefi**, used when the PXE options indicate that the system
+    is attempting to PXE boot into a UEFI environment on an amd64 compatible system.
+
+  - **arm64-uefi**, used when the PXE options indicate that the system is attempting
+    to aPXE boot in an ARM64 based UEFI environment.
+
+  - **386-pcbios**, used when the PXE options indicate that hte system is attempting to
+    PXE boot into into a i386 compatible legacy BIOS environment.
+
+   The values for these keys are interpreted as if they were appended to the appropriate env
+   arch-specific path.
+
 - **OS**: an embedded structure that contains some basic information on
   the OS that this BootEnv will boot into, if applicable.  OS contains
   the following fields:
@@ -788,6 +807,44 @@ in the Templates section.  All referenced templates can refer to each
 other by their ID (if referring to a Template object directly), or by
 the TemplateInfo Name (if the TemplateInfo object), in addition to all
 the Template objects by ID.
+
+Customization using bootenvs-customize
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+As a tech preview feature, the 4.4.x series of dr-provision will allow
+for programmatic overrides of various aspects of different bootenvs
+on a per-machine (via the usual parameter inheritance mechanisms) or
+global (via ovverides in the global profile) basis.
+
+This param allows you to overlay dynamic customizations on top of BootEnvs.
+Its intended use is to reduce the number of bootenvs you have to create
+for what are ultimately trivial reasons.  This Param is structured as a
+map of bootenv name -> override values.  You can override the following bootenv fields:
+
+- **Loaders**
+
+- **OS**
+
+- **Templates**
+
+The override values have the same names and semantics of the equivalent fields in the BootEnv,
+with the following exceptions:
+
+1. The Templates section is merged in with the Templates section from the BootEnv,
+   with identically-named Templates from this Param overriding the ones from
+   the BootEnv.
+
+2. You must use the per-arch SupportedArchitectures section to override
+   kernel, initrd, iso, boot parameter, and boot loader values from the
+   BootEnv.
+
+This feature is still in alpha, and this param definition and the semantics it enables
+may change.  In particular, it is not compatible with bootenv purging right now, and
+you may experience UI pauses when uploading a new ISO file.  You will also get unexpected
+results if you create multiple overrides for the same BootEnv that have the same OS name
+but reference different ISOs, or have different kernel/initrd settings.  You should also
+not try to override Sledgehammer on a machine by machine basis, and any overrides for
+sledgehammer must be matched by identical changes in the OS section of the discovery bootenv.
 
 .. _rs_data_workflow:
 
