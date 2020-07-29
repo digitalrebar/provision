@@ -133,6 +133,7 @@ var (
 	validEndpointName = regexp.MustCompile(`^(\pL|\pN)+([- _.:]+|\pN+|\pL+)+$`)
 	validName         = regexp.MustCompile(`^\pL+([- _.]+|\pN+|\pL+)+$`)
 	validParamName    = regexp.MustCompile(`^\pL+([- _./]+|\pN+|\pL+)+$`)
+	validNumberName   = validMachineName
 )
 
 func validMatch(msg, s string, re *regexp.Regexp) error {
@@ -150,6 +151,10 @@ func ValidMachineName(msg, s string) error {
 // ValidEndpointName validates that the string is a valid Endpoint Name
 func ValidEndpointName(msg, s string) error {
 	return validMatch(msg, s, validEndpointName)
+}
+
+func ValidNumberName(msg, s string) error {
+	return validMatch(msg, s, validNumberName)
 }
 
 // ValidName validates that the string is a valid Name

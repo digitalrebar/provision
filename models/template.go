@@ -32,7 +32,7 @@ func (t *Template) SetMeta(d Meta) {
 }
 
 func (t *Template) Validate() {
-	t.AddError(ValidName("Invalid ID", t.ID))
+	t.AddError(ValidNumberName("Invalid ID", t.ID))
 }
 
 func (t *Template) Prefix() string {
