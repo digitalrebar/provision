@@ -309,13 +309,13 @@ and wind up in a file with the same name as the item + the default file extensio
 			localItems := itemsFromCatalog(localCatalog, "")
 
 			for k, v := range srcItems {
-				// Only get things that aren't tip or stable
-				if strings.HasSuffix(k, "-tip") || strings.HasSuffix(k, "-stable") {
+				// Only get things that aren't stable
+				if strings.HasSuffix(k, "-stable") {
 					continue
 				}
 
 				// Get things that aren't in local
-				if _, ok := localItems[k]; !ok {
+				if nv, ok := localItems[k]; !ok || nv.ActualVersion != v.ActualVersion {
 					parts := map[string]string{}
 					i := strings.Index(v.Source, "/rebar-catalog/")
 					switch v.ContentType {
