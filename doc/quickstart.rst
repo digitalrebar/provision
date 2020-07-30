@@ -280,7 +280,7 @@ a DRP Endpoint ... **before** you are ready for that to happen!!  So we must
 first set the default actions for a few system wide preferences.  One of those
 defaults will point to our Discovery Workflow (see :ref:`rs_qs_workflow`).
 
-You can review the preferences using ``drpcli prefs get``.
+You can review the preferences using ``drpcli prefs list``.
 
 Any Machine that boots will by default be placed in to the Discovery Workflow,
 which will NOT install an Operating System, but will enroll the machine for
