@@ -34,16 +34,16 @@ We *strongly* recommend changing this default or, better, using SSH ``without-pa
 
 A quick reference table for passwords:
 
-------------------------  ------------  ------------
-use                       user          password
-------------------------  ------------  ------------
-``drp endpoint auth``     rocketskates  r0cketsk8ts
-``sledgehammer``          root          rebar1
-``most bootenvs`` (*)     root          RocketSkates
-``debian`` / ``ubuntu``   rocketskates  RocketSkates
-``cloud-init`` images     <varies> (*)  RocketSkates
-``VMware ESXi``           root          <generated>
-------------------------  ------------  ------------
+======================== ============ ============
+use                      user         password
+======================== ============ ============
+``drp endpoint auth``    rocketskates r0cketsk8ts
+``sledgehammer``         root         rebar1
+``most bootenvs`` (*)    root         RocketSkates
+``debian`` / ``ubuntu``  rocketskates RocketSkates
+``cloud-init`` images    <varies> (*) RocketSkates
+``VMware ESXi``          root         <generated>
+======================== ============ ============
 
 For more information:
 
