@@ -5,9 +5,30 @@
   pair: Digital Rebar Provision; Release Process
 
 
+.. _rs_release_summaries:
+
+Release Summaries
+-----------------
+
+RackN creates a high level summary for each release that includes the major deliverables, highlights and objectives for the re
+
+.. toctree::
+   :maxdepth: 1
+   :glob:
+
+   rel_notes/summaries/*
+
+.. _rs_release_strategy:
+
+Version Strategy
+----------------
+
+Generally, Digital Rebar aims to have frequent (quarterly) releases.  Releases are feature, not date driven.
+
+.. _rs_release_versions:
 
 Version Scheme
---------------
+~~~~~~~~~~~~~~
 
 There are two named releases and many semantic versioned releases.
 
@@ -46,7 +67,7 @@ The *drpcli* client reports its version by running:
 .. _rs_release_process:
 
 Release Process
----------------
+~~~~~~~~~~~~~~~
 
 Each dev build will generate a new **tip** release and report that in the catalog.  These builds will be available through
 the catalog as well.
@@ -55,8 +76,10 @@ Additionally, as releases cut at stable points, the **stable** build in the cata
 Both the **stable** and tagged build will be available through the catalog.
 
 
-Releases
-~~~~~~~~
+.. _rs_release_details:
+
+Release Details
+~~~~~~~~~~~~~~~
 
 The following are the release notes for the trees.
 
