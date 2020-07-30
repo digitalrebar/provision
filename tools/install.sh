@@ -3,7 +3,7 @@
 set -e
 
 # BUMP version on updates
-VERSION="v20.03.23-1"
+VERSION="v20.07.10-1"
 
 DEFAULT_DRP_VERSION=${DEFAULT_DRP_VERSION:-"stable"}
 
@@ -952,7 +952,7 @@ EOF
                                  if [[ $CREATE_SELF ]] ; then
                                      cp $(which drpcli) /tmp/jq
                                      chmod +x /tmp/jq
-                                     ID=$(drpcli info get | /tmp/jq .id -r)
+                                     ID=$(drpcli info get | /tmp/jq .id -r | sed -r 's/:/-/g')
                                      rm /tmp/jq
                                      drpcli machines workflow "Name:$ID" "$INITIAL_WORKFLOW" >/dev/null
                                  fi

@@ -1,4 +1,4 @@
-.. Copyright (c) 2017 RackN Inc.
+.. Copyright (c) 2020 RackN Inc.
 .. Licensed under the Apache License, Version 2.0 (the "License");
 .. DigitalRebar Provision documentation under Digital Rebar master license
 ..

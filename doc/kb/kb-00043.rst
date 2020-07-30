@@ -1,0 +1,74 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+
+.. _Secure_Boot_Shim_Bootloaders_Fail_With_Proxy_DHCP_in_UEFI_Mode_Booting:
+
+kb-00043: Secure Boot Shim Bootloaders Fail With Proxy DHCP in UEFI Mode Booting
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. _rs_kb_00043:
+
+Knowledge Base Article: kb-00043
+--------------------------------
+
+
+Description
+-----------
+
+Booting a machine in UEFI mode with Proxy DHCP will cause the machine to
+enter the GRUB command line.  The boot process stops at this point.
+
+GRUB does not request additional configuration files.
+
+
+Solution
+--------
+
+Due to a bug in the upstream Grub2 code, grub2 does NOT handle Proxy DHCP
+messages in UEFI mode.  This is not directly fixable.  To make this work
+for non-secure boot environments, one can override the bootloader to use
+the unsigned, but functional, ``ipxe.efi`` bootloader.  The ``bootloaders``
+parameter can be used to change globally or by profile for a set of machines.
+Additionally, one could use the ``bootenv-customize`` parameter to alter a
+specific bootenv globally or by profile for a set of machines.
+
+For Secure Boot Mode, there is currently not a valid solution.
+
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+RedHat Bug tracking this issue: https://bugzilla.redhat.com/show_bug.cgi?id=1809246
+
+
+Versions
+========
+
+v4.4.0 and beyond content packs have this problem.
+
+
+Keywords
+========
+
+Proxy, DHCP, UEFI, Grub2
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00043
+    initial release:  Tue Jul  7 15:24:50 CDT 2020
+    updated release:  Tue Jul  7 15:24:50 CDT 2020
+
