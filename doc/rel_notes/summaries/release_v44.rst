@@ -70,5 +70,4 @@ Other Items of Note
   * Debian 10
   * Centos 8 / RHEL 8
   * Ubuntu 20.04
-* Update Sledgehammer to use Centos 8
 * Moved into open ecosystem: Cohesity and Solidfire Support

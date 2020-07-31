@@ -22,19 +22,39 @@ In addition to bug fixes and performance improvements, the release includes seve
 Multi-Site Manager
 ~~~~~~~~~~~~~~~~~~
 
-TBD
+Two Major Features:
+
+* Ability to consolidate data from multiple endpoints into subscribed endpoints and proxy forward API requests
+* Ability to centrally manage and enforce configuration of remote endpoints
+
 
 .. _rs_release_v45_universal_workflow:
+
+
+Sledgehammer Centos 8
+~~~~~~~~~~~~~~~~~~~~~
+
+To take advantage of the latest kernel and distro features, customers want Sledgehammer migrated to Centos8 instead of Centos7
+
+Make SL8 the main sledgehammer with python3 and a profile to support backwards SL7.
+
 
 Universal Workflow
 ~~~~~~~~~~~~~~~~~~
 
-TBD
+Planned, not committed
 
+
+Log Capture 
+~~~~~~~~~~~~
+
+Planned, not committed
+
+Allow customers to collect log information from DRP to analysis by RackN as a utility.  Should attempt (but won’t be able to) scrub/remove sensitive information.
 
 .. _rs_release_v45_otheritems:
 
 Other Items of Note
 ~~~~~~~~~~~~~~~~~~~
 
-TBD
+* TBD
