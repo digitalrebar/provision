@@ -17,6 +17,8 @@ Release Themes: Multi-Site Manager, Universal Workflow
 
 In addition to bug fixes and performance improvements, the release includes several customer-driven features.
 
+See :ref:`rs_release_summaries` for a complete list of all releases.
+
 .. _rs_release_v45_multisite:
 
 Multi-Site Manager

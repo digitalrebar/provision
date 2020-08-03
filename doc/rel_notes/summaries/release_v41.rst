@@ -16,3 +16,6 @@ Release Date: missing
 Release Themes: missing
 
 Digital Rebar v4.1 release notes are not available at this time.
+
+See :ref:`rs_release_summaries` for a complete list of all releases.
+

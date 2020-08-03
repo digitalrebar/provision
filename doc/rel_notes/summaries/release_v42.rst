@@ -21,6 +21,7 @@ Along with improvements to the core platform, RackN included numerous usability,
 
 Note: since the v4.3 release included major architectural work and required more development time; consequently, v4.2 needed more patches than most RackN release cycles.
 
+See :ref:`rs_release_summaries` for a complete list of all releases.
 
 .. _rs_release_v42_otheritems:
 
