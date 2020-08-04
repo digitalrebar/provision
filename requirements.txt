@@ -1,1 +1,2 @@
 -e git+https://github.com/galthaus/sphinx-swaggerdoc#egg=sphinx-swaggerdoc
+-e git+https://github.com/sphinx-contrib/youtube#egg=sphinxcontrib-youtube
