@@ -5,7 +5,6 @@
   pair: Digital Rebar Provision; Release v4.4
   pair: Digital Rebar Provision; Release Notes
 
-
 .. _rs_release_v44:
 
 Digital Rebar version 4.4
@@ -17,8 +16,9 @@ Release Themes: Pooling, Secure Boot for VMware
 
 Note about release cadence: RackN is taking steps to maintain a fast (2-3 month) release cadence with Digital Rebar.  The goal of smaller releases is to ensure that important features and fixes are not gated by multi-release feature deliverables.  In many cases, that allows advanced users to have technical preview access to new features inside of stable releases.  As always, we work to keep the primary development branch reliable throughout the development cycle.
 
-
 In addition to bug fixes and performance improvements, the release includes several customer-driven features.
+
+See :ref:`rs_release_summaries` for a complete list of all releases.
 
 .. _rs_release_v44_pooling:
 

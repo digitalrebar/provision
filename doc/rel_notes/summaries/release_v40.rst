@@ -17,6 +17,8 @@ Release Themes: License Change, New Backend
 
 TLDR: We’re inverting our open license model to empower operations collaboration on the platform while ensuring that RackN can generate sustaining revenue from production users.
 
+See :ref:`rs_release_summaries` for a complete list of all releases.
+
 Summary
 ~~~~~~~
 

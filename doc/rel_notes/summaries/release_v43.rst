@@ -21,6 +21,8 @@ Along with improvements to the core platform storage, RackN included numerous us
 
 In addition to bug fixes and performance improvements, the release includes several customer-driven features.
 
+See :ref:`rs_release_summaries` for a complete list of all releases.
+
 .. _rs_release_v43_ha:
 
 High Availability
