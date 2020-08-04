@@ -126,7 +126,7 @@ func encryptAfterDownload(c *models.Content) (key []byte, err error) {
 	return
 }
 
-func doReplaceContent(layer *models.Content, key string) error {
+func doReplaceContent(layer *models.Content, key string, replaceWritable bool) error {
 	if err := decryptForUpload(layer, key); err != nil {
 		return generateError(err, "Error preparing layer")
 	}
@@ -143,9 +143,9 @@ func doReplaceContent(layer *models.Content, key string) error {
 	}
 	var res interface{}
 	if exists {
-		res, err = Session.ReplaceContent(layer)
+		res, err = Session.ReplaceContent(layer, replaceWritable)
 	} else {
-		res, err = Session.CreateContent(layer)
+		res, err = Session.CreateContent(layer, replaceWritable)
 	}
 	if err == nil {
 		return prettyPrint(res)
@@ -154,12 +154,12 @@ func doReplaceContent(layer *models.Content, key string) error {
 	}
 }
 
-func replaceContent(path, key string) error {
+func replaceContent(path, key string, replaceWritable bool) error {
 	layer := &models.Content{}
 	if err := into(path, layer); err != nil {
 		return generateError(err, "Error parsing layer")
 	}
-	return doReplaceContent(layer, key)
+	return doReplaceContent(layer, key, replaceWritable)
 }
 
 func registerContent(app *cobra.Command) {
@@ -168,6 +168,7 @@ func registerContent(app *cobra.Command) {
 		Short: "Access CLI commands relating to content",
 	}
 	var key string
+	var replaceWritable bool
 	content.AddCommand(&cobra.Command{
 		Use:   "list",
 		Short: "List the installed content bundles",
@@ -251,13 +252,14 @@ func registerContent(app *cobra.Command) {
 			if err := decryptForUpload(layer, key); err != nil {
 				return generateError(err, "Error preparing layer")
 			}
-			if res, err := Session.CreateContent(layer); err != nil {
+			if res, err := Session.CreateContent(layer, replaceWritable); err != nil {
 				return generateError(err, "Error adding content layer")
 			} else {
 				return prettyPrint(res)
 			}
 		},
 	}
+	create.Flags().BoolVar(&replaceWritable, "replaceWritable", false, "Replace identically named writable objects")
 	create.Flags().StringVar(&key, "key", "", "Location of key to use for embedded secure parameters")
 	content.AddCommand(create)
 	update := &cobra.Command{
@@ -281,13 +283,14 @@ func registerContent(app *cobra.Command) {
 			if id != layer.Meta.Name {
 				return fmt.Errorf("Passed ID %s does not match layer ID %s", id, layer.Meta.Name)
 			}
-			if res, err := Session.ReplaceContent(layer); err != nil {
+			if res, err := Session.ReplaceContent(layer, replaceWritable); err != nil {
 				return generateError(err, "Error replacing content layer")
 			} else {
 				return prettyPrint(res)
 			}
 		},
 	}
+	update.Flags().BoolVar(&replaceWritable, "replaceWritable", false, "Replace identically named writable objects")
 	update.Flags().StringVar(&key, "key", "", "Location of key to use for embedded secure parameters")
 	content.AddCommand(update)
 	upload := &cobra.Command{
@@ -300,9 +303,10 @@ func registerContent(app *cobra.Command) {
 			return nil
 		},
 		RunE: func(c *cobra.Command, args []string) error {
-			return replaceContent(args[0], key)
+			return replaceContent(args[0], key, replaceWritable)
 		},
 	}
+	upload.Flags().BoolVar(&replaceWritable, "replaceWritable", false, "Replace identically named writable objects")
 	upload.Flags().StringVar(&key, "key", "", "Location of key to use for embedded secure parameters")
 	content.AddCommand(upload)
 	content.AddCommand(&cobra.Command{
@@ -566,7 +570,7 @@ func registerContent(app *cobra.Command) {
 					}
 				}
 				if reload {
-					if err := replaceContent(target, key); err != nil {
+					if err := replaceContent(target, key, delete); err != nil {
 						return err
 					}
 				}

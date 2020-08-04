@@ -200,7 +200,8 @@ and wind up in a file with the same name as the item + the default file extensio
 			return err
 		},
 	})
-	itemCmd.AddCommand(&cobra.Command{
+	replaceWritable := false
+	install := &cobra.Command{
 		Use:               "install [item]",
 		Short:             "Installs [item] from the catalog on the current dr-provision endpoint",
 		PersistentPreRunE: ppr,
@@ -238,10 +239,14 @@ and wind up in a file with the same name as the item + the default file extensio
 				if err := json.NewDecoder(src).Decode(&content); err != nil {
 					return fmt.Errorf("Error downloading content bundle %s: %v", item.Name, err)
 				}
-				return doReplaceContent(content, "")
+				return doReplaceContent(content, "", replaceWritable)
 			case "PluginProvider":
 				res := &models.PluginProviderUploadInfo{}
-				if err := Session.Req().Post(src).UrlFor("plugin_providers", item.Name).Do(res); err != nil {
+				req := Session.Req().Post(src).UrlFor("plugin_providers", item.Name)
+				if replaceWritable{
+					req = req.Params("replaceWritable","true")
+				}
+				if err := req.Do(res); err != nil {
 					return err
 				}
 				return prettyPrint(res)
@@ -249,7 +254,9 @@ and wind up in a file with the same name as the item + the default file extensio
 				return fmt.Errorf("Don't know how to install %s of type %s yet", item.Name, item.ContentType)
 			}
 		},
-	})
+	}
+	install.Flags().BoolVar(&replaceWritable, "replaceWritable", false, "Replace identically named writable objects")
+	itemCmd.AddCommand(install)
 	itemCmd.AddCommand(&cobra.Command{
 		Use:   "show [item]",
 		Short: "Shows available versions for [item]",

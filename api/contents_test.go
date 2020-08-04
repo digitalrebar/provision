@@ -48,7 +48,7 @@ func TestContentCrud(t *testing.T) {
 			op: func() (interface{}, error) {
 				barking := &models.Content{}
 				barking.Fill()
-				return session.CreateContent(barking)
+				return session.CreateContent(barking, false)
 			},
 		},
 		{
@@ -71,7 +71,7 @@ meta:
 				barking := &models.Content{}
 				barking.Fill()
 				barking.Meta.Name = "BarkingStore"
-				return session.CreateContent(barking)
+				return session.CreateContent(barking, false)
 			},
 		},
 		{
@@ -93,7 +93,7 @@ meta:
 					return nil, err
 				}
 				barking.Sections["profiles"] = map[string]interface{}{env.Key(): env}
-				return session.ReplaceContent(barking)
+				return session.ReplaceContent(barking, false)
 			},
 		},
 		{
@@ -123,7 +123,7 @@ meta:
 				}
 				env.(*models.BootEnv).Name = "ignoble"
 				barking.Sections["bootenvs"] = map[string]interface{}{env.Key(): env}
-				return session.ReplaceContent(barking)
+				return session.ReplaceContent(barking, false)
 			},
 		},
 		{
