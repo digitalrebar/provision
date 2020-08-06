@@ -45,9 +45,9 @@ file to set these values.
 
 To do so, create a file ``$HOME/.drpclirc`` with the following possible values and format:
 
----------------------- ----------------------------------------------------------------------------
+====================== ============================================================================
 value                  notes
----------------------- ----------------------------------------------------------------------------
+====================== ============================================================================
 ``RS_ENDPOINT``        sets the endpoint API location (default: https://127.0.0.1:8092)
 ``RS_USERNAME``        sets username to auth to the Endpoint (default: "rocketskates")
 ``RS_PASSWORD``        sets the password for the auth (default: "r0cketsk8ts")
@@ -57,7 +57,7 @@ value                  notes
 ``RS_PRINT_FIELDS``    comma separate list of fields to show in output "table" or "text" format
 ``RS_NO_HEADER``       remove the header fields from "table" or "text" format output
 ``RS_TRUNCATE_LENGTH`` limits the length of fields displayed for "table" or "text" output formats
----------------------- ----------------------------------------------------------------------------
+====================== ============================================================================
 
 Example:
   ::
