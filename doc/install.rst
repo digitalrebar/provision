@@ -31,7 +31,7 @@ Updating for current version, an example command sequence for Linux would be:
 
   ::
 
-    export $DRPVERSION="v4.2.4"
+    export DRPVERSION="v4.2.4"
     mkdir dr-provision-install
     cd dr-provision-install
     curl -fsSL https://rebar-catalog.s3-us-west-2.amazonaws.com/drp/$DRPVERSION.zip -o dr-provision.zip
