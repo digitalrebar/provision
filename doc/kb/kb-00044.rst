@@ -1,0 +1,163 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+
+.. _rs_kb_example_bootenvs_customize_with_sledgehammer:
+
+kb-00044: Example bootenvs-customize with Sledgehammer
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. _rs_kb_00044:
+
+Knowledge Base Article: kb-00044
+--------------------------------
+
+
+Description
+-----------
+
+In Digital Rebar Platform (DRP) version v4.4.0 there is a new BootEnv customization
+capability.  This allows you to provide a Profile of relevant changes to a single
+BootEnv, to express multiple variations and versions of that BootEnv.  For example,
+an operator can support multiple Sledgehammer versions based on the Profiel data, or
+multiple VMware vSphere ESXi ISOs referenced in the BootEnv.
+
+This helps reduce the sprawl associated with Operating Systems that heavily rely on
+many (hundreds!!) of custom ISOs for their OS deployments (looking at you ESXi ...).
+
+By setting the ``bootenv-customize`` Parameter with the right data structure, you can
+customize which ISO and BootEnv details are served for a given single BootEnv.
+
+This example solution will show how to use this mechanism to customize which Sledgehammer
+version is served for discovery and hardware lifecycle management tasks.
+
+
+Solution
+--------
+
+This solution example uses Sledgehammer to demonstrate this feature.  Note that the below
+referenced Sledgehammer versions will likely need to be updated with newer released versions
+if they are available.
+
+First, download this file for the Sledgehammer "8" referenced.
+
+  * https://rebar-catalog.s3-us-west-2.amazonaws.com/box2/sledgehammer-a4173163ae366f90450e8c41ec54807b0859220a.amd64.tar
+
+.. note:: Ensure you are using DRP v4.4.0 or newer.
+
+The below is a Profile definition named ``sledge8``.  The has value is the Sledgehammer
+version information, found in the *tar file* name listed above.  Adjust the values
+according to your OS version.
+
+  ::
+
+    ---
+    {
+      "Name": "sledge8",
+      "Description": "Bootenv override for sledgehammer amd64 based on CentOS 8",
+      "Documentation": "Describes Sledgehammer based on CentOS 8 version.",
+      "Meta": {},
+      "Params": {
+        "bootenv-customize": {
+          "discovery": {
+            "Loaders": {
+              "amd64-uefi": "a4173163ae366f90450e8c41ec54807b0859220a/shimx64.efi"
+            },
+            "OS": {
+              "Name": "sledgehammer",
+              "SupportedArchitectures": {
+                "amd64": {
+                  "Initrds": [
+                    "a4173163ae366f90450e8c41ec54807b0859220a/stage1.img"
+                  ],
+                  "IsoFile": "sledgehammer-a4173163ae366f90450e8c41ec54807b0859220a.amd64.tar",
+                  "Kernel": "a4173163ae366f90450e8c41ec54807b0859220a/vmlinuz0"
+                }
+              }
+            },
+            "Templates": [
+              {
+                "ID": "allarch-grub.tmpl",
+                "Name": "grub-secure-discovery",
+                "Path": "sledgehammer/a4173163ae366f90450e8c41ec54807b0859220a/grub.cfg"
+              }
+            ]
+          },
+          "sledgehammer": {
+            "Loaders": {
+              "amd64-uefi": "a4173163ae366f90450e8c41ec54807b0859220a/shimx64.efi"
+            },
+            "OS": {
+              "Name": "sledgehammer",
+              "SupportedArchitectures": {
+                "amd64": {
+                  "Initrds": [
+                    "a4173163ae366f90450e8c41ec54807b0859220a/stage1.img"
+                  ],
+                  "IsoFile": "sledgehammer-a4173163ae366f90450e8c41ec54807b0859220a.amd64.tar",
+                  "Kernel": "a4173163ae366f90450e8c41ec54807b0859220a/vmlinuz0"
+                }
+              }
+            },
+            "Templates": [
+              {
+                "ID": "default-grub.tmpl",
+                "Name": "grub-secure",
+                "Path": "sledgehammer/a4173163ae366f90450e8c41ec54807b0859220a/grub.cfg-{{.Machine.HexAddress}}"
+              },
+              {
+                "ID": "default-grub.tmpl",
+                "Name": "grub-secure-mac",
+                "Path": "sledgehammer/a4173163ae366f90450e8c41ec54807b0859220a/grub.cfg-{{.Machine.MacAddr \"pxelinux\"}}"
+              }
+            ]
+          }
+        }
+      },
+      "Profiles": []
+    }
+
+To use this profile, save the above example to your system with a ``drpcli`` client, as 
+``sledge8.json``, and add it to your system with the following:
+
+  * ``drpcli profiles create sledge8.json``
+
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+  * :ref:`rs_provisioning_models`_
+
+
+See Also
+========
+
+  * :ref:`rs_provision_bootenv_customize`_
+  * https://provision.readthedocs.io/en/latest/doc/content-packages/basic-store.html#bootenv-customize
+
+
+Versions
+========
+
+  * DRP v4.4.0 or newer
+
+
+Keywords
+========
+
+bootenvs, customization, bootenv-customize, sledgehammer, sledge8
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00044
+    initial release:  Tue Aug 11 10:34:19 PDT 2020
+    updated release:  Tue Aug 11 10:34:19 PDT 2020
