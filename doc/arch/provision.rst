@@ -808,8 +808,10 @@ other by their ID (if referring to a Template object directly), or by
 the TemplateInfo Name (if the TemplateInfo object), in addition to all
 the Template objects by ID.
 
-Customization using bootenvs-customize
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. _rs_provision_bootenv_customize:
+
+Customization using bootenv-customize
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 As a tech preview feature, the 4.4.x series of dr-provision will allow
 for programmatic overrides of various aspects of different bootenvs
