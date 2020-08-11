@@ -132,13 +132,13 @@ Additional Information
 
 Additional resources and information related to this Knowledge Base article.
 
-  * :ref:`rs_provisioning_models`_
+  * :ref:`rs_provisioning_models`
 
 
 See Also
 ========
 
-  * :ref:`rs_provision_bootenv_customize`_
+  * :ref:`rs_provision_bootenv_customize`
   * https://provision.readthedocs.io/en/latest/doc/content-packages/basic-store.html#bootenv-customize
 
 
