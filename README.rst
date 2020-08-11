@@ -113,8 +113,6 @@ Table of Contents
    doc/high-availability
    doc/integrations
    doc/os-support
-   doc/os-support/linuxkit
-   doc/ui
    doc/ux/portalux
    doc/Swagger
    doc/cli
