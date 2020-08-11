@@ -10,7 +10,7 @@
 Digital Rebar Provision API
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In general, the Digital Rebar Provision API is documented via the Swagger spec and introspectable for machines via `/swagger.json` and for humans via `/swagger-ui`.
+In general, the Digital Rebar Provision API is documented via the Swagger spec and introspectable for machines via `/swagger.json` and for humans via `/swagger-ui`.  See :ref:`rs_swagger`.
 
 All API calls are available under `/api/v3` based on the Digital Rebar API convention.
 

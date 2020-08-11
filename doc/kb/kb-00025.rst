@@ -33,14 +33,35 @@ Note that this solution is *NOT* an exhaustive reference of how to do this, but 
 some possible techniques.
 
 
-Solution
---------
+Solutions
+---------
 
 Golang template complains if you are building a template that also uses double curly brances (e.g.
 ``{{ jinja 2 for ansible }}``) and it can be difficult to properly escape these characters.
 
-One possible workaround is to define variables for the double brace and then use the variable in the
-template.
+There are multiple solutions, please review to see which best fits your needs.
+
+Solution 1: Escape In Place
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can also use a pair of single quotes (\\`) to escape the block in place to create
+an string that is not modifed by gotemplates inside a gotemplate brace pair.
+
+Generallly, this approach is recommended because it is simple and easy to read.
+
+For example:
+
+  ::
+
+    "{{`{{ services['drpcli.service'].status }}`}}"
+
+
+Solution 2: Substitution
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Another workaround is to define variables for the double brace and then use the variable in the template.
+
+This approach is needed to make more template substitions _inside_ the Ansible code block.
 
 For example:
 
@@ -51,14 +72,14 @@ For example:
 
     - hosts: localhost
       vars:
-        braceme: "{{ $openblock }} item.Name {{ $closeblock }}"
-
+        braceme: "{{ $openblock }}{{ .Param "variable" }}{{ $closeblock }}"
 
 Additional Information
 ----------------------
 
 Additional resources and information related to this Knowledge Base article.
 
+Example from codebase: https://github.com/digitalrebar/provision-content/blob/521f3ed31242762dba04699f51f764949ec10fb3/task-library/tasks/ansible-join-up.yaml#L60
 
 See Also
 ========

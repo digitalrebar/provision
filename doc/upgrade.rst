@@ -470,17 +470,6 @@ Please read the steps through carefully, and make note of the current contents/p
 
     Again - make sure you modify things appropriately in the above scriptlet.
 
-v3.2.0 to v3.3.0
-----------------
-
-`Release Notes for v3.3.0 <https://github.com/digitalrebar/provision/v4/releases/tag/v3.3.0>`_
-
-No aditional steps required.
-
-v3.3.0 to v3.4.0
-----------------
-
-`Release Notes for v3.4.0 <https://github.com/digitalrebar/provision/v4/releases/tag/v3.4.0>`_
 
 Content Changes
 +++++++++++++++
@@ -522,57 +511,6 @@ Please see the `Release Notes <https://github.com/digitalrebar/provision/v4/rele
     drpcli plugin_providers upload $PLUG_NAME from $PLUGIN
 
 2. Many commands now have new *helper* capabilities.  See each command outputs relevant help statement.
-
-
-v3.4.0 to v3.5.0
-----------------
-
-`Release Notes for v3.5.0 <https://github.com/digitalrebar/provision/v4/releases/tag/v3.5.0>`_
-
-No additional changes necessary.
-
-v3.5.0 to v3.6.0
-----------------
-
-`Release Notes for v3.6.0 <https://github.com/digitalrebar/provision/v4/releases/tag/v3.6.0>`_
-
-No additional changes necessary.
-
-v3.6.0 to v3.7.0
-----------------
-
-`Release Notes for v3.7.0 <https://github.com/digitalrebar/provision/v4/releases/tag/v3.7.0>`_
-
-The plugin system has been updated to a new version.  All plugins have been updated to
-use the new version.  After updating to *v3.7.0*, all plugins must be updated to function.
-The system will start after update, but the plugin-providers will not load until they are
-udpated.  Use the RackN UX to get the updates for the plugins.
-
-The Task subsystem has been updated to default to `sane-exit-codes`.  This is a change from
-the default of `original-exit-codes`.  This was done to address the need of task authors to
-match some basic assumptions about exit codes.  *1* should be a fail and not reboot your box.
-
-Additionally, the default UX redirect has changed to the `stable portal <https://portal.rackn.io>`_.
-This will result in more stable UX experience.
-
-v3.7.0 to v3.8.0
-----------------
-
-`Release Notes for v3.8.0 <https://github.com/digitalrebar/provision/v4/releases/tag/v3.8.0>`_
-
-No additional changes necessary.
-
-v3.8.0 to v3.9.0
-----------------
-
-`Release Notes for v3.9.0 <https://github.com/digitalrebar/provision/v4/releases/tag/v3.9.0>`_
-
-No additional changes necessary.
-
-Local UI Removed
-~~~~~~~~~~~~~~~~
-
-The old UI has been removed and a redirect to the RackN Portal UI is present instead.  The UI loads into the browswer and then uses the API to access the Endpoint.  The DRP endpoint does not talk to the internet.  The browser acts as a bridge for content transfers.  The only requirement is that the browser has access to the Endpoint and HTTPS-based access to the internet.  The HTTPS-based access can be through a web proxy.
 
 Install Script Changed
 ~~~~~~~~~~~~~~~~~~~~~~
