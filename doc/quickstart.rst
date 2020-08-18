@@ -208,21 +208,9 @@ environment.
       ]
     }' > /tmp/local_subnet.json
 
-    # edit the above JSON spec to suit your environment
-    #
-    # for v3.6.0 and older:
-    #  add a next-server after "Name" with the IP address of your DRP Endpoint, like:
-    #    NextServer": "10.10.16.10",
-    #
-    # for v3.6.0 and older:
-    #  add DHCP Option 67 to the Options map, like:
-    #    { "Code": 67, "Value": "lpxelinux.0", "Description": "Bootfile" },
-    #
     vim /tmp/local_subnet.json
 
     drpcli subnets create - < /tmp/local_subnet.json
-
-.. note:: Option 67 (bootfile name) specifies the PXE boot file.  The `lpxelinux.0` boot file is for Legacy BIOS machines.  If you are booting a UEFI system, you will need to make more advanced changes to support UEFI boot mode. Please see the FAQ on :ref:`rs_uefi_boot_option`.  DRP v3.7.0 and newer has magic helpers to try and set the Legacy/UEFI bootfile for you, but custom usage or custom/unique PXE implementations may require changes.
 
 .. _rs_qs_workflow:
 
