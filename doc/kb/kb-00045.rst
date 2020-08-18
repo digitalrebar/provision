@@ -1,0 +1,84 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+
+.. _Supported_Image_Deploy_Image_Formats:
+
+kb-00045: Supported Image Deploy Image Formats
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. _rs_kb_00045:
+
+Knowledge Base Article: kb-00045
+--------------------------------
+
+
+Description
+-----------
+
+This document outlines the various Image Deploy plugin supportted image formats.
+
+
+Solution
+--------
+
+Current documentation on Image Deploy can be found at:
+
+  * https://provision.readthedocs.io/en/latest/doc/content-packages/image-deploy.html
+
+The ``image-deploy/image-type`` param specifies which type of supported image to deploy.
+When you set this Param on a machine, it is validated against an Enum type list of the
+supported image types - so you can not set this value to an unsupported image type.
+
+According to the Param type definition, the currently supported types are:
+
+  * ``tgz`` - Tar gzip compress filesystem
+  * ``dd-tgz`` - tar file containing a single gzip compressed disk image
+  * ``dd-txz`` - tar file containing a single XV compressed disk image`
+  * ``dd-tbz`` - tar file containing a single BZ compressed disk image`
+  * ``dd-tar`` - tar file containing a single uncompressed disk image`
+  * ``dd-bz2`` - tar file containing a single BZ2 compressed disk image`
+  * ``dd-gz`` - raw disk image that is gzip compressed
+  * ``dd-xz`` - raw disk image that is XZ compressed`
+  * ``dd-raw`` - raw disk image that is uncompressed
+
+.. note:: For the most up to date list, see the Param definition link in *See Also*,
+          below or the Param type definition in your DRP Endpoint.
+
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+  * `Image Deploy Documentation <https://provision.readthedocs.io/en/latest/doc/content-packages/image-deploy.html>`_
+  * `Param definition in Github Repo <https://github.com/digitalrebar/provision-plugins/blob/v4/cmds/image-deploy/content/params/image-deploy.image-type.yaml>`_
+
+Versions
+========
+
+All
+
+
+Keywords
+========
+
+image-deploy, image deploy, image format, image type
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00045
+    initial release:  Mon Aug 17 17:25:38 PDT 2020
+    updated release:  Mon Aug 17 17:25:38 PDT 2020
+
