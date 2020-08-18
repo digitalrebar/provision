@@ -41,7 +41,7 @@ func TestContentCrud(t *testing.T) {
 			expectRes: nil,
 			expectErr: &models.Error{
 				Model:    "contents",
-				Type:     "STORE_ERROR",
+				Type:     "POST",
 				Messages: []string{"Store at content- has no Name metadata"},
 				Code:     422,
 			},
@@ -82,7 +82,7 @@ meta:
 				Key:      "BarkingStore",
 				Type:     "PUT",
 				Messages: []string{"profiles:global in layer writable would override layer content-BarkingStore"},
-				Code:     500,
+				Code:     422,
 			},
 			op: func() (interface{}, error) {
 				barking := &models.Content{}
