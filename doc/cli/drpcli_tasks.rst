@@ -47,6 +47,7 @@ SEE ALSO
    action for this task
 -  `drpcli tasks actions <drpcli_tasks_actions.html>`__ - Display
    actions for this task
+-  `drpcli tasks count <drpcli_tasks_count.html>`__ - Count all tasks
 -  `drpcli tasks create <drpcli_tasks_create.html>`__ - Create a new
    task with the passed-in JSON or string key
 -  `drpcli tasks destroy <drpcli_tasks_destroy.html>`__ - Destroy task

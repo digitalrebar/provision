@@ -1,19 +1,56 @@
-drpcli catalog_items
+drpcli subnets count
 --------------------
 
-Access CLI commands relating to catalog_items
+Count all subnets
 
 Synopsis
 ~~~~~~~~
 
-Access CLI commands relating to catalog_items
+This will count all subnets by default. You can narrow down the count
+returned using index filters. Use the “indexes” command to get the
+indexes available for subnets.
+
+To filter by indexes, you can use the following stanzas:
+
+-  *index* Eq *value* This will return items Equal to *value* according
+   to *index*
+-  *index* Ne *value* This will return items Not Equal to *value*
+   according to *index*
+-  *index* Lt *value* This will return items Less Than *value* according
+   to *index*
+-  *index* Lte *value* This will return items Less Than Or Equal to
+   *value* according to *index*
+-  *index* Gt *value* This will return items Greater Than *value*
+   according to *index*
+-  *index* Gte *value* This will return items Greater Than Or Equal to
+   *value* according to *index*
+-  *index* Re *re2 compatible regular expression* This will return items
+   in *index* that match the passed-in regular expression We use the
+   regular expression syntax described at
+   https://github.com/google/re2/wiki/Syntax
+-  *index* Between *lower* *upper* This will return items Greater Than
+   Or Equal to *lower* and Less Than Or Equal to *upper* according to
+   *index*
+-  *index* Except *lower* *upper* This will return items Less Than
+   *lower* or Greater Than *upper* according to *index*
+-  *index* In *comma,separated,list,of,values* This will return any
+   items In the set passed for the comma-separated list of values.
+-  *index* Nin *comma,separated,list,of,values* This will return any
+   items Not In the set passed for the comma-separated list of values.
+
+You can chain any number of filters together, and they will pipeline
+into each other as appropriate.
+
+::
+
+   drpcli subnets count [filters...] [flags]
 
 Options
 ~~~~~~~
 
 ::
 
-     -h, --help   help for catalog_items
+     -h, --help   help for count
 
 Options inherited from parent commands
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -41,24 +78,5 @@ Options inherited from parent commands
 SEE ALSO
 ~~~~~~~~
 
--  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
-   DigitalRebar Provision API
--  `drpcli catalog_items count <drpcli_catalog_items_count.html>`__ -
-   Count all catalog_items
--  `drpcli catalog_items create <drpcli_catalog_items_create.html>`__ -
-   Create a new catalog_item with the passed-in JSON or string key
--  `drpcli catalog_items destroy <drpcli_catalog_items_destroy.html>`__
-   - Destroy catalog_item by id
--  `drpcli catalog_items exists <drpcli_catalog_items_exists.html>`__ -
-   See if a catalog_items exists by id
--  `drpcli catalog_items indexes <drpcli_catalog_items_indexes.html>`__
-   - Get indexes for catalog_items
--  `drpcli catalog_items list <drpcli_catalog_items_list.html>`__ - List
-   all catalog_items
--  `drpcli catalog_items show <drpcli_catalog_items_show.html>`__ - Show
-   a single catalog_items by id
--  `drpcli catalog_items update <drpcli_catalog_items_update.html>`__ -
-   Unsafely update catalog_item by id with the passed-in JSON
--  `drpcli catalog_items wait <drpcli_catalog_items_wait.html>`__ - Wait
-   for a catalog_item’s field to become a value within a number of
-   seconds
+-  `drpcli subnets <drpcli_subnets.html>`__ - Access CLI commands
+   relating to subnets

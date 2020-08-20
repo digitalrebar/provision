@@ -47,6 +47,7 @@ SEE ALSO
    action for this user
 -  `drpcli users actions <drpcli_users_actions.html>`__ - Display
    actions for this user
+-  `drpcli users count <drpcli_users_count.html>`__ - Count all users
 -  `drpcli users create <drpcli_users_create.html>`__ - Create a new
    user with the passed-in JSON or string key
 -  `drpcli users destroy <drpcli_users_destroy.html>`__ - Destroy user

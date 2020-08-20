@@ -7,6 +7,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/VictorLowther/jsonpatch2/utils"
+
 	"github.com/digitalrebar/provision/v4/api"
 	"github.com/digitalrebar/provision/v4/models"
 	"github.com/spf13/cobra"
@@ -164,6 +166,127 @@ further tweak how the results are returned using the following meta-filters:
 			false,
 			"Should decode any secure params")
 	}
+
+	countCmd := &cobra.Command{
+		Use:   "count [filters...]",
+		Short: fmt.Sprintf("Count all %v", o.name),
+		Long: fmt.Sprintf(`This will count all %v by default.
+You can narrow down the count returned using index filters.
+Use the "indexes" command to get the indexes available for %v.
+
+To filter by indexes, you can use the following stanzas:
+
+* *index* Eq *value*
+  This will return items Equal to *value* according to *index*
+* *index* Ne *value*
+  This will return items Not Equal to *value* according to *index*
+* *index* Lt *value*
+  This will return items Less Than *value* according to *index*
+* *index* Lte *value*
+  This will return items Less Than Or Equal to *value* according to *index*
+* *index* Gt *value*
+  This will return items Greater Than *value* according to *index*
+* *index* Gte *value*
+  This will return items Greater Than Or Equal to *value* according to *index*
+* *index* Re *re2 compatible regular expression*
+  This will return items in *index* that match the passed-in regular expression
+  We use the regular expression syntax described at
+  https://github.com/google/re2/wiki/Syntax
+* *index* Between *lower* *upper*
+  This will return items Greater Than Or Equal to *lower*
+  and Less Than Or Equal to *upper* according to *index*
+* *index* Except *lower* *upper*
+  This will return items Less Than *lower* or
+  Greater Than *upper* according to *index*
+* *index* In *comma,separated,list,of,values*
+  This will return any items In the set passed for the
+  comma-separated list of values.
+* *index* Nin *comma,separated,list,of,values*
+  This will return any items Not In the set passed for the
+  comma-separated list of values.
+
+You can chain any number of filters together, and they will pipeline into
+each other as appropriate.
+`, o.name, o.name),
+		Args: func(c *cobra.Command, args []string) error {
+			if len(args) == 0 {
+				return nil
+			}
+			if strings.Contains(args[0], "=") {
+				for _, a := range args {
+					ar := strings.SplitN(a, "=", 2)
+					if len(ar) != 2 {
+						return fmt.Errorf("Filter argument requires an '=' separator: %s", a)
+					}
+				}
+			}
+			return nil
+		},
+		RunE: func(c *cobra.Command, args []string) error {
+			req := Session.Req().Head().UrlFor(o.name)
+			if len(args) > 0 && strings.Contains(args[0], "=") {
+				// Old-style structured args
+				if listLimit != -1 {
+					args = append(args, fmt.Sprintf("limit=%d", listLimit))
+				}
+				if listOffset != -1 {
+					args = append(args, fmt.Sprintf("offset=%d", listOffset))
+				}
+				if slim != "" {
+					args = append(args, fmt.Sprintf("slim=%s", slim))
+				}
+				if params != "" {
+					args = append(args, fmt.Sprintf("params=%s", params))
+				}
+				if decode {
+					args = append(args, "decode=true")
+				}
+				pargs := []string{}
+				for _, arg := range args {
+					a := strings.SplitN(arg, "=", 2)
+					pargs = append(pargs, a...)
+				}
+				req.Params(pargs...)
+			} else {
+				// New-style freeform args
+				if listLimit != -1 {
+					args = append(args, "limit", fmt.Sprintf("%d", listLimit))
+				}
+				if listOffset != -1 {
+					args = append(args, "offset", fmt.Sprintf("%d", listOffset))
+				}
+				if slim != "" {
+					args = append(args, "slim", slim)
+				}
+				if params != "" {
+					args = append(args, "params", params)
+				}
+				if decode {
+					args = append(args, "decode")
+				}
+				if len(args) > 0 {
+					req = Session.Req().Filter(o.name, args...)
+				}
+			}
+			data := map[string]interface{}{}
+			err := req.Do(&data)
+			if err != nil {
+				return generateError(err, "counting %v", o.name)
+			}
+			d := data["X-Drp-List-Filter-Count"]
+			da := []string{}
+			if err := utils.Remarshal(d, &da); err != nil {
+				return generateError(err, "counting %v", o.name)
+			}
+			i, err := strconv.Atoi(da[0])
+			if err != nil {
+				return generateError(err, "counting %v (bad number): %s", o.name, da[0])
+			}
+			return prettyPrint(i)
+		},
+	}
+	cmds = append(cmds, countCmd)
+
 	cmds = append(cmds, &cobra.Command{
 		Use:   "indexes",
 		Short: fmt.Sprintf("Get indexes for %s", o.name),

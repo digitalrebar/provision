@@ -51,6 +51,8 @@ SEE ALSO
    param *key* to *blob*
 -  `drpcli profiles addprofile <drpcli_profiles_addprofile.html>`__ -
    Add profile to the machine’s profile list
+-  `drpcli profiles count <drpcli_profiles_count.html>`__ - Count all
+   profiles
 -  `drpcli profiles create <drpcli_profiles_create.html>`__ - Create a
    new profile with the passed-in JSON or string key
 -  `drpcli profiles destroy <drpcli_profiles_destroy.html>`__ - Destroy

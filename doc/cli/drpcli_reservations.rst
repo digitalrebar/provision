@@ -47,6 +47,8 @@ SEE ALSO
    Display the action for this reservation
 -  `drpcli reservations actions <drpcli_reservations_actions.html>`__ -
    Display actions for this reservation
+-  `drpcli reservations count <drpcli_reservations_count.html>`__ -
+   Count all reservations
 -  `drpcli reservations create <drpcli_reservations_create.html>`__ -
    Create a new reservation with the passed-in JSON or string key
 -  `drpcli reservations destroy <drpcli_reservations_destroy.html>`__ -

@@ -1,27 +1,56 @@
-drpcli plugin_providers upload
-------------------------------
+drpcli plugin_providers count
+-----------------------------
 
-Upload a program to act as a plugin_provider
+Count all plugin_providers
 
 Synopsis
 ~~~~~~~~
 
-Uploads a program to act as a plugin_provider. If the final name of the
-plugin_provider is the same as the name of the file being uploaded, then
-the (from [file]) part may be omitted, and [name] should be the path to
-the plugin_provider.
+This will count all plugin_providers by default. You can narrow down the
+count returned using index filters. Use the “indexes” command to get the
+indexes available for plugin_providers.
+
+To filter by indexes, you can use the following stanzas:
+
+-  *index* Eq *value* This will return items Equal to *value* according
+   to *index*
+-  *index* Ne *value* This will return items Not Equal to *value*
+   according to *index*
+-  *index* Lt *value* This will return items Less Than *value* according
+   to *index*
+-  *index* Lte *value* This will return items Less Than Or Equal to
+   *value* according to *index*
+-  *index* Gt *value* This will return items Greater Than *value*
+   according to *index*
+-  *index* Gte *value* This will return items Greater Than Or Equal to
+   *value* according to *index*
+-  *index* Re *re2 compatible regular expression* This will return items
+   in *index* that match the passed-in regular expression We use the
+   regular expression syntax described at
+   https://github.com/google/re2/wiki/Syntax
+-  *index* Between *lower* *upper* This will return items Greater Than
+   Or Equal to *lower* and Less Than Or Equal to *upper* according to
+   *index*
+-  *index* Except *lower* *upper* This will return items Less Than
+   *lower* or Greater Than *upper* according to *index*
+-  *index* In *comma,separated,list,of,values* This will return any
+   items In the set passed for the comma-separated list of values.
+-  *index* Nin *comma,separated,list,of,values* This will return any
+   items Not In the set passed for the comma-separated list of values.
+
+You can chain any number of filters together, and they will pipeline
+into each other as appropriate.
 
 ::
 
-   drpcli plugin_providers upload [name] (from [file]) [flags]
+   drpcli plugin_providers count [filters...] [flags]
 
 Options
 ~~~~~~~
 
 ::
 
-     -h, --help              help for upload
-         --replaceWritable   Replace identically named writable objects
+     -h, --help   help for count
 
 Options inherited from parent commands
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

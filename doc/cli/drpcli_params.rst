@@ -43,6 +43,7 @@ SEE ALSO
 
 -  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
    DigitalRebar Provision API
+-  `drpcli params count <drpcli_params_count.html>`__ - Count all params
 -  `drpcli params create <drpcli_params_create.html>`__ - Create a new
    param with the passed-in JSON or string key
 -  `drpcli params destroy <drpcli_params_destroy.html>`__ - Destroy

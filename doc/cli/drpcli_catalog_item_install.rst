@@ -17,7 +17,8 @@ Options
 
 ::
 
-     -h, --help   help for install
+     -h, --help              help for install
+         --replaceWritable   Replace identically named writable objects
 
 Options inherited from parent commands
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
