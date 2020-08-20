@@ -21,14 +21,22 @@ func (c *Client) GetContentItem(name string) (*models.Content, error) {
 	return res, c.Req().UrlFor("contents", name).Do(&res)
 }
 
-func (c *Client) CreateContent(content *models.Content) (*models.ContentSummary, error) {
+func (c *Client) CreateContent(content *models.Content, replaceWritable bool) (*models.ContentSummary, error) {
 	res := &models.ContentSummary{}
-	return res, c.Req().Post(content).UrlFor("contents").Do(res)
+	req := c.Req().Post(content).UrlFor("contents")
+	if replaceWritable {
+		req = req.Params("replaceWritable","true")
+	}
+	return res, req.Do(res)
 }
 
-func (c *Client) ReplaceContent(content *models.Content) (*models.ContentSummary, error) {
+func (c *Client) ReplaceContent(content *models.Content, replaceWritable bool) (*models.ContentSummary, error) {
 	res := &models.ContentSummary{}
-	return res, c.Req().Put(content).UrlFor("contents", content.Meta.Name).Do(res)
+	req := c.Req().Put(content).UrlFor("contents", content.Meta.Name)
+	if replaceWritable {
+		req = req.Params("replaceWritable","true")
+	}
+	return res, req.Do(res)
 }
 
 func (c *Client) DeleteContent(name string) error {
