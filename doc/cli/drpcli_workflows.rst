@@ -47,6 +47,8 @@ SEE ALSO
    the action for this workflow
 -  `drpcli workflows actions <drpcli_workflows_actions.html>`__ -
    Display actions for this workflow
+-  `drpcli workflows count <drpcli_workflows_count.html>`__ - Count all
+   workflows
 -  `drpcli workflows create <drpcli_workflows_create.html>`__ - Create a
    new workflow with the passed-in JSON or string key
 -  `drpcli workflows destroy <drpcli_workflows_destroy.html>`__ -

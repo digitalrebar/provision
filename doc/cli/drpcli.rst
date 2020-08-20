@@ -54,8 +54,6 @@ SEE ALSO
    relating to contexts
 -  `drpcli debug <drpcli_debug.html>`__ - Gather [type] of debug
    information and save it to [target]
--  `drpcli endpoint_connections <drpcli_endpoint_connections.html>`__ -
-   Access CLI commands relating to endpoint_connections
 -  `drpcli endpoints <drpcli_endpoints.html>`__ - Access CLI commands
    relating to endpoints
 -  `drpcli events <drpcli_events.html>`__ - DigitalRebar Provision Event
@@ -106,6 +104,8 @@ SEE ALSO
    to stages
 -  `drpcli subnets <drpcli_subnets.html>`__ - Access CLI commands
    relating to subnets
+-  `drpcli support <drpcli_support.html>`__ - Access commands related to
+   RackN Tech Support
 -  `drpcli system <drpcli_system.html>`__ - Access CLI commands relating
    to system
 -  `drpcli tasks <drpcli_tasks.html>`__ - Access CLI commands relating

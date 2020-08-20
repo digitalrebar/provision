@@ -1,19 +1,56 @@
-drpcli version_sets
+drpcli params count
 -------------------
 
-Access CLI commands relating to version_sets
+Count all params
 
 Synopsis
 ~~~~~~~~
 
-Access CLI commands relating to version_sets
+This will count all params by default. You can narrow down the count
+returned using index filters. Use the “indexes” command to get the
+indexes available for params.
+
+To filter by indexes, you can use the following stanzas:
+
+-  *index* Eq *value* This will return items Equal to *value* according
+   to *index*
+-  *index* Ne *value* This will return items Not Equal to *value*
+   according to *index*
+-  *index* Lt *value* This will return items Less Than *value* according
+   to *index*
+-  *index* Lte *value* This will return items Less Than Or Equal to
+   *value* according to *index*
+-  *index* Gt *value* This will return items Greater Than *value*
+   according to *index*
+-  *index* Gte *value* This will return items Greater Than Or Equal to
+   *value* according to *index*
+-  *index* Re *re2 compatible regular expression* This will return items
+   in *index* that match the passed-in regular expression We use the
+   regular expression syntax described at
+   https://github.com/google/re2/wiki/Syntax
+-  *index* Between *lower* *upper* This will return items Greater Than
+   Or Equal to *lower* and Less Than Or Equal to *upper* according to
+   *index*
+-  *index* Except *lower* *upper* This will return items Less Than
+   *lower* or Greater Than *upper* according to *index*
+-  *index* In *comma,separated,list,of,values* This will return any
+   items In the set passed for the comma-separated list of values.
+-  *index* Nin *comma,separated,list,of,values* This will return any
+   items Not In the set passed for the comma-separated list of values.
+
+You can chain any number of filters together, and they will pipeline
+into each other as appropriate.
+
+::
+
+   drpcli params count [filters...] [flags]
 
 Options
 ~~~~~~~
 
 ::
 
-     -h, --help   help for version_sets
+     -h, --help   help for count
 
 Options inherited from parent commands
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -41,31 +78,5 @@ Options inherited from parent commands
 SEE ALSO
 ~~~~~~~~
 
--  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
-   DigitalRebar Provision API
--  `drpcli version_sets action <drpcli_version_sets_action.html>`__ -
-   Display the action for this version_set
--  `drpcli version_sets actions <drpcli_version_sets_actions.html>`__ -
-   Display actions for this version_set
--  `drpcli version_sets count <drpcli_version_sets_count.html>`__ -
-   Count all version_sets
--  `drpcli version_sets create <drpcli_version_sets_create.html>`__ -
-   Create a new version_set with the passed-in JSON or string key
--  `drpcli version_sets destroy <drpcli_version_sets_destroy.html>`__ -
-   Destroy version_set by id
--  `drpcli version_sets exists <drpcli_version_sets_exists.html>`__ -
-   See if a version_sets exists by id
--  `drpcli version_sets indexes <drpcli_version_sets_indexes.html>`__ -
-   Get indexes for version_sets
--  `drpcli version_sets list <drpcli_version_sets_list.html>`__ - List
-   all version_sets
--  `drpcli version_sets
-   runaction <drpcli_version_sets_runaction.html>`__ - Run action on
-   object from plugin
--  `drpcli version_sets show <drpcli_version_sets_show.html>`__ - Show a
-   single version_sets by id
--  `drpcli version_sets update <drpcli_version_sets_update.html>`__ -
-   Unsafely update version_set by id with the passed-in JSON
--  `drpcli version_sets wait <drpcli_version_sets_wait.html>`__ - Wait
-   for a version_set’s field to become a value within a number of
-   seconds
+-  `drpcli params <drpcli_params.html>`__ - Access CLI commands relating
+   to params

@@ -55,6 +55,8 @@ SEE ALSO
    to the machine’s task list
 -  `drpcli machines bootenv <drpcli_machines_bootenv.html>`__ - Set the
    machine’s bootenv
+-  `drpcli machines count <drpcli_machines_count.html>`__ - Count all
+   machines
 -  `drpcli machines create <drpcli_machines_create.html>`__ - Create a
    new machine with the passed-in JSON or string key
 -  `drpcli machines currentlog <drpcli_machines_currentlog.html>`__ -

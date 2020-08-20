@@ -47,6 +47,8 @@ SEE ALSO
    the action for this bootenv
 -  `drpcli bootenvs actions <drpcli_bootenvs_actions.html>`__ - Display
    actions for this bootenv
+-  `drpcli bootenvs count <drpcli_bootenvs_count.html>`__ - Count all
+   bootenvs
 -  `drpcli bootenvs create <drpcli_bootenvs_create.html>`__ - Create a
    new bootenv with the passed-in JSON or string key
 -  `drpcli bootenvs destroy <drpcli_bootenvs_destroy.html>`__ - Destroy

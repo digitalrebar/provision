@@ -43,6 +43,8 @@ SEE ALSO
 
 -  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
    DigitalRebar Provision API
+-  `drpcli tenants count <drpcli_tenants_count.html>`__ - Count all
+   tenants
 -  `drpcli tenants create <drpcli_tenants_create.html>`__ - Create a new
    tenant with the passed-in JSON or string key
 -  `drpcli tenants destroy <drpcli_tenants_destroy.html>`__ - Destroy

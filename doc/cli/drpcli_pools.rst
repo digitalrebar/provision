@@ -49,6 +49,7 @@ SEE ALSO
    actions for this pool
 -  `drpcli pools active <drpcli_pools_active.html>`__ - List active
    pools
+-  `drpcli pools count <drpcli_pools_count.html>`__ - Count all pools
 -  `drpcli pools create <drpcli_pools_create.html>`__ - Create a new
    pool with the passed-in JSON or string key
 -  `drpcli pools destroy <drpcli_pools_destroy.html>`__ - Destroy pool

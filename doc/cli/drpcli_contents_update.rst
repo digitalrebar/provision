@@ -17,8 +17,9 @@ Options
 
 ::
 
-     -h, --help         help for update
-         --key string   Location of key to use for embedded secure parameters
+     -h, --help              help for update
+         --key string        Location of key to use for embedded secure parameters
+         --replaceWritable   Replace identically named writable objects
 
 Options inherited from parent commands
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

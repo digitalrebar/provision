@@ -47,6 +47,7 @@ SEE ALSO
    action for this lease
 -  `drpcli leases actions <drpcli_leases_actions.html>`__ - Display
    actions for this lease
+-  `drpcli leases count <drpcli_leases_count.html>`__ - Count all leases
 -  `drpcli leases destroy <drpcli_leases_destroy.html>`__ - Destroy
    lease by id
 -  `drpcli leases exists <drpcli_leases_exists.html>`__ - See if a
