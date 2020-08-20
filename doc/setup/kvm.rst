@@ -377,7 +377,7 @@ or pass a VM name as ARGv1 to the script.
 
   ::
 
-    cat << EOF_SCRIPT > $HOME/create-vms.sh
+    cat << 'EOF_SCRIPT' > $HOME/create-vm.sh
     #!/usr/bin/env bash
     # create a DRP managed KVM Virtual Machine
 
@@ -415,11 +415,11 @@ or pass a VM name as ARGv1 to the script.
     exit 0
     EOF_SCRIPT
 
-    chmod $HOME/create-vm.sh
+    chmod +x $HOME/create-vm.sh
 
 Example usage of the script, creating VM named *vm-test-01*:
 
-* ``./create-vm.sh vm-test-01``
+* ``$HOME/create-vm.sh vm-test-01``
 
 
 Create VMs via ``virsh`` or other Methods
