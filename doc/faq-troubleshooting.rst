@@ -312,9 +312,9 @@ CLI FAQ:
 The CLI has a dedicated FAQ section.  Please see :ref:`rs_cli_faq`.
 
 Topics include:
-  * :ref: `rs_autocomplete`
-  * :ref: `rs_cli_faq_zip`
-  * :ref: `rs_download_rackn_content`
+  * :ref:`rs_autocomplete`
+  * :ref:`rs_cli_faq_zip`
+  * :ref:`rs_download_rackn_content`
 
 
 .. .. _rs_more_debug:

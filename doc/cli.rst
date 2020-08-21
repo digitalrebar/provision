@@ -120,7 +120,7 @@ CLI Frequently Asked Questions (FAQ)
 ====================================
 
 This is a specialized FAQ section for FAQ concerns.
-Please see the general :ref: `rs_faq` page for additional items.
+Please see the general :ref:`rs_faq` page for additional items.
 
 .. _rs_download_rackn_content:
 
