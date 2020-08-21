@@ -32,6 +32,12 @@ Options
      -u, --url-proxy string        URL Proxy for passing actions through another DRP
      -U, --username string         Name of the Digital Rebar Provision user to talk to (default "rocketskates")
 
+
+Filtering Results
+~~~~~~~~~~~~~~~~~
+
+The DRPCLI passes through API filters.  See :ref:`rs_api_filters` for more details.
+
 SEE ALSO
 ~~~~~~~~
 
