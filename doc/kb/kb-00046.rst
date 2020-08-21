@@ -34,13 +34,14 @@ shows what you would add to your task to add the ability for the task to query a
   ::
 
     ExtraClaims:
-    - scope: "profiles"
-      action: "get"
-      specific: "*"
+      - scope: "profiles"
+        action: "get"
+        specific: "*"
 
 See Also
 ========
-:ref:`rs_data_claim`s
+
+:ref:`rs_data_claim`
 
 
 Keywords
