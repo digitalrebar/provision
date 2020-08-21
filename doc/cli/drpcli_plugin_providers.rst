@@ -44,6 +44,9 @@ SEE ALSO
 -  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
    DigitalRebar Provision API
 -  `drpcli plugin_providers
+   count <drpcli_plugin_providers_count.html>`__ - Count all
+   plugin_providers
+-  `drpcli plugin_providers
    destroy <drpcli_plugin_providers_destroy.html>`__ - Destroy
    plugin_provider by id
 -  `drpcli plugin_providers

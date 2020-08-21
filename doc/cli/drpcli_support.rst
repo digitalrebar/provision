@@ -1,29 +1,19 @@
-drpcli endpoint_connections wait
---------------------------------
+drpcli support
+--------------
 
-Wait for a endpoint_connection’s field to become a value within a number
-of seconds
+Access commands related to RackN Tech Support
 
 Synopsis
 ~~~~~~~~
 
-This function waits for the value to become the new value.
-
-Timeout is optional, defaults to 1 day, and is measured in seconds.
-
-Returns the following strings: complete - field is equal to value
-interrupt - user interrupted the command timeout - timeout has exceeded
-
-::
-
-   drpcli endpoint_connections wait [id] [field] [value] [timeout] [flags]
+Access commands related to RackN Tech Support
 
 Options
 ~~~~~~~
 
 ::
 
-     -h, --help   help for wait
+     -h, --help   help for support
 
 Options inherited from parent commands
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -51,5 +41,7 @@ Options inherited from parent commands
 SEE ALSO
 ~~~~~~~~
 
--  `drpcli endpoint_connections <drpcli_endpoint_connections.html>`__ -
-   Access CLI commands relating to endpoint_connections
+-  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
+   DigitalRebar Provision API
+-  `drpcli support bundle <drpcli_support_bundle.html>`__ - Create a
+   support bundle for the RackN engineering team.

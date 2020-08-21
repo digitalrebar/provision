@@ -117,7 +117,7 @@ get_next_index(){
     _num=$(echo $_last | sed -e 's/^kb-\([0-9][0-9][0-9][0-9][0-9]\).*rst$/\1/')
     _num=$(echo "$_num" | sed 's/^0*//')
     (( _num++ ))
-    INDEX=$(printf "%05s" "$_num")
+    INDEX=$(printf "%05d" "$_num")
     echo ">>> New index number generated: '$INDEX'"
   else
     echo ">>> Index number already provided, not generating new dynamic index."

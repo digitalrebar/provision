@@ -49,6 +49,8 @@ SEE ALSO
    actions for this plugin
 -  `drpcli plugins add <drpcli_plugins_add.html>`__ - Add the plugins
    param *key* to *blob*
+-  `drpcli plugins count <drpcli_plugins_count.html>`__ - Count all
+   plugins
 -  `drpcli plugins create <drpcli_plugins_create.html>`__ - Create a new
    plugin with the passed-in JSON or string key
 -  `drpcli plugins destroy <drpcli_plugins_destroy.html>`__ - Destroy

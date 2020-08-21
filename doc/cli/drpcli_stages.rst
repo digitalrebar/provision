@@ -55,6 +55,7 @@ SEE ALSO
    the stage’s task list
 -  `drpcli stages bootenv <drpcli_stages_bootenv.html>`__ - Set the
    stage’s bootenv
+-  `drpcli stages count <drpcli_stages_count.html>`__ - Count all stages
 -  `drpcli stages create <drpcli_stages_create.html>`__ - Create a new
    stage with the passed-in JSON or string key
 -  `drpcli stages destroy <drpcli_stages_destroy.html>`__ - Destroy

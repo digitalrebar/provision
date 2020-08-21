@@ -43,6 +43,8 @@ SEE ALSO
 
 -  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
    DigitalRebar Provision API
+-  `drpcli catalog_items count <drpcli_catalog_items_count.html>`__ -
+   Count all catalog_items
 -  `drpcli catalog_items create <drpcli_catalog_items_create.html>`__ -
    Create a new catalog_item with the passed-in JSON or string key
 -  `drpcli catalog_items destroy <drpcli_catalog_items_destroy.html>`__

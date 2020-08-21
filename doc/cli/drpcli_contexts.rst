@@ -43,6 +43,8 @@ SEE ALSO
 
 -  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
    DigitalRebar Provision API
+-  `drpcli contexts count <drpcli_contexts_count.html>`__ - Count all
+   contexts
 -  `drpcli contexts create <drpcli_contexts_create.html>`__ - Create a
    new context with the passed-in JSON or string key
 -  `drpcli contexts destroy <drpcli_contexts_destroy.html>`__ - Destroy

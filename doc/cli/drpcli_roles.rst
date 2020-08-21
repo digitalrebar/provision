@@ -43,6 +43,7 @@ SEE ALSO
 
 -  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
    DigitalRebar Provision API
+-  `drpcli roles count <drpcli_roles_count.html>`__ - Count all roles
 -  `drpcli roles create <drpcli_roles_create.html>`__ - Create a new
    role with the passed-in JSON or string key
 -  `drpcli roles destroy <drpcli_roles_destroy.html>`__ - Destroy role

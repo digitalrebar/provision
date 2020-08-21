@@ -20,7 +20,8 @@ Options
 
 ::
 
-     -h, --help   help for upload
+     -h, --help              help for upload
+         --replaceWritable   Replace identically named writable objects
 
 Options inherited from parent commands
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -49,6 +49,8 @@ SEE ALSO
    Display actions for this endpoint
 -  `drpcli endpoints add <drpcli_endpoints_add.html>`__ - Add the
    endpoints param *key* to *blob*
+-  `drpcli endpoints count <drpcli_endpoints_count.html>`__ - Count all
+   endpoints
 -  `drpcli endpoints create <drpcli_endpoints_create.html>`__ - Create a
    new endpoint with the passed-in JSON or string key
 -  `drpcli endpoints destroy <drpcli_endpoints_destroy.html>`__ -

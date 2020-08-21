@@ -43,6 +43,8 @@ SEE ALSO
 
 -  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
    DigitalRebar Provision API
+-  `drpcli interfaces count <drpcli_interfaces_count.html>`__ - Count
+   all interfaces
 -  `drpcli interfaces exists <drpcli_interfaces_exists.html>`__ - See if
    a interfaces exists by id
 -  `drpcli interfaces indexes <drpcli_interfaces_indexes.html>`__ - Get

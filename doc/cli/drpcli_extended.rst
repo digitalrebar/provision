@@ -50,6 +50,7 @@ SEE ALSO
    actions for this extended
 -  `drpcli extended add <drpcli_extended_add.html>`__ - Add the param
    *key* to *blob*
+-  `drpcli extended count <drpcli_extended_count.html>`__ - Count all
 -  `drpcli extended create <drpcli_extended_create.html>`__ - Create a
    new extended with the passed-in JSON or string key
 -  `drpcli extended destroy <drpcli_extended_destroy.html>`__ - Destroy

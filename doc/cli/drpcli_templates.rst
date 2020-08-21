@@ -47,6 +47,8 @@ SEE ALSO
    the action for this template
 -  `drpcli templates actions <drpcli_templates_actions.html>`__ -
    Display actions for this template
+-  `drpcli templates count <drpcli_templates_count.html>`__ - Count all
+   templates
 -  `drpcli templates create <drpcli_templates_create.html>`__ - Create a
    new template with the passed-in JSON or string key
 -  `drpcli templates destroy <drpcli_templates_destroy.html>`__ -

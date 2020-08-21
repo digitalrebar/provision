@@ -47,6 +47,8 @@ SEE ALSO
    Display the action for this version_set
 -  `drpcli version_sets actions <drpcli_version_sets_actions.html>`__ -
    Display actions for this version_set
+-  `drpcli version_sets count <drpcli_version_sets_count.html>`__ -
+   Count all version_sets
 -  `drpcli version_sets create <drpcli_version_sets_create.html>`__ -
    Create a new version_set with the passed-in JSON or string key
 -  `drpcli version_sets destroy <drpcli_version_sets_destroy.html>`__ -

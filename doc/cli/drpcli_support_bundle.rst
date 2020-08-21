@@ -1,25 +1,44 @@
-drpcli endpoint_connections meta add
-------------------------------------
+drpcli support bundle
+---------------------
 
-Atomically add [key]:[val] to the metadata on
-[endpoint_connections]:[id]
+Create a support bundle for the RackN engineering team.
 
 Synopsis
 ~~~~~~~~
 
-Atomically add [key]:[val] to the metadata on
-[endpoint_connections]:[id]
+Create a support bundle for the RackN engineering team. This command is
+currently only supported on a Linux host and expects to be running on
+the drp endpoint.
 
 ::
 
-   drpcli endpoint_connections meta add [id] key [key] val [val] [flags]
+   By default the command will run:
+       journalctl -u dr-provision --since yesterday
+   It captures that output and puts it into a file.
+   Next we take the contents of /var/lib/dr-provision
+   excluding some folders and add them along with the
+   log output to a zip file that can be sent to support@rackn.com
+
+   If your drp endpoint runs as some other user you can set the user with the --dr-user flag.
+   If your drp endpoint has a different base dir than /var/lib/dr-provision
+   you can set that with the --drp-basedir flag.
+   If you need to include additional directories that are excluded by default above
+   you can add them with  --extra-dirs This is only needed if directed by support.
+
+::
+
+   drpcli support bundle [flags]
 
 Options
 ~~~~~~~
 
 ::
 
-     -h, --help   help for add
+         --dr-user string       dr-user dr-provision (default "dr-provision")
+         --drp-basedir string   drp-basedir /var/lib/dr-provision (default "/var/lib/dr-provision/")
+         --extra-dirs string    extra-dirs job-logs,saas-content,ux,plugins
+     -h, --help                 help for bundle
+         --since string         since 'something valid that journalctl supports' (default "yesterday")
 
 Options inherited from parent commands
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -47,6 +66,5 @@ Options inherited from parent commands
 SEE ALSO
 ~~~~~~~~
 
--  `drpcli endpoint_connections
-   meta <drpcli_endpoint_connections_meta.html>`__ - Gets metadata for
-   the endpoint_connection
+-  `drpcli support <drpcli_support.html>`__ - Access commands related to
+   RackN Tech Support

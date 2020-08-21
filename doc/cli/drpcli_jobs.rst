@@ -45,6 +45,7 @@ SEE ALSO
    DigitalRebar Provision API
 -  `drpcli jobs actions <drpcli_jobs_actions.html>`__ - Get the actions
    for this job
+-  `drpcli jobs count <drpcli_jobs_count.html>`__ - Count all jobs
 -  `drpcli jobs create <drpcli_jobs_create.html>`__ - Create a new job
    with the passed-in JSON or string key
 -  `drpcli jobs destroy <drpcli_jobs_destroy.html>`__ - Destroy job by

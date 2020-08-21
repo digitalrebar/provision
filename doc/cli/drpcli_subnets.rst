@@ -47,6 +47,8 @@ SEE ALSO
    action for this subnet
 -  `drpcli subnets actions <drpcli_subnets_actions.html>`__ - Display
    actions for this subnet
+-  `drpcli subnets count <drpcli_subnets_count.html>`__ - Count all
+   subnets
 -  `drpcli subnets create <drpcli_subnets_create.html>`__ - Create a new
    subnet with the passed-in JSON or string key
 -  `drpcli subnets destroy <drpcli_subnets_destroy.html>`__ - Destroy

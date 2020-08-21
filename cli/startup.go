@@ -322,6 +322,8 @@ func NewApp() *cobra.Command {
 					sc.PersistentPreRunE = ppr
 				}
 			}
+		case "support":
+
 		default:
 			c.PersistentPreRunE = ppr
 		}

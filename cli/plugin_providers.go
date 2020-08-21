@@ -20,7 +20,8 @@ func registerPluginProvider(app *cobra.Command) {
 		noCreate:   true,
 		noUpdate:   true,
 	}
-	op.addCommand(&cobra.Command{
+	replaceWritable := false
+	upload := &cobra.Command{
 		Use:   "upload [name] (from [file])",
 		Short: "Upload a program to act as a plugin_provider",
 		Long: `Uploads a program to act as a plugin_provider.
@@ -47,11 +48,17 @@ then the (from [file]) part may be omitted, and [name] should be the path to the
 			}
 			defer fi.Close()
 			res := &models.PluginProviderUploadInfo{}
-			if err := Session.Req().Post(fi).UrlFor(op.name, name).Do(res); err != nil {
+			req := Session.Req().Post(fi).UrlFor(op.name, name)
+			if replaceWritable{
+				req = req.Params("replaceWritable","true")
+			}
+			if err := req.Do(res); err != nil {
 				return err
 			}
 			return prettyPrint(res)
 		},
-	})
+	}
+	upload.Flags().BoolVar(&replaceWritable, "replaceWritable", false, "Replace identically named writable objects")
+	op.addCommand(upload)
 	op.command(app)
 }

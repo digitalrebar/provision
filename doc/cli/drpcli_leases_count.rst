@@ -1,14 +1,14 @@
-drpcli endpoint_connections list
---------------------------------
+drpcli leases count
+-------------------
 
-List all endpoint_connections
+Count all leases
 
 Synopsis
 ~~~~~~~~
 
-This will list all endpoint_connections by default. You can narrow down
-the items returned using index filters. Use the “indexes” command to get
-the indexes available for endpoint_connections.
+This will count all leases by default. You can narrow down the count
+returned using index filters. Use the “indexes” command to get the
+indexes available for leases.
 
 To filter by indexes, you can use the following stanzas:
 
@@ -39,30 +39,18 @@ To filter by indexes, you can use the following stanzas:
    items Not In the set passed for the comma-separated list of values.
 
 You can chain any number of filters together, and they will pipeline
-into each other as appropriate. After the above filters have been
-applied, you can further tweak how the results are returned using the
-following meta-filters:
-
--  ‘reverse’ to return items in reverse order
--  ‘limit’ *number* to only return the first *number* items
--  ‘offset’ *number* to skip *number* items
--  ‘sort’ *index* to sort items according to *index*
+into each other as appropriate.
 
 ::
 
-   drpcli endpoint_connections list [filters...] [flags]
+   drpcli leases count [filters...] [flags]
 
 Options
 ~~~~~~~
 
 ::
 
-         --decode          Should decode any secure params
-     -h, --help            help for list
-         --limit int       Maximum number of items to return (default -1)
-         --offset int      Number of items to skip before starting to return data (default -1)
-         --params string   Should return only the parameters specified as a comma-separated list of parameter names.
-         --slim string     Should elide certain fields.  Can be 'Params', 'Meta', or a comma-separated list of both.
+     -h, --help   help for count
 
 Options inherited from parent commands
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -90,5 +78,5 @@ Options inherited from parent commands
 SEE ALSO
 ~~~~~~~~
 
--  `drpcli endpoint_connections <drpcli_endpoint_connections.html>`__ -
-   Access CLI commands relating to endpoint_connections
+-  `drpcli leases <drpcli_leases.html>`__ - Access CLI commands relating
+   to leases
