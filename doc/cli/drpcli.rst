@@ -36,7 +36,28 @@ Options
 Filtering Results
 ~~~~~~~~~~~~~~~~~
 
+There are several ways to filter DRPCLI output;
+
+API Filters
+===========
+
 The DRPCLI passes through API filters.  See :ref:`rs_api_filters` for more details.
+
+When passing filters via DRPCLI, you may need to protect specialized filters using quotes or
+single ticks.
+
+For example, to use the not equal (Ne) filter:
+
+  ::
+
+     drpcli machines list Name='Ne(cluster01)'
+     drpcli machines list Name="Ne(cluster01)"
+
+
+JSON Query (JQ)
+===============
+
+DRPCLI includes a fully jq parser.  Please see :ref:`rs_kb_00042` for details about using JQ with DRPCLI.
 
 SEE ALSO
 ~~~~~~~~
