@@ -3,6 +3,7 @@ package models
 import (
 	"net"
 	"runtime"
+	"sync"
 )
 
 // HaPassiveState the state of the passive node
@@ -17,7 +18,7 @@ type HaPassiveState struct {
 	State string `json:"state"`
 }
 
-// Stat contains a basic statistic sbout dr-provision
+// Stat contains a basic statistic about dr-provision
 //
 // swagger:model
 type Stat struct {
@@ -96,6 +97,9 @@ type Info struct {
 	// HaPassiveState is a list of passive node's and their current state
 	// This is only valid from the Active node
 	HaPassiveState []*HaPassiveState `json:"ha_passive_state"`
+
+	// local lock to protect fields
+	lock sync.Mutex
 }
 
 // HasFeature is a helper function to determine if a requested feature
@@ -134,8 +138,10 @@ func (i *Info) Fill() {
 }
 
 func (i *Info) AddUpdatePassive(id, address, state string) {
+	i.lock.Lock()
+	defer i.lock.Unlock()
 	if i.HaPassiveState == nil {
-		i.HaPassiveState = []*HaPassiveState{&HaPassiveState{Id: id, Address: address, State: state}}
+		i.HaPassiveState = []*HaPassiveState{{Id: id, Address: address, State: state}}
 		return
 	}
 	for _, ps := range i.HaPassiveState {
@@ -151,6 +157,8 @@ func (i *Info) AddUpdatePassive(id, address, state string) {
 }
 
 func (i *Info) RemovePassive(id string) {
+	i.lock.Lock()
+	defer i.lock.Unlock()
 	if i.HaPassiveState == nil {
 		return
 	}
