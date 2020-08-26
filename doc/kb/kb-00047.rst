@@ -153,7 +153,7 @@ Performing the git add/commit/push:
     git add doc/kb/kb-00099.rst
 
     # create a commit message with our changes, follow the style guidelines
-    git commit -m "enhance(kb): Add Interesting Thing KB"
+    git commit -m "doc(kb): Add Interesting Thing KB"
 
     # push the branch to the "origin"
     git push --set-upstream origin kb-interesting-thing
