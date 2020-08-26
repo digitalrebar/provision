@@ -98,7 +98,7 @@ The basic process is as follows:
   * make edits to appropriate files/etc
   * add modified files to your branch
   * create a commit message describing your changes
-  * push your changes as  Pull Request
+  * push your changes as a Pull Request
   * open a web browser, and submit the Pull Request
   * wait for review or feedback from the RackN team
 
@@ -149,7 +149,7 @@ Performing the git add/commit/push:
 
   ::
 
-    # add the files to our Branch (``kb-interesting-thing``)
+    # add the files to our Branch ('kb-interesting-thing')
     git add doc/kb/kb-00099.rst
 
     # create a commit message with our changes, follow the style guidelines
