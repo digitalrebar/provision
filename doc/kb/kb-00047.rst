@@ -1,0 +1,233 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+
+.. _git_basics_with_digital_rebar:
+
+kb-00047: Git Basics with Digital Rebar
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. _rs_kb_00047:
+
+Knowledge Base Article: kb-00047
+--------------------------------
+
+
+Description
+-----------
+
+RackN and the Digital Rebar Platform (DRP) project utilize Git to manage contributions
+to the Open Ecosystem of content and plugins.  We use a fairly traditional Git Pull
+Request and Branch methodology for incorporationg contributions.
+
+This document outlines one very basic approach to providing contributions using the Git
+command line.  Note that there are many ways to use Git, including various IDE
+integrations, GUI based tools, etc.  This is only one simplified example to help you get
+started with the basics to contribute to the project.
+
+This basic methodology is used across all of the Repositories that are managed by RackN
+in relation to the Digital Rebar suite of services, tools, and components.  Some of the
+Repos that make up that family, are as follows:
+
+  * https://github.com/digitalrebar/provision - DRP Main Site for Open API, Models, Runner/Agent, etc.
+  * https://github.com/digitalrebar/provision-content - Open Ecosystem of Content packs/bundles
+  * https://github.com/digitalrebar/provision-plugins - Open Ecosystem of Plugin providers
+  * https://github.com/digitalrebar/colordemo - Example content pack training Content and resources
+  * https://github.com/digitalrebar/edgelab - Open Edge Lab initiative
+  * https://github.com/digitalrebar/postman - Postman API collections and examples for API Usage
+  * https://github.com/rackn/multi-site-demo - Example framework utilizing the DRP Multi-Site-Manager (licensed feature)
+  * https://github.com/rackn/terraform-provider-drp - Terraform Provider for driving DRP use
+  * https://github.com/rackn/vmware_tools - Various VMware related tools
+  * https://github.com/rackn/gohai - Gohai Inventory library
+  * https://github.com/rackn/netwrangler - Network configuration mangler, utilizing netconf style YAML syntax
+
+Solution
+--------
+
+This is a very quick introduction to setup and usage of Git to get you started.  Please check
+out many of the various `Git Introduction <https://www.google.com/search?q=introduction+to+git&oq=introduction+to+git>`_
+references on the Web for more detailed examples.
+
+
+Prerequisites
+=============
+
+You will need the following:
+
+  * a Git command line client - you can use a GUI/UX tool, this KB is for command line
+  * a Github user account (free) - `Create Github Account <https://github.com/join>`_
+
+
+Setup - Installing Git
+======================
+
+This tutorial assumes use of the command line ``git`` tool.  You can certainly use one
+of the GUIs, but that is outside the scope of this document.
+
+  * download: `Git Downloads <https://git-scm.com/downloads>`_
+  * install documenation: `Getting Started - Installing Git <https://git-scm.com/book/en/v2/Getting-Started-Installing-Git>`_
+
+
+Basic Configuration
+===================
+
+Basic setup:
+
+  ::
+
+    git config --global user.name "Cloudia Bear"
+    git config --global user.email cloudia@bearmetal.dev
+
+More in depth details on setup of your git environment:
+
+  * `First Time Git Setup <https://git-scm.com/book/en/v2/Getting-Started-First-Time-Git-Setup>`_
+
+
+Operating Git to Make Changes
+=============================
+
+The basic process is as follows:
+
+  * clone the repository
+  * create a branch
+  * checkout the branch
+  * make edits to appropriate files/etc
+  * add modified files to your branch
+  * create a commit message describing your changes
+  * push your changes as a Pull Request
+  * open a web browser, and submit the Pull Request
+  * wait for review or feedback from the RackN team
+
+Here is an example of the above process in command line usage.  We will show an example of creating
+a Knowledge Base article document to the ``digitalrebar/provision`` Git repository.
+
+
+  ::
+
+    # create a base directory to hold the git repos in, and 'cd' to it
+    mkdir digitalrebar && cd digitalrebar
+
+    # clone the Provision repo
+    git clone https://github.com/digitalrebar/provision.git
+
+    # change to the provision directory
+    cd provision
+
+    # create a branch - with mythical example name of "kb-interesting-thing"
+    git branch kb-interesting-thing
+
+    # checkout our branch
+    git checkout kb-interesting-thing
+
+Once we've setup our Repository clone and branch, we will then want to
+create the changes we will checkin as a Pull Request.  For this example,
+we'll use a mythical Knowledge Base article named *Interesting Thing Document*.
+
+More details on creating Knowledge Base articles and the helper script can be
+found at :ref:`rs_contributing_kb_articles` .
+
+  ::
+
+    # use the helper script to create a new KB article
+    tools/docs-make-kb.sh -t "Interesting Thing Document"
+
+    # edit the KB and document your "interesting thing"
+    # save the file - this should produce an file with something
+    # like:  doc/kb/kb-00099.rst  (the number will be different)
+
+Now that we have our contributory information we want to submit as a Pull
+Request, lets submit it!
+
+.. note:: Substitute the correct KB article number in the below example that is created from the script above.  Follow style guidlines for commit message:  :ref:`rs_dev_commit`
+
+
+Performing the git add/commit/push:
+
+  ::
+
+    # add the files to our Branch ('kb-interesting-thing')
+    git add doc/kb/kb-00099.rst
+
+    # create a commit message with our changes, follow the style guidelines
+    git commit -m "doc(kb): Add Interesting Thing KB"
+
+    # push the branch to the "origin"
+    git push --set-upstream origin kb-interesting-thing
+
+
+If the *push* is successful, you should see an output message along the lines of:
+
+  ::
+
+    Enumerating objects: 49, done.
+    Counting objects: 100% (48/48), done.
+    Delta compression using up to 8 threads
+    Compressing objects: 100% (33/33), done.
+    Writing objects: 100% (37/37), 13.00 KiB | 2.60 MiB/s, done.
+    Total 37 (delta 9), reused 0 (delta 0)
+    remote: Resolving deltas: 100% (9/9), completed with 6 local objects.
+    remote:
+    remote: Create a pull request for 'kb-interesting-thing' on GitHub by visiting:
+    remote:      https://github.com/digitalrebar/provision/pull/new/kb-interesting-thing
+    remote:
+    To https://github.com/digitalrebar/provision.git
+    * [new branch]      kb-interesting-thing -> kb-interesting-thing
+    Branch 'kb-interesting-thing' set up to track remote branch 'kb-interesting-thing' from 'origin'.
+
+
+**There is one more step!**  Copy the HTTPS URL from the *remote:    https://github...* line.
+This URL will let you more fully describe the changes you've made, and submit the Pull
+Request officially.
+
+  * our example URL from above: https://github.com/digitalrebar/provision/pull/new/kb-interesting-thing
+
+In your web page with the above URL loaded, you'll be able to add comments to explain your
+Pull Request.  Once you've done this, hit the ``Submit`` button.
+
+
+Review and Incorporating Feedback
+=================================
+
+Once you've submitted your Pull Request as above, the RackN team will be notified.
+A team member will review the request, and make any suggestions, modification requests,
+or if it's all "good to go", notify you it's good.
+
+The Pull Request will be pulled in and added to the ``v4`` branch (our *master* branch),
+and any other tagged versions as appropriate.
+
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+  * :ref:`rs_dev_dev` - code style, commit message formats, and more
+
+
+Versions
+========
+
+all
+
+
+Keywords
+========
+
+digital rebar platform, drp, digital rebar provision, rackn, git, github, contribute, contributing, commit, branch, pull request, pr
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00047
+    initial release:  Wed Aug 26 10:18:02 PDT 2020
+    updated release:  Wed Aug 26 10:18:02 PDT 2020
+
