@@ -132,7 +132,7 @@ found at :ref:`rs_contributing_kb_articles` .
 
   ::
 
-    # use the helper script to create a new KB article, see kb-00000 for
+    # use the helper script to create a new KB article
     tools/docs-make-kb.sh -t "Interesting Thing Document"
 
     # edit the KB and document your "interesting thing"
