@@ -27,5 +27,6 @@ Some of these operations are in the :ref:`rs_ui`, but not all.  This will focus 
    operations/imagedeploy
    operations/pooling
    operations/runbooks
+   operations/backup
    operations/security
    operations/scaling
