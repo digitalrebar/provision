@@ -183,7 +183,7 @@ If the *push* is successful, you should see an output message along the lines of
 This URL will let you more fully describe the changes you've made, and submit the Pull
 Request officially.
 
-  * our exmaple URL from above: https://github.com/digitalrebar/provision/pull/new/kb-interesting-thing
+  * our example URL from above: https://github.com/digitalrebar/provision/pull/new/kb-interesting-thing
 
 In your web page with the above URL loaded, you'll be able to add comments to explain your
 Pull Request.  Once you've done this, hit the ``Submit`` button.
