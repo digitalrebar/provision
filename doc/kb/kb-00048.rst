@@ -1,0 +1,85 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+
+.. _content_upload_error_with_U002D:
+
+kb-00048: Content Upload Error with 'U+002D'
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. _rs_kb_00048:
+
+Knowledge Base Article: kb-00048
+--------------------------------
+
+
+Description
+-----------
+
+When trying to upload a Content Pack to a DRP Endpoint, you receive an error
+similar to:
+
+  ::
+
+    Error: PUT: content-pack-name: tasks:my-task-name: Templates[0} Error parsing
+    Contents: template: template-name:15: bad character U+002D '-'
+
+The actual ``content-pack-name``, ``my-task-name``, and ``template-name``
+will be specific to your content.  In addition, you may not have a Task
+listed in the error message, if your template is an External template
+(contained in the *templates* directory).
+
+Solution
+--------
+
+In the referenced Template, you most likely have a Golang construct that is not
+properly protected with quotes.  This is often a ``.Param`` reference to a
+Parameter that contains dashes (Unicode ``U+002D`` character), which must be
+quote protected.
+
+Here is an example of the **BAD** reference:
+
+  * ``{{ .Param foo-bar }}``
+
+The Param ``foo-bar`` must be quote protected.  **GOOD** example:
+
+  * ``{{ .Param "foo-bar" }}``
+
+Find the Template line number in the referenced output; in the above example,
+it is on line 15 of the template.  You will need to add quotes around the
+item that contains the dashes (``-``, Unicode U+002D character).
+
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+n/a
+
+Versions
+========
+
+all
+
+Keywords
+========
+
+content pack, put error, unicode character, U+002D
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00048
+    initial release:  Thu Aug 27 09:46:54 PDT 2020
+    updated release:  Thu Aug 27 09:46:54 PDT 2020
+
