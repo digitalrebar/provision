@@ -19,6 +19,15 @@ In addition to bug fixes and performance improvements, the release includes seve
 
 See :ref:`rs_release_summaries` for a complete list of all releases.
 
+.. _rs_release_v45_deprecations:
+
+Deprecations
+~~~~~~~~~~~~
+
+The following items are flagged as deprecated in v4.5 and will be removed in v4.6.
+
+* old pattern cluster synchronization with cluster-add, cluster-step and cluster-sync.  Operators should migrate to the new cluster-gate-* patterns.
+
 .. _rs_release_v45_multisite:
 
 Multi-Site Manager

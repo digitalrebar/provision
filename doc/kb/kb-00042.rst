@@ -115,6 +115,28 @@ The Job Logs provide a lot of information about the provisioning process of your
     drpcli jobs list | jq ".[] | select(.Machine==\"$UUID\")"
 
 
+.. _rs_jq_pass_param:
+
+Using --args deal with pipes and quotes (NOT A DRPCLI JQ feature)
+=================================================================
+
+.. note:: This is NOT supported by the DROCLI JQ_
+
+In scripts, it can become very difficult to correctly pass variables inside of pipes.  For this reason, operators may want to use the `jq --args` instead of attempting to inject values into jq queries.
+
+In the example below, we needed to match a value inside an array of JSON objects.  The command is passing the machine $uuid into the JQ string is difficult because of the required single ticks.  Using `--args varname inputvalue` makes it simpler to build and manage inputs for jq pipes.
+
+  ::
+
+    mc=$(jq --args uuid "$uuid" -r '.[] | select(.Uuid = "$uuid")' <<< "$CLUSTER_MACHINES")
+
+
+This example looks for a value in an array.
+
+ ::
+
+    licensed=$(jq --args m "$mc" -r 'contains(["$m"])' <<< $endpoints)
+
 Additional Information
 ----------------------
 

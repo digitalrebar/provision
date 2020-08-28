@@ -114,6 +114,41 @@ CLI Commands Reference
 
    cli/*
 
+.. _rs_cli_filters:
+
+Filtering Results for DRPCLI
+============================
+
+There are several ways to filter DRPCLI output;
+
+.. _rs_cli_filters_api:
+
+DRPCLI and API Filters
+----------------------
+
+The DRPCLI passes through API filters.  See :ref:`rs_api_filters` for more details.
+
+DRPCLI allows multiple filters to be passed in a single command.  They are considered to be AND operations.
+
+When passing filters via DRPCLI, you may need to protect specialized filters using quotes or
+single ticks.
+
+For example, to use the not equal (Ne) filter:
+
+  ::
+
+     drpcli machines list Name='Ne(cluster01)'
+     drpcli machines list Name="Ne(cluster01)"
+
+.. _rs_cli_filters_jq:
+
+DRPCLI and JSON Query (JQ)
+--------------------------
+
+DRPCLI includes a fully jq parser!  Please see :ref:`rs_kb_00042` for details about using JQ with DRPCLI.
+
+.. note:: Since JQ acts _after_ results have been returned, API filters should be applied first when possible.  Returning large data sets will degrade system performance.
+
 .. _rs_cli_faq:
 
 CLI Frequently Asked Questions (FAQ)
