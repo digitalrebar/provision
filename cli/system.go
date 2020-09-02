@@ -2,6 +2,7 @@ package cli
 
 import (
 	"fmt"
+	"path"
 
 	"github.com/spf13/cobra"
 )
@@ -63,7 +64,9 @@ func addSystemCommands() (res *cobra.Command) {
 			return fmt.Errorf("%v requires 0 argument", c.UseLine())
 		},
 		RunE: func(c *cobra.Command, args []string) error {
-			if info, err := Session.PostBlob(nil, "system", "passive"); err != nil {
+			r := Session.Req().Post(nil).UrlFor(path.Join("/", "system", "passive"))
+			var info interface{}
+			if err := r.Do(&info); err != nil {
 				return generateError(err, "Failed to set passive state")
 			} else {
 				return prettyPrint(info)
@@ -80,7 +83,9 @@ func addSystemCommands() (res *cobra.Command) {
 			return fmt.Errorf("%v requires 0 argument", c.UseLine())
 		},
 		RunE: func(c *cobra.Command, args []string) error {
-			if info, err := Session.PostBlob(nil, "system", "active"); err != nil {
+			r := Session.Req().Post(nil).UrlFor(path.Join("/", "system", "active"))
+			var info interface{}
+			if err := r.Do(&info); err != nil {
 				return generateError(err, "Failed to set active state")
 			} else {
 				return prettyPrint(info)
