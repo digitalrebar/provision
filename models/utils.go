@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"reflect"
 	"regexp"
 	"strings"
 	"time"
@@ -16,10 +17,14 @@ import (
 )
 
 var (
-	modelPrefixes = func() map[string]Model {
-		res := map[string]Model{}
+	baseModels = func() map[string]reflect.Type {
+		res := map[string]reflect.Type{}
 		for _, m := range All() {
-			res[m.Prefix()] = m
+			vv := reflect.ValueOf(m)
+			for vv.Kind() == reflect.Interface || vv.Kind() == reflect.Ptr {
+				vv = vv.Elem()
+			}
+			res[m.Prefix()] = vv.Type()
 		}
 		return res
 	}()
@@ -106,16 +111,14 @@ func AllPrefixes() []string {
 // New returns a new blank instance of the Model with the passed-in
 // prefix.
 func New(prefix string) (Slicer, error) {
-	for _, i := range All() {
-		key := i.Prefix()
-		if key == prefix || prefix == strings.TrimSuffix(key, "s") {
-			res := i.(Slicer)
-			res.Fill()
-			return res, nil
-		}
+	var res Slicer
+	if v, ok := baseModels[prefix]; ok {
+		res = reflect.New(v).Interface().(Slicer)
+	} else if v, ok = baseModels[strings.TrimSuffix(prefix, "s")]; ok {
+		res = reflect.New(v).Interface().(Slicer)
+	} else {
+		res = &RawModel{"Type": prefix}
 	}
-
-	res := &RawModel{"Type": prefix}
 	res.Fill()
 	return res, nil
 }

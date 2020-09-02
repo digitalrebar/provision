@@ -51,7 +51,7 @@ func (t *Tenant) GetDescription() string {
 func (t *Tenant) Validate() {
 	t.AddError(ValidName("Invalid Name", t.Name))
 	for k := range t.Members {
-		if _, ok := modelPrefixes[k]; !ok {
+		if _, ok := baseModels[k]; !ok {
 			t.Errorf("Invalid ")
 		}
 	}
