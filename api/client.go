@@ -144,6 +144,7 @@ type R struct {
 	noRetry              bool
 	traceLvl, traceToken string
 	proxy                string
+	params               url.Values
 }
 
 // Req creates a new R for the current client.
@@ -158,6 +159,7 @@ func (c *Client) Req() *R {
 		method:     "GET",
 		header:     http.Header{},
 		proxy:      c.urlProxy,
+		params:     url.Values{},
 		err: &models.Error{
 			Type: "CLIENT_ERROR",
 		},
@@ -318,23 +320,16 @@ func (r *R) UrlForM(m models.Model, rest ...string) *R {
 	return r.UrlFor(args...)
 }
 
-// Params appends query parameters to the URL R will use.  r.UrlFor()
-// or r.UrlForM() must have already been called.  You must pass an
-// even number of parameters to Params
+// Params appends query parameters to the URL R will use.
+// You must pass an  even number of parameters to Params
 func (r *R) Params(args ...string) *R {
-	if r.uri == nil {
-		r.err.Errorf("Cannot call WithParams before UrlFor or UrlForM")
-		return r
-	}
 	if len(args)&1 == 1 {
-		r.err.Errorf("WithParams was not passed an even number of arguments")
+		r.err.Errorf("Params was not passed an even number of arguments")
 		return r
 	}
-	values := url.Values{}
 	for i := 1; i < len(args); i += 2 {
-		values.Add(args[i-1], args[i])
+		r.params.Set(args[i-1], args[i])
 	}
-	r.uri.RawQuery = values.Encode()
 	return r
 }
 
@@ -480,6 +475,7 @@ func (r *R) Response() (*http.Response, error) {
 		r.err.Errorf("No URL to talk to")
 		return nil, r.err
 	}
+	r.uri.RawQuery = r.params.Encode()
 	r.c.mux.Lock()
 	if r.c.closed {
 		r.c.mux.Unlock()
