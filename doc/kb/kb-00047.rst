@@ -92,13 +92,14 @@ Operating Git to Make Changes
 
 The basic process is as follows:
 
+  * Fork the repository
   * clone the repository
   * create a branch
   * checkout the branch
   * make edits to appropriate files/etc
   * add modified files to your branch
   * create a commit message describing your changes
-  * push your changes as a Pull Request
+  * push your changes up to your fork on the new feature branch
   * open a web browser, and submit the Pull Request
   * wait for review or feedback from the RackN team
 
@@ -108,20 +109,26 @@ a Knowledge Base article document to the ``digitalrebar/provision`` Git reposito
 
   ::
 
+    # Forking a repository is really straightforward
+    # Make sure you're logged into GitHub with your account.
+    # Find the GitHub repository with which youd like to work.
+    # Click the Fork button on the upper right-hand side of the repository's page.
+    # That's it you now have a copy of the original repository in your GitHub account.
+
     # create a base directory to hold the git repos in, and 'cd' to it
     mkdir digitalrebar && cd digitalrebar
 
     # clone the Provision repo
-    git clone https://github.com/digitalrebar/provision.git
+    git clone https://github.com/##YOUR GH USERNAME##/provision.git
 
     # change to the provision directory
     cd provision
 
-    # create a branch - with mythical example name of "kb-interesting-thing"
-    git branch kb-interesting-thing
+    # Add the digitalrebar upstream as a remote
+    git remote add upstream https://github.com/digitalrebar/provision.git
 
-    # checkout our branch
-    git checkout kb-interesting-thing
+    # create a branch - with mythical example name of "kb-interesting-thing" and check it out
+    git checkout -b kb-interesting-thing
 
 Once we've setup our Repository clone and branch, we will then want to
 create the changes we will checkin as a Pull Request.  For this example,
@@ -179,14 +186,11 @@ If the *push* is successful, you should see an output message along the lines of
     Branch 'kb-interesting-thing' set up to track remote branch 'kb-interesting-thing' from 'origin'.
 
 
-**There is one more step!**  Copy the HTTPS URL from the *remote:    https://github...* line.
-This URL will let you more fully describe the changes you've made, and submit the Pull
-Request officially.
+**There is one more step!**  GitHub makes this part incredibly easy. Once you push a new branch up to your repository,
+GitHub will prompt you to create a pull request (Im assuming youre using your browser and not the GitHub native apps).
 
-  * our example URL from above: https://github.com/digitalrebar/provision/pull/new/kb-interesting-thing
-
-In your web page with the above URL loaded, you'll be able to add comments to explain your
-Pull Request.  Once you've done this, hit the ``Submit`` button.
+In your web page with the pull request open, you'll be able to add comments to explain your Pull Request.  Once you've
+done this, hit the ``Submit`` button.
 
 
 Review and Incorporating Feedback
@@ -202,8 +206,7 @@ and any other tagged versions as appropriate.
 
 Additional Information
 ----------------------
-
-Additional resources and information related to this Knowledge Base article.
+Using Fork-Branch Git Workflow: https://blog.scottlowe.org/2015/01/27/using-fork-branch-git-workflow/
 
 
 See Also
@@ -229,5 +232,4 @@ Revision Information
 
     KB Article     :  kb-00047
     initial release:  Wed Aug 26 10:18:02 PDT 2020
-    updated release:  Wed Aug 26 10:18:02 PDT 2020
-
+    updated release:  Thu Sept 3 15:38:00 CDT 2020
