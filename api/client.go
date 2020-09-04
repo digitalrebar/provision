@@ -145,6 +145,7 @@ type R struct {
 	traceLvl, traceToken string
 	proxy                string
 	params               url.Values
+	ctx                  context.Context
 }
 
 // Req creates a new R for the current client.
@@ -160,10 +161,20 @@ func (c *Client) Req() *R {
 		header:     http.Header{},
 		proxy:      c.urlProxy,
 		params:     url.Values{},
+		ctx:        context.Background(),
 		err: &models.Error{
 			Type: "CLIENT_ERROR",
 		},
 	}
+}
+
+// Context will set the Context.Context that should be used for processing this
+// specific request.  If you set a context, the usual retry logic will
+// be disabled as if you had also called FailFast
+func (r *R) Context(c context.Context) *R {
+	r.ctx = c
+	r.noRetry = true
+	return r
 }
 
 // Proxy will insert the string between the host and the api/v3 path in the url.
@@ -503,7 +514,7 @@ func (r *R) Response() (*http.Response, error) {
 	var err error
 	for _, waitFor := range timeouts {
 		var req *http.Request
-		req, err = http.NewRequest(r.method, r.uri.String(), r.body)
+		req, err = http.NewRequestWithContext(r.ctx, r.method, r.uri.String(), r.body)
 		if err != nil {
 			r.err.AddError(err)
 			return nil, r.err
