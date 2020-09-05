@@ -16,6 +16,8 @@ type HaPassiveState struct {
 	Address string `json:"address"`
 	// required: true
 	State string `json:"state"`
+	// required: true
+	Electable bool `json:"electable"`
 }
 
 // Stat contains a basic statistic about dr-provision
@@ -137,7 +139,7 @@ func (i *Info) Fill() {
 	}
 }
 
-func (i *Info) AddUpdatePassive(id, address, state string) {
+func (i *Info) AddUpdatePassive(id, address, state string, electable bool) {
 	i.lock.Lock()
 	defer i.lock.Unlock()
 	if i.HaPassiveState == nil {
@@ -146,6 +148,7 @@ func (i *Info) AddUpdatePassive(id, address, state string) {
 	}
 	for _, ps := range i.HaPassiveState {
 		if ps.Id == id {
+			ps.Electable = electable
 			ps.State = state
 			if address != "" {
 				ps.Address = address
@@ -153,7 +156,7 @@ func (i *Info) AddUpdatePassive(id, address, state string) {
 			return
 		}
 	}
-	i.HaPassiveState = append(i.HaPassiveState, &HaPassiveState{Id: id, Address: address, State: state})
+	i.HaPassiveState = append(i.HaPassiveState, &HaPassiveState{Id: id, Address: address, State: state, Electable: electable})
 }
 
 func (i *Info) RemovePassive(id string) {

@@ -527,6 +527,13 @@ func (r *R) Response() (*http.Response, error) {
 			break
 		}
 		if r.body == nil {
+			r.c.mux.Lock()
+			if r.c.closed {
+				r.c.mux.Unlock()
+				r.err.Errorf("Connection Closed")
+				return nil, r.err
+			}
+			r.c.mux.Unlock()
 			r.c.iMux.Lock()
 			r.c.info = nil
 			r.c.iMux.Unlock()
@@ -541,6 +548,13 @@ func (r *R) Response() (*http.Response, error) {
 		if i, err := seeker.Seek(0, io.SeekStart); err != nil || i != 0 {
 			break
 		}
+		r.c.mux.Lock()
+		if r.c.closed {
+			r.c.mux.Unlock()
+			r.err.Errorf("Connection Closed")
+			return nil, r.err
+		}
+		r.c.mux.Unlock()
 		time.Sleep(waitFor)
 	}
 	if err != nil {
