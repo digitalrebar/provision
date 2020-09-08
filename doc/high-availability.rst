@@ -43,8 +43,8 @@ Configuration
 -------------
 
 Aside from settings listed later in this section, configuration flags and startup options for the dr-provision
-services participating in an HA cluster should be identical.  It is not required that the servers participating in the
-HA cluster have identical versions, but they must be running on the same OS and system architecture types.
+services participating in an HA cluster should be identical.  It is not required that the servers participating
+in the HA cluster have identical versions, but they must be running on the same OS and system architecture types.
 If you try to add a server version to a cluster that is incompatible, it will fail with an error telling
 you what to do to resolve the issue.
 
@@ -130,10 +130,11 @@ When dr-provision comes back up, it will be running on the IP address you set as
 The Initially Passive Nodes
 ===========================
 
-WARNING: Do not start a passive endpoint(s) in "normal mode."  When installing a passive endpoint, the active endpoint _must_ be available when the endpoing is started.
+WARNING: Do not start a passive endpoint(s) in "normal mode."  When installing a passive endpoint, the active
+endpoint _must_ be available when the endpoing is started.
 
-Perform the same installation steps you used for the initially active node, but change the `RS_HA_PASSIVE` line to false in
-the `/etc/systemd/system/dr-provision.service.d/20-ha.conf` file
+Perform the same installation steps you used for the initially active node, but change the `RS_HA_PASSIVE` line
+to false in the `/etc/systemd/system/dr-provision.service.d/20-ha.conf` file
 
   ::
 
@@ -148,24 +149,31 @@ passive node is fully caught up to the active node.
 Switching from Active to Passive
 --------------------------------
 
-To switch a dr-provision instance from active to passive, send it the USR2 signal.  To switch it to active, send it the
-USR1 signal.  As of right now, there are no other mechanisms (automated or manual) for changing HA state on a node.
+To switch a dr-provision instance between states, an API call will need to be done.  **drpcli** can be used to
+send that API call.  Issuing a **POST** request with empty JSON object to **/api/v3/system/active** and
+**/api/v3/system/passive** will cause the system to transition to active or passive, respectively.
+
+As of right now, there are no other mechanisms (automated or manual) for changing HA state on a node.
 
 .. note:: When doing a practice failover, the active endpoint should be stopped first.
 
 To stop the active endpoint (becomes passive):
 
   ::
-    // deactivate endpoint (goes into passive mode)
-    pkill -USR2 dr-provision
 
+    // deactivate endpoint (goes into passive mode)
+    drpcli system passive
 
 To promote a passive endpoint to active
 
   ::
+
     // activate endpoint (goes into active mode)    
-    pkill -USR1 dr-provision
-    
+    drpcli system active
+
+.. note:: Prior to v4.5.0, Signals were used to shift state.  SIGUSR2 was used to go from active to passive and
+  SIGUSR1 was used to go from passive to active.
+
 Install Video
 -------------
 
