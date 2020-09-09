@@ -818,14 +818,6 @@ case $MODE in
                     fi
                  fi
 
-                 # handle the v3.0.X to v3.1.0 directory structure.
-                 if [[ ! -e ${DRP_HOME_DIR}/digitalrebar && -e ${DRP_HOME_DIR} ]] ; then
-                     DIR=$(mktemp -d)
-                     $_sudo mv ${DRP_HOME_DIR} $DIR
-                     $_sudo mkdir -p ${DRP_HOME_DIR}
-                     $_sudo mv $DIR/* ${DRP_HOME_DIR}/digitalrebar
-                 fi
-
                  if [[ ! -e ${DRP_HOME_DIR}/digitalrebar/tftpboot && -e /var/lib/tftpboot ]] ; then
                      echo "MOVING /var/lib/tftpboot to ${DRP_HOME_DIR}/tftpboot location ... "
                      $_sudo mv /var/lib/tftpboot ${DRP_HOME_DIR}
