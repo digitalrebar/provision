@@ -26,4 +26,5 @@ dr-provision for developers and power users.
    arch/content-package
    arch/cluster
    arch/pooling
+   arch/manager
 
