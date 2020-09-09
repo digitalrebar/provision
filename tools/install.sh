@@ -920,7 +920,9 @@ EOF
 
                      # If upgrading, assume DRP user already created
                      if [[ "$UPGRADE" == "true" ]]; then
-                         export RS_KEY="$DRP_USER:$DRP_PASSWORD"
+                         if [[ $DRP_USER ]] ; then
+                            export RS_KEY="$DRP_USER:$DRP_PASSWORD"
+                         fi
                          check_drp_ready
                      else
                          check_drp_ready
