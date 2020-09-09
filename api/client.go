@@ -43,6 +43,9 @@ const APIPATH = "/api/v3"
 // against digitalrebar provision.
 type Client struct {
 	*http.Client
+	// The amount of time to allow any single round trip by default.
+	// Defaults to no timeout.  This will be overridden by a Client.Req().Context()
+	RoundTripTimeout             time.Duration
 	mux                          *sync.Mutex
 	endpoint, username, password string
 	neverProxy                   bool
@@ -153,7 +156,7 @@ type R struct {
 func (c *Client) Req() *R {
 	c.mux.Lock()
 	defer c.mux.Unlock()
-	return &R{
+	res := &R{
 		c:          c,
 		traceLvl:   c.traceLvl,
 		traceToken: c.traceToken,
@@ -166,6 +169,7 @@ func (c *Client) Req() *R {
 			Type: "CLIENT_ERROR",
 		},
 	}
+	return res
 }
 
 // Context will set the Context.Context that should be used for processing this
@@ -485,6 +489,12 @@ func (r *R) Response() (*http.Response, error) {
 	if r.uri == nil {
 		r.err.Errorf("No URL to talk to")
 		return nil, r.err
+	}
+	if r.c.RoundTripTimeout > 0 && r.ctx == context.Background() {
+		r.noRetry = true
+		var cancel context.CancelFunc
+		r.ctx, cancel = context.WithDeadline(r.ctx, time.Now().Add(r.c.RoundTripTimeout))
+		defer cancel()
 	}
 	r.uri.RawQuery = r.params.Encode()
 	r.c.mux.Lock()
@@ -1063,7 +1073,7 @@ func transport(useproxy bool) *http.Transport {
 			TLSClientConfig:       &tls.Config{InsecureSkipVerify: true},
 			MaxIdleConns:          10,
 			IdleConnTimeout:       90 * time.Second,
-			TLSHandshakeTimeout:   10 * time.Second,
+			TLSHandshakeTimeout:   1 * time.Second,
 			ExpectContinueTimeout: 1 * time.Second,
 			DialContext: func(ctx context.Context, net, addr string) (net.Conn, error) {
 				return dialer.DialContext(ctx, net, addr)
@@ -1081,13 +1091,6 @@ func transport(useproxy bool) *http.Transport {
 		}
 	}
 	return tr
-}
-
-// TokenSession creates a new api.Client that will use the passed-in Token for authentication.
-// It should be used whenever the API is not acting on behalf of a user.
-// Attempts to use/create a proxy session
-func TokenSession(endpoint, token string) (*Client, error) {
-	return TokenSessionProxy(endpoint, token, true)
 }
 
 // TokenSessionProxy creates a new api.Client that will use the passed-in Token for authentication.
@@ -1111,24 +1114,16 @@ func TokenSessionProxy(endpoint, token string, proxy bool) (*Client, error) {
 	return c, nil
 }
 
-// UserSession creates a new api.Client that can act on behalf of a
-// user.  It will perform a single request using basic authentication
-// to get a token that expires 600 seconds from the time the session
-// is crated, and every 300 seconds it will refresh that token.
-//
-// UserSession does not currently attempt to cache tokens to
-// persistent storage, although that may change in the future.
-func UserSession(endpoint, username, password string) (*Client, error) {
-	return UserSessionTokenProxy(endpoint, username, password, true, true)
+// TokenSession creates a new api.Client that will use the passed-in Token for authentication.
+// It should be used whenever the API is not acting on behalf of a user.
+// Attempts to use/create a proxy session
+func TokenSession(endpoint, token string) (*Client, error) {
+	return TokenSessionProxy(endpoint, token, true)
 }
 
-// UserSessionToken allows for the token conversion turned off.
-func UserSessionToken(endpoint, username, password string, usetoken bool) (*Client, error) {
-	return UserSessionTokenProxy(endpoint, username, password, usetoken, true)
-}
-
-// UserSessionTokenProxy allows for the token conversion turned off and turn off local proxy
-func UserSessionTokenProxy(endpoint, username, password string, usetoken, useproxy bool) (*Client, error) {
+// UserSessionTokenProxy allows for the token conversion turned off and turn off local proxy, along with passing in a
+// context.Context to allow for faster connect timeouts.
+func UserSessionTokenProxyContext(ctx context.Context, endpoint, username, password string, usetoken, useproxy bool) (*Client, error) {
 	tr := transport(useproxy)
 	c := &Client{
 		mux:        &sync.Mutex{},
@@ -1143,6 +1138,7 @@ func UserSessionTokenProxy(endpoint, username, password string, usetoken, usepro
 	basicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
 	token := &models.UserToken{}
 	if err := c.Req().
+		Context(ctx).
 		UrlFor("users", c.username, "token").
 		Headers("Authorization", "Basic "+basicAuth).
 		Do(&token); err != nil {
@@ -1176,4 +1172,44 @@ func UserSessionTokenProxy(endpoint, username, password string, usetoken, usepro
 		}()
 	}
 	return c, nil
+}
+
+// UserSessionTokenProxy allows for the token conversion turned off and turn off local proxy
+func UserSessionTokenProxy(endpoint, username, password string, usetoken, useproxy bool) (*Client, error) {
+	return UserSessionTokenProxyContext(context.Background(), endpoint, username, password, usetoken, useproxy)
+}
+
+// UserSessionContext creates a new api.Client that can act on behalf of a
+// user.  It will perform a single request using basic authentication
+// to get a token that expires 600 seconds from the time the session
+// is crated, and every 300 seconds it will refresh that token.
+//
+// UserSession does not currently attempt to cache tokens to
+// persistent storage, although that may change in the future.
+//
+// You can use the passed-in Context to override the default connection and request/response timeouts.
+func UserSessionContext(ctx context.Context, endpoint, username, password string) (*Client, error) {
+	return UserSessionTokenProxyContext(ctx, endpoint, username, password, true, true)
+}
+
+// UserSession creates a new api.Client that can act on behalf of a
+// user.  It will perform a single request using basic authentication
+// to get a token that expires 600 seconds from the time the session
+// is crated, and every 300 seconds it will refresh that token.
+//
+// UserSession does not currently attempt to cache tokens to
+// persistent storage, although that may change in the future.
+func UserSession(endpoint, username, password string) (*Client, error) {
+	return UserSessionTokenProxyContext(context.Background(), endpoint, username, password, true, true)
+}
+
+// UserSessionTokenContext allows for the token conversion turned off.
+// It also takes a context.Context to override the default connection timeouts.
+func UserSessionTokenContext(ctx context.Context, endpoint, username, password string, usetoken bool) (*Client, error) {
+	return UserSessionTokenProxyContext(ctx, endpoint, username, password, usetoken, true)
+}
+
+// UserSessionToken allows for the token conversion turned off.
+func UserSessionToken(endpoint, username, password string, usetoken bool) (*Client, error) {
+	return UserSessionTokenProxy(endpoint, username, password, usetoken, true)
 }
