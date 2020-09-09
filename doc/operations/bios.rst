@@ -100,7 +100,7 @@ modes.
 
 
 The ``bios-skip-config``
-++++++++++++++++++++++++
+------------------------
 
 The ``bios-skip-config`` Param allows for all BIOS related tasks to "skip" running, if this Params
 value is set to ``true``.  This is often used in Discovery type default workflows to turn off the
@@ -110,7 +110,7 @@ is not set to ``true`` on the machine if you see the BIOS tasks just skipping, a
 
 
 Video Example
-+++++++++++++
+-------------
 
 The following is an example of using the BIOS subsystem in video form.  This video example
 shows the above outlined process on a fleet of Dell R730xd server platforms.  Only a very

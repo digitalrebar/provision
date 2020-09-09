@@ -4,12 +4,12 @@
 .. index::
   pair: Digital Rebar Provision; Using DRPCLI
 
+Using the ``drpcli`` tool
++++++++++++++++++++++++++
+
 .. note:: **drpcli** normally spits out JSON formatted objects or an array of objects.  To help with some of the command line functions, we use the **jq** tool.  This is available for both Linux and Darwin.  You can specify output format to be YAML, with the ``--format=yaml`` flag.
 
 In this doc we will assume that ``drpcli`` is already somewhere in the path and have setup the environment variables to access Digital Rebar Provision.  See, :ref:`rs_cli`.
-
-Using the ``drpcli`` tool
-+++++++++++++++++++++++++
 
 The ``drpcli`` tool is designed to provide a single, easy to use compiled stand alone binary.  It very closely mimics the API call parameters and usage, and allows for easy "transition" between the use of the CLI binary, and the use of the API calls.
 
