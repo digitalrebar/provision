@@ -1,5 +1,8 @@
 dist: xenial
 language: go
+arch:
+  - amd64
+  - arm64
 addons:
   apt:
     packages:
