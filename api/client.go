@@ -600,7 +600,7 @@ func (r *R) Do(val interface{}) error {
 		defer resp.Body.Close()
 	}
 	if err != nil {
-		return r.err
+		return err
 	}
 	if resp.StatusCode >= 400 {
 		if r.method == "HEAD" {
