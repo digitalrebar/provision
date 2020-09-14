@@ -223,7 +223,7 @@ each other as appropriate.
 			return nil
 		},
 		RunE: func(c *cobra.Command, args []string) error {
-			req := Session.Req().Head().UrlFor(o.name)
+			req := Session.Req().UrlFor(o.name)
 			if len(args) > 0 && strings.Contains(args[0], "=") {
 				// Old-style structured args
 				if listLimit != -1 {
@@ -265,9 +265,11 @@ each other as appropriate.
 					args = append(args, "decode")
 				}
 				if len(args) > 0 {
-					req = Session.Req().Filter(o.name, args...)
+					req = req.Filter(o.name, args...)
 				}
 			}
+			// We do this to reset the GET to a HEAD if we used the Filter() call
+			req.Head()
 			data := map[string]interface{}{}
 			err := req.Do(&data)
 			if err != nil {
