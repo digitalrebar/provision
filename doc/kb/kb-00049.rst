@@ -1,0 +1,55 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+
+.. _How_To_Enable_EPEL:
+
+kb-00049: How To Enable EPEL
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. _rs_kb_00049:
+
+Knowledge Base Article: kb-00049
+--------------------------------
+
+
+Description
+-----------
+The EPEL repo is not enabled by default. This document will describe how to enable the EPEL repo on CentOS.
+
+Solution
+--------
+Add "epel-release" to your "extra-packages" param. This param can be added to the global profile, or to any profile, or added directly to the machine.
+
+
+Additional Information
+----------------------
+extra-packages is an array of strings where each string is an additional package to install during the initial OS install.
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+ :ref:`rs_cp_drp_community_content`
+
+Versions
+========
+
+
+Keywords
+========
+epel, centos, ansible
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00049
+    initial release:  Mon 14 Sep 2020 02:10:37 PM CDT
+    updated release:  Mon 14 Sep 2020 02:10:37 PM CDT
+
