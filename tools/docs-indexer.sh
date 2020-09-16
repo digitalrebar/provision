@@ -35,7 +35,8 @@ doc_files.each do |f|
   blob = JSON.parse(open(f, "r").read)
   page = blob["current_page_name"]
   title_raw = Nokogiri::HTML.parse(blob["title"]).text
-  title = title_raw.match(/^((\d+\.)+ )(.*)$/)[3]
+  title_match = title_raw.match(/^((\d+\.)+ )(.*)$/)
+  title = title_match ? title_match[3] : ""
   # Extract only the text from the html
   text = Nokogiri::HTML.parse(blob["body"]).text
 
