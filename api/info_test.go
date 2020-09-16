@@ -34,11 +34,13 @@ func TestInfo(t *testing.T) {
 			FilePort:           10012,
 			BinlPort:           10015,
 			DhcpPort:           10014,
+			DnsPort:            10017,
 			TftpPort:           10013,
 			ProvisionerEnabled: true,
 			TftpEnabled:        true,
 			BinlEnabled:        true,
 			DhcpEnabled:        true,
+			DnsEnabled:         true,
 			Stats: []models.Stat{
 				{
 					Name:  "machines.count",
