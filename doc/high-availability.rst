@@ -68,6 +68,10 @@ High Availability Startup Options
   This is the IP address and netmask of the virtual IP that the active cluster member will use
   for communication.  It must be in CIDR format (aa.bb.cc.dd/xx)
 
+--ha-interface (or the environment variable RS_HA_INTERFACE)
+  This is the Ethernet interface that the ha address should be added to and removed from when
+  dr-provision transitions between active and passive.
+
 --ha-passive (or the environment variable RS_HA_PASSIVE)
   This must be true on the nodes that should start as passive nodes by default.  In practice, this means
   every node after the initial node.
@@ -80,6 +84,24 @@ High Availability Startup Options
       drpcli users token rocketskates ttl 3y
 
   and then extracting the Token field from the resulting JSON.
+
+--ha-interface-script (or the environment variable RS_HA_INTERFACE_SCRIPT)
+  This is the full path to the script that should be run whenever dr-provision needs to add or remove the
+  ha address to the ha interface.  If not set, dr-provision defaults to using ``ip addr add`` and ``ip addr del``
+  internally on Linux, and ``ifconfig`` on Darwin.  You can use the following example as a starting point::
+
+    #/usr/bin/env bash
+    # $1 is the action to perform.  "add" and "remove" are the only ones supported for now.
+    # $2 is the network interface to operate on.  It will be set to the value of --ha-interface.
+    # $3 is the address to add or remove.  It will be set to the value of --ha-address.
+    case $1 in
+       add)    sudo ip addr add "$3" dev "$2";;
+       remove) sudo ip addr del "$3" dev "$2";;
+       *) echo "Unknown action $1"; exit 1;;
+    esac
+
+  Customize to taste to suit your preferred method of getting authority to add and remove addresses
+  to interfaces.
 
 Bootstrapping
 -------------
