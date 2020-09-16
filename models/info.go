@@ -56,6 +56,8 @@ type Info struct {
 	// required: true
 	DhcpPort int `json:"dhcp_port"`
 	// required: true
+	DnsPort int `json:"dns_port"`
+	// required: true
 	BinlPort int `json:"binl_port"`
 	// required: true
 	TftpPort int `json:"tftp_port"`
@@ -67,6 +69,8 @@ type Info struct {
 	BinlEnabled bool `json:"binl_enabled"`
 	// required: true
 	ProvisionerEnabled bool `json:"prov_enabled"`
+	// required: true
+	DnsEnabled bool `json:"dns_enabled"`
 	// required: true
 	Address net.IP `json:"address"`
 	// required: true
