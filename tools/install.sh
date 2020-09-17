@@ -57,6 +57,11 @@ OPTIONS:
     --bootstrap             # Store the install image and the install script in the files bootstrap
     --drp-id=<string>       # String to use as the DRP Identifier (only with --systemd)
     --ha-id=<string>        # String to use as the HA Identifier (only with --systemd)
+    --ha-enabled            # Indicates that the system is HA enabled
+    --ha-address=<string>   # IP Address to use a VIP for HA system
+    --ha-interface=<string> # Interrace to use for HA traffic
+    --ha-passive            # Indicates that the system is starting as passive.
+    --ha-token=<string>     # The token to use to sync passive to active
     --drp-user=<string>     # DRP user to create after system start (only with --systemd)
     --drp-password=<string> # DRP user password to set after system start (only with --systemd)
     --remove-rocketskates   # Remove the rocketskates user after system start (only with --systemd)
@@ -115,6 +120,9 @@ DEFAULTS:
     |  container-netns     = $CNT_NETNS             |  container-restart   = $CNT_RESTART
     |  bootstrap           = false            |  initial-workflow    = unset
     |  initial-contents    = unset            |  systemd-services    = unset
+    |  ha-enabled          = false            |  ha-address          = unset
+    |  ha-passive          = false            |  ha-interface        = unset
+    |  ha-token            = unset
 
     * version examples: 'tip', 'v4.1.13', 'v4.2.0-beta7.3', or 'stable'
 
@@ -175,6 +183,11 @@ CNT_RESTART="always"
 CNT_VOL_REMOVE=true
 SYSTEM_USER=root
 SYSTEM_GROUP=root
+HA_ENABLED=false
+HA_ADDRESS=
+HA_INTERFACE=
+HA_TOKEN=
+HA_PASSIVE=false
 
 args=()
 while (( $# > 0 )); do
@@ -210,6 +223,11 @@ while (( $# > 0 )); do
         --drp-password)             DRP_PASSWORD="${arg_data}"                ;;
         --drp-id)                   DRP_ID="${arg_data}"                      ;;
         --ha-id)                    HA_ID="${arg_data}"                       ;;
+        --ha-enabled)               HA_ENABLED=true                           ;;
+        --ha-address)               HA_ADDRESS="${arg_data}"                  ;;
+        --ha-interface)             HA_INTERFACE="${arg_data}"                ;;
+        --ha-passive)               HA_PASSIVE=true                           ;;
+        --ha-token)                 HA_TOKEN="${arg_data}"                    ;;
         --system-user)              SYSTEM_USER="${arg_data}"                 ;;
         --system-group)             SYSTEM_GROUP="${arg_data}"                ;;
         --drp-home-dir)             DRP_HOME_DIR="${arg_data}"                ;;
@@ -240,6 +258,15 @@ while (( $# > 0 )); do
     shift
 done
 set -- "${args[@]}"
+
+if [[ "$HA_ENABLED" == "true" ]] ; then
+  if [[ "$HA_TOKEN" == "" ]] ; then
+    if [[ "$HA_PASSIVE" == "true" ]] ; then
+      usage; exit_cleanup 1 "Passive systems must have a token.  Specify HA_TOKEN."
+    fi
+    HA_TOKEN="ACTIVE_NO_TOKEN"
+  fi
+fi
 
 CLI="${BIN_DIR}/drpcli"
 CLI_BKUP="${BIN_DIR}/drpcli.drp-installer.backup"
@@ -885,6 +912,16 @@ EOF
                        cat > /etc/systemd/system/dr-provision.service.d/haid.conf <<EOF
 [Service]
 Environment=RS_HA_ID=$HA_ID
+EOF
+                     fi
+                     if [[ "$HA_ENABLED" == "true" ]] ; then
+                       cat > /etc/systemd/system/dr-provision.service.d/ha.conf <<EOF
+[Service]
+Environment=RS_HA_ENABLED=true
+Environment=RS_HA_INTERFACE=$HA_INTERFACE
+Environment=RS_HA_ADDRESS=$HA_ADDRESS
+Environment=RS_HA_PASSIVE=$HA_PASSIVE
+Environment=RS_HA_TOKEN=$HA_TOKEN
 EOF
                      fi
                      if [[ $IPADDR ]] ; then
