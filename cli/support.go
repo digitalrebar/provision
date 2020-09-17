@@ -16,18 +16,18 @@ limitations under the License.
 package cli
 
 import (
-"archive/zip"
-"bytes"
-"fmt"
-"github.com/spf13/cobra"
-"io"
-"io/ioutil"
-"log"
-"os"
-"os/exec"
-"runtime"
-"strings"
-"time"
+	"archive/zip"
+	"bytes"
+	"fmt"
+	"github.com/spf13/cobra"
+	"io"
+	"io/ioutil"
+	"log"
+	"os"
+	"os/exec"
+	"runtime"
+	"strings"
+	"time"
 )
 
 // bundleCmd represents the bundle command
@@ -62,51 +62,51 @@ func bundleCmds()  *cobra.Command {
 	If you need to include additional directories that are excluded by default above
 	you can add them with  --extra-dirs This is only needed if directed by support.
 	`,
-	RunE: func(cmd *cobra.Command, args []string) error {
-		tmpBuf := new(bytes.Buffer)
-		w := zip.NewWriter(tmpBuf)
-		var command = "journalctl -u " + drUser + " --since " + since
-		outBuf, errBuf, err := runCommnd(command)
-		if err != nil {
-			fmt.Printf("An error happened trying to run %s. Got: %s", command, errBuf.String() )
-			return err
-		}
-		f, err := w.Create("rackn_bundle/journal-output.txt")
-		if err != nil {
-			return err
-		}
-		f.Write(outBuf.Bytes())
-		// Loop through the directories we want to add from the base
-		if ! strings.HasSuffix(drBase, "/") {
-			drBase = drBase + "/"
-		}
-		dirsToGet := []string {"wal", "digitalrebar", "secrets"}
-		if len(extraDirs) > 0 {
-			extras := strings.Split(extraDirs, ",")
-			if extras != nil && len(extras) > 0 {
-				dirsToGet = append(dirsToGet, extras...)
+		RunE: func(cmd *cobra.Command, args []string) error {
+			tmpBuf := new(bytes.Buffer)
+			w := zip.NewWriter(tmpBuf)
+			var command = "journalctl -u " + drUser + " --since " + since
+			outBuf, errBuf, err := runCommnd(command)
+			if err != nil {
+				fmt.Printf("An error happened trying to run %s. Got: %s", command, errBuf.String() )
+				return err
 			}
-		}
-		for _, d := range dirsToGet {
-			err = AddDirToZip(w,drBase + d + "/")
+			f, err := w.Create("rackn_bundle/journal-output.txt")
 			if err != nil {
 				return err
 			}
-		}
+			f.Write(outBuf.Bytes())
+			// Loop through the directories we want to add from the base
+			if ! strings.HasSuffix(drBase, "/") {
+				drBase = drBase + "/"
+			}
+			dirsToGet := []string {"wal", "digitalrebar", "secrets"}
+			if len(extraDirs) > 0 {
+				extras := strings.Split(extraDirs, ",")
+				if extras != nil && len(extras) > 0 {
+					dirsToGet = append(dirsToGet, extras...)
+				}
+			}
+			for _, d := range dirsToGet {
+				err = AddDirToZip(w,drBase + d + "/")
+				if err != nil {
+					return err
+				}
+			}
 
-		if w.Close() != nil {
-			return err
-		}
+			if w.Close() != nil {
+				return err
+			}
 
-		t := time.Now()
-		fname := fmt.Sprintf("drp-support-bundle-%d-%02d-%02d-%02d-%02d-%02d.zip",
-			t.Year(), t.Month(), t.Day(),
-			t.Hour(), t.Minute(), t.Second())
-		err = ioutil.WriteFile(fname, tmpBuf.Bytes(), 0644)
-		if err != nil {
-			return err
-		}
-		return nil
+			t := time.Now()
+			fname := fmt.Sprintf("drp-support-bundle-%d-%02d-%02d-%02d-%02d-%02d.zip",
+				t.Year(), t.Month(), t.Day(),
+				t.Hour(), t.Minute(), t.Second())
+			err = ioutil.WriteFile(fname, tmpBuf.Bytes(), 0644)
+			if err != nil {
+				return err
+			}
+			return nil
 		},
 	}
 	bundleCmd.Flags().StringVarP(&extraDirs, "extra-dirs", "", "", "extra-dirs job-logs,saas-content,ux,plugins")
@@ -114,7 +114,6 @@ func bundleCmds()  *cobra.Command {
 	bundleCmd.Flags().StringVarP(&drUser, "dr-user", "", "dr-provision", "dr-user dr-provision")
 	bundleCmd.Flags().StringVarP(&drBase, "drp-basedir", "", "/var/lib/dr-provision/", "drp-basedir /var/lib/dr-provision")
 	cmd.AddCommand(bundleCmd)
-
 	return cmd
 }
 
