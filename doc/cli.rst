@@ -21,21 +21,43 @@ If you've already installed the Digital Rebar server, then the CLI is available 
 
 .. note:: There is a ``</>`` button on the UX top right corner that will download the right binary from your endpoint.
 
-To install without the Digital Rebar server, you should review the catalog at `https://repo.rackn.io` for the desired version (stable is safest) to use.  The following steps can be used to quickly download DRPCLI v4.2 and then use the catalog function to ugprade to the latest version.
+To install without the Digital Rebar server, you should review the catalog at `https://repo.rackn.io` for the desired version (stable is safest) to use.  The following script can be used to quickly download DRPCLI and then use the catalog function to ugprade to the latest version.
 
   ::
 
-    # choose your architecture!
-    export arch=amd64
-    export os=linux
-    echo "Downloading v4.2.0 reference DRPCLI"
-    RUN curl -o drpcli420 https://s3-us-west-2.amazonaws.com/rebar-catalog/drpcli/v4.2.0/${arch}/${os}/drpcli
-    chmod 755 drpcli420
-    echo "Downloading latest stable DRPCLI"
-    ./drpcli420 catalog item download drpcli to drpcli
-    chmod 755 drpcli
-    rm drpcli420
-    echo "Installed DRPCLI $(drpcli version)"
+    #!/usr/bin/env bash
+    # Get 'drpcli' binary.
+    # Copyright RackN, Inc - 2020
+
+    # simple script to get the 'drpcli' client binary - to change OS Architecture
+    # or Platform, set environment variables ARCH and PLATFORM.  Defaults
+    # to "amd64" and "linux".
+    #
+    # Change the base repo location if you have a different Catalog source by
+    # setting the REPO environment variable.  Defaults to https://repo.rackn.io
+    #
+    # Change drpcli version by using one of the version names tagged in the
+    # catalog by setting VERSION environment variable.  Defaults to "stable"
+    #
+    # Some examples
+    #
+    # ARCH="arm64" PLATFORM="linux" VERSION="tip" ./get-drpcli.sh
+    # ARCH="amd64" PLATFORM="darwin" VERSION="v4.4.0" ./get-drpcli.sh
+    # ARCH="amd64" PLATFORM="windows" ./get-drpcli.sh
+
+
+    REPO=${REPO:-"https://repo.rackn.io"}
+    ARCH=${ARCH:-"amd64"}
+    PLAT=${PLATFORM:-"linux"}
+    VER=${VERSION:-"stable"}
+
+    BASE=$(curl -s --compressed $REPO | jq -r '.sections.catalog_items[]| select(.Name == "drpcli") | select(.Version == "'$VER'") | .Source')
+
+    [[ "$PLAT" == "windows" ]] && EXT=".exe" || EXT=""
+    [[ -f "drpcli${EXT}" ]] && { echo "drpcli${EXT} exists, not overwriting, exiting"; exit 1; } || true
+    curl --progress-bar -kfSL $BASE/$ARCH/$PLAT/drpcli${EXT} -o drpcli${EXT}
+    (( $? )) && echo "download failure" || echo "Saved as:  drpcli${EXT}"
+    [[ -f "drpcli${EXT}" ]] && chmod 755 drpcli${EXT} || false
 
 
 Overview
