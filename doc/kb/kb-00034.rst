@@ -58,10 +58,17 @@ changing the kernel parameters passed to bootenvs.  Sometimes it is used to twea
 the kernel is using, but it can be used for other values as well.
 
 
+**CLI Example**:
+
+  ::
+
+    drpcli profiles add global param kernel-console to "provisioner.wgetretrycount=60 provisioner.postportdelay=120"
+
+
 Additional Information
 ----------------------
 
-Additional resources and information related to this Knowledge Base article.
+The params listed above should be added to a profile that will be applied to the machine. You can use the global profile to make sure the param will apply to all machines, or add it to individual profiles and apply them directly to the machine.
 
 
 See Also
