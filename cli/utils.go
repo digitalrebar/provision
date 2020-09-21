@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"bytes"
 	"crypto/tls"
 	"encoding/json"
 	"errors"
@@ -12,9 +13,11 @@ import (
 	"net/url"
 	"os"
 	"reflect"
+	"regexp"
 	"runtime"
 	"sort"
 	"strings"
+	"time"
 
 	"github.com/VictorLowther/jsonpatch2/utils"
 	"github.com/digitalrebar/provision/v4/api"
@@ -27,6 +30,131 @@ var encodeJSONPtr = strings.NewReplacer("~", "~0", "/", "~1")
 // String translates a pointerSegment into a regular string, encoding it as we go.
 func makeJSONPtr(s string) string {
 	return encodeJSONPtr.Replace(string(s))
+}
+
+var rackNHost = regexp.MustCompile(`(?P<bucket>[-\w]+)\.s3[-.](?P<region>[-\w]+)\.amazonaws.com`)
+var rackNUrl = regexp.MustCompile(`s3[-.](?P<region>[-\w]+)\.amazonaws.com`)
+
+type CloudiaUrlReq struct {
+	Bucket string `json:"bucket"`
+	Region string `json:"region"`
+	Object string `json:"object"`
+}
+
+type CloudiaUrlResp struct {
+	Object CloudiaUrlReq `json:"object"`
+	Url    string        `json:"url"`
+}
+
+func signRackNUrl(oldUrl string) (newUrl string, err error) {
+	newUrl = oldUrl
+	myURL, perr := url.Parse(oldUrl)
+	if perr != nil {
+		err = perr
+		return
+	}
+
+	// Test Time
+	values := myURL.Query()
+	expire := values.Get("X-Amz-Expires")
+	date := values.Get("X-Amz-Date")
+	// Check if we already have a signed URL.
+	if expire != "" && date != "" {
+		d, derr := time.Parse("20060102T150405Z0700", date)
+		sec, serr := time.ParseDuration(expire + "s")
+		if derr == nil && serr == nil {
+			if time.Now().Before(d.Add(sec)) {
+				return
+			}
+		}
+	}
+
+	// Should we sign the URL - test the hostname format
+	match := rackNHost.FindStringSubmatch(myURL.Host)
+	result := map[string]string{}
+	for i, name := range rackNHost.SubexpNames() {
+		if i != 0 && name != "" && len(match) > i {
+			result[name] = match[i]
+		}
+	}
+	bucket, bok := result["bucket"]
+	region, rok := result["region"]
+	myPath := strings.TrimPrefix(myURL.Path, "/")
+	if !bok || !rok {
+		// Check the region/bucket form
+		match = rackNUrl.FindStringSubmatch(myURL.Host)
+		result = map[string]string{}
+		for i, name := range rackNUrl.SubexpNames() {
+			if i != 0 && name != "" && len(match) > i {
+				result[name] = match[i]
+			}
+		}
+		region, rok = result["region"]
+		if !rok {
+			err = fmt.Errorf("Url is not a RackN URL: %s", oldUrl)
+			return
+		}
+		parts := strings.SplitN(myPath, "/", 2)
+		if len(parts) != 2 {
+			err = fmt.Errorf("Url is not a RackN URL: %s", oldUrl)
+			return
+		}
+		bucket = parts[0]
+		myPath = parts[1]
+	}
+
+	// Something to sign.
+	license := ""
+	if lerr := Session.Req().UrlFor("profiles", "rackn-license", "params", "rackn/license").Do(&license); err != nil {
+		err = fmt.Errorf("Failed to get license: %v", lerr)
+		return
+	}
+
+	reqData := &CloudiaUrlReq{
+		Bucket: bucket,
+		Region: region,
+		Object: myPath,
+	}
+	tr := &http.Transport{
+		MaxIdleConns:    1,
+		IdleConnTimeout: 10 * time.Second,
+	}
+	data, _ := json.Marshal(reqData)
+	client := &http.Client{Transport: tr}
+	req, rerr := http.NewRequest("POST", "https://cloudia.rackn.io/api/v1/org/presign", bytes.NewBuffer(data))
+	if rerr != nil {
+		err = fmt.Errorf("Failed to build request for cloudia: %v", rerr)
+		return
+	}
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("Authorization", license)
+
+	resp, derr := client.Do(req)
+	if derr != nil {
+		err = fmt.Errorf("Failed to query cloudia: %v", derr)
+		return
+	}
+	defer resp.Body.Close()
+
+	body, berr := ioutil.ReadAll(resp.Body)
+	if berr != nil {
+		err = fmt.Errorf("Failed to read body: %v", berr)
+		return
+	}
+
+	if resp.StatusCode != 200 {
+		err = fmt.Errorf("Cloudia returned error: %d: %s", resp.StatusCode, string(body))
+		return
+	}
+
+	respData := &CloudiaUrlResp{}
+	if jerr := json.Unmarshal(body, &respData); jerr != nil {
+		err = fmt.Errorf("Failed to unmarshal response: %s %v", string(body), jerr)
+		return
+	}
+
+	newUrl = respData.Url
+	return
 }
 
 func bufOrFileDecode(ref string, data interface{}) (err error) {
@@ -102,6 +230,7 @@ func urlOrFileAsReadCloser(src string) (io.ReadCloser, error) {
 				tr.Proxy = http.ProxyURL(proxyURL)
 			}
 		}
+		src, _ = signRackNUrl(src)
 		client := &http.Client{Transport: tr}
 		res, err := client.Get(src)
 		if err != nil {
@@ -135,6 +264,7 @@ func bufOrFile(src string) ([]byte, error) {
 				tr.Proxy = http.ProxyURL(proxyURL)
 			}
 		}
+		src, _ = signRackNUrl(src)
 		client := &http.Client{Transport: tr}
 		res, err := client.Get(src)
 		if err != nil {
