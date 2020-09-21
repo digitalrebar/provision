@@ -135,6 +135,7 @@ It will attempt to perform a direct copy without saving the ISO locally.`,
 					}
 				}
 				client := &http.Client{Transport: tr}
+				isoUrl, _ = signRackNUrl(isoUrl)
 				isoDlResp, err := client.Get(isoUrl)
 				if err != nil {
 					log.Printf("Unable to connect to %s: %v: Skipping", isoUrl, err)

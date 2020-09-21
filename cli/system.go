@@ -92,6 +92,24 @@ func addSystemCommands() (res *cobra.Command) {
 			}
 		},
 	})
+	res.AddCommand(&cobra.Command{
+		Use:   "signurl [URL]",
+		Short: "Generate a RackN Signed URL for download",
+		Args: func(c *cobra.Command, args []string) error {
+			if len(args) == 1 {
+				return nil
+			}
+			return fmt.Errorf("%v requires 1 argument", c.UseLine())
+		},
+		RunE: func(c *cobra.Command, args []string) error {
+			if newurl, err := signRackNUrl(args[0]); err != nil {
+				return generateError(err, "Failed to sign url")
+			} else {
+				fmt.Println(newurl)
+				return nil
+			}
+		},
+	})
 
 	return res
 }

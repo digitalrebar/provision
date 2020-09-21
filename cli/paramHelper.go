@@ -1,9 +1,16 @@
 package cli
 
 import (
+	"crypto/tls"
 	"fmt"
+	"log"
+	"net/http"
+	"net/url"
+
+	utils2 "github.com/VictorLowther/jsonpatch2/utils"
 
 	"github.com/VictorLowther/jsonpatch2"
+	"github.com/digitalrebar/provision/v4/models"
 	"github.com/spf13/cobra"
 )
 
@@ -256,6 +263,103 @@ func (o *ops) params() {
 				}
 			}
 			return prettyPrint(param)
+		},
+	})
+	o.addCommand(&cobra.Command{
+		Use:   "uploadiso [id]",
+		Short: "This will attempt to upload the ISO from the specified ISO URL.",
+		Long: `This will attempt to upload the ISO from the specified ISO URL.
+It will attempt to perform a direct copy without saving the ISO locally.`,
+		Args: func(c *cobra.Command, args []string) error {
+			if len(args) != 1 {
+				return fmt.Errorf("%v requires 1 argument", c.UseLine())
+			}
+			return nil
+		},
+		RunE: func(c *cobra.Command, args []string) error {
+			name := args[0]
+			key := "bootenv-customize"
+			var res interface{}
+			req := Session.Req().UrlFor(o.name, name, "params", key)
+			req.Params("aggregate", "true")
+			req.Params("decode", "true")
+			req.Params("compose", "true")
+			if err := req.Do(&res); err != nil {
+				return generateError(err, "Failed to fetch params %v: %v", o.singleName, name)
+			}
+			if res == nil {
+				return fmt.Errorf("%s %s does not require an iso, parameter not set", o.singleName, name)
+			}
+
+			bootEnvs := map[string]*models.BootEnv{}
+			if jerr := utils2.Remarshal(res, &bootEnvs); jerr != nil {
+				return generateError(jerr, "Failed to fetch %v: %v", o.singleName, args[0])
+			}
+
+			isoFiles := map[string]string{}
+			for _, bootEnv := range bootEnvs {
+				if bootEnv.OS.IsoFile != "" {
+					isoFiles[bootEnv.OS.IsoFile] = bootEnv.OS.IsoUrl
+				}
+				for _, archInfo := range bootEnv.OS.SupportedArchitectures {
+					if archInfo.IsoFile != "" {
+						isoFiles[archInfo.IsoFile] = archInfo.IsoUrl
+					}
+				}
+			}
+
+			if len(isoFiles) == 0 {
+				return fmt.Errorf("%s %s does not require an iso", o.singleName, name)
+			}
+			isos, err := Session.ListBlobs("isos")
+			if err != nil {
+				return fmt.Errorf("%s %s Unable to determine what ISO files are already present", o.singleName, name)
+			}
+			for _, iso := range isos {
+				if _, ok := isoFiles[iso]; ok {
+					delete(isoFiles, iso)
+				}
+			}
+			if len(isoFiles) == 0 {
+				log.Printf("%s %s already has all required ISO files", o.singleName, name)
+				return nil
+			}
+			for isoFile, isoUrl := range isoFiles {
+				if isoUrl == "" {
+					log.Printf("Unable to automatically download iso for %s %s, skipping", o.singleName, name)
+					continue
+				}
+				tr := &http.Transport{
+					TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+				}
+				if downloadProxy != "" {
+					proxyURL, err := url.Parse(downloadProxy)
+					if err == nil {
+						tr.Proxy = http.ProxyURL(proxyURL)
+					}
+				}
+				client := &http.Client{Transport: tr}
+				isoUrl, _ = signRackNUrl(isoUrl)
+				isoDlResp, err := client.Get(isoUrl)
+				if err != nil {
+					log.Printf("Unable to connect to %s: %v: Skipping", isoUrl, err)
+					continue
+				}
+				if isoDlResp.StatusCode >= 300 {
+					isoDlResp.Body.Close()
+					log.Printf("Unable to initiate download of %s: %s: Skipping", isoUrl, isoDlResp.Status)
+					continue
+				}
+				func() {
+					defer isoDlResp.Body.Close()
+					if info, err := Session.PostBlob(isoDlResp.Body, "isos", isoFile); err != nil {
+						log.Printf("%v", generateError(err, "Error uploading %s", isoUrl))
+					} else {
+						log.Printf("%v", prettyPrint(info))
+					}
+				}()
+			}
+			return nil
 		},
 	})
 }
