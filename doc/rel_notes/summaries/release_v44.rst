@@ -7,8 +7,8 @@
 
 .. _rs_release_v44:
 
-Digital Rebar version 4.4
--------------------------
+Digital Rebar version 4.4 [Summer 2020]
+---------------------------------------
 
 Release Date: July 30, 2020
 

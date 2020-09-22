@@ -15,6 +15,7 @@ RackN creates a high level summary for each release that includes the major deli
 .. toctree::
    :maxdepth: 1
    :glob:
+   :reversed:
 
    rel_notes/summaries/*
 

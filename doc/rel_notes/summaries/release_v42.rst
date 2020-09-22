@@ -8,8 +8,8 @@
 
 .. _rs_release_v42:
 
-Digital Rebar version 4.2
--------------------------
+Digital Rebar version 4.2 [Winter 2019]
+---------------------------------------
 
 Release Date: December 31, 2019
 

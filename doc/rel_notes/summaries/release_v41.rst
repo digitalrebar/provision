@@ -8,8 +8,8 @@
 
 .. _rs_release_v41:
 
-Digital Rebar version 4.1
--------------------------
+Digital Rebar version 4.1 [Fall 2019]
+-------------------------------------
 
 Release Date: missing
 

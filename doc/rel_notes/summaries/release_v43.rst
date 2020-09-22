@@ -8,8 +8,8 @@
 
 .. _rs_release_v43:
 
-Digital Rebar version 4.3
--------------------------
+Digital Rebar version 4.3 [Spring 2020]
+---------------------------------------
 
 Release Date: June 3, 2020
 
