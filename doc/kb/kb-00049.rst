@@ -1,0 +1,67 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+
+.. _How_To_Update_drpcli:
+
+kb-00049: How To Update drpcli
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. _rs_kb_00049:
+
+Knowledge Base Article: kb-00049
+--------------------------------
+
+
+Description
+-----------
+How to update drpcli
+
+Solution
+--------
+One of the ways drpcli can be updated is by using drpcli. It is not the only, but it is the way covered by this article.
+
+  ::
+
+    drpcli catalog item download drpcli
+    chmod +x drpcli
+    cp `which drpcli` drpcli.old
+    mv drpcli `which drpcli`
+
+Verify that your new drpcli is working as expected, and once you have done that the backup named drpcli.old can be removed.
+
+Additional Information
+----------------------
+
+If you need a specific version of drpcli you can provide the --version=[version] flag. To see what versions are
+available in our catalog run the following
+
+  ::
+
+    drpcli catalog item show drpcli |jq .Versions
+
+
+See Also
+========
+
+
+Versions
+========
+
+
+Keywords
+========
+drpcli
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00049
+    initial release:  Wed 23 Sep 2020 10:08:02 AM CDT
+    updated release:  Wed 23 Sep 2020 10:08:02 AM CDT
+

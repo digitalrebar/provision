@@ -752,3 +752,27 @@ A secure pattern would be the following:
     drpcli -T <token> users password fred mypassword
 
 
+
+Creating Support Bundles
+------------------------
+If you are having issues with Digital Rebar the RackN engineering team may request a support bundle from you
+to assist them with troubleshooting your issue. drpcli can be used to create the bundles.
+
+.. note:: Support bundles are a new feature in drpcli 4.5
+
+* DRP will not start or crashes
+
+  ::
+
+    drpcli support bundle
+
+.. note:: This command must be run from the DRP endpoint.
+
+* Machine having problems with a workflow or task
+
+  ::
+
+    drpcli support machine-bundle [id]
+
+
+How to update drpcli to obtain the support commands: :ref:`_rs_kb_00049`
