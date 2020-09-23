@@ -16,18 +16,20 @@ limitations under the License.
 package cli
 
 import (
-"archive/zip"
-"bytes"
-"fmt"
-"github.com/spf13/cobra"
-"io"
-"io/ioutil"
-"log"
-"os"
-"os/exec"
-"runtime"
-"strings"
-"time"
+	"archive/zip"
+	"bytes"
+	"fmt"
+	"io"
+	"io/ioutil"
+	"log"
+	"os"
+	"os/exec"
+	"runtime"
+	"strings"
+	"time"
+
+	"github.com/digitalrebar/provision/v4/models"
+	"github.com/spf13/cobra"
 )
 
 // bundleCmd represents the bundle command
@@ -36,7 +38,7 @@ var drBase string
 var since string
 var extraDirs string
 
-func bundleCmds()  *cobra.Command {
+func bundleCmds() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "support",
 		Short: "Access commands related to RackN Tech Support",
@@ -62,51 +64,51 @@ func bundleCmds()  *cobra.Command {
 	If you need to include additional directories that are excluded by default above
 	you can add them with  --extra-dirs This is only needed if directed by support.
 	`,
-	RunE: func(cmd *cobra.Command, args []string) error {
-		tmpBuf := new(bytes.Buffer)
-		w := zip.NewWriter(tmpBuf)
-		var command = "journalctl -u " + drUser + " --since " + since
-		outBuf, errBuf, err := runCommnd(command)
-		if err != nil {
-			fmt.Printf("An error happened trying to run %s. Got: %s", command, errBuf.String() )
-			return err
-		}
-		f, err := w.Create("rackn_bundle/journal-output.txt")
-		if err != nil {
-			return err
-		}
-		f.Write(outBuf.Bytes())
-		// Loop through the directories we want to add from the base
-		if ! strings.HasSuffix(drBase, "/") {
-			drBase = drBase + "/"
-		}
-		dirsToGet := []string {"wal", "digitalrebar", "secrets"}
-		if len(extraDirs) > 0 {
-			extras := strings.Split(extraDirs, ",")
-			if extras != nil && len(extras) > 0 {
-				dirsToGet = append(dirsToGet, extras...)
+		RunE: func(cmd *cobra.Command, args []string) error {
+			tmpBuf := new(bytes.Buffer)
+			w := zip.NewWriter(tmpBuf)
+			var command = "journalctl -u " + drUser + " --since " + since
+			outBuf, errBuf, err := runCommnd(command)
+			if err != nil {
+				fmt.Printf("An error happened trying to run %s. Got: %s", command, errBuf.String())
+				return err
 			}
-		}
-		for _, d := range dirsToGet {
-			err = AddDirToZip(w,drBase + d + "/")
+			f, err := w.Create("rackn_bundle/journal-output.txt")
 			if err != nil {
 				return err
 			}
-		}
+			f.Write(outBuf.Bytes())
+			// Loop through the directories we want to add from the base
+			if !strings.HasSuffix(drBase, "/") {
+				drBase = drBase + "/"
+			}
+			dirsToGet := []string{"wal", "digitalrebar", "secrets"}
+			if len(extraDirs) > 0 {
+				extras := strings.Split(extraDirs, ",")
+				if extras != nil && len(extras) > 0 {
+					dirsToGet = append(dirsToGet, extras...)
+				}
+			}
+			for _, d := range dirsToGet {
+				err = AddDirToZip(w, drBase+d+"/")
+				if err != nil {
+					return err
+				}
+			}
 
-		if w.Close() != nil {
-			return err
-		}
+			if w.Close() != nil {
+				return err
+			}
 
-		t := time.Now()
-		fname := fmt.Sprintf("drp-support-bundle-%d-%02d-%02d-%02d-%02d-%02d.zip",
-			t.Year(), t.Month(), t.Day(),
-			t.Hour(), t.Minute(), t.Second())
-		err = ioutil.WriteFile(fname, tmpBuf.Bytes(), 0644)
-		if err != nil {
-			return err
-		}
-		return nil
+			t := time.Now()
+			fname := fmt.Sprintf("drp-support-bundle-%d-%02d-%02d-%02d-%02d-%02d.zip",
+				t.Year(), t.Month(), t.Day(),
+				t.Hour(), t.Minute(), t.Second())
+			err = ioutil.WriteFile(fname, tmpBuf.Bytes(), 0644)
+			if err != nil {
+				return err
+			}
+			return nil
 		},
 	}
 	bundleCmd.Flags().StringVarP(&extraDirs, "extra-dirs", "", "", "extra-dirs job-logs,saas-content,ux,plugins")
@@ -115,10 +117,78 @@ func bundleCmds()  *cobra.Command {
 	bundleCmd.Flags().StringVarP(&drBase, "drp-basedir", "", "/var/lib/dr-provision/", "drp-basedir /var/lib/dr-provision")
 	cmd.AddCommand(bundleCmd)
 
+	machineCmd := &cobra.Command{
+		Short: "Create a support bundle for a given machine for the RackN engineering team.",
+		Use:   "machine-bundle [id]",
+		Long:  "",
+		Args: func(c *cobra.Command, args []string) error {
+			if len(args) != 1 {
+				return fmt.Errorf("%v requires 1 argument", c.UseLine())
+			}
+			return nil
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			t := time.Now()
+			m := &models.Machine{}
+			fname := fmt.Sprintf("drp-machine-support-bundle-%d-%02d-%02d-%02d-%02d-%02d.zip",
+				t.Year(), t.Month(), t.Day(),
+				t.Hour(), t.Minute(), t.Second())
+			req := Session.Req().UrlFor("machines", args[0])
+			req.Params("aggregate", "true")
+			// get machine
+			if err := req.Do(&m); err != nil {
+				return generateError(err, "Failed to fetch %v: %v", " ", args[0])
+			}
+			// create zip
+			zipFile, err := os.Create(fname)
+			if err != nil {
+				return err
+			}
+			w := zip.NewWriter(zipFile)
+			outBuf, err := prettyPrintBuf(m)
+			if err != nil {
+				return err
+			}
+			// add machine object to zip
+			f, err := w.Create("rackn_bundle/machine-" + m.Key() + ".json")
+			if err != nil {
+				return err
+			}
+			f.Write(outBuf)
+			// get jobs from machine from last 24 hours
+			jobs := []*models.Job{}
+			if err := Session.Req().Filter("jobs",
+				"Machine", "Eq", m.Key(),
+				"sort", "StartTime",
+				"reverse").Params("StartTime", "Gte("+time.Now().AddDate(0, 0, -1).Format(time.RFC3339)+")").Do(&jobs); err != nil {
+				return generateError(err, "Failed to fetch jobs for %s: %v", m.Name, m.Key())
+			}
+			for i := 0; i < len(jobs); i++ {
+				outBuf, err = prettyPrintBuf(jobs[i])
+				if err != nil {
+					return err
+				}
+				// add each job object to zip
+				f, err := w.Create("rackn_bundle/job-" + jobs[i].Key() + ".json")
+				if err != nil {
+					return err
+				}
+				f.Write(outBuf)
+				f, err = w.Create("rackn_bundle/job-log-" + jobs[i].Key() + ".log")
+				if err := Session.Req().UrlFor("jobs", jobs[i].Key(), "log").Do(f); err != nil {
+					return generateError(err, "Error getting log for job "+jobs[i].Key())
+				}
+			}
+			if w.Close() != nil {
+				return err
+			}
+			zipFile.Close()
+			return nil
+		},
+	}
+	cmd.AddCommand(machineCmd)
 	return cmd
 }
-
-
 
 func init() {
 	addRegistrar(func(c *cobra.Command) { c.AddCommand(bundleCmds()) })
@@ -144,14 +214,14 @@ func runCommnd(cmdStr string) (outBuffer bytes.Buffer, errBuf bytes.Buffer, err 
 	err = cmd.Run()
 	if err != nil {
 		log.Fatalf("cmd.Run() failed with %s\n", err)
-		return  stdoutBuf, stderrBuf, err
+		return stdoutBuf, stderrBuf, err
 	}
 	return stdoutBuf, errBuf, err
 }
 
 // verify the command bring run is on the system in the path
 func checkToolExists(t string) error {
-	_,err := exec.LookPath(t)
+	_, err := exec.LookPath(t)
 	if err != nil {
 		fmt.Printf("didn't find %s in path\n", t)
 		return err
@@ -164,14 +234,18 @@ func checkToolExists(t string) error {
 func AddDirToZip(zipWriter *zip.Writer, dirname string) error {
 	files, err := ioutil.ReadDir(dirname)
 	if err != nil {
-		if strings.HasSuffix(dirname, "secrets/") { return nil }
-		if strings.HasSuffix(dirname, "digitalrebar/") { return nil }
+		if strings.HasSuffix(dirname, "secrets/") {
+			return nil
+		}
+		if strings.HasSuffix(dirname, "digitalrebar/") {
+			return nil
+		}
 		fmt.Println("encountered an error ", err)
 		return err
 	}
 	for _, file := range files {
 		if !file.IsDir() {
-			err = AddFileToZip(zipWriter, dirname + file.Name())
+			err = AddFileToZip(zipWriter, dirname+file.Name())
 			if err != nil {
 				return err
 			}
