@@ -103,6 +103,11 @@ func signRackNUrl(oldUrl string) (newUrl string, err error) {
 		myPath = parts[1]
 	}
 
+	if Session == nil {
+		err = fmt.Errorf("No session to get signing info")
+		return
+	}
+
 	// Something to sign.
 	license := ""
 	if lerr := Session.Req().UrlFor("profiles", "rackn-license", "params", "rackn/license").Do(&license); err != nil {
