@@ -323,6 +323,11 @@ func NewApp() *cobra.Command {
 				}
 			}
 		case "support":
+			for _, sc := range c.Commands() {
+				if !strings.HasPrefix(sc.Use, "bundle") {
+					sc.PersistentPreRunE = ppr
+				}
+			}
 
 		default:
 			c.PersistentPreRunE = ppr

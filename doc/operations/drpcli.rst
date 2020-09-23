@@ -183,6 +183,23 @@ is optional, but I find YAML easier to edit.
     # Edit the discovery.yaml as needed
     drpcli bootenvs update discovery - < discovery.yaml
 
+
+Downloading ISOs by URL
+~~~~~~~~~~~~~~~~~~~~~~~
+
+While the `uploadiso` command for BootEnvs, Profiles, Stages, and Machines provides a mechanism to download ISOs to satisfy the ISO requirement
+of a BootEnv or its customization, it is sometimes helpful to pull the ISO and locally and distribute this.  Often times wget or curl is used
+for this process.  Some URLs require signatures by RackN to get access to the ISO.  The CLI and UX handle this for you.  If an signed URL is
+needed, the `drpcli` provides a sign URL feature to provide a limited time use URL for download purposes.
+
+  ::
+
+    drpcli system signurl <url>
+
+This will return if the URL needs to be signed or other errors on failure.  If successful, a new URL with a signature will be provided that is
+valid for a limited about of time, usually an hour.  The command requires access to DRP with a valid license.
+
+
 Subnet Operations
 +++++++++++++++++
 
