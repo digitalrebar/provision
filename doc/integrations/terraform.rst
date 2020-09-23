@@ -93,7 +93,26 @@ Prereqs
 
 Before using the Terraform Provider, you must have a Digital Rebar Provision (DRP) server version v4.4 or later installed with at least one machine created. These machines could be VMs, Packet servers, physical servers or even empty DRP machine models.
 
-Terraform v1.12+ must be installed on the system.
+Terraform v1.13+ must be installed on the system.
+
+3rd Party Provider Stanza
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The DRP provider is maintained by RackN under https://extras.rackn.io and not available via the Terraform community repositories (at this time); consequently, users _must_ include the `drp` stanza in the `terraform.required_providers` block.  By including the reference, Terraform will be able to automatically download the provider from the RackN managed repository.
+
+The `required_providers` block is as follows:
+
+  ::
+
+		terraform {
+		  required_version = ">= 0.13.0"
+		  required_providers {
+		    drp = {
+		      versions = ["2.0.0"]
+		      source = "extras.rackn.io/rackn/drp"
+		    }
+		  }
+		}
 
 DRP Access via Environment Variables (provider "drp")
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -155,6 +174,16 @@ Example Terraform Plan
 The following example plan represents all the available options in the comments.
 
   ::
+
+		terraform {
+		  required_version = ">= 0.13.0"
+		  required_providers {
+		    drp = {
+		      versions = ["2.0.0"]
+		      source = "extras.rackn.io/rackn/drp"
+		    }
+		  }
+		}
 
 	  provider "drp" {
 	    username = "rocketskates"
