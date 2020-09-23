@@ -54,8 +54,8 @@ Community Resources from https://rebar.digital
   :target: https://goreportcard.com/report/github.com/digitalrebar/provision/v4
   :alt: Go Report Card
 
-.. image:: https://godoc.org/github.com/digitalrebar/provision/v4?status.svg
-  :target: https://godoc.org/github.com/digitalrebar/provision/v4
+.. image:: https://pkg.go.dev/badge/github.com/digitalrebar/provision/v4
+  :target: https://pkg.go.dev/github.com/digitalrebar/provision/v4
   :alt: GoDoc
 
 .. image:: https://readthedocs.org/projects/provision/badge/?version=latest
