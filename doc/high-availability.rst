@@ -39,6 +39,23 @@ There are a few conditions that need to be met in order to set up an HA cluster 
 #. A high-availability entitlement in your license.  High-availability is a licensed enterprise feature.  If you
    are not sure if your license includes high-availability support, contact support@rackn.com.
 
+Contraindications
+-----------------
+
+The high-availability support code in dr-provision assumes a model where the machines are in the same layer 2
+broadcast domain to allow for moving the HA IP address via gratuitous AR), and that the writable storage that dr-provision
+uses is not shared (via NFS, iSCSI, drbd, or whatever) between servers running dr-provision.
+
+* If you are running on separate broadcast domains, you will need to either ensure that there is an alternate mechanism for
+  ensuring that packets destined for the HA IP address get routed correctly, or accept that provisioning operations
+  will fail from the old network until the clients are informed of the new IP address.  In the latter case, you probably
+  do not want to use the integrated HA support directly, as it assumes that it has a virtual IP that will migrate from
+  one dr-provision instance to another.
+
+* If you are using a shared storage mechanism (NFS, DRBD, iSCSI, or some form of distributed filesystem), then you should
+  not use our integrated HA support, as it will lead to data corruption.  You should also make sure you never run more than
+  one instance of dr-provision on the same backing data at the same time, or the data will be corrupted.
+
 Configuration
 -------------
 
@@ -153,7 +170,7 @@ The Initially Passive Nodes
 ===========================
 
 WARNING: Do not start a passive endpoint(s) in "normal mode."  When installing a passive endpoint, the active
-endpoint _must_ be available when the endpoing is started.
+endpoint _must_ be available when the endpoint is started.
 
 Perform the same installation steps you used for the initially active node, but change the `RS_HA_PASSIVE` line
 to false in the `/etc/systemd/system/dr-provision.service.d/20-ha.conf` file
@@ -208,39 +225,45 @@ Troubleshooting
 Log Verification
 ================
 
-It is normal to see ``Error during replication: read tcp [passive IP]:45786->[cluster IP]:8092: i/o timeout`` on the passive endpoints logs when the active endpoint is killed or switches to passive mode.  This is an indication that the active endpoint has stopped sending updates.
+It is normal to see ``Error during replication: read tcp [passive IP]:45786->[cluster IP]:8092: i/o timeout`` on the
+passive endpoints logs when the active endpoint is killed or switches to passive mode.  This is an indication that the
+active endpoint has stopped sending updates.
 
 
 Transfer Start-up Time
 ======================
 
-It may take up to a minute for a passive endpoint to come online after it has recieved ``-USR1`` signals.
+It may take up to a minute for a passive endpoint to come online after it has received ``-USR1`` signals.
 
 Network Interface Locked
 ========================
 
-It is possible for the HA interface to become locked if you have to stop and restart the service during configuration testing.  To clear the interface, use ```ip addr del [ha ip] dev [ha interface]```
+It is possible for the HA interface to become locked if you have to stop and restart the service during configuration
+testing.  To clear the interface, use ```ip addr del [ha ip] dev [ha interface]```
 
-This happens because Digital Rebar is attaching to (and detaching from) the cluster IP.  If this process is interrupted, then the association may not be correctly removed.
+This happens because Digital Rebar is attaching to (and detaching from) the cluster IP.  If this process is interrupted,
+then the association may not be correctly removed.
 
 WAL File Checksums
 ==================
 
-When operating correctly, all the WAL files should match on all endpoints.  You can check the signature of the wal files using `hexdump -C`
+When operating correctly, all the WAL files should match on all endpoints.  You can check the signature of the wal files
+using `hexdump -C`
 
 For example:
 
   :: 
 
     cd /var/lib/dr-provision/wal
-    hexdump -C base.0
+    hexdump -C base.0 |less
 
 Active Endpoint File ha-state is Passive:true
 =============================================
 
-Digital Rebar uses the ``ha-state.json`` file in it's root directory (typically ``/var/lib/dr-provision``) to track transitions from active to passive state.
+Digital Rebar uses the ``ha-state.json`` file in it's root directory (typically ``/var/lib/dr-provision``) to track
+transitions from active to passive state.
 
-.. note:: removing this file incorrectlycan cause very serious problems!  This is a last resort solution.
+.. note:: removing this file incorrectly can cause very serious problems!  This is a last resort solution.
 
 The ``ha-state.json`` file has a single item JSON schema that changes from true to false depending on the endpoint HA state.  This file can be updated or change to force a reset.  The dr-provision server must be restarted afterwards.
 
@@ -249,4 +272,5 @@ The ``ha-state.json`` file has a single item JSON schema that changes from true 
     {"Passive":false}
 
 
-When making this changes, stop ALL dr-provision servers in the HA cluster.  Fix the state files for all servers.  Start the selected Active endpoint first.  After it is running, start the passive endpoints.
+When making this changes, stop ALL dr-provision servers in the HA cluster.  Fix the state files for all servers.
+Start the selected Active endpoint first.  After it is running, start the passive endpoints.
