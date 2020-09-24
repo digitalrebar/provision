@@ -980,7 +980,7 @@ EOF
                              fi
 
                              if [[ "$INITIAL_WORKFLOW" != "" ]] ; then
-                                 if [[ $CREATE_SELF ]] ; then
+                                 if [[ $CREATE_SELF == true ]] ; then
                                      cp $(which drpcli) /tmp/jq
                                      chmod +x /tmp/jq
                                      ID=$(drpcli info get | /tmp/jq .id -r | sed -r 's/:/-/g')
@@ -1028,7 +1028,7 @@ EOF
                              fi
 
                              if [[ "$INITIAL_WORKFLOW" != "" ]] ; then
-                                 if [[ $CREATE_SELF ]] ; then
+                                 if [[ $CREATE_SELF == true ]] ; then
                                      cp $(which drpcli) /tmp/jq
                                      chmod +x /tmp/jq
                                      ID=$(drpcli info get | /tmp/jq .id -r)
