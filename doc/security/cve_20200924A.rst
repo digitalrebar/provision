@@ -1,0 +1,44 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+.. index::
+  pair: Digital Rebar Provision; Security
+
+.. _rs_cve_20200924a:
+
+CVE 20200924a: Web requests can navigate outside of DRP controlled areas
+========================================================================
+
+DRP server incorrectly respects using `..` for navigation if resulting path is outside of managed areas.  This potentially allowed bad actors to access the host file system.
+
+* Classification: Directory Traversal
+* Reported: Sept 24, 2020
+* Fixed: Sept 24, 2020
+* Addressed In: v4.5, v4.4.7, v4.3.8, v4.2.17
+
+Recommendation
+--------------
+
+Users are advised to apply this patch as soon as possible.   Patching involves replacing the DR-SERVER binary that closes matches the currently deployed version.
+
+
+Mitigation
+----------
+
+Code was added to prevent out of bounds navigation.
+
+Steps to reproduce
+------------------
+
+  :: 
+
+    docker run --rm -it ubuntu /bin/bash
+
+    apt update && apt install -y curl
+    cd /opt
+    mkdir drp ; cd drp
+    curl -fsSL get.rebar.digital/stable | bash -s -- --isolated install
+    ./dr-provision --base-root=`pwd`/drp-data --local-content="" --default-content="" > drp.log 2>&1 &
+    curl -k https://127.0.0.1:8092/%2e%2e/%2e%2e/%2e%2e/%2e%2e/%2e%2e/%2e%2e/etc/passwd
+
+The above results on the contents of /etc/passwd being shown. This is particularly bad given that this application generally runs as root.

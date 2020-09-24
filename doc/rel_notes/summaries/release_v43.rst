@@ -23,6 +23,17 @@ In addition to bug fixes and performance improvements, the release includes seve
 
 See :ref:`rs_release_summaries` for a complete list of all releases.
 
+Important Notices
+~~~~~~~~~~~~~~~~~
+
+Vulnerabilities
++++++++++++++++
+
+The following vulnerabilities were reported and fixed this release.  See the CVE for which releases contain the fix.
+
+* :ref:`rs_cve_20200924a`
+
+
 .. _rs_release_v43_ha:
 
 High Availability
