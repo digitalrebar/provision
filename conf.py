@@ -69,9 +69,9 @@ master_doc = 'README'
 
 # General information about the project.
 project = u'Digital Rebar'
-copyright = u'2019, RackN team'
+copyright = u'2020, RackN Inc'
 license = u'Apache v2'
-author = u'RackN team'
+author = u'RackN Inc'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -155,7 +155,7 @@ html_theme = 'bizstyle'
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
-html_title = "Digital Rebar Platform Docs"
+html_title = "Digital Rebar Docs"
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 html_short_title = "DRP"
@@ -257,7 +257,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'DigitalRebar_Provision.tex', u'Digital Rebar Platform Documentation',
+    (master_doc, 'DigitalRebar_Provision.tex', u'Digital Rebar Documentation',
      u'RackN team', 'manual'),
 ]
 
@@ -287,7 +287,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'dr-provision', u'Digital Rebar Platform Documentation',
+    (master_doc, 'dr-provision', u'Digital Rebar Documentation',
      [author], 1)
 ]
 
@@ -301,8 +301,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'Digital Rebar Platform', u'Digital Rebar Platform Documentation',
-     author, 'Digital Rebar Platform', 'Golang API-Driven Provisioning Workflow.',
+    (master_doc, 'Digital Rebar', u'Digital Rebar Documentation',
+     author, 'Digital Rebar', 'Golang API-Driven Provisioning Workflow.',
      'Miscellaneous'),
 ]
 

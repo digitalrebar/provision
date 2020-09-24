@@ -80,7 +80,7 @@ Our `Quick Start <http://provision.readthedocs.io/en/latest/doc/quickstart.html>
 
 Regular `Install <http://provision.readthedocs.io/en/latest/doc/install.html>`_ for more details on the install steps.  These include production options. (`Previous Version Docs <http://provision.readthedocs.io/en/latest/doc/quickstart.html>`_)
 
-Current Stable Line is the :ref:`rs_release_v44` and next Release is planned to be :ref:`rs_release_v45`.  See :ref:`rs_release_summaries` for a complete list.
+Current Stable Line is the :ref:`rs_release_v45` and next Release is planned to be :ref:`rs_release_v46`.  See :ref:`rs_release_summaries` for a complete list.
 
 Components & Extensions
 -----------------------
