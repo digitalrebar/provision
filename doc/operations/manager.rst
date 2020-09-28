@@ -80,6 +80,12 @@ or content packages.  The **files** api can be used to update the catalog.
 
 The UX has a helper button for this action.
 
+Proxy Creating an Object on Managed Endpoint
+____________________________________________
+
+It is possible to create objects on managed endpoints by using proxy pass-through from the manager.  Details are available in :ref:`rs_api_proxy`.
+
+
 Manager Common Methods
 ----------------------
 
