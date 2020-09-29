@@ -513,7 +513,7 @@ Please see the `Release Notes <https://github.com/digitalrebar/provision/v4/rele
 2. Many commands now have new *helper* capabilities.  See each command outputs relevant help statement.
 
 Install Script Changed
-~~~~~~~~~~~~~~~~~~~~~~
+++++++++++++++++++++++
 
 There are minor changes to the install script for isolated mode.  Production mode installs are still done and updated the same way.  For isolated, there are some new flags and options.  Please see the commands output for more details or check the updated :ref:`rs_quickstart`.
 

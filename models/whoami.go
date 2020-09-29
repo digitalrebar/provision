@@ -13,14 +13,16 @@ import (
 	"github.com/pborman/uuid"
 )
 
+type WhoamiResult struct {
+	Score int       `json:",omitempty"`
+	Uuid  uuid.UUID `json:",omitempty"`
+	Token string    `json:",omitempty"`
+}
+
 // Whoami contains the elements used toi fingerprint a machine, along with
 // the results of the fingerprint comparison request
 type Whoami struct {
-	Result struct {
-		Score int       `json:",omitempty"`
-		Uuid  uuid.UUID `json:",omitempty"`
-		Token string    `json:",omitempty"`
-	}
+	Result      WhoamiResult
 	Fingerprint MachineFingerprint
 	MacAddrs    []string
 	OnDiskUUID  string
