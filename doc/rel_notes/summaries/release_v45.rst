@@ -126,5 +126,5 @@ Other Items of Note
 * Improved stability for self-runner bootstrapping agent
 * Improved data collection and communication within HA clusters
 * Web UX
-  * Improved Params update from Machines List view including setting secure values
-  * Numerous rendering and edit page fixes
+   * Improved Params update from Machines List view including setting secure values
+   * Numerous rendering and edit page fixes
