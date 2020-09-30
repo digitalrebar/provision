@@ -775,4 +775,4 @@ to assist them with troubleshooting your issue. drpcli can be used to create the
     drpcli support machine-bundle [id]
 
 
-How to update drpcli to obtain the support commands: :ref:`_rs_kb_00049`
+How to update drpcli to obtain the support commands: :ref:`rs_kb_00049`

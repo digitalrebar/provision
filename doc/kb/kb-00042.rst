@@ -39,6 +39,7 @@ JQ Raw Mode
 ===========
 
 Raw JSON output is usefull when passing the results of one ``jq`` command in to another for scripted interaction.  Be sure to specify "Raw" mode in this case - to prevent colorization and extraneous quotes being wrapped around Key/Value data output.
+
   ::
 
       <some command> | jq -r ...
@@ -52,11 +53,13 @@ Filter Out gohai-inventory
 The ``gohai-inventory`` module is extremely useful for providing Machine classification information for use by other stages or tasks.  However, it is very long and causes a lot of content to be output to the console when listing Machine information.  Using a simple ``jq`` filter, you can delete the ``gohai-inventory`` content from the output display.
 
 Note that since the Param name is ``gohai-inventory``, we have to provide some quoting of the Param name, since the dash (``-``) has special meaning in JSON parsing.
+
   ::
 
     drpcli machines list | jq 'del(.[].Params."gohai-inventory")'
 
 Subsequently, if you are listing an individual Machine, then you can also filter it's ``gohai-inventory`` output as well, with:
+
   ::
 
     drpcli machines show <UUID> | jq 'del(.Params."gohai-inventory")'
@@ -68,6 +71,7 @@ List BootEnv Names
 ==================
 
 Get list of bootenvs available in the installed content, by name:
+
   ::
 
     drpcli bootenvs list | jq '.[].Name'
@@ -79,11 +83,13 @@ Reformat Output With Specific Keys
 ==================================
 
 Get list of machines, output "Name:Uuid" pairs from the the JSON output:
+
   ::
 
     drpcli machines list | jq -r '.[] | "\(.Name):\(.Uuid)"'
 
 Output is printed as follows:
+
   ::
 
     machine1:05abe5dc-637a-4952-a1be-5ec85ba00686
@@ -98,6 +104,7 @@ Extract Specific Key From Output
 ================================
 
 ``jq`` can also pull out only specific Keys from the JSON input.  Here is an example to get ISO File name for a bootenv:
+
   ::
 
     drpcli contents show os-discovery | jq '.sections.bootenvs.discovery.OS.IsoFile'
@@ -109,6 +116,7 @@ Display Job Logs for Specific Machine
 =====================================
 
 The Job Logs provide a lot of information about the provisioning process of your DRP Endpoint.  However, you often only want to see Job Logs for a specific Machine to evaluate provisioning status.  To get specific Jobs from the job list - based on Machine UUID, do:
+
   ::
 
     export UUID=`abcd-efgh-ijkl-mnop-qrps"
@@ -120,7 +128,7 @@ The Job Logs provide a lot of information about the provisioning process of your
 Using --args deal with pipes and quotes (NOT A DRPCLI JQ feature)
 =================================================================
 
-.. note:: This is NOT supported by the DROCLI JQ_
+.. note:: This is NOT supported by the DROCLI JQ
 
 In scripts, it can become very difficult to correctly pass variables inside of pipes.  For this reason, operators may want to use the `jq --args` instead of attempting to inject values into jq queries.
 
@@ -133,7 +141,7 @@ In the example below, we needed to match a value inside an array of JSON objects
 
 This example looks for a value in an array.
 
- ::
+  ::
 
     licensed=$(jq --args m "$mc" -r 'contains(["$m"])' <<< $endpoints)
 

@@ -124,7 +124,6 @@ Table of Contents
    doc/content-packages
    doc/rackn/license
    Trademark
-   LICENSE
    doc/fun-facts
 
 .. _rs_license:
