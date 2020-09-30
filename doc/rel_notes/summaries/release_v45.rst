@@ -74,6 +74,18 @@ To leverage the new SL8, add the enabling SL8 profile in your workflow.
 Note: SL8 is expected to become default in DRP v4.6.  A profile will be provided the enable backwards SL7 support.
 
 
+.. _rs_release_v45_backup:
+
+WAL Backup
+~~~~~~~~~~
+
+DRP v4 introduced the WAL transcation log data store for Digital Rebar data.  This critical core change has enabled endpoint replication features such as muiti-site and high availably.  In this release, RackN added additional tooling to help operators make backups of the WAL.
+
+Operators can now use the `dr-backup` utility to capture DRP snapshots of live systems with confidence that they will detect and work with system transaction boundaries.  It can also be used remotely to ensure off-system and test convenience backups.
+
+Operators are advised to migrate all backup operations to this new utility since it is more reliable than capturing the state of the file system.
+
+
 .. _rs_release_v45_log_capture:
 
 Log Capture 
