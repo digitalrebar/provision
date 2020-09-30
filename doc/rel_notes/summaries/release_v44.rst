@@ -58,16 +58,16 @@ Other Items of Note
 * Cloud Wrap - standardizes patterns to create cloud instances using Contexts with Terraform and Ansible.
 * Prototype Terraform Provider - enables use of the Pooling API via Terraform
 * UX Enhancements
-  * Significant UX performance rendering improvements - helpful for large scale and systems that are under stress due to error storms
-  * Select entire row instead of just checkbox
-  * Improve claimed editing
-  * Improve editing panels and pages
-  * Content pack differencing
+   * Significant UX performance rendering improvements - helpful for large scale and systems that are under stress due to error storms
+   * Select entire row instead of just checkbox
+   * Improve claimed editing
+   * Improve editing panels and pages
+   * Content pack differencing
 * Backup Enhancements - improved tooling around server backups and diagnostics
 * Workflow timeout - allows operators to determine if a workflow has stalled
 * Agent auto-update - Agent can upgrade itself.  This is very helpful for agents embedded in image deploys and containers.
 * Additional Operating Systems
-  * Debian 10
-  * Centos 8 / RHEL 8
-  * Ubuntu 20.04
+   * Debian 10
+   * Centos 8 / RHEL 8
+   * Ubuntu 20.04
 * Moved into open ecosystem: Cohesity and Solidfire Support
