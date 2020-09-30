@@ -68,8 +68,9 @@ The two main functions of manager are discussed here.
 Single Pane of Glass
 ====================
 
-When making API requests, the manager will provide results from all the attached endpoints.  Additionally, all objects
-have a field, **Endpoint**, that is populated with the Endpoint Id (the High Availability Id) of the owning endpoint.
+When making API requests, the manager will provide results from all the attached endpoints.  Additionally, all objects have a field, **Endpoint**, that is populated with the Endpoint Id (the High Availability Id) of the owning endpoint.  API requests made to objects from attached endpoints are
+automatically forward to the correct endpoint.  See :ref:`rs_api_proxy` for more information about
+using this automatic API behavior explicity.
 
 Only the local objects are replicated up to the manager, objects provided by content packages and plugins are not
 replicated to the manager.  It is assumed that the manager will have all the content packages and plugins loaded to

@@ -52,6 +52,26 @@ The API includes specialized filter behavior for Params that allows deep searchi
 
 To filter Machines or Profiles by Param values, pass the Param name and value using the normal Field filter specification.  When the Field is not found, the backend will search model's Params keys and evalute the filter against the Param value.
 
+.. _rs_api_proxy:
+
+Leveraging Multi-Site Proxy Forwarding
+--------------------------------------
+
+In the :ref:`rs_manager_arch`, API calls to a DRP manager for remote objects are automatically forwarded to the correct attached endpoint.  This allows operators to make API calls to remote endpoints from a centralized manager without knowing the actual owner of the object.  The owning endpoint can be determined for any object by inspecting its `Endpoint` property.
+
+For most cases, no additional information or API notation is required to leverage this functionality. The exception is creating objects on attached endpoints.  The create (aka POST) case requires API callers to specify the target remote endpoint (the endpoint must be registered or the request will be rejected) to the manager.
+
+To make an explicit API proxy call, prefix the path of the request with the endpoint identity.  For example:
+
+  ::
+
+    /[target endpoint id]/api/v3/machines
+
+
+This pattern is also invoked by with the `-u` flag in the DRPCLI.
+
+NOTE: Multi-site is a licensed feature available in DRP v4.5+ and must be enabled for the endpoint.
+
 .. _rs_api_slim:
 
 Payload Reduction (slim)
