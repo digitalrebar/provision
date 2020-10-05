@@ -364,6 +364,10 @@ func stopHandler(w http.ResponseWriter, r *http.Request, ps PluginStop) {
 	if ps != nil {
 		ps.Stop(l)
 	}
+	if es != nil {
+		es.Deregister(esHandle)
+		es.Close()
+	}
 	if r.Body != nil {
 		r.Body.Close()
 	}
