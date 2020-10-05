@@ -51,8 +51,14 @@ OPTIONS:
     --initial-workflow=<string>
                             # Workflow to assign to the DRP's self machine as install finishes
                             # This is only valid with create-self object
+    --initial-profiles=<string>
+                            # Initial profiles to add to the DRP endpoint before starting the workflow
+                            # This is only valid with create-self object
     --initial-contents=<string>
                             # Initial content packs to deliver, comma separated list.
+                            # A file, URL, or content-pack name
+    --initial-plugins=<string>
+                            # Initial plugins to deliver, comma separated list.
                             # A file, URL, or content-pack name
     --bootstrap             # Store the install image and the install script in the files bootstrap
     --drp-id=<string>       # String to use as the DRP Identifier (only with --systemd)
@@ -119,7 +125,8 @@ DEFAULTS:
     |  container-type      = $CNT_TYPE           |  container-name      = $CNT_NAME
     |  container-netns     = $CNT_NETNS             |  container-restart   = $CNT_RESTART
     |  bootstrap           = false            |  initial-workflow    = unset
-    |  initial-contents    = unset            |  systemd-services    = unset
+    |  initial-contents    = unset            |  initial-profiles    = unset
+    |  initial-plugins     = unset            |  systemd-services    = unset
     |  ha-enabled          = false            |  ha-address          = unset
     |  ha-passive          = false            |  ha-interface        = unset
     |  ha-token            = unset
@@ -159,7 +166,9 @@ KEEP_INSTALLER=false
 CONTAINER=false
 BOOTSTRAP=false
 INITIAL_WORKFLOW=
+INITIAL_PROFILES=
 INITIAL_CONTENTS=
+INITIAL_PLUGINS=
 SYSTEMD_ADDITIONAL_SERVICES=
 START_LIMIT_INTERVAL=5
 START_LIMIT_BURST=100
@@ -218,7 +227,9 @@ while (( $# > 0 )); do
         --local-ui)                 LOCAL_UI=true                             ;;
         --remove-rocketskates)      REMOVE_RS=true                            ;;
         --initial-workflow)         INITIAL_WORKFLOW="${arg_data}"            ;;
+        --initial-profiles)         INITIAL_PROFILES="${arg_data}"            ;;
         --initial-contents)         INITIAL_CONTENTS="${arg_data}"            ;;
+        --initial-plugins)          INITIAL_PLUGINS="${arg_data}"             ;;
         --drp-user)                 DRP_USER=${arg_data}                      ;;
         --drp-password)             DRP_PASSWORD="${arg_data}"                ;;
         --drp-id)                   DRP_ID="${arg_data}"                      ;;
@@ -752,7 +763,8 @@ case $MODE in
                      else
                        if [[ ! -e rackn-catalog.json ]] ; then
                          get $DRP_CATALOG
-                         mv rackn-catalog.json rackn-catalog.json.gz
+                         FILE=${DRP_CATALOG##*/}
+                         mv ${FILE} rackn-catalog.json.gz
                          gunzip rackn-catalog.json.gz
                        fi
                        SOURCE=$(grep "drp-$DRP_VERSION:::" rackn-catalog.json | awk -F\" '{ print $4 }')
@@ -974,9 +986,35 @@ EOF
                                      elif [[ $i == http* ]] ; then
                                          drpcli contents upload ${i}
                                      else
-                                         drpcli catalog item install ${i} --version=${DRP_CONTENT_VERSION}
+                                         drpcli catalog item install ${i} --version=${DRP_CONTENT_VERSION} -c $DRP_CATALOG
                                      fi
                                  done
+                             fi
+
+                             if [[ "$INITIAL_PLUGINS" != "" ]] ; then
+                                 IFS=',' read -ra plugins_array <<< "$INITIAL_PLUGINS"
+                                 for i in "${plugins_array[@]}" ; do
+                                     if [[ -f ${OLD_PWD}/$i ]] ; then
+                                         drpcli plugin_providers upload ${OLD_PWD}/${i}
+                                     elif [[ $i == http* ]] ; then
+                                         drpcli plugin_providers upload ${i}
+                                     else
+                                         drpcli catalog item install ${i} --version=${DRP_CONTENT_VERSION} -c $DRP_CATALOG
+                                     fi
+                                 done
+                             fi
+
+                             if [[ "$INITIAL_PROFILES" != "" ]] ; then
+                                 if [[ $CREATE_SELF == true ]] ; then
+                                   cp $(which drpcli) /tmp/jq
+                                   chmod +x /tmp/jq
+                                   ID=$(drpcli info get | /tmp/jq .id -r | sed -r 's/:/-/g')
+                                   rm /tmp/jq
+                                   IFS=',' read -ra profiles_array <<< "$INITIAL_PROFILES"
+                                   for i in "${profiles_array[@]}" ; do
+                                     drpcli machines addprofile "Name:$ID" "$i" >/dev/null
+                                   done
+                                 fi
                              fi
 
                              if [[ "$INITIAL_WORKFLOW" != "" ]] ; then
@@ -1012,7 +1050,7 @@ EOF
                          check_drp_ready
 
                          if [[ "$NO_CONTENT" == "false" ]] ; then
-                             drpcli catalog item install task-library --version=${DRP_CONTENT_VERSION}
+                             drpcli catalog item install task-library --version=${DRP_CONTENT_VERSION} -c $DRP_CATALOG
 
                              if [[ "$INITIAL_CONTENTS" != "" ]] ; then
                                  IFS=',' read -ra contents_array <<< "$INITIAL_CONTENTS"
@@ -1022,9 +1060,35 @@ EOF
                                      elif [[ $i == http* ]] ; then
                                          drpcli contents upload ${i}
                                      else
-                                         drpcli catalog item install ${i} --version=${DRP_CONTENT_VERSION}
+                                         drpcli catalog item install ${i} --version=${DRP_CONTENT_VERSION} -c $DRP_CATALOG
                                      fi
                                  done
+                             fi
+
+                             if [[ "$INITIAL_PLUGINS" != "" ]] ; then
+                                 IFS=',' read -ra plugins_array <<< "$INITIAL_PLUGINS"
+                                 for i in "${plugins_array[@]}" ; do
+                                     if [[ -f ${OLD_PWD}/$i ]] ; then
+                                         drpcli plugin_providers upload ${OLD_PWD}/${i}
+                                     elif [[ $i == http* ]] ; then
+                                         drpcli plugin_providers upload ${i}
+                                     else
+                                         drpcli catalog item install ${i} --version=${DRP_CONTENT_VERSION} -c $DRP_CATALOG
+                                     fi
+                                 done
+                             fi
+
+                             if [[ "$INITIAL_PROFILES" != "" ]] ; then
+                                 if [[ $CREATE_SELF == true ]] ; then
+                                   cp $(which drpcli) /tmp/jq
+                                   chmod +x /tmp/jq
+                                   ID=$(drpcli info get | /tmp/jq .id -r | sed -r 's/:/-/g')
+                                   rm /tmp/jq
+                                   IFS=',' read -ra profiles_array <<< "$INITIAL_PROFILES"
+                                   for i in "${profiles_array[@]}" ; do
+                                     drpcli machines addprofile "Name:$ID" "$i" >/dev/null
+                                   done
+                                 fi
                              fi
 
                              if [[ "$INITIAL_WORKFLOW" != "" ]] ; then
