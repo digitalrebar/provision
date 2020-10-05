@@ -57,47 +57,121 @@ func getLocalCatalog() (res *models.Content, err error) {
 	return
 }
 
+func fetchCatalog() (res *models.Content, err error) {
+	buf := []byte{}
+	buf, err = bufOrFile(catalog)
+	if err == nil {
+		err = json.Unmarshal(buf, &res)
+	}
+	if err != nil {
+		err = fmt.Errorf("Error fetching catalog: %v", err)
+	}
+	return
+}
+
+func itemsFromCatalog(cat *models.Content, name string) map[string]*models.CatalogItem {
+	res := map[string]*models.CatalogItem{}
+	for k, v := range cat.Sections["catalog_items"] {
+		item := &models.CatalogItem{}
+		if err := models.Remarshal(v, &item); err != nil {
+			continue
+		}
+		if name == "" || name == item.Name {
+			res[k] = item
+		}
+	}
+	return res
+}
+
+func oneItem(cat *models.Content, name, version string) *models.CatalogItem {
+	items := itemsFromCatalog(cat, name)
+	for _, v := range items {
+		if v.Version == version {
+			return v
+		}
+	}
+	return nil
+}
+
+func installItem(catalog *models.Content, name, version, arch, tgtos string, replaceWritable bool, inflight map[string]struct{}) error {
+	inflight[name] = struct{}{}
+	if name == "BasicStore" {
+		return nil
+	}
+	item := oneItem(catalog, name, version)
+	if item == nil {
+		return fmt.Errorf("%s version %s not in catalog", name, version)
+	}
+	src, err := urlOrFileAsReadCloser(item.DownloadUrl(arch, tgtos))
+	if src != nil {
+		defer src.Close()
+	}
+	if err != nil {
+		return fmt.Errorf("Unable to contact source URL for %s: %v", item.Name, err)
+	}
+	switch item.ContentType {
+	case "ContentPackage":
+		content := &models.Content{}
+		if err := json.NewDecoder(src).Decode(&content); err != nil {
+			return fmt.Errorf("Error downloading content bundle %s: %v", item.Name, err)
+		}
+
+		prereqs := strings.Split(content.Meta.Prerequisites, ",")
+		for _, p := range prereqs {
+			p = strings.TrimSpace(p)
+			if p == "" {
+				continue
+			}
+			pversion := version
+			if pversion != "tip" && pversion != "stable" {
+				pversion = "stable"
+			}
+			parts := strings.Split(p, ":")
+			pname := strings.TrimSpace(parts[0])
+
+			if _, err := Session.GetContentItem(pname); err == nil {
+				inflight[pname] = struct{}{}
+				continue
+			}
+
+			if err := installItem(catalog, pname, pversion, arch, tgtos, replaceWritable, inflight); err != nil {
+				return err
+			}
+		}
+		return doReplaceContent(content, "", replaceWritable)
+	case "PluginProvider":
+		res := &models.PluginProviderUploadInfo{}
+		req := Session.Req().Post(src).UrlFor("plugin_providers", item.Name)
+		if replaceWritable {
+			req = req.Params("replaceWritable", "true")
+		}
+		// TODO: One day handle prereqs.  Save to local file, mark executable, get contents, check prereqs
+		if err := req.Do(res); err != nil {
+			return err
+		}
+		return prettyPrint(res)
+	case "DRP":
+		if info, err := Session.PostBlob(src, "system", "upgrade"); err != nil {
+			return generateError(err, "Failed to post upgrade of DRP")
+		} else {
+			return prettyPrint(info)
+		}
+	case "DRPUX":
+		if info, err := Session.PostBlobExplode(src, true, "files", "ux", "drp-ux.zip"); err != nil {
+			return generateError(err, "Failed to post upgrade of DRP")
+		} else {
+			return prettyPrint(info)
+		}
+	default:
+		return fmt.Errorf("Don't know how to install %s of type %s yet", item.Name, item.ContentType)
+	}
+}
+
 func catalogCommands() *cobra.Command {
 
 	type catItem struct {
 		Type     string
 		Versions []string
-	}
-
-	fetchCatalog := func() (res *models.Content, err error) {
-		buf := []byte{}
-		buf, err = bufOrFile(catalog)
-		if err == nil {
-			err = json.Unmarshal(buf, &res)
-		}
-		if err != nil {
-			err = fmt.Errorf("Error fetching catalog: %v", err)
-		}
-		return
-	}
-
-	itemsFromCatalog := func(cat *models.Content, name string) map[string]*models.CatalogItem {
-		res := map[string]*models.CatalogItem{}
-		for k, v := range cat.Sections["catalog_items"] {
-			item := &models.CatalogItem{}
-			if err := models.Remarshal(v, &item); err != nil {
-				continue
-			}
-			if name == "" || name == item.Name {
-				res[k] = item
-			}
-		}
-		return res
-	}
-
-	oneItem := func(cat *models.Content, name, version string) *models.CatalogItem {
-		items := itemsFromCatalog(cat, name)
-		for _, v := range items {
-			if v.Version == version {
-				return v
-			}
-		}
-		return nil
 	}
 
 	cmd := &cobra.Command{
@@ -220,39 +294,13 @@ and wind up in a file with the same name as the item + the default file extensio
 			if err != nil {
 				return fmt.Errorf("Unable to fetch session information to determine endpoint arch and OS")
 			}
-			item := oneItem(catalog, args[0], version)
-			if item == nil {
-				return fmt.Errorf("%s version %s not in catalog", args[0], version)
-			}
 			arch = info.Arch
 			tgtos = info.Os
-			src, err := urlOrFileAsReadCloser(item.DownloadUrl(arch, tgtos))
-			if src != nil {
-				defer src.Close()
-			}
+			err = installItem(catalog, args[0], version, arch, tgtos, replaceWritable, map[string]struct{}{})
 			if err != nil {
-				return fmt.Errorf("Unable to contact source URL for %s: %v", item.Name, err)
+				return err
 			}
-			switch item.ContentType {
-			case "ContentPackage":
-				content := &models.Content{}
-				if err := json.NewDecoder(src).Decode(&content); err != nil {
-					return fmt.Errorf("Error downloading content bundle %s: %v", item.Name, err)
-				}
-				return doReplaceContent(content, "", replaceWritable)
-			case "PluginProvider":
-				res := &models.PluginProviderUploadInfo{}
-				req := Session.Req().Post(src).UrlFor("plugin_providers", item.Name)
-				if replaceWritable{
-					req = req.Params("replaceWritable","true")
-				}
-				if err := req.Do(res); err != nil {
-					return err
-				}
-				return prettyPrint(res)
-			default:
-				return fmt.Errorf("Don't know how to install %s of type %s yet", item.Name, item.ContentType)
-			}
+			return nil
 		},
 	}
 	install.Flags().BoolVar(&replaceWritable, "replaceWritable", false, "Replace identically named writable objects")
@@ -388,4 +436,8 @@ and wind up in a file with the same name as the item + the default file extensio
 
 func init() {
 	addRegistrar(func(c *cobra.Command) { c.AddCommand(catalogCommands()) })
+}
+
+func installOne() {
+
 }

@@ -317,7 +317,7 @@ func run(toPath, fromPath string, pc PluginConfig, def *models.PluginProvider) e
 	}
 	pmux := mux.New(thelog)
 	pmux.Handle("/api-plugin/v4/config",
-		func(w http.ResponseWriter, r *http.Request) { configHandler(w, r, pc) })
+		func(w http.ResponseWriter, r *http.Request) { configHandler(w, r, def, pc) })
 	if ps, ok := pc.(PluginStop); ok {
 		pmux.Handle("/api-plugin/v4/stop",
 			func(w http.ResponseWriter, r *http.Request) { stopHandler(w, r, ps) })
@@ -394,7 +394,7 @@ func buildSession() (*api.Client, error) {
 	return session, err2
 }
 
-func configHandler(w http.ResponseWriter, r *http.Request, pc PluginConfig) {
+func configHandler(w http.ResponseWriter, r *http.Request, def *models.PluginProvider, pc PluginConfig) {
 	var params map[string]interface{}
 	if !mux.AssureDecode(w, r, &params) {
 		return
@@ -416,10 +416,36 @@ func configHandler(w http.ResponseWriter, r *http.Request, pc PluginConfig) {
 		resp.Code = err.Code
 		b, _ := json.Marshal(err)
 		resp.Messages = append(resp.Messages, string(b))
+		mux.JsonResponse(w, resp.Code, resp)
+		return
 	}
+
+	// We need to handle a few cases.
+	// Does the plugin have the following:
+	//    eventSelector
+	//    publish Function
+	//    marked HasPublish.
+	//
+	// The plugin should either HasPublish or use eventSelector
+	// if both selector HasPublish and EventSelector - panic
 	pse, hasPSE := pc.(PluginEventSelecter)
-	pp, hasPublish := pc.(PluginPublisher)
-	if hasPSE && hasPublish {
+	pp, hasPublishFunct := pc.(PluginPublisher)
+	hasPublish := def.HasPublish
+	if hasPublish && hasPSE {
+		err := &models.Error{Code: 400, Model: "plugin", Key: "unknown", Type: "plugin", Messages: []string{}}
+		err.Errorf("Plugin can NOT have both HasPublish and EventSelector: %s", def.Name)
+		mux.JsonResponse(w, err.Code, err)
+		return
+	}
+
+	if hasPSE && !hasPublishFunct {
+		err := &models.Error{Code: 400, Model: "plugin", Key: "unknown", Type: "plugin", Messages: []string{}}
+		err.Errorf("Plugin can has an EventSelector, but no Publish function: %s", def.Name)
+		mux.JsonResponse(w, err.Code, err)
+		return
+	}
+
+	if hasPSE && hasPublishFunct {
 		var esErr error
 		if es != nil {
 			es.Deregister(esHandle)
