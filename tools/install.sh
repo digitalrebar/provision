@@ -60,6 +60,9 @@ OPTIONS:
     --initial-plugins=<string>
                             # Initial plugins to deliver, comma separated list.
                             # A file, URL, or content-pack name
+    --initial-parameters=<string>
+                            # Initial parameters to set on the system.  Simple parameters
+                            # as a comma separated list.
     --bootstrap             # Store the install image and the install script in the files bootstrap
     --drp-id=<string>       # String to use as the DRP Identifier (only with --systemd)
     --ha-id=<string>        # String to use as the HA Identifier (only with --systemd)
@@ -167,6 +170,7 @@ CONTAINER=false
 BOOTSTRAP=false
 INITIAL_WORKFLOW=
 INITIAL_PROFILES=
+INITIAL_PARAMETERS=
 INITIAL_CONTENTS=
 INITIAL_PLUGINS=
 SYSTEMD_ADDITIONAL_SERVICES=
@@ -228,6 +232,7 @@ while (( $# > 0 )); do
         --remove-rocketskates)      REMOVE_RS=true                            ;;
         --initial-workflow)         INITIAL_WORKFLOW="${arg_data}"            ;;
         --initial-profiles)         INITIAL_PROFILES="${arg_data}"            ;;
+        --initial-parameters)       INITIAL_PARAMETERS="${arg_data}"          ;;
         --initial-contents)         INITIAL_CONTENTS="${arg_data}"            ;;
         --initial-plugins)          INITIAL_PLUGINS="${arg_data}"             ;;
         --drp-user)                 DRP_USER=${arg_data}                      ;;
@@ -1017,6 +1022,20 @@ EOF
                                  fi
                              fi
 
+                             if [[ "$INITIAL_PARAMETERS" != "" ]] ; then
+                                 if [[ $CREATE_SELF == true ]] ; then
+                                   cp $(which drpcli) /tmp/jq
+                                   chmod +x /tmp/jq
+                                   ID=$(drpcli info get | /tmp/jq .id -r | sed -r 's/:/-/g')
+                                   rm /tmp/jq
+                                   IFS=',' read -ra param_array <<< "$INITIAL_PARAMETERS"
+                                   for i in "${param_array[@]}" ; do
+                                     IFS="=" read -ra data_array <<< "$i"
+                                     drpcli machines set "Name:$ID" param "${data_array[0]}" to "${data_array[1]}" >/dev/null
+                                   done
+                                 fi
+                             fi
+
                              if [[ "$INITIAL_WORKFLOW" != "" ]] ; then
                                  if [[ $CREATE_SELF == true ]] ; then
                                      cp $(which drpcli) /tmp/jq
@@ -1087,6 +1106,20 @@ EOF
                                    IFS=',' read -ra profiles_array <<< "$INITIAL_PROFILES"
                                    for i in "${profiles_array[@]}" ; do
                                      drpcli machines addprofile "Name:$ID" "$i" >/dev/null
+                                   done
+                                 fi
+                             fi
+
+                             if [[ "$INITIAL_PARAMETERS" != "" ]] ; then
+                                 if [[ $CREATE_SELF == true ]] ; then
+                                   cp $(which drpcli) /tmp/jq
+                                   chmod +x /tmp/jq
+                                   ID=$(drpcli info get | /tmp/jq .id -r | sed -r 's/:/-/g')
+                                   rm /tmp/jq
+                                   IFS=',' read -ra param_array <<< "$INITIAL_PARAMETERS"
+                                   for i in "${param_array[@]}" ; do
+                                     IFS="=" read -ra data_array <<< "$i"
+                                     drpcli machines set "Name:$ID" param "${data_array[0]}" to "${data_array[1]}" >/dev/null
                                    done
                                  fi
                              fi
