@@ -124,7 +124,6 @@ Table of Contents
    doc/content-packages
    doc/rackn/license
    Trademark
-   LICENSE
    doc/fun-facts
 
 .. _rs_license:
@@ -150,3 +149,5 @@ Digital Rebar Provision documentation is available from multiple authors under t
 
     In the case of works protected by multiple Creative Common licenses,
     the user may choose either.
+
+.. Release v4.6.0 Start

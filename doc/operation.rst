@@ -20,7 +20,6 @@ Some of these operations are in the :ref:`rs_ui`, but not all.  This will focus 
 
    operations/airgap
    operations/bios
-   operations/commands
    operations/contexts
    operations/drpcli
    operations/esxi-getting-started

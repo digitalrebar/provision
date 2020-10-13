@@ -92,17 +92,17 @@ Other Items of Note
 * UX Messaging Feature
 * Secure Boot
 * VMware v7 Integration
-* Other Notable Enhancements 
-  * Support for additional DHCP Options
-  * Significant performance enhancements on backend storage
-  * Machine fingerprint supports constrained external DHCP
-  * Re-integration of automated test coverage reports (sustained >70%)
+* Other Notable Enhancements
+   * Support for additional DHCP Options
+   * Significant performance enhancements on backend storage
+   * Machine fingerprint supports constrained external DHCP
+   * Re-integration of automated test coverage reports (sustained >70%)
 * Integrations and Operational Helpers
-  * Integrated log rotation settings with safe defaults
-  * Improved Ansible Integrations via API and Contexts
-  * Endpoint bootstrapping workflows (was beta in v4.2)
+   * Integrated log rotation settings with safe defaults
+   * Improved Ansible Integrations via API and Contexts
+   * Endpoint bootstrapping workflows (was beta in v4.2)
 * Hardware Expansions
-  * Raspberry Pi Support (exposed via EdgeLab.digital)
-  * Netapp Solidfire and Cohesity Support (not in public catalog)
+   * Raspberry Pi Support (exposed via EdgeLab.digital)
+   * Netapp Solidfire and Cohesity Support (not in public catalog)
 
 

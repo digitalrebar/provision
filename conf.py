@@ -361,7 +361,7 @@ urls = [
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/chef-bootstrap.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/classify.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/cloud-wrappers.rst",
-    "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/coheisity.rst",
+    "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/cohesity.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/coreos.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/dell-support.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/dev-library.rst",
@@ -401,7 +401,6 @@ urls = [
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/vmware.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/vmware-lib.rst",
 ]
-
 fetch_n_save(urls, path="doc/content-packages")
 
 urls = [
