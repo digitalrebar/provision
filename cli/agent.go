@@ -20,7 +20,7 @@ import (
 
 	"github.com/digitalrebar/provision/v4/models"
 
-	"github.com/kardianos/service"
+	"github.com/digitalrebar/service"
 	"github.com/spf13/cobra"
 )
 
