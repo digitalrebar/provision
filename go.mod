@@ -9,6 +9,7 @@ require (
 	github.com/VictorLowther/jsonpatch2 v1.0.0
 	github.com/cpuguy83/go-md2man v1.0.10 // indirect
 	github.com/digitalrebar/logger v0.3.0
+	github.com/digitalrebar/service v1.1.1-0.20201014144010-350daf8c5b17
 	github.com/digitalrebar/tftp/v3 v3.0.0
 	github.com/elithrar/simple-scrypt v1.3.0
 	github.com/fastly/go-utils v0.0.0-20180712184237-d95a45783239 // indirect
@@ -21,7 +22,6 @@ require (
 	github.com/itchyny/gojq v0.6.0
 	github.com/jehiah/go-strftime v0.0.0-20171201141054-1d33003b3869 // indirect
 	github.com/json-iterator/go v1.1.7
-	github.com/kardianos/service v1.1.0
 	github.com/klauspost/compress v1.7.4 // indirect
 	github.com/klauspost/cpuid v1.2.1 // indirect
 	github.com/klauspost/pgzip v1.2.1
@@ -42,6 +42,6 @@ require (
 	github.com/xeipuuv/gojsonschema v1.1.0
 	golang.org/x/crypto v0.0.0-20200414173820-0848c9571904
 	golang.org/x/net v0.0.0-20190724013045-ca1201d0de80
-	golang.org/x/sys v0.0.0-20191120155948-bd437916bb0e
+	golang.org/x/sys v0.0.0-20201014080544-cc95f250f6bc
 	gopkg.in/yaml.v2 v2.2.2
 )
