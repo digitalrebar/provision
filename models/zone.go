@@ -30,10 +30,13 @@ type Zone struct {
 	Description   string
 	Documentation string
 
-	Zone     string // Base zone for this zone
-	Priority int    // Lower first
-	Filters  []*ZoneFilter
-	Records  []*ZoneRecord
+	Zone       string        // Base zone for this zone
+	Filters    []*ZoneFilter // Matchers
+	Priority   int           // Lower first
+	Forwarders []string      // Forwarders for this zone.
+	Continue   bool          // Should the next zone be processed.
+
+	Records []*ZoneRecord
 }
 
 func (z *Zone) GetMeta() Meta {
