@@ -30,7 +30,8 @@ type Zone struct {
 	Description   string
 	Documentation string
 
-	Priority int // Lower first
+	Zone     string // Base zone for this zone
+	Priority int    // Lower first
 	Filters  []*ZoneFilter
 	Records  []*ZoneRecord
 }
