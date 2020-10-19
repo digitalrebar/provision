@@ -1,5 +1,11 @@
 package models
 
+import (
+	"net"
+	"strconv"
+	"strings"
+)
+
 // ZoneRecord contains an individual record for a DNS zone
 //
 // swagger:model
@@ -102,6 +108,45 @@ func (z *Zone) ToModels(obj interface{}) []Model {
 
 func (z *Zone) Validate() {
 	z.AddError(ValidName("Invalid Name", z.Name))
+	for i := range z.Forwarders {
+		s := z.Forwarders[i]
+
+		s = strings.TrimSpace(s)
+		if strings.Contains(s, ":") {
+			p := strings.Split(s, ":")
+			if p[0] == "" {
+				z.Errorf("Invalid IP in forwarders list: %s", s)
+				continue
+			}
+			ip := net.ParseIP(p[0])
+			if ip == nil {
+				z.Errorf("Invalid IP in forwarders list: %s", s)
+				continue
+			}
+			if _, err := strconv.Atoi(p[1]); err != nil {
+				z.Errorf("Invalid IP:Port in forwarders list: %s", s)
+				continue
+			}
+		} else {
+			ip := net.ParseIP(s)
+			if ip == nil {
+				z.Errorf("Invalid IP in forwarders list: %s", s)
+				continue
+			}
+			s = s + ":53"
+		}
+		z.Forwarders[i] = s
+	}
+	for i, fi := range z.Filters {
+		switch fi.Type {
+		case 1:
+			if _, _, e := net.ParseCIDR(fi.Filter); e != nil {
+				z.Errorf("Invalid filter subnet (%s) at index %d: %v", fi.Filter, i, e)
+			}
+		default:
+			z.Errorf("Invalid filter type (%d) at index %d", fi.Type, i)
+		}
+	}
 }
 
 func (z *Zone) CanHaveActions() bool {

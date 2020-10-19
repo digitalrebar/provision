@@ -91,6 +91,7 @@ func All() []Model {
 		&Workflow{},
 		&Tenant{},
 		&Pool{},
+		&Zone{},
 		&Endpoint{},
 		&VersionSet{},
 		&CatalogItem{},
