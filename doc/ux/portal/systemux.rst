@@ -24,8 +24,11 @@ The top of the page offers the following services via a single blue button for e
 * Add Stage - Add a new stage into the Workflow process
 * Add Profile - Add a new profile to the RackN Portal
 
+.. _rs_ux_machines:
+
 Machines
 --------
+
 The Machines page highlights the following information for all machines/nodes the Digital Rebar Provision endpoint is currently aware of. Information shown for each machine:
 
 * Machine Runnable Status (Active/Standby)
@@ -60,6 +63,12 @@ The top of the page offers the following services via a single button for each a
 * Clone - Clone a machine by selecting a machine listed
 * Delete  - Delete a machine by selecting a machine listed
 * Show - This will show additional features for each machine including Plugin, RAM, NICs, CPUs, Make, and Family
+
+Here's an overview of clickable things in the machines table. All links that do not navigate internally within the UX will open in a new tab.
+
+.. image:: images/machine_clickables.png
+  :width: 800
+  :alt: Clickable objects in the machines table
 
 Bulk Actions
 ~~~~~~~~~~~~
