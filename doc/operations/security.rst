@@ -141,6 +141,8 @@ Select commands from the CLI will connect with RackN servers to retrieve the cat
 
 The UX in default configurations does connect with RackN for mailbox and license validation.   We also collect non-identifying information about the endpoint such as ID, machine count and entitlements.  We do NOT store anything else about your environment or access in the RackN SaaS.  The UX automatically creates a unique anonymous identifier for mailbox communications.
 
+See below for more details about compromises related to RackN managed systems.
+
 What private information does RackN store?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -154,6 +156,8 @@ The information collected is:
 * deployment versions
 * content packs that are installed
 * the IP address of the user’s browser
+
+To obtain a RackN license, an active email address (could be an alias) is required.  For contact purposes, we also request name and phone number.  
 
 
 Is all the flow between Digital Rebar and the provisioned machines secured?
@@ -293,6 +297,15 @@ Do DRP services intercommunicate in an authenticated way?
 
 The DRP service is self-contained go-binary.  All services talk internally through memory operations.  Plugins are run locally and use unix/domain sockets for their communication.
 
+
+What information is at risk from a "man-in-the-middle" (MITM) attack?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The CLI and UX both use authenticated HTTPS API calls to control the system that requires authenticated access to control the system.  We recommend using a chain of trust certificate, instead of self-signed, certificate for production systems.
+
+During a client session, a time limited token is granted after initial authentication.  All subsequent requests use the token.
+
+
 Does DRP use encryption and hash algorithms?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -324,6 +337,65 @@ Parameters are the primary method of storing information on plugins, machines, a
 In the future, these parameters could be stored in Hashicorp Vault for example.  This is a roadmap item that is awaiting prioritization. 
 
 See :ref:`rs_data_param_secure` for additional details.
+
+
+.. _rs_remote_access:
+
+Remote Access to DRP by RackN
+-----------------------------
+
+RackN does not connect to any DRP endpoints.  Users of the UX or CLI are connecting directly to the DRP through their network connection.
+
+
+Can RackN take DRP actions via an within open session?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+No. Open sessions are directly from the user's browser to the DRP endpoint only.  No inbound communication to the DRP server or user's browser is used or allowed.
+
+All browser to DRP endpoint communication is direct between the browser and the endpoint.  All API communication is secured with TLS and uses a time based token for authentication.
+
+
+Does RackN have access to my DRP Passwords?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+No.  DRP passwords are not sent or stored by RackN.  Passwords are sent directly to the DRP endpoint from the UX or CLI: they are hash checked or passed to active directory for validation.  Once validated, the password is discarded.  This is only done to the DRP endpoint.  
+
+RackN SaaS does not store any operator passwords (or internal data) for deployed software  The only information passed to the DRP SaaS is the DRP license identity, usage counts, and usage of plugins and contents.  This is not a specific configuration.
+
+Does RackN have access access to on-site iLO, iDrac, etc.?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+No.  No actions are exposed (or notifications of their use) to RackN.  Further, the UX does not act against those items directly.  Requests for out-of-band management are funnelled through the DRP endpoint and must be validated by DRP security.
+
+Can the RackN leak information to attackers including: PII data or security configurations.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+No. The UX does not send PII or security configuration information to RackN; however, it does transmit the DRP information block including version to RackN.  If operators are not keeping up with latest CVEs (see :ref:`rs_release_summaries`) then RackN tracked information could be used to exploit known issues.
+
+
+Can RackN render the DRP server unavailable or modify behavior remotely
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+No.  RackN does not have any remote control over the DRP and cannot remotely disable DRP operations.
+
+Note that an expired RackN license key will disable DRP parts of functionality.  This is not a remote operation, it is based on information contained in the locally installed license file and cannot be modified by RackN once the license is issued.  Operators should always be aware of their license entitlements and expiration dates.
+
+
+What happens if the RackN.io services are unavailable?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In practice, this does not impact active users because it not in the active control flow; however, if RackN.io is not available then operators will not be able to download the UX for new sessions.  The processes that the UX uses collect data (see above) and send information to RackN.io are non-critical to the application and do not interrupt UX operation if interrupted.
+
+We recommend that operators install a local copy of the RackN UX as a backup.
+
+
+What is at risk from a RackN insider threat or 3rd party website compromise?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+A compromise of RackN tracked information would potentially provide an attacker with information about the DRP version installed, it's internal name or IP address (depeending on customer configuration) and number of machines managed by each DRP endpoint.
+
+Since RackN has no access or credentials, this information is only of value for an attacker who has already penetrated the customer networks and then discovered customer DRP access information.
+
 
 .. _rs_security_overall:
 
