@@ -842,8 +842,8 @@ Interface
 The Interface Object is a read-only object that is used to identify
 local interfaces and their addresses on the Digital Rebar Provision
 server.  This is useful for determining what subnets to create and
-with what address ranges.  The :ref:`rs_ui_subnets` part of the
-:ref:`rs_ui` uses this to populate possible subnets to create.
+with what address ranges.  The :ref:`rs_ux_subnets` part of the
+:ref:`rs_portal` uses this to populate possible subnets to create.
 
 
 .. _rs_additional_models:

@@ -10,6 +10,8 @@ Networking
 ============
 This section contains information to the DRP endpoint about all networking settings within the available infrastructure. 
 
+.. _rs_ux_subnets:
+
 Subnets
 -------
 This section lists all Subnets discovered in the network. 
