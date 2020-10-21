@@ -157,7 +157,7 @@ The information collected is:
 * content packs that are installed
 * the IP address of the user’s browser
 
-To obtain a RackN license, an active email address (could be an alias) is required.  For contact purposes, we also requrest name and phone number.  
+To obtain a RackN license, an active email address (could be an alias) is required.  For contact purposes, we also request name and phone number.  
 
 
 Is all the flow between Digital Rebar and the provisioned machines secured?
