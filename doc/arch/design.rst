@@ -43,7 +43,7 @@ api
 
 The API package implements the reference Go client API for
 *dr-provision*. You should consult the go docs for the API at
-https://godoc.org/github.com/digitalrebar/provision/v4/api for in-depth
+https://godoc.org/github.com/digitalrebar/provision for in-depth
 discussion on how to use the client API.
 
 .. _rs_arch_cli:
