@@ -3,6 +3,7 @@ package cli
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"strconv"
 	"strings"
 	"time"
@@ -302,6 +303,8 @@ each other as appropriate.
 			return prettyPrint(indexes)
 		},
 	})
+	wait := ""
+	etag := ""
 	showCmd := &cobra.Command{
 		Use:   "show [id]",
 		Short: fmt.Sprintf("Show a single %v by id", o.name),
@@ -327,8 +330,22 @@ format id as *index*:*value*
 			if params != "" {
 				req = req.Params("params", params)
 			}
+			if wait != "" {
+				if etag == "" {
+					er := Session.Req().Head().UrlFor(o.name, args[0])
+					err := er.Do(nil)
+					if err == nil {
+						etag = er.GetETag()
+					}
+				}
+				req = req.Wait(etag, wait)
+			}
 			if err := req.Do(&data); err != nil {
 				return generateError(err, "Failed to fetch %v: %v", o.singleName, args[0])
+			}
+			if req.Resp.StatusCode == 304 {
+				fmt.Printf("Timeout: no change\n")
+				return nil
 			}
 			return prettyPrint(data)
 		},
@@ -351,9 +368,17 @@ format id as *index*:*value*
 			false,
 			"Should decode any secure params.")
 	}
+	showCmd.Flags().StringVar(&etag,
+		"etag",
+		"",
+		"etag to use for waiting.")
+	showCmd.Flags().StringVar(&wait,
+		"wait",
+		"",
+		"The time to wait for an etag change. This is a time string (default units seconds).  Maximum 10m")
 
 	cmds = append(cmds, showCmd)
-	cmds = append(cmds, &cobra.Command{
+	existsCmd := &cobra.Command{
 		Use:   "exists [id]",
 		Short: fmt.Sprintf("See if a %v exists by id", o.name),
 		Long:  fmt.Sprintf("This will detect if a %v exists.", o.singleName),
@@ -364,16 +389,42 @@ format id as *index*:*value*
 			return nil
 		},
 		RunE: func(c *cobra.Command, args []string) error {
-			exists, err := Session.ExistsModel(o.name, args[0])
+
+			req := Session.Req().Head().UrlFor(o.name, args[0])
+			if wait != "" {
+				if etag == "" {
+					er := Session.Req().Head().UrlFor(o.name, args[0])
+					err := er.Do(nil)
+					if err == nil {
+						etag = er.GetETag()
+					}
+				}
+				req.Wait(etag, wait)
+			}
+			err := req.Do(nil)
 			if err != nil {
 				return generateError(err, "Failed to test %v: %v", o.name, args[0])
 			}
-			if exists {
+			if e, ok := err.(*models.Error); ok && e.Code == http.StatusNotFound {
+				return fmt.Errorf("%s:%s does not exist", o.name, args[0])
+			}
+			if req.Resp.StatusCode == 304 {
+				fmt.Printf("Timeout: no change\n")
 				return nil
 			}
-			return fmt.Errorf("%s:%s does not exist", o.name, args[0])
+			return nil
 		},
-	})
+	}
+	existsCmd.Flags().StringVar(&etag,
+		"etag",
+		"",
+		"etag to use for waiting.")
+	existsCmd.Flags().StringVar(&wait,
+		"wait",
+		"",
+		"The time to wait for an etag change. This is a time string (default units seconds).  Maximum 10m")
+	cmds = append(cmds, existsCmd)
+
 	if !o.noCreate {
 		cmds = append(cmds, &cobra.Command{
 			Use:   "create [json]",

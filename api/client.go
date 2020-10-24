@@ -149,6 +149,7 @@ type R struct {
 	proxy                string
 	params               url.Values
 	ctx                  context.Context
+	eTag                 string
 }
 
 // Req creates a new R for the current client.
@@ -245,6 +246,16 @@ func (r *R) Patch(b jsonpatch2.Patch) *R {
 // Must be used before PatchXXX calls
 func (r *R) ParanoidPatch() *R {
 	r.paranoid = true
+	return r
+}
+
+// Wait adds wait time for long polling - for HEAD and GET calls
+func (r *R) Wait(etag, dur string) *R {
+	if r.header == nil {
+		r.header = http.Header{}
+	}
+	r.header.Add("If-None-Match", etag)
+	r.header.Add("Prefer", fmt.Sprintf("wait=%s", dur))
 	return r
 }
 
@@ -572,8 +583,8 @@ func (r *R) Response() (*http.Response, error) {
 		return nil, r.err
 	}
 	r.Resp = resp
+	r.eTag = resp.Header.Get("ETag")
 	return r.Resp, r.err.HasError()
-
 }
 
 // Do attempts to execute the reqest built up by previous method calls
@@ -621,6 +632,7 @@ func (r *R) Do(val interface{}) error {
 		}
 		return res
 	}
+	r.eTag = resp.Header.Get("ETag")
 	if wr, ok := val.(io.Writer); ok {
 		if resp.StatusCode == 304 {
 			// Pretend we wrote the whole thing.
@@ -646,6 +658,9 @@ func (r *R) Do(val interface{}) error {
 		r.err.Code = resp.StatusCode
 		return r.err
 	}
+	if resp.StatusCode == 304 {
+		return nil
+	}
 	var dec Decoder
 	ct := resp.Header.Get("Content-Type")
 	mt, _, _ := mime.ParseMediaType(ct)
@@ -668,6 +683,10 @@ func (r *R) Do(val interface{}) error {
 		f.Fill()
 	}
 	return r.err.HasError()
+}
+
+func (r *R) GetETag() string {
+	return r.eTag
 }
 
 // Close should be called whenever you no longer want to use this
