@@ -402,11 +402,11 @@ format id as *index*:*value*
 				req.Wait(etag, wait)
 			}
 			err := req.Do(nil)
-			if err != nil {
-				return generateError(err, "Failed to test %v: %v", o.name, args[0])
-			}
 			if e, ok := err.(*models.Error); ok && e.Code == http.StatusNotFound {
 				return fmt.Errorf("%s:%s does not exist", o.name, args[0])
+			}
+			if err != nil {
+				return generateError(err, "Failed to test %v: %v", o.name, args[0])
 			}
 			if req.Resp.StatusCode == 304 {
 				fmt.Printf("Timeout: no change\n")
