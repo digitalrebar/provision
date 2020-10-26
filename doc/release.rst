@@ -10,7 +10,7 @@
 Release Summaries
 -----------------
 
-RackN creates a high level summary for each release that includes the major deliverables, highlights and objectives for the re
+RackN creates a high level summary for each release that includes the major deliverables, highlights and objectives for each release.
 
 .. toctree::
    :maxdepth: 1
@@ -18,6 +18,22 @@ RackN creates a high level summary for each release that includes the major deli
    :reversed:
 
    rel_notes/summaries/*
+
+
+.. _rs_cve:
+
+Common Vulnerabilities and Exposures (CVE)
+------------------------------------------
+
+The following Digital Rebar security issues are being tracked by the RackN team.  Issues are tracked based on the date reported.  Issues are addressed only in the release(s) specified: operators should not assume items are back ported unless explicity indicated.
+
+To report an issue: https://rackn.zendesk.com/hc/en-us/requests/new
+
+.. toctree::
+   :maxdepth: 1
+   :glob:
+
+   security/*
 
 .. _rs_release_strategy:
 

@@ -21,8 +21,19 @@ See :ref:`rs_release_summaries` for a complete list of all releases.
 
 .. _rs_release_v45_deprecations:
 
+Important Notices
+~~~~~~~~~~~~~~~~~
+
+Vulnerabilities
++++++++++++++++
+
+The following vulnerabilities were reported and fixed this release.  See the CVE for which releases contain the fix.
+
+* :ref:`rs_cve_20200924a`
+
+
 Deprecations
-~~~~~~~~~~~~
+++++++++++++
 
 The following items are flagged as deprecated in v4.5 and will be removed in v4.6.
 
@@ -33,7 +44,7 @@ The following items are flagged as deprecated in v4.5 and will be removed in v4.
 .. _rs_release_v45_removals:
 
 Removals
-~~~~~~~~
+++++++++
 
 None at this time.
 
