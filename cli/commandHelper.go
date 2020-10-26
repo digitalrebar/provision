@@ -425,6 +425,32 @@ format id as *index*:*value*
 		"The time to wait for an etag change. This is a time string (default units seconds).  Maximum 10m")
 	cmds = append(cmds, existsCmd)
 
+	etagCmd := &cobra.Command{
+		Use:   "etag [id]",
+		Short: fmt.Sprintf("Get the etag for a %v by id", o.name),
+		Long:  fmt.Sprintf("This will detect if a %v exists and return its etag.", o.singleName),
+		Args: func(c *cobra.Command, args []string) error {
+			if len(args) != 1 {
+				return fmt.Errorf("%v requires 1 argument", c.UseLine())
+			}
+			return nil
+		},
+		RunE: func(c *cobra.Command, args []string) error {
+
+			req := Session.Req().Head().UrlFor(o.name, args[0])
+			err := req.Do(nil)
+			if e, ok := err.(*models.Error); ok && e.Code == http.StatusNotFound {
+				return fmt.Errorf("%s:%s does not exist", o.name, args[0])
+			}
+			if err != nil {
+				return generateError(err, "Failed to test %v: %v", o.name, args[0])
+			}
+			fmt.Printf("%s\n", req.GetETag())
+			return nil
+		},
+	}
+	cmds = append(cmds, etagCmd)
+
 	if !o.noCreate {
 		cmds = append(cmds, &cobra.Command{
 			Use:   "create [json]",
