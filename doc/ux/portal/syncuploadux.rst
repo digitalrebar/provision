@@ -39,6 +39,11 @@ The top of the page has a set of blue buttons for additional information:
 * Search - Search all content regardless of selected categories 
 * Categories - Toggle categories for available content
 
+Here's an overview of clickable things in the catalog table. All links that do not navigate internally within the UX will open in a new tab.
+
+.. image:: images/catalog_clickables.png
+  :width: 800
+  :alt: Clickable objects in the catalog table
 
 Boot ISOs
 ---------
