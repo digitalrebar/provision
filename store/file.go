@@ -76,6 +76,7 @@ func (f *File) Open(codec Codec) error {
 			return err
 		}
 	}
+	f.name = f.data.Meta["Name"]
 	f.opened = true
 	return nil
 }
