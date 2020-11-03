@@ -91,13 +91,17 @@ generate_label(){
 }
 
 editor(){
-  local _editor
-  which vi > /dev/null && _editor=$(which vi)
-  which vim > /dev/null && _editor=$(which vim)
-  [[ -z "$_editor" ]] && _editor=$VISUAL
-  [[ -z "$_editor" ]] && xiterr 1 "can't find an editor to use (vi, vim, \$VISUAL)"
-  echo ">>> Attempt to start editor   : '$_editor $KB_FILE'"
+  if [[ ! $EDITOR ]]; then
+    local _editor
+    which vi > /dev/null && _editor=$(which vi)
+    which vim > /dev/null && _editor=$(which vim)
+    [[ -z "$_editor" ]] && _editor=$VISUAL
+    [[ -z "$_editor" ]] && xiterr 1 "can't find an editor to use (vi, vim, \$VISUAL)"
+    echo ">>> Attempt to start editor   : '$_editor $KB_FILE'"
   [[ -w "$KB_FILE" ]] && $_editor "$KB_FILE" || xiterr 1 "can't write to KB file ('$KB_FILE')"
+  else
+    $EDITOR "$KB_FILE" || xiterr 1
+  fi
 }
 
 validate_index(){
