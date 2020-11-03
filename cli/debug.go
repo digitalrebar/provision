@@ -31,6 +31,8 @@ dr-provision server, provided it has the /api/v3/debug or /api/v3/drp_debug.  Th
 
     heap: Memory tracing information for all live data in memory. heap is always point-in-time data.
 
+    heapdump: All live objects in the system.  Use only as directed by support.
+
     allocs: Memory tracing of all memory that has been allocated since the start of the program
             This includes memory that has been garbage-collected.  alloc is always point-in-time data.
 
@@ -65,7 +67,7 @@ dr-provision server, provided it has the /api/v3/debug or /api/v3/drp_debug.  Th
 				if seconds == 0 {
 					seconds = 1
 				}
-			case "heap", "allocs", "block", "mutex", "threadcreate", "goroutine", "index":
+			case "heap", "allocs", "block", "mutex", "threadcreate", "goroutine", "index", "heapdump":
 			default:
 				return fmt.Errorf("Unknown debug type %s", args[0])
 			}
