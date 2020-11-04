@@ -1,0 +1,88 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+
+.. _kb_secure_data_content:
+
+kb-00050: Adding Secure Data to a Content Pack
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. _rs_kb_00050:
+
+Knowledge Base Article: kb-00050
+--------------------------------
+
+Description
+-----------
+
+Options for storing secure or sensitive data in a Content Pack.
+
+While Params are encrypted by Digital Rebar when set or updated, how can an operator store the Content Pack data at rest or in a code repo with the rest of the Content Pack?  While possible, this requires using a DRP server to encrypt the data and a feature of the DRPCLI to retrieve it.
+
+Since writing data to a Secure Params is automatically encrypted, this article focuses on being able to store secure information in a Content Pack at rest. 
+
+
+Solution
+--------
+
+.. note:: This article assumes that the Params in question are already configured as `Secure: true`.  
+
+Storing secure data in a Content Pack at rest or decomposed in a code repo is NOT recommended if it can be avoided.  If it cannot, here are several options to store secure content in a Content Pack.
+
+1. You can store the value in the clear in the content and it will be encrypted correctly when uploaded.  This method does NOT secure the data at rest and should be carefully managed.
+
+1. You can inject the values in the clear just before bundle and upload so that the Content Pack source code does not include any source data.  Make sure to `.gitignore` to avoid accidently exposing sensitive data AND use the option below when possible.  This method does NOT secure the data at rest and should be carefully managed.
+
+1. You can use `drpcli contents --key` flag to download a Content Pack uploaded by a method above with Secure Params data included.  This allows you to safely store and distribute a Content Pack with sensitive data.  The key file create during download is also required to upload the Content Pack and should be stored separately from the secured Content Pack.  See Additional Information below
+
+
+Operators should consider the pros and cons of storing secure data in a Content Pack.  Content Packs are intented a code controlled, immutable resources; consequently, they are designed for sensitive configuration data.
+
+
+Additional Information
+----------------------
+
+Using the `drpcli contents --key` flag is required when downloading or uploading Content Packs with secure Params.  Using `--key` is _not_ a stand alone DRPCLI action: it requires a connection to a DRP endpoint to upload and then retrieve the encrypted Content Pack.
+
+The following steps could be used to store an encrypted Param in a Content Pack
+
+1. Define the secure Param in DRP server (recommended as part of a Content Pack)
+1. Define the target Content Pack
+1. Inject or set Param information into the appropriate parts of the Content Pack.  This data will be in the clear.
+1. Bundle the Content Pack: `drpcli contents bundle [content file]`
+1. Upload the Content Pack to a DRP server: `drpcli contents upload [content file]`
+1. Download the same Content Pack bundle from the DRP server and save the encryption key: `drpcli contents show [id] --key [file] > [secure content file]`.
+1. Delete the original Content Pack bundle
+
+Now you have a secure version of the Content Pack! Note that only the Params are encrypted, the non-secure parts of the Content Pack remain in clear text.
+
+You can now upload the Content Pack to other DRP servers using `bundle contents upload [secure content file] --key [file]`
+
+See Also
+========
+
+More information about :ref:`rs_data_param_secure`
+
+Versions
+========
+
+Digital Rebar v4+
+
+Keywords
+========
+
+Secure Params, Encryption, Nonce, Security, Infrastructure as Code
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00050
+    initial release:  Tue 03 Nov 2020 02:29:47 PM CST
+    updated release:  Tue 03 Nov 2020 02:29:47 PM CST
+

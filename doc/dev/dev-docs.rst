@@ -41,6 +41,10 @@ This process uses the following elements:
 #. Use a terminal window with a ``watch`` function to rebuild the HTML document tree
 #. Use a web browser with an auto-refresh extension to view the rendered HTML
 
+Building FAQ or Knowledge Base Articles
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The format for Knowledge Base Articles are controlled.  To create a new article, please see KB article :ref:`rs_contributing_kb_articles`.
 
 Install and Setup Sphinx and Swagger
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
