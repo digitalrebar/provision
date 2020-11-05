@@ -24,6 +24,72 @@ func addSystemCommands() (res *cobra.Command) {
 		Short: fmt.Sprintf("Access CLI commands relating to %v", name),
 	}
 
+	consensus := &cobra.Command{
+		Use:   "ha",
+		Short: "Access CLI commands to get the state of high availability",
+	}
+
+	consensus.AddCommand(&cobra.Command{
+		Use:   "id",
+		Short: "Get the machine ID of this endpoint in the consensus system",
+		Args:  cobra.NoArgs,
+		RunE: func(c *cobra.Command, args []string) error {
+			var res interface{}
+			if err := Session.Req().UrlFor("system", "consensus", "id").Do(&res); err != nil {
+				return err
+			}
+			return prettyPrint(res)
+		},
+	})
+	consensus.AddCommand(&cobra.Command{
+		Use:   "leader",
+		Short: "Get the machine ID of the leader in the consensus system",
+		Args:  cobra.NoArgs,
+		RunE: func(c *cobra.Command, args []string) error {
+			var res interface{}
+			if err := Session.Req().UrlFor("system", "consensus", "leader").Do(&res); err != nil {
+				return err
+			}
+			return prettyPrint(res)
+		},
+	})
+	consensus.AddCommand(&cobra.Command{
+		Use:   "active",
+		Short: "Get the machine ID of the current active node in the consensus system",
+		Args:  cobra.NoArgs,
+		RunE: func(c *cobra.Command, args []string) error {
+			var res interface{}
+			if err := Session.Req().UrlFor("system", "consensus", "active").Do(&res); err != nil {
+				return err
+			}
+			return prettyPrint(res)
+		},
+	})
+	consensus.AddCommand(&cobra.Command{
+		Use:   "peers",
+		Short: "Get basic info on all members of the consensus system",
+		Args:  cobra.NoArgs,
+		RunE: func(c *cobra.Command, args []string) error {
+			var res interface{}
+			if err := Session.Req().UrlFor("system", "consensus", "peers").Do(&res); err != nil {
+				return err
+			}
+			return prettyPrint(res)
+		},
+	})
+	consensus.AddCommand(&cobra.Command{
+		Use:   "dump",
+		Short: "Dump the detailed state of the consensus system.",
+		Args:  cobra.NoArgs,
+		RunE: func(c *cobra.Command, args []string) error {
+			var res interface{}
+			if err := Session.Req().UrlFor("system", "consensus", "state").Do(&res); err != nil {
+				return err
+			}
+			return prettyPrint(res)
+		},
+	})
+
 	op := &ops{
 		name:       name,
 		singleName: singularName,
@@ -110,6 +176,7 @@ func addSystemCommands() (res *cobra.Command) {
 			}
 		},
 	})
+	res.AddCommand(consensus)
 
 	return res
 }
