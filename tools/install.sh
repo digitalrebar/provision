@@ -1048,7 +1048,11 @@ EOF
                          fi
 
                          if [[ $DRP_USER ]] ; then
-                             drpcli users create "{ \"Name\": \"$DRP_USER\", \"Roles\": [ \"superuser\" ] }"
+                             if drpcli users exists $DRP_USER >/dev/null 2>/dev/null ; then
+                                 drpcli users update $DRP_USER "{ \"Name\": \"$DRP_USER\", \"Roles\": [ \"superuser\" ] }"
+                             else
+                                 drpcli users create "{ \"Name\": \"$DRP_USER\", \"Roles\": [ \"superuser\" ] }"
+                             fi
                              drpcli users password $DRP_USER "$DRP_PASSWORD"
                              export RS_KEY="$DRP_USER:$DRP_PASSWORD"
                              if [[ $REMOVE_RS == true ]] ; then
