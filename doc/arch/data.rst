@@ -388,46 +388,13 @@ this yaml.
           address: 1.1.1.2
 
 .. index::
-  pair: SubTemplate; Local Repos
-
-Local Repos
-+++++++++++
-
-**This section is deprecated, it is being replaced by the more general
-package-repositories functionality**
-
-It is possible to use the exploded ISOs as repositories for
-post-installation work.  This can be helpful when missing internet
-connectivity.  To cause the local repos to replace the public repos,
-set the *local_repo* parameter to *true*.  This will force them to be
-changed.  There is one for ubuntu/debian-based systems,
-**ubuntu-drp-only-repos.tmpl** and one for centos/redhat-based
-systems, **centos-drp-only-repos.tmpl**.  The place the template in
-the post-install section of the kickstart or the net-post-install.sh
-script.
-
-  ::
-
-    {{ template "ubuntu-drp-only-repos.tmpl" . }}
-    {{ template "centos-drp-only-repos.tmpl" . }}
-
-
-An example :ref:`rs_model_profile` that sets proxies would look like this yaml.
-
-  ::
-
-    Name: local-repos
-    Params:
-      local-repo: true
-
-.. index::
   pair: SubTemplate; Package Repositories
 
 Package Repositories
 ++++++++++++++++++++
 
-As an alternative to rolling your own support for local annd remote
-package repositrory management, you can write your templates to use
+As an alternative to rolling your own support for local and remote
+package repository management, you can write your templates to use
 our package repository support.  This support consists of three parts:
 
 1. Support in the template rendering engine for a parameter named
@@ -587,6 +554,30 @@ To expand the repos suitable for post-install package management, use::
 
     {{range $repo := .MachineRepos}}{{$repo.Lines}}{{end}}
 
+Local Repos
+^^^^^^^^^^^
+
+By default, local package repositories provided by exploded OS install
+media is made available as a set of extra repositories that override
+matching install repositories from the package-repositories param.
+
+These extra repositories will always be present if the ISO associated
+with a boot environment has been uploaded to dr-provision.  They are treated
+as if you defined a custom entry in package-repositories that pointed back to
+the location the ISO exploded to + the location we expect the package repositories
+on the ISO to be at.  They will always behave as if they were install sources.
+The are built as follows:
+
+  ::
+
+    - tag: <bootenv.Name>
+      os: [<bootenv.OS.Name>]
+      installSource: true
+      securitySource: true
+      url: http://<dr-provision address>:8091/<bootenv.OS.Name>/install/<on-media path to repo>
+
+
+The above is an example, details may vary.
 
 .. index::
   pair: SubTemplate; Set Hostname
