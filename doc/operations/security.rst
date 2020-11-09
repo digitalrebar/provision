@@ -178,6 +178,14 @@ No.  The Remote CLI does not use SSH.   We don’t use SSH anywhere in the produ
  
 The CLI uses an HTTPS connection to the DRP API. 
 
+Can I restrict the allowed ciphers for API connections?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Yes.  DRP server v4.5.2+ can restrict clients' ciphers; however, operators need to take the addional step to restrict DRP server's ability to use ciphers with a `--min-tls-version` start-up flag.
+
+Determine the current and available ciphers using `--tls-cipher-list` and `--tls-ciphers-available`.
+
+
 Is the admin password strongly encrypted?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -401,6 +409,20 @@ Since RackN has no access or credentials, this information is only of value for 
 
 Overall security Security
 -------------------------
+
+.. _rs_faq_cve:
+
+Does RackN maintaining a Common Vulnerabilities and Exposures (CVE) list?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Yes, see the list below or the Release :ref:`rs_cve` section.  The reporter and RackN customers get advanced notice before public reporting (typically 30 days).  `Create a ticket <https://rackn.zendesk.com/hc/en-us/requests/new>`_ to report an issue.
+
+.. toctree::
+   :maxdepth: 1
+   :glob:
+
+   security/*
+
 
 Is DRP protected against Top 10 OWASP?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

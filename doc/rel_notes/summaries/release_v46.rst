@@ -51,6 +51,33 @@ Removals
 
 None at this time.
 
+
+Limit client TLS ciphers
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+DRP server allows clients to connect with a range of TLS ciphers by default.  Some security teams choose restrict the allowed ciphers.  
+
+Operators who wish to restrict use of client ciphers are advised to start with the `--tls-min-version` flags.  Operators can use the `--tls-cipher-list` and `--tls-ciphers-available` command line flags to determine the current and available ciphers.
+
+Note: this feature was also backported to v4.5.2+
+
+
+Stand Alone High Availability (HA with RAFT)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The v4.3 :ref:`rs_release_v43_ha` feature was designed to rely on pacemaker or corosync to trigger failover.  This requirement has been elimimated.
+
+In this verion, DRP HA includes integrated leader (re)election capability.  Operators will be able to influence or force changes in leadership.
+
+This enables DRP to be used in site bootstrapping environments or locations where the additional requirement for failover detection was an operational burden.
+
+Support for Client Long Polling
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Long Polling allows clients that cannot use websockets to monitor DRP server for data changes to select objects.  This option provides a much lower overhead and faster way for clients to monitor DRP for updates than time-based polling.
+
+RackN recommends using websockets when available; however long polling is strongly encouraged to reduce load on the DRP server when websockets cannot be used.
+
 Universal Workflow
 ~~~~~~~~~~~~~~~~~~
 
