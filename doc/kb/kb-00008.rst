@@ -31,14 +31,14 @@ The Param ``access-ssh-root-mode`` defines the login policy for the *root* user.
 vaule is ``without-password`` which means the remote SSH *root* user must access must be
 performed with SSH keys (see :ref:`rs_add_ssh`).  Possible values are:
 
-------------------------  ----------------------------------------------------------
+========================  ==========================================================
 value                     definition
-------------------------  ----------------------------------------------------------
+========================  ==========================================================
 ``without-password``      require SSH public keys for root login, no forced commands
 ``yes``                   allow SSH *root* user login with password
 ``no``                    do not allow SSH *root* user login at all
 ``forced-commands-only``  only allow forced commands to run via remote login
-------------------------  ----------------------------------------------------------
+========================  ==========================================================
 
 
 Additional Information
