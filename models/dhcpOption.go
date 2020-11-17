@@ -104,7 +104,7 @@ func DHCPOptionParser(code dhcp.OptionCode) (func(string) ([]byte, error), func(
 				addrs := make([]net.IP, 0)
 				alist := strings.Split(s, ",")
 				for i := range alist {
-					addrs = append(addrs, net.ParseIP(alist[i]).To4())
+					addrs = append(addrs, net.ParseIP(strings.TrimSpace(alist[i])).To4())
 				}
 				return dhcp.JoinIPs(addrs), nil
 			}, func(buf []byte) string {
@@ -212,7 +212,7 @@ func DHCPOptionParser(code dhcp.OptionCode) (func(string) ([]byte, error), func(
 				}
 				res := []byte{}
 				for _, b := range strings.Split(s, ",") {
-					ival, err := strconv.Atoi(b)
+					ival, err := strconv.Atoi(strings.TrimSpace(b))
 					if err != nil {
 						return nil, err
 					}
