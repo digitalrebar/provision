@@ -67,6 +67,7 @@ Community Resources from https://rebar.digital
 * `Issues and Features <https://github.com/digitalrebar/provision/issues>`_
 * Full `Documentation <http://provision.readthedocs.io/en/latest/>`_ (Github `/doc <https://github.com/digitalrebar/provision/tree/v4/doc>`_ sources are updatable via pull request).
 * Videos on the `DR Provision Playlist <https://www.youtube.com/playlist?list=PLXPBeIrpXjfilUi7Qj1Sl0UhjxNRSC7nx>`_ provide both specific and general background information.
+* Test Bullet
 
 
 .. _rs_quick:
