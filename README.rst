@@ -5,7 +5,7 @@
 
 .. _rs_welcome:
 
-Digital Rebar
+Digital Rebar 1
 ~~~~~~~~~~~~~
 
 *simple, fast and open-ecosystem infrastructure automation with strong Infrastructure as Code (IaC) design.*
