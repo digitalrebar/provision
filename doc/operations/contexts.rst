@@ -49,13 +49,19 @@ The following system information lists what was used to create this guide.
 .. note::
     * Older versions of docker will work just fine, but you could run into issues when building your container images.
     * Docker was setup using the following guide: https://docs.docker.com/install/linux/docker-ce/centos/
+    * Podman can be used interchangably from Docker.
+
+Prerequisites
+-------------
+
+For the Docker (OCI) Execution Context plugin requires that you have either Docker or Podman installed.  Operators may find that Podman provides better security and controls.
 
 Getting Started
 ---------------
 
 We need to verify that the DRP endpoint is properly configured to function
 with the docker-context plugin. To do that make sure the user running
-docker and the user running drp are one in the same, or that the user
+docker or podman and the user running drp are one in the same, or that the user
 running drp can use docker. To make things easy in this example both users
 will be root.
 
@@ -205,6 +211,19 @@ We have created an empty machine object, next we updated the workflow and set it
 
 At this point you should be able to navigate to the jobs page of the web portal, look for the task `context-demo-example` and see it has run for about 10 seconds, and if you click into the job you will see the output from the task.
 
+
+Container Image Locations
+-------------------------
+
+The Docker-Context plugin does not use `docker pull` or related approaches to retrieve images because this assumes external connectivity.  Instead, the Docker-Context relies on the needed images being stored as single artifact archives in the DRP server's `/files/contexts/docker-contexts` path.
+
+Here is the process the plugin uses when starting a Context container:
+
+* When a Context is requested, the Docker-Context plugin will check the system for an image tag that matches the `Context.Image` value.
+* If that image is not installed, the plugin will download it from the DRP server's `/files/contexts/docker-contexts` path and register it as an image with the correct tag.
+* Start the container as a Context.
+
+If the tagged container image already exists on the DRP endpoint, then no download is attempted.  This allows operators to also pre-stage images for testing.
 
 Additional Resources
 --------------------
