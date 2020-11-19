@@ -396,6 +396,10 @@ func registerContent(app *cobra.Command) {
 		RunE: func(c *cobra.Command, args []string) error {
 			src := args[0]
 			ext := path.Ext(src)
+			codecString := "json"
+			if format == "yaml" || format == "yml" {
+				codecString = "yaml"
+			}
 			switch ext {
 			case ".yaml", ".yml", ".json":
 			default:
@@ -409,7 +413,7 @@ func registerContent(app *cobra.Command) {
 			if err := api.DecodeYaml(buf, content); err != nil {
 				return fmt.Errorf("Failed to unmarshal store content: %v", err)
 			}
-			s, _ := store.Open("memory:///")
+			s, _ := store.Open("memory:///?codec=" + codecString)
 			if err := content.ToStore(s); err != nil {
 				return fmt.Errorf("Failed to open store %s: %v", src, err)
 			}
