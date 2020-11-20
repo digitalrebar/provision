@@ -1,0 +1,77 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+
+.. _Imagedeploy_requires_a_CentOS_repo:
+
+kb-00051: Image-deploy requires a CentOS repo
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. _rs_kb_00051:
+
+Knowledge Base Article: kb-00051
+--------------------------------
+
+
+Description
+-----------
+
+When using Image-deploy inside of sledgehammer, the system requires at least one repo
+to function.  Most of the time this works fine or if the quickstart guide is followed.
+
+If neither the centos install isos are downloaded nor the package-repositories parameter
+points to valid repositories, then the install of the image-deploy tools will fail.
+
+
+Solution
+--------
+
+Add the centos-8-install or centos-7-install isos to the system.
+
+To do this:
+
+  ::
+
+    drpcli bootenvs uploadiso centos-7-install
+
+    or
+
+    drpcli bootenvs uploadiso centos-8-install
+
+This choice of centos-7 or centos-8 is based upon the version of sledgeahammer you are using.  Sledgehammer
+is currently centos-7 based, but will move to centos-8 by default in the next release, v4.6.0.
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+
+Versions
+========
+
+All versions.
+
+
+Keywords
+========
+
+sledgehammer, image-deploy, install failure
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00051
+    initial release:  Thu Nov 19 23:02:47 CST 2020
+    updated release:  Thu Nov 19 23:02:47 CST 2020
+
