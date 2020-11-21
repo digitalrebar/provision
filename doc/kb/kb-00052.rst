@@ -1,0 +1,80 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+.. index::
+  pair: Digital Rebar Provision; DHCP Models
+
+
+.. _Why_use_Digital_Rebar_integrated_DHCP:
+
+kb-00052: Why use Digital Rebar integrated DHCP?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. _rs_kb_00052:
+
+Knowledge Base Article: kb-00052
+--------------------------------
+
+
+Description
+-----------
+
+We recommend using the Digital Rebar integrated DHCP; however, some operational environments require using another DHCP service.  RackN can provide guideance about
+the required settings option and next server values for using an external DHCP server.
+
+The purpose of this article is to outline features and benefits of using the integrated DHCP server.
+
+Solution
+--------
+
+Digital Rebar DHCP is Required For
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* Secure Boot - the integrated DHCP server is required due to chain of trust requirements in a secure boot system.
+* EUFI - Digital Rebar has specialized paths that help influence EUFI booting sequences.  These paths require an integrated DHCP system.
+
+Benefits Of Digital Rebar DHCP include
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* API Driven - operators can make chnages to DHCP via API without having to change configuration files.
+* Atomic Actions - operators do not need to restart Digital Rebar for changes to take effect.
+* Integrated Registration - machines registered via the intergrated DHCP are known to Digital Rebar via MAC and IP address before they are fully discovered.
+* Lease Timing - integrated DHCP is tuned to handle IP allocation during boot and provisioning processes.
+* Protections from Lease from Exhaustion - bootstrapping systems may cycle through DHCP reservations and the integrated DHCP is designed to handle this scenario.
+* IaC Controls - the integrated DHCP can be managed using Digital Rebar content packs and IaC techniques.
+* Next Server - the integrated DHCP will automatically manage Next Server redirects to the correct interfaces and IP addresses without additional configuration
+* Specialized Options - the integrated DHCP server can handle advanced configuration options when required for specialized infrastructure such as switches or Raspberry Pi.
+
+
+Additional Information
+----------------------
+
+See `RFC 2132 <https://tools.ietf.org/html/rfc2132>`
+
+See Also
+========
+
+Please see :ref:`rs_dhcp_arch`
+
+Versions
+========
+
+Most features are available in v4+
+
+Secure Boot became available in v4.4+
+
+Keywords
+========
+
+DHCP, Secure Boot, EUFI, IPAM
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00052
+    initial release:  Thu 19 Nov 2020 08:43:27 AM CST
+

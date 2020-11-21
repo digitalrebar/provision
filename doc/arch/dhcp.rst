@@ -4,6 +4,8 @@
 .. index::
   pair: Digital Rebar Provision; DHCP Models
 
+.. _rs_dhcp_arch:
+
 DHCP Models
 ^^^^^^^^^^^
 
@@ -31,6 +33,8 @@ local subnets.  Interface objects have the following fields:
   address if you want to create a Subnet specifically for this
   interface.
 
+.. _rs_dhcp_option:
+
 DHCP Option
 -----------
 
@@ -45,6 +49,8 @@ following fields:
 - Value: A string that will be template-expanded to form a valid value
   to return as the DHCP option.  Template expansion happens in the
   context of the source options.
+
+.. _rs_dhcp_subnet:
 
 Subnet
 ------
@@ -105,6 +111,8 @@ Provision server.  Subnet objects have the following fields:
 - Options: A list of DhcpOption objects that should be returned in any
   replies to dhcp requests.
 
+.. _rs_dhcp_reservation:
+
 Reservation
 -----------
 
@@ -122,6 +130,8 @@ have the following fields:
 
 - Options: The DHCP options that should be returned when creating or
   renewing a Lease based on this Reservation.
+
+.. _rs_dhcp_lease:
 
 Lease
 -----
