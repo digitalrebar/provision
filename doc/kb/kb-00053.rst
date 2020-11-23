@@ -1,0 +1,105 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+
+.. _Updating_Sledgehammer:
+
+kb-00053: Updating Sledgehammer
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. _rs_kb_00053:
+
+Knowledge Base Article: kb-00053
+--------------------------------
+
+
+Description
+-----------
+
+Periodically, the `drp-community-content` will be updated with newer sledgehammer images.  This is
+particularly true with the v4.5.0 and v4.6.0 releases, because Sledgehammer is updating from Centos 7
+to Centos 8.  This is sometimes referred as Sledge8 or SL8.
+
+Also, sledgehammer will be updated with security fixes or other fixes that will also require an update.
+
+This leads to: How do you update sledgehammer?
+
+
+Solution
+--------
+
+There are a couple of `drpcli` commmands that can be used to help with this setup.
+
+To update the default sledgehammer iso image, you can use this command:
+
+  ::
+
+    drpcli bootenvs uploadiso sledgehammer
+
+This will get the appropriate sledgehammer image.  You can use the `-D` parameter if an external
+http proxy is needed to access the internet.
+
+Additionally, in the v4.6.0 release, profiles to choose different versions of sledgehammer are provided in the
+`drp-community-content` pack.  This will enable you to track a specific release version of sledgehammer.
+There will NOT be a profile per release, but a new profile will be added when a release adds a new sledgehammer.
+
+These profiles use the :ref:`rs_provision_bootenv_customize` system to override the default sledgehammer.  By adding
+one of these profile to the `global` profile, the system will use that sledgehammer for all systems.  Individual known
+systems can be overridden by applying the profile to the machine directly.
+
+Some examples of these profiles are:
+
+  * sledgehammer-centos8-v4.6.0 - Secure Boot capable Centos8-based sledgehammer
+  * sledgehammer-centos7-v4.6.0 - Secure Boot capable Centos7-based sledgehammer
+  * sledgehammer-centos7-v4.5.0 - Secure Boot capable Centos7-based sledgehammer (from the v4.5.0 release)
+  * sledgehammer-centos8-full-v4.6.0 - Sledgehammer with more drivers (but not Secure Boot capable)
+
+To help with iso downloading, the profile can be used to retrieve the iso with a command like this:
+
+  ::
+
+    drpcli profiles uploadiso sledgehammer-centos8-full-v4.6.0
+
+
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+  * :ref:`rs_provisioning_models`
+
+See Also
+========
+
+
+  * :ref:`rs_kb_00044`
+  * :ref:`rs_provision_bootenv_customize`
+  * https://provision.readthedocs.io/en/latest/doc/content-packages/basic-store.html#bootenv-customize
+
+
+Versions
+========
+
+  * DRP v4.6.0 or newer for sledgehammer helper profiles
+  * DRP v4.5.0 or newer for profile iso uploader
+
+
+Keywords
+========
+
+sledgehammer, update, customize, iso, download
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00053
+    initial release:  Sun Nov 22 17:48:00 CST 2020
+    updated release:  Sun Nov 22 17:48:00 CST 2020
+
