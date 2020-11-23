@@ -95,14 +95,31 @@ type RecievedEvent struct {
 	Err error
 }
 
+// ValueInList parses a list string for matches with escapes.
+//
+// \1 is the dot character.
+// \2 is the comma character.
+// \3 is the asterisk character.
+func ValueInList(val, list string) bool {
+	for _, p := range strings.Split(list, ",") {
+		p = strings.Replace(p, "\\1", ".", -1)
+		p = strings.Replace(p, "\\2", ",", -1)
+		p = strings.Replace(p, "\\3", "*", -1)
+		if strings.TrimSpace(p) == val {
+			return true
+		}
+	}
+	return false
+}
+
 func (r *RecievedEvent) matches(registration string) bool {
 	tak := strings.SplitN(registration, ".", 3)
 	if len(tak) != 3 {
 		return false
 	}
-	return (tak[0] == r.E.Type || tak[0] == "*") &&
-		(tak[1] == r.E.Action || tak[1] == "*") &&
-		(tak[2] == r.E.Key || tak[2] == "*")
+	return (tak[0] == "*" || ValueInList(r.E.Type, tak[0])) &&
+		(tak[1] == "*" || ValueInList(r.E.Action, tak[1])) &&
+		(tak[2] == "*" || ValueInList(r.E.Key, tak[2]))
 }
 
 // EventStream receives events from the digitalrebar provider.  You
