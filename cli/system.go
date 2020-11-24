@@ -3,6 +3,9 @@ package cli
 import (
 	"fmt"
 	"path"
+	"time"
+
+	"github.com/digitalrebar/provision/v4/models"
 
 	"github.com/spf13/cobra"
 )
@@ -84,6 +87,38 @@ func addSystemCommands() (res *cobra.Command) {
 		RunE: func(c *cobra.Command, args []string) error {
 			var res interface{}
 			if err := Session.Req().UrlFor("system", "consensus", "state").Do(&res); err != nil {
+				return err
+			}
+			return prettyPrint(res)
+		},
+	})
+	consensus.AddCommand(&cobra.Command{
+		Use:   "failOverSafe [timeout]",
+		Short: "Check to see if at least one non-observer passive node is caught up",
+		Args: func(c *cobra.Command, args []string) error {
+			if len(args) == 0 {
+				return nil
+			}
+			if len(args) > 1 {
+				return fmt.Errorf("Only an optional timeout argument is accepted")
+			}
+			if dur, err := models.ParseDuration(args[0], "s"); err != nil {
+				return err
+			} else if dur < 50*time.Millisecond {
+				return fmt.Errorf("Duration %s too short, try something larger", args[0])
+			} else if dur > 5*time.Second {
+				return fmt.Errorf("Duration %s too long, try something shorter", args[0])
+			} else {
+				return nil
+			}
+		},
+		RunE: func(c *cobra.Command, args []string) error {
+			var res interface{}
+			req := Session.Req().Post(nil).UrlFor("system", "consensus", "failOverSafe")
+			if len(args) == 1 {
+				req = req.Params("waitFor", args[0])
+			}
+			if err := req.Do(&res); err != nil {
 				return err
 			}
 			return prettyPrint(res)
