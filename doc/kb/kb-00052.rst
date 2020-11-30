@@ -30,14 +30,13 @@ The purpose of this article is to outline features and benefits of using the int
 Solution
 --------
 
-Digital Rebar DHCP is Required For
-==================================
+Digital Rebar DHCP is Required For:
+
 
 * Secure Boot - the integrated DHCP server is required due to chain of trust requirements in a secure boot system.
 * EUFI - Digital Rebar has specialized paths that help influence EUFI booting sequences.  These paths require an integrated DHCP system.
 
-Benefits Of Digital Rebar DHCP include
-======================================
+Benefits Of Digital Rebar DHCP include:
 
 * API Driven - operators can make chnages to DHCP via API without having to change configuration files.
 * Atomic Actions - operators do not need to restart Digital Rebar for changes to take effect.
