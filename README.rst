@@ -46,10 +46,6 @@ Community Resources from https://rebar.digital
   :target: https://travis-ci.org/digitalrebar/provision
   :alt: Build Status
 
-.. image:: https://codecov.io/gh/digitalrebar/provision/branch/v4/graph/badge.svg
-  :target: https://codecov.io/gh/digitalrebar/provision
-  :alt: codecov
-
 .. image:: https://goreportcard.com/badge/github.com/digitalrebar/provision/v4
   :target: https://goreportcard.com/report/github.com/digitalrebar/provision/v4
   :alt: Go Report Card
