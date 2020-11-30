@@ -126,6 +126,7 @@ Table of Contents
    Trademark
    doc/fun-facts
 
+
 .. _rs_license:
 
 License
