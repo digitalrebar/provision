@@ -364,7 +364,7 @@ func registerContent(app *cobra.Command) {
 				return fmt.Errorf("Failed to open store %s: %v", target, err)
 			}
 			defer os.Remove(target + ".tmp")
-			cc := &api.Client{}
+			cc := api.DisconnectedClient()
 			if err := cc.BundleContent(".", s, params); err != nil {
 				return fmt.Errorf("Failed to load: %v", err)
 			}
@@ -418,7 +418,7 @@ func registerContent(app *cobra.Command) {
 				return fmt.Errorf("Failed to open store %s: %v", src, err)
 			}
 			defer s.Close()
-			cc := &api.Client{}
+			cc := api.DisconnectedClient()
 			return cc.UnbundleContent(s, ".")
 		},
 	})

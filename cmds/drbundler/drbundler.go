@@ -63,7 +63,7 @@ func main() {
 	if dst, err := store.Open(fmt.Sprintf("file:%s.tmp?codec=%s", filename, codec)); err != nil {
 		cleanUp(filename, fmt.Sprintf("Failed to open store: %v\n", err))
 	} else {
-		client := &api.Client{}
+		client := api.DisconnectedClient()
 		if err := client.BundleContent(directory, dst, map[string]string{}); err != nil {
 			cleanUp(filename, fmt.Sprintf("Failed to load: %v\n", err))
 		}
