@@ -11,9 +11,9 @@ Virtual Media ISO Booting
 
 .. warning:: The Virtual Media ISO mount and booting method is currently a
              *Technical Preview*, as of December 2020.  This feature will be
-             released in the v4.6.0 version.  The documentation in this guide
-             may be out of sync with usage as this feature is productionized.
-             Contact RackN support for any questions.
+             available in the v4.6.0 version (as a Tech Preview).  The
+             documentation in this guide may be out of sync with usage as this
+             feature is productionized.  Contact RackN support for any questions.
 
 .. note:: This capability will be changing as new use case requirements and
           field testing is performed.  If you have any feature enhancements
@@ -42,7 +42,7 @@ Supported Platforms
 
 Due to the customized and unique design of each BMC in different manufacturers hardware platforms,
 the Virtual Media boot functions only work on limited platform types.  Here is the current list of
-support in the DDRP platform by vendor.
+support in DRP by vendor.
 
 ==========  ============  ===================================================================
 Vendor      Working?      Notes
@@ -68,22 +68,22 @@ following prerequisites are met:
   * IPMI actions configured and working via the IPMI plugin
   * ``sledgehammer-builder``: *v4.6.0-alpha00.154* or newer (**)
 
-.. note:: ``(*)`` A new version of the Sledgehammer BootEnv tar must also be updated with
+.. note:: ``(*)`` A new version of the Sledgehammer BootEnv iso/tar must also be updated with
           the DRP Community Content update.  There are enhancements in Sledgehammer to
           support this feature (eg ``drpcli bootenvs uploadiso sledgehammer``).
 
 .. note:: ``(**)`` Sledgehammer Builder is only required if you intend to create customized versions
-          of Sledgehammer for the ISO Boot, otherwise this content pack is not required.
+          of Sledgehammer for the Boot ISO image, otherwise this content pack is not required.
 
 The General Availability (GA) release v4.6.0 of all respective components should support
-this feature, however it may still be marked as a *Technical Preview* feature and not
+this capability, however it may still be marked as a *Technical Preview* feature and not
 a production supported feature.
 
 The new version of the Sledgehammer BootEnv ISO (technically it's a tarball), contains
 a new embedded tempalte ``cdboot.iso`` which is used in the dynamic generated per-machine
 custom ISO.  In addition, Sledgehammer has been modified to allow injection of Static IP
-assignments to the Sledgehammer environment, in addition to the default DHCP IP address
-assignment method.
+assignments to the Sledgehammer environment (in addition to the default DHCP IP address
+assignment method).
 
 
 The Process
@@ -98,17 +98,20 @@ method, which has extensive and broad support for a large number of systems (spe
 the UEFI boot stack pieces).
 
 To set a specific machine (or machines) to begin generating a dynamic generated boot ISO,
-the Machine must have the ``boot-virtual-iso`` set to the Boolean value *True*.
+the Machine must have the Param ``boot-virtual-iso`` set to the Boolean value *True*.
 
 This param will then cause the ``dr-provision`` service to automatically generate the ISO
 when the Machine(s) change BootEnv **in to** the Sledgehammer BootEnv.  There are several
 other Params that are used to inject custom details in to the dynamically generated ISO,
 which are described below.
 
+In addition, DRP will automatically mount the dynamically generated ISO path location on
+the BMC, and attempt to set the Next Boot directive to boot via the VirtualMedia path.
+
 The current usage path is as follows:
 
   * Set the ``boot-virtual-iso`` Param on the target machine(s)
-  * Use ``drpcli`` to verify the dynamically generated ISO is mounted to the Machine(s) BMC
+  * Use ``drpcli`` to verify the dynamically generated ISO is set to mount to the Machine(s) BMC
   * Set any supporting customization Params (eg ``network-data`` static IP addressing)
   * Set the Machine(s) BootEnv to Sledgehammer (if currently in Sledgehammer, change it to ``local``, then back to ``Sledgehammer``).
 
@@ -125,20 +128,20 @@ Enable Dynamic ISO Generation
 For any machine(s) that you will attach Virtual Media ISOs to, you must set the following
 Params:
 
-  * ``boot-virtual-iso`` set to the Boolean value *true*
+  * ``boot-virtual-iso`` to the Boolean value *true*
 
   ::
 
-    # example of setting machine 'mach-01' (a UUID can be used ) to have dynamically generated ISOs
+    # example of setting machine 'mach-01' (a UUID can be used) to have dynamically generated ISOs
     drpcli machines set Name:mach-01 param boot-virtual-iso to true
 
 Once this value is set on the machine, and all appropriate Prerequisites fulfilled (listed above),
 then the ``dr-provision`` service will dynamically generate a custom ISO when the Machine is
-changed **in to** the Sledgehammer or Local BootEnvs.
+changed **in to** the Sledgehammer BootEnv.
 
 The ISO will be built and cached at on the DRP server under the ``tftpboot`` path in a directory
 named ``dynamic_isos``.  In a typical "production" install mode, this is found at the following
-fully qualified path in a separate director for each Machine, with the Machines UUID value:
+fully qualified path in a separate directory for each Machine, with the Machines UUID value:
 
   * ``/var/lib/dr-provision/tftpboot/dynamic_isos/<MACHINE_UUID>``
 
@@ -149,15 +152,15 @@ Verify the Virtual Media ISO Mount
 For the system to boot from the Virtual Media ISO - the Baseboard Management Controller (BMC)
 must be instructed to mount the ISO.  This path is not very well standardized between the
 different manufacturers.  Currently, the Redfish protocol is the only supported method for
-mounting and the Virtual Media.  However, there is no standardized Redfish path for setting
+mounting the Virtual Media.  However, there is no standardized Redfish path for setting
 the "bootonce" via VirtualMedia to the BMC.  The IPMI plugin must be correctly configured to
 support the vendor specific capabilities to control the BMC (eg iDRAC or iLO) to support
 the reboot once to VirtualMedia.
 
-.. note:: BootEnv transitions will attempt to set the VirtualMedia mount path, and set the
-          appropriate boot once directive.
+.. note:: BootEnv transitions will automatically attempt to set the VirtualMedia mount path,
+          and set the appropriate boot once directive.
 
-To verify the media mounted path, the ``drpcli`` command line tool has been extended to support
+To verify the media mount path, the ``drpcli`` command line tool has been extended to support
 several Redfish query paths to check/set/verify/mount/unmount media on the BMCs Virtual Media
 mount point.
 
@@ -203,7 +206,7 @@ Here is an example Param stanza to define static IP assignment to a machine, as 
     }
 
 It may also be possible (but is as of yet untested), to set a VLAN tag value for environments
-using VLAN tagging with the addition of the key/value pair like ``"vlan": 1020``.
+using VLAN tagging with the addition of the key/value pair ``"vlan": 1020``.
 
 .. note:: This ``network-data`` structure can be used with the standard Sledgehammer PXE 
           in-band boot path, and should allow you to set static IP assignments for
@@ -252,6 +255,27 @@ Notes and Troubleshooting
 Here is a list of notes or debugging processes to help if there are issues with
 the VirtualMedia booting process.
 
+Restore Default In-Band Management Path
+---------------------------------------
+
+If a machine object has been modified to use the out-of-band dynamically generated
+custom ISO, it can be returned to proper in-band management by simply removing the
+``boot-virtual-iso`` Param from the machine, for example:
+
+  ::
+
+    # remove the boot-virtual-iso param from machine Named 'mach-01'
+    drpcli machines remove Name:mach-01 param boot-virtual-media
+
+In addition, the ``network-data`` param may or may not need to be removed.  If
+moving back to DHCP IP address based PXE booting, then typically this param should
+be removed.  However, the DHCP/PXE boot path process for in-band management of the
+system will still honor the settings in this param when Sledgehammer boots.
+
+If complete clean up is required, you may also want to remove the dynamically generated
+ISO images in the ``tftpboot/dynamic_isos/`` directory path.  Note that ISOs are stored
+in a sub-directory with the Machines UUID as the directory name.
+
 
 Performance Impact
 ------------------
@@ -261,8 +285,8 @@ Any command and control functions implemented directly to the Baseboard Manageme
 to 60 seconds before the command completes.
 
 Additionally, with the ``boot-virtual-iso`` set to ``true``, specific BootEnv changes force the
-``dr-provision`` service to dynamically generate a new custom ISO.  This process can be IO
-intensive, if many machines are transitioned at once.
+``dr-provision`` service to dynamically generate a new custom ISO.  This process can be CPU and I/O
+intensive, especially if many machines are transitioned at once.
 
 There is currently no sizing guidelines to for large scale infrastructure use of this feature.
 However, expect additional CPU and disk I/O impact.
@@ -291,8 +315,8 @@ clues.  For example, Dell systems with iDRAC 8 BMCs would show output like:
 VirtualMedia Mount Options
 --------------------------
 
-The new actions in the IPMI plugin support manipulating the VirtualMedia mount paths, here's
-an example of specifying an ISO to mount:
+The new actions in the IPMI plugin support manipulating the VirtualMedia mount paths, here
+are examples of different usage scenarios:
 
 **Mount ISO**
 
