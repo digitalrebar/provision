@@ -19,14 +19,16 @@ Some of these operations are in the :ref:`rs_ui`, but not all.  This will focus 
    :glob:
 
    operations/airgap
+   operations/backup
    operations/bios
    operations/contexts
    operations/drpcli
    operations/esxi-getting-started
    operations/imagedeploy
-   operations/pooling
    operations/manager
+   operations/pooling
    operations/runbooks
-   operations/backup
-   operations/security
    operations/scaling
+   operations/security
+   operations/virtualmedia-iso-booting
+   operations/vmware-sddc
