@@ -179,7 +179,7 @@ No.  The Remote CLI does not use SSH.   We don’t use SSH anywhere in the produ
 The CLI uses an HTTPS connection to the DRP API. 
 
 Can I restrict the allowed ciphers for API connections?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Yes.  DRP server v4.5.2+ can restrict clients' ciphers; however, operators need to take the addional step to restrict DRP server's ability to use ciphers with a `--min-tls-version` start-up flag.
 
@@ -307,7 +307,7 @@ The DRP service is self-contained go-binary.  All services talk internally throu
 
 
 What information is at risk from a "man-in-the-middle" (MITM) attack?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The CLI and UX both use authenticated HTTPS API calls to control the system that requires authenticated access to control the system.  We recommend using a chain of trust certificate, instead of self-signed, certificate for production systems.
 
@@ -398,7 +398,7 @@ We recommend that operators install a local copy of the RackN UX as a backup.
 
 
 What is at risk from a RackN insider threat or 3rd party website compromise?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 A compromise of RackN tracked information would potentially provide an attacker with information about the DRP version installed, it's internal name or IP address (depeending on customer configuration) and number of machines managed by each DRP endpoint.
 
@@ -421,7 +421,7 @@ Yes, see the list below or the Release :ref:`rs_cve` section.  The reporter and 
    :maxdepth: 1
    :glob:
 
-   security/*
+   ../security/*
 
 
 Is DRP protected against Top 10 OWASP?

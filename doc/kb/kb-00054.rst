@@ -1,0 +1,70 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+
+.. rs_virtualmedia_iso_boot:
+
+kb-00054: VirtualMedia ISO Boot
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. _rs_kb_00054:
+
+Knowledge Base Article: kb-00054
+--------------------------------
+
+
+Description
+-----------
+
+The default method for discovering and managing Machine lifecycle is via the in-band
+DHCP and PXE boot control path.  This method has proven to be vastly more scalable,
+require fewer resources on the provisioning host side, and is more flexible in
+regards to network topologies.
+
+However, it may be necessary from time to time to boot systems by attaching an ISO
+to the Baseboard Management Controller (BMC) via the "VirtualMedia" mechanism.  This
+knowledge base provides references to how that process works in Digital Rebar Platform (DRP).
+
+
+Solution
+--------
+
+The :ref:`rs_virtualmedia_iso_booting` contains detailed information and help on
+how this process works in the Digital Rebar Platform (DRP>.
+
+.. warning::  The VirtualMedia ISO Booting process is a *Tech Preview* feature, and
+              is subject to change over time until it is officially released.
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+:ref:`rs_virtualmedia_iso_booting`
+
+Versions
+========
+
+*Technical Preview* released in v4.6.0
+
+Keywords
+========
+
+virtualmedia, virtual media, redfish, boot, iso, out-of-band, baseboard management controller, ipmi, dell, idrac, hpe, ilo, lenovo, imm
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00054
+    initial release:  Tue Dec  1 17:01:29 PST 2020
+    updated release:  Tue Dec  1 17:01:29 PST 2020
+

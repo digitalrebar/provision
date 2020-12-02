@@ -121,12 +121,22 @@ Once the system boots from the local disk, the runner starts and
 processes the last task which has DRP set the stage to `complete`.
 The runner goes idle at that point.
 
+
+.. _rs_arch_contexts:
+
 Contexts
 --------
 
 Contexts are a new top-level object that allow dr-provision to support
 the underlying idea that tasks for a machine can run somewhere besides
 on the machine itself.
+
+You can find more information on contexts in various :ref:`rs_operations`
+documentation pages.  Here is an incomplete list of specific operations
+documentation:
+
+  * :ref:`rs_contexts`
+
 
 Empty BootEnv
 -------------
