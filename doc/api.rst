@@ -21,9 +21,9 @@ API Filters
 
 The API includes index driven filters for large deployments that can be used to pre-filter requests from the API.
 
-The list of available indexes is provided by the ``/api/v3/indexes`` and ``/api/v3/indexes/[model]`` calls.  These hashs provide a list of all keys that can be used for filters with some additional metadata.
+The list of available indexes is provided by the ``/api/v3/indexes`` and ``/api/v3/indexes/[model]`` calls.  These objects provide a list of all keys that can be used for filters with some additional metadata.
 
-To use the index, simply include one or more indexs and values on the request URI.  For example:
+To use the index, simply include one or more indexes and values on the request URI.  For example:
 
   ::
 
@@ -84,6 +84,29 @@ Since Params and Meta may contain a lot of data, the API supports the ``?slim=[P
     /api/v3/machines?slim=Params,Meta
 
 Only endpoints that offer the ``slim-objects`` feature flag (v3.9+) will accept this flag.
+
+
+Exploration with Curl
+---------------------
+
+You can also interact with the API using ``curl``.  The general pattern is:
+
+  ::
+    curl -X <method> -k -u <username>:<password> -H `Content-Type: application/json' -H 'Accept: application/json' https://<endpoint addr>:<port>/api/v3/<opject type>/<object ID>
+
+In the remainder of this section, <object type> refers to the lower case, pluralized version of the type of object.  This is `bootenvs` for boot environments, `workflows` for workflows, `machines` for machines, and so on.
+<object id> refers to the unique identifier for this object, which is generally the `Name`, `ID` or `Uuid` field of an object.  You can also use any unique index in this field, in the form of `<index name>:<value>`.
+A common one to use is `Name:machine.name` for Machine objects instead of the Uuid.
+
+
+The API follows the usual REST guidelines:
+
+* HEAD /api/v3/<object type> gets you headers containing basic information about how many of <object type> are present in the system.
+  You can use filters on this request.
+* GET /api/v3/<object type> lists all of the objects of the requested type.  The result is a JSON array.  You can use filters on this request.
+* POST /api/v3/<object type> is a request to create a new object.  The body of the payload should be valid JSON for the object type.
+* GET /api/v3/<object type>/<object id> fetches the request object.
+* HEAD /spi/v3/<object type>/<object id> tests to see if the requested object exists.
 
 .. _rs_api_notes:
 

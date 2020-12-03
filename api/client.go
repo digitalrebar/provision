@@ -34,6 +34,10 @@ import (
 	"github.com/digitalrebar/provision/v4/models"
 )
 
+var (
+	defaultLogBuf = logger.New(log.New(os.Stderr, "", 0))
+)
+
 // APIPATH is the base path for all API endpoints that digitalrebar
 // provision provides.
 const APIPATH = "/api/v3"
@@ -42,6 +46,7 @@ const APIPATH = "/api/v3"
 // and routines for handling some of the boilerplate CRUD operations
 // against digitalrebar provision.
 type Client struct {
+	logger.Logger
 	*http.Client
 	// The amount of time to allow any single round trip by default.
 	// Defaults to no timeout.  This will be overridden by a Client.Req().Context()
@@ -122,7 +127,6 @@ func (c *Client) File(pathParts ...string) (io.ReadCloser, error) {
 		return nil, fmt.Errorf("Static file service not running")
 	}
 	url := fmt.Sprintf("http://%s:%d/%s", info.Address, info.FilePort, path.Join(pathParts...))
-	log.Printf("url: %s", url)
 	resp, err := http.Get(url)
 	if err != nil {
 		return nil, err
@@ -1049,11 +1053,11 @@ func (c *Client) MakeProxy(socketPath string) error {
 	weAreTheProxy = true
 	go func() {
 		for {
-			log.Printf("Proxy error: %v", server.Serve(listener))
+			c.Errorf("Proxy error: %v", server.Serve(listener))
 			if fi, err := os.Stat(socketPath); err != nil || fi.Mode()&os.ModeSocket == 0 {
 				localProxyMux.Lock()
 				defer localProxyMux.Unlock()
-				log.Printf("Proxy socket vanished!")
+				c.Errorf("Proxy socket vanished!")
 				os.Unsetenv(("RS_LOCAL_PROXY"))
 				os.Remove(socketPath)
 				c.Client.Transport = trans
@@ -1112,20 +1116,23 @@ func transport(useproxy bool) *http.Transport {
 	return tr
 }
 
+func DisconnectedClient() *Client {
+	return &Client{Logger: defaultLogBuf.Log("").Fork()}
+}
+
 // TokenSessionProxy creates a new api.Client that will use the passed-in Token for authentication.
 // It should be used whenever the API is not acting on behalf of a user.
 // Allows for choice on session creation or not.
 func TokenSessionProxy(endpoint, token string, proxy bool) (*Client, error) {
 	tr := transport(proxy)
-	c := &Client{
-		mux:        &sync.Mutex{},
-		endpoint:   endpoint,
-		Client:     &http.Client{Transport: tr},
-		closer:     make(chan struct{}, 0),
-		token:      &models.UserToken{Token: token},
-		iMux:       &sync.Mutex{},
-		neverProxy: !proxy,
-	}
+	c := DisconnectedClient()
+	c.mux = &sync.Mutex{}
+	c.endpoint = endpoint
+	c.Client = &http.Client{Transport: tr}
+	c.closer = make(chan struct{}, 0)
+	c.token = &models.UserToken{Token: token}
+	c.iMux = &sync.Mutex{}
+	c.neverProxy = !proxy
 	go func() {
 		<-c.closer
 		tr.CloseIdleConnections()
@@ -1144,16 +1151,15 @@ func TokenSession(endpoint, token string) (*Client, error) {
 // context.Context to allow for faster connect timeouts.
 func UserSessionTokenProxyContext(ctx context.Context, endpoint, username, password string, usetoken, useproxy bool) (*Client, error) {
 	tr := transport(useproxy)
-	c := &Client{
-		mux:        &sync.Mutex{},
-		endpoint:   endpoint,
-		username:   username,
-		password:   password,
-		Client:     &http.Client{Transport: tr},
-		closer:     make(chan struct{}, 0),
-		iMux:       &sync.Mutex{},
-		neverProxy: !useproxy,
-	}
+	c := DisconnectedClient()
+	c.mux = &sync.Mutex{}
+	c.endpoint = endpoint
+	c.username = username
+	c.password = password
+	c.Client = &http.Client{Transport: tr}
+	c.closer = make(chan struct{}, 0)
+	c.iMux = &sync.Mutex{}
+	c.neverProxy = !useproxy
 	basicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
 	token := &models.UserToken{}
 	if err := c.Req().
@@ -1180,7 +1186,7 @@ func UserSessionTokenProxyContext(ctx context.Context, endpoint, username, passw
 							UrlFor("users", c.username, "token").
 							Headers("Authorization", "Basic "+basicAuth).
 							Do(&token); err != nil {
-							log.Fatalf("Error reauthing token, aborting: %v", err)
+							c.Fatalf("Error reauthing token, aborting: %v", err)
 						}
 					}
 					c.mux.Lock()
@@ -1231,4 +1237,8 @@ func UserSessionTokenContext(ctx context.Context, endpoint, username, password s
 // UserSessionToken allows for the token conversion turned off.
 func UserSessionToken(endpoint, username, password string, usetoken bool) (*Client, error) {
 	return UserSessionTokenProxy(endpoint, username, password, usetoken, true)
+}
+
+func (c *Client) SetLogger(l logger.Logger) {
+	c.Logger = l
 }

@@ -12,6 +12,8 @@ import (
 	"sync/atomic"
 	"time"
 
+	"github.com/digitalrebar/logger"
+
 	"github.com/VictorLowther/jsonpatch2/utils"
 	"github.com/digitalrebar/provision/v4/models"
 	"github.com/gorilla/websocket"
@@ -125,6 +127,8 @@ func (r *RecievedEvent) matches(registration string) bool {
 // EventStream receives events from the digitalrebar provider.  You
 // can read received events by reading from its Events channel.
 type EventStream struct {
+	logger.Logger
+	src           string
 	client        *Client
 	handleId      int64
 	conn          *websocket.Conn
@@ -168,7 +172,7 @@ func (es *EventStream) processEvents(running chan struct{}) {
 			select {
 			case toSend[i] <- evt:
 			default:
-				fmt.Printf("Failed to send an event\n")
+				es.Errorf("Failed to send an event")
 			}
 		}
 		es.mux.Unlock()
@@ -182,6 +186,7 @@ func (c *Client) Events() (*EventStream, error) {
 		return nil, err
 	}
 	res := &EventStream{
+		Logger:        c.Logger.SetPrincipal("events"),
 		client:        c,
 		conn:          conn,
 		subscriptions: map[string][]int64{},
