@@ -7,12 +7,10 @@ import (
 	"path"
 )
 
-/*
- * CatalogItem tracks a versioned thing in the RackN system
- */
-
 // CatalogItem structure that handles RawModel instead of dealing with
 // RawModel which is how DRP is storing it.
+//
+// swagger:model
 type CatalogItem struct {
 	Validation
 	Access
@@ -28,7 +26,9 @@ type CatalogItem struct {
 
 	Owned
 
-	Id   string
+	// Id is the unique ID for this catalog item.
+	Id string
+	// Type is the type of catalog item this is.
 	Type string
 
 	Name          string

@@ -50,20 +50,43 @@ type ContentMetaData struct {
 	Prerequisites string
 
 	// New descriptor fields for catalog.  These are used by the UX.
-	Color       string
-	Icon        string
-	Author      string
+
+	// Color is the color the Icon should show up as in the UX.  Color names
+	// must be one of the ones available from https://react.semantic-ui.com/elements/button/#types-basic-shorthand
+	Color string
+	// Icon is the icon that should be used to represent this content bundle.
+	// We use icons from https://react.semantic-ui.com/elements/icon/
+	Icon string
+	// Author should contain the name of the author along with their email address.
+	Author string
+	// DisplayName is the froiendly name the UX will use by default.
 	DisplayName string
-	License     string
-	Copyright   string
-	CodeSource  string
-	Order       string
-	Tags        string // Comma separated list
-	DocUrl      string
+	// License should be the name of the license that governs the terms the content is made available under.
+	License string
+	// Copyright is the copyright terms for this content.
+	Copyright string
+	// CodeSource should be a URL to the repository that this content was built from, if applicable.
+	CodeSource string
+	// Order gives a hint about the relaitve importance of this content when the UX is rendering
+	// it.  Deprecated, can be left blank.
+	Order string
+	// Tags is used in the UX to categorize content bundles according to various criteria.  It should
+	// be a comma-separated list of single words.
+	Tags string
+	// DocUrl should contain a link to external documentation for this content, if available.
+	DocUrl string
 
 	// Informational Fields
-	Type         string
-	Writable     bool
+
+	// Type contains what type of content bundle this is.  It is read-only, and cannot be changed voa the API.
+	Type string
+	// Writable controls wheter objects provided by this content can be modified independently via the API.
+	// This will be false for everything but the BackingStore.  It is read-only, and cannot be changed via
+	// the API.
+	Writable bool
+	// Overwritable controls whether objects provided by this content store can be overridden by identically identified
+	// objects from another content bundle.  This will be false for everything but the BasicStore.
+	// This field is read-only, and cannot be changed via the API.
 	Overwritable bool
 }
 
@@ -94,6 +117,9 @@ type Content struct {
 		machines     map[string]*models.Machine
 		leases       map[string]*models.Lease
 	*/
+
+	// Sections is a nested map of object types to object unique identifiers to the objects
+	// that are provided by this content bundle.
 	Sections Sections `json:"sections"`
 }
 
@@ -290,6 +316,10 @@ func (c *Content) GetDescription() string {
 	return c.Meta.Description
 }
 
+// ContentSummary is a summary view of a content bundle, consisting of the
+// content metadata, a count of each type of object the content bundle provides,
+// and any warnings that were recorded when attempting to load the content bundle.
+//
 // swagger:model
 type ContentSummary struct {
 	Meta     ContentMetaData `json:"meta"`
