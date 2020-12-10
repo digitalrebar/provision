@@ -53,6 +53,8 @@ SEE ALSO
    Create a new reservation with the passed-in JSON or string key
 -  `drpcli reservations destroy <drpcli_reservations_destroy.html>`__ -
    Destroy reservation by id
+-  `drpcli reservations etag <drpcli_reservations_etag.html>`__ - Get
+   the etag for a reservations by id
 -  `drpcli reservations exists <drpcli_reservations_exists.html>`__ -
    See if a reservations exists by id
 -  `drpcli reservations indexes <drpcli_reservations_indexes.html>`__ -

@@ -49,6 +49,8 @@ SEE ALSO
    Create a new catalog_item with the passed-in JSON or string key
 -  `drpcli catalog_items destroy <drpcli_catalog_items_destroy.html>`__
    - Destroy catalog_item by id
+-  `drpcli catalog_items etag <drpcli_catalog_items_etag.html>`__ - Get
+   the etag for a catalog_items by id
 -  `drpcli catalog_items exists <drpcli_catalog_items_exists.html>`__ -
    See if a catalog_items exists by id
 -  `drpcli catalog_items indexes <drpcli_catalog_items_indexes.html>`__

@@ -65,6 +65,8 @@ SEE ALSO
    Delete all jobs associated with machine
 -  `drpcli machines destroy <drpcli_machines_destroy.html>`__ - Destroy
    machine by id
+-  `drpcli machines etag <drpcli_machines_etag.html>`__ - Get the etag
+   for a machines by id
 -  `drpcli machines exists <drpcli_machines_exists.html>`__ - See if a
    machines exists by id
 -  `drpcli machines get <drpcli_machines_get.html>`__ - Get a parameter
@@ -111,6 +113,8 @@ SEE ALSO
    manipulation for machines
 -  `drpcli machines update <drpcli_machines_update.html>`__ - Unsafely
    update machine by id with the passed-in JSON
+-  `drpcli machines uploadiso <drpcli_machines_uploadiso.html>`__ - This
+   will attempt to upload the ISO from the specified ISO URL.
 -  `drpcli machines wait <drpcli_machines_wait.html>`__ - Wait for a
    machine’s field to become a value within a number of seconds
 -  `drpcli machines whoami <drpcli_machines_whoami.html>`__ - Figure out

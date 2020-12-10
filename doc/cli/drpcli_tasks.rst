@@ -52,6 +52,8 @@ SEE ALSO
    task with the passed-in JSON or string key
 -  `drpcli tasks destroy <drpcli_tasks_destroy.html>`__ - Destroy task
    by id
+-  `drpcli tasks etag <drpcli_tasks_etag.html>`__ - Get the etag for a
+   tasks by id
 -  `drpcli tasks exists <drpcli_tasks_exists.html>`__ - See if a tasks
    exists by id
 -  `drpcli tasks indexes <drpcli_tasks_indexes.html>`__ - Get indexes

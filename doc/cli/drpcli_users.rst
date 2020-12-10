@@ -52,6 +52,8 @@ SEE ALSO
    user with the passed-in JSON or string key
 -  `drpcli users destroy <drpcli_users_destroy.html>`__ - Destroy user
    by id
+-  `drpcli users etag <drpcli_users_etag.html>`__ - Get the etag for a
+   users by id
 -  `drpcli users exists <drpcli_users_exists.html>`__ - See if a users
    exists by id
 -  `drpcli users indexes <drpcli_users_indexes.html>`__ - Get indexes

@@ -55,6 +55,8 @@ SEE ALSO
    new extended with the passed-in JSON or string key
 -  `drpcli extended destroy <drpcli_extended_destroy.html>`__ - Destroy
    extended by id
+-  `drpcli extended etag <drpcli_extended_etag.html>`__ - Get the etag
+   for a by id
 -  `drpcli extended exists <drpcli_extended_exists.html>`__ - See if a
    exists by id
 -  `drpcli extended get <drpcli_extended_get.html>`__ - Get a parameter
@@ -76,5 +78,7 @@ SEE ALSO
    by id
 -  `drpcli extended update <drpcli_extended_update.html>`__ - Unsafely
    update extended by id with the passed-in JSON
+-  `drpcli extended uploadiso <drpcli_extended_uploadiso.html>`__ - This
+   will attempt to upload the ISO from the specified ISO URL.
 -  `drpcli extended wait <drpcli_extended_wait.html>`__ - Wait for a
    extended’s field to become a value within a number of seconds

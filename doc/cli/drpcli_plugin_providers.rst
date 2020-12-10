@@ -50,6 +50,11 @@ SEE ALSO
    destroy <drpcli_plugin_providers_destroy.html>`__ - Destroy
    plugin_provider by id
 -  `drpcli plugin_providers
+   download <drpcli_plugin_providers_download.html>`__ - Download the
+   plugin_provider named [item] to [dest]
+-  `drpcli plugin_providers etag <drpcli_plugin_providers_etag.html>`__
+   - Get the etag for a plugin_providers by id
+-  `drpcli plugin_providers
    exists <drpcli_plugin_providers_exists.html>`__ - See if a
    plugin_providers exists by id
 -  `drpcli plugin_providers

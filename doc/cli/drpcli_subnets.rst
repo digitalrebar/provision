@@ -53,6 +53,8 @@ SEE ALSO
    subnet with the passed-in JSON or string key
 -  `drpcli subnets destroy <drpcli_subnets_destroy.html>`__ - Destroy
    subnet by id
+-  `drpcli subnets etag <drpcli_subnets_etag.html>`__ - Get the etag for
+   a subnets by id
 -  `drpcli subnets exists <drpcli_subnets_exists.html>`__ - See if a
    subnets exists by id
 -  `drpcli subnets get <drpcli_subnets_get.html>`__ - Get dhcpOption

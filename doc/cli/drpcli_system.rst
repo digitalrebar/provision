@@ -47,7 +47,13 @@ SEE ALSO
    action for this system
 -  `drpcli system actions <drpcli_system_actions.html>`__ - Display
    actions for this system
+-  `drpcli system active <drpcli_system_active.html>`__ - Switch DRP to
+   HA Active State
+-  `drpcli system passive <drpcli_system_passive.html>`__ - Switch DRP
+   to HA Passive State
 -  `drpcli system runaction <drpcli_system_runaction.html>`__ - Run
    action on object from plugin
+-  `drpcli system signurl <drpcli_system_signurl.html>`__ - Generate a
+   RackN Signed URL for download
 -  `drpcli system upgrade <drpcli_system_upgrade.html>`__ - Upgrade DRP
    with the provided file

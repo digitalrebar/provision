@@ -53,6 +53,8 @@ SEE ALSO
    new bootenv with the passed-in JSON or string key
 -  `drpcli bootenvs destroy <drpcli_bootenvs_destroy.html>`__ - Destroy
    bootenv by id
+-  `drpcli bootenvs etag <drpcli_bootenvs_etag.html>`__ - Get the etag
+   for a bootenvs by id
 -  `drpcli bootenvs exists <drpcli_bootenvs_exists.html>`__ - See if a
    bootenvs exists by id
 -  `drpcli bootenvs fromAppleNBI <drpcli_bootenvs_fromAppleNBI.html>`__

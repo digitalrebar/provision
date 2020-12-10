@@ -60,6 +60,8 @@ SEE ALSO
    stage with the passed-in JSON or string key
 -  `drpcli stages destroy <drpcli_stages_destroy.html>`__ - Destroy
    stage by id
+-  `drpcli stages etag <drpcli_stages_etag.html>`__ - Get the etag for a
+   stages by id
 -  `drpcli stages exists <drpcli_stages_exists.html>`__ - See if a
    stages exists by id
 -  `drpcli stages get <drpcli_stages_get.html>`__ - Get a parameter from
@@ -85,5 +87,7 @@ SEE ALSO
    stages by id
 -  `drpcli stages update <drpcli_stages_update.html>`__ - Unsafely
    update stage by id with the passed-in JSON
+-  `drpcli stages uploadiso <drpcli_stages_uploadiso.html>`__ - This
+   will attempt to upload the ISO from the specified ISO URL.
 -  `drpcli stages wait <drpcli_stages_wait.html>`__ - Wait for a stage’s
    field to become a value within a number of seconds

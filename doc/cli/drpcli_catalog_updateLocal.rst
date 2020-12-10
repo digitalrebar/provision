@@ -17,7 +17,8 @@ Options
 
 ::
 
-     -h, --help   help for updateLocal
+     -h, --help             help for updateLocal
+         --version string   Minimum version of the items
 
 Options inherited from parent commands
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

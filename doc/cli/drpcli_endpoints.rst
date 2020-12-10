@@ -55,6 +55,8 @@ SEE ALSO
    new endpoint with the passed-in JSON or string key
 -  `drpcli endpoints destroy <drpcli_endpoints_destroy.html>`__ -
    Destroy endpoint by id
+-  `drpcli endpoints etag <drpcli_endpoints_etag.html>`__ - Get the etag
+   for a endpoints by id
 -  `drpcli endpoints exists <drpcli_endpoints_exists.html>`__ - See if a
    endpoints exists by id
 -  `drpcli endpoints get <drpcli_endpoints_get.html>`__ - Get a
@@ -77,5 +79,7 @@ SEE ALSO
    single endpoints by id
 -  `drpcli endpoints update <drpcli_endpoints_update.html>`__ - Unsafely
    update endpoint by id with the passed-in JSON
+-  `drpcli endpoints uploadiso <drpcli_endpoints_uploadiso.html>`__ -
+   This will attempt to upload the ISO from the specified ISO URL.
 -  `drpcli endpoints wait <drpcli_endpoints_wait.html>`__ - Wait for a
    endpoint’s field to become a value within a number of seconds
