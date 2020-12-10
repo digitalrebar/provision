@@ -55,6 +55,8 @@ SEE ALSO
    plugin with the passed-in JSON or string key
 -  `drpcli plugins destroy <drpcli_plugins_destroy.html>`__ - Destroy
    plugin by id
+-  `drpcli plugins etag <drpcli_plugins_etag.html>`__ - Get the etag for
+   a plugins by id
 -  `drpcli plugins exists <drpcli_plugins_exists.html>`__ - See if a
    plugins exists by id
 -  `drpcli plugins get <drpcli_plugins_get.html>`__ - Get a parameter
@@ -76,5 +78,7 @@ SEE ALSO
    plugins by id
 -  `drpcli plugins update <drpcli_plugins_update.html>`__ - Unsafely
    update plugin by id with the passed-in JSON
+-  `drpcli plugins uploadiso <drpcli_plugins_uploadiso.html>`__ - This
+   will attempt to upload the ISO from the specified ISO URL.
 -  `drpcli plugins wait <drpcli_plugins_wait.html>`__ - Wait for a
    plugin’s field to become a value within a number of seconds

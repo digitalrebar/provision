@@ -53,6 +53,8 @@ SEE ALSO
    Create a new version_set with the passed-in JSON or string key
 -  `drpcli version_sets destroy <drpcli_version_sets_destroy.html>`__ -
    Destroy version_set by id
+-  `drpcli version_sets etag <drpcli_version_sets_etag.html>`__ - Get
+   the etag for a version_sets by id
 -  `drpcli version_sets exists <drpcli_version_sets_exists.html>`__ -
    See if a version_sets exists by id
 -  `drpcli version_sets indexes <drpcli_version_sets_indexes.html>`__ -

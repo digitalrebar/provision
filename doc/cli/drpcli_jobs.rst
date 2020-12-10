@@ -50,6 +50,8 @@ SEE ALSO
    with the passed-in JSON or string key
 -  `drpcli jobs destroy <drpcli_jobs_destroy.html>`__ - Destroy job by
    id
+-  `drpcli jobs etag <drpcli_jobs_etag.html>`__ - Get the etag for a
+   jobs by id
 -  `drpcli jobs exists <drpcli_jobs_exists.html>`__ - See if a jobs
    exists by id
 -  `drpcli jobs indexes <drpcli_jobs_indexes.html>`__ - Get indexes for

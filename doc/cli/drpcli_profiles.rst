@@ -57,6 +57,8 @@ SEE ALSO
    new profile with the passed-in JSON or string key
 -  `drpcli profiles destroy <drpcli_profiles_destroy.html>`__ - Destroy
    profile by id
+-  `drpcli profiles etag <drpcli_profiles_etag.html>`__ - Get the etag
+   for a profiles by id
 -  `drpcli profiles exists <drpcli_profiles_exists.html>`__ - See if a
    profiles exists by id
 -  `drpcli profiles get <drpcli_profiles_get.html>`__ - Get a parameter
@@ -82,5 +84,7 @@ SEE ALSO
    profiles by id
 -  `drpcli profiles update <drpcli_profiles_update.html>`__ - Unsafely
    update profile by id with the passed-in JSON
+-  `drpcli profiles uploadiso <drpcli_profiles_uploadiso.html>`__ - This
+   will attempt to upload the ISO from the specified ISO URL.
 -  `drpcli profiles wait <drpcli_profiles_wait.html>`__ - Wait for a
    profile’s field to become a value within a number of seconds

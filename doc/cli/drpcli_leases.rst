@@ -50,6 +50,8 @@ SEE ALSO
 -  `drpcli leases count <drpcli_leases_count.html>`__ - Count all leases
 -  `drpcli leases destroy <drpcli_leases_destroy.html>`__ - Destroy
    lease by id
+-  `drpcli leases etag <drpcli_leases_etag.html>`__ - Get the etag for a
+   leases by id
 -  `drpcli leases exists <drpcli_leases_exists.html>`__ - See if a
    leases exists by id
 -  `drpcli leases indexes <drpcli_leases_indexes.html>`__ - Get indexes

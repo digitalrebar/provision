@@ -49,6 +49,8 @@ SEE ALSO
    tenant with the passed-in JSON or string key
 -  `drpcli tenants destroy <drpcli_tenants_destroy.html>`__ - Destroy
    tenant by id
+-  `drpcli tenants etag <drpcli_tenants_etag.html>`__ - Get the etag for
+   a tenants by id
 -  `drpcli tenants exists <drpcli_tenants_exists.html>`__ - See if a
    tenants exists by id
 -  `drpcli tenants indexes <drpcli_tenants_indexes.html>`__ - Get

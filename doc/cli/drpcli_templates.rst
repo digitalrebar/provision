@@ -53,6 +53,8 @@ SEE ALSO
    new template with the passed-in JSON or string key
 -  `drpcli templates destroy <drpcli_templates_destroy.html>`__ -
    Destroy template by id
+-  `drpcli templates etag <drpcli_templates_etag.html>`__ - Get the etag
+   for a templates by id
 -  `drpcli templates exists <drpcli_templates_exists.html>`__ - See if a
    templates exists by id
 -  `drpcli templates indexes <drpcli_templates_indexes.html>`__ - Get

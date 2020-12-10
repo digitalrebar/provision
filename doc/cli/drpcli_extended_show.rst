@@ -19,9 +19,11 @@ Options
 ::
 
          --decode          Should decode any secure params.
+         --etag string     etag to use for waiting.
      -h, --help            help for show
          --params string   Should return only the parameters specified as a comma-separated list of parameter names.
          --slim string     Should elide certain fields.  Can be 'Params', 'Meta', or a comma-separated list of both.
+         --wait string     The time to wait for an etag change. This is a time string (default units seconds).  Maximum 10m
 
 Options inherited from parent commands
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -22,6 +22,8 @@ from a running dr-provision server, provided it has the /api/v3/debug or
 
    heap: Memory tracing information for all live data in memory. heap is always point-in-time data.
 
+   heapdump: All live objects in the system.  Use only as directed by support.
+
    allocs: Memory tracing of all memory that has been allocated since the start of the program
            This includes memory that has been garbage-collected.  alloc is always point-in-time data.
 

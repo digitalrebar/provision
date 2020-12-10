@@ -54,6 +54,8 @@ SEE ALSO
    pool with the passed-in JSON or string key
 -  `drpcli pools destroy <drpcli_pools_destroy.html>`__ - Destroy pool
    by id
+-  `drpcli pools etag <drpcli_pools_etag.html>`__ - Get the etag for a
+   pools by id
 -  `drpcli pools exists <drpcli_pools_exists.html>`__ - See if a pools
    exists by id
 -  `drpcli pools indexes <drpcli_pools_indexes.html>`__ - Get indexes

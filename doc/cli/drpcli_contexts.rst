@@ -49,6 +49,8 @@ SEE ALSO
    new context with the passed-in JSON or string key
 -  `drpcli contexts destroy <drpcli_contexts_destroy.html>`__ - Destroy
    context by id
+-  `drpcli contexts etag <drpcli_contexts_etag.html>`__ - Get the etag
+   for a contexts by id
 -  `drpcli contexts exists <drpcli_contexts_exists.html>`__ - See if a
    contexts exists by id
 -  `drpcli contexts indexes <drpcli_contexts_indexes.html>`__ - Get

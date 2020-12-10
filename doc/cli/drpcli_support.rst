@@ -45,3 +45,6 @@ SEE ALSO
    DigitalRebar Provision API
 -  `drpcli support bundle <drpcli_support_bundle.html>`__ - Create a
    support bundle for the RackN engineering team.
+-  `drpcli support
+   machine-bundle <drpcli_support_machine-bundle.html>`__ - Create a
+   support bundle for a given machine for the RackN engineering team.

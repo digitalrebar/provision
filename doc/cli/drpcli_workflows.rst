@@ -53,6 +53,8 @@ SEE ALSO
    new workflow with the passed-in JSON or string key
 -  `drpcli workflows destroy <drpcli_workflows_destroy.html>`__ -
    Destroy workflow by id
+-  `drpcli workflows etag <drpcli_workflows_etag.html>`__ - Get the etag
+   for a workflows by id
 -  `drpcli workflows exists <drpcli_workflows_exists.html>`__ - See if a
    workflows exists by id
 -  `drpcli workflows indexes <drpcli_workflows_indexes.html>`__ - Get

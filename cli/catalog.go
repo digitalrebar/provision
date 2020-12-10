@@ -345,6 +345,7 @@ and wind up in a file with the same name as the item + the default file extensio
 	})
 	cmd.AddCommand(itemCmd)
 
+	minVersion := ""
 	updateCmd := &cobra.Command{
 		Use:   "updateLocal",
 		Short: "Update the local catalog from the upstream catalog",
@@ -363,9 +364,22 @@ and wind up in a file with the same name as the item + the default file extensio
 			srcItems := itemsFromCatalog(srcCatalog, "")
 			localItems := itemsFromCatalog(localCatalog, "")
 
+			var mv *semver.Version
+			if minVersion != "" {
+				var verr error
+				mv, verr = semver.NewVersion(minVersion)
+				if verr != nil {
+					return fmt.Errorf("Invalid version: %s, %v", minVersion, verr)
+				}
+			}
+
 			for k, v := range srcItems {
 				// Only get things that aren't stable
 				if strings.HasSuffix(k, "-stable") {
+					continue
+				}
+
+				if o, oerr := semver.NewVersion(v.ActualVersion); oerr != nil || mv.Compare(o) > 0 {
 					continue
 				}
 
@@ -401,6 +415,7 @@ and wind up in a file with the same name as the item + the default file extensio
 			return nil
 		},
 	}
+	updateCmd.PersistentFlags().StringVar(&minVersion, "version", "", "Minimum version of the items")
 	cmd.AddCommand(updateCmd)
 
 	// Start of create stuff

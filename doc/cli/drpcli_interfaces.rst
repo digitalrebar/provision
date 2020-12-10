@@ -45,6 +45,8 @@ SEE ALSO
    DigitalRebar Provision API
 -  `drpcli interfaces count <drpcli_interfaces_count.html>`__ - Count
    all interfaces
+-  `drpcli interfaces etag <drpcli_interfaces_etag.html>`__ - Get the
+   etag for a interfaces by id
 -  `drpcli interfaces exists <drpcli_interfaces_exists.html>`__ - See if
    a interfaces exists by id
 -  `drpcli interfaces indexes <drpcli_interfaces_indexes.html>`__ - Get

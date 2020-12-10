@@ -48,6 +48,8 @@ SEE ALSO
    param with the passed-in JSON or string key
 -  `drpcli params destroy <drpcli_params_destroy.html>`__ - Destroy
    param by id
+-  `drpcli params etag <drpcli_params_etag.html>`__ - Get the etag for a
+   params by id
 -  `drpcli params exists <drpcli_params_exists.html>`__ - See if a
    params exists by id
 -  `drpcli params indexes <drpcli_params_indexes.html>`__ - Get indexes

@@ -48,6 +48,8 @@ SEE ALSO
    role with the passed-in JSON or string key
 -  `drpcli roles destroy <drpcli_roles_destroy.html>`__ - Destroy role
    by id
+-  `drpcli roles etag <drpcli_roles_etag.html>`__ - Get the etag for a
+   roles by id
 -  `drpcli roles exists <drpcli_roles_exists.html>`__ - See if a roles
    exists by id
 -  `drpcli roles indexes <drpcli_roles_indexes.html>`__ - Get indexes
