@@ -248,7 +248,7 @@ func InitApp(use, short, version string, def *models.PluginProvider, pc PluginCo
 				defaultToken = tk
 			}
 			if pv, ok := pc.(PluginValidator); ok && defaultToken != "catalog" {
-				session, err2 := buildSession()
+				session, err2 := buildSession(thelog)
 				if err2 != nil {
 					return err2
 				}
@@ -377,7 +377,7 @@ func stopHandler(w http.ResponseWriter, r *http.Request, ps PluginStop) {
 	os.Exit(0)
 }
 
-func buildSession() (*api.Client, error) {
+func buildSession(l logger.Logger) (*api.Client, error) {
 	defaultEndpoint := "https://127.0.0.1:8092"
 	if ep := os.Getenv("RS_ENDPOINT"); ep != "" {
 		defaultEndpoint = ep
@@ -394,7 +394,7 @@ func buildSession() (*api.Client, error) {
 	} else {
 		err2 = fmt.Errorf("Must have a token specified")
 	}
-
+	session.SetLogger(l.Fork().SetPrincipal("client"))
 	return session, err2
 }
 
@@ -406,7 +406,7 @@ func configHandler(w http.ResponseWriter, r *http.Request, def *models.PluginPro
 	l := w.(logger.Logger)
 
 	l.Infof("Setting API session\n")
-	session, err2 := buildSession()
+	session, err2 := buildSession(l)
 	if err2 != nil {
 		err := &models.Error{Code: 400, Model: "plugin", Key: "unknown", Type: "plugin", Messages: []string{}}
 		err.AddError(err2)
@@ -444,7 +444,7 @@ func configHandler(w http.ResponseWriter, r *http.Request, def *models.PluginPro
 
 	if hasPSE && !hasPublishFunct {
 		err := &models.Error{Code: 400, Model: "plugin", Key: "unknown", Type: "plugin", Messages: []string{}}
-		err.Errorf("Plugin can has an EventSelector, but no Publish function: %s", def.Name)
+		err.Errorf("Plugin has an EventSelector, but no Publish function: %s", def.Name)
 		mux.JsonResponse(w, err.Code, err)
 		return
 	}

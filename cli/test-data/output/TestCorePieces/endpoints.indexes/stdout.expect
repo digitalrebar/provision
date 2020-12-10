@@ -1,4 +1,16 @@
 {
+  "Apply": {
+    "Regex": false,
+    "Type": "boolean",
+    "Unique": false,
+    "Unordered": true
+  },
+  "Arch": {
+    "Regex": true,
+    "Type": "string",
+    "Unique": false,
+    "Unordered": false
+  },
   "Available": {
     "Regex": false,
     "Type": "boolean",
@@ -6,6 +18,18 @@
     "Unordered": true
   },
   "Bundle": {
+    "Regex": true,
+    "Type": "string",
+    "Unique": false,
+    "Unordered": false
+  },
+  "DRPUXVersion": {
+    "Regex": true,
+    "Type": "string",
+    "Unique": false,
+    "Unordered": false
+  },
+  "DRPVersion": {
     "Regex": true,
     "Type": "string",
     "Unique": false,
@@ -39,6 +63,12 @@
     "Regex": true,
     "Type": "string",
     "Unique": true,
+    "Unordered": false
+  },
+  "Os": {
+    "Regex": true,
+    "Type": "string",
+    "Unique": false,
     "Unordered": false
   },
   "Params": {
