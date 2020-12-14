@@ -237,38 +237,46 @@ func (r *runner) perform(action *models.JobAction, taskDir string) error {
 	if sane {
 		switch code {
 		case 0:
+			r.failed = false
 		case 16:
+			r.failed = false
 			r.stop = true
 		case 32:
+			r.failed = false
 			r.poweroff = true
 		case 64:
+			r.failed = false
 			r.reboot = true
 		case 128:
+			r.failed = false
 			r.incomplete = true
 		case 144:
+			r.failed = false
 			r.stop = true
 			r.incomplete = true
 		case 160:
+			r.failed = false
 			r.incomplete = true
 			r.poweroff = true
 		case 192:
+			r.failed = false
 			r.incomplete = true
 			r.reboot = true
-		default:
-			r.failed = true
 		}
 	} else {
 		switch code {
 		case 0:
+			r.failed = false
 		case 1:
+			r.failed = false
 			r.reboot = true
 		case 2:
+			r.failed = false
 			r.incomplete = true
 		case 3:
+			r.failed = false
 			r.incomplete = true
 			r.reboot = true
-		default:
-			r.failed = true
 		}
 	}
 	return nil
@@ -339,7 +347,7 @@ func (r *runner) run() error {
 		{Op: "test", Path: "/State", Value: r.j.State},
 		{Op: "replace", Path: "/State", Value: "running"},
 	}
-	finalState := "incomplete"
+	finalState := "failed"
 	taskDir, err := ioutil.TempDir(r.agentDir, r.j.Task+"-")
 	if err != nil {
 		r.log("Failed to create local tmpdir: %v", err)
@@ -361,6 +369,9 @@ func (r *runner) run() error {
 			}
 		}
 		exitState := "complete"
+		if r.incomplete {
+			finalState = "incomplete"
+		}
 		if finalState == "failed" {
 			exitState = "failed"
 		}
@@ -403,7 +414,7 @@ func (r *runner) run() error {
 	}
 	for i, action := range actions {
 		final := len(actions)-1 == i
-		r.failed = false
+		r.failed = true
 		r.incomplete = false
 		r.poweroff = false
 		r.reboot = false
@@ -424,7 +435,6 @@ func (r *runner) run() error {
 			// Contents is a script to run, run it.
 		}
 		if err != nil {
-			r.failed = true
 			finalState = "failed"
 			finalErr.AddError(err)
 			r.log("Task %s %s", r.j.Task, finalState)
@@ -442,7 +452,6 @@ func (r *runner) run() error {
 			break
 		}
 		if r.failed {
-			finalState = "failed"
 			break
 		}
 		if r.reboot || r.poweroff || r.stop {
@@ -450,8 +459,12 @@ func (r *runner) run() error {
 			break
 		}
 	}
-	if !r.failed && !r.incomplete {
-		finalState = "finished"
+	if !r.failed {
+		if r.incomplete {
+			finalState = "incomplete"
+		} else {
+			finalState = "finished"
+		}
 	}
 	r.log("Task %s %s", r.j.Task, finalState)
 	return nil
