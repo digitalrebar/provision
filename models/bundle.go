@@ -1,10 +1,12 @@
 package models
 
-// Bundle holds the object's store's name
+// Bundled holds the object's store's name
 //
 // swagger: model
 type Bundled struct {
-	// Bundle tracks the name of the store containing this object
+	// Bundle tracks the name of the store containing this object.
+	// This field is read-only, and cannot be changed via the API.
+	//
 	// read only: true
 	Bundle string
 }

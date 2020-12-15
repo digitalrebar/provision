@@ -20,7 +20,9 @@ type ArchInfo struct {
 	// it has not been corrupted.
 	Sha256 string
 	// IsoUrl is the location that IsoFile can be downloaded from, if any.
-	// This must be a full URL, including the filename.
+	// This must be a full URL, including the filename.  dr-provision does
+	// not use this field internally.  drpcli and the UX use this field to
+	// provide a default source for downloading the IsoFile.
 	//
 	// swagger:strfmt url
 	IsoUrl string
@@ -58,7 +60,9 @@ type ArchInfo struct {
 	//
 	// This setting will be overridden by Subnet and Reservation
 	// options, and it will also only be in effect when dr-provision is
-	// the DHCP server of record.
+	// the DHCP server of record.  It will also be overridden by the corresponding
+	// entry in the Loaders field of the BootEnv, if present and secure boot is enabled by
+	// the license.
 	Loader string
 }
 
@@ -172,9 +176,18 @@ func (o OsInfo) VersionEq(other string) bool {
 	return true
 }
 
+// BootEnvOverride is used to allow a BootEnv to be customized on
+// a per-machine basis.  Every entry in a bootenv-customize Param must
+// be one of these.
 type BootEnvOverride struct {
-	Loaders   map[string]string
-	OS        OsInfo
+	// Loaders contains the boot loaders that should be used.  Any entries
+	// here will override matching entries in the BootEnv that is being overridden.
+	Loaders map[string]string
+	// Override for the OSInfo field of the BootEnv that is being overridden.
+	OS OsInfo
+	// Additional templates that should also be rendered for the overridden BootEnv.
+	// TemplateInfo fields with an identical Name will override the ones in the original
+	// BootEnv.
 	Templates []TemplateInfo
 }
 
@@ -188,23 +201,25 @@ type BootEnv struct {
 	Meta
 	Owned
 	Bundled
-	// The name of the boot environment.  Boot environments that install
-	// an operating system must end in '-install'.
+	// Name is the name of the boot environment.  Boot environments that install
+	// an operating system must end in '-install'.  All boot environment names must be unique.
 	//
 	// required: true
 	Name string
-	// A description of this boot environment.  This should tell what
+	// Description is a one-line description of this boot environment.  This should tell what
 	// the boot environment is for, any special considerations that
 	// should be taken into account when using it, etc.
 	Description string
-	// Documentation of this boot environment.  This should tell what
+	// Documentation for this boot environment.  This should tell what
 	// the boot environment is for, any special considerations that
 	// should be taken into account when using it, etc. in rich structured text (rst).
 	Documentation string
-	// The OS specific information for the boot environment.
+	// OS is the operating system specific information for the boot environment.
 	OS OsInfo
-	// The templates that should be expanded into files for the
-	// boot environment.
+	// Templates contains a list of templates that should be expanded into files for the
+	// boot environment.  These expanded templates will be available via TFTP and static HTTP
+	// from dr-provision.  You should take care that the final paths for the temmplates do not
+	// overlap with ones provided by other boot environments.
 	//
 	// required: true
 	Templates []TemplateInfo
@@ -222,18 +237,19 @@ type BootEnv struct {
 	// required: true
 	Initrds []string
 	// A template that will be expanded to create the full list of
-	// boot parameters for the environment.
+	// boot parameters for the environment.  This list will generally be passed as commmand line
+	// arguments to the Kernel as it boots up.
 	//
 	// required: true
 	BootParams string
 	// The list of extra required parameters for this
-	// bootstate. They should be present as Machine.Params when
+	// boot environment. They should be present as Machine.Params when
 	// the bootenv is applied to the machine.
 	//
 	// required: true
 	RequiredParams []string
 	// The list of extra optional parameters for this
-	// bootstate. They can be present as Machine.Params when
+	// boot environment. They can be present as Machine.Params when
 	// the bootenv is applied to the machine.  These are more
 	// other consumers of the bootenv to know what parameters
 	// could additionally be applied to the bootenv by the
@@ -242,7 +258,13 @@ type BootEnv struct {
 	OptionalParams []string
 	// OnlyUnknown indicates whether this bootenv can be used without a
 	// machine.  Only bootenvs with this flag set to `true` be used for
-	// the unknownBootEnv preference.
+	// the unknownBootEnv preference.  If this flag is set to True, then the
+	// Templates provided byt this boot environment must take care to be able
+	// to chainload into the appropriate boot environments for other machines
+	// if the bootlaoder that machine is using does not support it natively.
+	// The built-in ignore boot environment and the discovery boot environment
+	// provided by the community content bundle should be used as references for
+	// satisfying that requirement.
 	//
 	// required: true
 	OnlyUnknown bool

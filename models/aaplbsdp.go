@@ -15,8 +15,10 @@ const (
 
 // BsdpBootOption contains the information needed to boot their
 // systems using the aapl BDSP boot protocol.  Unless you are
-// provisioning Mac systems, you probably don't need to care about
-// this.
+// provisioning legacy Mac systems, you probably don't care about this.
+// Apple has formally deprecated the underlying NetBoot protocol that
+// these options enumerate: https://support.apple.com/en-us/HT208312
+// There does not appear to be a replacement set of protocols.
 type BsdpBootOption struct {
 	Index     uint16 `plist:"Index"`
 	Install   bool   `plist:"IsInstall"`
@@ -27,6 +29,7 @@ type BsdpBootOption struct {
 	RootPath  string `plist:"RootPath"`
 }
 
+// OSName maps the associated BSDP version flag to a useful string.
 func (bo *BsdpBootOption) OSName() string {
 	switch bo.OSType {
 	case BsdpOS9:
@@ -42,6 +45,8 @@ func (bo *BsdpBootOption) OSName() string {
 	}
 }
 
+// InstallType defines the specific type of netboot
+// is nbeing attempted.
 func (bo *BsdpBootOption) InstallType() string {
 	switch bo.Install {
 	case true:

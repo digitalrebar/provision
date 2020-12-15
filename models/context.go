@@ -1,20 +1,36 @@
 package models
 
+// Context defines an alternate task execution environment for a machine.
+// This allows Digital Rebar to manage and run tasks against machines that
+// mey not be able to run the Agent.  See https://provision.readthedocs.io/en/latest/doc/arch/provision.html#context
+// for more detailed information on how to make an environment for a Context.
+//
+// swagger:model
 type Context struct {
 	Validation
 	Access
 	Meta
 	Owned
 	Bundled
-	// Name is the name of this Context.
+	// Name is the name of this Context.  It must be unique.
 	Name string
-	// Image the OS image that jobs will execute in when running in this Context.
-	// This is usually a Docker container, a VM image, or something similar.
+	// Image is the name of the prebuilt execution environment that the Engine should use to create
+	// specific execution environments for this Context when Tasks should run on behalf
+	// of a Machine.  Images must contain all the tools needed to run the Tasks
+	// that are designed to run in them, as well as a version of drpcli
+	// with a context-aware `machines processjobs` command.
 	Image string
-	// Engine is the system that runs the Image.  This is something like
-	// docker, kubernetes, AWS, or something similar.
-	Engine        string
-	Description   string
+	// Engine is the name of the Plugin that provides the functionality
+	// needed to manage the execution environment that Tasks run in on
+	// behalf of a given Machine in the Context.  An Engine could be a
+	// Plugin that interfaces with Docker or Podman locally, Kubernetes,
+	// Rancher, vSphere, AWS, or any number of other things.
+	Engine string
+
+	// Description is a one-line summary of the purpose of this Context
+	Description string
+	// Documentation should contain any special notes or caveats to keep in mind
+	// when using this Context.
 	Documentation string
 }
 

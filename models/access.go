@@ -4,7 +4,9 @@ package models
 //
 // swagger: model
 type Access struct {
-	// ReadOnly tracks if the store for this object is read-only
+	// ReadOnly tracks if the store for this object is read-only.
+	// This flag is informational, and cannot be changed via the API.
+	//
 	// read only: true
 	ReadOnly bool
 }
@@ -13,7 +15,6 @@ type Access struct {
 // satisfy.  model object may define a Validate method that can be
 // used to return errors about if the model is valid in the current
 // datatracker.
-//
 type Accessor interface {
 	IsReadOnly() bool
 }
