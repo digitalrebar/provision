@@ -25,6 +25,7 @@ Some of these operations are in the :ref:`rs_ui`, but not all.  This will focus 
    operations/drpcli
    operations/esxi-getting-started
    operations/imagedeploy
+   operations/universal
    operations/manager
    operations/pooling
    operations/runbooks

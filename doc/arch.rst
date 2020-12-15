@@ -21,6 +21,7 @@ dr-provision for developers and power users.
    arch/provision
    arch/dhcp
    arch/sledgehammer
+   arch/universal
    arch/workflow
    arch/runner-state
    arch/content-package
