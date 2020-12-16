@@ -165,6 +165,7 @@ func (r *runner) expand(action *models.JobAction, taskDir string) error {
 		r.log("Unable to write to %s: %v", action.Path, err)
 		return err
 	}
+	r.failed = false
 	return nil
 }
 
