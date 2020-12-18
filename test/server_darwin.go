@@ -18,6 +18,7 @@ func StartServer(tmpDir string, basePort int) error {
 	dhcpPort := fmt.Sprintf("%d", basePort+3)
 	binlPort := fmt.Sprintf("%d", basePort+4)
 	metricPort := fmt.Sprintf("%d", basePort+5)
+	dnsPort := fmt.Sprintf("%d", basePort+6)
 
 	os.Setenv("RS_TOKEN_PATH", path.Join(tmpDir, "tokens"))
 	os.Setenv("RS_ENDPOINT", fmt.Sprintf("https://127.0.0.1:%s", apiPort))
@@ -29,6 +30,7 @@ func StartServer(tmpDir string, basePort int) error {
 		"--api-port", apiPort,
 		"--static-port", staticPort,
 		"--tftp-port", tftpPort,
+		"--dns-port", dnsPort,
 		"--dhcp-port", dhcpPort,
 		"--binl-port", binlPort,
 		"--metrics-port", metricPort,

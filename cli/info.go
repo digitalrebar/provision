@@ -9,6 +9,8 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/miekg/dns"
+
 	tftp "github.com/digitalrebar/tftp/v3"
 	dhcp "github.com/krolaw/dhcp4"
 	"github.com/spf13/cobra"
@@ -71,8 +73,8 @@ func addInfoCommands() (res *cobra.Command) {
 				Port           int
 			}
 			results := map[string]*status{}
-			chaddr,_ := net.ParseMAC("de:ad:be:ef:f0:01")
-			for _, service := range []string{"API", "Static", "TFTP", "DHCP", "BINL"} {
+			chaddr, _ := net.ParseMAC("de:ad:be:ef:f0:01")
+			for _, service := range []string{"API", "Static", "TFTP", "DHCP", "BINL", "DNS"} {
 				alive := false
 				switch service {
 				case "API":
@@ -98,6 +100,23 @@ func addInfoCommands() (res *cobra.Command) {
 						}
 					}
 					results[service] = &status{d.ProvisionerEnabled && d.TftpEnabled, alive, d.TftpPort}
+				case "DNS":
+					if d.DnsEnabled {
+						m1 := new(dns.Msg)
+						m1.Id = dns.Id()
+						m1.RecursionDesired = true
+						m1.Question = make([]dns.Question, 1)
+						m1.Question[0] = dns.Question{"1.0.0.127.in-addr.arpa.", dns.TypePTR, dns.ClassINET}
+						c := new(dns.Client)
+						c.Dialer = &net.Dialer{
+							Timeout: 2 * time.Second,
+						}
+						_, _, err := c.Exchange(m1, fmt.Sprintf("%s:%d", d.Address.String(), d.DnsPort))
+						if err == nil {
+							alive = true
+						}
+					}
+					results[service] = &status{d.DnsEnabled, alive, d.DnsPort}
 				case "DHCP":
 					if d.DhcpEnabled {
 						xid := make([]byte, 4)
