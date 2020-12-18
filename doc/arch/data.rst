@@ -262,6 +262,10 @@ Expansion                      Description
 .ParseURL <segment> <url>      Parse the specified URL and return the segment requested. Supported segments can be one of *scheme* (eg "https"), *host* (eg "drp.example.com:8092"), or *path* (eg "/api/v3/machines").  *host* does not separate name and port.
 .ParamExists <key>             Returns true if the specified key is a valid parameter available for this rendering.
 .Param <key>                   Returns the structure for the specified key for this rendering.
+.ParamExpand <key>             Returns after running templating on the contents of a string parameter before returning it.
+.ParamAsJSON <key>             Return the specified parameter as a JSON string or an error.
+.ParamAsYAML <key>             Return the specified parameter as a YAML string or an error.
+.ComposeParam <key>            Returns the composed value of a parameter across all Param sources instead of just the highest precedence.
 .Repos <tag>, <tag>,...        Returns Repos (as defined by the package-repositories param currently in scope) with the matching tags.
 .MachineRepos                  Returns all Repos that have the **OS** of the Machine defined in their os section.
 .InstallRepos                  Returns exactly one Repo from the list chosen by MachineRepos that has the installSource bit set, and at most one Repo from the MachineRepos that has the securitySource bit set.
