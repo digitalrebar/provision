@@ -254,6 +254,7 @@ Expansion                      Description
 .Env.OS.Family                 An optional string from the BootEnv that is used to represent the OS Family.  Ubuntu preseed uses this to determine debian vs ubuntu as an example.
 .Env.OS.Version                An optional string from the BootEnv that is used to represent the OS Version.  Ubuntu preseed uses this to determine what version of ubuntu is being installed.
 .Env.JoinInitrds <proto>       A comma separated string of all the initrd files specified in the BootEnv reference through the specified proto (**tftp** or **http**)
+.Task.TargetOS                 Returns a string that presents the OS of the runner.  This can be *esxi*, *linux*, *darwin*, or *windows*.
 .BootParams                    This renders the **BootParam** field of :ref:`rs_model_bootenv` at that spot.  Template expansion applies to that field as well.
 .ProvisionerAddress            An IP address that is on the provisioner that is the most direct access to the machine.
 .ProvisionerURL                An HTTP URL to access the base file server root
@@ -262,10 +263,14 @@ Expansion                      Description
 .ParseURL <segment> <url>      Parse the specified URL and return the segment requested. Supported segments can be one of *scheme* (eg "https"), *host* (eg "drp.example.com:8092"), or *path* (eg "/api/v3/machines").  *host* does not separate name and port.
 .ParamExists <key>             Returns true if the specified key is a valid parameter available for this rendering.
 .Param <key>                   Returns the structure for the specified key for this rendering.
-.ParamExpand <key>             Returns after running templating on the contents of a string parameter before returning it.
+.ParamExpand <key>             Returns after running templating on the contents of a parameter before returning it.  This iterates through maps and arrays to find expandable strings.
 .ParamAsJSON <key>             Return the specified parameter as a JSON string or an error.
 .ParamAsYAML <key>             Return the specified parameter as a YAML string or an error.
 .ComposeParam <key>            Returns the composed value of a parameter across all Param sources instead of just the highest precedence.
+.ParamCompose <key>            Same as ComposeParam, but matches the other Param function naming conventions.
+.ParamComposeExpand <key>      Returns the specified parameter after composing and then doing string expansion.
+.StringExpand <string>         Returns the expanded string from the provided template string.
+.ObjectExpand <object>         Returns the expanded object from the provided object.  This can iterate through arrays and maps.
 .Repos <tag>, <tag>,...        Returns Repos (as defined by the package-repositories param currently in scope) with the matching tags.
 .MachineRepos                  Returns all Repos that have the **OS** of the Machine defined in their os section.
 .InstallRepos                  Returns exactly one Repo from the list chosen by MachineRepos that has the installSource bit set, and at most one Repo from the MachineRepos that has the securitySource bit set.
