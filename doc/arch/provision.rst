@@ -404,12 +404,17 @@ the system to make the machine not runnable after each task.  Removing the
 parameter or setting it to ``false`` will cause the system to resume normal
 operations.
 
+In UX v4.6, this capability can be set from the the machine debug view.
+
+
 Stop At
 ~~~~~~~
 
 Setting the Machine parameter ``task-stop-at`` to a list of tasks or
 action entries will cause the system to stop prior to those tasks.  Setting
 the machine to runnable will cause the tasks to continue.
+
+In UX v4.6, this capability is used to enable break points in the machine debug view.
 
 Retry
 ~~~~~
@@ -422,6 +427,9 @@ between retries.  There is no maximum wait time.
 
 The Machine field ``RetryTaskAttempt`` tracks the retry for the current task.
 This is reset to 0 for every new task.
+
+For example, if the flaky task is ``always-fails`` then setting the ``task-retry`` parameter to ``{"always-fails": 3}`` will cause DRP to retry the task three times.
+
 
 Error Handlers
 ~~~~~~~~~~~~~~
