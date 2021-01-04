@@ -1,0 +1,123 @@
+.. Copyright (c) 2020 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+
+.. _rs_runner_no_start:
+
+kb-00055: Troubleshooting Runner does not connect
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. _rs_kb_00055:
+
+Knowledge Base Article: kb-00055
+--------------------------------
+
+Description
+-----------
+
+I have booted a machine (or used the join-up script) but the machine is not showing runnable (aka Ready) or being created during discover?
+
+I realize that means that the agent/runner is not starting correctly, but how can I figure out what's going on?
+
+Solution
+--------
+
+There are number of reasons why the DRP runner is not able to start on a system.  This article will help identify where to look for logs.  Generally, details in the logs are sufficient to identify the failure to start or connect reason.
+
+Note: depending on your start-up, there are differences between discovery and join-up processes so some suggestions here may not apply.
+
+Note: these instructions assume that you can log into the machine(s) in question.
+
+Did Discovery Start control.sh?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+For Sledgehammer and netboot installation, Digital Rebar injects values into the bootstrap process.
+
+Use ``cat /proc/cmdline`` to ensure that the ``BOOTIF`` and ``provisioner.web`` values are being set.
+
+Note: join-up systems will not have specialized settings.
+
+Is the runner starting then failing?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If the runner is starting and then failing, then the runner logs will provide helpful information.  Either review configuration at ``/var/lib/drp-agent`` or try ``journalctl -u sledgehammer``
+
+Did discovery-common-bootstrap.sh get created?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+One of the first things creating during runner bootstrap is the ``/tmp/discovery-common-bootstrap.sh`` file.  Check to see if that file exists.
+
+If it is missing, then the basic discovery process failed.
+
+
+Did Jobs start running?
+~~~~~~~~~~~~~~~~~~~~~~~
+
+In some cases, the runner starts but then fails.  This may indiciate a configuration or resource problem on the machine.
+
+If the runner was able to start, then jobs lobs will be created under ``/tmp/runner-*`` on the system.
+
+Can DRPCLI connect?
+~~~~~~~~~~~~~~~~~~~
+
+One of the first things that the runner will check is access to the system.  Test access to the DRP server by using ``drpcli -E [https://endpoint IP] -P [password] machines whoami``.
+
+Success with whoami confirms connectivity to the DRP server and also shows how the server identifies the machine in question.grep
+
+Is control.sh avialable?
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+During discovery or join-up of _known_ machines machines will download the ``control.sh`` bootstrap script from the DRP Server from http://[drp ip]:8091/machines/[machine uuid]/control.sh.  If this file is not avialable at this URL then the process will fail.
+
+This will happen if the machine is using ``local`` or ``ignore`` bootenvs.  It can also happen if the DRP Unknown Workflow/Stage/BootEnv values are not set.
+
+Did control.sh or join-up.sh start?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+When attaching discovered or netbooted machines, the system uses ``control.sh`` to connect.
+
+When attaching to existing machines, such as cloud joins, the system uses ``join-up.sh`` to connect.
+
+In many cases, the machine's UUID is already presentnon the system as ``/etc/rs-uuid``.  Check to see if this file exists and contains the correct UUID.
+
+Test the ``/tmp/control.sh`` or ``join-up.sh`` script by simply running it on the system and watching the results.
+
+What about DRP Server logs?
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+While runner connect issues are generally machine related.  DRP Server logs (or lack of them) can be a helpful diagnostic tool.
+
+Use ``journalctl -u dr-provision`` to observe the logs.
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+
+Versions
+========
+
+All
+
+Keywords
+========
+
+runner, agent, does not start, not runnable
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00055
+    initial release:  Wed 16 Dec 2020 11:15:57 AM CST
+    updated release:  Wed 16 Dec 2020 11:15:57 AM CST
+
