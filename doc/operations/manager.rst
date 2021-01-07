@@ -105,7 +105,7 @@ the command will download the whole catalog.
 
     # Put the current license into the catalog.
     drpcli contents show rackn-license > /tmp/v0.0.1.json
-    drpcil files upload /tmp/v0.0.1.json as rebar-catalog/rackn-license/v0.0.1.json
+    drpcli files upload /tmp/v0.0.1.json as rebar-catalog/rackn-license/v0.0.1.json
     rm -f /tmp/v0.0.1.json
 
     # Create the initial catalog
