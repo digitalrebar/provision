@@ -154,6 +154,9 @@ func NewApp() *cobra.Command {
 	if tk := os.Getenv("RS_PRINT_FIELDS"); tk != "" {
 		defaultPrintFields = tk
 	}
+	if tk := os.Getenv("RS_DOWNLOAD_PROXY"); tk != "" {
+		defaultDownloadProxy = tk
+	}
 	if tk := os.Getenv("RS_NO_HEADER"); tk != "" {
 		var e error
 		defaultNoHeader, e = strconv.ParseBool(tk)
