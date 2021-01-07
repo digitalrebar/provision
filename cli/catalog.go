@@ -379,8 +379,10 @@ and wind up in a file with the same name as the item + the default file extensio
 					continue
 				}
 
-				if o, oerr := semver.NewVersion(v.ActualVersion); oerr != nil || mv.Compare(o) > 0 {
-					continue
+				if mv != nil {
+					if o, oerr := semver.NewVersion(v.ActualVersion); oerr != nil || mv.Compare(o) > 0 {
+						continue
+					}
 				}
 
 				// Get things that aren't in local
