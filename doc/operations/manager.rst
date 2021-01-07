@@ -97,11 +97,16 @@ __________________
 The Manager requires a local catalog cache to install downstream endpoints.  This catalog can be built and initialized
 with the following commands.
 
+To reduce the amount of content downloaded, the `--version` flag can be used to specify the minimum version to download
+from the catalog.  For example, `--version=v4.5.3` would download things newer and including `v4.5.3`.  If left off,
+the command will download the whole catalog.
+
   ::
 
     # Put the current license into the catalog.
-    mkdir -p /var/lib/dr-provision/tftpboot/files/rebar-catalog/rackn-license
-    drpcli contents show rackn-license > /var/lib/dr-provision/tftpboot/files/rebar-catalog/rackn-license/v0.0.1.json
+    drpcli contents show rackn-license > /tmp/v0.0.1.json
+    drpcil files upload /tmp/v0.0.1.json as rebar-catalog/rackn-license/v0.0.1.json
+    rm -f /tmp/v0.0.1.json
 
     # Create the initial catalog
     drpcli plugins runaction manager buildCatalog
@@ -118,6 +123,10 @@ ____________________
 
 Once the catalog is initialized, you can incrementally update the catalog with the following commands.  This can
 be put into a cron job to keep the catalog up to date.
+
+To reduce the amount of content downloaded, the `--version` flag can be used to specify the minimum version to download
+from the catalog.  For example, `--version=v4.5.3` would download things newer and including `v4.5.3`.  If left off,
+the command will download the whole catalog.
 
   ::
 
