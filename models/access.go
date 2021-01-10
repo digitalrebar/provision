@@ -17,6 +17,7 @@ type Access struct {
 // datatracker.
 type Accessor interface {
 	IsReadOnly() bool
+	SetReadOnly(bool)
 }
 
 // IsReadOnly returns whether the object is read-only.
@@ -24,4 +25,10 @@ type Accessor interface {
 // than the working one (provided by a plugin or a content bundle, etc.)
 func (a *Access) IsReadOnly() bool {
 	return a.ReadOnly
+}
+
+// SetReadOnly sets the ReadOnly field of the model.  Doing this will
+// have no effect on the client side.
+func (a *Access) SetReadOnly(v bool) {
+	a.ReadOnly = v
 }

@@ -24,6 +24,10 @@ func (r *RawModel) IsReadOnly() bool {
 	return b.(bool)
 }
 
+func (r *RawModel) SetReadOnly(v bool) {
+	(*r)["ReadOnly"] = v
+}
+
 func (r *RawModel) SetBundle(name string) {
 	(*r)["Bundle"] = name
 }
