@@ -12,22 +12,21 @@ type Interface struct {
 	//
 	// required: true
 	Name string
-	// Index of the interface
-	//
+	// Index of the interface.  This is OS specific.
 	Index int
-	// A List of Addresses on the interface (CIDR)
+	// Addresses contains the IPv4 and IPv6 addresses bound to this interface in no particular order.
 	//
 	// required: true
 	Addresses []string
-	// The interface to use for this interface when
-	// advertising or claiming access (CIDR)
-	//
+	// ActiveAddress is our best guess at the address that should be used for "normal" incoming traffic
+	// on this interface.
 	ActiveAddress string
-	// Possible gateway for this interface
+	// Gateway is our best guess about the IP address that traffic forwarded through this interface should
+	// be sent to.
 	Gateway string
-	// Possible DNS for this interface
+	// DnsServers is a list of DNS server that hsould be used when resolving addresses via this interface.
 	DnsServers []string
-	// Possible DNS for domain for this interface
+	// DnsDomain is the domain that this system appears to be in on this interface.
 	DnsDomain string
 }
 

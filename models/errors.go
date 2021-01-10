@@ -20,12 +20,17 @@ type ErrorAdder interface {
 // swagger:model
 type Error struct {
 	Object Model `json:"-"`
-	Model  string
-	Key    string
-	Type   string
+	// Model is the type of object to which the error refers.  It is generally
+	// whatever thing.Prefix() would return.
+	Model string
+	// Key is the unique per-model identifier of the object to which the error refers.
+	// It is generally whatever thing.Key() would return.
+	Key string
+	// Type is the type of error this is.  There is no set definition for what this us.
+	Type string
 	// Messages are any additional messages related to this Error
 	Messages []string
-	// code is the HTTP status code that should be used for this Error
+	// Code is the HTTP status code that should be used for this Error
 	Code int
 }
 
