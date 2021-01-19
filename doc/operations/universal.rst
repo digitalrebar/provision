@@ -1,6 +1,8 @@
 .. Copyright (c) 2020 RackN Inc.
 .. Licensed under the Apache License, Version 2.0 (the "License");
 .. Digital Rebar Platform documentation under Digital Rebar master license
+..
+.. doc hierarchy: ~ - =
 .. index::
   pair: Digital Rebar Platform; Universal Workflow Operations
 
@@ -11,6 +13,32 @@ Universal Workflow Operations
 
 This section will address usage of the Universal Workflow system.  The architecture and implementation of the Universal
 Workflow system is described at :ref:`rs_universal_arch`.
+
+
+Actions
+-------
+
+Applying an Application
+=======================
+
+Building an Application
+=======================
+
+Modifying Discovery Classifier
+==============================
+
+Adding Tasks to a Workflow
+==========================
+
+Configuring Callbacks
+=====================
+
+Using Validations
+=================
+
+
+Provided Workflows
+------------------
 
 The following workflows are the default set of universal workflows.  Using these are starting points that do most default
 operations needed to operate a data center.
@@ -93,6 +121,9 @@ named such they work with the universal-classify stage/task.
 
 ESXI Install
 ============
+
+ESXI Config
+===========
 
 Solidfire RTFI
 ==============
