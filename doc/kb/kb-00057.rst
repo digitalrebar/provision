@@ -1,0 +1,81 @@
+.. Copyright (c) 2021 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+
+.. _:
+
+kb-00057: Parameter Precedence
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. _rs_kb_00057:
+
+Knowledge Base Article: kb-00057
+--------------------------------
+
+
+Description
+-----------
+What is the precedence for parameter?
+
+Solution
+--------
+A parameter is looked up from the top to bottom of this list:
+
+- Machine Parameter
+- Machine Profile (or profiles in that profile).
+- Stage Parameter
+- Stage Profile
+- Global Profile Parameter
+- Global Profile Profile
+- Parameter default.
+
+This is handled by the template render engine.
+
+You can see the state on a machine (except parameter defaults) by doing:
+
+  ::
+
+    drpcli machines params <Machine ID> --aggregate
+
+
+Additional Information
+----------------------
+
+To view what the default value of a param is you can find it in the UX by clicking on the Param navigation
+link on the left side of the screen, then searching for the param, then clicking on it. You can also use a
+simple drpcli command.
+
+  ::
+
+    drpcli params show burnin-skip|jq .Schema
+    {
+        "default": false,
+        "type": "boolean"
+    }
+
+
+
+See Also
+========
+
+
+Versions
+========
+
+
+Keywords
+========
+param, param precedence, workflow
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00057
+    initial release:  Thu 26 Jan 2021 15:55:25 PM CST
+    updated release:  Thu 28 Jan 2021 08:57:00 AM CST
+
