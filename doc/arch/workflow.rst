@@ -253,6 +253,37 @@ exit, non-0 values provide enhanced functionality:
 The codes are based on intpretation of bit position left as a trivial
 exercise to the reader until someone updates the documentation.
 
+.. _rs_workflow_idempotent:
+
+idempotent behavior
+-------------------
+
+In DRP extra care should be taken for tasks to make sure they are idempotent.
+This is especially important with regards to the above reboot section. Often
+when an operator needs to control a reboot the operating environment is
+sledgehammer. Sledgehammer runs in memory so when you reboot everything you
+previously had configured is gone and when the system boots again it will need
+to restore the system to its state before the reboot. To prevent your task
+from getting stuck in a reboot loop you will want to create a param of type
+boolean, set that param at the end of your task before doing the reboot, and
+you need to check the value of the param to see if you should do the job before
+the job is run. Below is a pseudo example.
+
+  ::
+
+      #!/usr/bin/env bash
+      {{template "setup.tmpl" .}}
+      if [[ {{.Param "reboot-test-skip"}} == true ]]; then
+        echo "Skipping task because param says so";
+        exit 0
+      fi
+      echo "running the thing"
+      drpcli machines set "$RS_UUID" param reboot-test-skip to true
+      exit_reboot
+
+
+Following examples like we have outlined above will ensure that the task is idempotent.
+
 .. _rs_workflow_server:
 
 dr-provision (server side)
