@@ -384,3 +384,8 @@ func NewApp() *cobra.Command {
 
 	return app
 }
+
+func ResetDefaults() {
+	defaultEndpoint = "https://127.0.0.1:8092"
+	defaultEndpoints = []string{"https://127.0.0.1:8092"}
+}
