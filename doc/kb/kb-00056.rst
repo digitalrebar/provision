@@ -1,0 +1,88 @@
+.. Copyright (c) 2021 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+
+.. _Troubleshooting_Portal_WebSockets:
+
+kb-00056: Troubleshooting Portal WebSockets
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. _rs_kb_00056:
+
+Knowledge Base Article: kb-00056
+--------------------------------
+
+
+Description
+-----------
+
+Occasionally the RackN Portal will have connectivity issues due to the self-signed certificates expiring.
+
+When the socket loses connection, a megaphone icon button on the top left will flash red and say "Unable to access DRP"
+
+Clicking this icon will yield the error code and status.
+
+
+Solution
+--------
+
+See additional information for a list of error codes.
+
+The most common and hard to troubleshoot issue is the `1006 - CLOSE_ABNORMAL` error. This usually happens when the browser does not show the accept certificate page when the websocket is getting TLS errors.
+
+The easiest fix is to completely close and re-open the browser so the accept certificate dialog can be shown.
+
+
+Additional Information
+----------------------
+
+List of RFC6455 Web Socket status codes, most of which are never seen or are not used:
+
+  * ``1000`` - ``CLOSE_NORMAL`` - Normal closure
+  * ``1001`` - ``CLOSE_GOING_AWAY`` - Server goes down or webpage is navigated away from
+  * ``1002`` - ``CLOSE_PROTOCOL_ERROR`` - Endpoint terminates connection due to protocol error
+  * ``1003`` - ``CLOSE_UNSUPPORTED`` - DRP or UX sends unsupported data (binary instead of text)
+  * ``1005`` - ``CLOSED_NO_STATUS`` - Should never get this, it means no status code was provided
+  * ``1006`` - ``CLOSE_ABNORMAL`` - Socket closed without a close control frame - likely due to TLS errors
+  * ``1007`` - ``Unsupported payload`` - Sending non-UTC-8 data
+  * ``1008`` - ``Policy violation`` - Should never get this, it means the message violates policy
+  * ``1009`` - ``CLOSE_TOO_LARGE`` - Happens when a message is too long, the portal should automatically reconnect
+  * ``1010`` - ``Mandatory extension`` - Not implemented
+  * ``1011`` - ``Server error`` - Server crashed
+  * ``1012`` - ``Service restart`` - Server is restarting
+  * ``1013`` - ``Try again later`` - Not implemented
+  * ``1014`` - ``Bad gateway`` - Not implemented
+  * ``1015`` - ``TLS handshake fail`` - Server certificate cannot be verified
+
+
+See Also
+========
+
+  * :ref:`rs_portal`
+  * Visit ` Stable Portal <https://portal.rackn.io>`_
+  * Visit ` Tip Portal <https://tip.rackn.io>`_
+
+Versions
+========
+
+This document applies to all versions of Digital Rebar and RackN Portal v1.18+
+
+
+Keywords
+========
+
+ux, portal, websocket, socket, tls, certificate, browser, faq, abnormal, close_abnormal, close
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00056
+    initial release:  Wed Jan 27 11:32:17 CST 2021
+    updated release:  Wed Jan 27 11:32:17 CST 2021
+
