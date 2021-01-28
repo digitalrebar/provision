@@ -19,6 +19,8 @@ TLDR: We’re inverting our open license model to empower operations collaborati
 
 See :ref:`rs_release_summaries` for a complete list of all releases.
 
+.. note:: Support for this release of Digital Rebar is no longer available.
+
 Summary
 ~~~~~~~
 
