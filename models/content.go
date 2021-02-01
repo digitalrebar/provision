@@ -430,6 +430,9 @@ func (c *Content) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return err
 	}
+	if c == nil {
+		c = &Content{}
+	}
 	c.Meta = t.Meta
 	c.Sections = t.Sections
 	c.Meta.Type, c.Meta.Overwritable, c.Meta.Writable = getExtraFields(c.Meta.Name, c.Meta.Type)
