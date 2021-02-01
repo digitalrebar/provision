@@ -1,7 +1,6 @@
 package models
 
 import (
-	"encoding/json"
 	"fmt"
 	"strings"
 
@@ -84,11 +83,11 @@ type ContentMetaData struct {
 	// Writable controls wheter objects provided by this content can be modified independently via the API.
 	// This will be false for everything but the BackingStore.  It is read-only, and cannot be changed via
 	// the API.
-	Writable bool `json:"-"`
+	Writable bool
 	// Overwritable controls whether objects provided by this content store can be overridden by identically identified
 	// objects from another content bundle.  This will be false for everything but the BasicStore.
 	// This field is read-only, and cannot be changed via the API.
-	Overwritable bool `json:"-"`
+	Overwritable bool
 }
 
 // Content models a content bundle.  It consists of the metadata
@@ -421,20 +420,4 @@ func getExtraFields(n, t string) (string, bool, bool) {
 		overwritable = true
 	}
 	return t, overwritable, writable
-}
-
-func (c *Content) UnmarshalJSON(b []byte) error {
-	type tContent Content
-	t := &tContent{}
-	err := json.Unmarshal(b, t)
-	if err != nil {
-		return err
-	}
-	if c == nil {
-		c = &Content{}
-	}
-	c.Meta = t.Meta
-	c.Sections = t.Sections
-	c.Meta.Type, c.Meta.Overwritable, c.Meta.Writable = getExtraFields(c.Meta.Name, c.Meta.Type)
-	return nil
 }
