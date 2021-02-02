@@ -71,7 +71,8 @@ With these steps completed its time to move to creating a basic profile that we 
 Creating A Basic Profile
 ------------------------
 
-An example profile is provided by the vmware plugin we installed above. We will use it as a starting place to make our own.
+An example profile is provided by the vmware plugin we installed above. It is not required to make one, but in this example we will show you some options
+you might want to use especially while troubleshooting. We will use the default profile as a starting place to make our own.
 
   ::
 
@@ -99,15 +100,9 @@ The changes you need to make in this file are to the "Name" and then we will be 
           "Name": "esxi-profile-clone",
           "Params": {
             "esxi/disk-install-options": "--firstdisk --overwritevmfs",
-            "esxi/insecure-password": "rebar1",
-            "esxi/network-hostname": "esxi-test.mrice.internal",
-            "esxi/network-type": "dhcp",
             "esxi/serial-console": "gdbPort=none logPort=none tty2Port=com1",
             "esxi/shell-local": true,
             "esxi/shell-remote": true,
-            "esxi/skip-notify": "false",
-            "esxi/skip-reboot": false,
-            "esxi/skip-tools": false
           },
           "Partial": false,
           "Profiles": [],
@@ -115,7 +110,7 @@ The changes you need to make in this file are to the "Name" and then we will be 
           "Validated": true
       }
 
-Next we need to upload this new profile to the endpoint
+This profile will enable SSH to assist in troubleshooting should you need it. Next we need to upload this new profile to the endpoint
 
   ::
 
