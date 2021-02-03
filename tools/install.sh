@@ -3,7 +3,7 @@
 set -e
 
 # BUMP version on updates
-VERSION="v20.07.10-1"
+VERSION="v21.02.02-1"
 
 DEFAULT_DRP_VERSION=${DEFAULT_DRP_VERSION:-"stable"}
 
@@ -346,7 +346,7 @@ fi
 OS_NAME="$OS_TYPE-$OS_VER"
 
 case $OS_TYPE in
-    centos|redhat|fedora) OS_FAMILY="rhel"      ;;
+    amzn|centos|redhat|fedora) OS_FAMILY="rhel"      ;;
     debian|ubuntu|raspbian)        OS_FAMILY="debian"    ;;
     coreos)               OS_FAMILY="container" ;;
     *)                    OS_FAMILY="$OS_TYPE"  ;;
