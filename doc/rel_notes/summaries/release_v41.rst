@@ -19,3 +19,4 @@ Digital Rebar v4.1 release notes are not available at this time.
 
 See :ref:`rs_release_summaries` for a complete list of all releases.
 
+.. note:: Support for this release of Digital Rebar is no longer available.

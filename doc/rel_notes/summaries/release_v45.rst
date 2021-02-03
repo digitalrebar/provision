@@ -31,6 +31,11 @@ The following vulnerabilities were reported and fixed this release.  See the CVE
 
 * :ref:`rs_cve_20200924a`
 
+Critical Known Issues
++++++++++++++++++++++
+
+* The DRP binary includes a time-limited embedded license that will disable operations if not replaced by a RackN issued license.  In a new installation after the time-limit, DRP API v4.5 and earlier will not allow users to upload their license during installation before stopping.  To workaround this problem, create the full install path (e.g. ``/var/lib/dr-provision/saas-content/``), copy the license file there _before_ installing.,
+
 
 Deprecations
 ++++++++++++

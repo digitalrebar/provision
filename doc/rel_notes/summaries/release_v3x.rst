@@ -11,6 +11,8 @@
 Digital Rebar version 3.x
 -------------------------
 
+.. note:: Support for this release of Digital Rebar is no longer available.
+
 Historical notes about v3 releases.
 
 v3.6.0 to v3.7.0
