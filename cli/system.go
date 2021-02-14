@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path"
+	"strings"
 	"time"
 
 	"github.com/digitalrebar/provision/v4/api"
@@ -199,8 +200,13 @@ func addSystemCommands() (res *cobra.Command) {
 		Use:   "enroll [endpointUrl] [endpointUser] [endpointPass]",
 		Short: "Have the endpoint at [endpointUrl] join the cluster.",
 		Args: func(c *cobra.Command, args []string) error {
-			if len(args) != 3 {
+			if len(args) < 3 {
 				return fmt.Errorf("Need exactly 3 arguments")
+			}
+			if len(args) > 3 {
+				if len(args[3:])%2 != 0 {
+					return fmt.Errorf("Extra enroll args must be present in even numbers")
+				}
 			}
 			return nil
 		},
@@ -218,6 +224,26 @@ func addSystemCommands() (res *cobra.Command) {
 			}
 			if err = Session.Req().UrlFor("system", "consensus", "introduction").Do(&intro.GlobalHaState); err != nil {
 				return err
+			}
+			intro.Passive = true
+			intro.Uri = args[0]
+			intro.ConsensusJoin = Session.Endpoint()
+			if len(args) > 3 {
+				for i := 3; i < len(args); i += 2 {
+					k, v := args[i], args[i+1]
+					switch k {
+					case "VirtInterface":
+						intro.VirtInterface = v
+					case "VirtInterfaceScript":
+						intro.VirtInterfaceScript = v
+					case "ConsensusAddr":
+						intro.ConsensusAddr = v
+					case "Observer":
+						intro.Observer = strings.ToLower(v) == "true"
+					default:
+						return fmt.Errorf("Unknown node HA setting %s", k)
+					}
+				}
 			}
 			if err = epSess.Req().Post(intro).UrlFor("system", "consensus", "enroll").Do(&intro); err != nil {
 				return err
