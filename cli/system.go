@@ -1,9 +1,14 @@
 package cli
 
 import (
+	"context"
+	"encoding/json"
 	"fmt"
+	"os"
 	"path"
 	"time"
+
+	"github.com/digitalrebar/provision/v4/api"
 
 	"github.com/digitalrebar/provision/v4/models"
 
@@ -81,12 +86,24 @@ func addSystemCommands() (res *cobra.Command) {
 		},
 	})
 	consensus.AddCommand(&cobra.Command{
+		Use:   "state",
+		Short: "Get the HA state of the system.",
+		Args:  cobra.NoArgs,
+		RunE: func(c *cobra.Command, args []string) error {
+			var res models.CurrentHAState
+			if err := Session.Req().UrlFor("system", "consensus", "state").Do(&res); err != nil {
+				return err
+			}
+			return prettyPrint(res)
+		},
+	})
+	consensus.AddCommand(&cobra.Command{
 		Use:   "dump",
-		Short: "Dump the detailed state of the consensus system.",
+		Short: "Dump the detailed state of all members of the consensus system.",
 		Args:  cobra.NoArgs,
 		RunE: func(c *cobra.Command, args []string) error {
 			var res interface{}
-			if err := Session.Req().UrlFor("system", "consensus", "state").Do(&res); err != nil {
+			if err := Session.Req().UrlFor("system", "consensus", "fullstate").Do(&res); err != nil {
 				return err
 			}
 			return prettyPrint(res)
@@ -122,6 +139,90 @@ func addSystemCommands() (res *cobra.Command) {
 				return err
 			}
 			return prettyPrint(res)
+		},
+	})
+	consensus.AddCommand(&cobra.Command{
+		Use:   "introduction [file]",
+		Short: "Get an introduction from an existing cluster, save it in [file]",
+		Args: func(c *cobra.Command, args []string) error {
+			if len(args) != 1 {
+				return fmt.Errorf("Must pass a the name of a file to save the introduction to")
+			}
+			return nil
+		},
+		RunE: func(c *cobra.Command, args []string) error {
+			intro := models.GlobalHaState{}
+			err := Session.Req().UrlFor("system", "consensus", "introduction").Do(&intro)
+			if err != nil {
+				return err
+			}
+			tgt, err := os.Create(args[0])
+			if err != nil {
+				return err
+			}
+			defer tgt.Close()
+			enc := json.NewEncoder(tgt)
+			enc.SetIndent("", "  ")
+			return enc.Encode(intro)
+		},
+	})
+	consensus.AddCommand(&cobra.Command{
+		Use:   "join [file]",
+		Short: "Join a cluster using the introduction saved in [file]",
+		Args: func(c *cobra.Command, args []string) error {
+			if len(args) != 1 {
+				return fmt.Errorf("Must pass a the name of a file to load the introduction from")
+			}
+			return nil
+		},
+		RunE: func(c *cobra.Command, args []string) error {
+			intro := models.CurrentHAState{}
+			if err := Session.Req().UrlFor("system", "consensus", "state").Do(&intro); err != nil {
+				return err
+			}
+			src, err := os.Open(args[0])
+			if err != nil {
+				return err
+			}
+			defer src.Close()
+			dec := json.NewDecoder(src)
+			if err = dec.Decode(&intro.GlobalHaState); err != nil {
+				return err
+			}
+			if err = Session.Req().Post(intro).UrlFor("system", "consensus", "enroll").Do(&intro); err != nil {
+				return err
+			}
+			return prettyPrint(intro)
+		},
+	})
+	consensus.AddCommand(&cobra.Command{
+		Use:   "enroll [clusterUrl] [clusterUser] [clusterPass]",
+		Short: "Join the cluster at [clusterUrl] using [clusterUser] and [clusterPass]",
+		Args: func(c *cobra.Command, args []string) error {
+			if len(args) != 3 {
+				return fmt.Errorf("Need exactly 3 arguments")
+			}
+			return nil
+		},
+		RunE: func(c *cobra.Command, args []string) error {
+			intro := models.CurrentHAState{}
+			if err := Session.Req().UrlFor("system", "consensus", "state").Do(&intro); err != nil {
+				return err
+			}
+			leaderSess, err := api.UserSessionTokenProxyContext(context.Background(),
+				args[0],
+				args[1], args[2],
+				false, false)
+			if err != nil {
+				return err
+			}
+			if err = leaderSess.Req().UrlFor("system", "consensus", "introduction").Do(&intro.GlobalHaState); err != nil {
+				return err
+			}
+			if err = Session.Req().Post(intro).UrlFor("system", "consensus", "enroll").Do(&intro); err != nil {
+				return err
+			}
+			return prettyPrint(intro)
 		},
 	})
 
