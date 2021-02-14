@@ -8,7 +8,7 @@ require (
 	github.com/StackExchange/wmi v0.0.0-20190523213315-cbe66965904d // indirect
 	github.com/VictorLowther/jsonpatch2 v1.0.0
 	github.com/cpuguy83/go-md2man v1.0.10 // indirect
-	github.com/digitalrebar/logger v0.3.0
+	github.com/digitalrebar/logger v1.0.2
 	github.com/digitalrebar/service v1.1.1-0.20201014144010-350daf8c5b17
 	github.com/digitalrebar/tftp/v3 v3.0.0
 	github.com/elithrar/simple-scrypt v1.3.0

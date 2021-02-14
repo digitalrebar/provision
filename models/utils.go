@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"reflect"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
@@ -293,4 +294,58 @@ func RandString(n int) string {
 	}
 	base64 := base64.URLEncoding.EncodeToString(b)
 	return base64[:n]
+}
+
+
+var (
+	unitMap = map[string]time.Duration{
+		"ns": time.Nanosecond,
+		"us": time.Microsecond,
+		"µs": time.Microsecond, // U+00B5 = micro symbol
+		"μs": time.Microsecond, // U+03BC = Greek letter mu
+		"ms": time.Millisecond,
+		"s":  time.Second,
+		"m":  time.Minute,
+		"h":  time.Hour,
+		`d`:  time.Hour * 24,
+		`w`:  time.Hour * 24 * 7,
+		`mo`: time.Hour * 24 * 30,
+		`y`:  time.Hour * 24 * 365,
+	}
+	lengthRE   = regexp.MustCompile(`^([.0-9]+)`)
+	durationRE = regexp.MustCompile(`[.0-9]+\s?((mo|(n|u|m|µ|μ)?s|m|h|d|w|y)?[a-z]*)$`)
+)
+
+func ParseDuration(s, unit string) (time.Duration, error) {
+	if s == "never" {
+		// never = 100 years, more or less
+		return time.Hour * 24 * 365 * 100, nil
+	}
+	parts := lengthRE.FindStringSubmatch(s)
+	if parts == nil || len(parts) != 2 || parts[1] == "" {
+		return 0, fmt.Errorf("Invalid duration '%s': number not valid", s)
+	}
+	length, err := strconv.ParseFloat(parts[1], 64)
+	if err != nil {
+		return 0, fmt.Errorf("Invalid duration '%s': number not valid", s)
+	}
+	parts = durationRE.FindStringSubmatch(s)
+	switch len(parts) {
+	case 3:
+		if parts[2] != "" {
+			unit = parts[2]
+			break
+		}
+		fallthrough
+	case 2:
+		if parts[1] != "" {
+			unit = parts[1]
+			break
+		}
+	}
+	duration, ok := unitMap[unit]
+	if !ok {
+		return 0, fmt.Errorf("Invalid duration '%s': unit must be [ns] nanoseconds, [us] microseconds, [ms] milliseconds, [s]seconds, [m]inutes, [h]ours, [d]ays, [w]eeks, [mo]nths, [y]ears, or never", s)
+	}
+	return time.Duration(int64(length * float64(duration))), nil
 }
