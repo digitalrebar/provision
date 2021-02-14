@@ -196,8 +196,8 @@ func addSystemCommands() (res *cobra.Command) {
 		},
 	})
 	consensus.AddCommand(&cobra.Command{
-		Use:   "enroll [clusterUrl] [clusterUser] [clusterPass]",
-		Short: "Join the cluster at [clusterUrl] using [clusterUser] and [clusterPass]",
+		Use:   "enroll [endpointUrl] [endpointUser] [endpointPass]",
+		Short: "Have the endpoint at [endpointUrl] join the cluster.",
 		Args: func(c *cobra.Command, args []string) error {
 			if len(args) != 3 {
 				return fmt.Errorf("Need exactly 3 arguments")
@@ -206,20 +206,20 @@ func addSystemCommands() (res *cobra.Command) {
 		},
 		RunE: func(c *cobra.Command, args []string) error {
 			intro := models.CurrentHAState{}
-			if err := Session.Req().UrlFor("system", "consensus", "state").Do(&intro); err != nil {
-				return err
-			}
-			leaderSess, err := api.UserSessionTokenProxyContext(context.Background(),
+			epSess, err := api.UserSessionTokenProxyContext(context.Background(),
 				args[0],
 				args[1], args[2],
 				false, false)
 			if err != nil {
 				return err
 			}
-			if err = leaderSess.Req().UrlFor("system", "consensus", "introduction").Do(&intro.GlobalHaState); err != nil {
+			if err = epSess.Req().UrlFor("system", "consensus", "state").Do(&intro); err != nil {
 				return err
 			}
-			if err = Session.Req().Post(intro).UrlFor("system", "consensus", "enroll").Do(&intro); err != nil {
+			if err = Session.Req().UrlFor("system", "consensus", "introduction").Do(&intro.GlobalHaState); err != nil {
+				return err
+			}
+			if err = epSess.Req().Post(intro).UrlFor("system", "consensus", "enroll").Do(&intro); err != nil {
 				return err
 			}
 			return prettyPrint(intro)
