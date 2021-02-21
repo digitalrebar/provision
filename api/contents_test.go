@@ -81,7 +81,7 @@ meta:
 				Model:    "contents",
 				Key:      "BarkingStore",
 				Type:     "PUT",
-				Messages: []string{"profiles:global in layer writable would override layer content-BarkingStore"},
+				Messages: []string{"profiles:global in layer dynamic-BarkingStore would override layer writable-BackingStore"},
 				Code:     422,
 			},
 			op: func() (interface{}, error) {

@@ -49,7 +49,7 @@ func TestFiles(t *testing.T) {
 				Key:   "/foo/bar",
 				Type:  "POST",
 				Messages: []string{
-					"Cannot create directory /foo",
+					"Failed to ensure final directory for bar exists",
 				},
 				Code: 409,
 			},
