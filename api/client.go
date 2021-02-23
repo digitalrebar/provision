@@ -710,6 +710,8 @@ func (c *Client) Close() {
 // Token returns the current authentication token associated with the
 // Client.
 func (c *Client) Token() string {
+	c.mux.Lock()
+	defer c.mux.Unlock()
 	if c.token == nil {
 		return ""
 	}
@@ -973,9 +975,11 @@ func (c *Client) PutModel(obj models.Model) error {
 
 func (c *Client) Websocket(at string) (*websocket.Conn, error) {
 	subpath := path.Join(APIPATH, at)
+	c.mux.Lock()
 	if c.urlProxy != "" {
 		subpath = path.Join(subpath, c.urlProxy)
 	}
+	c.mux.Unlock()
 	ep, err := url.ParseRequestURI(c.endpoint + subpath)
 	if err != nil {
 		return nil, err
@@ -999,6 +1003,8 @@ func (c *Client) Websocket(at string) (*websocket.Conn, error) {
 
 // UrlProxy sets the request url proxy (for endpoint chaining)
 func (c *Client) UrlProxy(up string) *Client {
+	c.mux.Lock()
+	defer c.mux.Unlock()
 	c.urlProxy = up
 	return c
 }
