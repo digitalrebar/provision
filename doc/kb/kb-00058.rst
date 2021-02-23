@@ -1,0 +1,104 @@
+.. Copyright (c) 2021 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+
+.. _Image_Deploy_with_Curtin_Partitions_and_XFS:
+
+kb-00058: Image Deploy with Curtin Partitions and XFS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. _rs_kb_00058:
+
+Knowledge Base Article: kb-00058
+--------------------------------
+
+Description
+-----------
+
+When doing image-deploy, there are a couple of errors that can be generated when
+using XFS.  These include:
+
+* grub-install fails because of bad filesystem type
+* Missing / bad rootfs or other filesystem on reboot into running system.
+
+This can happen when using Sledgehammer to image deploy Centos 7 or Ubuntu
+18.04 or younger images.
+
+The problem is that Centos 8 has a newer version of XFS that is incompatible with
+the XFS running in previous operating systems, e.g. Centos 7 or Ubuntu 18.04.
+
+This happens when a curtin/partitions parameter is used that sets an XFS
+filesystem.  This is NOT the default and so is only triggered from this action.
+
+
+Solution
+--------
+
+Within `curtin/partitions` parameter, an additional variable will need to be added
+to all XFS filesystem creation stanzas.  This looks like this (in JSON format):
+
+  ::
+
+    "extra_options": [
+      "-i",
+      "sparse=0"
+    ],
+
+This tells the Centos8-based sledgehammer to generate an XFS filesystem that will
+work in the older environments.
+
+A complete XFS filesystem stanza would look like this:
+
+  ::
+
+       {
+        "extra_options": [
+          "-i",
+          "sparse=0"
+        ],
+        "fstype": "xfs",
+        "id": "disk0-part1",
+        "label": "root-partition",
+        "type": "format",
+        "volume": "root_part"
+      }
+
+You will also need to make sure that your image contains the XFS tools.  If you are using image builder, you can
+use the `image-builder/additional-packages` parameter with a value that includes `xfsprogs`.
+
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+:ref:`rs_cp_image_deploy`
+:ref:`rs_cp_image_builder`
+
+Versions
+========
+
+v4.6.0+
+
+Keywords
+========
+
+XFS, curtin, image-deploy
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00058
+    initial release:  Tue Feb 23 14:19:26 CST 2021
+    updated release:  Tue Feb 23 14:19:26 CST 2021
+
