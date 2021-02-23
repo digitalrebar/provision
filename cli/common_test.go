@@ -447,7 +447,7 @@ func verifyClean(t *testing.T) {
 		switch k {
 		case "preferences":
 			continue
-		case "users", "profiles":
+		case "users", "profiles", "plugin_providers":
 			if len(v) == 1 {
 				continue
 			}
