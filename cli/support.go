@@ -96,6 +96,16 @@ func bundleCmds() *cobra.Command {
 				}
 			}
 
+			abtFile := drBase + "/abort.log"
+			_, err = os.Stat(abtFile)
+			if os.IsNotExist(err) {
+				return err
+			}
+			err = AddFileToZip(w, abtFile)
+			if err != nil {
+				return err
+			}
+
 			if w.Close() != nil {
 				return err
 			}
