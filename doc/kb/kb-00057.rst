@@ -6,7 +6,7 @@
 .. If you make EDITS - ensure you update footer release date information.
 
 
-.. _:
+.. _parameter_precedence:
 
 kb-00057: Parameter Precedence
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -19,7 +19,7 @@ Knowledge Base Article: kb-00057
 
 Description
 -----------
-What is the precedence for parameter?
+What is the order precedence for parameters?
 
 Solution
 --------
@@ -33,7 +33,8 @@ A parameter is looked up from the top to bottom of this list:
 - Global Profile Profile
 - Parameter default.
 
-This is handled by the template render engine.
+This is handled by the template render engine.  Values at the top of the list
+will replace values lower in the list.
 
 You can see the state on a machine (except parameter defaults) by doing:
 
@@ -41,9 +42,20 @@ You can see the state on a machine (except parameter defaults) by doing:
 
     drpcli machines params <Machine ID> --aggregate
 
+.. note:: It is possible that a Paramter can be defined as "Composed", which
+          will NOT follow the Paramter Order of Precedence.  The values will
+          be built up from each of the levels of precedence and combined.
+
+          This is defined in the Template with the use of the ``{{ .ComposeParam ... }}``
+          and associated functions in the Architecture Documentation :ref:`rs_model_template`
+          (link also below).
+
 
 Additional Information
 ----------------------
+
+The ``drpcli`` command line argument ``--aggregate`` will not show any Params default volues
+in the output.
 
 To view what the default value of a param is you can find it in the UX by clicking on the Param navigation
 link on the left side of the screen, then searching for the param, then clicking on it. You can also use a
@@ -62,6 +74,7 @@ simple drpcli command.
 See Also
 ========
 
+  * Architecture Data :ref:`rs_model_template` documentation (Compose Param docs)
 
 Versions
 ========
