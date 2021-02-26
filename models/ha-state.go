@@ -49,6 +49,7 @@ type GlobalHaState struct {
 	LoadBalanced     bool
 	Enabled          bool
 	ConsensusEnabled bool
+	ConsensusJoin    string
 	VirtAddr         string
 	ActiveUri        string
 	Token            string
@@ -71,8 +72,7 @@ type NodeHaState struct {
 	VirtInterface       string
 	VirtInterfaceScript string
 	ConsensusAddr       string
-	ConsensusJoin       string
-	Uri                 string
+	ApiUrl              string
 	Passive             bool
 	Observer            bool
 }
