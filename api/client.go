@@ -721,14 +721,17 @@ func (c *Client) Token() string {
 // Info returns some basic system information that was retrieved as
 // part of the initial authentication.
 func (c *Client) Info() (*models.Info, error) {
+	newInfo := &models.Info{}
+	err := c.Req().UrlFor("info").Do(newInfo)
 	c.iMux.Lock()
-	if c.info != nil {
-		c.iMux.Unlock()
-		return c.info, nil
+	defer c.iMux.Unlock()
+	if err == nil {
+		c.info = newInfo
+	} else if c.info != nil {
+		newInfo = c.info
+		err = nil
 	}
-	c.info = &models.Info{}
-	c.iMux.Unlock()
-	return c.info, c.Req().UrlFor("info").Do(c.info)
+	return newInfo, err
 }
 
 // Objects returns a list of objects in the DRP system
