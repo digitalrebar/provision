@@ -3,7 +3,6 @@ package models
 import (
 	"net"
 	"runtime"
-	"sync"
 )
 
 // HaPassiveState the state of the passive node
@@ -136,8 +135,9 @@ type Info struct {
 	// This is only valid from the Active node
 	HaPassiveState []*HaPassiveState `json:"ha_passive_state"`
 
-	// local lock to protect fields
-	lock sync.Mutex
+	// ClusterState is the current state of the consensus cluster that this
+	// node is a member of.  As of v4.6, all nodes are in at least a single-node cluster
+	ClusterState ClusterState
 }
 
 // HasFeature is a helper function to determine if a requested feature
@@ -172,44 +172,5 @@ func (i *Info) Fill() {
 	}
 	if i.HaPassiveState == nil {
 		i.HaPassiveState = []*HaPassiveState{}
-	}
-}
-
-func (i *Info) AddUpdatePassive(id, address, state string, electable bool) {
-	i.lock.Lock()
-	defer i.lock.Unlock()
-	if i.HaPassiveState == nil {
-		i.HaPassiveState = []*HaPassiveState{{Id: id, Address: address, State: state}}
-		return
-	}
-	for _, ps := range i.HaPassiveState {
-		if ps.Id == id {
-			ps.Electable = electable
-			ps.State = state
-			if address != "" {
-				ps.Address = address
-			}
-			return
-		}
-	}
-	i.HaPassiveState = append(i.HaPassiveState, &HaPassiveState{Id: id, Address: address, State: state, Electable: electable})
-}
-
-func (i *Info) RemovePassive(id string) {
-	i.lock.Lock()
-	defer i.lock.Unlock()
-	if i.HaPassiveState == nil {
-		return
-	}
-	idx := -1
-	for ii, ps := range i.HaPassiveState {
-		if ps.Id == id {
-			idx = ii
-		}
-	}
-	if idx != -1 {
-		i.HaPassiveState[idx] = i.HaPassiveState[len(i.HaPassiveState)-1]
-		i.HaPassiveState[len(i.HaPassiveState)-1] = nil
-		i.HaPassiveState = i.HaPassiveState[:len(i.HaPassiveState)-1]
 	}
 }

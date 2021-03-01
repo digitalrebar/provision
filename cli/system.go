@@ -225,9 +225,6 @@ func addSystemCommands() (res *cobra.Command) {
 			if err = Session.Req().UrlFor("system", "consensus", "introduction").Do(&intro.GlobalHaState); err != nil {
 				return err
 			}
-			intro.Passive = true
-			intro.Uri = args[0]
-			intro.ConsensusJoin = Session.Endpoint()
 			if len(args) > 3 {
 				for i := 3; i < len(args); i += 2 {
 					k, v := args[i], args[i+1]
