@@ -77,6 +77,7 @@ func TestInfo(t *testing.T) {
 				info.License = models.LicenseBundle{Licenses: []models.License{}}
 				info.Features = []string{}
 				info.Scopes = map[string]map[string]struct{}{}
+				info.ClusterState = models.ClusterState{}
 			}
 			return info, err
 		},
