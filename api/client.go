@@ -710,6 +710,8 @@ func (c *Client) Close() {
 // Token returns the current authentication token associated with the
 // Client.
 func (c *Client) Token() string {
+	c.mux.Lock()
+	defer c.mux.Unlock()
 	if c.token == nil {
 		return ""
 	}
@@ -719,14 +721,17 @@ func (c *Client) Token() string {
 // Info returns some basic system information that was retrieved as
 // part of the initial authentication.
 func (c *Client) Info() (*models.Info, error) {
+	newInfo := &models.Info{}
+	err := c.Req().UrlFor("info").Do(newInfo)
 	c.iMux.Lock()
-	if c.info != nil {
-		c.iMux.Unlock()
-		return c.info, nil
+	defer c.iMux.Unlock()
+	if err == nil {
+		c.info = newInfo
+	} else if c.info != nil {
+		newInfo = c.info
+		err = nil
 	}
-	c.info = &models.Info{}
-	c.iMux.Unlock()
-	return c.info, c.Req().UrlFor("info").Do(c.info)
+	return newInfo, err
 }
 
 // Objects returns a list of objects in the DRP system
@@ -973,9 +978,11 @@ func (c *Client) PutModel(obj models.Model) error {
 
 func (c *Client) Websocket(at string) (*websocket.Conn, error) {
 	subpath := path.Join(APIPATH, at)
+	c.mux.Lock()
 	if c.urlProxy != "" {
 		subpath = path.Join(subpath, c.urlProxy)
 	}
+	c.mux.Unlock()
 	ep, err := url.ParseRequestURI(c.endpoint + subpath)
 	if err != nil {
 		return nil, err
@@ -999,6 +1006,8 @@ func (c *Client) Websocket(at string) (*websocket.Conn, error) {
 
 // UrlProxy sets the request url proxy (for endpoint chaining)
 func (c *Client) UrlProxy(up string) *Client {
+	c.mux.Lock()
+	defer c.mux.Unlock()
 	c.urlProxy = up
 	return c
 }
