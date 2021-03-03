@@ -197,11 +197,11 @@ func addSystemCommands() (res *cobra.Command) {
 		},
 	})
 	consensus.AddCommand(&cobra.Command{
-		Use:   "enroll [endpointUrl] [endpointUser] [endpointPass]",
+		Use:   "enroll [endpointUrl] [endpointUser] [endpointPass] extraArgs",
 		Short: "Have the endpoint at [endpointUrl] join the cluster.",
 		Args: func(c *cobra.Command, args []string) error {
 			if len(args) < 3 {
-				return fmt.Errorf("Need exactly 3 arguments")
+				return fmt.Errorf("Need 3 or more arguments")
 			}
 			if len(args) > 3 {
 				if len(args[3:])%2 != 0 {
@@ -237,6 +237,21 @@ func addSystemCommands() (res *cobra.Command) {
 						intro.ConsensusAddr = v
 					case "Observer":
 						intro.Observer = strings.ToLower(v) == "true"
+					case "LoadBalanced":
+						if intro.ConsensusEnabled {
+							return fmt.Errorf("LoadBalanced can only be set during self-enrollment")
+						}
+						intro.LoadBalanced = strings.ToLower(v) == "true"
+					case "VirtAddr":
+						if intro.ConsensusEnabled {
+							return fmt.Errorf("VirtAddr can only be set during self-enrollment")
+						}
+						intro.VirtAddr = v
+					case "HaID":
+						if intro.ConsensusEnabled {
+							return fmt.Errorf("HaID can only be set during self-enrollment")
+						}
+						intro.HaID = v
 					default:
 						return fmt.Errorf("Unknown node HA setting %s", k)
 					}
