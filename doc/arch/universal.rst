@@ -93,24 +93,35 @@ The basic layout is:
 The `discover` layout would have the following stages with parameters with their defaults:
 
   * universal-discover-start-callback
+  
     * Parameter setting in stage: callback/action = universal-discover-start
     * Parameter setting in stage: callback/event = true
+
   * universal-discover-pre-flexiflow
+
     * Parameter setting in stage: flexiflow/list-parameter = universal-discover-pre-flexiflow
     * Parameter default: universal-discover-pre-flexiflow = []
+
   * The default stages for `discover` are the inventory and discovery components.
   * universal-discover-post-flexiflow
+
     * Parameter setting in stage: flexiflow/list-parameter = universal-discover-post-flexiflow
     * Parameter default: universal-discover-post-flexiflow = []
+
   * universal-discover-classification
+
     * Parameter setting in stage: classify/stage-list-parameter = universal/discover-classification-list
     * Parameter default: universal/discover-classification-list = [ "universal-discover-classification-base" ]
   * universal-discover-post-validation
+
     * Parameter setting in stage: validation/list-parameter = universal-discover-post-validation
     * Parameter default: universal-discover-post-validation = []
+
   * universal-discover-complete-callback
+
     * Parameter setting in stage: callback/action = universal-discover-complete
     * Parameter setting in stage: callback/event = true
+
   * universal-chain-workflow
 
 Defaults and Overrides
