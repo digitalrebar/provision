@@ -34,20 +34,21 @@ line flags.  See *dr-waltool --help* for more information.
 
     export RS_ENDPOINT=https://DRP_IP:DRP_PORT # FILL THIS IN
     export RS_KEY=username:password # FILL THIS IN
-    dr-waltool backup --destDir=path/to/backup --artifacts
+    dr-waltool backup --destDir=/tmp/backups/dr-provision --artifacts
 
 
 This will connect to the DRP Endpoint at address *DRP_IP* on port *DRP_PORT* using the username and
 password of *username* and *password*, respectively.
 
-It will attempt to use the specified directory, *path/to/backup*, and create it if not present.
+It will attempt to use the specified directory, */tmp/backups/dr-provision*, and create it if not present. When creating
+an initial backup with dr-waltool, --destDir must not exist.
 
 Since *--artifacts* was specified, all content packs, plugin providers, and the files and isos
 directories will be recorded as well.  If *--artifacts* is not specified, only the data objects
 will be backed up.
 
 You can also specify the endpoint and credentials on the command line with the *--endpoint* and
-either the *--token* or *--key* flags.
+either the *--token* or *--key* flags. These must be set and do not have defaults like drpcli does.
 
 .. note::
 
@@ -58,10 +59,16 @@ Once complete, this directory can be tarred up for storage elsewhere.
 
   ::
 
-    cd path/to/backup
+    cd /tmp/backups/dr-provision
     tar -zcvf ../backup-2020-08-25.tgz *
 
-A complete backup would include the *install.sh*, *dr-provision.zip*, and this tarball as well.
+A complete backup should include the *install.sh* and the *dr-provision.zip* used at install time, and this tarball.
+
+.. note::
+
+    If dr-waltool is not installed on your drp endpoint you may be running an older version of dr-provision server,
+or you have installed, or upgraded using the web installer. See below for solutions.
+
 
 Restore
 -------
@@ -104,3 +111,25 @@ Once it is installed, you should follow the *Restore* procedure.
   starting the new DRP endpoint. Duplicate Subnets can cause networking problems.
 
 
+dr-waltool Missing
+------------------
+
+If dr-waltool is missing from your drp endpoint first make sure you are using at least dr-provision version 4.5 or newer.
+
+  ::
+
+    drpcli info get|jq .version
+
+Once you verify you are running at least 4.5 or newer you can grab the dr-waltool doing the following
+
+  ::
+
+    cd /tmp
+    drpcli catalog item download drp --version=stable
+    bsdtar -xzvf drp.zip
+    cp bin/linux/amd64/dr-waltool /usr/local/bin/
+    chmod +x /usr/local/bin/dr-waltool
+
+.. note::
+
+  Note the file is named .zip but for historical reasons it is actually a tar file and using "unzip" instead of bsdtar will result in issues.
