@@ -291,52 +291,15 @@ Configuring the Virtual Machine networks differently (eg with multiple NICs), an
 associated Bridges to other network devices is entirely possible, but outside the
 scope of this document.
 
-The below enables extremely simplified ``iptables`` rules to perform these tasks.  Other
-firewall services can be substituted, as long as you perform these similar capabilities.
-We encourage you to also increase the external network rulesets to better protect your
-system services.
+The `vm-bridge.sh <https://github.com/digitalrebar/provision/blob/v4/tools/vm-bridge.sh>` script uses :ref:`rs_cli` to read DRP Endpoint subnet information and then enables extremely simplified ``iptables`` rules to perform these tasks.  Other firewall services can be substituted, as long as you perform these similar capabilities. We encourage you to also increase the external network rulesets to better protect your system services.
 
 .. warning:: If you utilize other firewall services (eg ``firewalld``), ensure you perform
              the equivalent setup as below.
 
-This configuration will check the DRP Endpoint Plugin instantiation (as above) to
-set the network devices and rules automatically.
-
   ::
 
-    #!/usr/bin/env bash
-
-    # get DRP kvm-test base network for $1 (kvm-test by default if not defined)
-    # saves configurations so they survive reboots
-    PATH=$PATH:/usr/local/bin
-
-    NW=$(drpcli plugins show kvm-test | jq -r '.Params."kvm-test/subnet".name')
-    NET=${1:-$NW}
-    JSON=/tmp/$NET-network.json
-    drpcli subnets show $NET > $JSON
-    NETWORK=$(cat $JSON | jq -r '.Subnet' | sed 's/\(.*\)\.\(.*\)\.\(.*\)\..*$/\1.\2.\3.0/')
-    HOST=$(cat $JSON | jq -r ".Options | .[] | select(.Code==3) | .Value")
-    MASK=$(cat $JSON | jq -r ".Options | .[] | select(.Code==1) | .Value")
-
-    echo "
-    NETWORK  :: $NETWORK
-    HOST     :: $HOST
-    MASK     :: $MASK
-    "
-
-    systemctl start iptables
-    systemctl enable iptables
-
-    iptables -t nat -A POSTROUTING -s "$NETWORK/$MASK" ! -d "$NETWORK/$MASK" -j MASQUERADE
-    iptables -I FORWARD 1 -i $NET -j ACCEPT
-    iptables -I FORWARD 1 -o $NET -m state --state RELATED,ESTABLISHED -j ACCEPT
-
-    service iptables save
-
-    sysctl net.ipv4.ip_forward=1
-    echo "net.ipv4.ip_forward=1" > /etc/sysctl.d/50-ipv4_ip_forward.conf
-    exit 0
-
+    curl -fsSL https://raw.githubusercontent.com/digitalrebar/provision/v4/tools/vm-bridge.sh -o install.sh | bash -s --
+    
 
 Virtual Machine Creation
 ------------------------
