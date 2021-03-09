@@ -8,8 +8,8 @@
 
 .. _rs_release_v46:
 
-Digital Rebar version 4.6 [planned]
------------------------------------
+Digital Rebar version 4.6
+-------------------------
 
 Release Date: expected early 2021
 
@@ -56,12 +56,13 @@ None at this time.
 Sledgehammer Cento8
 ~~~~~~~~~~~~~~~~~~~
 
-We have made many updates to the Cento8 Sledgehammer this release.  You will need to get an updated version of Sledgehammer as part of this release.
+We have made many updates to the Cento8 Sledgehammer this release.  You will need to get an updated version of Sledgehammer as part of this release.  Centos7 Sledgehammer
+is still available as a profile that can be added to the global profile or a specific machine to allow for its usage.
 
 Limit client TLS ciphers
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-DRP server allows clients to connect with a range of TLS ciphers by default.  Some security teams choose restrict the allowed ciphers.  
+DRP server allows clients to connect with a range of TLS ciphers by default.  Some security teams choose restrict the allowed ciphers.
 
 Operators who wish to restrict use of client ciphers are advised to start with the `--tls-min-version` flags.  Operators can use the `--tls-cipher-list` and `--tls-ciphers-available` command line flags to determine the current and available ciphers.
 
@@ -87,7 +88,7 @@ RackN recommends using websockets when available; however long polling is strong
 Image Deploy for ESXi
 ~~~~~~~~~~~~~~~~~~~~~
 
-To improve the speed and consistence of VMware ESXi installation, The Image Deploy workflow has been expanded to include support for the ESXi operating system.  This allows operators to install ESXi directly to disk from a proven image and bypass the time consuming netboot (WEASLE) and post-configuration processes.  
+To improve the speed and consistence of VMware ESXi installation, The Image Deploy workflow has been expanded to include support for the ESXi operating system.  This allows operators to install ESXi directly to disk from a proven image and bypass the time consuming netboot (WEASEL) and post-configuration processes.
 
 The process has specific requirements including the Digital Rebar VMware agent (aka DRPY) and having the correct partition maps.  Please contact RackN for assistance.
 
@@ -115,18 +116,6 @@ Universal Workflow
 The components of Universal Workflow are all included the the v4.6 release.  Universal Workflow provides a standardized workflow that can be applied to all provisioning operations in a consistent way.  Within that workflow, the system is able to dynamically adapt to the detected environment and take additional actions.  Unlike previous cloned Workflows, Operators may add their own custom stages and tasks to the Universal Workflow without interfering with standard operating processes.
 
 Note: There are no helpers or added design tools for Universal Workflow in the v4.6 UX.  These will roll out incrementally based on customer design interactions.
-
-
-Restricted Access ISOs
-~~~~~~~~~~~~~~~~~~~~~~
-
-Planned, not committed
-
-
-Integrated Simple DNS
-~~~~~~~~~~~~~~~~~~~~~
-
-Planned, not committed
 
 
 .. _rs_release_v46_otheritems:
