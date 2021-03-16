@@ -189,6 +189,10 @@ func (r *runner) perform(action *models.JobAction, taskDir string) error {
 	}
 	cmdArray = append(cmdArray, "./"+path.Base(taskFile))
 	r.cmdMux.Lock()
+	home := os.Getenv("HOME")
+	if home == "" {
+		home = r.agentDir
+	}
 	r.cmd = exec.Command(cmdArray[0], cmdArray[1:]...)
 	r.cmd.Dir = taskDir
 	r.cmd.Env = append(os.Environ(),
@@ -198,6 +202,7 @@ func (r *runner) perform(action *models.JobAction, taskDir string) error {
 		"RS_TASK_DIR="+taskDir,
 		"RS_UUID="+r.m.Key(),
 		"RS_ENDPOINT="+r.c.Endpoint(),
+		"HOME="+home,
 	)
 	if r.token != "" {
 		r.cmd.Env = append(r.cmd.Env, "RS_TOKEN="+r.token)
