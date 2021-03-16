@@ -10,9 +10,8 @@ High Availability
 #################
 
 There are two strategies available for implementing high availability in dr-provision: automated failover using Raft for
-consensus and liveness checking, and manual failover via synchronous replication.  The former is new in 4.6.0, and
-is currently in beta testing.  The latter has been available since v4.3.0, and will continue to remain available for the
-forseeable future.
+consensus and liveness checking, and manual failover via synchronous replication.  The former is new in 4.6.0.
+The latter has been available since v4.3.0, and will continue to remain available for the foreseeable future.
 
 Prerequisites
 ~~~~~~~~~~~~~
@@ -62,10 +61,12 @@ Contraindications
 
 The high-availability support code in dr-provision assumes a model where either:
 
-* The machines are in the same layer 2 broadcast domain to allow for moving the HA IP address via gratuitous AR, or
+* There is a single IP available for the HA cluster.  This requires one of the following two items:
 
-* An external load balancer is responsible for holding the virtual IP address and directing all traffic to the
-  current active node.
+  * The machines are in the same layer 2 broadcast domain to allow for moving the HA IP address via gratuitous AR
+
+  * An external load balancer is responsible for holding the virtual IP address and directing all traffic to the
+    current active node.
 
 * The writable storage that dr-provision uses is not shared (via NFS, iSCSI, drbd, or whatever) between servers running
   dr-provision.
@@ -73,7 +74,7 @@ The high-availability support code in dr-provision assumes a model where either:
 * If running in automated failover, there must be at least 3 servers in the cluster, and there must be an odd number
   of servers in the cluster.
 
-Of none of the above are true, then you cannot use dr-provision in high-availability mode.
+If none of the above are true, then you cannot use dr-provision in high-availability mode.
 
 * If you are running on separate broadcast domains, you will need to either ensure that there is an alternate mechanism for
   ensuring that packets destined for the HA IP address get routed correctly, or accept that provisioning operations
@@ -82,6 +83,9 @@ Of none of the above are true, then you cannot use dr-provision in high-availabi
 * If you are using a shared storage mechanism (NFS, DRBD, iSCSI, or some form of distributed filesystem), then you should
   not use our integrated HA support, as it will lead to data corruption.  You should also make sure you never run more than
   one instance of dr-provision on the same backing data at the same time, or the data will be corrupted.
+
+It is possible to use shared storage that replicates extended attributes for the tftproot space.  This will reduce transfer
+times for replication, but only some distributed filesystems or shared devices support extended attribute sharing.
 
 Configuration
 ~~~~~~~~~~~~~
@@ -297,9 +301,84 @@ VirtInterfaceScript
 If present, this is the name of the script that will be run whenever we need to add or remove VirtAddr
 to VirtInterface.It is specific to each node, and corresponds to the --ha-interface-script commandline option.
 
+Bootstrapping Consensus via Raft (v4.6.0 and later)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Bootstrapping Synchronous Replication
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In 4.6 and later, you can bootstrap, add nodes to, and remove nodes from a consensus cluster using `drpcli` without
+needing to stop nodes for manual reconfiguration or mess with systemd config files.  This is the preferred method of
+high availability.
+
+Self-enroll the initial active node
+-----------------------------------
+
+To start the initial active node, you can use the `drpcli system ha enroll` command to have it
+enroll itself.  The form of the command to run is as follows::
+
+    drpcli system ha enroll $RS_ENDPOINT username password \
+        ConsensusAddr address:port \
+        Observer true/false \
+        VirtInterface interface \
+        VirtInterfaceScript /path/to/script \
+        HaId ha-identifier \
+        LoadBalanced true/false \
+        VirtAddr virtualaddr
+
+The last 3 of those settings can only be specified during self-enroll, and even then they can only be specified
+if the system you are self-enrolling is not already in a synchronous replication cluster.
+
+You also can only specify VirtInterface and VirtInterfaceScript if LoadBalanced is false.
+
+If any errors are returned during that call, they should be addressed and the command retried.
+Once the command finished without error, the chosen system will be in a single node Raft cluster
+that is ready to have other nodes added to the cluster.
+
+Adding additional nodes
+-----------------------
+
+To add additional nodes to an existing cluster, you also use
+`drpcli system ha enroll` against the current active node in that cluster::
+
+    drpcli system ha enroll https://ApiURL_of_target target_username target_password \
+        ConsensusAddr address:port \
+        Observer true/false \
+        VirtInterface interface \
+        VirtInterfaceScript /path/to/script
+
+This will get the global HA settings from the active node in the cluster, merge those settings with the
+per-node settings from the target node and the rest of the settings passed in on the command line, and direct
+the target node to join the cluster using the merged configuration.
+
+**NOTE** The current data on the target node will be backed up, and once the target node has joined the
+cluster it will mirror all data from the existing cluster.  All backed up data will be inaccessible from that point.
+
+Other consensus commands
+------------------------
+
+`drpcli system ha` has several other commands that you can use to examine the state of consensus on a node.
+
+* `drpcli system ha active` will get the Consensus ID of the node that is currently responsible for
+  all client communication in a consensus cluster.  It is possible for this value to be unset if the
+  active node has failed and the cluster is deciding on a new active node.
+
+* `drpcli system ha dump` will dump the user-visible parts of the backing finite state machine that
+  is responsible for keeping track of the state of the cluster.
+
+* `drpcli system ha failOverSafe` will return true if there is at least one node in the cluster that
+  is completly up-to-date with the active node, and it will return false otherwise.  You can pass
+  a time to wait (up to 5 seconds) for the cluster to be fail over safe as an optional argument.
+
+* `drpcli system ha id` returns the Consensus ID of the node you are takling to.
+
+* `drpcli system ha leader` returns the Consensus ID of the current leader of the Raft cluster.  This can
+  be different than the active ID if the cluster is in the middle of determining which cluster member is
+  best suited to handling external cluster traffic.
+
+* `drpcli system ha peers` returns a list of all known cluster members.
+
+* `drpcli system ha state` returns the current HA state of an individual node.
+
+Bootstrapping Synchronous Replication (pre-v4.6.0 style)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This bootstrapping documentation will assume that you are working with dr-provision running as a native service
 managed by systemd on a Linux server.
@@ -385,83 +464,11 @@ To promote a passive endpoint to active
 
   ::
 
-    // activate endpoint (goes into active mode)    
+    // activate endpoint (goes into active mode)
     drpcli system active
 
 .. note:: Prior to v4.5.0, Signals were used to shift state.  SIGUSR2 was used to go from active to passive and
   SIGUSR1 was used to go from passive to active.
-
-Bootstrapping Consensus via Raft (v4.6.0 and later)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-In 4.6 and later, you can bootstrap, add nodes to, and remove nodes from a consensus cluster using `drpcli` without
-needing to stop nodes for manual reconfiguration or mess with systemd config files.
-
-Self-enroll the initial active node
------------------------------------
-
-To start the initial active node, you can use the `drpcli system ha enroll` command to have it
-enroll itself.  The form of the command to run is as follows::
-
-    drpcli system ha enroll $RS_ENDPOINT username password \
-        ConsensusAddr address:port \
-        Observer true/false \
-        VirtInterface interface \
-        VirtInterfaceScript /path/to/script \
-        HaId ha-identifier \
-        LoadBalanced true/false \
-        VirtAddr virtualaddr
-
-The last 3 of those settings can only be specified during self-enroll, and even then they can only be specified
-if the system you are self-enrolling is not already in a synchronous replication cluster.  You also can only specify
-VirtInterface and VirtInterfaceScript if LoadBalanced is false.  If any errors are returned during that call,
-they should be addressed and the command retried.  Once the command finished without error, the chosen system
-will be in a single node Raft cluster that is ready to have other nodes added to the cluster.
-
-Adding additional nodes
------------------------
-
-To add additional nodes to an existing cluster, you also use
-`drpcli system ha enroll` against the current active node in that cluster::
-
-    drpcli system ha enroll https://ApiURL_of_target target_username target_password \
-        ConsensusAddr address:port \
-        Observer true/false \
-        VirtInterface interface \
-        VirtInterfaceScript /path/to/script
-
-This will get the global HA settings from the active node in the cluster, merge those settings with the
-per-node settings from the target node and the rest of the settings passed in on the command line, and direct
-the target node to join the cluster using the merged configuration.
-
-**NOTE** The current data on the target node will be backed up, and once the target node has joined the
-cluster it will mirror all data from the existing cluster.  All backed up data will be inaccessible from that point.
-
-Other consensus commands
-------------------------
-
-`drpcli system ha` has several other commands that you can use to examine the state of consensus on a node.
-
-* `drpcli system ha active` will get the Consensus ID of the node that is currently responsible for
-  all client communication in a consensus cluster.  It is possible for this value to be unset if the
-  active node has failed and the cluster is deciding on a new active node.
-
-* `drpcli system ha dump` will dump the user-visible parts of the backing finite state machine that
-  is responsible for keeping track of the state of the cluster.
-
-* `drpcli system ha failOverSafe` will return true if there is at least one node in the cluster that
-  is completly up-to-date with the active node, and it will return false otherwise.  You can pass
-  a time to wait (up to 5 seconds) for the cluster to be fail over safe as an optional argument.
-
-* `drpcli system ha id` returns the Consensus ID of the node you are takling to.
-
-* `drpcli system ha leader` returns the Consensus ID of the current leader of the Raft cluster.  This can
-  be different than the active ID if the cluster is in the middle of determining which cluster member is
-  best suited to handling external cluster traffic.
-
-* `drpcli system ha peers` returns a list of all known cluster members.
-
-* `drpcli system ha state` returns the current HA state of an individual node.
 
 Troubleshooting
 ~~~~~~~~~~~~~~~
