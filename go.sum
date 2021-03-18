@@ -14,7 +14,6 @@ github.com/VictorLowther/jsonpatch2 v1.0.0 h1:gQxztbUxxBK0EccdhRO44TgDy7jSFFIZAG
 github.com/VictorLowther/jsonpatch2 v1.0.0/go.mod h1:MagdKGtUJ6bwyDgLk502ME/LDMKy9Rqh9iOf41iG5ds=
 github.com/cpuguy83/go-md2man v1.0.10 h1:BSKMNlYxDvnunlTymqtgONjNnaRV1sTpcovwwjF22jk=
 github.com/cpuguy83/go-md2man v1.0.10/go.mod h1:SmD6nW6nTyfqj6ABTjUi3V3JVMnlJmwcJI5acqYI6dE=
-github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
@@ -22,8 +21,8 @@ github.com/digitalocean/go-smbios v0.0.0-20180907143718-390a4f403a8e h1:vUmf0yez
 github.com/digitalocean/go-smbios v0.0.0-20180907143718-390a4f403a8e/go.mod h1:YTIHhz/QFSYnu/EhlF2SpU2Uk+32abacUYA5ZPljz1A=
 github.com/digitalrebar/logger v1.0.2 h1:0Q2fwvrasMNcm/8jWBjQWHS/sX4k//wt+K0c24V0ELE=
 github.com/digitalrebar/logger v1.0.2/go.mod h1:ZVptenY/Zi6Y7vGYcAOepmo2MSgIbodlUtanpFBK2Yw=
-github.com/digitalrebar/service v1.1.1-0.20201014144010-350daf8c5b17 h1:1Ali1GA05Qt0p8E7od7qIVHw/oY9R5k+fs1zEVf5YSc=
-github.com/digitalrebar/service v1.1.1-0.20201014144010-350daf8c5b17/go.mod h1:QIfTKUcTpVIbO5W5dntdyBM1o0jNiNUoMVbwNvIacwo=
+github.com/digitalrebar/service v1.1.1-0.20210318203824-ace7506f4810 h1:BYwmlkh0Cvys1alFy9oA95F9eo/EYW17Qul7sELRrMU=
+github.com/digitalrebar/service v1.1.1-0.20210318203824-ace7506f4810/go.mod h1:QIfTKUcTpVIbO5W5dntdyBM1o0jNiNUoMVbwNvIacwo=
 github.com/digitalrebar/tftp v2.1.0+incompatible h1:CzBcnsUaMtdLSOf3dSycinnfpajAAro7l8oo/ILyzOI=
 github.com/digitalrebar/tftp v2.1.0+incompatible/go.mod h1:k1tcsyQwHE72oTU5sfXPJdOCHFiZUt3M2BdYdHsfw6c=
 github.com/digitalrebar/tftp/v3 v3.0.0 h1:Ft2i3s2gCZ795rISs9vlcy3YSqfd6mtodxGoUcPSrhs=
@@ -43,7 +42,6 @@ github.com/gofunky/semver v3.5.2+incompatible/go.mod h1:7MXgDdC47tqmTJhxqX5CCuJa
 github.com/google/go-cmp v0.4.0 h1:xsAVV57WRhGj6kEIi8ReJzQlHHqcBYCElAvkovg3B/4=
 github.com/google/go-cmp v0.4.0/go.mod h1:v8dTdLbMG2kIc/vJvl+f65V22dbkXbowE6jgT/gNBxE=
 github.com/google/gofuzz v1.0.0/go.mod h1:dBl0BpW6vV/+mYPU4Po3pmUjxk6FQPldtuIdl/M65Eg=
-github.com/google/uuid v1.0.0 h1:b4Gk+7WdP/d3HZH8EJsZpvV7EtDOgaZLtnaNGIu1adA=
 github.com/google/uuid v1.0.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
 github.com/google/uuid v1.1.1 h1:Gkbcsh/GbpXz7lPftLA3P6TYMwjCLYm83jiFQZF/3gY=
 github.com/google/uuid v1.1.1/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=

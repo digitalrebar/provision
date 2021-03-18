@@ -9,7 +9,7 @@ require (
 	github.com/VictorLowther/jsonpatch2 v1.0.0
 	github.com/cpuguy83/go-md2man v1.0.10 // indirect
 	github.com/digitalrebar/logger v1.0.2
-	github.com/digitalrebar/service v1.1.1-0.20201014144010-350daf8c5b17
+	github.com/digitalrebar/service v1.1.1-0.20210318203824-ace7506f4810
 	github.com/digitalrebar/tftp/v3 v3.0.0
 	github.com/elithrar/simple-scrypt v1.3.0
 	github.com/ghodss/yaml v1.0.0
