@@ -89,6 +89,7 @@ AllowAutoUpdate: true
 type agentProg struct {
 	exe          string
 	stateLoc     string
+	serviceType  string
 	cmd          *exec.Cmd
 	opts         agentOpts
 	logPipe      io.ReadCloser
@@ -123,22 +124,36 @@ func (a *agentProg) Start(s service.Service) error {
 	go func() {
 		started := false
 		for !a.shuttingDown {
-			in, out := io.Pipe()
-			a.logPipe = in
-			a.cmd.Stderr, a.cmd.Stdout = out, out
-			go func(rdr io.Reader) {
-				scanner := bufio.NewScanner(rdr)
-				for scanner.Scan() {
-					slog.Info(scanner.Text())
+			switch a.serviceType {
+			case "linux-systemd", "linux-upstart":
+				a.cmd.Stderr = os.Stderr
+				a.cmd.Stdout = os.Stdout
+			default:
+				in, out, err := os.Pipe()
+				if err != nil {
+					slog.Errorf("Error setting up logging: %v", err)
+					slog.Errorf("Will try again in 5 seconds")
+					time.Sleep(5 * time.Second)
+					continue
 				}
-			}(in)
+				a.logPipe = in
+				a.cmd.Stderr, a.cmd.Stdout = out, out
+				go func(rdr, wrt io.ReadCloser) {
+					defer wrt.Close()
+					scanner := bufio.NewScanner(rdr)
+					for scanner.Scan() {
+						slog.Info(scanner.Text())
+					}
+				}(in, out)
+			}
 			err = a.cmd.Start()
 			if !started {
 				started = true
 				up.Done()
 				if err != nil {
-					in.Close()
-					out.Close()
+					if a.logPipe != nil {
+						a.logPipe.Close()
+					}
 					return
 				}
 			}
@@ -152,8 +167,9 @@ func (a *agentProg) Start(s service.Service) error {
 				slog.Errorf("Agent runner exited prematurely!")
 			}
 			slog.Errorf("Will try again in 5 seconds")
-			in.Close()
-			out.Close()
+			if a.logPipe != nil {
+				a.logPipe.Close()
+			}
 			time.Sleep(5 * time.Second)
 		}
 	}()
@@ -175,7 +191,9 @@ func (a *agentProg) Stop(s service.Service) error {
 		a.shuttingDown = true
 		a.cmd.Process.Kill()
 	}
-	a.logPipe.Close()
+	if a.logPipe != nil {
+		a.logPipe.Close()
+	}
 	return nil
 }
 
@@ -237,8 +255,9 @@ var agentHandler = &cobra.Command{
 			}
 		}
 		prog := &agentProg{
-			exe:      exePath,
-			stateLoc: stateLoc,
+			exe:         exePath,
+			stateLoc:    stateLoc,
+			serviceType: system.String(),
 		}
 		if len(args) == 0 {
 			fi, err := os.Open(cfgFileName)
