@@ -6,13 +6,20 @@
 
 .. _rs_upgrade:
 
-Upgrade
-~~~~~~~
+Upgrade and Downgrade DRP
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
-While not glamorous, existing code can be overwritten by a new install and
-restart.  That is about it.  Here are a few more details.
+Upgrading Digital Rebar Platform (DRP) is generally pretty straight forward.  The
+``dr-provision`` binary is simply replaced with a newer version.  Upgrades can be
+performed on a running system with DRP provided tools, via the Portal, or by stopping
+the ``dr-provision`` service, replacing the binary, and staring it back up again.
 
-We recommend that you backup your existing install as a safey measure.
+However, note that there are a few general rules to consider for upgrades:
+
+  * always upgrade the DRP service first
+  * upgrade content packs and plugins after the DRP service upgrade
+
+.. warning:: We HIGHLY SUGGEST that you backup your existing install as a safey measure.
 
 
 Backup

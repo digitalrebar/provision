@@ -92,6 +92,7 @@ Exploration with Curl
 You can also interact with the API using ``curl``.  The general pattern is:
 
   ::
+
     curl -X <method> -k -u <username>:<password> -H `Content-Type: application/json' -H 'Accept: application/json' https://<endpoint addr>:<port>/api/v3/<opject type>/<object ID>
 
 In the remainder of this section, <object type> refers to the lower case, pluralized version of the type of object.  This is `bootenvs` for boot environments, `workflows` for workflows, `machines` for machines, and so on.

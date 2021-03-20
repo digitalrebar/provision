@@ -30,7 +30,7 @@ Code was added to prevent out of bounds navigation.
 Steps to reproduce
 ------------------
 
-  :: 
+  ::
 
     docker run --rm -it ubuntu /bin/bash
 

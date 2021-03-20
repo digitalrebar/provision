@@ -32,4 +32,3 @@ Some of these operations are in the :ref:`rs_ui`, but not all.  This will focus 
    operations/scaling
    operations/security
    operations/virtualmedia-iso-booting
-   operations/vmware-sddc

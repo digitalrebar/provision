@@ -64,10 +64,9 @@ Once complete, this directory can be tarred up for storage elsewhere.
 
 A complete backup should include the *install.sh* and the *dr-provision.zip* used at install time, and this tarball.
 
-.. note::
-
-    If dr-waltool is not installed on your drp endpoint you may be running an older version of dr-provision server,
-or you have installed, or upgraded using the web installer. See below for solutions.
+.. note:: If dr-waltool is not installed on your drp endpoint you may be running an older version of
+          dr-provision server, or you have installed, or upgraded using the web installer. See below
+          for solutions.
 
 
 Restore

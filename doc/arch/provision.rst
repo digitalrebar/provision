@@ -303,6 +303,8 @@ the following fields:
 When a Param has the Secure flag, the following additional steps must be
 taken to set and get values for this param on objects that hold params.
 
+.. _rs_data_setting_param_secure:
+
 Setting Secure Param Values
 ===========================
 
@@ -330,6 +332,8 @@ Setting Secure Param Values
 
 6. Use the SecureData struct in place of the raw param value when
    making API calls to add, set, or update params.
+
+.. _rs_data_retrieving_param_secure:
 
 Retrieving Decrypted Secure Data Values
 =======================================

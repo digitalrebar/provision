@@ -67,7 +67,9 @@ Showing Progress and Leaders
 
 To show cluster install progress, common practice is to set the Machine.Meta icon and color.  This provides a fast reference back to operators about the state of the cluster without having to open the profile.
 
-  :: 
+  ::
+
     drpcli machines update $RS_UUID "{\"Meta\":{\"color\":\"purple\", \"icon\": \"anchor\"}}" | jq .Meta
 
 Scripts are often updated so that the elected leader(s) have a distinct icon or color from the rest of the cluster.
+
