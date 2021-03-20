@@ -1,0 +1,242 @@
+.. Copyright (c) 2021 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+
+.. _working_with_secure_params:
+
+kb-00060: Working with Secure Params
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. _rs_kb_00060:
+
+Knowledge Base Article: kb-00060
+--------------------------------
+
+
+Description
+-----------
+
+This article describes several ways to work with Secure Params in the Digital
+Rebar Platform (DRP).
+
+Topis discussed:
+
+  * Using the meta ``password`` value (this is NOT secure params)
+  * Creating and working with encrytped Secure Params
+
+This document does not discuss Secure Params at rest in Infrastructure-as-Code (IaC)
+content packs.  For more details on working with Secure Params at rest, please see
+the following Knowledge Base article:
+
+  * :ref:`kb_secure_data_content`
+
+
+Solution
+--------
+
+Working with Secure Params within DRP is relatively easy.  The two primary ingredients are:
+
+  * the Param type definition carrying the field ``Secure: true``
+  * use of the ``decode`` option by an authroized user (with an appropriate :ref:`rs_data_claim`)
+
+.. note:: The Portal has a simplified option to obfuscate the display of a given Param value.
+          This method is **NOT** utilizing the Secure Params system.  However, it is discussed
+          in this KB for completeness sake.
+
+Secure Params utilize *curve25519* and *xsalsa20* for crypto, and *poly1305* for validation of
+param values that are marked Secure.  The values are carried in the Params value field as an object
+with a ``key``, ``nonce``, and ``payload``.  An example of a Secure Param (in YAML output):
+
+  ::
+
+      aaa-secure-string:
+        Key: O5+tXUZS7VyxjMQi7O+b6sOtLw25DMesqefhExa0m3U=
+        Nonce: 01Dgtd14ZnmC8n8Kr9QMEKmQsfSz8t4z
+        Payload: t68Br812eKhefUTInr0+pchQ1stATjUEIcvID7Uxmhwr5pPjzybjeM937uY=
+
+The secure param can only be decrypted with the use of a valid Username/Password pair or Token;
+which has the appopriate :ref:`rs_data_claim` (specifically ``getSecure``).
+
+
+**Prerequisites**
+
+Within the Digital Rebar Platform (DRP), is a core feature for enabling secure handling
+of secrets (passwords, keys, etc.).  This feature is simply called "Secure Params".  Your
+DRP Endpoint must be licensed to use the "Secure Params" system.  You can verify this as
+follows:
+
+  * In the UX, observe the ``Info & Preferences`` page, under "Feature Flags" will have ``secure-params``
+  * CLI check - use ``drpcli info get | jq -r .features | grep secure-params``, should also return ``secure-params``
+  * API use the /api/v3/info with a GET request, parse the ``features`` JSON returned section for ``secure-params``
+
+In addition, the license entitlements may restrict this feature.
+
+
+**The meta "password" versus "Secure Params"**
+
+DRP Param definitions can make use of the ``Meta`` field named ``password``.  This field
+simply obfuscates the value of the field in the RackN Portal (UX).  It does NOT actually
+encrypt the data values.  This can be useful for simple information display that the
+operator does not want exposed visually within the portal.
+
+A YAML example of a Param type definition using this implementation looks like:
+
+  ::
+
+    ---
+    Name: password-string
+    Meta:
+      color: yellow
+      icon: pencil
+      password: "yes"
+    Schema:
+      type: string
+      default: "secret"
+
+.. warning:: Use of the Meta ``password: yes`` does NOT actually encrypt the string.  The
+             value is stored in clear text.  Only the RackN portal obfuscates the value as
+             a convenience.
+
+The ``password`` Meta field can contain the following values:
+
+  * ``yes`` = obfuscate the value ONLY in the Portal (UX)
+  * ``showable`` = optionally allow operator to click on the lock icon to show it in the UX
+
+
+**Creating a Secure Param**
+
+Creation of a Secure Param is fairly easy.  When creating the type definition of a Param, simply
+add the ``Secure: true`` boolean value to the Param object definition, like:
+
+  ::
+
+    ---
+    Name: secure-string
+    Meta:
+      color: orange
+      icon: private
+    Secure: true
+    Schema:
+      type: string
+      default: "secure param value"
+
+When the Param is assigned a value through any normal mechanism, the field value will be encrypted
+and stored in the system in the key/nonce/payload structure automatically.  The initial assignment
+value of the Param is performed by passing in the clear text value, which will then be automatically
+converted to the secured and encrypted key/nonce/payload.
+
+An example of using the Secure Param by assigning a value to a Machine, using ``drpcli``:
+
+  ::
+
+    # creating a "bare" machine Param which has been defined with "Secure: true"
+    drpcli machines set Name:mach-01 param aaa-secure-string to "lorem ipsum dolor sit amet"
+
+    # returns the encrypted key/nonce/payload values as follows:
+    {
+      "Key": "9BD8qnGR9dv/o0RfoDvFAP9f20aT71b03vR18iKr6Dk=",
+      "Nonce": "StDGvBPPeLUSf+Aw9YcbGJDAEp6+PiLw",
+      "Payload": "XV5109jwsBlorMl2VZxW+B/jg8Z5ht62+Acozqk5ajgfCHVv+SUx3EI4rhg="
+    }
+
+Subsequently - any use of the Param value will be via the encrypted Param, and an operator must
+decode the encrypted string to view it in the non-encrypted format.
+
+
+**Viewing a Secure Param**
+
+Any operator that has Claim rights (appropriate Role Based Access Controls) to the object, and has
+a valid username/password or Token with the ``getSecure`` Claim right can decode a secure param.
+The following are methods for viewing the value of a Secure Param.
+
+  **In the Portal (UX)**
+
+    If the user meets the Claim / authorization rights, the Param will be presented with a Lock
+    icon in the value of the Param.  Clicking the lock icon will automatically decrypt the stored
+    key/nonce/payload values, and make them visibly accessible.
+
+  **In the Command Line client (drpcli)**
+
+    Use of the ``--decode`` flag in appropriate CLI usage will decode the Param values, assuming
+    the appropriate Claim / authorization information is presented.  Example:
+
+      ::
+
+        # view the encoded key/nonce/payload
+        drpcli machines get Name:mach-01 param aaa-secure-string
+
+        # returns:
+          {
+            "Key": "O5+tXUZS7VyxjMQi7O+b6sOtLw25DMesqefhExa0m3U=",
+            "Nonce": "01Dgtd14ZnmC8n8Kr9QMEKmQsfSz8t4z",
+            "Payload": "t68Br812eKhefUTInr0+pchQ1stATjUEIcvID7Uxmhwr5pPjzybjeM937uY="
+          }
+
+        # decode the encrypted param
+        drpcli machines get Name:mach-01 param aaa-secure-string --decode
+
+        # returns:
+          "lorem ipsum dolor sit amet"
+
+  **Decoding Secure Params with the API**
+
+    The API can be used to obtain the decrypted Secure Param value by appending the
+    query field ``decode=true`` to the API call.  Below is an example of using the
+    ``curl`` command to get the decrypted value via the API.
+
+      ::
+
+        # get the encrypted key/nonce/payload
+        curl --insecure -X GET --header 'Accept: application/json' --header 'Authorization: Basic abc123abc123abc123' \
+          'https://drp:8092/api/v3/machines/8910cdea-b711-4f3c-98c5-dc7b6483e300/params?params=aaa-secure-string'
+
+        # returns:
+          {"aaa-secure-string":{"Key":"O5+tXUZS7VyxjMQi7O+b6sOtLw25DMesqefhExa0m3U=","Nonce":"01Dgtd14ZnmC8n8Kr9QMEKmQsfSz8t4z","Payload":"t68Br812eKhefUTInr0+pchQ1stATjUEIcvID7Uxmhwr5pPjzybjeM937uY="}}
+
+        # decrypt the value (notice '&decode=true` query string appended):
+        curl --insecure -X GET --header 'Accept: application/json' --header 'Authorization: Basic abc123abc123abc123' \
+          'https://drp:8092/api/v3/machines/8910cdea-b711-4f3c-98c5-dc7b6483e300/params?params=aaa-secure-string&decode=true'
+
+        # returns:
+          {"aaa-secure-string":"lorem ipsum dolor sit amet"}
+
+
+Additional Information
+----------------------
+
+
+See Also
+========
+
+Additional resources and information related to this Knowledge Base article.
+
+  * :ref:`kb_secure_data_content`
+  * :ref:`rs_data_param_secure`
+  * :ref:`rs_data_setting_param_secure`
+  * :ref:`rs_data_retrieving_param_secure`
+  * Understanding how the :ref:`rs_data_claim` system works
+
+
+Versions
+========
+
+v4.0 and newer
+
+Keywords
+========
+
+secure params, encrypted params, password, secret, hidden, showable
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00060
+    initial release:  Sat Mar 20 10:25:49 PDT 2021
+    updated release:  Sat Mar 20 10:25:49 PDT 2021
+
