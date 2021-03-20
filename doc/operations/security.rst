@@ -10,7 +10,7 @@ Security Frequently Asked Questions (FAQ)
 =========================================
 
 The following questions from customer security reviews that may be generally helpful in understanding Digital Rebar security.  The questions are generally organized into categories.
- 
+
 This FAQ page is constantly evolving.  If you cannot find the answer to your question here, please let us know and we’ll add to the page.
 
 
@@ -22,15 +22,15 @@ Authentication Questions
 What are the authentication methods for admin accounts?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-There are two internal methods.  
+There are two internal methods.
 
 #. Username/Password over HTTPS connection (Basic Auth)
 #. Token over HTTPS connection (Bearer Auth)
- 
+
 Tokens can grant a subset of a user’s abilities to restrict access and control.   We strongly recommend using token security as much as possible.  The preferred pattern is to use username/password authentication to create a token.  The token should be used for all subsequent requests because it is more secure and performant.
- 
+
 The Single Sign On (SSO) plugin allows Digital Rebar to delegate authentication to external authentication services such as LDAP or Active Directory.  Roles returned from that service will be mapped back into Digital Rebar roles.  No user accounts need to be created in advance.
- 
+
 With the addition of SSO capabilities, RackN chose to delegate advanced authentication features to the SSO system rather than re-implementing them in the internal authentication system.  For that reason, Digital Rebar user authentication options are kept minimal.
 
 What are the authentication methods for user accounts?
@@ -62,7 +62,7 @@ Does DRP support Multi-Tenant allocations?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Yes.  Tenants are primary objects in DRP.  Users and machines can be assigned into tenants to limit access to specific machines.
- 
+
 Tenants are maintained in a flat model.  DRP does not support nesting tenants, users or machines.
 
 Does DRP have built in Roles?  Can they be overridden?
@@ -79,16 +79,16 @@ Is there an accounting mechanism?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 All API actions generate events and these  are logged to files or to external event listeners.
- 
+
 The events contain what user took the action.
 
 Are authentication activities logged?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Yes in multiple ways
- 
+
 Most simply, they are logged stdout by default.
- 
+
 In addition, all authentication activities, including token creation, also generate events against the User Model that can be forwarded.
 
 Are admin activities logged?
@@ -105,7 +105,7 @@ How long are the logs stored in the solution?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Operators define their own log rotation scheme.
- 
+
 DRP is usually run under systemd with interaction into many log capture/rotation systems.
 
 Can the logs be sent to Splunk and/or other solutions?
@@ -124,7 +124,7 @@ Is sensitive data logged?
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 We try to filter all sensitive data out of the server logs.  Sensitive data may be included at higher log levels (debug or trace) so production systems should never run at elevated log levels for prolonged periods.
- 
+
 Job logs, which are often operator created content, may contain sensitive information.  They are maintained separately so they can be quickly purged or managed independently of server logs.
 
 .. _rs_security_condidentiality:
@@ -157,7 +157,7 @@ The information collected is:
 * content packs that are installed
 * the IP address of the user’s browser
 
-To obtain a RackN license, an active email address (could be an alias) is required.  For contact purposes, we also request name and phone number.  
+To obtain a RackN license, an active email address (could be an alias) is required.  For contact purposes, we also request name and phone number.
 
 
 Is all the flow between Digital Rebar and the provisioned machines secured?
@@ -175,8 +175,8 @@ Does the CLI use an SSH connection?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 No.  The Remote CLI does not use SSH.   We don’t use SSH anywhere in the product.
- 
-The CLI uses an HTTPS connection to the DRP API. 
+
+The CLI uses an HTTPS connection to the DRP API.
 
 Can I restrict the allowed ciphers for API connections?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -192,24 +192,24 @@ Is the admin password strongly encrypted?
 .. note:: CHANGE YOUR ADMIN PASSWORD FROM THE DEFAULT
 
 The password is only saved as a one-way calculated secret hash (scrypt).  This is stored on the user object.  It is possible to perform this encryption outside of the system and store the passwords as hashed data.
- 
+
 Parameters that have been flagged as Secure are stored in encrypted format.
- 
+
 Versions prior to 4.2 stored data as json files on the Server's disk.  Older versions are not recommended for production.
- 
+
 Digital Rebar does not have any external database.
 
 How are the users IDs (login/pass) stored? Are they encrypted?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The Passwords for users (the same as admin) are stored as one-way hashes for comparison.  We do not store the user passwords on disk on their cryptographic hash.
- 
+
 Digital Rebar does not store passwords when SSO is enabled.
 
 Does a full disk encryption feature exist or can we implement it?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Not yet.  We are in the process of exploring and implementing a LUKS process for encryption/decryption of machines during boot.  If this is interesting to you, we should talk about it.  
+Not yet.  We are in the process of exploring and implementing a LUKS process for encryption/decryption of machines during boot.  If this is interesting to you, we should talk about it.
 
 .. _rs_security_availability:
 
@@ -219,8 +219,8 @@ Service and Availability Questions
 What are the most likely causes of disruption or downtime?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-DRP is provided a single go-binary.  This is usually run under systemd to handle restarts after catastrophic failures.  DRP starts within seconds. 
- 
+DRP is provided a single go-binary.  This is usually run under systemd to handle restarts after catastrophic failures.  DRP starts within seconds.
+
 DRP Enterprise includes active/passive(s) high available (HA) features to automatically synchronize data between endpoints.  By design, an additional service such as Corosync Pacemaker is needed to manage automatic failover between endpoints, if that is a concern.
 
 What strategies and safeguards does the service/product have to help avoid disruption or downtime of the service/product?
@@ -296,7 +296,7 @@ Is the flow between a DRP and a provisioned machine authenticated?
 
 There are two sets of flows for DRP to provisioned servers.
 
-#. The first flow is for basic booting.  These files are served over tftp/http and are not secured. 
+#. The first flow is for basic booting.  These files are served over tftp/http and are not secured.
 #. The second flow is for configuration; these actions are done over the secured HTTPS ports.  These actions use token-based authentication that are restricted to the machine only.
 
 
@@ -332,7 +332,7 @@ Is DRP scalable?
 Yes.  DRP scales by segmenting Data centers into pieces with content packages being a common deployment sync method.
 
 The internal data storage uses a write logging process with check points.  This allows DRP to optimize lock and write behavior even with 1,000s of concurrent operations.
- 
+
 Additionally, DRP is light-weight and has been performance tested to ensure scale.  We have a scaling document to assist in tuning DRP host environments.
 
 Please consult :ref:`rs_scaling` for additional details.
@@ -340,9 +340,9 @@ Please consult :ref:`rs_scaling` for additional details.
 How sensitive data are stored?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Parameters are the primary method of storing information on plugins, machines, and profiles.  These have two forms, normal and secure.  Secure parameters are maintained in a separate data store that is encrypted. 
- 
-In the future, these parameters could be stored in Hashicorp Vault for example.  This is a roadmap item that is awaiting prioritization. 
+Parameters are the primary method of storing information on plugins, machines, and profiles.  These have two forms, normal and secure.  Secure parameters are maintained in a separate data store that is encrypted.
+
+In the future, these parameters could be stored in Hashicorp Vault for example.  This is a roadmap item that is awaiting prioritization.
 
 See :ref:`rs_data_param_secure` for additional details.
 
@@ -366,7 +366,7 @@ All browser to DRP endpoint communication is direct between the browser and the 
 Does RackN have access to my DRP Passwords?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-No.  DRP passwords are not sent or stored by RackN.  Passwords are sent directly to the DRP endpoint from the UX or CLI: they are hash checked or passed to active directory for validation.  Once validated, the password is discarded.  This is only done to the DRP endpoint.  
+No.  DRP passwords are not sent or stored by RackN.  Passwords are sent directly to the DRP endpoint from the UX or CLI: they are hash checked or passed to active directory for validation.  Once validated, the password is discarded.  This is only done to the DRP endpoint.
 
 RackN SaaS does not store any operator passwords (or internal data) for deployed software  The only information passed to the DRP SaaS is the DRP license identity, usage counts, and usage of plugins and contents.  This is not a specific configuration.
 
@@ -431,9 +431,9 @@ See OWSAP reference: https://owasp.org/www-project-top-ten/
 
 Brief comments regarding the OWASP top 10 list
 
-#. Injection: there is no SQL database in DRP. 
-#. Broken Authentication: no known issues and tokens are time and scope limited. 
-#. Sensitive Data Exposure: parameters can be stored securely. 
+#. Injection: there is no SQL database in DRP.
+#. Broken Authentication: no known issues and tokens are time and scope limited.
+#. Sensitive Data Exposure: parameters can be stored securely.
 #. XML External Entities (XXE): there is no XML in DRP.
 #. Broken Access Control: no known issues.
 #. Security Misconfiguration: we help mitigate this issue.  DRP makes patch and upgrade of DRP easy via the API.
@@ -453,7 +453,7 @@ Do you have data flow diagrams?
 
 RackN has many graphics about data flows and need more details to provide the correct reference material.  There are provisioning dataflows, discovery dataflows, configuration dataflows, plugin dataflows.
 
-We are in the process of migrating this information to this documentation site.  Please contact us if you'd like access.  
+We are in the process of migrating this information to this documentation site.  Please contact us if you'd like access.
 
 Can I customize the UX based on role?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -464,14 +464,14 @@ Is Idle Session Timeout implemented?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The RackN UX has a user settable session timeout (default is 24 hours).  The ux_views plugin must be installed to expose this feature.
- 
+
 The DRP CLI uses maintained connections with tokens that are short lived by refreshed.  Token duration is selected when the token is created.  This way if the DRP CLI the token store to speed up connection processing times out quickly (within an hour).
 
 Are session tampering controls implemented?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The normal communication paths are over HTTPS and reduces this issue.  In addition, tokens are encrypted by the server with it’s own uniquely generated key.
- 
+
 Additionally, tokens have markers and times in the data to facilitate secondary validation.
 
 Which kind of data are processed by the application? Stored by the application?
@@ -481,7 +481,7 @@ Our system processes inventory and state information about the machines being ma
 
 Some data needed to deploy the system will be potentially sensitive, e.g. ipmi/password, base words for operating system, etc.  These are stored in secure parameters.
 
-One of the niceties of the image deploy system is that DRP doesn’t have to be involved in any of that data.  Those images can reside outside of DRP and referenced.  DRP and RackN try to keep as little information about the actual work the system is doing other than what is minimally needed to provision that system. 
+One of the niceties of the image deploy system is that DRP doesn’t have to be involved in any of that data.  Those images can reside outside of DRP and referenced.  DRP and RackN try to keep as little information about the actual work the system is doing other than what is minimally needed to provision that system.
 
 
 .. _rs_security_general:

@@ -41,38 +41,37 @@ Golang template complains if you are building a template that also uses double c
 
 There are multiple solutions, please review to see which best fits your needs.
 
-Solution 1: Escape In Place
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  **Solution 1: Escape In Place**
 
-You can also use a pair of single quotes (\\`) to escape the block in place to create
-an string that is not modifed by gotemplates inside a gotemplate brace pair.
+  You can also use a pair of single quotes (\\`) to escape the block in place to create
+  an string that is not modifed by gotemplates inside a gotemplate brace pair.
 
-Generallly, this approach is recommended because it is simple and easy to read.
+  Generallly, this approach is recommended because it is simple and easy to read.
 
-For example:
+  For example:
 
-  ::
+    ::
 
-    "{{`{{ services['drpcli.service'].status }}`}}"
+      "{{`{{ services['drpcli.service'].status }}`}}"
 
 
-Solution 2: Substitution
-~~~~~~~~~~~~~~~~~~~~~~~~
+  **Solution 2: Substitution**
 
-Another workaround is to define variables for the double brace and then use the variable in the template.
+  Another workaround is to define variables for the double brace and then use the variable in the template.
 
-This approach is needed to make more template substitions _inside_ the Ansible code block.
+  This approach is needed to make more template substitions _inside_ the Ansible code block.
 
-For example:
+  For example:
 
-  ::
+    ::
 
-    {{ $openblock := "\x7B\x7B" }}
-    {{ $closeblock := "\x7D\x7D" }}
+      {{ $openblock := "\x7B\x7B" }}
+      {{ $closeblock := "\x7D\x7D" }}
 
-    - hosts: localhost
-      vars:
-        braceme: "{{ $openblock }}{{ .Param "variable" }}{{ $closeblock }}"
+      - hosts: localhost
+        vars:
+          braceme: "{{ $openblock }}{{ .Param "variable" }}{{ $closeblock }}"
+
 
 Additional Information
 ----------------------

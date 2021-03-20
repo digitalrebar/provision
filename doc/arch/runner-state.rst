@@ -131,7 +131,7 @@ Contexts are a new top-level object that allow dr-provision to support
 the underlying idea that tasks for a machine can run somewhere besides
 on the machine itself.
 
-You can find more information on contexts in various :ref:`rs_operations`
+You can find more information on contexts in various :ref:`rs_operation`
 documentation pages.  Here is an incomplete list of specific operations
 documentation:
 

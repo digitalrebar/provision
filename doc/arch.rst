@@ -28,5 +28,5 @@ dr-provision for developers and power users.
    arch/cluster
    arch/pooling
    arch/manager
-   arch/Swagger
+   arch/swagger
 

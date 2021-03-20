@@ -110,11 +110,9 @@ Table of Contents
    doc/integrations
    doc/os-support
    doc/ux/portalux
-   doc/Swagger
    doc/cli
    doc/api
    doc/dev/dev-contributing
-   doc/faq-troubleshooting
    doc/knowledge-base
    doc/arch
    doc/content-packages
