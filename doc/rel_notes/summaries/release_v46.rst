@@ -44,6 +44,10 @@ The following items are flagged as deprecated in v4.5 and will be removed in v4.
 * terraform-provider-drp based on the DRP v3 API will not be supported
 * Centos7 Sledgehammer will not continue to get updates after this release.  Customers should plan to migrate to the Centos8 version.
 
+The following items are marked Deprecated in v4.6 and will be removed in a future DRP release:
+
+* individual Linux install "*base*" workflows (eg ``centos-7-base``, ``debian-10-base``, ``ubuntu-20.04-base``) - **replaced** with Universal Workflows (see :ref:`_deploy_linux_with_universal`)
+
 
 .. _rs_release_v46_removals:
 
@@ -115,6 +119,13 @@ Universal Workflow
 The components of Universal Workflow are all included the the v4.6 release.  Universal Workflow provides a standardized workflow that can be applied to all provisioning operations in a consistent way.  Within that workflow, the system is able to dynamically adapt to the detected environment and take additional actions.  Unlike previous cloned Workflows, Operators may add their own custom stages and tasks to the Universal Workflow without interfering with standard operating processes.
 
 Note: There are no helpers or added design tools for Universal Workflow in the v4.6 UX.  These will roll out incrementally based on customer design interactions.
+
+Additional documentation on Universal usage can be found at:
+
+  * :ref:`rs_cp_universal``
+  * :ref:`rs_universal_arch`
+  * :ref:`rs_universal_ops`
+
 
 UX Streamlined License Process
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
