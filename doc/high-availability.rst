@@ -11,7 +11,7 @@ High Availability
 
 There are two strategies available for implementing high availability in dr-provision: automated failover using Raft for
 consensus and liveness checking, and manual failover via synchronous replication.  The former is new in 4.6.0.
-The later has been available since v4.3.0, and will continue to remain available for the foreseeable future.
+The latter has been available since v4.3.0, and will continue to remain available for the foreseeable future.
 
 Prerequisites
 ~~~~~~~~~~~~~
