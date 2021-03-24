@@ -42,7 +42,24 @@ which then chains through different workflows automatically based on Params and 
 values.  For this use case, we will use the ``universal-linux-install`` workflow to
 drive standard Linux OS deployments.
 
-The process is generally very straighforward and simple, requiring only four steps:
+Many previously existing "*base*" workflows are already provided as pre-existing profiles.
+When using these, the process can skip step 1.
+
+Example pre-existing profiles are:
+
+  * universal-application-centos-7
+  * universal-application-centos-8
+  * universal-application-fedora-31
+  * universal-application-fedora-33
+  * universal-application-debian-8
+  * universal-application-debian-9
+  * universal-application-debian-10
+  * universal-application-ubuntu-18.04
+  * universal-application-ubuntu-20.04
+  * others can be check by searching for ``universal-application-`` among the profiles
+  
+If customization is required, the process is generally very straighforward and simple,
+requiring only four steps:
 
   * Create a profile that defines the Linux OS to install, and any customizations
   * Apply the profile to your target Machine(s)
@@ -55,12 +72,14 @@ Below are more detailed usage steps.
 
   First create a Profile that sets at a minimum:
 
-    * ``univeral/application`` to the OS version
-    * adds a Linux specific Universal Profile
+    * the parameter ``universal/application`` to the name of the profile being created without the ``universal-application-`` prefix
+    * adds a Linux specific Universal Profile as a basis
 
-  .. note:: Supported OS versions can be determined by reviewing the *enum* list
-            in the Param named ``linux/install-bootenv``.  Custom OSes can be
-            selecte if BootEnvs are on the system.
+  .. note:: Supported OS versions can be determined by reviewing the existing list
+            ``universal-application-*`` profiles.  Custom OSes can be
+            selected if BootEnvs are on the system.
+            
+  .. note:: The name of the profile must start with ``universal-application-``.
 
   The below example assumes installation of *CentOS 7*.  You can substitute ``centos-7``
   for any number of supported OS version (eg ``ubuntu-20.04``, ``debian-10``,
@@ -68,17 +87,18 @@ Below are more detailed usage steps.
 
     ::
 
-      drpcli profiles create '{ "Name": "my-centos7", "Profiles": [ "universal-application-centos-7" ], "Params": { "universal/application": "centos-7" } }'
+      drpcli profiles create '{ "Name": "universal-application-my-centos-7", "Profiles": [ "universal-application-centos-7" ], "Params": { "universal/application": "my-centos-7" } }'
 
     Or in the Portal (UX):
 
       * Go to ``Profiles`` in the menu, and click the *Add* button at the top
+      * In the *Name* field enter ``universal-application-my-centos-7``
       * In the *Profiles* field enter ``universal-application-centos-7``
       * In the Params, type ``universal/application``, select the green *Plus* button
-      * Enter ``centos-7`` in the ``universal/application`` Param field after you've added it
+      * Enter ``my-centos-7`` in the ``universal/application`` Param field after you've added it
       * Click the ``Save and Exit`` at the bottom of the form
 
-  Customization of the deployed Operating system can be done by adding any other supported
+  Customization of the deployed Operating System can be done by adding any other supported
   OS Param values to your Profile.
 
   .. note:: If you are installing a custom OS version that is not defined in the *enum*
@@ -99,7 +119,7 @@ Below are more detailed usage steps.
     * Go to the ``Machines`` in the left side menu
     * Select the check box for all Machines you wish to install
     * Select the ``Profiles`` tab in the top center Bulk Actions panel
-    * Type ``my-centos7`` in the input field
+    * Type ``universal-application-my-centos-7`` in the input field
     * Click the *Plus* icon to add to the selected Machines
 
 
@@ -140,6 +160,7 @@ zero touch controls of your infrastructure.  There are many additional
 settings and behaviors available in the system.  For more advanced usage
 and documentation, please see the following resources:
 
+  * :ref:`rs_universal_arch`
   * :ref:`rs_universal_ops`
   * :ref:`rs_cp_universal`
   * :ref:`rs_release_v46`
