@@ -2,8 +2,10 @@ package cli
 
 import (
 	"context"
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"path"
 	"strings"
@@ -23,6 +25,10 @@ func init() {
 func systemInfo(app *cobra.Command) {
 	tree := addSystemCommands()
 	app.AddCommand(tree)
+}
+
+type cert struct {
+	Cert, Key []byte
 }
 
 func addSystemCommands() (res *cobra.Command) {
@@ -350,7 +356,63 @@ func addSystemCommands() (res *cobra.Command) {
 			}
 		},
 	})
-	res.AddCommand(consensus)
 
+	certs := &cobra.Command{
+		Use:   "certs",
+		Short: "Access CLI commands to get and set the TLS cert the API uses",
+	}
+
+	certs.AddCommand(&cobra.Command{
+		Use:   "get [certFile] [keyFile]",
+		Short: "Get the current operating TLS certificate and private key, and save them in PEM format.",
+		Args: func(c *cobra.Command, args []string) error {
+			if len(args) != 2 {
+				return fmt.Errorf("%v requires 2 arguments", c.UseLine())
+			}
+			return nil
+		},
+		RunE: func(c *cobra.Command, args []string) error {
+			runCert := cert{}
+			err := Session.Req().UrlFor("system", "cert").Do(&runCert)
+			if err != nil {
+				return generateError(err, "Failed to fetch cert")
+			}
+			if err = ioutil.WriteFile(args[0], runCert.Cert, 0444); err != nil {
+				return generateError(err, "Failed to save server certificate")
+			}
+			if err = ioutil.WriteFile(args[1], runCert.Key, 0400); err != nil {
+				return generateError(err, "Failed to save server private key")
+			}
+			return nil
+		},
+	})
+	certs.AddCommand(&cobra.Command{
+		Use:   "set [certFile] [keyFile]",
+		Short: "Set the current operating TLS certificate and private key using passed-in PEM encoded files",
+		Args: func(c *cobra.Command, args []string) error {
+			if len(args) != 2 {
+				return fmt.Errorf("%v requires 2 arguments", c.UseLine())
+			}
+			return nil
+		},
+		RunE: func(c *cobra.Command, args []string) error {
+			var err error
+			runCert := &cert{}
+			if runCert.Cert, err = ioutil.ReadFile(args[0]); err != nil {
+				return generateError(err, "Failed to read certificate")
+			}
+			if runCert.Key, err = ioutil.ReadFile(args[1]); err != nil {
+				return generateError(err, "Failed to read private key")
+			}
+			if _, err = tls.X509KeyPair(runCert.Cert, runCert.Key); err != nil {
+				return generateError(err, "Invalid TLS certificate/key combination")
+			}
+			if err = Session.Req().Post(runCert).UrlFor("system", "cert").Do(&runCert); err != nil {
+				return generateError(err, "Failed to update running TLS certificate")
+			}
+			return nil
+		},
+	})
+	res.AddCommand(certs, consensus)
 	return res
 }
