@@ -46,7 +46,7 @@ The following items are flagged as deprecated in v4.5 and will be removed in v4.
 
 The following items are marked Deprecated in v4.6 and will be removed in a future DRP release:
 
-* individual Linux install "*base*" workflows (eg ``centos-7-base``, ``debian-10-base``, ``ubuntu-20.04-base``) - **replaced** with Universal Workflows (see :ref:`_deploy_linux_with_universal`)
+* individual Linux install "*base*" workflows (eg ``centos-7-base``, ``debian-10-base``, ``ubuntu-20.04-base``) - **replaced** with Universal Workflows (see :ref:`deploy_linux_with_universal`)
 
 
 .. _rs_release_v46_removals:
