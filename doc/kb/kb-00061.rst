@@ -141,7 +141,9 @@ settings and behaviors available in the system.  For more advanced usage
 and documentation, please see the following resources:
 
   * :ref:`rs_universal_ops`
-  * :ref:`rs_cp_universal``
+  * :ref:`rs_cp_universal`
+  * :ref:`rs_release_v46`
+  * :ref:`rs_release_v46_deprecations`
 
 
 Versions
