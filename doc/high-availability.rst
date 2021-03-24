@@ -110,7 +110,7 @@ High Availability Startup Options
   Must be the same on all nodes participating in an HA cluster.
 
 --ha-enabled (or the environment variable RS_HA_ENABLED)
-  Must be true on all nodes participating in an HA cluster.
+  Must be included on all nodes participating in an HA cluster.
 
 --ha-address (or the environment variable RS_HA_ADDRESS)
   This is the IP address and netmask of the virtual IP that the active cluster member will use
@@ -319,7 +319,7 @@ enroll itself.  The form of the command to run is as follows::
         Observer true/false \
         VirtInterface interface \
         VirtInterfaceScript /path/to/script \
-        HaId ha-identifier \
+        HaID ha-identifier \
         LoadBalanced true/false \
         VirtAddr virtualaddr
 
