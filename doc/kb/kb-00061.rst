@@ -1,0 +1,165 @@
+.. Copyright (c) 2021 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+
+.. _deploy_linux_with_universal:
+
+kb-00061: Deploying Linux with Universal Workflows
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. _rs_kb_00061:
+
+Knowledge Base Article: kb-00061
+--------------------------------
+
+
+Description
+-----------
+
+This document outlines how to quickly get up and running using the Content Pack
+named ``Universal`` to drive Linux OS installations.
+
+Note that in DRP v4.6.0 release, the standard Linux install "*base*" workflows
+(eg *centos-7-base*, *ubuntu-20.04-base*, etc) are deprecated in favor of this
+procedure.
+
+The Universal workflows allow the Operator of a DRP system to quickly utilize
+advanced zero touch operations, along with customizable workflow chaining
+cpabilities.  This document only very briefly touches on a simplified use of
+the Universal capabilities.  Please see the Additional Resources at the end
+of this document for links to more advanced usages.
+
+
+Solution
+--------
+
+Most Universal usage is designed to start from the workflow ``universal-discover``,
+which then chains through different workflows automatically based on Params and map
+values.  For this use case, we will use the ``universal-linux-install`` workflow to
+drive standard Linux OS deployments.
+
+The process is generally very straighforward and simple, requiring only four steps:
+
+  * Create a profile that defines the Linux OS to install, and any customizations
+  * Apply the profile to your target Machine(s)
+  * Set the ``universal-linux-install`` workflow on the Machine(s)
+  * Relax and wait for the installer to complete
+
+Below are more detailed usage steps.
+
+**Step 1:  Create a Profile**
+
+  First create a Profile that sets at a minimum:
+
+    * ``univeral/application`` to the OS version
+    * adds a Linux specific Universal Profile
+
+  .. note:: Supported OS versions can be determined by reviewing the *enum* list
+            in the Param named ``linux/install-bootenv``.  Custom OSes can be
+            selecte if BootEnvs are on the system.
+
+  The below example assumes installation of *CentOS 7*.  You can substitute ``centos-7``
+  for any number of supported OS version (eg ``ubuntu-20.04``, ``debian-10``,
+  ``rhel-server-8.3-full``, etc.)
+
+    ::
+
+      drpcli profiles create '{ "Name": "my-centos7", "Profiles": [ "universal-application-centos-7" ], "Params": { "universal/application": "centos-7" } }'
+
+    Or in the Portal (UX):
+
+      * Go to ``Profiles`` in the menu, and click the *Add* button at the top
+      * In the *Profiles* field enter ``universal-application-centos-7``
+      * In the Params, type ``universal/application``, select the green *Plus* button
+      * Enter ``centos-7`` in the ``universal/application`` Param field after you've added it
+      * Click the ``Save and Exit`` at the bottom of the form
+
+  Customization of the deployed Operating system can be done by adding any other supported
+  OS Param values to your Profile.
+
+  .. note:: If you are installing a custom OS version that is not defined in the *enum*
+            list, you will also have to create a similarly matching Profile.  Follow the
+            ``universal-application-centos-7`` profile as an example.
+
+**Step 2:  Add the Profile to your Machine(s)**
+
+  Once the profile is created, associate it with the Machine(s) you wish to install.
+
+  ::
+
+    # you can select machines by Name:[NAME] or replace it with the Machines UUID value
+    drpcli machines addprofile Name:mach-01.example.org my-centos7
+
+  Or in the Portal (UX):
+
+    * Go to the ``Machines`` in the left side menu
+    * Select the check box for all Machines you wish to install
+    * Select the ``Profiles`` tab in the top center Bulk Actions panel
+    * Type ``my-centos7`` in the input field
+    * Click the *Plus* icon to add to the selected Machines
+
+
+**Step 3:  Start the Workflow**
+
+  ::
+
+    # you can select machines by Name:[NAME] or replace it with the Machines UUID value
+    drpcli machines workflow Name:mach-01.example.org universal-linux-install
+
+  Or in the Portal (UX):
+
+    * Go to the ``Machines`` in the left side menu
+    * Select the check box for all Machines you wish to install
+    * Select the ``Workflow`` tab in the top center Bulk Actions panel
+    * Type in ``universal-linux-install``
+    * Hit the *Play* icon next to the drop down field
+
+** Step 4:  Relax**
+
+  The systems you have selected should now be passing through the Universal
+  ``universal-linux-install`` Workflow.  Based on the value of the Param
+  ``linux/install-bootenv-override`` in the Profile you created, the select
+  OS installer will be started and completed.
+
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+The Universal Workflows are extremely capable and can provide advanced
+zero touch controls of your infrastructure.  There are many additional
+settings and behaviors available in the system.  For more advanced usage
+and documentation, please see the following resources:
+
+  * :ref:`rs_universal_ops`
+  * :ref:`rs_cp_universal``
+
+
+Versions
+========
+
+DRP v4.6.0 and newer, Universal v4.6.0 and newer
+
+Keywords
+========
+
+universal, linux install, universal-linux-install, zero touch
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00061
+    initial release:  Tue Mar 23 17:47:27 PDT 2021
+    updated release:  Tue Mar 23 17:47:27 PDT 2021
+
