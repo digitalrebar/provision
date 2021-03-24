@@ -138,7 +138,7 @@ Below are more detailed usage steps.
     * Type in ``universal-linux-install``
     * Hit the *Play* icon next to the drop down field
 
-** Step 4:  Relax**
+**Step 4:  Relax**
 
   The systems you have selected should now be passing through the Universal
   ``universal-linux-install`` Workflow.  Based on the value of the Param
