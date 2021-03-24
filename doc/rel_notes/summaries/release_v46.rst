@@ -1,4 +1,4 @@
-.. Copyright (c) 2020 RackN Inc.
+.. Copyright (c) 2021 RackN Inc.
 .. Licensed under the Apache License, Version 2.0 (the "License");
 .. Digital Rebar Provision documentation under Digital Rebar master license
 .. index::
@@ -109,13 +109,28 @@ Note: This change relies on features that are only available in v4.6.
 
 We expect this view will continue to improve as the communtiy provides feedback.
 
-
 Universal Workflow
 ~~~~~~~~~~~~~~~~~~
 
 The components of Universal Workflow are all included the the v4.6 release.  Universal Workflow provides a standardized workflow that can be applied to all provisioning operations in a consistent way.  Within that workflow, the system is able to dynamically adapt to the detected environment and take additional actions.  Unlike previous cloned Workflows, Operators may add their own custom stages and tasks to the Universal Workflow without interfering with standard operating processes.
 
 Note: There are no helpers or added design tools for Universal Workflow in the v4.6 UX.  These will roll out incrementally based on customer design interactions.
+
+UX Streamlined License Process
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+For new/trial users, the UX will guide you to create a RackN account before using the product.  We have eliminated the requirement to validate an email address before issuing a license.  Instead, a short term license will be immediately authorized while the user account is confirmed via one of several routes.
+
+For existing users bringing up a new endpoint, the UX will be more proscriptive about making sure that your license is uploaded into the endpoint.
+
+We've also improved alerting about license expiration.
+
+Sledgehammer can use BIOS with Tagged VLANs
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Sledgehammer now includes tagged VLAN options to work with servers using BIOS settings to boot from a tagged VLAN.
+
+The vlan value is included on the `network-data` parameter.
 
 
 .. _rs_release_v46_otheritems:
@@ -130,3 +145,5 @@ Other Items of Note
   * Catalog Intelligent Upgrade
   * Catalog Limits Versions
   * Ability to set UX Banner color
+* Content System
+  * Readonly content can override writable objects (using `drpcli contents upload --replaceWritable`)
