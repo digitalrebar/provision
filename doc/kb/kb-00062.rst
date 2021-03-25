@@ -1,0 +1,100 @@
+.. Copyright (c) 2021 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+
+.. _ubuntu_20_04_autoinstall_fails:
+
+kb-00062: Ubunto 20.04 Autoinstall Fails
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. _rs_kb_00062:
+
+Knowledge Base Article: kb-00062
+--------------------------------
+
+
+Description
+-----------
+
+Ubuntu 20.04 introduces yet another different installer to deploy Linux on to
+your systems.  This solution is a combination of ``autoinstall``, ``cloud-init``,
+``curtin`` deployment, and ``subiquity``.
+
+The *autoinstall* is delivered as a YAML formated file.  As such, it is extremely
+sensitive to spaces in the formatting.  If the rendered template is not fully
+valid YAML, the *autoinstall* will fallback to user input to finish the install.
+
+If you are presented with the Ubuntu interactive menu structure (generally starting
+with Language selection), then the YAML template is bad.
+
+Additionally, check the DRP System Logs (not Job logs).  If the template has a
+validity error rendering, you will receive an error message in the DRP System Log.
+In this case, the problem is generally not around valid YAML formatting.
+
+
+Solution
+--------
+
+To verify if the YAML formatting is correct, the *autoinstall* template can be
+rendered and reviewed.  Ensure that the target machine is in the appropriate
+Ubuntu 20.04 BootEnv (or create a fake machine for testing purposes, and place it
+in the BootEnv).
+
+Visit a URL similar to the following (when the Machine is in the Ubuntu 20.04
+BootEnv):
+
+  * http://[DRP]:8091/machines/[UUID]/autoinstall/user-data
+
+For example:  http://drp.example.com:8091/machines/8920cdea-b722-4f3c-98c5-dc7b6483e300/autoinstall/user-data
+
+If this page does not render correctly, then either a validation error occured
+(check the System Log for more details - not the Jobs Logs), or the Machine is
+not in the correct BootEnv.
+
+Visually inspect the YAML to verify it's valid.  Additionally, the YAML can be
+checked with ``yamllint``, or any number of `online YAML Validation <https://onlineyamltools.com/validate-yaml>`_
+tools.
+
+One primary cause of YAML linting failure is due to injection of the Storage
+structure, which does not adhere to the 2 space separation requirement.  See
+the Ubuntu 20.04 BootEnv Documentation field for more details.
+
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+  * :ref:`rs_cp_drp_community_content` - BootEnv documentation for Ubuntu 20.04
+  * `Online YAML Tools validator <https://onlineyamltools.com/validate-yaml>`_
+  * `YAML Lint <http://www.yamllint.com/>`_
+
+
+Versions
+========
+
+DRP v4.6.0 and newer, DRP Community Content v4.6.0 and newer
+
+
+Keywords
+========
+
+DRP, ubuntu, YAML, failed, broken, autoinstall
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00062
+    initial release:  Wed Mar 24 11:24:36 PDT 2021
+    updated release:  Wed Mar 24 11:24:36 PDT 2021
+
