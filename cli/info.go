@@ -71,7 +71,7 @@ func addInfoCommands() (res *cobra.Command) {
 				Port           int
 			}
 			results := map[string]*status{}
-			chaddr,_ := net.ParseMAC("de:ad:be:ef:f0:01")
+			chaddr, _ := net.ParseMAC("de:ad:be:ef:f0:01")
 			for _, service := range []string{"API", "Static", "TFTP", "DHCP", "BINL"} {
 				alive := false
 				switch service {
@@ -79,7 +79,7 @@ func addInfoCommands() (res *cobra.Command) {
 					results[service] = &status{true, true, d.ApiPort}
 				case "Static":
 					if d.ProvisionerEnabled {
-						host := net.JoinHostPort(d.Address.String(), strconv.Itoa(d.FilePort))
+						host := net.JoinHostPort(Session.Host(), strconv.Itoa(d.FilePort))
 						res, err := http.Get("http://" + host + "/")
 						if err == nil {
 							defer res.Body.Close()
@@ -89,7 +89,7 @@ func addInfoCommands() (res *cobra.Command) {
 					results[service] = &status{d.ProvisionerEnabled, alive, d.FilePort}
 				case "TFTP":
 					if d.ProvisionerEnabled && d.TftpEnabled {
-						c, err := tftp.NewClient(net.JoinHostPort(d.Address.String(), strconv.Itoa(d.TftpPort)))
+						c, err := tftp.NewClient(net.JoinHostPort(Session.Host(), strconv.Itoa(d.TftpPort)))
 						if err == nil {
 							if src, err := c.Receive("lpxelinux.0", ""); err == nil {
 								alive = true
@@ -100,9 +100,17 @@ func addInfoCommands() (res *cobra.Command) {
 					results[service] = &status{d.ProvisionerEnabled && d.TftpEnabled, alive, d.TftpPort}
 				case "DHCP":
 					if d.DhcpEnabled {
+						var hosts []string
+						hosts, err = net.LookupHost(Session.Host())
+						if err != nil {
+							return err
+						}
+						if len(hosts) == 0 {
+							return fmt.Errorf("%s does not resolve to anything!", Session.Host())
+						}
 						xid := make([]byte, 4)
 						rand.Read(xid)
-						dest := &net.UDPAddr{IP: d.Address, Port: d.DhcpPort, Zone: ""}
+						dest := &net.UDPAddr{IP: net.ParseIP(hosts[0]), Port: d.DhcpPort, Zone: ""}
 						packet := dhcp.RequestPacket(dhcp.Request, chaddr, net.IPv4(0, 0, 0, 0), xid, false, nil)
 						conn, err := net.ListenUDP("udp", &net.UDPAddr{Port: 0})
 						if err == nil {
@@ -124,9 +132,17 @@ func addInfoCommands() (res *cobra.Command) {
 					results[service] = &status{d.DhcpEnabled, alive, d.DhcpPort}
 				case "BINL":
 					if d.BinlEnabled {
+						var hosts []string
+						hosts, err = net.LookupHost(Session.Host())
+						if err != nil {
+							return err
+						}
+						if len(hosts) == 0 {
+							return fmt.Errorf("%s does not resolve to anything!", Session.Host())
+						}
 						xid := make([]byte, 4)
 						rand.Read(xid)
-						dest := &net.UDPAddr{IP: d.Address, Port: d.BinlPort, Zone: ""}
+						dest := &net.UDPAddr{IP: net.ParseIP(hosts[0]), Port: d.BinlPort, Zone: ""}
 						packet := dhcp.RequestPacket(dhcp.Request, chaddr, net.IPv4(0, 0, 0, 0), xid, false, nil)
 						conn, err := net.ListenUDP("udp", &net.UDPAddr{Port: 0})
 						if err == nil {
