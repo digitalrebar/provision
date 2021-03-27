@@ -114,6 +114,15 @@ func (c *Client) TraceToken(t string) {
 	c.traceToken = t
 }
 
+func (c *Client) Host() string {
+	uri, err := url.Parse(c.endpoint)
+	if err != nil {
+		return ""
+	}
+	host, _, _ := net.SplitHostPort(uri.Host)
+	return host
+}
+
 // File initiates a download from the static file service on the
 // dr-provision endpoint.  It is up to the caller to ensure that the
 // returned ReadCloser gets closed, otherwise stale HTTP connections
@@ -126,7 +135,8 @@ func (c *Client) File(pathParts ...string) (io.ReadCloser, error) {
 	if info.FilePort == 0 {
 		return nil, fmt.Errorf("Static file service not running")
 	}
-	url := fmt.Sprintf("http://%s:%d/%s", info.Address, info.FilePort, path.Join(pathParts...))
+
+	url := fmt.Sprintf("http://%s:%d/%s", c.Host(), info.FilePort, path.Join(pathParts...))
 	resp, err := http.Get(url)
 	if err != nil {
 		return nil, err
