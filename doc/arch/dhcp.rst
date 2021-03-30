@@ -131,6 +131,9 @@ have the following fields:
 - Options: The DHCP options that should be returned when creating or
   renewing a Lease based on this Reservation.
 
+.. note:: If you create a static reservation DRP will always respond to the request even if the subnet is "disabled"
+
+
 .. _rs_dhcp_lease:
 
 Lease
