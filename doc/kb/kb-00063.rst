@@ -1,0 +1,172 @@
+.. Copyright (c) 2021 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+
+.. _drp_http_file_server:
+
+kb-00063: How to use DRP as an HTTP/S File Server
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. _rs_kb_00063:
+
+Knowledge Base Article: kb-00063
+--------------------------------
+
+
+Description
+-----------
+
+This document describes how to use the Digital Rebar Platform (DRP) built in HTTP
+(and HTTPS) File Services.
+
+
+Solution
+--------
+
+All DRP Endpoints have a built in HTTP File Server service which can be used to stage
+files, artifacts, etc. for use in Workflow Stages, Tasks, and Templates.  In addition,
+the HTTP File Server space is available via the HTTPS API port.
+
+In this document, we will assume that the DRP Endpoint installed base directory is the
+default production location (``/var/lib/dr-provision``).  If you have installed in the
+Isolated (with the ``--isolated`` flag at install time), or you have moved the base
+directory with the ``--drp-home-dir`` flag, please adjust accordingly.
+
+You can copy files in to the filesystem path that is the designated HTTP Root, on the
+DRP Endpoint.  You will find the HTTP Root filesystem path at:
+
+  * ``/var/lib/dr-provision/tftpboot/files``
+
+However, you can use the API, CLI, or Portal to also stage and manage files in this space.
+
+**Saving Files**
+
+To save files to the HTTP file server path with the ``drpcli`` client, you can use the
+following command:
+
+  ::
+
+    # assuming we have a local tar gzipped file named "foo.tgz"
+
+    drpcli files upload foo.tgz as bar/baz/foo.tgz
+
+
+Thi will uploaded (assuming default production install paths) to:
+
+
+  * ``/var/lib/dr-provision/tftpboot/files/bar/baz/foo.tgz``
+
+.. note:: If you pass the ``--explode`` argument on the end of the command, then any tar zip
+          files will automatically be unzipped, and untarred in the directory you specify.  The
+          constituent files in the zipped tarball will be directly available.
+
+** Getting Files **
+
+You can use the ``drpcli`` client to download files from the DRP Endpoint, with the
+following syntax:
+
+  ::
+
+    drpcli files download bar/baz/foo.tgz as foo.tgz
+
+Additionally, any standard HTTP compliant tool can be used (eg ``wget`` or ``curl``).  Some
+examples:
+
+  ::
+
+    # wget the HTTP file server path location
+
+    wget http://drp:8091/files/bar/baz/foo.tgz
+
+    # get via HTTPS API port path, via wget or curl - note that it may be necessary
+    # to ignore the TLS certificate - shown in these examples
+
+    wget --no-check-certificate https://drp.example.org:8092/files/bar/baz/foo.tgz
+    curl -k https://drp.example.org:8092/files/bar/baz/foo.tgz
+
+** Deleting Files **
+
+This is best/easiest done with the ``drpcli`` tool.  Use of ``curl``/``wget`` can be
+achieved, but appropriate REST headers and authentication have to be passed in.
+
+  ::
+
+    # below we destroy the paths individually, there is no recursive option available
+    # on this command
+
+    drpcli files destroy bar/baz/foo.tgz
+    drpcli files destroy bar/baz
+    drpcli files destroy bar
+
+** Workflow Templating **
+
+In workflow Stages/Tasks/Templates, the following golang templating constructs can be
+used to build up the appropriate HTTP/S paths, unique to the DRP Endpoint you are working
+with.
+
+This is extremely usefully for **Multi-Site Manager** endpoints, as the Files server
+artifacts can be automatically replicated/synchronized to downstream managed DRP Endpoints.
+As such, you may not know the DRP Endpoints IP address information in your content packs.
+Additionally, the HTTP File server port, or the HTTPS API port will be dynamically added
+to the rendered string as well (these can change between deployments).
+
+  ::
+
+    {{ .ProvisionerURL }}/files/bar/baz/foo.tgz
+
+    # expands to:
+
+    http://10.10.10.10:8091/files/bar/baz/.foo.tgz
+
+
+    {{ .ApiURL }}/files/bar/baz/foo.tgz
+
+    https://10.10.10.10:8092/files/bar/baz/.foo.tgz
+
+.. note:: The template expanded IP Address will be the one that is in use by the given
+          Machine at the time the Template is rendered.  There may be multiple interfaces
+          on a DRP Endpoint, and the templating system will use the one that is in use
+          for communication between the DRP Endpoint and the Machine.
+
+It is always recommended to use the ``drpcli`` client when possible, along with
+the Template constructs to build up the correct URL reference paths.  This helps
+to ensure that your Content can be moved between different DRP Endpoints as your
+use of the product/service grows in your organization.
+
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+  * :ref:`rs_data_render` (**Provisioner** items)
+
+
+Versions
+========
+
+All DRP Versions
+
+
+Keywords
+========
+
+http, https, fileserver, document root, curl, wget, drpcli, files, artifacts
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00063
+    initial release:  Thu Apr  1 09:34:57 PDT 2021
+    updated release:  Thu Apr  1 09:34:57 PDT 2021
+
