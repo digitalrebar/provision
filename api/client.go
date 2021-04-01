@@ -55,7 +55,9 @@ type Client struct {
 	endpoint, username, password string
 	neverProxy                   bool
 	token                        *models.UserToken
-	closer                       chan struct{}
+	tokenAutoRefresh             bool
+	closeCtx                     context.Context
+	closeFn                      context.CancelFunc
 	closed                       bool
 	traceLvl                     string
 	traceToken                   string
@@ -708,9 +710,10 @@ func (r *R) GetETag() string {
 // in the background, and force any API calls made to this client that
 // would communicate with the server to return an error
 func (c *Client) Close() {
-	close(c.closer)
+	c.closeFn()
 	c.mux.Lock()
 	c.closed = true
+	c.tokenAutoRefresh = false
 	c.mux.Unlock()
 	c.iMux.Lock()
 	c.info = nil
@@ -951,10 +954,6 @@ func (c *Client) DeleteModel(prefix, key string) (models.Model, error) {
 	return res, c.Req().Del().UrlFor(prefix, key).Do(&res)
 }
 
-func (c *Client) reauth(tok *models.UserToken) error {
-	return c.Req().UrlFor("users", c.username, "token").Params("ttl", "600").Do(&tok)
-}
-
 // PatchModel attempts to update the object matching the passed prefix
 // and key on the server side with the passed-in JSON patch (as
 // sepcified in https://tools.ietf.org/html/rfc6902).  To ensure that
@@ -1148,12 +1147,12 @@ func TokenSessionProxy(endpoint, token string, proxy bool) (*Client, error) {
 	c.mux = &sync.Mutex{}
 	c.endpoint = endpoint
 	c.Client = &http.Client{Transport: tr}
-	c.closer = make(chan struct{}, 0)
+	c.closeCtx, c.closeFn = context.WithCancel(context.Background())
 	c.token = &models.UserToken{Token: token}
 	c.iMux = &sync.Mutex{}
 	c.neverProxy = !proxy
 	go func() {
-		<-c.closer
+		<-c.closeCtx.Done()
 		tr.CloseIdleConnections()
 	}()
 	return c, nil
@@ -1166,6 +1165,54 @@ func TokenSession(endpoint, token string) (*Client, error) {
 	return TokenSessionProxy(endpoint, token, true)
 }
 
+func (c *Client) TokenRefresh(prefix, key string) {
+	c.mux.Lock()
+	if c.tokenAutoRefresh {
+		c.mux.Unlock()
+		return
+	}
+	c.tokenAutoRefresh = true
+	c.mux.Unlock()
+	ticker := time.NewTicker(300 * time.Second)
+	for {
+		select {
+		case <-c.closeCtx.Done():
+			ticker.Stop()
+			return
+		case <-ticker.C:
+			token := &models.UserToken{}
+			switch prefix {
+			case "users":
+				if err := c.Req().
+					UrlFor("users", c.username, "token").
+					Params("ttl", "600").
+					Do(&token); err == nil {
+					break
+				}
+				basicAuth := base64.StdEncoding.EncodeToString([]byte(c.username + ":" + c.password))
+				if err := c.Req().
+					UrlFor("users", c.username, "token").
+					Headers("Authorization", "Basic "+basicAuth).
+					Do(&token); err != nil {
+					c.Fatalf("Error reauthing token, aborting: %v", err)
+				}
+			case "machines":
+				if err := c.Req().
+					UrlFor("machines", key, "token").
+					Params("ttl", "600").
+					Do(&token); err != nil {
+					c.Fatalf("Error reauthing token, aborting: %v", err)
+				}
+			default:
+				c.Fatalf("Cannot reauth %s", prefix)
+			}
+			c.mux.Lock()
+			c.token = token
+			c.mux.Unlock()
+		}
+	}
+}
+
 // UserSessionTokenProxy allows for the token conversion turned off and turn off local proxy, along with passing in a
 // context.Context to allow for faster connect timeouts.
 func UserSessionTokenProxyContext(ctx context.Context, endpoint, username, password string, usetoken, useproxy bool) (*Client, error) {
@@ -1176,7 +1223,7 @@ func UserSessionTokenProxyContext(ctx context.Context, endpoint, username, passw
 	c.username = username
 	c.password = password
 	c.Client = &http.Client{Transport: tr}
-	c.closer = make(chan struct{}, 0)
+	c.closeCtx, c.closeFn = context.WithCancel(context.Background())
 	c.iMux = &sync.Mutex{}
 	c.neverProxy = !useproxy
 	basicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
@@ -1190,31 +1237,13 @@ func UserSessionTokenProxyContext(ctx context.Context, endpoint, username, passw
 	}
 	if usetoken {
 		c.token = token
-		go func() {
-			ticker := time.NewTicker(300 * time.Second)
-			for {
-				select {
-				case <-c.closer:
-					ticker.Stop()
-					tr.CloseIdleConnections()
-					return
-				case <-ticker.C:
-					token := &models.UserToken{}
-					if err := c.reauth(token); err != nil {
-						if err := c.Req().
-							UrlFor("users", c.username, "token").
-							Headers("Authorization", "Basic "+basicAuth).
-							Do(&token); err != nil {
-							c.Fatalf("Error reauthing token, aborting: %v", err)
-						}
-					}
-					c.mux.Lock()
-					c.token = token
-					c.mux.Unlock()
-				}
-			}
-		}()
+		go c.TokenRefresh("users", c.username)
 	}
+	go func() {
+		<-c.closeCtx.Done()
+		tr.CloseIdleConnections()
+	}()
+
 	return c, nil
 }
 

@@ -139,6 +139,7 @@ func New(c *api.Client, m *models.Machine,
 		return nil, err
 	}
 	res.bootTime = bt
+	res.client.TokenRefresh("machines", m.UUID())
 	return res, nil
 }
 
