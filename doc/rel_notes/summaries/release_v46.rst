@@ -122,7 +122,7 @@ Note: There are no helpers or added design tools for Universal Workflow in the v
 
 Additional documentation on Universal usage can be found at:
 
-  * :ref:`rs_cp_universal``
+  * :ref:`rs_cp_universal`
   * :ref:`rs_universal_arch`
   * :ref:`rs_universal_ops`
 
