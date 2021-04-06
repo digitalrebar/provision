@@ -89,8 +89,25 @@ Long Polling allows clients that cannot use websockets to monitor DRP server for
 
 RackN recommends using websockets when available; however long polling is strongly encouraged to reduce load on the DRP server when websockets cannot be used.
 
-Image Deploy for ESXi
-~~~~~~~~~~~~~~~~~~~~~
+Operating System Updates
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+The support for the following Operating Systems was added or sigifiacantly improved in this release
+
+* Ubuntu 20.04 - Canonical made significantly changes to this install that had to be accomodated.
+
+* Centos 8 via Image Deploy - Tooling updates were required to run for both 7 and 8.  These may break backwards compatability.
+
+* RHEL 8 via Image Deploy - Tooling updates were required to run for both 7 and 8.  These may break backwards compatability.
+
+* RHEL 8 Network Deploy - Tooling updates were required to run for both 7 and 8.  These may break backwards compatability.
+
+* VMware Photon (preview) - Specialed immutable O/S from VMware may have operational restrictions based on hardware
+
+* ESXi via Image Deploy (preview) - see detail below
+
+Image Deploy for ESXi 7.x (preview)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 To improve the speed and consistence of VMware ESXi installation, The Image Deploy workflow has been expanded to include support for the ESXi operating system.  This allows operators to install ESXi directly to disk from a proven image and bypass the time consuming netboot (WEASEL) and post-configuration processes.
 
@@ -143,6 +160,12 @@ Sledgehammer now includes tagged VLAN options to work with servers using BIOS se
 
 The vlan value is included on the `network-data` parameter.
 
+Updates to Hardware BIOS and RAID tooling
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Due to tooling changes by multiple hardware vendors, sigificant upgrades to the BIOS, firmware and RAID tooling were required in this release.  These changes are not being backported.
+
+Note: The updated tooling enables AMD CPUs to be supported in v4.6+.
 
 .. _rs_release_v46_otheritems:
 
