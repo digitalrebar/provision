@@ -1,6 +1,7 @@
 package agent
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -66,6 +67,7 @@ type runner struct {
 	logger                      io.Writer
 	token                       string
 	extraPerms                  jcl
+	exitNow                     context.Context
 }
 
 // newRunner creates a new TaskRunner for the passed-in machine.
@@ -84,7 +86,7 @@ func newRunner(a *Agent, m *models.Machine, agentDir, chrootDir string, logger i
 		m:        m,
 		agentDir: agentDir,
 		logger:   logger,
-		cmdMux:   &sync.Mutex{},
+		exitNow:  a.stopWork,
 	}
 	job := &models.Job{Machine: m.Uuid, Context: a.context}
 	if err := a.client.CreateModel(job); err != nil && err != io.EOF {
@@ -110,14 +112,6 @@ func newRunner(a *Agent, m *models.Machine, agentDir, chrootDir string, logger i
 		res.t = t
 	}
 	return res, nil
-}
-
-func (r *runner) kill() {
-	r.cmdMux.Lock()
-	defer r.cmdMux.Unlock()
-	if r.cmd != nil && r.cmd.Process != nil {
-		r.cmd.Process.Kill()
-	}
 }
 
 // Close() shuts down the writer side of the logging pipe.
@@ -188,12 +182,11 @@ func (r *runner) perform(action *models.JobAction, taskDir string) error {
 		cmdArray = append(cmdArray, "-File")
 	}
 	cmdArray = append(cmdArray, "./"+path.Base(taskFile))
-	r.cmdMux.Lock()
 	home := os.Getenv("HOME")
 	if home == "" {
 		home = r.agentDir
 	}
-	r.cmd = exec.Command(cmdArray[0], cmdArray[1:]...)
+	r.cmd = exec.CommandContext(r.exitNow, cmdArray[0], cmdArray[1:]...)
 	r.cmd.Dir = taskDir
 	r.cmd.Env = append(os.Environ(),
 		"TMPDIR="+path.Dir(r.agentDir),
@@ -213,24 +206,27 @@ func (r *runner) perform(action *models.JobAction, taskDir string) error {
 	r.cmd.Stderr = r.in
 	if err := r.enterChroot(r.cmd); err != nil {
 		r.log("Command failed to set up chroot: %v", err)
-		r.cmdMux.Unlock()
 		return err
 	}
 	r.log("Starting command %s\n\n", r.cmd.Path)
 	if err := r.cmd.Start(); err != nil {
 		r.log("Command failed to start: %v", err)
-		r.cmdMux.Unlock()
 		return err
 	}
-	r.cmdMux.Unlock()
 	// Wait on the process, not the command to exit.
 	// We don't want to auto-close stdout and stderr,
 	// as we will continue to use them.
 	r.log("Command running")
-	pState, _ := r.cmd.Process.Wait()
-	r.cmdMux.Lock()
+	r.cmd.Wait()
+	select {
+	case <-r.exitNow.Done():
+		r.log("Agent signalled to exit")
+		r.incomplete = true
+		return nil
+	default:
+	}
+	pState := r.cmd.ProcessState
 	r.cmd = nil
-	r.cmdMux.Unlock()
 	r.exitChroot()
 	status := pState.Sys().(syscall.WaitStatus)
 	sane := r.t.HasFeature("sane-exit-codes")
@@ -324,8 +320,8 @@ func (r *runner) run() error {
 	go func() {
 		defer reader.Close()
 		buf := make([]byte, 1<<16)
-		reader.SetReadDeadline(time.Now().Add(1 * time.Second))
 		pos := 0
+		reader.SetReadDeadline(time.Now().Add(1 * time.Second))
 		for {
 			count, err := reader.Read(buf[pos:])
 			pos += count
