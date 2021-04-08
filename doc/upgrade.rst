@@ -22,6 +22,8 @@ However, note that there are a few general rules to consider for upgrades:
 .. warning:: We HIGHLY SUGGEST that you backup your existing install as a safey measure.
 
 
+.. _rs_backup_instructions:
+
 Backup
 ======
 
@@ -249,6 +251,217 @@ Based on these install options, the upgrade process is as follows:
 
 .. note:: The only material differnece is the use of the 'upgrade' argument to the
           install script for upgrades, instead of 'install' for installation.
+
+
+.. _rs_downgrade_drp:
+
+Downgrade Steps
+===============
+
+Downgrading DRP from one minor relaase to another *REQUIRES* addtional steps - as the
+underlaying database that backs the service may very well change between minor point
+releases (eg v4.5.x to v4.6.x).  Database changes do not occur between Patch releases
+(eg v4.5.5 to v4.5.6).
+
+.. warning:: You should **ALWAYS** perform these downgrade steps if you are moving from
+             one higher point release to a lower point release (eg v4.6.x to v4.5.x).
+
+All downgrade steps and examples below are run at the shell of the server where the ``dr-provision``
+service is installed and running, as the ``root`` user (generally, unless installed as a
+non-privileged user).
+
+.. note:: Downgrade is only supported for major release version v4.x.x to another v4.x.x version.
+          No downgrade is supported or possible in the v3.x.x version line.
+
+
+Backup DRP First
+----------------
+
+Please see :ref:`rs_backup_instructions` documentation.
+
+
+Stop dr-provision Service
+-------------------------
+
+The ``dr-provision`` service needs to be stopped for a downgrade procedure, as we must convert
+the database records to flat JSON text files.  We call this process "*humanize*", as it turns
+the database records in to human readable components.
+
+  ::
+
+    # for systemd "production" install modes:
+    systemctl stop dr-provision
+    systemctl status dr-provision               # verify it's not running
+
+    # for other modes, you may need to kill it:
+    pkill dr-provision
+    ps -ef | grep -v grep | grep dr-provision   # should return no process entries
+
+
+"*Humanize*" the Database
+-------------------------
+
+The ``dr-provision` binary has a special flag ``--humanize`` which converts the current database
+format components in to human readable JSON text files.  You must run the same ``dr-provision``
+version binary as the database format is using.
+
+Once the ``dr-provision`` service is stopped, now perform the "*humanize*" step:
+
+  ::
+
+    # depending on install mode, 'dr-provision' may not be in your direct path,
+    # locate the proper binary and call it with correct PATH/dr-provision as appropriate
+    dr-provision --humanize
+
+To verify that the "*humanize*" step completed propertly, look at the base directory
+for (potentially) a new directory named ``digitalrebar``.
+
+The base directory location will vary depending on how your service is installed.
+By default this will be in the ``/var/lib/dr-provision`` directory for "default
+production" installs.  It will be a directory named ``drp-data`` for "isolated"
+mode installs in the Current Working Directory that the install was performed.
+
+The following commands will "*humanize*" the database:
+
+  ::
+
+    dr-provision --humanize
+
+An example of "*humanize*" of a DRP v4.6.0 system:
+
+  ::
+
+    # DRP v4.6.0 currently running example:
+
+    root@mach-04:~# cd /var/lib/dr-provision
+
+    root@mach-04:/var/lib/dr-provision# ls
+      ha-state.json  job-logs  plugins  replace  runner  saas-content  server.crt  server.key  tftpboot  ux  wal
+
+    # humanize step
+
+    root@mach-04:/var/lib/dr-provision# /usr/local/bin/dr-provision --humanize
+      dr-provision2021/03/27 15:26:18.250522 Processing arguments
+      dr-provision2021/03/27 15:26:18.250812 Version: v4.6.0
+      dr-provision2021/03/27 15:26:18.251282 Extracting Default Assets
+      dr-provision2021/03/27 15:26:19.614140 [2:1]:backend [ warn]: github.com/hashicorp/raft@v1.2.0/raft.go:214
+      [2:1]heartbeat timeout reached, starting election: last-leader=
+      dr-provision2021/03/27 15:26:19.711402 [2:2]:backend [audit]: github.com/rackn/provision-server/v4/datastack/stack.go:1958
+      [2:2]Seeded CommitID: 3
+
+Now verify that the "*humanize*" completed successfully, and that our database records
+have been turned in to human readable JSON files on disk:
+
+  ::
+
+    # verify the humanize completed
+
+    root@mach-04:/var/lib/dr-provision# ls
+      digitalrebar  ha-state.json  job-logs  plugins	replace  runner  saas-content  secrets	server.crt  server.key	tftpboot  ux  wal
+
+    root@mach-04:/var/lib/dr-provision# ls digitalrebar
+      preferences  profiles  users
+
+In the above output, note the presense of the ``digitalrebar`` directory, and subsequently, the
+directory structure underneath it.  This is newwly "*humanized*" objects that were stored in
+the v4.6.0 database (in this example).
+
+
+Install Older dr-provision Service
+----------------------------------
+
+To install the older ``dr-provision`` service, we will need to manually extract the binary
+out of the distributed TAR.GZ file (even though the file ends in ``.zip``).  If you do not
+currently have the older binary (eg from a previous backup or another DRP instance in your
+environment) you will have to download it.
+
+  ::
+
+    # example of getting the v4.5.6 with drpcli
+
+    root@mach-04:/tmp# drpcli catalog item download drp --version=v4.5.6
+
+    root@mach-04:/tmp# ls -l *zip
+      -rw-r--r-- 1 root root 232361496 Mar  27 15:34 drp.zip
+
+The above command automatically parses the RackN distributed JSON Catalog to find the
+download location and get the version.  Some older versions will be removed from the
+catalog from time to time to keep it to managable size.  In that case, you may need to
+acquire it from alternative locations.
+
+One possibility is to directly download from the RackN staging location in an Amazon S3
+bucket.
+
+.. warning:: RackN may change the staging locations in the future, please verify with
+             the RackN team if you are having download issues via this mechanism.
+
+  ::
+
+    # using a constructed URL to find an older version archive file and sha256 sum file
+    VER="v4.2.0"
+    wget -O drp-${VER}.zip https://rebar-catalog.s3-us-west-2.amazonaws.com/drp/${VER}.zip
+    wget -O drp-${VER}.zip.sha256 https://rebar-catalog.s3-us-west-2.amazonaws.com/drp/${VER}.sha256
+
+Now unroll the archive file ... yes, the format really is a TAR.GZ despite the filename
+ending in ``.zip``:
+
+  ::
+
+     tar -xzvf drp.zip
+
+Verify the binary (using our very old v4.2.0 example from above):
+
+  ::
+
+    root@mach-04:/tmp# ls -l bin/linux/amd64/dr-provision
+      -rwxrwxr-x 1 2000 2000 75890688 Dec 29  2019 bin/linux/amd64/dr-provision
+
+    root@mach-04:/tmp# bin/linux/amd64/dr-provision --version
+      dr-provision2021/03/27 15:43:28.810743 Processing arguments
+      dr-provision2021/03/27 15:43:28.810766 Version: v4.2.0
+
+Put it in place:
+
+  ::
+
+    # move old binary aside - adjust path appropriately for your system
+    mv /usr/local/bin/dr-provision /usr/local/bin/dr-provision.old
+
+    # copy new binary in place - adjust path appropriately for your system
+    cp bin/linux/amd64/dr-provision /usr/local/bin/
+
+
+Start the dr-provision Service
+------------------------------
+
+Now start up your DRP service as you would normally:
+
+  ::
+
+    # systemd "production" install:
+
+    systemctl start dr-provision
+    systemctl status dr-provision
+
+    # possible startup command for an isolated mode install (this command assumes
+    # the setup symbolic links is still in place and pointing at the binary path
+    # correctly):
+
+    sudo ./dr-provision --base-root=`pwd`/drp-data --local-content="" --default-content="" > drp.log 2>&1 &
+
+.. note:: The startup process may take some time (up to 15 minutes), if you have a very
+          large number of Machines and Jobs Logs, as the JSON data structures are converted
+          in to database records.
+
+
+Verify the service is running the new (old) version via the command line tool:
+
+  ::
+
+    drpcli info get | jq -r '.version'
+
+The returned string should be the version, eg ``v4.5.6``.
+
 
 Version to Version Notes
 ========================
