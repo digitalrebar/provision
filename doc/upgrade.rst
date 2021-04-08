@@ -321,12 +321,6 @@ By default this will be in the ``/var/lib/dr-provision`` directory for "default
 production" installs.  It will be a directory named ``drp-data`` for "isolated"
 mode installs in the Current Working Directory that the install was performed.
 
-The following commands will "*humanize*" the database:
-
-  ::
-
-    dr-provision --humanize
-
 An example of "*humanize*" of a DRP v4.6.0 system:
 
   ::
