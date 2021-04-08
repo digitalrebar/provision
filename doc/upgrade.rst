@@ -301,7 +301,7 @@ the database records in to human readable components.
 "*Humanize*" the Database
 -------------------------
 
-The ``dr-provision` binary has a special flag ``--humanize`` which converts the current database
+The ``dr-provision`` binary has a special flag ``--humanize`` which converts the current database
 format components in to human readable JSON text files.  You must run the same ``dr-provision``
 version binary as the database format is using.
 
