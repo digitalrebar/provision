@@ -180,6 +180,8 @@ Production Deployments
 The following items should be considered for production deployments.  Recommendations may be missing so operators should use their best judgement.
 
 
+.. _rs_install_special_permissions:
+
 Start DRP Without Root (or sudo)
 ++++++++++++++++++++++++++++++++
 
