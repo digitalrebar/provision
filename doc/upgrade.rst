@@ -303,7 +303,9 @@ the database records in to human readable components.
 
 The ``dr-provision`` binary has a special flag ``--humanize`` which converts the current database
 format components in to human readable JSON text files.  You must run the same ``dr-provision``
-version binary as the database format is using.
+version binary as the database format is using.  In addition, if you have installed DRP in a
+location other than the default production install path (``/var/lib/dr-provision``), you must
+also specify where the DRP base directory is with the ``--base-root`` flag.
 
 Once the ``dr-provision`` service is stopped, now perform the "*humanize*" step:
 
@@ -311,7 +313,9 @@ Once the ``dr-provision`` service is stopped, now perform the "*humanize*" step:
 
     # depending on install mode, 'dr-provision' may not be in your direct path,
     # locate the proper binary and call it with correct PATH/dr-provision as appropriate
-    dr-provision --humanize
+
+    DRP_ROOT="/var/lib/dr-provision"                    # adjust this accordingly
+    dr-provision --humanize --base-root=$DRP_ROOT
 
 To verify that the "*humanize*" step completed propertly, look at the base directory
 for (potentially) a new directory named ``digitalrebar``.
@@ -334,7 +338,7 @@ An example of "*humanize*" of a DRP v4.6.0 system:
 
     # humanize step
 
-    root@mach-04:/var/lib/dr-provision# /usr/local/bin/dr-provision --humanize
+    root@mach-04:/var/lib/dr-provision# /usr/local/bin/dr-provision --humanize --base-root=/var/lib/dr-provision
       dr-provision2021/03/27 15:26:18.250522 Processing arguments
       dr-provision2021/03/27 15:26:18.250812 Version: v4.6.0
       dr-provision2021/03/27 15:26:18.251282 Extracting Default Assets
@@ -423,6 +427,10 @@ Put it in place:
 
     # copy new binary in place - adjust path appropriately for your system
     cp bin/linux/amd64/dr-provision /usr/local/bin/
+
+.. note:: For installations as non-root user, you may need to adjust ``setcap`` bits
+          appropriately on the binary.  Please see :ref:`rs_install_special_permissions`
+          for more details.
 
 
 Start the dr-provision Service
