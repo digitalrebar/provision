@@ -1,4 +1,4 @@
-.. Copyright (c) 2018 RackN Inc.
+.. Copyright (c) 2021 RackN Inc.
 .. Licensed under the Apache License, Version 2.0 (the "License");
 .. Digital Rebar Provision documentation under Digital Rebar master license
 .. index::
@@ -6,65 +6,63 @@
 
 .. _rackn_licensing:
 
-RackN Licensing Overview
-~~~~~~~~~~~~~~~~~~~~~~~~
+RackN Licensing Overview (v4.6+)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This document outlines the RackN limited use and commercial licensing information and initial setup steps necessary to access licensed entitlements.  If you have any questions or concerns, please feel free to contact us on Slack, or email us at support@rackn.com.
 
-Watch the `license training video <https://youtu.be/wIGaSQevjfM!>`_
+If you have a license issued before May 1, 2021, please see :ref:`rackn_licensing_pre46`.  You can identify these licenses because they will end in a number sequence greater than 4600000.  Licenses issued prior to v4.6 will continue to function and can be used to create v4.6+ licenses; however, new entitlements cannot be added to earlier licenses.
 
 License Types
--------------
+=============
 
-Embedded licensing
-==================
+Start-up / Embedded licensing
+-----------------------------
 
-*Embedded licensing* of RackN Digital Rebar Platform is provided for bootstrapping endpoints
+*Embedded licensing* of RackN Digital Rebar Platform is provided for solely new endpoints to run until you install get an official use license.
 
 The embedded license is built into the platform and has restricted entitlements:
 
 * 10 machines (10)
 * no contexts or pools
 * restricted use of plugins
+* hard coded expiration date based on binary build date
 
 Limited Use licensing
-=====================
+---------------------
 
 *Limited Use licensing* of RackN Digital Rebar Platform is provided for individual users, trial and non-commercial teams.
 
 The trial/communty license is generated via the processes documented below. Self-service
-licenses start at:
+licenses generally start at:
 
 * 20 machines
-* 3 contexts
-* 1 pools
-* 90-day self-service renewal.  
+* 5 contexts
+* 5 pools
+* 30-days with 1 self-service renewal
+* allow access to all publically available plugins in the RackN catalog.
 
-They allow access to all publically available plugins in the RackN catalog.  HA and Secure boot are not included in the trial license.  Contact the RackN solution team if you would like to expand your entitlements.
+Enterprise features such as Airgap, HA and Secure boot are not included in the trial license.  Contact the RackN solution team if you would like to expand your entitlements.
 
 Commercial Use licensing
-========================
+------------------------
 
-*Commercial Use licensing* of RackN Digital Rebar Platform is
+*Commercial Use licensing* of RackN Digital Rebar Platform is 
 provided to named Organizations.  License entitlements are enabled on several different dimensions
 including endpoint id, unit counts, contexts, pools, plugins and advanced features like HA and 
 secure boot.  The RackN solution team will need to setup an Organization with the correct license entitlements for this type of license.
 
-.. _rackn_licensing_prereqs:
+.. _rackn_licensing_file:
 
-Prerequisites
--------------
+License Enforcement Mechanism
+=============================
 
-Here is a list of the necessary prerequisites that will need to be in place prior to you successfully using any licensed component(s):
+The RackN License file restricts operatations for a Digital Rebar endpoint based on different entitlements.  The file contains all the information needed to validate the service so *no external access is required*
 
-#. You must have a Web Portal user account that is registered and functioning (sign up if you do not already have one here: https://portal.rackn.io/#/user/signup)
-#. A functioning DRP Endpoint that is managable via the Web Portal
+RackN License File
+------------------
 
-If you cannot meet these prerequisites, please contact RackN for alternative ways to create an
-entitlement file.
-
-Entitlement Enforcement Mechanism
----------------------------------
+The RackN license 
 
 Entitlement files simply Digital Rebar Content Packs named `rackn-license`.  Installing the Content
 creates a `rackn license` Profile with two variables:
@@ -74,17 +72,33 @@ creates a `rackn license` Profile with two variables:
 
 The Digital Rebar server looks for the `rackn/license` parameter to verify entitements.
 
+Entitlements
+------------
+
 The entitlements are verified on several dimensions including:
 
 * Endpoint ID
 * Date
 * Plugins in Use
-* Counts
+* Object Counts.
    * Machines
    * Contexts
    * Pools
+   * Subnets
 * High Availability (HA) enabled
 * Secure Boot enabled
+* Air-Gap enabled
+
+Installling RackN License Files
+===============================
+
+The RackN License file is a Digital Rebar content pack that contains the license key.  It can be managed in the system using the Contents API and CLI like any other content pack.
+
+
+Verify and Update
+-----------------
+
+The RackN UX integrates with our license generating API and can be used to authenticate and download updated entitlement files.
 
 
 .. _rackn_licensing_check:
@@ -106,18 +120,17 @@ retrieve an updated license from the RackN entitlement service.
 
 .. _rackn_licensing_generate_license:
 
-Generate a License from RackN Account
--------------------------------------
+Generate a New License
+----------------------
 
 .. note:: You must log in to the DRP Endpoint first.
 
-Log in to your Rackn Account from the "License Manager" page and "Online Activation and
-Support" panel.  If you do not have an account, then you will need to create and verify it
-before you can continue.
+The first time that you login to a Digital Rebar endpoint from the RackN UX, you will be prompted to either request new license file or upload an existing license.  If you complete the request information then the service creates a short term `rackn-license` content file and then uploads it to your endpoint.
 
-.. note:: Your RackN Account is different from a Digital Rebar login.  They are only used to create or update entitlement files.  RackN can set up multiple accounts for the same organization or have a single account that supports multiple organizations.
 
-The first time that you activate a license entitlement, you will need to "Authorize" new license file from the "License" tab.  This creates the `rackn-license` content and then uploads it to your endpoint.  You will need to perform this step only once for each Organization that you manage that has a license entitlement.
+You will only need to perform this step once because the license file is used to validate your access rather than a RackN specific login or password.  For this reason, it is important to download and store the license file for future use.  Even if a newer license if issued, previous licenses can still be used to validate your identity to the RackN license service.
+
+IMPORTANT: Licenses created via the self-enrollment process have limited time spans.  You will need to contact RackN via the UX or email to verify your self-enrollment license and expand the entitlement settings.
 
 Once completed, you should see the entitlements in the "License Management" panel.
 
@@ -151,9 +164,9 @@ Install a License from a File
 
 .. note:: You must log in to the DRP Endpoint first.
 
-The Digital Rebar entitlements file, typically `rackn-license.json`, is just a Content pack.
-You can upload it from Catalog Import in RackN UX or using `DRPCLI contents upload rackn-license.json`
-
+The Digital Rebar entitlements file, typically `rackn-license-org.json`, is just a Content pack.
+You can upload it from Catalog Import in RackN UX or using `DRPCLI contents upload rackn-license-org.json`
+` 
 Once a valid license is installed, the key in the license can be used to retrieve an updated license.
 
 
@@ -169,59 +182,53 @@ The "License Manager" page will show an overview of the licensed Contents, Featu
 
 Many licenses, including trial/community licenses, use the "upto-nodes" module which allows operators to use *any* licensed content up to the stated number of machines.
 
-.. _rackn_licensing_api_upgrade:
 
 Check or Update an Existing License
 ------------------------------------
+
+To update a license, visit the UX *License Management* page.
+Click the "Check and Update License" button in the top right
+corner of the "License Management" panel.  This uses the API
+described below to update your license including adding new
+endpoints.
+
+.. _rackn_licensing_api_upgrade:
+
+Non-UX Update an Existing License
+=================================
 
 These steps require that you already have a valid RackN license.
 The information contained in the license is used to verify your
 entitlements and to authorize an updated license.  It relies on
 online RackN License Management APIs.
 
-To update manually, visit the UX *License Management* page.
-Click the "Check and Update License" button in the top right
-corner of the "License Management" panel.  This uses the API
-described below to update your license including adding new
-endpoints.
-
-To update automatically using the APIs, you must make the
-a GET call with the required rackn headers.  If successful,
-the call will return the latest valid license.  If a new
-license is required, it will be automatically generated.
-
-The most required fields are all avilable in the `sections.profiles.Params`
-section of the License JSON file.
-
-* `rackn-ownerid` = `[base].rackn/license-object.OwnerId`
-* `rackn-contactid` = `[base].rackn/license-object.ContactId`
-* `rackn-key` = `[base].rackn/license`
-* `rackn-version` = `[base].rackn/license-object.Version`
-
-The URL for the GET call is subject to change!  The current
-(Nov 2019) URL is `https://1p0q9a8qob.execute-api.us-west-2.amazonaws.com/v40/license`
-
-For faster performance, you can also use `https://1p0q9a8qob.execute-api.us-west-2.amazonaws.com/v40/check`
-with the same headers to validate the license before asking for
-updates.
 
 Required Header Fields:
 
-* `rackn-ownerid`: license ownerid / org [or 'unknown']
-* `rackn-contactid`: license contactid / cognitor userid [or 'unknown']
-* `rackn-endpointid`: digital rebar endpoint id [or 'unknown']
-* `rackn-key`: license key [or 'unknown']
-* `rackn-version`: license version [or 'unknown']
+* `rackn-endpointid`: digital rebar endpoint id
+* `Authorization`: license key
 
-.. note:: The `rackn-endpointid` is the endpoint id (aka `drpid`) of the Digital Rebar Provision endpoint to be licensed.  Licenses are issued per endpoint.  You can add endpoints to a license by sending a new endpoint with license information validated for a different endpoint.  This will create a new license that can be applied too all endpoints.
-
-With header values exported, an example CURL call would resemble:
+.. note:: The `rackn-endpointid` is the endpoint id (aka `drpid`) of the Digital Rebar Provision endpoint to be licensed.  Licenses are issued per endpoint.  
 
   ::
 
-    curl GET -H "rackn-contactid: $CONTACTID" \
-      -H "rackn-ownerid: $OWNERID" \
-      -H "rackn-endpointid: $ENDPOINTID" \
-      -H "rackn-key: $KEY" \
-      -H "rackn-version: $VERSION" \
-      https://1p0q9a8qob.execute-api.us-west-2.amazonaws.com/v40/license
+    export ENDPOINTID=$(drpcli info get | jq -r .ha_id)
+    export KEY=$(drpcli profiles get rackn-license param rackn/license | jq -r)
+
+    curl -X POST -H "rackn-endpointid: $ENDPOINTID" \
+      -H "Authorization: $KEY" \
+      -d '$(drpcli info get)' \
+      https://cloudia.rackn.io/api/v1/license/update
+
+Adding Endpoints to a License
+-----------------------------
+
+Generally, the UX will add endpoints automatically during the Check and Update process on a new endpoint.
+
+If you cannot use the UX to add an endpoint then use the API above.  Add endpoints to a license upto your entitlements by sending a new endpoint with license information validated for a different endpoint.  This will create a new license that can be applied too all endpoints.  
+
+
+Removing Endpoints from a License
+----------------------------------
+
+There is no automated process to REMOVE endpoints from a license.  Contact RackN if you need to do this.
