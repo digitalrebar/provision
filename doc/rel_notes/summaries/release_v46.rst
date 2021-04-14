@@ -147,7 +147,7 @@ Additional documentation on Universal usage can be found at:
 UX Streamlined License Process
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-For new/trial users, the UX will guide you to create a RackN account before using the product.  We have eliminated the requirement to validate an email address before issuing a license.  Instead, a short term license will be immediately authorized while the user account is confirmed via one of several routes.
+For new/trial users, the UX will guide you to create a RackN account before using the product.  We have eliminated the requirement to validate an email address before issuing a license.  Instead, a short term license will be immediately authorized while the user account is confirmed via one of several routes.  Please see :ref:`rackn_licensing` for more details.
 
 For existing users bringing up a new endpoint, the UX will be more proscriptive about making sure that your license is uploaded into the endpoint.
 
