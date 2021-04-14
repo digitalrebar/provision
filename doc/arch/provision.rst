@@ -126,8 +126,9 @@ template.  RenderData has the following fields:
     first from the Param precedence.
 
   - **.ParamExpand <key>** returns the value for the specified key for this
-    rendering, but then re-expands the string value again through the renderer.
-    If not a string, no expansion is done.  Variations include:
+    rendering, but then re-expands the value again through the renderer.
+    If the value is an array or object, the value is recursively processed to
+    expand internal strings.  Additional similar functions include:
 
     - **.StringExpand** does templating on the contents of a string value
     
