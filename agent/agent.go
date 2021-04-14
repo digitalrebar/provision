@@ -3,6 +3,7 @@ package agent
 import (
 	"bufio"
 	"compress/gzip"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -78,7 +79,8 @@ type Agent struct {
 	task                                      *runner
 	taskMux                                   *sync.Mutex
 	exitNow                                   bool
-	kill                                      chan error
+	stopWork                                  context.Context
+	kill                                      context.CancelFunc
 }
 
 func (a *Agent) saveState() (err error) {
@@ -131,6 +133,7 @@ func New(c *api.Client, m *models.Machine,
 		waitTimeout:       1 * time.Hour,
 		taskMux:           &sync.Mutex{},
 	}
+	res.stopWork, res.kill = context.WithCancel(context.Background())
 	if res.logger == nil {
 		res.logger = os.Stderr
 	}
@@ -735,15 +738,11 @@ func (a *Agent) loadState() {
 func (a *Agent) Kill() error {
 	a.logf("Agent signalled to exit")
 	a.taskMux.Lock()
-	a.kill = make(chan error)
 	a.exitNow = true
 	a.events.Kill()
-	if a.task != nil {
-		a.task.log("Agent signalled to exit")
-		a.task.kill()
-	}
+	a.kill()
 	a.taskMux.Unlock()
-	return <-a.kill
+	return nil
 }
 
 func (a *Agent) Close() {
@@ -824,11 +823,6 @@ func (a *Agent) Run() error {
 				a.waitRunnable()
 			} else {
 				a.logf("Agent exiting\n")
-				a.taskMux.Lock()
-				if a.exitNow {
-					a.kill <- a.err
-				}
-				a.taskMux.Unlock()
 				return a.err
 			}
 		case AGENT_KEXEC:
