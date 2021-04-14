@@ -121,9 +121,25 @@ template.  RenderData has the following fields:
     Param returns values as simple strings! For complex output, look at
     .ParamAsJSON and .ParamAsYAML below.
 
+  - **.ParamCompose <key>** like Param above, except that it returns the
+    composed value of a parameter across _all sources_ instead of choosing the
+    first from the Param precedence.
+
   - **.ParamExpand <key>** returns the value for the specified key for this
-    rendering, but then re-expands the string value again through the renderer.
-    If not a string, no expansion is done.
+    rendering, but then re-expands the value again through the renderer.
+    If the value is an array or object, the value is recursively processed to
+    expand internal strings.  Additional similar functions include:
+
+    - **.StringExpand** does templating on the contents of a string value
+    
+    - **.ObjectExpand** using an arbitrary object and does an expand on it recursively.
+      If the object does not understand expansion, it will be returned as is.
+      If the object is an array or slice or map, the system will recurse on
+      each element.
+
+  - **.ParamComposeExpand <key>** like ParamExpand above, except that it returns the
+    composed value of a parameter across _all sources_ instead of choosing the
+    first from the ParamExpand precedence.
 
   - **.ParamAsJSON <key>** returns the value for the specified key for this
     rendering preserved in JSON formatting.  This is important for templates
