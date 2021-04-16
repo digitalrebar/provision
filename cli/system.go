@@ -269,6 +269,37 @@ func addSystemCommands() (res *cobra.Command) {
 			return prettyPrint(intro)
 		},
 	})
+	consensus.AddCommand(&cobra.Command{
+		Use:   "remove [endpointId]",
+		Short: "Remove the node with consensus id [endpointId] from the cluster",
+		Args: func(c *cobra.Command, args []string) error {
+			if len(args) != 1 {
+				return fmt.Errorf("missing required argument endpointId")
+			}
+			return nil
+		},
+		RunE: func(c *cobra.Command, args []string) error {
+			peers := []models.NodeInfo{}
+			if err := Session.Req().UrlFor("system", "consensus", "peers").Do(&peers); err != nil {
+				return err
+			}
+			for i := range peers {
+				if args[0] == peers[i].ConsensusAddr || args[0] == peers[i].ConsensusID.String() {
+					if !peers[i].Passive {
+						return fmt.Errorf("%s is the active node, cannot remove it", args[0])
+					}
+					err := Session.Req().Del().
+						UrlFor("system", "consensus", "node", peers[i].ConsensusID.String()).
+						Do(nil)
+					if err != nil {
+						return err
+					}
+					return prettyPrint(peers[i])
+				}
+			}
+			return fmt.Errorf("Cannot find consensus node %s. Try 'drpcli system ha peers' to see what is available.", args[0])
+		},
+	})
 
 	op := &ops{
 		name:       name,
