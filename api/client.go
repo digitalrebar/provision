@@ -718,6 +718,7 @@ func (c *Client) Close() {
 	c.iMux.Lock()
 	c.info = nil
 	c.iMux.Unlock()
+	c.CloseIdleConnections()
 }
 
 // Token returns the current authentication token associated with the
@@ -1138,6 +1139,11 @@ func DisconnectedClient() *Client {
 	return &Client{Logger: defaultLogBuf.Log("").Fork()}
 }
 
+func connCleanup(tx *http.Transport, ctx context.Context) {
+	<-ctx.Done()
+	tx.CloseIdleConnections()
+}
+
 // TokenSessionProxy creates a new api.Client that will use the passed-in Token for authentication.
 // It should be used whenever the API is not acting on behalf of a user.
 // Allows for choice on session creation or not.
@@ -1148,13 +1154,12 @@ func TokenSessionProxy(endpoint, token string, proxy bool) (*Client, error) {
 	c.endpoint = endpoint
 	c.Client = &http.Client{Transport: tr}
 	c.closeCtx, c.closeFn = context.WithCancel(context.Background())
+	cf := c.closeFn
+	runtime.SetFinalizer(c, func(_ interface{}) { cf() })
 	c.token = &models.UserToken{Token: token}
 	c.iMux = &sync.Mutex{}
 	c.neverProxy = !proxy
-	go func() {
-		<-c.closeCtx.Done()
-		tr.CloseIdleConnections()
-	}()
+	go connCleanup(tr, c.closeCtx)
 	return c, nil
 }
 
@@ -1224,6 +1229,8 @@ func UserSessionTokenProxyContext(ctx context.Context, endpoint, username, passw
 	c.password = password
 	c.Client = &http.Client{Transport: tr}
 	c.closeCtx, c.closeFn = context.WithCancel(context.Background())
+	cf := c.closeFn
+	runtime.SetFinalizer(c, func(_ interface{}) { cf() })
 	c.iMux = &sync.Mutex{}
 	c.neverProxy = !useproxy
 	basicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
@@ -1235,14 +1242,11 @@ func UserSessionTokenProxyContext(ctx context.Context, endpoint, username, passw
 		Do(&token); err != nil {
 		return nil, err
 	}
+	go connCleanup(tr, c.closeCtx)
 	if usetoken {
 		c.token = token
 		go c.TokenRefresh("users", c.username)
 	}
-	go func() {
-		<-c.closeCtx.Done()
-		tr.CloseIdleConnections()
-	}()
 
 	return c, nil
 }
