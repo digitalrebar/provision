@@ -33,6 +33,8 @@ This method can be used in regular shell scripts as Tasks, within Context Contai
 usage, or any other place where the template rendering can be used to automatically
 set up access to the API services for Workflow.
 
+This document outlines use of the Token (eg ``RS_TOKEN``) method for authentication.
+
 
 Solution
 --------
@@ -43,18 +45,18 @@ the necessary details to access and use the DRP Endpoint API.  They are:
   * Username and Password (eg "basic") authentication
   * Token authentication
 
-By default Tokens that are generated for use in Workflow are only scooped to
+By default Tokens that are generated for use in Workflow are only scoped to
 allow changes to the Machines object.  This is a security control mechanism.
 
 
 **Using ``setup.tmpl``**
 
-The Template named ``setup.tmpl`` is designed to be used with BASH shell scripts
+The Template named ``setup.tmpl`` is designed to be used with Bash shell scripts
 in Workflow.  It will setup the appropriate Shell variables for the ``drpcli``
 client.  This allows the ``drpcli`` tool to be used transparently without any
 options; as it will use the Shell environment variables by default.
 
-To use it simply add the following Template injections near the top of your
+To use it simply add the following Template injection near the top of your
 task/template:
 
   ::
@@ -81,7 +83,8 @@ These variables can also be optionally used in the script if needed.
 
 Building up the appropriate details via Golang Template rendering is very easy.
 There are several helper functions that make this easy.  Here's an example of
-setting Shell variables appropriately for the ``drpcli`` client tool:
+setting Shell variables appropriately for the ``drpcli`` client tool:  This is
+effectively replicating what the ``setup.tmpl`` above does.
 
   ::
 
