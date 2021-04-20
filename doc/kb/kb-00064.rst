@@ -73,7 +73,7 @@ These variables can also be optionally used in the script if needed.
 
 .. note:: The ``setup.tmpl`` is maintained under Templates in the DRP Community
           Content pack.  Refer to it for complete details on all of the environment
-          settings it manipulates (eg "exit on error - ``set -e``, interaction with
+          settings it manipulates (eg "exit on error" - ``set -e``, interaction with
           the ``rs-debug-enable`` Param, etc).
 
 
