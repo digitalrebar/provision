@@ -173,6 +173,7 @@ Other Items of Note
 ~~~~~~~~~~~~~~~~~~~
 
 * UX
+
   * Improved alerting if DRP server loses connection
   * Token cached to avoid login if browser is refreshed
   * Machine Debug View (requires v4.6 DRP)
@@ -180,4 +181,5 @@ Other Items of Note
   * Catalog Limits Versions
   * Ability to set UX Banner color
 * Content System
+
   * Readonly content can override writable objects (using `drpcli contents upload --replaceWritable`)
