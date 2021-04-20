@@ -424,7 +424,7 @@ func registerContent(app *cobra.Command) {
 	})
 
 	// Bundlize - takes a list of objects and makes them a bundle - deleting them optionaly.- interactive.
-	var delete = false
+	var remove = false
 	var reload = false
 	bundlize := &cobra.Command{
 		Use:   "bundlize [file] [meta fields] [objects]",
@@ -544,7 +544,7 @@ func registerContent(app *cobra.Command) {
 			s.Close()
 
 			// delete the objects
-			if delete {
+			if remove {
 				deleteOrder := []string{
 					"machines",
 					"leases",
@@ -574,7 +574,7 @@ func registerContent(app *cobra.Command) {
 					}
 				}
 				if reload {
-					if err := replaceContent(target, key, delete); err != nil {
+					if err := replaceContent(target, key, remove); err != nil {
 						return err
 					}
 				}
@@ -582,7 +582,7 @@ func registerContent(app *cobra.Command) {
 			return nil
 		},
 	}
-	bundlize.Flags().BoolVar(&delete, "delete", false, "Delete bundlized content")
+	bundlize.Flags().BoolVar(&remove, "delete", false, "Delete bundlized content")
 	bundlize.Flags().BoolVar(&reload, "reload", false, "Load the bundle as a content package (requires delete)")
 	bundlize.Flags().StringVar(&key, "key", "", "Location to save key for embedded secure parameters")
 	content.AddCommand(bundlize)

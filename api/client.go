@@ -138,8 +138,8 @@ func (c *Client) File(pathParts ...string) (io.ReadCloser, error) {
 		return nil, fmt.Errorf("Static file service not running")
 	}
 
-	url := fmt.Sprintf("http://%s:%d/%s", c.Host(), info.FilePort, path.Join(pathParts...))
-	resp, err := http.Get(url)
+	uri := fmt.Sprintf("http://%s:%d/%s", c.Host(), info.FilePort, path.Join(pathParts...))
+	resp, err := http.Get(uri)
 	if err != nil {
 		return nil, err
 	}
@@ -299,7 +299,7 @@ func (r *R) PatchTo(old, new models.Model) *R {
 func (r *R) PatchToFull(old models.Model, new models.Model, paranoid bool) (models.Model, error) {
 	res := models.Clone(old)
 	if paranoid {
-		r = r.ParanoidPatch()
+		r.ParanoidPatch()
 	}
 	err := r.PatchTo(old, new).Do(&res)
 	if err != nil {
@@ -962,12 +962,12 @@ func (c *Client) DeleteModel(prefix, key string) (models.Model, error) {
 // appropriate test stanzas, which will allow the server to detect and
 // reject conflicting changes from different sources.
 func (c *Client) PatchModel(prefix, key string, patch jsonpatch2.Patch) (models.Model, error) {
-	new, err := models.New(prefix)
+	item, err := models.New(prefix)
 	if err != nil {
 		return nil, err
 	}
-	err = c.Req().Patch(patch).UrlFor(prefix, key).Do(&new)
-	return new, err
+	err = c.Req().Patch(patch).UrlFor(prefix, key).Do(&item)
+	return item, err
 }
 
 func (c *Client) PatchTo(old models.Model, new models.Model) (models.Model, error) {
@@ -1178,43 +1178,54 @@ func (c *Client) TokenRefresh(prefix, key string) {
 	}
 	c.tokenAutoRefresh = true
 	c.mux.Unlock()
-	ticker := time.NewTicker(300 * time.Second)
+	var err error
+	normalWaitTime := 300 * time.Second
+	retries := uint(0)
+	timer := time.NewTimer(normalWaitTime)
 	for {
 		select {
 		case <-c.closeCtx.Done():
-			ticker.Stop()
+			timer.Stop()
 			return
-		case <-ticker.C:
-			token := &models.UserToken{}
-			switch prefix {
-			case "users":
-				if err := c.Req().
-					UrlFor("users", c.username, "token").
-					Params("ttl", "600").
-					Do(&token); err == nil {
-					break
-				}
-				basicAuth := base64.StdEncoding.EncodeToString([]byte(c.username + ":" + c.password))
-				if err := c.Req().
-					UrlFor("users", c.username, "token").
-					Headers("Authorization", "Basic "+basicAuth).
-					Do(&token); err != nil {
-					c.Fatalf("Error reauthing token, aborting: %v", err)
-				}
-			case "machines":
-				if err := c.Req().
-					UrlFor("machines", key, "token").
-					Params("ttl", "600").
-					Do(&token); err != nil {
-					c.Fatalf("Error reauthing token, aborting: %v", err)
-				}
-			default:
-				c.Fatalf("Cannot reauth %s", prefix)
-			}
-			c.mux.Lock()
-			c.token = token
-			c.mux.Unlock()
+		case <-timer.C:
 		}
+		token := &models.UserToken{}
+		switch prefix {
+		case "users":
+			err = c.Req().
+				UrlFor("users", c.username, "token").
+				Params("ttl", "600").
+				Do(token)
+			if err == nil {
+				break
+			}
+			basicAuth := base64.StdEncoding.EncodeToString([]byte(c.username + ":" + c.password))
+			err = c.Req().
+				UrlFor("users", c.username, "token").
+				Headers("Authorization", "Basic "+basicAuth).
+				Do(token)
+		case "machines":
+			err = c.Req().
+				UrlFor("machines", key, "token").
+				Params("ttl", "600").
+				Do(token)
+		default:
+			c.Fatalf("Cannot reauth %s", prefix)
+		}
+		if err != nil {
+			if retries < 5 {
+				c.Errorf("Tried 5 times to renew token for %s, giving up")
+				return
+			}
+			retries++
+			timer.Reset(normalWaitTime >> retries)
+			continue
+		}
+		c.mux.Lock()
+		c.token = token
+		c.mux.Unlock()
+		retries = 0
+		timer.Reset(normalWaitTime)
 	}
 }
 

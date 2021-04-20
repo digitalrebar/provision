@@ -77,17 +77,17 @@ func Open(locator string) (Store, error) {
 		return nil, fmt.Errorf("Unknown ro value %s. Try true or false", roParam)
 	}
 	var res Store
-	path := uri.Opaque
-	if path == "" {
-		path = uri.Path
+	urlPath := uri.Opaque
+	if urlPath == "" {
+		urlPath = uri.Path
 	}
 	switch uri.Scheme {
 	case "stack":
 		res = &StackedStore{}
 	case "file":
-		res = &File{Path: path}
+		res = &File{Path: urlPath}
 	case "directory":
-		res = &Directory{Path: path}
+		res = &Directory{Path: urlPath}
 	case "memory":
 		res = &Memory{}
 	}

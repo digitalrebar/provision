@@ -410,14 +410,14 @@ the stage runner wait flag.
 			if runContext == "" {
 				runContext = os.Getenv("RS_CONTEXT")
 			}
-			agent, err := agent.New(Session, m, oneShot, exitOnFailure, ActuallyPowerThings && !skipPower, os.Stdout)
+			agt, err := agent.New(Session, m, oneShot, exitOnFailure, ActuallyPowerThings && !skipPower, os.Stdout)
 			if err != nil {
 				return err
 			}
 			if oneShot {
-				agent = agent.Timeout(time.Second)
+				agt = agt.Timeout(time.Second)
 			}
-			return agent.StateLoc(runStateLoc).Context(runContext).Run()
+			return agt.StateLoc(runStateLoc).Context(runContext).Run()
 		},
 	}
 	processJobs.Flags().BoolVar(&exitOnFailure, "exit-on-failure", false, "Exit on failure of a task")
