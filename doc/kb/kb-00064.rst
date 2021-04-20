@@ -1,0 +1,155 @@
+.. Copyright (c) 2021 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+
+.. _using_drpcli_in_workflow:
+
+kb-00064: Using 'drpcli' in Workflow
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. _rs_kb_00064:
+
+Knowledge Base Article: kb-00064
+--------------------------------
+
+
+Description
+-----------
+
+This article explains how to use the ``drpcli`` client binary in workflow Tasks
+or Templates.  The client requires authentication to the DRP Endpoint.  The
+authentication information can be generated on the fly by the DRP Endpoint, and
+rendered in Templates for Tasks to use.
+
+This article explains how to use the RackN provided ``setup.tmpl``, as well as
+using Golang Template rendering constructs to build up the appropriate values
+needed.
+
+This method can be used in regular shell scripts as Tasks, within Context Container
+usage, or any other place where the template rendering can be used to automatically
+set up access to the API services for Workflow.
+
+This document outlines use of the Token (eg ``RS_TOKEN``) method for authentication.
+
+
+Solution
+--------
+
+The ``drpcli`` client can use two primary modes of authentication to provide
+the necessary details to access and use the DRP Endpoint API.  They are:
+
+  * Username and Password (eg "basic") authentication
+  * Token authentication
+
+By default Tokens that are generated for use in Workflow are only scoped to
+allow changes to the Machines object.  This is a security control mechanism.
+
+
+**Using ``setup.tmpl``**
+
+The Template named ``setup.tmpl`` is designed to be used with Bash shell scripts
+in Workflow.  It will setup the appropriate Shell variables for the ``drpcli``
+client.  This allows the ``drpcli`` tool to be used transparently without any
+options; as it will use the Shell environment variables by default.
+
+To use it simply add the following Template injection near the top of your
+task/template:
+
+  ::
+
+    # note the trailing lone dot is important !!
+    {{ template "setup.tmpl" . }}
+
+When the Template is rendered, the following Variables are set that the ``drpcli``
+client will use:
+
+  * RS_ENDPOINT="https://drp.example.com:8092"
+  * RS_TOKEN="...long string with token here..."
+  * RS_UUID="...current machine's UUID here..."
+
+These variables can also be optionally used in the script if needed.
+
+.. note:: The ``setup.tmpl`` is maintained under Templates in the DRP Community
+          Content pack.  Refer to it for complete details on all of the environment
+          settings it manipulates (eg "exit on error" - ``set -e``, interaction with
+          the ``rs-debug-enable`` Param, etc).
+
+
+**Using Golang Template Rendering**
+
+Building up the appropriate details via Golang Template rendering is very easy.
+There are several helper functions that make this easy.  Here's an example of
+setting Shell variables appropriately for the ``drpcli`` client tool:  This is
+effectively replicating what the ``setup.tmpl`` above does.
+
+  ::
+
+    RS_ENDPOINT="{{ .ApiURL }}"
+    RS_TOKEN="{{ .GenerateInfiniteToken }}"
+    RS_UUID="{{ .Machine.UUID }}"
+
+These can be rendered as Shell variables (as shown above), or in whatever
+native language format your Task/Template is using.
+
+
+**A Note on ExtraClaims and Permissions**
+
+From time to time you may need to authorize Tasks with the ability to manipulate
+other Objects in the system besides the Machines specific Object.  This can be
+done by providing elevated permissions via the :ref:`rs_data_claim` system.
+
+These are used by setting the Task ``ExtraClaims`` fields appropriately, as in
+the following example to modify Profiles:
+
+  ::
+
+    ExtraClaims:
+      - scope: "profiles"
+        action: "*"
+        specific: "*"
+
+Note that the above ExtraClaims specifies full access to read/write/update all
+Profiles on the system.  This is potentially bad.  You can limit the authorization
+to only a specific Profile by specifying it by Name in the ``specific`` portion
+of the stanza.
+
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+  * :ref:`rs_faq_drpcli`
+  * :ref:`rs_model_template` expansion functions
+  * :ref:`rs_data_render`
+  * :ref:`rs_data_claim` System for elevated privilege access
+  * Knowledge Basse detailing :ref:`What_are_ExtraClaims`
+
+
+Versions
+========
+
+All DRP Versions
+
+Keywords
+========
+
+drpcli, rs_endpoint, rs_token, rs_username, rs_password, rs_uuid, template, rendering, api
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00064
+    initial release:  Tue Apr 20 06:01:46 PDT 2021
+    updated release:  Tue Apr 20 06:01:46 PDT 2021
+
