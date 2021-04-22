@@ -2,7 +2,7 @@
   "Addr": {
     "Regex": false,
     "Type": "IP Address",
-    "Unique": false,
+    "Unique": true,
     "Unordered": false
   },
   "Available": {
