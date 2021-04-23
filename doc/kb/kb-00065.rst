@@ -1,0 +1,54 @@
+.. Copyright (c) 2021 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+
+.. _:
+
+kb-00065: ESXi Agent (drpy) Config Recovery
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. _rs_kb_00065:
+
+Knowledge Base Article: kb-00065
+--------------------------------
+
+
+Description
+-----------
+The ESXi agent (drpy) has incorrect values in the config keeping ESXi workflows from running
+
+Solution
+--------
+Place holder. The solution will change dependig on how the install happened.
+
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+
+Versions
+========
+
+
+Keywords
+========
+esxi, drpy, agent, config
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00065
+    initial release:  Fri 23 Apr 2021 02:13:16 PM CDT
+    updated release:  Fri 23 Apr 2021 02:13:16 PM CDT
+
