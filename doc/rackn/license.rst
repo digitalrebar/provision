@@ -208,7 +208,7 @@ Required Header Fields:
 * `rackn-endpointid`: digital rebar endpoint id
 * `Authorization`: license key
 
-.. note:: The `rackn-endpointid` is the endpoint id (aka `drpid`) of the Digital Rebar Provision endpoint to be licensed.  Licenses are issued per endpoint.  
+The `rackn-endpointid` is the endpoint id (aka `drpid`) of the Digital Rebar Provision endpoint to be licensed.  Licenses are issued per endpoint.
 
   ::
 
@@ -217,7 +217,6 @@ Required Header Fields:
 
     curl -X POST -H "rackn-endpointid: $ENDPOINTID" \
       -H "Authorization: $KEY" \
-      -d '$(drpcli info get)' \
       https://cloudia.rackn.io/api/v1/license/update
 
 Adding Endpoints to a License
