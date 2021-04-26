@@ -270,11 +270,12 @@ func addSystemCommands() (res *cobra.Command) {
 		},
 	})
 	consensus.AddCommand(&cobra.Command{
-		Use:   "remove [endpointId]",
-		Short: "Remove the node with consensus id [endpointId] from the cluster",
+		Use:   "remove [ConsensusId]",
+		Short: "Remove the node with provided Consensus Id from the cluster",
+		Long:  "Only passive nodes can be removed.  ConsensusID is the internally generated ID by the Consensus system.",
 		Args: func(c *cobra.Command, args []string) error {
 			if len(args) != 1 {
-				return fmt.Errorf("missing required argument endpointId")
+				return fmt.Errorf("missing required argument ConsensusId")
 			}
 			return nil
 		},
