@@ -407,8 +407,11 @@ and wind up in a file with the same name as the item + the default file extensio
 						if err != nil {
 							return fmt.Errorf("Error opening src file %s: %v", s, err)
 						}
-						defer data.Close()
-						if _, err := Session.PostBlobExplode(data, false, "files", d); err != nil {
+						func() {
+							defer data.Close()
+							_, err = Session.PostBlobExplode(data, false, "files", d)
+						}()
+						if err != nil {
 							return generateError(err, "Failed to post %v: %v", "files", d)
 						}
 					}
