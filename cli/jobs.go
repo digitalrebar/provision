@@ -56,6 +56,18 @@ You may also pass in a machine UUID or Name to create a new job on that Name.
 			return prettyPrint(ref)
 		},
 	})
+	op.addCommand(&cobra.Command{
+		Use:   "purge",
+		Short: "Purge jobs in excess of the job retention preferences",
+		Args:  cobra.NoArgs,
+		RunE: func(c *cobra.Command, args []string) error {
+			var res interface{}
+			if err := Session.Req().Meth("DELETE").UrlFor("jobs").Do(&res); err != nil {
+				return err
+			}
+			return prettyPrint(res)
+		},
+	})
 	actionsFor := ""
 	actionsCmd := &cobra.Command{
 		Use:   "actions [id]",
