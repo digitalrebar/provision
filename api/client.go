@@ -695,7 +695,7 @@ func (r *R) Do(val interface{}) error {
 	if val != nil && resp.Body != nil && resp.ContentLength != 0 {
 		r.err.AddError(dec.Decode(val))
 	}
-	if f, ok := val.(models.Filler); ok && err != nil {
+	if f, ok := val.(models.Filler); ok {
 		f.Fill()
 	}
 	return r.err.HasError()
@@ -1074,16 +1074,16 @@ func (c *Client) MakeProxy(socketPath string) error {
 		for {
 			c.Errorf("Proxy error: %v", server.Serve(listener))
 			if fi, err := os.Stat(socketPath); err != nil || fi.Mode()&os.ModeSocket == 0 {
-				localProxyMux.Lock()
-				defer localProxyMux.Unlock()
-				c.Errorf("Proxy socket vanished!")
-				os.Unsetenv(("RS_LOCAL_PROXY"))
-				os.Remove(socketPath)
-				c.Client.Transport = trans
-				weAreTheProxy = false
-				return
+				break
 			}
 		}
+		localProxyMux.Lock()
+		defer localProxyMux.Unlock()
+		c.Errorf("Proxy socket vanished!")
+		os.Unsetenv(("RS_LOCAL_PROXY"))
+		os.Remove(socketPath)
+		c.Client.Transport = trans
+		weAreTheProxy = false
 	}()
 	os.Setenv("RS_LOCAL_PROXY", socketPath)
 	c.Client.Transport = transport(true)
@@ -1213,7 +1213,8 @@ func (c *Client) TokenRefresh(prefix, key string) {
 			c.Fatalf("Cannot reauth %s", prefix)
 		}
 		if err != nil {
-			if retries < 5 {
+			c.Errorf("Error renewing token: %v", err)
+			if retries > 5 {
 				c.Errorf("Tried 5 times to renew token for %s, giving up")
 				return
 			}

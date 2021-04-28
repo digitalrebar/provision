@@ -142,7 +142,9 @@ func New(c *api.Client, m *models.Machine,
 		return nil, err
 	}
 	res.bootTime = bt
-	go res.client.TokenRefresh("machines", m.UUID())
+	// Not until we have a token refresh scheme that isn't dependent
+	// on the current token being valid.
+	//go res.client.TokenRefresh("machines", m.UUID())
 	return res, nil
 }
 
@@ -337,19 +339,26 @@ func (a *Agent) loadKexec() {
 			a.logf("Failed to fetch %s\n", parts[1])
 			return
 		}
-		defer resp.Body.Close()
-		outPath := path.Join(tmpDir, path.Base(parts[1]))
-		out, err := os.Create(outPath)
+		var outPath string
+		func() {
+			defer resp.Body.Close()
+			outPath = path.Join(tmpDir, path.Base(parts[1]))
+			var out *os.File
+			out, err = os.Create(outPath)
+			if err != nil {
+				a.logf("Failed to create %s\n", outPath)
+				return
+			}
+			if _, err = io.Copy(out, resp.Body); err != nil {
+				a.logf("Failed to save %s\n", outPath)
+				return
+			}
+			out.Sync()
+			out.Close()
+		}()
 		if err != nil {
-			a.logf("Failed to create %s\n", outPath)
 			return
 		}
-		if _, err := io.Copy(out, resp.Body); err != nil {
-			a.logf("Failed to save %s\n", outPath)
-			return
-		}
-		out.Sync()
-		out.Close()
 		switch parts[0] {
 		case "kernel":
 			kernel = outPath
