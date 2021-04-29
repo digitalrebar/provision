@@ -14,7 +14,7 @@ type Plugin struct {
 	// plugins.
 	//
 	// required: true
-	Name string
+	Name string `index:",key"`
 	// A description of this plugin.  This can contain any reference
 	// information for humans you want associated with the plugin.
 	Description string

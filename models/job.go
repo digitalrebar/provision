@@ -88,7 +88,7 @@ type Job struct {
 	// The UUID of the job.  The primary key.
 	// required: true
 	// swagger:strfmt uuid
-	Uuid uuid.UUID
+	Uuid uuid.UUID `index:",key"`
 	// The UUID of the previous job to run on this machine.
 	// swagger:strfmt uuid
 	Previous uuid.UUID
@@ -150,7 +150,7 @@ type Job struct {
 	// Token is the JWT token that should be used when running this Job.  If not
 	// present or empty, the Agent running the Job will use its ambient Token
 	// instead.  If set, the Token will only be valid for the current Job.
-	Token string `json:"Token, omitempty"`
+	Token string `json:"Token,omitempty"`
 }
 
 func (j *Job) GetMeta() Meta {

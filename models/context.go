@@ -13,7 +13,7 @@ type Context struct {
 	Owned
 	Bundled
 	// Name is the name of this Context.  It must be unique.
-	Name string
+	Name string `index:",key"`
 	// Image is the name of the prebuilt execution environment that the Engine should use to create
 	// specific execution environments for this Context when Tasks should run on behalf
 	// of a Machine.  Images must contain all the tools needed to run the Tasks

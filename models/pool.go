@@ -63,7 +63,7 @@ type Pool struct {
 	Owned
 	Bundled
 
-	Id            string
+	Id            string `index:",key"`
 	Description   string `json:",omitempty"`
 	Documentation string `json:",omitempty"`
 	ParentPool    string `json:",omitempty"`

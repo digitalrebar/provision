@@ -205,7 +205,7 @@ type BootEnv struct {
 	// an operating system must end in '-install'.  All boot environment names must be unique.
 	//
 	// required: true
-	Name string
+	Name string `index:",key"`
 	// Description is a one-line description of this boot environment.  This should tell what
 	// the boot environment is for, any special considerations that
 	// should be taken into account when using it, etc.

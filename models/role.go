@@ -294,7 +294,7 @@ type Role struct {
 	// Name is the name of the user
 	//
 	// required: true
-	Name string
+	Name string `index:",key"`
 	// Claims that the role support.
 	Claims []*Claim
 	// Description of role
