@@ -6,10 +6,21 @@
 
 .. _rs_install:
 
-Install
-~~~~~~~
+Production Install
+~~~~~~~~~~~~~~~~~~
 
 The install script does the following steps (in a slightly different order).  See :ref:`rs_quickstart` for details about the script. For air gap/offline install instructions please see :ref:`this doc <rs_airgap>`
+
+Other installation paths:
+
+* :ref:`rs_quickstart` is a basic SystemD install for new users
+* :ref:`rs_install_dev` for developers running DRP interactively
+* :ref:`rs_install_docker` for trial users minimizing their install requirements
+* :ref:`rs_install_cloud` is non-PXE / Cloud-Only installation process
+* `Edge Lab with RPi <http://edgelab.digital>`_ is self-contained Digital Rebar inexpensive lab using Raspberry Pi computers.
+
+Each of these environments requires careful setup up of your network environment and consideration with regard to competing DHCP services.  The setup of these environments is outside the scope of this document.
+
 
 Get Code
 --------
@@ -73,15 +84,6 @@ Using ``dr-provision --help`` will provide the most complete list of configurati
 
 .. note:: In pre v4.2 releases, the **dr-provision** requires two applications to operate correctly, **bsdtar** and **7z**.  These are used to extract the contents of iso and tar images to be served by the file server component of **dr-provision**
 
-Container Environments
-----------------------
-
-If you intend to install DRP via a container system, you must pre-install the appropriate container solution.  RackN typically only tests and verifies with recent versions of Docker.
-
-.. admonition:: Container Installation
-
-  sudo yum install docker-ce
-
 Running The Server
 ------------------
 
@@ -89,18 +91,13 @@ Additional support materials in :ref:`rs_faq`.
 
 The **install.sh** script provides three options for running **dr-provision**.
 
-  #. Production mode installations
-  #. Isolated (generally for testing) mode
-  #. Container based installation
+  #. Production mode installations via `systemd <https://en.wikipedia.org/wiki/Systemd>`_ (this guide)
+  #. :ref:`rs_install_dev` for developers running DRP interactively
+  #. :ref:`rs_install_docker` for trial users minimizing their install requirements
 
 The default values install the server and cli in /usr/local/bin.  It will also put a service control file in place.  Once that finishes, the appropriate service start method will run the daemon.  The **install.sh** script prints out the command to run and enable the service.  The method described in the :ref:`rs_quickstart` can be used to deploy this way if the *--isolated* flag is removed from the command line.  Look at the internals of the **install.sh** script to see what is going on.
 
 .. note:: The default location for storing runtime information is ``/var/lib/dr-provision`` unless overridden by ``--data-root``
-
-Alternatively, the **install.sh** script can be passed the *--isolated* flag and it will setup the current directory
-as an isolated "test drive" environment.  This will create a symbolic link from the bin directory to the local top-level
-directory for the appropriate OS/platform, create a set of directories for data storage and file storage, and
-display a command to run.  This is what the :ref:`rs_quickstart` method describes.
 
 The default username & password used for administering the *dr-provision* service is:
   ::
@@ -132,46 +129,6 @@ If the SSL certificate is not valid, then follow the :ref:`rs_gen_cert` steps.
   ::
 
     sudo route add 255.255.255.255 192.168.100.1
-
-Container Deployments
----------------------
-
-Installation is perforemed with the ``install.sh`` script with the ``--container`` flag and associated options.  Here are some of the options (please check the latest installer script for updates/details):
-
-  ::
-
-    --container             # Force to install as a container, not zipfile
-    --container-type=<string>
-                            # Container install type, defaults to "docker"
-    --container-name=<string>
-                            # Set the "docker run" container name, defaults to "drp"
-    --container-restart=<string>
-                            # Set the Docker restart option, defaults to "always"
-                            # options are:  no, on-failure, always, unless-stopped
-                            * see: https://docs.docker.com/config/containers/start-containers-automatically/
-    --container-volume=<string>
-                            # Volume name to use for backing persistent storage, default "drp-data"
-    --container-registry="drp.example.com:5000"
-                            # Alternate registry to get container images from, default "index.docker.io"
-    --container-env="<string> <string> <string>"
-                            # Define a space separated list of environment variables to pass to the
-                            # container on start (eg "RS_METRICS_PORT=8888 RS_DRP_ID=fred")
-                            # see 'dr-provision --help' for complete list of startup variables
-    --container-netns="<string>"
-                            # Define Network Namespace to start container in. Defaults to "host"
-                            # If set to empty string (""), then disable setting any network namespace
-
-.. note:: WARNING: If you intend to Upgrade DRP in a container based scenarios, it iS IMPORTANT that you retain a copy of the installation command line flags you use for install time.  These flags will have to be specified for the upgrade command to work correctly.
-
-Container based installations will by default name the container ``drp``, and the data backing volume ``drp-data``.  You can change these with appropriate flags.  The writable data store is located in the backing volume, which helps isolate the binary/service environment from the writable content.  See the :ref:`rs_upgrade_container` for more details.
-
-The ``dr-provision`` service binary utilizes environment variables as a mechanism to support customization of the runtime of the service.  This also allows the operator to start the container and modify the runtime via the use of passing Environment variables in to the container.  Here is an example:
-
-  ::
-
-    ./install.sh install --container --container-restart=always --container-netns=host --container-env="RS_METRICS_PORT=8888"
-
-This example modifies the Metrics port to be changed from the default of ``8080`` to relocate to port ``8888``.  See ``dr-provision --help`` for a list of all environment variable options that can be set.
 
 
 Production Deployments
@@ -240,12 +197,6 @@ To remove programs and data use.
   ::
 
     tools/install.sh --remove-data remove
-
-For *iolated* installs, remove the directory used to contain the isolated install.  In the example above, the directory *dr-provision-install* was used to isolate the install process.  A command like this would clean up the system.
-
-  ::
-
-    sudo rm -rf dr-provision-install
 
 
 Running the RackN UX Locally

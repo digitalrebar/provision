@@ -219,12 +219,21 @@ The `rackn-endpointid` is the endpoint id (aka `drpid`) of the Digital Rebar Pro
       -H "Authorization: $KEY" \
       https://cloudia.rackn.io/api/v1/license/update
 
+Return Codes:
+
+* 200, then the ``license.json`` output can be uploaded new license with ``drpcli contents upload license.json``
+* 304, then the license is up to date with the required endpoint included and no action is quuired.
+
+Note that RackN limits the number of endpoints that can be registered.  If you have exceeded that number, the API not update the license and will return 304.
+
 Adding Endpoints to a License
 -----------------------------
 
 Generally, the UX will add endpoints automatically during the Check and Update process on a new endpoint.
 
-If you cannot use the UX to add an endpoint then use the API above.  Add endpoints to a license upto your entitlements by sending a new endpoint with license information validated for a different endpoint.  This will create a new license that can be applied too all endpoints.  
+If you cannot use the UX to add an endpoint then use the API above.  Add endpoints to a license up to your entitlements by sending a new endpoint with license information validated for a different endpoint.
+
+This will create a new license that can be applied to _all_ endpoints.
 
 
 Removing Endpoints from a License

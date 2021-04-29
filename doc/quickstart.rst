@@ -1,192 +1,149 @@
-.. Copyright (c) 2017 RackN Inc.
+.. Copyright (c) 2021 RackN Inc.
 .. Licensed under the Apache License, Version 2.0 (the "License");
-.. Digital Rebar Provision documentation under Digital Rebar master license
+.. Digital Rebar documentation under Digital Rebar master license
 .. index::
-  pair: Digital Rebar Provision; Quickstart
+  pair: Digital Rebar Provision; Quick Start
 
 .. _rs_quickstart:
 
 Quick Start
 ~~~~~~~~~~~
 
-.. note::  We HIGHLY recommend using the ``latest`` version of the documentation, as it contains the most up to date information.  Use the version selector in the lower right corner of your browser.
+This quick start guide provides a streamlined self-trial installation via `systemd <https://en.wikipedia.org/wiki/Systemd>`_ on Mac OS, Linux OS, Linux VMs and Cloud Servers.  Many advanced options are including air-gap, local UX, using another DHCP are available but outside of this scope.
 
-This quick start guide provides a basic installation and start point for further exploration.  The guide has been designed for UNIX systems: Mac OS, Linux OS, Linux VMs and Linux Packet Servers.  The guide employs Curl and Bash commands which are not typically considered safe, but they do provide a simple and quick process for start up.  Installation of the service (``dr-provision``) is not supported or possible on Windows operating systems.
+We recommend consulting the `video guide <https://youtu.be/v-KcvYrUoE0>`_ of this process during the installation and our `advanced features showcase <https://www.youtube.com/playlist?list=PLXPBeIrpXjfigvrXEQIJxXmFdTHqobooH>`_.
 
-It is possible to install on hypervisors and in virtualized environments (eg. VirtualBox, VMware Workstation/Fusion, KVM, etc.), or as a container (from Docker Hub).  Each of these environments requires careful setup up of your network environment and consideration with regard to competing DHCP services.  The setup of these environments is outside the scope of this document.
+Most Digital Rebar environments require knowledge of your network and DHCP environment.  Cloud and fully Virtual environments generally require less networking knowledge.
 
-For a full install, or for installations that require offline setup (no direct access to the internet to install prereqs, or pull down zip files), please see the full :ref:`rs_install` documentation.
+Other installation paths to consider:
 
-Overview
---------
+.. toctree::
+   :maxdepth: 1
+   :glob:
 
-  * Read :ref:`rs_qs_preparation` steps below
-  * :ref:`rs_qs_install` DRP Endpoint (in "isolated" mode)
-  * :ref:`rs_qs_start` daemon
-  * :ref:`rs_qs_bootenvs` (OS media for installation)
-  * :ref:`rs_qs_subnet` to answer DHCP requests
-  * :ref:`rs_qs_workflow`
-  * :ref:`rs_qs_defaults` for defaultBootEnv, defaultStage, unknownBootEnv, and defaultWorkflow
-  * boot your first Machine and :ref:`rs_qs_first_machine` an OS on it
+   install/install
+   install/install-dev
+   install/install-docker
+   install/install-cloud
 
-This document refers to the ``drpcli`` command line tool for manipulating the ``dr-provision`` service.  We do not specify any paths in the documentation.  However, in our default quickstart for *isolated* mode, the ``drpcli`` tool will NOT be installed in any system PATH locations.  You must do this, or you may use the local setup symbolic link.  For example - simply change ``drpcli`` to ``./drpcli`` in the documentation below.  Or ... copy the binary to a PATH location.
+This graphic shows the basic layout for a quick start system:
 
-You can perform all of the actions outlined in this document via the hosted web UX Portal.  If you choose to use the web Portal, please ensure the setup is completed by reviewing the output of the ``Info & Preferences`` panel named *System Wizard* are completed successfully.  Basic `documentation on the Web Portal <http://provision.readthedocs.io/en/latest/doc/ux/portal/systemux.html#machines>`_ UX is available. 
+.. image:: images/quick_start_network.png
+  :width: 100%
+  :alt: Basic layout for a Digital Rebar Quick Start
 
 .. _rs_qs_preparation:
 
-Preparation
------------
+Prepare Your Environment
+------------------------
 
-Please make sure your environment doesn't have any conflicts or issues that might cause PXE booting to fail.  Some things to note:
+This quick start guide will install the latest stable release of Digital Rebar onto a Linux or MacOS system as a `systemd <https://en.wikipedia.org/wiki/Systemd>`_ service running on port 8092 (these :ref:`rs_arch_ports` are used by default).
 
-  * only one DHCP server on a local subnet
-  * your Machines should be set to PXE boot the correct NIC (on the correct provisioning network interface)
-  * if you customize Reservations - you must also add all of the correct PXE boot options (see :ref:`rs_create_reservation` )
-  * you need the network information for the subnet that your target Machines will be on
-  * Mac OSX may require additional setup (see notes below)
-  * we rely heavily on the ``jq`` tool for use with the Command Line tool (``drpcli``) - install it if you don't have it already
+For a quick trial, we recommend using a dedicated Virtual Machine using `host only networking` on one interface for your trial.
 
-For additional information on preparing a *Quickstart* environment, please see the :ref:`rs_setup` for additional
-details.
+* Linux or MacOS system (we recommend Centos 8, Windows is not supported)
+* 4 Gb of RAM (minimum)
+* 20 Gb of Disk Space (60 Gb is better because some O/S installation ISOs require much more space)
+* Access to the internet to download components (*not* a requirement for production systems)
+* Provisioning network without a DHCP server (Digital Rebar will provide DHCP by default)
+
+If you are concerned about installing Digital Rebar as a service, please review our :ref:`rs_install_dev` guide to run it isolated in a single directory.
 
 .. _rs_qs_install:
 
-Install
--------
+Install Digital Rebar Endpoint
+------------------------------
 
 To begin, execute the following commands in a shell or terminal:
-  ::
 
-    mkdir drp ; cd drp
-    curl -fsSL get.rebar.digital/stable | bash -s -- --isolated install
+.. code-block:: bash
 
-.. note:: If you want to try the latest code, you can checkout the development tip using ``curl -fsSL get.rebar.digital/tip | bash -s -- --isolated --drp-version=tip install``
+    curl -fsSL get.rebar.digital/stable | bash -s -- install --systemd --version=stable
 
-The command will pull the *stable* ``dr-provision`` bundle and checksum from github, extract the files, verify prerequisites are installed, and create some initial directories and links.
+The command will download the stable Digital Rebar (the ``systemctl`` service name is ``dr-provision``) bundle and checksum from github, extract the files, verify prerequisites are installed, and create needed directories and links under ``/var/lib/dr-provision``.  The ``--systemd`` and ``--version`` flags included for clarity, they are not required for this install.
 
-.. note:: By default the installer will pull in the default Community Content packages.  If you are going to add your own or different (eg RackN registered content), append the ``--nocontent`` flag to the end of the install command.
+The `install <http://get.rebar.digital/stable/>`_ script used by our installs has many additional options including ``remove`` that are documented in its help and explored in other install guides.
 
-.. note:: The "install.sh" script that is executed (either via 'stable' or 'tip' in the initial 'curl' command), has it's own version number independent of the Digital Rebar Provision endpoint version that is installed (also typically called 'tip' or 'stable').  It is NOT recommend to "mix-n-match" the installer and endpoint version that's being installed.
+Once the installation script completes, a Digital Rebar endpoint will be running your local system!
 
-For reference, you can download the installer (``install.sh``), and observe what the shell script is going to do (highly recommended as a prudent security caution), to do so simply:
-  ::
+.. _rs_qs_license:
 
-    curl -fsSL get.rebar.digital/stable -o install.sh
+Open the RackN UX & Trial License 
+---------------------------------
 
-Once the installer is downloaded, you can execute it with the appropriate ``install`` options (try ``bash ./install.sh --help`` for details).
+All Digital Rebar operations are securely local and behind your firewall. RackN *never* has direct access to your DRP endpoint.
 
-It is recommended that directory is used for this process.  The ``mkdir drp ; cd drp`` command does this as the ``drp`` directory.  The directory will contain all installed and operating files. The ``drp`` directory can be anything.
+The Digital Rebar UX is hosted at `RackN <https://portal.rackn.io/>`_ as a convenience for new users.  RackN does not have access to your data, credentials or provisioning APIs because The RackN portal runs as a single-page app *locally* in your browser so all DRP API calls remain behind your firewall. 
 
-Even for *production* installs (without ``--isolated``), it is recommended to run the ``install.sh`` script in a directory to contain all the install files for easy clean-up and removal if Digital Rebar Provision needs to be removed from the system.
+To start, open new Digital Rebar API:
 
-.. _rs_qs_start:
-
-Start Digital Rebar Provision service
--------------------------------------
-
-Our quickstart uses *isolated* mode install, and the ``dr-provision`` service is not installed in the system path.  You need to manually start ``dr-provision`` each time the system is booted up.  The *production* mode installation (do not specify the ``--isolated`` install flag) will install in to system directories, and provide helpers to setup ``init``, ``systemd``, etc. start up scripts for the service.
-
-Once the install has completed, your terminal should then display something like this (please use the output from YOUR install version, the below is just an example that may be out of date with the current versions output):
-
-  ::
-
-    # Run the following commands to start up dr-provision in a local isolated way.
-    # The server will store information and serve files from the ./drp-data directory.
-
-    sudo ./dr-provision --base-root=`pwd`/drp-data --local-content="" --default-content="" > drp.log 2>&1 &
-
-
-.. note:: On MAC DARWIN there is one additional step. You may have to add a route for broadcast addresses to work.  This can be done with following command ``sudo route -n add -net 255.255.255.255 192.168.100.1`` In this example, the ``192.168.100.1`` is the IP address of the interface that you want to send messages through. The install script should make suggestions for you.
-
-The next step is to execute the *sudo* command which will start an instance of Digital Rebar Provision service that uses the ``drp-data`` directory for object and file storage.
-
-.. note:: Before trying to install a BootEnv, please verify that the installed BootEnvs matches the above BootEnv Names that can be installed: ``drpcli bootenvs list | jq '.[].Name'``
-
-
-You may also use the RackN Portal UX by pointing your web browser to:
   ::
 
     https://<ip_address_of_your_endpoint>:8092/
 
-Please note that your browser will be redirected to the RackN Portal, pointing at your newly installed Endpoint.  Use the below username/password pair to authenticate to the DRP Endpoint.  Additional capabilities and features can be unlocked by also using the RackN Portal Login (upper right "Login" blue button).
 
-The default username & password used for administering the *dr-provision* service is:
+You will be redirected to the `RackN Portal UX <https://portal.rackn.io>`_ after you visit the Digital Rebar API port and accept the self-signed certificate generated by the installation.
+
+
+Then login Digital Rebar:
+
   ::
 
     username: rocketskates
     password: r0cketsk8ts
 
-.. _rs_qs_bootenvs:
 
-Install Boot Environments (bootenvs)
-------------------------------------
+After login, you will be promoted to create and download a extendable self-trial license that enables most enterprise feature of Digital Rebar.  If you save the generated license file then you'll be able to use it to bypass this process in the future.
 
-With Digital Rebar Provision running; it is now time to install the specialized Digital Rebar Provision content, and the required boot environments (BootEnvs).  We generally refer to this as "content".
+.. _rs_qs_ux_bootstrap:
 
-.. note:: This documentation assumes you are using the default ``drp-community-content`` pack. This is normally installed by ``install.sh`` script, other cases (such as running official Docker image or manual installation) are covered below.
+UX System Bootstrap Wizard
+--------------------------
 
-During the install step above, the installer output a message on how to install install BootEnvs.  You must install the ``sledgehammer`` BootEnv for Discovery and Workflow.  You may selectively choose to install one of the Community Content BootEnvs that you wish to install to your Machines.  To obtain a full list of Community Content supported BootEnvs, do:
-  ::
+On the top left section of the *Info & Preferences* page, the `RackN Portal <https://portal.rackn.io>`_ shows the steps needed to create a fully operational Digital Rebar endpoint.
 
-    drpcli bootenvs list | jq '.[].Name'
+A quick start system will have some initial configuration already done.  Work through the bootstrap check list until all items have green check marks.  The final *Machines* step requires actions outside of Digital Rebar, consult :ref:`rs_qs_first_machine` for assistance.
 
-  #. install the *sledgehammer* Boot Environment, used for discovery and provisioning workflow
-  #. set default preferences for basic discovery booting
-  #. download common utilties for Digital Rebar from the RackN catalog
-  #. cache the CentOS Boot ISO locally <optional>
-  #. cache the Ubuntu Boot ISO locally <optional>
+If you prefer command line actions over a UX, all of the UX Wizard steps can also be performed using the steps below.
 
-These steps should be performed from the newly installed *dr-provision* endpoint (or via remote *drpcli* binary with the use of the ``--endpoint`` flag):
+.. _rs_qs_cli_bootstrap:
+
+CLI System Bootstrap (optional)
+-------------------------------
+
+These :ref:`rs_cli` bootstrapping steps include the ones suggested by the install script.
+
+To use DRPCLI, you need to set the target endpoint and credentials.  This can be done per call using command line flags; however, most users prefer to set environment variables for this purpose.
 
 .. code-block:: bash
 
-    drpcli catalog item install drp-community-content # if was not installed previously
+    export RS_ENDPOINT=https://<ip_address_of_your_endpoint>:8092/
+    export RS_KEY=rocketskates:r0cketsk8ts
+
+First, set a more secure password for your endpoint.
+
+.. code-block:: bash
+
+    mypass="D1gitalR3bar"
+    drpcli users password rocketskates $mypass
+    export RS_KEY=rocketskates:$mypass
+
+
+Next, upload the discovery O/S (aka "sledgehammer") and set the defaults to use it.
+
+.. code-block:: bash
+
     drpcli bootenvs uploadiso sledgehammer
     drpcli prefs set defaultWorkflow discover-base unknownBootEnv discovery
-    drpcli contents upload catalog:task-library-stable
-    drpcli bootenvs uploadiso ubuntu-18.04-install # optional, requires about 3G of free space
-    drpcli bootenvs uploadiso centos-8-install # optional, requires about 15G of free space
 
-The ``uploadiso`` command will fetch the ISO image as specified in the BootEnv JSON spec, download it, and then "explode" it in to the ``drp-data/tftpboot/`` directory for installation use.  You may optionally choose one or both of the CentOS and Ubuntu BootEnvs (or any other Community Content supported BootEnv) to install; depending on which Operating System and Version you wish to test or use.
+Note that ``drpcli bootenvs uploadiso`` command is a helper command that combines two common steps:  it fetchs the ISO referenced ISO in the bootenv from the internet and then uploads the ISO to Digital Rebar.  If you perform these steps many times, we recommend storing the downloaded ISO media locally and then uploading it using ``drpcli isos upload``.
 
 
-Try the RackN UX
-----------------
+Next, define the provisioning Subnet in Digital Rebar DHCP.  Since you _must_ include all of the necessary DHCP boot options to correctly PXE boot a Machine; we recommend using the UX to create Subnets because it has logic to determine sane defaults.
 
-At this point, you can switch to the RackN Web UX by pointing your web browser to ``https://<ip_address_of_your_endpoint>:8092/``.
+The following command line example contains the JSON Subnet and DHCP definitions.  You *MUST* modify the network parameters to match your environment.
 
-After you accept the endpoint's self-signed certificate, you will be automatically redirected to
-the RackN portal at ``https://portal.rackn.io/`` with your endpoint IP included.
-This will guide you to ``Digital Rebar Endpoint Login`` for your new endpoint's API. Clicking ``defaults`` will populate the login with default credentials.
-
-.. note:: The RackN portal runs as a single-page app *locally* in your browser so all DRP API calls remain behind your firewall. RackN *never* has direct access to your DRP endpoint.
-
-.. _rs_qs_subnet:
-
-Configure a Subnet
-------------------
-
-A Subnet defines a network boundary that the DRP Endpoint will answer
-DHCP queries for.  In this quickstart, we assume you will use the
-local network interface as a subnet definition, and that your Machines
-are all booted from the local subnet (layer 2 boundary).  A Subnet
-specification must include all of the necessary DHCP boot options to
-correctly PXE boot a Machine.
-
-.. note:: DRP supports the use of external DHCP servers, DHCP Proxy, etc.  However, this is considered an advanced topic, and not discussed in the QuickStart.
-
-.. note:: The UX will create a Subnet based on an interface of the DRP Endpoint with sane defaults - it is easier to create a subnet via the UX.
-
-You must still set all of the remaining network values correctly in your Subnet specification, even in the UX.
-
-To create a basic Subnet from command line we must create a JSON blob that
-contains the Subnet and DHCP definitions.  Below is a _sample_ you can
-use.  *PLEASE ENSURE* you modify the network parameters accordingly.
-Ensure you change the network parameters according to your
-environment.
-
-  ::
+.. code-block:: bash
 
     ###
     #  EXAMPLE - please modify the below values according to your environment  !!!
@@ -212,164 +169,71 @@ environment.
 
     drpcli subnets create - < /tmp/local_subnet.json
 
-.. _rs_qs_workflow:
 
-Create a Workflow
------------------
+Finally, install one of these popular trial operating systems.
 
-No Action Required!
+.. code-block:: bash
 
-*Workflows* define a series of *Stages* that a Machine transitions through, driven
-by Digital Rebar Provision.  Not only do the drive basic Operating System 
-installation, but they also allow for advanced application installation and
-configuration if desired.  *Workflows* also allow for some basic power management
-functions for hardware that does not support IPMI-like functions.  
+    drpcli bootenvs uploadiso ubuntu-20.04-install # optional, requires at least 3G of free space
+    drpcli bootenvs uploadiso centos-8-install # optional, requires at least 30G of free space
 
-For our QuickStart use case, you've automatically created three simple *Workflows*:
 
-  #. discover-base (from community content)
-  #. centos-base (from RackN task-library)
-  #. ubuntu-base (from RackN task-library)
-
-These pre-built basic workflows are imported as read only to get you running quickly.
-You'll need to clone them to customize them as you learn Digital Rebar.
-
-.. _rs_qs_defaults:
-
-Set The Defaults 
-----------------
-
-No Action Required!
-
-For our QuickStart use case, you've already configured preferences to use base discovery.
-
-One of the basic safety mechanisms for newly installed DRP Endpoints, is to
-prevent accidental Installation of a Machine, if it should PXE boot against 
-a DRP Endpoint ... **before** you are ready for that to happen!!  So we must
-first set the default actions for a few system wide preferences.  One of those
-defaults will point to our Discovery Workflow (see :ref:`rs_qs_workflow`).
-
-You can review the preferences using ``drpcli prefs list``.
-
-Any Machine that boots will by default be placed in to the Discovery Workflow,
-which will NOT install an Operating System, but will enroll the machine for
-management by Digital Rebar Provision
-
-Once set, any "unknown" or new Machines that boot against the DRP Endpoint will
-be *discovered* and sit idly by waiting (`sledgehammer-wait`) for your 
-next commands (eg. install an operating system).
+We recommend reviewing the :ref:`rs_qs_ux_bootstrap` to ensure that all steps have been completed.
 
 .. _rs_qs_first_machine:
 
-Install your first Machine
---------------------------
+Provision a Machine
+-------------------
 
-Content configuration is the most complex topic with Digital Rebar Provision.
-The basic provisioning setup with the above "ISO" uploads, default preferences,
-and simple workflows will allow you to install an operating system on the Machine
-with *manual power management* (on/off/reboot etc) transitions.  
+Create network bootable virtual machine (physical machines on the DHCP network will work too):
 
-More advanced workflows and plugin_providers will allow for complete automation
-workflows with complex stages and state transitions.  To keep things "quick", the
-below are just bare basics, for more details and information, please see the
-Content documentation section.
+* with at least 2 Gb of RAM (4 Gb is preferred)
+* set to network boot first
+* attached to Digital Rebar provisioning network (aka Layer 2 subnet)
 
-  1. PXE Boot your Machine
+Power on the machine!  No further action is required.
 
-    * ensure your test Machine is on the same Layer 2 subnet as your DRP endpoint, or that you've configured your networks *IP Helper* to forward your DHCP requests to your DRP Endpoint
-    * the Machine should be in the same subnet as defined in the Subnets section above (not strictly required, but this is a simplified quickstart environment!)
-    * set your test machine or VM instance to PXE boot
-    * power the Machine on (or reboot it) and verify from the console that the NIC begins the PXE boot process
-    * verify that the DRP Endpoint responds with a DHCP lease to the Machine
-
-    The Machine should boot in to the Sledgehammer BootEnv - which will bring
-    the console to a prompt that looks like (the version signature may differ):
-
-      ::
-
-        Digital Rebar: Sledgehammer 6122f34b46b5b74b668d6779e33f5fcd0f44a8cc
-        Kernel 3.10.0-693.21.1.el7.x86_64 on an x86_64
-
-        d0c-c4-7a-e5-48-b6 login:
-
-  2. Get your Machines UUID so you can set the Workflow for it
-
-    * once your machine has booted, and received DHCP from the DRP Endpoint, it will now be "registered" with the Endpoint for installation
-    * by default, DRP will NOT attempt an OS install unless you explicitly direct it to (for safety's sake!)
-    * obtain your Machine's ID, you'll use it to define your BootEnv (see :ref:`rs_jq_filter_gohai` for more detailed/cleaner syntax)
+The machine should boot in to the Sledgehammer discovery operating system.  Typically, the machine console looks like (the version signature may differ):
 
     ::
 
-      drpcli machines list | jq '.[].Uuid'
+      Digital Rebar: Sledgehammer ###................................####
+      Kernel 3.10.0-693.21.1.el7.x86_64 on an x86_64
 
-  3. Set the Workflow to to your Operating System Workflow you defined above;
-     replace *<UUID>* with your machines ID from the above command:
+      d0c-c4-7a-e5-48-b6 login:
 
-    ::
+After the boot is complete, the UX *Machines* page should show the newly discovered machine.
 
-      # example for CentOS 7 workflow
-      drpcli machines update <UUID> '{ "Workflow": "centos7" }'
+If you have installed another operating system ISO besides Sledgehammer, then you can now provision an operating system by setting the target workflow on the machine:
 
-      # example for Debian 9 workflow
-      drpcli machines update <UUID> '{ "Workflow": "debian9" }'
+#. select the target machine (indicated with a check in the left most box)
+#. select the target workflow from the action list at the top of the page (typically centos-base or ubuntu-base)
+#. press the "Run Workflow" button (looks like a play icon next to the workflow list)
 
-      # example for Ubuntu 18.04 workflow
-      drpcli machines update <UUID> '{ "Workflow": "ubuntu18" }'
+You should see immediate updates to the machine's stages and tasks as Digital Rebar processes the workflow.
 
-  4. Reboot your Machine - it should now kick off a BootEnv install as you specified above.
+After installation completes, you can quickly return to Sledgehammer by running the ``discover-base`` workflow.
 
-    * watch the console, and you should see the appropriate installer running
-    * the machine should reboot in to the Operating System you specified once install is completed
+.. _rs_qs_next_steps:
 
-.. note:: Digital Rebar Provision is capable of automated workflow management of the boot process, power control, and much more.  This quickstart walks through the simplest process to get you up and running with a single test install.  Please review the rest of the documentation for further configuration details and information on automation of your provisioning environment.
+Advanced Features Catalog (next steps)
+--------------------------------------
 
-More Advanced Workflow
-----------------------
+Digital Rebar is capable of automated workflow management of the boot process, power control, and much more.  This quickstart walks through the simplest process to get you up and running with a single test install.  Please review the rest of the documentation for further configuration details and information on automation of your provisioning environment.
 
-The above procedure uses manual reboot of Machines, and manual application of the BootEnv definition to the Machine for final installation.  A simple workflow can be used to achieve the same effect, but it is a little more complex to setup.  See the :ref:`rs_operation` documentation for further details.
-
-Machine Power Management
-------------------------
+The UX Catalog contains a list of available extensions to Digital Rebar that are avaible for installation.  Choosing an item from the Catalog will automatically download and install the capability.  All items run locally in your Digital Rebar endpoint, no connection to RackN is required after the download.
 
 Fully automated provisioning control requires use of plugins for Power Management actions.  These are done through the IPMI subsystem, with a specific IPMI plugin for a specific environments.  Some existing plugins exist and are documented in :ref:`rs_setup`.
 
-Isolated vs Production Install Mode
------------------------------------
-
-The quickstart guide does NOT create a production deployment and the DRP Endpoint service will NOT restart on failure or reboot.  You will have to start the *dr-provision* service on each system reboot (or add appropiate startup scripts).
-
-A production mode install will install to ``/var/lib/dr-provision`` directory (by default), while an isolated install mode will install to ``$PWD/drp-data``.
-
-For more detailed installation information, see: :ref:`rs_install`
+.. _rs_qs_cleanup:
 
 Clean Up
 --------
 
-Once you are finished exploring Digital Rebar Provision in isolated mode, the system can cleaned by removing the directory containing the isolated install.  In the previous sections, we used ''drp'' as the directory containing the isolated install.  Removing this directory will clean up the installed files.
+Once you are finished exploring Digital Rebar, you can uninstall the service 
 
-For production deployments, the ``install.sh`` script can be run with the ``remove`` argument instead of the ``install`` argument to clean up the system.  This will not remove the data files stored in ``/var/lib/dr-provision``, ``/etc/dr-provision``, or ``/usr/share/dr-provision``.  The ``tools/install.sh`` script is in the directory where you ran the ``install.sh`` script the first time.  The script can be also redownloaded and run through curl | bash.
+.. code-block:: bash
 
-  ::
+    curl -fsSL get.rebar.digital/stable | bash -s -- remove
 
-    tools/install.sh remove
-
-To additionally remove the data files, run instead:
-
-  ::
-
-    tools/install.sh --remove-data remove
-
-Ports
------
-
-The Digital Rebar Provision endpoint service requires specific TCP Ports be accessible on the endpoint.  Please see :ref:`rs_arch_ports` for more detailed information.
-
-If you are running in a Containerized environment, please ensure you are forwarding all of the ports appropriately in to the container.  If you have a Firewall or packet filtering service on the node running the DRP Endpoint - ensure the appropriate ports are open.
-
-
-Videos
-------
-
-We constantly update and add videos to the
-`DR Provision Playlist <https://www.youtube.com/playlist?list=PLXPBeIrpXjfilUi7Qj1Sl0UhjxNRSC7nx>`_
-so please check to make sure you have the right version!
+Note that ``remove`` will *not* remove the data files stored in ``/var/lib/dr-provision``, ``/etc/dr-provision``, or ``/usr/share/dr-provision``.  Include the ``--remove-data`` flag for a full clean-up.
