@@ -64,6 +64,6 @@ SEE ALSO
 -  `drpcli system ha peers <drpcli_system_ha_peers.html>`__ - Get basic
    info on all members of the consensus system
 -  `drpcli system ha remove <drpcli_system_ha_remove.html>`__ - Remove
-   the node with consensus id [endpointId] from the cluster
+   the node with provided Consensus Id from the cluster
 -  `drpcli system ha state <drpcli_system_ha_state.html>`__ - Get the HA
    state of the system.

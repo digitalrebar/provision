@@ -1,16 +1,17 @@
 drpcli system ha remove
 -----------------------
 
-Remove the node with consensus id [endpointId] from the cluster
+Remove the node with provided Consensus Id from the cluster
 
 Synopsis
 ~~~~~~~~
 
-Remove the node with consensus id [endpointId] from the cluster
+Only passive nodes can be removed. ConsensusID is the internally
+generated ID by the Consensus system.
 
 ::
 
-   drpcli system ha remove [endpointId] [flags]
+   drpcli system ha remove [ConsensusId] [flags]
 
 Options
 ~~~~~~~
