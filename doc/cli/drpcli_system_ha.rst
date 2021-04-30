@@ -1,19 +1,19 @@
-drpcli system
--------------
+drpcli system ha
+----------------
 
-Access CLI commands relating to system
+Access CLI commands to get the state of high availability
 
 Synopsis
 ~~~~~~~~
 
-Access CLI commands relating to system
+Access CLI commands to get the state of high availability
 
 Options
 ~~~~~~~
 
 ::
 
-     -h, --help   help for system
+     -h, --help   help for ha
 
 Options inherited from parent commands
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -41,23 +41,29 @@ Options inherited from parent commands
 SEE ALSO
 ~~~~~~~~
 
--  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
-   DigitalRebar Provision API
--  `drpcli system action <drpcli_system_action.html>`__ - Display the
-   action for this system
--  `drpcli system actions <drpcli_system_actions.html>`__ - Display
-   actions for this system
--  `drpcli system active <drpcli_system_active.html>`__ - Switch DRP to
-   HA Active State
--  `drpcli system certs <drpcli_system_certs.html>`__ - Access CLI
-   commands to get and set the TLS cert the API uses
--  `drpcli system ha <drpcli_system_ha.html>`__ - Access CLI commands to
-   get the state of high availability
--  `drpcli system passive <drpcli_system_passive.html>`__ - Switch DRP
-   to HA Passive State
--  `drpcli system runaction <drpcli_system_runaction.html>`__ - Run
-   action on object from plugin
--  `drpcli system signurl <drpcli_system_signurl.html>`__ - Generate a
-   RackN Signed URL for download
--  `drpcli system upgrade <drpcli_system_upgrade.html>`__ - Upgrade DRP
-   with the provided file
+-  `drpcli system <drpcli_system.html>`__ - Access CLI commands relating
+   to system
+-  `drpcli system ha active <drpcli_system_ha_active.html>`__ - Get the
+   machine ID of the current active node in the consensus system
+-  `drpcli system ha dump <drpcli_system_ha_dump.html>`__ - Dump the
+   detailed state of all members of the consensus system.
+-  `drpcli system ha enroll <drpcli_system_ha_enroll.html>`__ - Have the
+   endpoint at [endpointUrl] join the cluster.
+-  `drpcli system ha
+   failOverSafe <drpcli_system_ha_failOverSafe.html>`__ - Check to see
+   if at least one non-observer passive node is caught up
+-  `drpcli system ha id <drpcli_system_ha_id.html>`__ - Get the machine
+   ID of this endpoint in the consensus system
+-  `drpcli system ha
+   introduction <drpcli_system_ha_introduction.html>`__ - Get an
+   introduction from an existing cluster, save it in [file]
+-  `drpcli system ha join <drpcli_system_ha_join.html>`__ - Join a
+   cluster using the introduction saved in [file]
+-  `drpcli system ha leader <drpcli_system_ha_leader.html>`__ - Get the
+   machine ID of the leader in the consensus system
+-  `drpcli system ha peers <drpcli_system_ha_peers.html>`__ - Get basic
+   info on all members of the consensus system
+-  `drpcli system ha remove <drpcli_system_ha_remove.html>`__ - Remove
+   the node with provided Consensus Id from the cluster
+-  `drpcli system ha state <drpcli_system_ha_state.html>`__ - Get the HA
+   state of the system.

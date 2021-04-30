@@ -71,6 +71,16 @@ give it a good description, next add the stage "image-deploy", and "complete". T
 setup. Click save. Now you can apply this workflow to a machine that has had the above 3 params defined on it.
 
 
+Customizing Storage Partitioning
+--------------------------------
+
+The Param ``curtin/partitions`` describes the disk layout, partitioning, and filesystem
+structure that the Image is deployed to for images of type ``TGZ`` (RootFS Tarball).  For
+*Raw* type images, the partitioning is for the most part "baked in" to the image itself.
+
+Examples of :ref:`rs_imagedeploy_storage` can be referenced as a starting point for
+creating custom partitioning layouts.
+
 
 Troubleshooting
 ---------------

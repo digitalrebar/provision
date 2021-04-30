@@ -513,7 +513,7 @@ ensure_packages() {
                 check_bins_darwin $BIN
             done
 
-            if [[ $error == 1 ]] ; then
+            if [[ $error == 1 ]]; then
                 echo "After install missing components, restart the terminal to pick"
                 echo "up the newly installed commands, and re-run the installer."
                 echo
@@ -530,6 +530,15 @@ ensure_packages() {
         coreos)
             echo "CoreOS does not require any packages to be installed.  DRP will be"
             echo "installed from the Docker Hub registry."
+        ;;
+        photon)
+            if ! which tar > /dev/null 2>&1; then
+                echo "Installing packages for Photon Linux..."
+                tdnf -y makecache
+                tdnf -y install tar
+            else
+                echo "'tar' already installed on Photon Linux..."
+            fi
         ;;
         *)
             exit_cleanup 1 "FATAL: Unsupported OS Family ($OS_FAMILY)."
@@ -1216,7 +1225,6 @@ EOF
                      fi
                  fi
 
-#SYG
                  STARTER="$_sudo ./dr-provision --base-root=`pwd`/drp-data > drp.log 2>&1 &"
                  [[ "$STARTUP" == "false" ]] && echo "$STARTER"
                  mkdir -p "`pwd`/drp-data/saas-content"

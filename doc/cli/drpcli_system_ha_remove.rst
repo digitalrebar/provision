@@ -1,19 +1,24 @@
-drpcli system
--------------
+drpcli system ha remove
+-----------------------
 
-Access CLI commands relating to system
+Remove the node with provided Consensus Id from the cluster
 
 Synopsis
 ~~~~~~~~
 
-Access CLI commands relating to system
+Only passive nodes can be removed. ConsensusID is the internally
+generated ID by the Consensus system.
+
+::
+
+   drpcli system ha remove [ConsensusId] [flags]
 
 Options
 ~~~~~~~
 
 ::
 
-     -h, --help   help for system
+     -h, --help   help for remove
 
 Options inherited from parent commands
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -41,23 +46,5 @@ Options inherited from parent commands
 SEE ALSO
 ~~~~~~~~
 
--  `drpcli <drpcli.html>`__ - A CLI application for interacting with the
-   DigitalRebar Provision API
--  `drpcli system action <drpcli_system_action.html>`__ - Display the
-   action for this system
--  `drpcli system actions <drpcli_system_actions.html>`__ - Display
-   actions for this system
--  `drpcli system active <drpcli_system_active.html>`__ - Switch DRP to
-   HA Active State
--  `drpcli system certs <drpcli_system_certs.html>`__ - Access CLI
-   commands to get and set the TLS cert the API uses
 -  `drpcli system ha <drpcli_system_ha.html>`__ - Access CLI commands to
    get the state of high availability
--  `drpcli system passive <drpcli_system_passive.html>`__ - Switch DRP
-   to HA Passive State
--  `drpcli system runaction <drpcli_system_runaction.html>`__ - Run
-   action on object from plugin
--  `drpcli system signurl <drpcli_system_signurl.html>`__ - Generate a
-   RackN Signed URL for download
--  `drpcli system upgrade <drpcli_system_upgrade.html>`__ - Upgrade DRP
-   with the provided file
