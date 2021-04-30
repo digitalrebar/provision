@@ -11,9 +11,9 @@
 Digital Rebar version 4.6
 -------------------------
 
-Release Date: expected early 2021
+Release Date: April 30, 2021
 
-Release Themes: Usability, Universal Workflow
+Release Themes: High Availability, Universal Workflow
 
 In addition to bug fixes and performance improvements, the release includes several customer-driven features.
 
