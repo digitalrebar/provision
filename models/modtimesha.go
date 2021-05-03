@@ -44,11 +44,7 @@ func (m *ModTimeSha) UpToDate(fi *os.File) bool {
 	return err == nil && !stat.IsDir() && stat.ModTime().Equal(m.ModTime)
 }
 
-func (m *ModTimeSha) Generate(fi *os.File) error {
-	stat, err := fi.Stat()
-	if err != nil {
-		return err
-	}
+func (m *ModTimeSha) GenerateStat(fi *os.File, stat os.FileInfo) error {
 	if stat.IsDir() {
 		return fmt.Errorf("Cannot generate modtimesha on a directory")
 	}
@@ -65,6 +61,14 @@ func (m *ModTimeSha) Generate(fi *os.File) error {
 	m.ModTime = mtime
 	m.ShaSum = shasum.Sum(nil)
 	return nil
+}
+
+func (m *ModTimeSha) Generate(fi *os.File) error {
+	stat, err := fi.Stat()
+	if err != nil {
+		return err
+	}
+	return m.GenerateStat(fi, stat)
 }
 
 func (m *ModTimeSha) Regenerate(fi *os.File) (bool, error) {
