@@ -43,9 +43,9 @@ None known
 Removals
 ++++++++
 
-The following items are flagged as deprecated in v4.5 and were removed in v4.7.
+The following items are flagged as deprecated in v4.5 and are removed in v4.7.
 
-* old pattern cluster synchronization with cluster-add, cluster-step and cluster-sync.  Operators should migrate to the new cluster-gate-* patterns.
+* old pattern cluster synchronization with cluster-add, cluster-step and cluster-sync.  Operators should migrate to the new `cluster-manager` patterns.
 
 
 Universal Workflow UX Helpers
@@ -72,4 +72,4 @@ Other Items of Note
 ~~~~~~~~~~~~~~~~~~~
 
 * UX
-  * TBD
+* TBD

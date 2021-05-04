@@ -49,6 +49,8 @@ For a quick trial, we recommend using a dedicated Virtual Machine using `host on
 
 If you are concerned about installing Digital Rebar as a service, please review our :ref:`rs_install_dev` guide to run it isolated in a single directory.
 
+You must install Digital Rebar to use it, there is no SaaS version.  :ref:`rs_self_managed_why`
+
 .. _rs_qs_install:
 
 Install Digital Rebar Endpoint

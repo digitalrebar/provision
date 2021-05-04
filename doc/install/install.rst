@@ -13,14 +13,17 @@ The install script does the following steps (in a slightly different order).  Se
 
 Other installation paths:
 
-* :ref:`rs_quickstart` is a basic SystemD install for new users
-* :ref:`rs_install_dev` for developers running DRP interactively
-* :ref:`rs_install_docker` for trial users minimizing their install requirements
-* :ref:`rs_install_cloud` is non-PXE / Cloud-Only installation process
-* `Edge Lab with RPi <http://edgelab.digital>`_ is self-contained Digital Rebar inexpensive lab using Raspberry Pi computers.
+.. toctree::
+   :maxdepth: 1
+   :glob:
+
+   install/install
+   install/upgrade
+   install/install-dev
+   install/install-docker
+   install/install-cloud
 
 Each of these environments requires careful setup up of your network environment and consideration with regard to competing DHCP services.  The setup of these environments is outside the scope of this document.
-
 
 Get Code
 --------
@@ -160,7 +163,7 @@ To enable any non-privileged user to start up the dr-provision binary and bind t
 
 Start the "dr-provision" binary as an ordinary user, and now it will have permission to bind to privileged ports 67 and 69.
 
-For automated upgrades from within DRP, the user that is running DRP needs to have the following in /etc/sudousers.  In this example, `drp-user` is the user running DRP.  This will allow DRP to update itself.
+For automated :ref:`rs_upgrade`_ from within DRP, the user that is running DRP needs to have the following in /etc/sudousers.  In this example, `drp-user` is the user running DRP.  This will allow DRP to update itself.
   ::
 
     drp-user ALL=(ALL:ALL) NOPASSWD:/usr/sbin/setcap
@@ -169,7 +172,7 @@ For automated upgrades from within DRP, the user that is running DRP needs to ha
 .. note:: The *setcap* command must reference the actual binary itself, and can not be pointed at a symbolic link.  Additional refinement of the capabilities may be possible.  For extremely security conscious setups, you may want to refer to the StackOverflow discussion (eg setting capabilities on a per-user basis, etc.):
   https://stackoverflow.com/questions/1956732/is-it-possible-to-configure-linux-capabilities-per-user
 
-.. note:: You must run the *setcap* command after very upgrade of DRP, the *setcap* tracks the binary and if it changes, you must rerun for the new binary.
+.. note:: You must run the *setcap* command after every upgrade of DRP, the *setcap* tracks the binary and if it changes, you must rerun for the new binary.
 
 System Logs
 +++++++++++

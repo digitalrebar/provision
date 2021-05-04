@@ -25,6 +25,8 @@ Other installation paths:
 
 Each of these environments requires careful setup up of your network environment and consideration with regard to competing DHCP services.  The setup of these environments is outside the scope of this document.
 
+You must install Digital Rebar to use it, there is no SaaS version.  :ref:`rs_self_managed_why`
+
 .. _rs_docker_preparation:
 
 Prepare Your Environment

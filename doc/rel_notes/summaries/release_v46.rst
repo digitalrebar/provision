@@ -8,8 +8,8 @@
 
 .. _rs_release_v46:
 
-Digital Rebar version 4.6
--------------------------
+Digital Rebar version 4.6 [Spring 2021]
+---------------------------------------
 
 Release Date: April 30, 2021
 
@@ -40,7 +40,7 @@ Deprecations
 
 The following items are flagged as deprecated in v4.5 and will be removed in v4.6.
 
-* old pattern cluster synchronization with cluster-add, cluster-step and cluster-sync.  Operators should migrate to the new cluster-gate-* patterns.
+* Old pattern cluster synchronization with cluster-add, cluster-step and cluster-sync.  Operators should migrate to the new cluster-gate-* patterns.
 * terraform-provider-drp based on the DRP v3 API will not be supported
 * Centos7 Sledgehammer will not continue to get updates after this release.  Customers should plan to migrate to the Centos8 version.
 
@@ -57,11 +57,19 @@ Removals
 None at this time.
 
 
-Sledgehammer Cento8
-~~~~~~~~~~~~~~~~~~~
+.. _rs_release_v46_centos8:
 
-We have made many updates to the Cento8 Sledgehammer this release.  You will need to get an updated version of Sledgehammer as part of this release.  Centos7 Sledgehammer
-is still available as a profile that can be added to the global profile or a specific machine to allow for its usage.
+Sledgehammer Centos8 Default & Updates
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+*The Centos8 Sledgehammer (aka SL8) is now the Discovery default.*
+
+We have made many updates to the Cento8 Sledgehammer this release.  You will need to get an updated version of Sledgehammer as part of this release.
+
+Centos7 Sledgehammer is still available by adding the ``sledgehammer-centos7-v4.6.0`` profile to the global profile or a specific machine to allow for its usage; however, Centos7 Sledgehammer will not continue to get updates after this release.  Customers should plan to migrate to the Centos8 version.
+
+
+.. _rs_release_v46_ciphers:
 
 Limit client TLS ciphers
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -72,15 +80,20 @@ Operators who wish to restrict use of client ciphers are advised to start with t
 
 Note: this feature was also backported to v4.5.2+
 
+.. _rs_release_v46_ha:
 
-Stand Alone High Availability (HA with RAFT)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Stand Alone High Availability (HA with RAFT Concensus)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The v4.3 :ref:`rs_release_v43_ha` feature was designed to rely on pacemaker or corosync to trigger failover.  This requirement has been elimimated.
 
 In this verion, DRP HA includes integrated leader (re)election capability.  Operators will be able to influence or force changes in leadership.
 
 This enables DRP to be used in site bootstrapping environments or locations where the additional requirement for failover detection was an operational burden.
+
+Due to the dynamic nature of this approach, an odd number and a minimum of three nodes are required to build a resilient cluster.  In future releases, a remote multi-site manager may be able to particpate in the cluster as a tie breaker.
+
+.. _rs_release_v46_long_polling:
 
 Support for Client Long Polling
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -89,22 +102,21 @@ Long Polling allows clients that cannot use websockets to monitor DRP server for
 
 RackN recommends using websockets when available; however long polling is strongly encouraged to reduce load on the DRP server when websockets cannot be used.
 
+.. _rs_release_v46_os:
+
 Operating System Updates
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-The support for the following Operating Systems was added or sigifiacantly improved in this release
+The support for the following Operating Systems was added or significantly improved in this release
 
-* Ubuntu 20.04 - Canonical made significantly changes to this install that had to be accomodated.
+  * Ubuntu 20.04 - Canonical made significantly changes to this install that had to be accomodated.
+  * Centos 8 via Image Deploy - Tooling updates were required to run for both 7 and 8.  These may break backwards compatability.
+  * RHEL 8 via Image Deploy - Tooling updates were required to run for both 7 and 8.  These may break backwards compatability.
+  * RHEL 8 Network Deploy - Tooling updates were required to run for both 7 and 8.  These may break backwards compatability.
+  * VMware Photon (preview) - Specialized immutable O/S from VMware may have operational restrictions based on hardware
+  * ESXi via Image Deploy (preview) - see detail below
 
-* Centos 8 via Image Deploy - Tooling updates were required to run for both 7 and 8.  These may break backwards compatability.
-
-* RHEL 8 via Image Deploy - Tooling updates were required to run for both 7 and 8.  These may break backwards compatability.
-
-* RHEL 8 Network Deploy - Tooling updates were required to run for both 7 and 8.  These may break backwards compatability.
-
-* VMware Photon (preview) - Specialed immutable O/S from VMware may have operational restrictions based on hardware
-
-* ESXi via Image Deploy (preview) - see detail below
+.. _rs_release_v46_esxi7:
 
 Image Deploy for ESXi 7.x (preview)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -113,6 +125,8 @@ To improve the speed and consistence of VMware ESXi installation, The Image Depl
 
 The process has specific requirements including the Digital Rebar VMware agent (aka DRPY) and having the correct partition maps.  Please contact RackN for assistance.
 
+.. _rs_release_v46_ux_performance:
+
 UX Improved Performance
 ~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -120,15 +134,18 @@ The object storage, retrieval and event processing of the UX was significantly r
 
 Previous versions of the UX subscribed to all system events.  This created a significant load on both browser and DRP server in large scale environments.
 
+.. _rs_release_v46_ux_task_debug:
 
 UX Improved Task Debugger
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To better assist Task developers, the UX added a new tab to the machine view that shows live updates of the Jobs running against a machine during a workflow execution.  This helps developeres monitor a whole workflow lifecycle and provides additional tools for debug, stepping and restarting.
+To better assist Task developers, the UX added a new tab to the machine view that shows live updates of the Jobs running against a machine during a workflow execution.  This helps developers monitor a whole workflow lifecycle and provides additional tools for debug, stepping and restarting.
 
 Note: This change relies on features that are only available in v4.6.
 
 We expect this view will continue to improve as the communtiy provides feedback.
+
+.. _rs_release_v46_workflow:
 
 Universal Workflow
 ~~~~~~~~~~~~~~~~~~
@@ -143,6 +160,7 @@ Additional documentation on Universal usage can be found at:
   * :ref:`rs_universal_arch`
   * :ref:`rs_universal_ops`
 
+.. _rs_release_v46_license:
 
 UX Streamlined License Process
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -153,12 +171,16 @@ For existing users bringing up a new endpoint, the UX will be more proscriptive 
 
 We've also improved alerting about license expiration.
 
+.. _rs_release_v46_sledgehammer_vlan:
+
 Sledgehammer can use BIOS with Tagged VLANs
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Sledgehammer now includes tagged VLAN options to work with servers using BIOS settings to boot from a tagged VLAN.
 
 The vlan value is included on the `network-data` parameter.
+
+.. _rs_release_v46_bios:
 
 Updates to Hardware BIOS and RAID tooling
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -21,6 +21,8 @@ Other installation paths:
 
 Unlike other environments which requires careful setup up of your network environment and consideration with regard to competing DHCP services, this setup does not use DHCP or PXE provisioning.
 
+You must install Digital Rebar to use it, there is no SaaS version.  :ref:`rs_self_managed_why`
+
 .. _rs_cloud_preparation:
 
 Preparation
