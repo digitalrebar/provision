@@ -70,13 +70,11 @@ Community Resources from https://rebar.digital
 Install & Quick Start
 ---------------------
 
-.. note::  We HIGHLY recommend using the ``latest`` version of the documentation, as it contains the most up to date information.  Use the version selector in the lower right corner of your browser.
+Our :ref:`rs_quickstart` has fast play-with-it steps.  Don't worry, they are very simple and take 10 to 20 minutes.  Consult the :ref:`_rs_install` guide for more details on the install steps.  
 
-Our `Quick Start <http://provision.readthedocs.io/en/latest/doc/quickstart.html>`_ has fast play-with-it steps.  Don't worry, they are very simple and take 10 to 20 minutes.  You can choose from stable or tip.  Tip is the very bleeding edge of development.
+Current Stable Line is the :ref:`rs_release_v46` and next Release is planned to be :ref:`rs_release_v47`.  See :ref:`rs_release_summaries` for a complete list.
 
-Regular `Install <http://provision.readthedocs.io/en/latest/doc/install.html>`_ for more details on the install steps.  These include production options. (`Previous Version Docs <http://provision.readthedocs.io/en/latest/doc/quickstart.html>`_)
-
-Current Stable Line is the :ref:`rs_release_v45` and next Release is planned to be :ref:`rs_release_v46`.  See :ref:`rs_release_summaries` for a complete list.
+.. _rs_components:
 
 Components & Extensions
 -----------------------
@@ -95,9 +93,7 @@ Table of Contents
    :numbered:
    :maxdepth: 1
 
-   doc/quickstart
    doc/install
-   doc/upgrade
    doc/environment
    doc/features
    doc/server
@@ -123,11 +119,14 @@ Table of Contents
 
 .. _rs_license:
 
-License
--------
-DigitalRebar Provision code is available from multiple authors under the `Apache 2 license <https://raw.githubusercontent.com/digitalrebar/provision/v4/LICENSE>`_.
+Licenses
+--------
 
-Digital Rebar Provision documentation is available from multiple authors under the `Creative Commons license <https://en.wikipedia.org/wiki/Creative_Commons_license>`_ with Attribution.
+Digital Rebar Server is proprietary licensed software available in compiled binary format from `RackN <rackn.com/rebar/>`_.
+
+Code for Digital Rebar client and many catalog componets is available from multiple authors under the `Apache 2 license <https://raw.githubusercontent.com/digitalrebar/provision/v4/LICENSE>`_.
+
+Digital Rebar documentation is available from multiple authors under the `Creative Commons license <https://en.wikipedia.org/wiki/Creative_Commons_license>`_ with Attribution.
 
 ::
 

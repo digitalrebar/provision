@@ -26,7 +26,7 @@ DHCP will not respond when running DRP from a Mac.  Log provides "No Matching Su
 Solution
 --------
 
-This is likely caused by not configuring the *MAC DARWIN*" route correctly as per :ref:`rs_qs_start`.
+This is likely caused by not configuring the *MAC DARWIN*" route correctly as per :ref:`rs_quickstart`.
 
 Make sure that the address on the MAC should be outside the range.  Then set the ip, add the route, and
 then (re)start DRP.  Make sure all the broadcast routes are deleted first using ``sudo route delete 255.255.255.255`` multiple times.
@@ -41,7 +41,7 @@ Additional resources and information related to this Knowledge Base article.
 See Also
 ========
 
-  * :ref:`rs_qs_start`
+  * :ref:`rs_quickstart`
 
 Versions
 ========

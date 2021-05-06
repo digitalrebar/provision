@@ -74,9 +74,7 @@ Major Features:
 
 Important note: all managed endpoints must be licensed BEFORE they can be attached to the manager.  When using the UX to add endpoints, it will automatically check and update the relevant license.
 
-
-.. _rs_release_v45_universal_workflow:
-
+.. _rs_release_v45_sl8:
 
 Sledgehammer on Centos 8 (SL8)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -89,6 +87,8 @@ To leverage the new SL8, add the enabling SL8 profile in your workflow.
 
 Note: SL8 is expected to become default in DRP v4.6.  A profile will be provided the enable backwards SL7 support.
 
+
+For v4.6 updates, :ref:`rs_release_v46_centos8`
 
 .. _rs_release_v45_backup:
 
