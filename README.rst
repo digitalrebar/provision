@@ -70,7 +70,7 @@ Community Resources from https://rebar.digital
 Install & Quick Start
 ---------------------
 
-Our :ref:`rs_quickstart` has fast play-with-it steps.  Don't worry, they are very simple and take 10 to 20 minutes.  Consult the :ref:`_rs_install` guide for more details on the install steps.  
+Our :ref:`rs_quickstart` has fast play-with-it steps.  Don't worry, they are very simple and take 10 to 20 minutes.  Consult the :ref:`rs_install` guide for more details on the install steps.  
 
 Current Stable Line is the :ref:`rs_release_v46` and next Release is planned to be :ref:`rs_release_v47`.  See :ref:`rs_release_summaries` for a complete list.
 
