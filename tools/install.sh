@@ -101,6 +101,9 @@ OPTIONS:
     --container-netns="<string>"
                             # Define Network Namespace to start container in. Defaults to "$CNT_NETNS"
                             # If set to empty string (""), then disable setting any network namespace
+    --universal             # Load the universal components and bootstrap the system.
+                            # This should be first and implies systemd, startup, start-runner, create-self.
+                            # Additionally, implies running universal-boostrap and starting discovery.
 
     version                 # show install.sh script version and exit
     install                 # Sets up an isolated or system 'production' enabled install
@@ -132,7 +135,7 @@ DEFAULTS:
     |  initial-plugins     = unset            |  systemd-services    = unset
     |  ha-enabled          = false            |  ha-address          = unset
     |  ha-passive          = false            |  ha-interface        = unset
-    |  ha-token            = unset
+    |  ha-token            = unset            |  universal           = unset
 
     * version examples: 'tip', 'v4.1.13', 'v4.2.0-beta7.3', or 'stable'
 
@@ -176,6 +179,7 @@ INITIAL_PLUGINS=
 SYSTEMD_ADDITIONAL_SERVICES=
 START_LIMIT_INTERVAL=5
 START_LIMIT_BURST=100
+UNIVERSAL=false
 
 # download URL locations; overridable via ENV variables
 URL_BASE=${URL_BASE:-"https://rebar-catalog.s3-us-west-2.amazonaws.com"}
@@ -208,53 +212,59 @@ while (( $# > 0 )); do
     arg_key="${arg%%=*}"
     arg_data="${arg#*=}"
     case $arg_key in
-        --help|-h)                  usage; exit_cleanup 0                     ;;
-        --debug)                    DBG=true                                  ;;
-        --version|--drp-version)    DRP_VERSION=${arg_data}                   ;;
-        --isolated)                 ISOLATED=true                             ;;
-        --skip-run-check)           SKIP_RUN_CHECK=true                       ;;
-        --skip-dep*|--skip-prereq*) SKIP_DEPENDS=true                         ;;
-        --fast-downloader)          FAST_DOWNLOADER=true                      ;;
-        --force)                    force=true                                ;;
-        --remove-data)              REMOVE_DATA=true                          ;;
+        --help|-h)                  usage; exit_cleanup 0                             ;;
+        --debug)                    DBG=true                                          ;;
+        --version|--drp-version)    DRP_VERSION=${arg_data}                           ;;
+        --isolated)                 ISOLATED=true                                     ;;
+        --skip-run-check)           SKIP_RUN_CHECK=true                               ;;
+        --skip-dep*|--skip-prereq*) SKIP_DEPENDS=true                                 ;;
+        --fast-downloader)          FAST_DOWNLOADER=true                              ;;
+        --force)                    force=true                                        ;;
+        --remove-data)              REMOVE_DATA=true                                  ;;
         --upgrade)                  UPGRADE=true; force=true
-                                    CNT_VOL_REMOVE=false                      ;;
-        --nocontent|--no-content)   NO_CONTENT=true                           ;;
-        --no-sudo)                  _sudo=""                                  ;;
-        --keep-installer)           KEEP_INSTALLER=true                       ;;
-        --startup)                  STARTUP=true; SYSTEMD=true                ;;
-        --systemd)                  SYSTEMD=true                              ;;
-        --systemd-services)         SYSTEMD_ADDITIONAL_SERVICES="${arg_data}" ;;
-        --create-self)              CREATE_SELF=true                          ;;
-        --start-runner)             START_RUNNER=true; CREATE_SELF=true       ;;
-        --bootstrap)                BOOTSTRAP=true                            ;;
-        --local-ui)                 LOCAL_UI=true                             ;;
-        --remove-rocketskates)      REMOVE_RS=true                            ;;
-        --initial-workflow)         INITIAL_WORKFLOW="${arg_data}"            ;;
-        --initial-profiles)         INITIAL_PROFILES="${arg_data}"            ;;
-        --initial-parameters)       INITIAL_PARAMETERS="${arg_data}"          ;;
-        --initial-contents)         INITIAL_CONTENTS="${arg_data}"            ;;
-        --initial-plugins)          INITIAL_PLUGINS="${arg_data}"             ;;
-        --drp-user)                 DRP_USER=${arg_data}                      ;;
-        --drp-password)             DRP_PASSWORD="${arg_data}"                ;;
-        --drp-id)                   DRP_ID="${arg_data}"                      ;;
-        --ha-id)                    HA_ID="${arg_data}"                       ;;
-        --ha-enabled)               HA_ENABLED=true                           ;;
-        --ha-address)               HA_ADDRESS="${arg_data}"                  ;;
-        --ha-interface)             HA_INTERFACE="${arg_data}"                ;;
-        --ha-passive)               HA_PASSIVE=true                           ;;
-        --ha-token)                 HA_TOKEN="${arg_data}"                    ;;
-        --system-user)              SYSTEM_USER="${arg_data}"                 ;;
-        --system-group)             SYSTEM_GROUP="${arg_data}"                ;;
-        --drp-home-dir)             DRP_HOME_DIR="${arg_data}"                ;;
-        --container)                CONTAINER=true                            ;;
-        --container-type)           CNT_TYPE="${arg_data}"                    ;;
-        --container-name)           CNT_NAME="${arg_data}"                    ;;
-        --container-volume)         CNT_VOL="${arg_data}"                     ;;
-        --container-restart)        CNT_RESTART="${arg_data}"                 ;;
-        --container-registry)       CNT_REGISTRY="${arg_data}"                ;;
-        --container-netns)          CNT_NETNS="${arg_data}"                   ;;
-        --container-env)            CNT_ENV="${arg_data}"                     ;;
+                                    CNT_VOL_REMOVE=false                              ;;
+        --nocontent|--no-content)   NO_CONTENT=true                                   ;;
+        --no-sudo)                  _sudo=""                                          ;;
+        --keep-installer)           KEEP_INSTALLER=true                               ;;
+        --startup)                  STARTUP=true; SYSTEMD=true                        ;;
+        --systemd)                  SYSTEMD=true                                      ;;
+        --systemd-services)         SYSTEMD_ADDITIONAL_SERVICES="${arg_data}"         ;;
+        --create-self)              CREATE_SELF=true                                  ;;
+        --start-runner)             START_RUNNER=true; CREATE_SELF=true               ;;
+        --bootstrap)                BOOTSTRAP=true                                    ;;
+        --local-ui)                 LOCAL_UI=true                                     ;;
+        --remove-rocketskates)      REMOVE_RS=true                                    ;;
+        --initial-workflow)         INITIAL_WORKFLOW="${arg_data}"                    ;;
+        --initial-profiles)         INITIAL_PROFILES="${INITIAL_PROFILES}${arg_data}" ;;
+        --initial-parameters)       INITIAL_PARAMETERS="${arg_data}"                  ;;
+        --initial-contents)         INITIAL_CONTENTS="${INITIAL_CONTENTS}${arg_data}" ;;
+        --initial-plugins)          INITIAL_PLUGINS="${INITIAL_PLUGINS}${arg_data}"   ;;
+        --drp-user)                 DRP_USER=${arg_data}                              ;;
+        --drp-password)             DRP_PASSWORD="${arg_data}"                        ;;
+        --drp-id)                   DRP_ID="${arg_data}"                              ;;
+        --ha-id)                    HA_ID="${arg_data}"                               ;;
+        --ha-enabled)               HA_ENABLED=true                                   ;;
+        --ha-address)               HA_ADDRESS="${arg_data}"                          ;;
+        --ha-interface)             HA_INTERFACE="${arg_data}"                        ;;
+        --ha-passive)               HA_PASSIVE=true                                   ;;
+        --ha-token)                 HA_TOKEN="${arg_data}"                            ;;
+        --system-user)              SYSTEM_USER="${arg_data}"                         ;;
+        --system-group)             SYSTEM_GROUP="${arg_data}"                        ;;
+        --drp-home-dir)             DRP_HOME_DIR="${arg_data}"                        ;;
+        --container)                CONTAINER=true                                    ;;
+        --container-type)           CNT_TYPE="${arg_data}"                            ;;
+        --container-name)           CNT_NAME="${arg_data}"                            ;;
+        --container-volume)         CNT_VOL="${arg_data}"                             ;;
+        --container-restart)        CNT_RESTART="${arg_data}"                         ;;
+        --container-registry)       CNT_REGISTRY="${arg_data}"                        ;;
+        --container-netns)          CNT_NETNS="${arg_data}"                           ;;
+        --container-env)            CNT_ENV="${arg_data}"                             ;;
+        --universal)                UNIVERSAL=true; BOOTSTRAP=true;
+                                    SYSTEMD=true;
+                                    CREATE_SELF=true; START_RUNNER=true;
+                                    INITIAL_WORKFLOW=universal-bootstrap;
+                                    INITIAL_CONTENTS="universal,";
+                                    INITIAL_PROFILES="bootstrap-discovery,"           ;;
         --zip-file)
             ZF=${arg_data}
             ZIP_FILE=$(echo "$(cd $(dirname $ZF) && pwd)/$(basename $ZF)")
