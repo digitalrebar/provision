@@ -79,7 +79,7 @@ Notes:
           path: /
           device: disk0-part1-format-root
 
-.. _id_stor_1_linux_single_paritioned:
+.. _id_stor_2_linux_single_paritioned:
 
 Linux Single Disk, Separate Partitions
 --------------------------------------
@@ -175,7 +175,7 @@ Notes:
          device: swap_fs
 
 
-.. _id_stor_1_linux_with_lvm:
+.. _id_stor_3_linux_with_lvm:
 
 Linux, LVM Multi-Partition Layout
 ---------------------------------
@@ -261,7 +261,7 @@ Notes:
          device: lv2_fs
 
 
-.. _id_stor_1_ubuntu_two_disk_md:
+.. _id_stor_4_ubuntu_two_disk_md:
 
 Linux - Ubuntu with Software RAID
 ---------------------------------
@@ -415,7 +415,7 @@ Notes:
        type: mount
 
 
-.. _id_stor_1_centos_standard:
+.. _id_stor_5_centos_standard:
 
 Linux - CentOS Standard Install
 -------------------------------
@@ -525,7 +525,7 @@ Notes:
        type: mount
 
 
-.. _id_stor_1_centos_raid:
+.. _id_stor_6_centos_raid:
 
 Linux - CentOS with RAID
 ------------------------
@@ -685,7 +685,7 @@ Notes:
        type: mount
 
 
-.. _id_stor_1_centos_raid_and_nvme:
+.. _id_stor_7_centos_raid_and_nvme:
 
 Linux - CentOS with Software RAID on NVMe Drives
 ------------------------------------------------
@@ -941,3 +941,231 @@ Notes:
        path: swap
        type: mount
 
+
+.. _id_stor_8_linux_two_disks
+
+Linux Two Separate Disks
+------------------------
+
+This example is for two disks.  The first disk is used for boot/root partitions.
+The ``boot`` partition is a GPT partition on disk, while remaining ``root`` and
+``swap` are LVM volumes.
+
+The second disk contains several separate filesystems.  All partition types are
+using EXT4 format.  Note that the *longhorn* named filesystems can be altered to
+other arbitrary data filesystem names based on your requirements.
+
+Notes:
+
+  * Uses a two disks
+  * Legacy BIOS only
+  * First disk with LVM and various filesystems
+  * Second disk with LVM and a */var/lib/longhorn* separate fileystem
+  * Filesystems formatted as ``EXT4`` type
+
+.. code-block:: yaml
+
+   storage:
+     version: 1
+     config:
+       - grub_device: true
+         id: sda
+         name: main_disk
+         path: /dev/sda
+         ptable: gpt
+         type: disk
+       - id: sdb
+         name: longhorn_disk
+         path: /dev/sdb
+         preserve: false
+         ptable: gpt
+         type: disk
+       - device: sda
+         flag: bios_grub
+         id: bios_boot_partition
+         size: 1MB
+         type: partition
+       - device: sda
+         flag: boot
+         id: boot_part
+         name: boot_part
+         size: 8GB
+         type: partition
+       - device: sda
+         flag: logical
+         id: rootvg_part
+         size: 90GB
+         type: partition
+       - device: sdb
+         id: longhorn_part
+         name: longhorn_part
+         preserve: false
+         size: 700GB
+         type: partition
+       - devices:
+           - rootvg_part
+         id: vg_root
+         name: vg-root
+         type: lvm_volgroup
+       - devices:
+           - longhorn_part
+         id: vg_longhorn
+         name: vg-longhorn
+         preserve: false
+         type: lvm_volgroup
+       - id: lv-root
+         name: lv_root
+         size: 10G
+         type: lvm_partition
+         volgroup: vg_root
+       - id: lv-swap
+         name: lv_swap
+         size: 10G
+         type: lvm_partition
+         volgroup: vg_root
+       - id: lv-home
+         name: lv_home
+         size: 5G
+         type: lvm_partition
+         volgroup: vg_root
+       - id: lv-tmp
+         name: lv_tmp
+         size: 5G
+         type: lvm_partition
+         volgroup: vg_root
+       - id: lv-var
+         name: lv_var
+         size: 10G
+         type: lvm_partition
+         volgroup: vg_root
+       - id: lv-log
+         name: lv_log
+         size: 4G
+         type: lvm_partition
+         volgroup: vg_root
+       - id: lv-audit
+         name: lv_audit
+         size: 4G
+         type: lvm_partition
+         volgroup: vg_root
+       - id: lv-vartmp
+         name: lv_vartmp
+         size: 5G
+         type: lvm_partition
+         volgroup: vg_root
+       - id: lv-varlibdocker
+         name: lv_varlibdocker
+         size: 10G
+         type: lvm_partition
+         volgroup: vg_root
+       - id: lv-longhorn
+         name: lv_longhorn
+         preserve: false
+         size: 690GB
+         type: lvm_partition
+         volgroup: vg_longhorn
+       - fstype: ext4
+         id: boot_fs
+         preserve: "false"
+         type: format
+         volume: boot_part
+       - fstype: ext4
+         id: fs-root
+         label: rootfs
+         preserve: "false"
+         type: format
+         volume: lv-root
+       - fstype: swap
+         id: fs-swap
+         label: swapfs
+         preserve: "false"
+         type: format
+         volume: lv-swap
+       - fstype: ext4
+         id: fs-home
+         label: homefs
+         preserve: "false"
+         type: format
+         volume: lv-home
+       - fstype: ext4
+         id: fs-tmp
+         label: rootfs
+         preserve: "false"
+         type: format
+         volume: lv-tmp
+       - fstype: ext4
+         id: fs-var
+         label: varfs
+         preserve: "false"
+         type: format
+         volume: lv-var
+       - fstype: ext4
+         id: fs-log
+         label: logfs
+         preserve: "false"
+         type: format
+         volume: lv-log
+       - fstype: ext4
+         id: fs-audit
+         label: auditfs
+         preserve: "false"
+         type: format
+         volume: lv-audit
+       - fstype: ext4
+         id: fs-vartmp
+         label: vartmpfs
+         preserve: "false"
+         type: format
+         volume: lv-vartmp
+       - fstype: ext4
+         id: fs-varlibdocker
+         label: varlibdocker
+         preserve: "false"
+         type: format
+         volume: lv-varlibdocker
+       - fstype: ext4
+         id: fs-longhorn
+         label: longhorn
+         preserve: false
+         type: format
+         volume: lv-longhorn
+       - device: fs-root
+         id: mount-root
+         path: /
+         type: mount
+       - device: boot_fs
+         id: boot_mount
+         path: /boot
+         type: mount
+       - device: fs-home
+         id: mount-home
+         path: /home
+         type: mount
+       - device: fs-tmp
+         id: mount-tmp
+         path: /tmp
+         type: mount
+       - device: fs-var
+         id: mount-var
+         path: /var
+         type: mount
+       - device: fs-log
+         id: mount-log
+         path: /var/log
+         type: mount
+       - device: fs-audit
+         id: mount-audit
+         path: /var/log/audit
+         type: mount
+       - device: fs-vartmp
+         id: mount-vartmp
+         path: /var/tmp
+         type: mount
+       - device: fs-varlibdocker
+         id: mount-varlibdocker
+         path: /var/lib/docker
+         type: mount
+       - device: fs-longhorn
+         id: mount-longhorn
+         path: /var/lib/longhorn
+         type: mount
