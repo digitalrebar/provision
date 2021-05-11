@@ -40,7 +40,7 @@ func (u *User) SetMeta(d Meta) {
 }
 
 func (u *User) Validate() {
-	u.AddError(ValidName("Invalid Name", u.Name))
+	u.AddError(ValidUserName("Invalid Name", u.Name))
 }
 
 func (u *User) Prefix() string {
