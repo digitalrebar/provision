@@ -136,6 +136,7 @@ var (
 	validMachineName  = regexp.MustCompile(`^(\pL|\pN)+([- _.]+|\pN+|\pL+)+$`)
 	validEndpointName = regexp.MustCompile(`^(\pL|\pN)+([- _.:]+|\pN+|\pL+)+$`)
 	validName         = regexp.MustCompile(`^\pL+([- _.]+|\pN+|\pL+)+$`)
+	validUserName     = regexp.MustCompile(`^\pL+([- @_.]+|\pN+|\pL+)+$`)
 	validParamName    = regexp.MustCompile(`^\pL+([- _./]+|\pN+|\pL+)+$`)
 	validNumberName   = validMachineName
 )
@@ -164,6 +165,11 @@ func ValidNumberName(msg, s string) error {
 // ValidName validates that the string is a valid Name
 func ValidName(msg, s string) error {
 	return validMatch(msg, s, validName)
+}
+
+// ValidUserName validates that the string is a valid Username
+func ValidUserName(msg, s string) error {
+	return validMatch(msg, s, validUserName)
 }
 
 // ValidParamName validates that the string is a valid Param Name
@@ -295,7 +301,6 @@ func RandString(n int) string {
 	base64 := base64.URLEncoding.EncodeToString(b)
 	return base64[:n]
 }
-
 
 var (
 	unitMap = map[string]time.Duration{
