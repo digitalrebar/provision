@@ -3,7 +3,7 @@
 set -e
 
 # BUMP version on updates
-VERSION="v21.05.10-1"
+VERSION="v21.05.10-2"
 
 DEFAULT_DRP_VERSION=${DEFAULT_DRP_VERSION:-"stable"}
 
@@ -50,19 +50,23 @@ OPTIONS:
                             # Only used with startup/systemd parameters.
     --initial-workflow=<string>
                             # Workflow to assign to the DRP's self machine as install finishes
-                            # This is only valid with create-self object
+                            # Only valid with create-self object, only one Workflow may be specified
     --initial-profiles=<string>
-                            # Initial profiles to add to the DRP endpoint before starting the workflow
-                            # This is only valid with create-self object
+                            # Initial profiles to add to the DRP endpoint before starting the workflow,
+                            # comma separated list, no spaces, this is only valid with create-self object
     --initial-contents=<string>
-                            # Initial content packs to deliver, comma separated list.
+                            # Initial content packs to deliver, comma separated with no spaces.
                             # A file, URL, or content-pack name
     --initial-plugins=<string>
-                            # Initial plugins to deliver, comma separated list.
+                            # Initial plugins to deliver, comma separated list with no spaces.
                             # A file, URL, or content-pack name
     --initial-parameters=<string>
                             # Initial parameters to set on the system.  Simple parameters
-                            # as a comma separated list.
+                            # as a comma separated list, with no spaces.
+    --initial-subnets=<string>
+                            # A file or URL containing Subnet definitions in JSON or YAML format,
+                            # comma separated, no spaces (NOTE: Subnets can also be injected in
+                            # content packs with the '--initial-contents' argument)
     --bootstrap             # Store the install image and the install script in the files bootstrap
     --drp-id=<string>       # String to use as the DRP Identifier (only with --systemd)
     --ha-id=<string>        # String to use as the HA Identifier (only with --systemd)
@@ -104,6 +108,7 @@ OPTIONS:
     --universal             # Load the universal components and bootstrap the system.
                             # This should be first and implies systemd, startup, start-runner, create-self.
                             # Additionally, implies running universal-boostrap and starting discovery.
+                            # Subsequent options for '--initial-workflow' will be ignored if this is set.
 
     version                 # show install.sh script version and exit
     install                 # Sets up an isolated or system 'production' enabled install
@@ -132,12 +137,13 @@ DEFAULTS:
     |  container-netns     = $CNT_NETNS             |  container-restart   = $CNT_RESTART
     |  bootstrap           = false            |  initial-workflow    = unset
     |  initial-contents    = unset            |  initial-profiles    = unset
-    |  initial-plugins     = unset            |  systemd-services    = unset
+    |  initial-plugins     = unset            |  initial-subnets     = unset
     |  ha-enabled          = false            |  ha-address          = unset
     |  ha-passive          = false            |  ha-interface        = unset
     |  ha-token            = unset            |  universal           = unset
+    |  systemd-services    = unset
 
-    * version examples: 'tip', 'v4.1.13', 'v4.2.0-beta7.3', or 'stable'
+    * version examples: 'tip', 'v4.6.3', 'v4.7.0-beta1.3', or 'stable'
 
 PREREQUISITES:
     NOTE: By default, prerequisite packages will be installed if possible.  You must
@@ -234,11 +240,13 @@ while (( $# > 0 )); do
         --bootstrap)                BOOTSTRAP=true                                    ;;
         --local-ui)                 LOCAL_UI=true                                     ;;
         --remove-rocketskates)      REMOVE_RS=true                                    ;;
-        --initial-workflow)         INITIAL_WORKFLOW="${arg_data}"                    ;;
+        --initial-workflow)         [[ "$UNIVERSAL" == "false" ]] && INITIAL_WORKFLOW="${arg_data}"
+                                                                                      ;;
         --initial-profiles)         INITIAL_PROFILES="${INITIAL_PROFILES}${arg_data}" ;;
         --initial-parameters)       INITIAL_PARAMETERS="${arg_data}"                  ;;
         --initial-contents)         INITIAL_CONTENTS="${INITIAL_CONTENTS}${arg_data}" ;;
         --initial-plugins)          INITIAL_PLUGINS="${INITIAL_PLUGINS}${arg_data}"   ;;
+        --initial-subnets)          INITIAL_SUBNETS="${arg_data}"                     ;;
         --drp-user)                 DRP_USER=${arg_data}                              ;;
         --drp-password)             DRP_PASSWORD="${arg_data}"                        ;;
         --drp-id)                   DRP_ID="${arg_data}"                              ;;
@@ -262,7 +270,7 @@ while (( $# > 0 )); do
         --universal)                UNIVERSAL=true; BOOTSTRAP=true;
                                     SYSTEMD=true;
                                     CREATE_SELF=true; START_RUNNER=true;
-                                    INITIAL_WORKFLOW=universal-bootstrap;
+                                    INITIAL_WORKFLOW="universal-bootstrap";
                                     INITIAL_CONTENTS="universal,";
                                     INITIAL_PROFILES="bootstrap-discovery,"           ;;
         --zip-file)
@@ -1003,19 +1011,24 @@ EOF
                              drpcli contents upload catalog:task-library-${DRP_CONTENT_VERSION}
 
                              if [[ "$INITIAL_CONTENTS" != "" ]] ; then
+                                 OLD_IFS="${IFS}"
                                  IFS=',' read -ra contents_array <<< "$INITIAL_CONTENTS"
                                  for i in "${contents_array[@]}" ; do
                                      if [[ -f ${OLD_PWD}/$i ]] ; then
                                          drpcli contents upload ${OLD_PWD}/${i}
+                                     elif [[ -f "$i" ]] ; then
+                                         drpcli contents upload ${i}
                                      elif [[ $i == http* ]] ; then
                                          drpcli contents upload ${i}
                                      else
                                          drpcli catalog item install ${i} --version=${DRP_CONTENT_VERSION} -c $DRP_CATALOG
                                      fi
                                  done
+                                 IFS="${OLD_IFS}"
                              fi
 
                              if [[ "$INITIAL_PLUGINS" != "" ]] ; then
+                                 OLD_IFS="${IFS}"
                                  IFS=',' read -ra plugins_array <<< "$INITIAL_PLUGINS"
                                  for i in "${plugins_array[@]}" ; do
                                      if [[ -f ${OLD_PWD}/$i ]] ; then
@@ -1026,6 +1039,7 @@ EOF
                                          drpcli catalog item install ${i} --version=${DRP_CONTENT_VERSION} -c $DRP_CATALOG
                                      fi
                                  done
+                                 IFS="${OLD_IFS}"
                              fi
 
                              if [[ "$INITIAL_PROFILES" != "" ]] ; then
@@ -1034,10 +1048,12 @@ EOF
                                    chmod +x /tmp/jq
                                    ID=$(drpcli info get | /tmp/jq .id -r | sed -r 's/:/-/g')
                                    rm /tmp/jq
+                                   OLD_IFS="${IFS}"
                                    IFS=',' read -ra profiles_array <<< "$INITIAL_PROFILES"
                                    for i in "${profiles_array[@]}" ; do
                                      drpcli machines addprofile "Name:$ID" "$i" >/dev/null
                                    done
+                                   IFS="${OLD_IFS}"
                                  fi
                              fi
 
@@ -1047,11 +1063,13 @@ EOF
                                    chmod +x /tmp/jq
                                    ID=$(drpcli info get | /tmp/jq .id -r | sed -r 's/:/-/g')
                                    rm /tmp/jq
+                                   OLD_IFS="${IFS}"
                                    IFS=',' read -ra param_array <<< "$INITIAL_PARAMETERS"
                                    for i in "${param_array[@]}" ; do
                                      IFS="=" read -ra data_array <<< "$i"
                                      drpcli machines set "Name:$ID" param "${data_array[0]}" to "${data_array[1]}" >/dev/null
                                    done
+                                   IFS="${OLD_IFS}"
                                  fi
                              fi
 
@@ -1061,7 +1079,30 @@ EOF
                                      chmod +x /tmp/jq
                                      ID=$(drpcli info get | /tmp/jq .id -r | sed -r 's/:/-/g')
                                      rm /tmp/jq
+                                     echo "Setting initial workflow to '$INITIAL_WORKFLOW' for Machine '$ID'"
                                      drpcli machines workflow "Name:$ID" "$INITIAL_WORKFLOW" >/dev/null
+                                 fi
+                             fi
+
+                             if [[ "$INITIAL_SUBNETS" != "" ]] ; then
+                                 if [[ $CREATE_SELF == true ]] ; then
+                                     OLD_IFS="${IFS}"
+                                     IFS=',' read -ra subnet_array <<< "$INITIAL_SUBNETS"
+                                     for i in "${subnet_array[@]}" ; do
+                                       if [[ $i == http* ]] ; then
+                                         echo "Creating subnet from URL '$i'"
+                                         drpcli subnets create ${i}
+                                       elif [[ -f ${OLD_PWD}/$i ]] ; then
+                                         echo "Creating subnet from file '${OLD_PWD}/$i'"
+                                         drpcli subnets create ${OLD_PWD}/${i}
+                                       elif [[ -f "$i" ]] ; then
+                                         echo "Creating subnet from file '${i}'"
+                                         drpcli subnets create ${i}
+                                       else
+                                         echo ">>> WARNING: unable to read subnet file '$i' or '${OLD_PWD}/$i'; no SUBNET created"
+                                       fi
+                                     done
+                                     IFS="${OLD_IFS}"
                                  fi
                              fi
                          fi
