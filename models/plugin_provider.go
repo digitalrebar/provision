@@ -14,7 +14,7 @@ type PluginProvider struct {
 
 	// Name is the unique name of the PluginProvider.
 	// Each Plugin provider must have a unique Name.
-	Name string
+	Name string `index:",key"`
 
 	// The version of the PluginProvider.  This is a semver compatible string.
 	Version string

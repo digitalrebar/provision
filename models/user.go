@@ -15,17 +15,17 @@ type User struct {
 	// Name is the name of the user
 	//
 	// required: true
-	Name string
+	Name string `index:",key"`
 	// Description of user
 	Description string
 	// PasswordHash is the scrypt-hashed version of the user's Password.
 	//
-	PasswordHash []byte `json:",omitempty"`
+	PasswordHash []byte `json:",omitempty" index:",ignore"`
 	// Token secret - this is used when generating user token's to
 	// allow for revocation by the grantor or the grantee.  Changing this
 	// will invalidate all existing tokens that have this user as a user
 	// or a grantor.
-	Secret string
+	Secret string `index:",ignore"`
 	// Roles is a list of Roles this User has.
 	//
 	Roles []string
@@ -40,7 +40,7 @@ func (u *User) SetMeta(d Meta) {
 }
 
 func (u *User) Validate() {
-	u.AddError(ValidName("Invalid Name", u.Name))
+	u.AddError(ValidUserName("Invalid Name", u.Name))
 }
 
 func (u *User) Prefix() string {

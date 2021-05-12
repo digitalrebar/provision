@@ -7,7 +7,7 @@ type Tenant struct {
 	Meta
 	Owned
 	Bundled
-	Name        string
+	Name        string `index:",key"`
 	Description string
 	// Documentation of this tenant.  This should tell what
 	// the tenant is for, any special considerations that

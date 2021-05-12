@@ -27,7 +27,7 @@ type CatalogItem struct {
 	Owned
 
 	// Id is the unique ID for this catalog item.
-	Id string
+	Id string `index:",key"`
 	// Type is the type of catalog item this is.
 	Type string
 

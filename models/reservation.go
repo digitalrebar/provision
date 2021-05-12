@@ -15,7 +15,7 @@ type Reservation struct {
 	//
 	// required: true
 	// swagger:strfmt ipv4
-	Addr net.IP
+	Addr net.IP `index:",key"`
 	// A description of this Reservation.  This should tell what it is for,
 	// any special considerations that should be taken into account when
 	// using it, etc.

@@ -17,7 +17,7 @@ type Task struct {
 	// Name is the name of this Task.  Task names must be globally unique
 	//
 	// required: true
-	Name string
+	Name string `index:",key"`
 	// Description is a one-line description of this Task.
 	Description string
 	// Documentation should describe in detail what this task should do on a machine.

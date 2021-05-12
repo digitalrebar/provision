@@ -13,7 +13,7 @@ type Template struct {
 	// ID is a unique identifier for this template.  It cannot change once it is set.
 	//
 	// required: true
-	ID string
+	ID string `index:",key"`
 	// A description of this template
 	Description string
 	// Contents is the raw template.  It must be a valid template

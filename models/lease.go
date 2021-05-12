@@ -29,7 +29,7 @@ type Lease struct {
 	//
 	// required: true
 	// swagger:strfmt ipv4
-	Addr net.IP
+	Addr net.IP `index:",key"`
 	// NextServer is the IP address that we should have the machine talk to
 	// next.  In most cases, this will be our address.
 	//

@@ -28,7 +28,7 @@ type VersionSet struct {
 	Owned
 	Bundled
 
-	Id string
+	Id string `index:",key"`
 
 	Documentation string
 	Description   string

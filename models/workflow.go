@@ -10,7 +10,7 @@ type Workflow struct {
 	Meta
 	Owned
 	Bundled
-	Name          string
+	Name          string `index:",key"`
 	Description   string
 	Documentation string
 	Stages        []string
