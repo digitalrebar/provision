@@ -104,7 +104,7 @@ type Machine struct {
 	//
 	// required: true
 	// swagger:strfmt hostname
-	Name string
+	Name string `index:",uniq"`
 	// A description of this machine.  This can contain any reference
 	// information for humans you want associated with the machine.
 	Description string
@@ -113,7 +113,7 @@ type Machine struct {
 	//
 	// required: true
 	// swagger:strfmt uuid
-	Uuid uuid.UUID
+	Uuid uuid.UUID `index:",key"`
 	// The UUID of the job that is currently running on the machine.
 	//
 	// swagger:strfmt uuid
@@ -166,7 +166,7 @@ type Machine struct {
 	Runnable bool
 	// Secret for machine token revocation.  Changing the secret will invalidate
 	// all existing tokens for this machine
-	Secret string
+	Secret string `index:",ignore"`
 	// OS is the operating system that the node is running in.  It is updated by Sledgehammer and by
 	// the various OS install tasks.
 	//
@@ -200,7 +200,7 @@ type Machine struct {
 	// a machine based on various DMI information.  This (in conjunction with HardwareAddrs)
 	// is used to uniquely identify a Machine using a score based on how many total items in the Fingerprint
 	// match.
-	Fingerprint MachineFingerprint
+	Fingerprint MachineFingerprint `index:",ignore"`
 	// Pool contains the pool the machine is in.
 	// Unset machines will join the default Pool
 	Pool string

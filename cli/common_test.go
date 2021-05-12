@@ -17,7 +17,6 @@ import (
 	"time"
 
 	"github.com/digitalrebar/provision/v4/api"
-	"github.com/digitalrebar/provision/v4/models"
 	"github.com/digitalrebar/provision/v4/test"
 )
 
@@ -464,14 +463,6 @@ func TestCorePieces(t *testing.T) {
 	cliTest(false, true, "-F", "cow", "bootenvs", "list").run(t)
 	cliTest(false, false, "-F", "yaml", "bootenvs", "list").run(t)
 	cliTest(false, false, "-F", "json", "bootenvs", "list").run(t)
-	for _, p := range models.AllPrefixes() {
-		switch p {
-		case "interfaces", "plugin_providers", "preferences":
-			continue
-		default:
-			cliTest(false, false, p, "indexes").run(t)
-		}
-	}
 	verifyClean(t)
 }
 

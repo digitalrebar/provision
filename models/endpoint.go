@@ -74,7 +74,7 @@ type Endpoint struct {
 	Bundled
 
 	// Id is the name of the DRP endpoint this should match the HA pair's ID or the DRP ID of a single node.
-	Id string
+	Id string `index:",key"`
 
 	// Description is a string for providing a simple description
 	Description string `json:"Description,omitempty"`

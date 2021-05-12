@@ -16,7 +16,7 @@ type Param struct {
 	// Name is the name of the param.  Params must be uniquely named.
 	//
 	// required: true
-	Name string
+	Name string `index:",key"`
 	// Description is a one-line description of the parameter.
 	Description string
 	// Documentation details what the parameter does, what values it can

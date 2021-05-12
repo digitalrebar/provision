@@ -19,7 +19,7 @@ type Profile struct {
 	// profiles.
 	//
 	// required: true
-	Name string
+	Name string `index:",key"`
 	// A description of this profile.  This can contain any reference
 	// information for humans you want associated with the profile.
 	Description string

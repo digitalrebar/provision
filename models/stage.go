@@ -16,7 +16,7 @@ type Stage struct {
 	// The name of the stage.
 	//
 	// required: true
-	Name string
+	Name string `index:",key"`
 	// A description of this stage.  This should tell what it is for,
 	// any special considerations that should be taken into account when
 	// using it, etc.
