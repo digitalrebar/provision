@@ -11,6 +11,7 @@ import (
 	"os/exec"
 	"path"
 	"regexp"
+	"runtime"
 	"strings"
 	"sync"
 	"testing"
@@ -471,7 +472,11 @@ func TestMain(m *testing.M) {
 	ActuallyPowerThings = false
 	DefaultStateLoc = ""
 
-	tmpDir, err = ioutil.TempDir("", "cli-")
+	baseDir := ""
+	if runtime.GOOS == "darwin" {
+		baseDir = "/tmp"
+	}
+	tmpDir, err = ioutil.TempDir(baseDir, "cli-")
 	if err != nil {
 		log.Printf("Creating temp dir for file root failed: %v", err)
 		os.Exit(1)
