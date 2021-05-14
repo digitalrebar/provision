@@ -16,8 +16,11 @@ import (
 	"regexp"
 	"runtime"
 	"sort"
+	"strconv"
 	"strings"
 	"time"
+
+	"github.com/mattn/go-isatty"
 
 	"github.com/VictorLowther/jsonpatch2/utils"
 	"github.com/digitalrebar/provision/v4/api"
@@ -394,6 +397,8 @@ func lamePrinter(obj interface{}) []byte {
 		var theFields []string
 		data := [][]string{}
 
+		colColors := []tablewriter.Colors{}
+		headerColors := []tablewriter.Colors{}
 		for i, v := range slice {
 			if m, ok := v.(map[string]interface{}); ok {
 				if i == 0 {
@@ -402,6 +407,12 @@ func lamePrinter(obj interface{}) []byte {
 						theFields = []string{}
 						for k := range m {
 							theFields = append(theFields, k)
+						}
+					}
+					if !noColor {
+						for range theFields {
+							headerColors = append(headerColors, tablewriter.Color(colorPatterns[4]...))
+							colColors = append(colColors, tablewriter.Color(colorPatterns[6]...))
 						}
 					}
 				}
@@ -413,6 +424,10 @@ func lamePrinter(obj interface{}) []byte {
 			} else {
 				if i == 0 {
 					theFields = []string{"Index", "Value"}
+					if !noColor {
+						headerColors = []tablewriter.Colors{tablewriter.Color(colorPatterns[4]...), tablewriter.Color(colorPatterns[5]...)}
+						colColors = []tablewriter.Colors{tablewriter.Color(colorPatterns[6]...), tablewriter.Color(colorPatterns[7]...)}
+					}
 				}
 				data = append(data, []string{fmt.Sprintf("%d", i), truncateString(fmt.Sprintf("%v", obj), truncateLength)})
 			}
@@ -422,6 +437,10 @@ func lamePrinter(obj interface{}) []byte {
 			table.SetHeader(theFields)
 			table.SetHeaderAlignment(tablewriter.ALIGN_LEFT)
 			table.SetHeaderLine(isTable)
+			if !noColor {
+				table.SetHeaderColor(headerColors...)
+				table.SetColumnColor(colColors...)
+			}
 		}
 		table.SetAutoWrapText(false)
 		table.SetAlignment(tablewriter.ALIGN_LEFT)
@@ -445,6 +464,10 @@ func lamePrinter(obj interface{}) []byte {
 		if !noHeader {
 			table.SetHeader([]string{"Field", "Value"})
 			table.SetHeaderLine(isTable)
+			if !noColor {
+				table.SetHeaderColor(tablewriter.Color(colorPatterns[4]...), tablewriter.Color(colorPatterns[5]...))
+				table.SetColumnColor(tablewriter.Color(colorPatterns[6]...), tablewriter.Color(colorPatterns[7]...))
+			}
 			table.SetHeaderAlignment(tablewriter.ALIGN_LEFT)
 		}
 		table.SetAutoWrapText(false)
@@ -485,16 +508,68 @@ func lamePrinter(obj interface{}) []byte {
 	return []byte(truncateString(fmt.Sprintf("%v", obj), truncateLength))
 }
 
+var colorPatterns [][]int
+
+func processColorPatterns() {
+	if colorPatterns != nil {
+		return
+	}
+
+	colorPatterns = [][]int{
+		// JSON
+		[]int{32},    // String
+		[]int{33},    // Bool
+		[]int{36},    // Number
+		[]int{90},    // Null
+		[]int{34, 1}, // Key
+		// Table colors
+		[]int{35}, // Header
+		[]int{92}, // Value
+		[]int{32}, // Header2
+		[]int{35}, // Value2
+	}
+
+	parts := strings.Split(colorString, ";")
+	for _, p := range parts {
+		subparts := strings.Split(p, "=")
+		idx, e := strconv.Atoi(subparts[0])
+		if e != nil {
+			continue
+		}
+		if idx < 0 || idx >= len(colorPatterns) {
+			continue
+		}
+		attrs := strings.Split(subparts[1], ",")
+		if len(attrs) == 0 {
+			continue
+		}
+		ii := make([]int, len(attrs))
+		for i, attr := range attrs {
+			ii[i], e = strconv.Atoi(attr)
+			if e != nil {
+				ii = nil
+				break
+			}
+		}
+		if ii != nil {
+			colorPatterns[idx] = ii
+		}
+	}
+}
+
 func prettyPrintBuf(o interface{}) (buf []byte, err error) {
 	var v interface{}
 	if err := utils.Remarshal(o, &v); err != nil {
 		return nil, err
 	}
 
+	noColor = noColor || os.Getenv("TERM") == "dumb" || (!isatty.IsTerminal(os.Stdout.Fd()) && !isatty.IsCygwinTerminal(os.Stdout.Fd()))
+	processColorPatterns()
+
 	if format == "text" || format == "table" {
 		return lamePrinter(v), nil
 	}
-	return api.Pretty(format, v)
+	return api.PrettyColor(format, v, !noColor, colorPatterns)
 }
 
 func prettyPrint(o interface{}) (err error) {

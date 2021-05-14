@@ -19,23 +19,37 @@ import (
 type registerSection func(*cobra.Command)
 
 var (
-	version               = v4.RSVersion
-	debug                 = false
-	catalog               = "https://repo.rackn.io"
-	defaultCatalog        = "https://repo.rackn.io"
-	endpoint              = "https://127.0.0.1:8092"
-	defaultEndpoint       = "https://127.0.0.1:8092"
-	defaultEndpoints      = []string{"https://127.0.0.1:8092"}
-	token                 = ""
-	defaultToken          = ""
-	username              = "rocketskates"
-	defaultUsername       = "rocketskates"
-	password              = "r0cketsk8ts"
-	defaultPassword       = "r0cketsk8ts"
-	downloadProxy         = ""
-	defaultDownloadProxy  = ""
-	format                = ""
-	defaultFormat         = "json"
+	version              = v4.RSVersion
+	debug                = false
+	catalog              = "https://repo.rackn.io"
+	defaultCatalog       = "https://repo.rackn.io"
+	endpoint             = "https://127.0.0.1:8092"
+	defaultEndpoint      = "https://127.0.0.1:8092"
+	defaultEndpoints     = []string{"https://127.0.0.1:8092"}
+	token                = ""
+	defaultToken         = ""
+	username             = "rocketskates"
+	defaultUsername      = "rocketskates"
+	password             = "r0cketsk8ts"
+	defaultPassword      = "r0cketsk8ts"
+	downloadProxy        = ""
+	defaultDownloadProxy = ""
+	format               = ""
+	defaultFormat        = "json"
+	noColor              = false
+	defaultNoColor       = false
+	// Format is idx=val1,val2,val3;idx2=val1,val2, ...
+	// idx = 0 = json string color
+	// idx = 1 = json bool color
+	// idx = 2 = json number color
+	// idx = 3 = json null color
+	// idx = 4 = json key color
+	// idx = 5 = header color
+	// idx = 6 = border color
+	// idx = 7 = value1 color
+	// idx = 8 = value2 color
+	colorString           = "0=32;1=33;2=36;3=90;4=34,1;5=35,6=95;7=32;8=92"
+	defaultColorString    = "0=32;1=33;2=36;3=90;4=34,1;5=35;6=95;7=32;8=92"
 	printFields           = ""
 	defaultPrintFields    = ""
 	defaultTruncateLength = 40
@@ -129,6 +143,10 @@ var ppr = func(c *cobra.Command, a []string) error {
 
 // NewApp is the app start function
 func NewApp() *cobra.Command {
+	// Don't use color on windows
+	if runtime.GOOS == "windows" {
+		defaultNoColor = true
+	}
 	app := &cobra.Command{
 		Use:   "drpcli",
 		Short: "A CLI application for interacting with the DigitalRebar Provision API",
@@ -164,6 +182,16 @@ func NewApp() *cobra.Command {
 			log.Fatal("RS_NO_HEADER should be a boolean value")
 		}
 	}
+	if tk := os.Getenv("RS_NO_COLOR"); tk != "" {
+		var e error
+		defaultNoColor, e = strconv.ParseBool(tk)
+		if e != nil {
+			log.Fatal("RS_NO_COLOR should be a boolean value")
+		}
+	}
+	if tk := os.Getenv("RS_COLORS"); tk != "" {
+		defaultColorString = tk
+	}
 	if tk := os.Getenv("RS_TRUNCATE_LENGTH"); tk != "" {
 		var e error
 		defaultTruncateLength, e = strconv.Atoi(tk)
@@ -196,6 +224,14 @@ func NewApp() *cobra.Command {
 				if e != nil {
 					log.Fatal("RS_NO_HEADER should be a boolean value in drpclirc")
 				}
+			case "RS_NO_COLOR":
+				var e error
+				defaultNoColor, e = strconv.ParseBool(parts[1])
+				if e != nil {
+					log.Fatal("RS_NO_HEADER should be a boolean value in drpclirc")
+				}
+			case "RS_COLORS":
+				defaultColorString = parts[1]
 			case "RS_ENDPOINT":
 				defaultEndpoints = []string{parts[1]}
 			case "RS_TOKEN":
@@ -246,6 +282,12 @@ func NewApp() *cobra.Command {
 	app.PersistentFlags().BoolVarP(&debug,
 		"debug", "d", false,
 		"Whether the CLI should run in debug mode")
+	app.PersistentFlags().BoolVarP(&noColor,
+		"no-color", "N", defaultNoColor,
+		"Whether the CLI should output colorized strings")
+	app.PersistentFlags().StringVarP(&colorString,
+		"colors", "C", defaultColorString,
+		`The colors for JSON and Table/Text colorization.  8 values in the for 0=val,val;1=val,val2...`)
 	app.PersistentFlags().StringVarP(&format,
 		"format", "F", defaultFormat,
 		`The serialization we expect for output.  Can be "json" or "yaml" or "text" or "table"`)

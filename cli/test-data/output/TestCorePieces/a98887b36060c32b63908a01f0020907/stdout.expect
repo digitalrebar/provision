@@ -41,7 +41,7 @@
         "Path": "pxelinux.cfg/default"
       },
       {
-        "Contents": "#!ipxe\nchain {{.ProvisionerURL}}/${netX/mac}.ipxe \u0026\u0026 exit || goto chainip\n:chainip\nchain tftp://{{.ProvisionerAddress}}/${netX/ip}.ipxe || exit\n",
+        "Contents": "#!ipxe\nchain {{.ProvisionerURL}}/${netX/mac}.ipxe && exit || goto chainip\n:chainip\nchain tftp://{{.ProvisionerAddress}}/${netX/ip}.ipxe || exit\n",
         "ID": "",
         "Link": "",
         "Meta": {},
