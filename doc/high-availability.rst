@@ -13,6 +13,8 @@ There are two strategies available for implementing high availability in dr-prov
 consensus and liveness checking, and manual failover via synchronous replication.  The former is new in 4.6.0.
 The latter has been available since v4.3.0, and will continue to remain available for the foreseeable future.
 
+.. _rs_high_availability_preq:
+
 Prerequisites
 ~~~~~~~~~~~~~
 
@@ -30,6 +32,8 @@ There are a few conditions that need to be met in order to set up an HA cluster 
 #. A high-availability entitlement in your license.  High-availability is a licensed enterprise feature.  If you
    are not sure if your license includes high-availability support, contact support@rackn.com.
 
+#. All endpoints and the cluster ID must be registered in your license.  High-availability is a licensed enterprise feature.  If you are not sure if your license includes high-availability support, contact support@rackn.com.
+
 #. A virtual IP address that client and external traffic can be directed to.  If using dr-provision's internal
    IL address management (i.e not using the --load-balanced command line option), dr-provision will handle adding and
    removing the virtual IP from a specified interface and sending out gratuitous ARP packets on failover events, and
@@ -37,24 +41,27 @@ There are a few conditions that need to be met in order to set up an HA cluster 
    then the virtual IP must point to the load balancer, and that address will be used by everything outside of the
    cluster to communicate with whichever cluster node is the active one.
 
-Synchronous Replication
-~~~~~~~~~~~~~~~~~~~~~~~
+Consensus via Raft (recommended)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Consensus via Raft is the feature used to implement high availability with automated failover.  This mode requires that
+you have at least 3 servers in a cluster.  More servers in a cluster are also permitted, but there must be an odd number
+to prevent the cluster from deadlocking in the case of communication failures that isolate half of the cluster from the
+other half.  Consensus via raft also requires a stable IP address:port that can be used for the replication protocol.
+
+
+Synchronous Replication (mainly for backups)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Synchronous Replication is the feature used to implement high availability with manual failover along with
 streaming realtime backups from dr-provision v4.3.0 thru v4.6.0.  It will continue to be present going forward
 as the realtime backup and protocol, but the shift towards consensus with automated failover will be the path
 going forward for high availability.
 
-When operating in synchronous replication mode, there must be at least 2 servers -- one active, and at least 1
+When operating HA in synchronous replication mode, there must be at least 2 servers -- one active, and at least 1
 passive node.
 
-Consensus via Raft
-~~~~~~~~~~~~~~~~~~
-
-Consensus via Raft is the feature used to implement high availability with automated failover.  This mode requires that
-you have at least 3 servers in a cluster.  More servers in a cluster are also permitted, but there must be an odd number
-to prevent the cluster from deadlocking in the case of communication failures that isolate half of the cluster from the
-other half.  Consensus via raft also requires a stable IP address:port that can be used for the replication protocol.
+.. _rs_high_availability_dont:
 
 Contraindications
 ~~~~~~~~~~~~~~~~~
@@ -87,88 +94,197 @@ If none of the above are true, then you cannot use dr-provision in high-availabi
 It is possible to use shared storage that replicates extended attributes for the tftproot space.  This will reduce transfer
 times for replication, but only some distributed filesystems or shared devices support extended attribute sharing.
 
+.. _rs_high_availability_config:
+
 Configuration
 ~~~~~~~~~~~~~
 
-Aside from settings listed later in this section, configuration flags and startup options for the dr-provision
+Aside from DRPID and settings listed later in this section, configuration flags and startup options for the dr-provision
 services participating in an HA cluster should be identical.  It is not required that the servers participating
 in the HA cluster have identical versions, but they must be running on the same OS and system architecture types.
 If you try to add a server version to a cluster that is incompatible, it will fail with an error telling
 you what to do to resolve the issue.
 
-High Availability Startup Options
----------------------------------
+Required Licensing
+------------------
 
---static-ip (or the environment variable RS_STATIC_IP)
-  Not specifically a high-availability startup option, if it is configured it must be different
-  on each server.
+Before installing, ensure that the ``High Availability`` flag is set on your RackN license.  You must install the license on your first endpoint.
 
---drp-id (or the environment variable RS_DRP_ID)
-  Also not specifically a high-availability startup option, this must be different on each server.
+While installed licenses are not required to join other endpoints, each endpoint *and* the ``HA ID`` *must* be listed in the installed license.  Consult :ref:`rackn_licensing_api_upgrade` for help adding endpoints to a RackN license.
 
---ha-id (or the environment variable RS_HA_ID)
-  Must be the same on all nodes participating in an HA cluster.
+Minimum Cluster Site
+--------------------
 
---ha-enabled (or the environment variable RS_HA_ENABLED)
-  Must be included on all nodes participating in an HA cluster.
+Consensus clusters require at least three endpoints.  To ensure elections work correctly, there should always be an odd number of endpoints.
 
---ha-address (or the environment variable RS_HA_ADDRESS)
-  This is the IP address and netmask of the virtual IP that the active cluster member will use
-  for communication.  It must be in CIDR format (aa.bb.cc.dd/xx) when not using an external load
-  balancer, and a raw IP address when using an external load balancer.
 
---ha-interface (or the environment variable RS_HA_INTERFACE)
-  This is the Ethernet interface that the ha address should be added to and removed from when
-  dr-provision transitions between active and passive.  Only applicable when not using an external
-  load balancer.
+Initial State
+-------------
 
---ha-passive (or the environment variable RS_HA_PASSIVE)
-  This must be true on the nodes that should start as passive nodes by default.  In practice, this means
-  every node after the initial node.
+When building a high availability system, you will start from regularly install Digital Rebar v4.6+ endpoint.  A regular installation leaves the endpoint running in "stand alone" mode with High Availability disabled.  No specialized configuration flags are required of the endpoints for the cluster.
 
---ha-join (or the environment variable RS_HA_JOIN)
-  The URL of the active node that should be contacted when starting replication as a passive node in
-  a synchronous replication cluster.  If not present, this defaults to https://$RS_HA_ADDRESS:$RS_API_PORT/
+For the first endpoint enrolled into the cluster, all data and configuration will be preserved.  This process will set the ``HA ID`` and and virtual IP or Load Balancer configuraiton.
 
---ha-token (or the environment variable RS_HA_TOKEN)
-  This is the authentication token that HA nodes use to authenticate and communicate with each other.
-  It should be identical across the nodes, and it should be a superuser auth token with a long lifetime.
-  With the default usernames, you can generate such a token with::
+For the subsequent endpoints enrolled into the cluster, all data and configuration *will be over written* during the enrollment process.  For this reason, only a minimal configuration is recommended for the added endpoints.
 
-      drpcli users token rocketskates ttl 3y
+Reminder: each endpoint in a cluster and the cluster itself *must* have a unique ``ID``.
 
-  and then extracting the Token field from the resulting JSON.
+.. _rs_high_availability_setup:
 
---ha-interface-script (or the environment variable RS_HA_INTERFACE_SCRIPT)
-  This is the full path to the script that should be run whenever dr-provision needs to add or remove the
-  ha address to the ha interface.  If not set, dr-provision defaults to using ``ip addr add`` and ``ip addr del``
-  internally on Linux, and ``ifconfig`` on Darwin.  You can use the following example as a starting point::
+Bootstrapping Consensus via Raft (v4.6.0 and later)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    #/usr/bin/env bash
-    # $1 is the action to perform.  "add" and "remove" are the only ones supported for now.
-    # $2 is the network interface to operate on.  It will be set to the value of --ha-interface.
-    # $3 is the address to add or remove.  It will be set to the value of --ha-address.
-    case $1 in
-       add)    sudo ip addr add "$3" dev "$2";;
-       remove) sudo ip addr del "$3" dev "$2";;
-       *) echo "Unknown action $1"; exit 1;;
-    esac
+In 4.6 and later, you can bootstrap, add nodes to, and remove nodes from a consensus cluster using `drpcli` without
+needing to stop nodes for manual reconfiguration or mess with systemd config files.  This is the preferred method of
+high availability.
 
-  Customize to taste to suit your preferred method of getting authority to add and remove addresses
-  to interfaces.
 
---ha-consensus-addr (or the environment variable RS_HA_CONSENSUS_ADDR)
-  This is the address:port that this node will use for all consensus traffic.  It must be accessible
-  by all the nodes that will participate in the cluster, and it will both originate TCP connections and listen
-  for incoming traffic on this address:port combination.
+Self-enroll the initial active node
+-----------------------------------
 
-ha-state.json
-~~~~~~~~~~~~~
+To start the initial active node, you can use the `drpcli system ha enroll` command to have it
+enroll itself.  The form of the command to run is as follows::
+
+    drpcli system ha enroll $RS_ENDPOINT username password \
+        ConsensusAddr address:port \
+        Observer true/false \
+        VirtInterface interface \
+        VirtInterfaceScript /path/to/script \
+        HaID ha-identifier \
+        LoadBalanced true/false \
+        VirtAddr virtualaddr
+
+The last 3 of those settings can only be specified during self-enroll, and even then they can only be specified
+if the system you are self-enrolling is not already in a synchronous replication cluster.
+
+You also can only specify VirtInterface and VirtInterfaceScript if LoadBalanced is false.
+
+If any errors are returned during that call, they should be addressed and the command retried.
+Once the command finished without error, the chosen system will be in a single node Raft cluster
+that is ready to have other nodes added to the cluster.
+
+Adding additional nodes
+-----------------------
+
+To add additional nodes to an existing cluster, you also use
+`drpcli system ha enroll` against the current active node in that cluster::
+
+    drpcli system ha enroll https://ApiURL_of_target target_username target_password \
+        ConsensusAddr address:port \
+        Observer true/false \
+        VirtInterface interface \
+        VirtInterfaceScript /path/to/script
+
+This will get the global HA settings from the active node in the cluster, merge those settings with the
+per-node settings from the target node and the rest of the settings passed in on the command line, and direct
+the target node to join the cluster using the merged configuration.
+
+**NOTE** The current data on the target node will be backed up, and once the target node has joined the
+cluster it will mirror all data from the existing cluster.  All backed up data will be inaccessible from that point.
+
+Other consensus commands
+------------------------
+
+`drpcli system ha` has several other commands that you can use to examine the state of consensus on a node.
+
+* `drpcli system ha active` will get the Consensus ID of the node that is currently responsible for
+  all client communication in a consensus cluster.  It is possible for this value to be unset if the
+  active node has failed and the cluster is deciding on a new active node.
+
+* `drpcli system ha dump` will dump the user-visible parts of the backing finite state machine that
+  is responsible for keeping track of the state of the cluster.
+
+* `drpcli system ha failOverSafe` will return true if there is at least one node in the cluster that
+  is completly up-to-date with the active node, and it will return false otherwise.  You can pass
+  a time to wait (up to 5 seconds) for the cluster to be fail over safe as an optional argument.
+
+* `drpcli system ha id` returns the Consensus ID of the node you are takling to.
+
+* `drpcli system ha leader` returns the Consensus ID of the current leader of the Raft cluster.  This can
+  be different than the active ID if the cluster is in the middle of determining which cluster member is
+  best suited to handling external cluster traffic.
+
+* `drpcli system ha peers` returns a list of all known cluster members.
+
+* `drpcli system ha state` returns the current HA state of an individual node.
+
+* `drpcli system ha remove` will remove a node from the cluster using it's consensus ID (not DRP ID!)
+
+.. _rs_high_availability_troubleshooting:
+
+Troubleshooting
+~~~~~~~~~~~~~~~
+
+Log Verification
+----------------
+
+It is normal to see ``Error during replication: read tcp [passive IP]:45786->[cluster IP]:8092: i/o timeout`` on the
+passive endpoints logs when the active endpoint is killed or switches to passive mode.  This is an indication that the
+active endpoint has stopped sending updates.
+
+
+Transfer Start-up Time
+----------------------
+
+It may take up to a minute for a passive endpoint to come online after it has received ``-USR1`` signals.
+
+Network Interface Locked
+------------------------
+
+It is possible for the HA interface to become locked if you have to stop and restart the service during configuration
+testing.  To clear the interface, use ```ip addr del [ha ip] dev [ha interface]```
+
+This happens because Digital Rebar is attaching to (and detaching from) the cluster IP.  If this process is interrupted,
+then the association may not be correctly removed.
+
+WAL File Checksums
+------------------
+
+When operating correctly, all the WAL files should match on all endpoints.  You can check the signature of the wal files
+using `hexdump -C`
+
+For example:
+
+  :: 
+
+    cd /var/lib/dr-provision/wal
+    hexdump -C base.0 |less
+
+Active Endpoint File ha-state is Passive:true
+---------------------------------------------
+
+.. note:: This only applies for Synchronous Replication, and not Consensus.
+
+Digital Rebar uses the ``ha-state.json`` file in it's root directory (typically ``/var/lib/dr-provision``) to track
+transitions from active to passive state.
+
+.. note:: removing this file incorrectly can cause very serious problems!  This is a last resort solution.
+
+The ``ha-state.json`` file has a single item JSON schema that changes from true to false depending on the endpoint HA state.  This file can be updated or change to force a reset.  The dr-provision server must be restarted afterwards.
+
+  ::
+
+    {"Passive":false}
+
+
+When making this changes, stop ALL dr-provision servers in the HA cluster.  Fix the state files for all servers.
+Start the selected Active endpoint first.  After it is running, start the passive endpoints.
+
+.. _rs_high_availability_state:
+
+Tracking HA State: ha-state.json
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. note:: This is a system managed file, do not edit it manually!
 
 As of version 4.6.0, the ha-state.json file will be the proxy Source of Truth for all high availability
 settings.  Settings in ha-state.json take precedence over any from the commandline or environment, and they
 will be automatically updated as conditions change as a result of HA-related API requests and general cluster
-status changes.  A sample ha-state.json looks like this::
+status changes.
+
+This section decribes the meaning of the components of this state file.
+
+A sample ha-state.json looks like this::
 
     {
       "ActiveUri": "",
@@ -301,84 +417,12 @@ VirtInterfaceScript
 If present, this is the name of the script that will be run whenever we need to add or remove VirtAddr
 to VirtInterface.It is specific to each node, and corresponds to the --ha-interface-script commandline option.
 
-Bootstrapping Consensus via Raft (v4.6.0 and later)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-In 4.6 and later, you can bootstrap, add nodes to, and remove nodes from a consensus cluster using `drpcli` without
-needing to stop nodes for manual reconfiguration or mess with systemd config files.  This is the preferred method of
-high availability.
-
-Self-enroll the initial active node
------------------------------------
-
-To start the initial active node, you can use the `drpcli system ha enroll` command to have it
-enroll itself.  The form of the command to run is as follows::
-
-    drpcli system ha enroll $RS_ENDPOINT username password \
-        ConsensusAddr address:port \
-        Observer true/false \
-        VirtInterface interface \
-        VirtInterfaceScript /path/to/script \
-        HaID ha-identifier \
-        LoadBalanced true/false \
-        VirtAddr virtualaddr
-
-The last 3 of those settings can only be specified during self-enroll, and even then they can only be specified
-if the system you are self-enrolling is not already in a synchronous replication cluster.
-
-You also can only specify VirtInterface and VirtInterfaceScript if LoadBalanced is false.
-
-If any errors are returned during that call, they should be addressed and the command retried.
-Once the command finished without error, the chosen system will be in a single node Raft cluster
-that is ready to have other nodes added to the cluster.
-
-Adding additional nodes
------------------------
-
-To add additional nodes to an existing cluster, you also use
-`drpcli system ha enroll` against the current active node in that cluster::
-
-    drpcli system ha enroll https://ApiURL_of_target target_username target_password \
-        ConsensusAddr address:port \
-        Observer true/false \
-        VirtInterface interface \
-        VirtInterfaceScript /path/to/script
-
-This will get the global HA settings from the active node in the cluster, merge those settings with the
-per-node settings from the target node and the rest of the settings passed in on the command line, and direct
-the target node to join the cluster using the merged configuration.
-
-**NOTE** The current data on the target node will be backed up, and once the target node has joined the
-cluster it will mirror all data from the existing cluster.  All backed up data will be inaccessible from that point.
-
-Other consensus commands
-------------------------
-
-`drpcli system ha` has several other commands that you can use to examine the state of consensus on a node.
-
-* `drpcli system ha active` will get the Consensus ID of the node that is currently responsible for
-  all client communication in a consensus cluster.  It is possible for this value to be unset if the
-  active node has failed and the cluster is deciding on a new active node.
-
-* `drpcli system ha dump` will dump the user-visible parts of the backing finite state machine that
-  is responsible for keeping track of the state of the cluster.
-
-* `drpcli system ha failOverSafe` will return true if there is at least one node in the cluster that
-  is completly up-to-date with the active node, and it will return false otherwise.  You can pass
-  a time to wait (up to 5 seconds) for the cluster to be fail over safe as an optional argument.
-
-* `drpcli system ha id` returns the Consensus ID of the node you are takling to.
-
-* `drpcli system ha leader` returns the Consensus ID of the current leader of the Raft cluster.  This can
-  be different than the active ID if the cluster is in the middle of determining which cluster member is
-  best suited to handling external cluster traffic.
-
-* `drpcli system ha peers` returns a list of all known cluster members.
-
-* `drpcli system ha state` returns the current HA state of an individual node.
+.. _rs_high_availability_replication:
 
 Bootstrapping Synchronous Replication (pre-v4.6.0 style)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. warning:: Provided for legacy support only, upgrade to v4.6 for all HA functions.
 
 This bootstrapping documentation will assume that you are working with dr-provision running as a native service
 managed by systemd on a Linux server.
@@ -470,60 +514,72 @@ To promote a passive endpoint to active
 .. note:: Prior to v4.5.0, Signals were used to shift state.  SIGUSR2 was used to go from active to passive and
   SIGUSR1 was used to go from passive to active.
 
-Troubleshooting
-~~~~~~~~~~~~~~~
 
-Log Verification
-----------------
+Pre v4.6 High Availability Startup Options
+---------------------------------~~~~~~~~~
 
-It is normal to see ``Error during replication: read tcp [passive IP]:45786->[cluster IP]:8092: i/o timeout`` on the
-passive endpoints logs when the active endpoint is killed or switches to passive mode.  This is an indication that the
-active endpoint has stopped sending updates.
+.. note:: These settings are NOT needed for consensus based HA.
 
+--static-ip (or the environment variable RS_STATIC_IP)
+  Not specifically a high-availability startup option, if it is configured it must be different
+  on each server.
 
-Transfer Start-up Time
-----------------------
+--drp-id (or the environment variable RS_DRP_ID)
+  Also not specifically a high-availability startup option, this must be different on each server.
 
-It may take up to a minute for a passive endpoint to come online after it has received ``-USR1`` signals.
+--ha-id (or the environment variable RS_HA_ID)
+  Must be the same on all nodes participating in an HA cluster.
 
-Network Interface Locked
-------------------------
+--ha-enabled (or the environment variable RS_HA_ENABLED)
+  Must be included on all nodes participating in an HA cluster.
 
-It is possible for the HA interface to become locked if you have to stop and restart the service during configuration
-testing.  To clear the interface, use ```ip addr del [ha ip] dev [ha interface]```
+--ha-address (or the environment variable RS_HA_ADDRESS)
+  This is the IP address and netmask of the virtual IP that the active cluster member will use
+  for communication.  It must be in CIDR format (aa.bb.cc.dd/xx) when not using an external load
+  balancer, and a raw IP address when using an external load balancer.
 
-This happens because Digital Rebar is attaching to (and detaching from) the cluster IP.  If this process is interrupted,
-then the association may not be correctly removed.
+--ha-interface (or the environment variable RS_HA_INTERFACE)
+  This is the Ethernet interface that the ha address should be added to and removed from when
+  dr-provision transitions between active and passive.  Only applicable when not using an external
+  load balancer.
 
-WAL File Checksums
-------------------
+--ha-passive (or the environment variable RS_HA_PASSIVE)
+  This must be true on the nodes that should start as passive nodes by default.  In practice, this means
+  every node after the initial node.
 
-When operating correctly, all the WAL files should match on all endpoints.  You can check the signature of the wal files
-using `hexdump -C`
+--ha-join (or the environment variable RS_HA_JOIN)
+  The URL of the active node that should be contacted when starting replication as a passive node in
+  a synchronous replication cluster.  If not present, this defaults to https://$RS_HA_ADDRESS:$RS_API_PORT/
 
-For example:
+--ha-token (or the environment variable RS_HA_TOKEN)
+  This is the authentication token that HA nodes use to authenticate and communicate with each other.
+  It should be identical across the nodes, and it should be a superuser auth token with a long lifetime.
+  With the default usernames, you can generate such a token with::
 
-  :: 
+      drpcli users token rocketskates ttl 3y
 
-    cd /var/lib/dr-provision/wal
-    hexdump -C base.0 |less
+  and then extracting the Token field from the resulting JSON.
 
-Active Endpoint File ha-state is Passive:true
----------------------------------------------
+--ha-interface-script (or the environment variable RS_HA_INTERFACE_SCRIPT)
+  This is the full path to the script that should be run whenever dr-provision needs to add or remove the
+  ha address to the ha interface.  If not set, dr-provision defaults to using ``ip addr add`` and ``ip addr del``
+  internally on Linux, and ``ifconfig`` on Darwin.  You can use the following example as a starting point::
 
-This only applies for Synchronous Replication, and not Consensus.
+    #/usr/bin/env bash
+    # $1 is the action to perform.  "add" and "remove" are the only ones supported for now.
+    # $2 is the network interface to operate on.  It will be set to the value of --ha-interface.
+    # $3 is the address to add or remove.  It will be set to the value of --ha-address.
+    case $1 in
+       add)    sudo ip addr add "$3" dev "$2";;
+       remove) sudo ip addr del "$3" dev "$2";;
+       *) echo "Unknown action $1"; exit 1;;
+    esac
 
-Digital Rebar uses the ``ha-state.json`` file in it's root directory (typically ``/var/lib/dr-provision``) to track
-transitions from active to passive state.
+  Customize to taste to suit your preferred method of getting authority to add and remove addresses
+  to interfaces.
 
-.. note:: removing this file incorrectly can cause very serious problems!  This is a last resort solution.
+--ha-consensus-addr (or the environment variable RS_HA_CONSENSUS_ADDR)
+  This is the address:port that this node will use for all consensus traffic.  It must be accessible
+  by all the nodes that will participate in the cluster, and it will both originate TCP connections and listen
+  for incoming traffic on this address:port combination.
 
-The ``ha-state.json`` file has a single item JSON schema that changes from true to false depending on the endpoint HA state.  This file can be updated or change to force a reset.  The dr-provision server must be restarted afterwards.
-
-  ::
-
-    {"Passive":false}
-
-
-When making this changes, stop ALL dr-provision servers in the HA cluster.  Fix the state files for all servers.
-Start the selected Active endpoint first.  After it is running, start the passive endpoints.

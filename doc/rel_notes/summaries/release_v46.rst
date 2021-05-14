@@ -205,3 +205,8 @@ Other Items of Note
 * Content System
 
   * Readonly content can override writable objects (using `drpcli contents upload --replaceWritable`)
+* Profiles
+  * Profile filters for Params have parity with Machine filters (v4.6.2+)
+
+* User Names
+  * Username can now have @ symbols to allow for better active directory integration. (v4.6.2+)
