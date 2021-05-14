@@ -25,7 +25,7 @@ fi
 
 go build -o drpcli-docs cmds/drpcli-docs/drpcli-docs.go
 # set our arch:os build pairs to compile for
-builds="amd64:linux amd64:darwin amd64:windows arm64:linux arm:linux"
+builds="amd64:linux amd64:darwin amd64:windows arm64:linux arm:linux ppc64le:linux"
 
 # anything on command line will override our pairs listed above
 [[ $* ]] && builds="$*"

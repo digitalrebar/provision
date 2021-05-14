@@ -62,10 +62,11 @@ var (
 	}
 
 	validGOARCH = map[string]struct{}{
-		"386":   struct{}{},
-		"amd64": struct{}{},
-		"arm":   struct{}{},
-		"arm64": struct{}{},
+		"386":     struct{}{},
+		"amd64":   struct{}{},
+		"arm":     struct{}{},
+		"arm64":   struct{}{},
+		"ppc64le": struct{}{},
 	}
 )
 
