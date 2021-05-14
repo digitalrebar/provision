@@ -809,7 +809,7 @@ case $MODE in
                        FILE=${SOURCE##*/}
                        # if we couldn't find dr-provision.zip, then try os/arch based zip
                        if [[ ! -e $FILE ]] ; then
-                           SOURCE=${SOURCE/.zip/.${os}.${arch}.zip}
+                           SOURCE=${SOURCE/.zip/.${arch}.${os}.zip}
                            get $SOURCE
                            FILE=${SOURCE##*/}
                        fi
