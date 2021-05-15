@@ -691,20 +691,23 @@ fi
 
 arch=$(uname -m)
 case $arch in
-    x86_64|amd64) arch=amd64 ;;
-    aarch64)      arch=arm64  ;;
-    armv7l)       arch=arm_v7 ;;
+    x86_64|amd64) arch=amd64   ;;
+    aarch64)      arch=arm64   ;;
+    armv7l)       arch=arm_v7  ;;
+    ppc64le)      arch=ppc64le ;;
     *)            exit_cleanup 1 "FATAL: architecture ('$arch') not supported" ;;
 esac
 
 case $(uname -s) in
     Darwin)
+        os="darwin"
         binpath="bin/darwin/$arch"
         bindest="${BIN_DIR}"
         tar="command tar"
         # Someday, handle adding all the launchd stuff we will need.
         shasum="command shasum -a 256";;
     Linux)
+        os="linux"
         binpath="bin/linux/$arch"
         bindest="${BIN_DIR}"
         tar="command tar"
@@ -802,8 +805,14 @@ case $MODE in
                        SOURCE=$(grep "drp-$DRP_VERSION:::" rackn-catalog.json | awk -F\" '{ print $4 }')
                        SOURCE=${SOURCE##*:::}
 
-                       get $SOURCE
+                       get $SOURCE || true
                        FILE=${SOURCE##*/}
+                       # if we couldn't find dr-provision.zip, then try os/arch based zip
+                       if [[ ! -e $FILE ]] ; then
+                           SOURCE=${SOURCE/.zip/.${arch}.${os}.zip}
+                           get $SOURCE
+                           FILE=${SOURCE##*/}
+                       fi
                        mv $FILE $ZIP
 
                        # XXX: Put sha back one day

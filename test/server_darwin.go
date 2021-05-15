@@ -33,6 +33,7 @@ func StartServer(tmpDir string, basePort int) error {
 		"--binl-port", binlPort,
 		"--metrics-port", metricPort,
 		"--fake-pinger",
+		"--no-watcher",
 		"--drp-id", "Fred",
 		"--plugin-comm-root", tmpDir,
 		"--backend", "memory:///")

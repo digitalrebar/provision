@@ -12,7 +12,7 @@ func TestFiles(t *testing.T) {
 	tests := []crudTest{
 		{
 			name:      "list files",
-			expectRes: []string{"drpcli.amd64.darwin", "drpcli.amd64.linux", "drpcli.amd64.windows", "drpcli.arm64.linux", "jq"},
+			expectRes: []string{"drpcli.amd64.darwin", "drpcli.amd64.linux", "drpcli.amd64.windows", "drpcli.arm64.linux", "drpcli.ppc64le.linux", "jq"},
 			expectErr: nil,
 			op: func() (interface{}, error) {
 				return session.ListBlobs("files")
@@ -75,6 +75,7 @@ func TestFiles(t *testing.T) {
 				"drpcli.amd64.linux",
 				"drpcli.amd64.windows",
 				"drpcli.arm64.linux",
+				"drpcli.ppc64le.linux",
 				"foo",
 				"jq",
 			},

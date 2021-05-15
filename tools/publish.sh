@@ -24,4 +24,6 @@ mkdir -p rebar-catalog/drpcli/$version/arm64/linux
 cp bin/linux/arm64/drpcli rebar-catalog/drpcli/$version/arm64/linux
 mkdir -p rebar-catalog/drpcli/$version/armv7/linux
 cp bin/linux/armv7/drpcli rebar-catalog/drpcli/$version/armv7/linux
+mkdir -p rebar-catalog/drpcli/$version/ppc64le/linux
+cp bin/linux/ppc64le/drpcli rebar-catalog/drpcli/$version/ppc64le/linux
 
