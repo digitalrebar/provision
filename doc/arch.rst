@@ -10,7 +10,7 @@ Architecture Reference
 ----------------------
 
 This section is intended to act as a reference to the internals of
-dr-provision for developers and power users.
+Digital Rebar for developers and power users.
 
 .. toctree::
 
@@ -28,5 +28,5 @@ dr-provision for developers and power users.
    arch/cluster
    arch/pooling
    arch/manager
-   arch/swagger
+   arch/Swagger
 

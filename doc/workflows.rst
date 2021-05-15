@@ -27,8 +27,6 @@ This recommended process allows operators to start with minimal information abou
 
 .. figure::  images/boot_discover.png
    :alt: Discover Machines
-   :target: https://docs.google.com/a/rackn.com/drawings/d/1FPI8JAyXDHqI9A5pmZd3NVyVdBcSRWeJAzjb_4OWpfI/edit?usp=sharing
-
 
 .. _rs_provision_discovered:
 
@@ -40,7 +38,6 @@ Once systems have been discovered using :ref:`rs_basic_discovery`, their machine
 
 .. figure::  images/install_discovered.png
    :alt: Install O/S from Discovered Machine
-   :target: https://docs.google.com/a/rackn.com/drawings/d/1vDs8_LYIRE6We-Y97Uh5uk639TSQMC866CLxJ2S58VE/edit?usp=sharing
 
 .. _rs_provision_known:
 
@@ -55,7 +52,5 @@ Two advantages to this approach is that it skips the discovery boot process; con
 
 .. figure::  images/install_known.png
    :alt: Install O/S to Known Machine
-   :target: https://docs.google.com/drawings/d/1z3QJh1-3jQ8_hg2KmTIc1m85bwLdICDoJ0gJe3XVjtk/edit?usp=sharing
-
 
 

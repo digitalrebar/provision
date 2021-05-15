@@ -1,17 +1,17 @@
-.. Copyright (c) 2017 RackN Inc.
+.. Copyright (c) 2021 RackN Inc.
 .. Licensed under the Apache License, Version 2.0 (the "License");
-.. Digital Rebar Provision documentation under Digital Rebar master license
+.. Digital Rebar Provision documentation under Digital Rebar license
 .. index::
   pair: Digital Rebar Provision; High Availability
 
 .. _rs_high_availability:
 
-High Availability
-#################
+High Availability (HA)
+######################
 
-There are two strategies available for implementing high availability in dr-provision: automated failover using Raft for
-consensus and liveness checking, and manual failover via synchronous replication.  The former is new in 4.6.0.
-The latter has been available since v4.3.0, and will continue to remain available for the foreseeable future.
+Digital Rebar v4.6+ supports fully integrated High Availability (HA) in dr-provision via automated failover using consensus (aka Raft) and liveness checking.  This capability is fully integrated to the standard Digital Rebar service so an in-place upgrade from Stand Alone mode is possible in v4.6+: a HA enabled license is required.
+
+Manual failover via synchronous replication has been supported since v4.3 and will continue to remain available for the foreseeable future to support live backups, multi-site manager and other distributed operations.  This can also be used for HA configuration but is not recommended.
 
 .. _rs_high_availability_preq:
 
@@ -41,25 +41,19 @@ There are a few conditions that need to be met in order to set up an HA cluster 
    then the virtual IP must point to the load balancer, and that address will be used by everything outside of the
    cluster to communicate with whichever cluster node is the active one.
 
-Consensus via Raft (recommended)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Consensus HA
+~~~~~~~~~~~~
 
-Consensus via Raft is the feature used to implement high availability with automated failover.  This mode requires that
-you have at least 3 servers in a cluster.  More servers in a cluster are also permitted, but there must be an odd number
-to prevent the cluster from deadlocking in the case of communication failures that isolate half of the cluster from the
-other half.  Consensus via raft also requires a stable IP address:port that can be used for the replication protocol.
+Consensus is the feature used to implement high availability with automated failover.  This mode requires that you have at least 3 servers in a cluster.  More servers in a cluster are also permitted, but there must be an odd number to prevent the cluster from deadlocking in the case of communication failures that isolate half of the cluster from the other half.  Consensus also requires a stable IP address:port that can be used for the replication protocol.
 
 
-Synchronous Replication (mainly for backups)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Synchronous Replication (mainly for management and backups)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Synchronous Replication is the feature used to implement high availability with manual failover along with
-streaming realtime backups from dr-provision v4.3.0 thru v4.6.0.  It will continue to be present going forward
-as the realtime backup and protocol, but the shift towards consensus with automated failover will be the path
-going forward for high availability.
+streaming realtime backups from Digital Rebar v4.3.0 thru v4.6.0.  It will continue to be present going forward as the realtime backup and protocol, but consensus with automated failover is the supported path for high availability.
 
-When operating HA in synchronous replication mode, there must be at least 2 servers -- one active, and at least 1
-passive node.
+This mode may be prefered for non-HA use cases such as creating off-line or off-site backups of a running Digital Rebar system.
 
 .. _rs_high_availability_dont:
 

@@ -1,3 +1,5 @@
+:orphan:
+
 .. Copyright (c) 2017 RackN Inc.
 .. Licensed under the Apache License, Version 2.0 (the "License");
 .. Digital Rebar Provision documentation under Digital Rebar master license
@@ -774,7 +776,7 @@ No matching Subnet (MacOS DHCP)
 
 Problem: DHCP will not respond when running DRP from a Mac.  Log provides "No Matching Subnet" warning.
 
-Cause: This is likely caused by not configuring the "MAC DARWIN" route correctly as per :ref:`rs_qs_start`.
+Cause: This is likely caused by not configuring the "MAC DARWIN" route correctly as per :ref:`rs_quickstart`.
 
 Solution: Make sure that the address on the MAC should be outside the range.  Then set the ip, add the route, and then (re)start DRP.  Make sure all the broadcast routes are deleted first using `sudo route delete 255.255.255.255` multiple times.
 

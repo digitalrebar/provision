@@ -16,9 +16,10 @@ The default installation includes an assets directory that contain pre-existing 
 :ref:`templates <rs_model_template>`.  Example Ubuntu, CentOS, and other operating systems are available to start from.
 
 
-This section of the docs provides some hints and gotchas for the various platforms.
+This section of the docs provides additional hints and gotchas for the various platforms.
 
-LinuxKit
---------
-1. :ref:`linuxkit <rs_os_linuxkit>`
+.. toctree::
+   :maxdepth: 1
+   :glob:
 
+   os-support/*

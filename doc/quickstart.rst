@@ -15,16 +15,13 @@ We recommend consulting the `video guide <https://youtu.be/v-KcvYrUoE0>`_ of thi
 
 Most Digital Rebar environments require knowledge of your network and DHCP environment.  Cloud and fully Virtual environments generally require less networking knowledge.
 
-Other installation paths to consider:
+Other installation paths:
 
-.. toctree::
-   :maxdepth: 1
-   :glob:
-
-   install/install
-   install/install-dev
-   install/install-docker
-   install/install-cloud
+* :ref:`rs_install` details more complex installs including offline/airgap.
+* :ref:`rs_install_dev` for developers running DRP interactively
+* :ref:`rs_install_docker` for trial users minimizing their install requirements
+* :ref:`rs_install_cloud` is non-PXE / Cloud-Only installation process (no DHCP required)
+* `Edge Lab with RPi <http://edgelab.digital>`_ is self-contained Digital Rebar inexpensive lab using Raspberry Pi computers.
 
 This graphic shows the basic layout for a quick start system:
 
