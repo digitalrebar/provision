@@ -14,149 +14,172 @@ exit_cleanup() {
   exit $_x
 }
 
+COLOR_OK=true
+set_color() {
+# terminal colors
+RCol='\e[0m'    # Text Reset
+
+# Regular           Bold                Underline           High Intensity      BoldHigh Intens     Background          High Intensity Backgrounds
+Bla='\e[0;30m';     BBla='\e[1;30m';    UBla='\e[4;30m';    IBla='\e[0;90m';    BIBla='\e[1;90m';   On_Bla='\e[40m';    On_IBla='\e[0;100m';
+Red='\e[0;31m';     BRed='\e[1;31m';    URed='\e[4;31m';    IRed='\e[0;91m';    BIRed='\e[1;91m';   On_Red='\e[41m';    On_IRed='\e[0;101m';
+Gre='\e[0;32m';     BGre='\e[1;32m';    UGre='\e[4;32m';    IGre='\e[0;92m';    BIGre='\e[1;92m';   On_Gre='\e[42m';    On_IGre='\e[0;102m';
+Yel='\e[0;33m';     BYel='\e[1;33m';    UYel='\e[4;33m';    IYel='\e[0;93m';    BIYel='\e[1;93m';   On_Yel='\e[43m';    On_IYel='\e[0;103m';
+Blu='\e[0;34m';     BBlu='\e[1;34m';    UBlu='\e[4;34m';    IBlu='\e[0;94m';    BIBlu='\e[1;94m';   On_Blu='\e[44m';    On_IBlu='\e[0;104m';
+Pur='\e[0;35m';     BPur='\e[1;35m';    UPur='\e[4;35m';    IPur='\e[0;95m';    BIPur='\e[1;95m';   On_Pur='\e[45m';    On_IPur='\e[0;105m';
+Cya='\e[0;36m';     BCya='\e[1;36m';    UCya='\e[4;36m';    ICya='\e[0;96m';    BICya='\e[1;96m';   On_Cya='\e[46m';    On_ICya='\e[0;106m';
+Whi='\e[0;37m';     BWhi='\e[1;37m';    UWhi='\e[4;37m';    IWhi='\e[0;97m';    BIWhi='\e[1;97m';   On_Whi='\e[47m';    On_IWhi='\e[0;107m';
+
+CWarn="$BYel"
+CFlag="$IBlu"
+CDef="$IBla"
+CNote="$Yel"
+}
+
 usage() {
-cat <<EOFUSAGE
-  USAGE: $0 [ install | upgrade | remove | version ] [ <options: see below> ]
+    [[ "$COLOR_OK" == "true" ]] && set_color
+echo -e "
+  ${ICya}USAGE:${RCol} ${BYel}$0${RCol} ${CFlag}[ install | upgrade | remove | version ] [ <options: see below> ]${RCol}
 
-WARNING: 'install' option will OVERWRITE existing installations
+${CWarn}WARNING${RCol}: '${CFlag}install${RCol}' option will OVERWRITE existing installations
 
-OPTIONS:
-    --debug=[true|false]    # Enables debug output
-    --force=[true|false]    # Forces an overwrite of local install binaries and content
-    --upgrade=[true|false]  # Turns on 'force' option to overwrite local binaries/content
-    --isolated              # Sets up current directory as install location for drpcli
-                            # and dr-provision (makes mess in current directory!)
-    --no-content            # Don't add content to the system
-    --zip-file=filename.zip # Don't download the dr-provision.zip file, instead use
-                            # the referenced zip file (useful for airgap deployments)
-                            # NOTE: disables sha256sum checks - do this manually
-    --ipaddr=<ip>           # The IP to use for the system identified IP.  The system
-                            # will attempt to discover the value if not specified
-    --version=<string>      # Version identifier if downloading; stable, tip, or
-                            # specific version label, defaults to: $DEFAULT_DRP_VERSION
-    --remove-data           # Remove data as well as program pieces
-    --skip-run-check        # Skip the process check for 'dr-provision' on new install
-                            # only valid in '--isolated' install mode
-    --skip-prereqs          # Skip OS dependency checks, for testing 'isolated' mode
-    --no-sudo               # Do not use "sudo" prefix on commands (assume you're root)
-    --fast-downloader       # (experimental) Use Fast Downloader (uses 'aria2')
-    --keep-installer        # In Production mode, do not purge the tmp installer artifacts
-    --startup               # Attempt to start the dr-provision service
-    --systemd               # Run the systemd enabling commands after installation
-    --systemd-services      # Additional services for systemd to wait for before starting DRP.
-    --create-self           # DRP will create a machine that represents itself.
-                            # Only used with startup/systemd parameters.
-    --start-runner          # DRP will start a runner for itself. Implies create self.
-                            # Only used with startup/systemd parameters.
-    --initial-workflow=<string>
-                            # Workflow to assign to the DRP's self machine as install finishes
-                            # Only valid with create-self object, only one Workflow may be specified
-    --initial-profiles=<string>
-                            # Initial profiles to add to the DRP endpoint before starting the workflow,
-                            # comma separated list, no spaces, this is only valid with create-self object
-    --initial-contents=<string>
-                            # Initial content packs to deliver, comma separated with no spaces.
-                            # A file, URL, or content-pack name
-    --initial-plugins=<string>
-                            # Initial plugins to deliver, comma separated list with no spaces.
-                            # A file, URL, or content-pack name
-    --initial-parameters=<string>
-                            # Initial parameters to set on the system.  Simple parameters
-                            # as a comma separated list, with no spaces.
-    --initial-subnets=<string>
-                            # A file or URL containing Subnet definitions in JSON or YAML format,
-                            # comma separated, no spaces (NOTE: Subnets can also be injected in
-                            # content packs with the '--initial-contents' argument)
-    --bootstrap             # Store the install image and the install script in the files bootstrap
-    --drp-id=<string>       # String to use as the DRP Identifier (only with --systemd)
-    --ha-id=<string>        # String to use as the HA Identifier (only with --systemd)
-    --ha-enabled            # Indicates that the system is HA enabled
-    --ha-address=<string>   # IP Address to use a VIP for HA system
-    --ha-interface=<string> # Interrace to use for HA traffic
-    --ha-passive            # Indicates that the system is starting as passive.
-    --ha-token=<string>     # The token to use to sync passive to active
-    --drp-user=<string>     # DRP user to create after system start (only with --systemd)
-    --drp-password=<string> # DRP user password to set after system start (only with --systemd)
-    --remove-rocketskates   # Remove the rocketskates user after system start (only with --systemd)
-    --local-ui              # Set up DRP to server a local UI
-    --system-user           # System user account to create for DRP to run as
-    --system-group          # System group name
-    --drp-home-dir          # Use with system-user and system-group to set the home directory
-                            # for the system-user. This path is where most important drp files live
-                            # including the tftp root
-    --bin-dir               # Use this as the local of the binaries.  Required for non-root upgrades
-    --container             # Force to install as a container, not zipfile
-    --container-type=<string>
-                            # Container install type, defaults to "$CNT_TYPE"
-    --container-name=<string>
-                            # Set the "docker run" container name, defaults to "$CNT_NAME"
-    --container-restart=<string>
-                            # Set the Docker restart option, defaults to "$CNT_RESTART"
-                            # options are:  no, on-failure, always, unless-stopped
+${ICya}OPTIONS${RCol}:
+    ${CFlag}--debug${RCol}=${CDef}[true|false]${RCol}    - Enables debug output
+    ${CFlag}--force${RCol}=${CDef}[true|false]${RCol}    - Forces an overwrite of local install binaries and content
+    ${CFlag}--upgrade${RCol}=${CDef}[true|false]${RCol}  - Turns on 'force' option to overwrite local binaries/content
+    ${CFlag}--isolated${RCol}              - Sets up current directory as install location for drpcli
+                              and dr-provision (makes mess in current directory!)
+    ${CFlag}--no-content${RCol}            - Don't add content to the system
+    ${CFlag}--zip-file${RCol}=${CDef}filename.zip${RCol} - Don't download the dr-provision.zip file, instead use
+                              the referenced zip file (useful for airgap deployments)
+                              NOTE: disables sha256sum checks - do this manually
+    ${CFlag}--ipaddr${RCol}=${CDef}<ip>${RCol}           - The IP to use for the system identified IP.  The system
+                              will attempt to discover the value if not specified
+    ${CFlag}--version${RCol}=${CDef}<string>${RCol}      - Version identifier if downloading; stable, tip, or
+                              specific version label, ${CDef}(defaults to: $DEFAULT_DRP_VERSION)${RCol}
+    ${CFlag}--remove-data${RCol}           - Remove data as well as program pieces
+    ${CFlag}--skip-run-check${RCol}        - Skip the process check for 'dr-provision' on new install
+                              only valid in '${CFlag}--isolated${RCol}' install mode
+    ${CFlag}--skip-prereqs${RCol}          - Skip OS dependency checks, for testing '${CFlag}--isolated${RCol}' mode
+    ${CFlag}--no-sudo${RCol}               - Do not use \"sudo\" prefix on commands (assume you're root)
+    ${CFlag}--fast-downloader${RCol}       - (experimental) Use Fast Downloader (uses 'aria2')
+    ${CFlag}--keep-installer${RCol}        - In Production mode, do not purge the tmp installer artifacts
+    ${CFlag}--startup${RCol}               - Attempt to start the dr-provision service
+    ${CFlag}--systemd${RCol}               - Run the systemd enabling commands after installation
+    ${CFlag}--systemd-services${RCol}      - Additional services for systemd to wait for before starting DRP.
+    ${CFlag}--create-self${RCol}           - DRP will create a machine that represents itself.
+                              Only used with startup/systemd parameters.
+    ${CFlag}--start-runner${RCol}          - DRP will start a runner for itself. Implies create self.
+                              Only used with startup/systemd parameters.
+    ${CFlag}--initial-workflow${RCol}=${CDef}<string>${RCol}
+                            - Workflow to assign to the DRP's self machine as install finishes
+                              Only valid with create-self object, only one Workflow may be specified
+    ${CFlag}--initial-profiles${RCol}=${CDef}<string>${RCol}
+                            - Initial profiles to add to the DRP endpoint before starting the workflow,
+                              comma separated list, no spaces, this is only valid with create-self object
+    ${CFlag}--initial-contents${RCol}=${CDef}<string>${RCol}
+                            - Initial content packs to deliver, comma separated with no spaces.
+                              A file, URL, or content-pack name
+    ${CFlag}--initial-plugins${RCol}=${CDef}<string>${RCol}
+                            - Initial plugins to deliver, comma separated list with no spaces.
+                              A file, URL, or content-pack name
+    ${CFlag}--initial-parameters${RCol}=${CDef}<string>${RCol}
+                            - Initial parameters to set on the system.  Simple parameters
+                              as a comma separated list, with no spaces.
+    ${CFlag}--initial-subnets${RCol}=${CDef}<string>${RCol}
+                            - A file or URL containing Subnet definitions in JSON or YAML format,
+                              comma separated, no spaces
+                              NOTE: Subnets can also be injected in content packs with the
+                                '${CFlag}--initial-contents${RCol}' argument
+    ${CFlag}--bootstrap${RCol}             - Store the install image and the install script in the files bootstrap
+    ${CFlag}--drp-id${RCol}=${CDef}<string>${RCol}       - String to use as the DRP Identifier ${CDef}(only with ${CFlag}--systemd${CDef})${RCol}
+    ${CFlag}--ha-id${RCol}=${CDef}<string>${RCol}        - String to use as the HA Identifier ${CDef}(only with ${CFlag}--systemd${CDef})${RCol}
+    ${CFlag}--ha-enabled${RCol}            - Indicates that the system is HA enabled
+    ${CFlag}--ha-address${RCol}=${CDef}<string>${RCol}   - IP Address to use a VIP for HA system
+    ${CFlag}--ha-interface${RCol}=${CDef}<string>${RCol} - Interrace to use for HA traffic
+    ${CFlag}--ha-passive ${RCol}           - Indicates that the system is starting as passive.
+    ${CFlag}--ha-token${RCol}=${CDef}<string>${RCol}     - The token to use to sync passive to active
+    ${CFlag}--drp-user${RCol}=${CDef}<string>${RCol}     - DRP user to create after system start ${CDef}(only with ${CFlag}--systemd${CDef})${RCol}
+    ${CFlag}--drp-password${RCol}=${CDef}<string>${RCol} - DRP user password to set after system start ${CDef}(only with ${CFlag}--systemd${CDef})${RCol}
+    ${CFlag}--remove-rocketskates${RCol}   - Remove the rocketskates user after system start ${CDef}(only with ${CFlag}--systemd${CDef})${RCol}
+    ${CFlag}--local-ui${RCol}              - Set up DRP to server a local UI
+    ${CFlag}--system-user${RCol}           - System user account to create for DRP to run as
+    ${CFlag}--system-group${RCol}          - System group name
+    ${CFlag}--drp-home-dir${RCol}          - Use with system-user and system-group to set the home directory
+                              for the system-user. This path is where most important drp files live
+                              including the tftp root
+    ${CFlag}--bin-dir${RCol}               - Use this as the local of the binaries.  Required for non-root upgrades
+    ${CFlag}--container${RCol}             - Force to install as a container, not zipfile
+    ${CFlag}--container-type${RCol}=${CDef}<string>${RCol}
+                            - Container install type, ${CDef}(defaults to \"$CNT_TYPE\")${RCol}
+    ${CFlag}--container-name${RCol}=${CDef}<string>${RCol}
+                            - Set the \"docker run\" container name, ${CDef}(defaults to \"$CNT_NAME\")${RCol}
+    ${CFlag}--container-restart${RCol}=${CDef}<string>${RCol}
+                            - Set the Docker restart option, ${CDef}(defaults to \"$CNT_RESTART\")${RCol}
+                              options are:  no, on-failure, always, unless-stopped
                             * see: https://docs.docker.com/config/containers/start-containers-automatically/
-    --container-volume=<string>
-                            # Volume name to use for backing persistent storage, default "$CNT_VOL"
-    --container-registry="drp.example.com:5000"
-                            # Alternate registry to get container images from, default "$CNT_REGISTRY"
-    --container-env="<string> <string> <string>"
-                            # Define a space separated list of environment variables to pass to the
-                            # container on start (eg "RS_METRICS_PORT=8888 RS_DRP_ID=fred")
-                            # see 'dr-provision --help' for complete list of startup variables
-    --container-netns="<string>"
-                            # Define Network Namespace to start container in. Defaults to "$CNT_NETNS"
-                            # If set to empty string (""), then disable setting any network namespace
-    --universal             # Load the universal components and bootstrap the system.
-                            # This should be first and implies systemd, startup, start-runner, create-self.
-                            # Additionally, implies running universal-boostrap and starting discovery.
-                            # Subsequent options for '--initial-workflow' will be ignored if this is set.
+    ${CFlag}--container-volume${RCol}=${CDef}<string>${RCol}
+                            - Volume name to use for backing persistent storage, ${CDef}(default to \"$CNT_VOL\")${RCol}
+    ${CFlag}--container-registry${RCol}=${CDef}\"drp.example.com:5000\"${RCol}
+                            - Alternate registry to get container images from, ${CDef}(default to \"$CNT_REGISTRY\")${RCol}
+    ${CFlag}--container-env${RCol}=${CDef}\"<string> <string> <string>\"${RCol}
+                            - Define a space separated list of environment variables to pass to the
+                              container on start ${CDef}(eg \"RS_METRICS_PORT=8888 RS_DRP_ID=fred\")${RCol}
+                              see 'dr-provision --help' for complete list of startup variables
+    ${CFlag}--container-netns${RCol}=${CDef}\"<string>\"${RCol}
+                            - Define Network Namespace to start container in. ${CDef}(defaults to \"$CNT_NETNS\")${RCol}
+                              If set to empty string (\"\"), then disable setting any network namespace
+    ${CFlag}--universal${RCol}             - Load the universal components and bootstrap the system.
+                              This should be first and implies systemd, startup, start-runner, create-self.
+                              Additionally, implies running universal-boostrap and starting discovery.
+                              Subsequent options for '${CFlag}--initial-workflow${RCol}' will be ignored if this is set.
 
-    version                 # show install.sh script version and exit
-    install                 # Sets up an isolated or system 'production' enabled install
-    upgrade                 # Sets the installer to upgrade an existing 'dr-provision', for upgrade of
-                            # container; kill/rm the DRP container, then upgrade and reattach data volume
-    remove                  # Removes the system enabled install.  Requires no other flags
-                            # optional: '--remove-data' to wipe all installed data
+    ${CFlag}version${RCol}                 - Show install.sh script version and exit
+    ${CFlag}install${RCol}                 - Sets up an isolated or system 'production' enabled install
+    ${CFlag}upgrade${RCol}                 - Sets the installer to upgrade an existing 'dr-provision', for upgrade of
+                              container; kill/rm the DRP container, then upgrade and reattach data volume
+    ${CFlag}remove${RCol}                  - Removes the system enabled install.  Requires no other flags
+                              optional: '${CFlag}--remove-data${RCol}' to wipe all installed data
 
-DEFAULTS:
+${ICya}DEFAULTS${RCol}:
     |  option:               value:           |  option:               value:
     |  -------------------   ------------     |  ------------------    ------------
-    |  remove-rocketskates = false            |  version (*)         = $DEFAULT_DRP_VERSION
-    |  isolated            = false            |  nocontent           = false
-    |  upgrade             = false            |  force               = false
-    |  debug               = false            |  skip-run-check      = false
-    |  skip-prereqs        = false            |  systemd             = false
-    |  create-self         = false            |  start-runner        = false
-    |  drp-id              = unset            |  ha-id               = unset
-    |  drp-user            = rocketskates     |  drp-password        = r0cketsk8ts
-    |  startup             = false            |  keep-installer      = false
-    |  local-ui            = false            |  system-user         = root
-    |  system-group        = root             |  drp-home-dir        = /var/lib/dr-provision
-    |  bin-dir             = /usr/local/bin   |  container           = false
-    |  container-volume    = $CNT_VOL         |  container-registry  = $CNT_REGISTRY
-    |  container-type      = $CNT_TYPE           |  container-name      = $CNT_NAME
-    |  container-netns     = $CNT_NETNS             |  container-restart   = $CNT_RESTART
-    |  bootstrap           = false            |  initial-workflow    = unset
-    |  initial-contents    = unset            |  initial-profiles    = unset
-    |  initial-plugins     = unset            |  initial-subnets     = unset
-    |  ha-enabled          = false            |  ha-address          = unset
-    |  ha-passive          = false            |  ha-interface        = unset
-    |  ha-token            = unset            |  universal           = unset
-    |  systemd-services    = unset
+    |  remove-rocketskates = ${CDef}false${RCol}            |  version (*)         = ${CDef}$DEFAULT_DRP_VERSION${RCol}
+    |  isolated            = ${CDef}false${RCol}            |  nocontent           = ${CDef}false${RCol}
+    |  upgrade             = ${CDef}false${RCol}            |  force               = ${CDef}false${RCol}
+    |  debug               = ${CDef}false${RCol}            |  skip-run-check      = ${CDef}false${RCol}
+    |  skip-prereqs        = ${CDef}false${RCol}            |  systemd             = ${CDef}false${RCol}
+    |  create-self         = ${CDef}false${RCol}            |  start-runner        = ${CDef}false${RCol}
+    |  drp-id              = ${CDef}unset${RCol}            |  ha-id               = ${CDef}unset${RCol}
+    |  drp-user            = ${CDef}rocketskates${RCol}     |  drp-password        = ${CDef}r0cketsk8ts${RCol}
+    |  startup             = ${CDef}false${RCol}            |  keep-installer      = ${CDef}false${RCol}
+    |  local-ui            = ${CDef}false${RCol}            |  system-user         = ${CDef}root${RCol}
+    |  system-group        = ${CDef}root${RCol}             |  drp-home-dir        = ${CDef}/var/lib/dr-provision${RCol}
+    |  bin-dir             = ${CDef}/usr/local/bin${RCol}   |  container           = ${CDef}false${RCol}
+    |  container-volume    = ${CDef}$CNT_VOL${RCol}         |  container-registry  = ${CDef}$CNT_REGISTRY${RCol}
+    |  container-type      = ${CDef}$CNT_TYPE${RCol}           |  container-name      = ${CDef}$CNT_NAME${RCol}
+    |  container-netns     = ${CDef}$CNT_NETNS${RCol}             |  container-restart   = ${CDef}$CNT_RESTART${RCol}
+    |  bootstrap           = ${CDef}false${RCol}            |  initial-workflow    = ${CDef}unset${RCol}
+    |  initial-contents    = ${CDef}unset${RCol}            |  initial-profiles    = ${CDef}unset${RCol}
+    |  initial-plugins     = ${CDef}unset${RCol}            |  initial-subnets     = ${CDef}unset${RCol}
+    |  ha-enabled          = ${CDef}false${RCol}            |  ha-address          = ${CDef}unset${RCol}
+    |  ha-passive          = ${CDef}false${RCol}            |  ha-interface        = ${CDef}unset${RCol}
+    |  ha-token            = ${CDef}unset${RCol}            |  universal           = ${CDef}unset${RCol}
+    |  systemd-services    = ${CDef}unset${RCol}
 
-    * version examples: 'tip', 'v4.6.3', 'v4.7.0-beta1.3', or 'stable'
+    * version examples: '${CDef}tip${RCol}', '${CDef}v4.6.3${RCol}', '${CDef}v4.7.0-beta1.3${RCol}', or '${CDef}stable${RCol}'
 
-PREREQUISITES:
-    NOTE: By default, prerequisite packages will be installed if possible.  You must
-          manually install these first on a Mac OS X system. Package names may vary
-          depending on your operating system version/distro packaging naming scheme.
+${ICya}PREREQUISITES${RCol}:
+    ${CNote}NOTE: By default, prerequisite packages will be installed if possible.  You must
+          ${CNote}manually install these first on a Mac OS X system. Package names may vary
+          ${CNote}depending on your operating system version/distro packaging naming scheme.${RCol}
 
-    REQUIRED: curl
-    OPTIONAL: aria2c (if using experimental "fast downloader")
+    ${ICya}REQUIRED${RCol}: curl
+    ${ICya}OPTIONAL${RCol}: aria2c (if using experimental "fast downloader")
 
-WARNING: 'install' option will OVERWRITE existing installations
+${CWarn}WARNING: '${CFlag}install${CWarn}' option will OVERWRITE existing installations${RCol}
 
-INSTALLER VERSION:  $VERSION
-EOFUSAGE
+${ICya}INSTALLER VERSION${RCol}:  ${CDef}$VERSION${RCol}
+"
 } # end usage()
 
 # control flags
@@ -231,6 +254,7 @@ while (( $# > 0 )); do
                                     CNT_VOL_REMOVE=false                              ;;
         --nocontent|--no-content)   NO_CONTENT=true                                   ;;
         --no-sudo)                  _sudo=""                                          ;;
+        --no-colors)                COLOR_OK=false                                    ;;
         --keep-installer)           KEEP_INSTALLER=true                               ;;
         --startup)                  STARTUP=true; SYSTEMD=true                        ;;
         --systemd)                  SYSTEMD=true                                      ;;
@@ -291,6 +315,7 @@ while (( $# > 0 )); do
     esac
     shift
 done
+[[ "$COLOR_OK" == "true" ]] && set_color
 set -- "${args[@]}"
 
 if [[ "$HA_ENABLED" == "true" ]] ; then
@@ -1360,7 +1385,7 @@ EOF
          ;;
      version) echo "Installer Version: $VERSION" ;;
      *)
-         echo "Unknown action \"$1\". Please use 'install', 'upgrade', or 'remove'";;
+         echo "Unknown action \"$1\". Please use '${CFlag}install${RCol}', '${CFlag}upgrade${RCol}', or '${CFlag}remove${RCol}'";;
 esac
 
 exit_cleanup 0
