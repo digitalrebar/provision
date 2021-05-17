@@ -10,7 +10,7 @@ DEFAULT_DRP_VERSION=${DEFAULT_DRP_VERSION:-"stable"}
 exit_cleanup() {
   local _x=$1
   shift
-  [[ -n "$*" ]] && echo "EXIT MESSAGE: $*"
+  [[ -n "$*" ]] && echo -e "EXIT MESSAGE: $*"
   exit $_x
 }
 
@@ -32,7 +32,12 @@ Whi='\e[0;37m';     BWhi='\e[1;37m';    UWhi='\e[4;37m';    IWhi='\e[0;97m';    
 CWarn="$BYel"
 CFlag="$IBlu"
 CDef="$IBla"
+CFile="$IBla"
 CNote="$Yel"
+CInfo="$Cya"
+CNotice="$IYel"
+COk="$IGre"
+CErr="$IRed"
 }
 
 usage() {
@@ -176,7 +181,7 @@ ${ICya}PREREQUISITES${RCol}:
     ${ICya}REQUIRED${RCol}: curl
     ${ICya}OPTIONAL${RCol}: aria2c (if using experimental "fast downloader")
 
-${CWarn}WARNING: '${CFlag}install${CWarn}' option will OVERWRITE existing installations${RCol}
+${CWarn}WARNING${RCol}: '${CFlag}install${RCol}' option will OVERWRITE existing installations
 
 ${ICya}INSTALLER VERSION${RCol}:  ${CDef}$VERSION${RCol}
 "
@@ -307,7 +312,7 @@ while (( $# > 0 )); do
             # "^^" Paremeter Expansion is a bash v4.x feature; Mac by default is bash 3.x
             #arg_key="${arg_key^^}"
             arg_key=$(echo $arg_key | tr '[:lower:]' '[:upper:]')
-            echo "Overriding $arg_key with $arg_data"
+            echo -e "$PREF_INFO Overriding $arg_key with $arg_data"
             export $arg_key="$arg_data"
             ;;
         *)
@@ -315,13 +320,19 @@ while (( $# > 0 )); do
     esac
     shift
 done
+
 [[ "$COLOR_OK" == "true" ]] && set_color
+PREF_OK="$COk>>>$RCol"
+PREF_ERR="$CErr!!!$RCol"
+PREF_INFO="$CInfo###$RCol"
+PREF_WARN="${CWarn}Warning$RCol:"
+
 set -- "${args[@]}"
 
 if [[ "$HA_ENABLED" == "true" ]] ; then
   if [[ "$HA_TOKEN" == "" ]] ; then
     if [[ "$HA_PASSIVE" == "true" ]] ; then
-      usage; exit_cleanup 1 "Passive systems must have a token.  Specify HA_TOKEN."
+      usage; exit_cleanup 1 "Passive systems must have a token. Specify HA_TOKEN."
     fi
     HA_TOKEN="ACTIVE_NO_TOKEN"
   fi
@@ -346,14 +357,14 @@ if [[ $EUID -eq 0 ]]; then
     _sudo=""
 else
     if [[ ! -x "$(command -v sudo)" ]]; then
-        exit_cleanup 1 "FATAL: Script is not running as root and sudo command is not found. Please be root"
+        exit_cleanup 1 "${CErr}FATAL${RCol}: Script is not running as root and sudo command is not found. Please be root"
     fi
 fi
 
 # verify the container restart directives
 case $CNT_RESTART in
   no|on-failure|always|unless-stopped) true ;;
-  *) exit_cleanup 1 "FATAL: Container restart directive ('$CNT_RESTART') is not valid. See '--help' for details."
+  *) exit_cleanup 1 "${CErr}FATAL${RCol}: Container restart directive ('$CNT_RESTART') is not valid. See '${CFlag}--help${CErr}' for details."
     ;;
 esac
 
@@ -377,7 +388,7 @@ elif [[ -f /etc/centos-release || -f /etc/fedora-release || -f /etc/redhat-relea
     done
 
     if [[ ! $OS_TYPE ]]; then
-        exit_cleanup 1 "FATAL: Cannot determine Linux version we are running on!"
+        exit_cleanup 1 "${CErr}FATAL${RCol}: Cannot determine Linux version we are running on!"
     fi
 elif [[ -f /etc/debian_version ]]; then
     OS_TYPE=debian
@@ -399,12 +410,16 @@ esac
 check_drp_ready() {
     COUNT=0
     while ! drpcli info get > /dev/null 2>&1 ; do
-        echo "DRP is not up yet, waiting ($COUNT) ..."
+        if (( $COUNT == 0 )); then
+            echo -e "$PREF_INFO Waiting for dr-provision to start ..."
+        else
+            echo -n "."
+        fi
         sleep 2
         # Pre-increment for compatibility with Bash 4.1+
         ((++COUNT))
         if (( $COUNT > 10 )) ; then
-            exit_cleanup 1 "FATAL: DRP Failed to start"
+            exit_cleanup 1 "${CErr}FATAL${RCol}: DRP Failed to start"
         fi
     done
 }
@@ -413,7 +428,7 @@ check_drp_ready() {
 install_epel() {
     if [[ $OS_FAMILY == rhel ]] ; then
         if ( `yum repolist enabled | grep -q "^epel/"` ); then
-            echo "EPEL repository installed already."
+            echo -e "$PREF_INFO EPEL repository installed already."
         else
             if [[ $OS_TYPE != fedora ]] ; then
                 $_sudo yum install -y epel-release
@@ -425,24 +440,24 @@ install_epel() {
 # set our downloader GET variable appropriately - supports standard
 # (curl) downloader or (experimental) aria2c fast downloader
 get() {
-    [[ -z "$*" ]] && exit_cleanup 1 "FATAL: Internal error, get() expects files to get"
+    [[ -z "$*" ]] && exit_cleanup 1 "${CErr}FATAL${RCol}: Internal error, get() expects files to get"
 
     if [[ "$FAST_DOWNLOADER" == "true" ]]; then
         if which aria2c > /dev/null; then
             GET="aria2c --quiet=true --continue=true --max-concurrent-downloads=10 --max-connection-per-server=16 --max-tries=0"
         else
-            exit_cleanup 1 "FATAL: '--fast-downloader' specified, but couldn't find tool ('aria2c')."
+            exit_cleanup 1 "${CErr}FATAL${RCol}: '--fast-downloader' specified, but couldn't find tool ('aria2c')."
         fi
     else
         if which curl > /dev/null; then
             GET="curl -sfL"
         else
-            exit_cleanup 1 "FATAL: Unable to find downloader tool ('curl')."
+            exit_cleanup 1 "${CErr}FATAL${RCol}: Unable to find downloader tool ('curl')."
         fi
     fi
     for URL in $*; do
         FILE=${URL##*/}
-        echo ">>> Downloading file:  $FILE"
+        echo -e "$PREF_OK Downloading file:  $FILE"
         $GET -o $FILE $URL
     done
 }
@@ -459,7 +474,7 @@ setup_system_user() {
     RC=0
     $_sudo groupadd --system ${SYSTEM_GROUP} || RC=$?
     if [[ ${RC} != 0 && ${RC} != 9 ]]; then
-        exit_cleanup ${RC} "FATAL: Unable to create system group ${SYSTEM_GROUP}"
+        exit_cleanup ${RC} "${CErr}FATAL${RCol}: Unable to create system group ${SYSTEM_GROUP}"
     fi
     if [[ ${OS_FAMILY} == "debian" ]]; then
         $_sudo adduser --system --home ${DRP_HOME_DIR} --quiet --group ${SYSTEM_USER}
@@ -473,7 +488,7 @@ setup_system_user() {
     if [[ ${RC} == 0 || ${RC} == 9 ]]; then
         return
     fi
-    exit_cleanup ${RC} "FATAL: Unable to create system user ${SYSTEM_USER}"
+    exit_cleanup ${RC} "${CErr}FATAL${RCol}: Unable to create system user ${SYSTEM_USER}"
 }
 
 set_ownership_of_drp() {
@@ -482,7 +497,7 @@ set_ownership_of_drp() {
     # Make sure a directory is created so DRP does not hit
     # permissions errors trying to use the home directory.
     if [ ! -d "${DRP_HOME_DIR}" ]; then
-        echo "DRP Home directory ${DRP_HOME_DIR} did not exist - creating..."
+        echo -e "$PREF_OK Creating DRP Home directory ${CDef}(${DRP_HOME_DIR})${RCol}"
         $_sudo mkdir -p ${DRP_HOME_DIR}
     fi
     $_sudo chown -R ${SYSTEM_USER}:${SYSTEM_GROUP} ${DRP_HOME_DIR}
@@ -499,9 +514,9 @@ setcap_drp_binary() {
                 $_sudo setcap "cap_net_raw,cap_net_bind_service=+ep" ${PROVISION}
             ;;
             *)
-                echo "Your OS Family ${OS_FAMILY} does not support setcap" \
-                     "and may not be able to bind privileged ports when" \
-                     "running as non-root user ${SYSTEM_USER}"
+                echo -e "$PREF_INFO Your OS Family ${OS_FAMILY} does not support setcap" \
+                     "  and may not be able to bind privileged ports when" \
+                     "  running as non-root user ${SYSTEM_USER}"
             ;;
         esac
     fi
@@ -514,7 +529,7 @@ check_bins_darwin() {
             if [[ "$FAST_DOWNLOADER" == "true" ]]; then
                 _bin="aria2"
                 if ! which $_bin > /dev/null 2>&1; then
-                    echo "Must have binary '$_bin' installed."
+                    echo -e "$PREF_ERR Must have binary '$_bin' installed."
                     echo "eg:   brew install $_bin"
                     error=1
                 fi
@@ -522,7 +537,7 @@ check_bins_darwin() {
           ;;
         *)
             if ! which $_bin > /dev/null 2>&1; then
-                echo "Must have binary '$_bin' installed."
+                echo -e "$PREF_ERR Must have binary '$_bin' installed."
                 echo "eg:   brew install $_bin"
                 error 1
             fi
@@ -536,7 +551,7 @@ check_pkgs_linux() {
     local _pkg=$1
         if ! which $_pkg &>/dev/null; then
             [[ $_pkg == "aria2" && "$FAST_DOWNLOADER" != "true" ]] && return 0
-            echo "Missing dependency '$_pkg', attempting to install it... "
+            echo -e "$PREF_INFO Missing dependency '$_pkg', attempting to install it... "
             if [[ $OS_FAMILY == rhel ]] ; then
                 echo $IN_EPEL | grep -q $_pkg && install_epel
                 $_sudo yum install -y $_pkg
@@ -547,7 +562,7 @@ check_pkgs_linux() {
 } # end check_pkgs_linux()
 
 ensure_packages() {
-    echo "Ensuring required tools are installed"
+    echo -e "$PREF_OK Ensuring required tools are installed"
     case $OS_FAMILY in
         darwin)
             error=0
@@ -557,8 +572,8 @@ ensure_packages() {
             done
 
             if [[ $error == 1 ]]; then
-                echo "After install missing components, restart the terminal to pick"
-                echo "up the newly installed commands, and re-run the installer."
+                echo -e "$PREF_ERR After install missing components, restart the terminal to pick"
+                echo "  up the newly installed commands, and re-run the installer."
                 echo
                 exit_cleanup 1
             fi
@@ -571,38 +586,38 @@ ensure_packages() {
             done
         ;;
         coreos)
-            echo "CoreOS does not require any packages to be installed.  DRP will be"
-            echo "installed from the Docker Hub registry."
+            echo -e "$PREF_INFO CoreOS does not require any packages to be installed.  DRP will be"
+            echo "  installed from the Docker Hub registry."
         ;;
         photon)
             if ! which tar > /dev/null 2>&1; then
-                echo "Installing packages for Photon Linux..."
+                echo -e "$PREF_OK Installing packages for Photon Linux..."
                 tdnf -y makecache
                 tdnf -y install tar
             else
-                echo "'tar' already installed on Photon Linux..."
+                echo -e "$PREF_INFO 'tar' already installed on Photon Linux..."
             fi
         ;;
         *)
-            exit_cleanup 1 "FATAL: Unsupported OS Family ($OS_FAMILY)."
+            exit_cleanup 1 "${CErr}FATAL${RCol}: Unsupported OS Family ($OS_FAMILY)."
         ;;
     esac
 } # end ensure_packages()
 
 # output a friendly statement on how to download ISOS via fast downloader
 show_fast_isos() {
-    cat <<FASTMSG
-Option '--fast-downloader' requested.  You may download the ISO images using
-'aria2c' command to significantly reduce download time of the ISO images.
+    echo -e "
+$PREF_INFO Option '${CFlag}--fast-downloader${RCol}' requested.  You may download the ISO images using
+  'aria2c' command to significantly reduce download time of the ISO images.
 
-NOTE: The following genereted scriptlet should download, install, and enable
-      the ISO images.  VERIFY SCRIPTLET before running it.
+${CNote} NOTE: The following genereted scriptlet should download, install, and enable
+      ${CNote}the ISO images.  VERIFY SCRIPTLET before running it.${RCol}
 
       YOU MUST START 'dr-provision' FIRST! Example commands:
 
 ###### BEGIN scriptlet
-  export CMD="aria2c --continue=true --max-concurrent-downloads=10 --max-connection-per-server=16 --max-tries=0"
-FASTMSG
+  export CMD=\"aria2c --continue=true --max-concurrent-downloads=10 --max-connection-per-server=16 --max-tries=0\"
+"
 
     for BOOTENV in $*
     do
@@ -622,19 +637,19 @@ FASTMSG
 remove_container() {
     case $CNT_TYPE in
         docker)
-            $_sudo docker kill $CNT_NAME > /dev/null && echo "Killed docker container '$CNT_NAME'"
-            $_sudo docker rm $CNT_NAME > /dev/null && echo "Removed docker container '$CNT_NAME'"
+            $_sudo docker kill $CNT_NAME > /dev/null && echo -e "$PREF_OK Killed docker container '$CNT_NAME'"
+            $_sudo docker rm $CNT_NAME > /dev/null && echo -e "$PREF_OK Removed docker container '$CNT_NAME'"
             if [[ "$CNT_VOL_REMOVE" == "true" ]]; then
-                $_sudo docker volume rm $CNT_VOL > /dev/null && echo "Removed backing volume named '$CNT_VOL'"
+                $_sudo docker volume rm $CNT_VOL > /dev/null && echo -e "$PREF_OK Removed backing volume named '$CNT_VOL'"
             else
-                echo ">>> Not removing container data volume '$CNT_VOL'"
+                echo -e "$PREF_OK Not removing container data volume '$CNT_VOL'"
                 if [[ "$MODE" == "remove" ]]; then
                     echo "    To remove: '$_sudo docker volume rm $CNT_VOL'"
                     echo "    or use '--remove-data' next time ... "
                 fi
             fi
             ;;
-        *)  exit_cleanup 1 "Container type '$CNT_TYPE' not supported in installer."
+        *)  exit_cleanup 1 "${CErr}Error${RCol}: Container type '$CNT_TYPE' not supported in installer."
             ;;
     esac
 } # end remove_container()
@@ -648,41 +663,41 @@ install_container() {
     fi
     case $CNT_TYPE in
         docker)
-            ! which docker > /dev/null 2>&1 && exit_cleanup 1 "Container install requested but no 'docker' in PATH ($PATH)."
+            ! which docker > /dev/null 2>&1 && exit_cleanup 1 "${CErr}Error${RCol}: Container install requested but no 'docker' in PATH ($PATH)."
             if [[ "$UPGRADE" == "false" ]]; then
                 $_sudo docker volume create $CNT_VOL > /dev/null
                 VOL_MNT=$($_sudo docker volume inspect $CNT_VOL | grep Mountpoint | awk -F\" '{ print $4 }')
-                echo "Created docker volume named '$CNT_VOL' with mountpoint '$VOL_MNT'"
+                echo -e "$PREF_OK Created docker volume named '$CNT_VOL' with mountpoint '$VOL_MNT'"
             else
                 if $_sudo docker volume inspect $CNT_VOL > /dev/null 2>&1; then
-                    echo "Attempting to reconnect volume '$CNT_VOL'"
+                    echo -e "$PREF_INFO Attempting to reconnect volume '$CNT_VOL'"
                 else
-                    exit_cleanup 1 "No existing volume '$CNT_VOL' found to reconnect."
+                    exit_cleanup 1 "${CErr}Error${RCol}: No existing volume '$CNT_VOL' found to reconnect."
                 fi
             fi
             if [[ -z "$CNT_NETNS" ]]; then
-              echo "WARNING:  No network namespace set - you may have issues with DHCP and TFTP depending on your use case."
+              echo -e "$PREF_WARN No network namespace set - you may have issues with DHCP and TFTP depending on your use case."
             else
               NETNS="--net $CNT_NETNS"
             fi
             CMD="$_sudo docker run $ENV_OPTS --restart "$CNT_RESTART" --volume $CNT_VOL:/provision/drp-data --name \"$CNT_NAME\" -itd $NETNS ${CNT_REGISTRY}/digitalrebar/provision:$DRP_VERSION"
-            echo "Starting container with following run command:"
+            echo -e "$PREF_INFO Starting container with following run command:"
             echo "$CMD"
             eval $CMD
 
             echo ""
-            echo "Digital Rebar Provision container is using backing volume: $CNT_VOL"
+            echo -e "$PREF_INFO Digital Rebar Provision container is using backing volume: $CNT_VOL"
             echo "Volume is backed on host filesystem at: $VOL_MNT"
             echo ""
-            echo "Docker container run time information:"
+            echo -e "$PREF_INFO Docker container run time information:"
             $_sudo docker ps --filter name=$CNT_NAME
             echo ""
-            echo ">>>  NOTICE:  If you intend to upgrade this container, record your 'install.sh' options  <<< "
-            echo ">>>           for the 'upgrade' command - you must reuse the same options to obtain the  <<< "
-            echo ">>>           same installed results in the upgraded container.  You have been warned!   <<< "
+            echo -e "${CNotice}>>>  NOTICE:  If you intend to upgrade this container, record your 'install.sh' options  <<< ${RCol}"
+            echo -e "${CNotice}>>>           for the 'upgrade' command - you must reuse the same options to obtain the  <<< ${RCol}"
+            echo -e "${CNotice}>>>           same installed results in the upgraded container.  You have been warned!   <<< ${RCol}"
             echo ""
             ;;
-        *)  exit_cleanup 1 "Container type '$CNT_TYPE' not supported in installer."
+        *)  exit_cleanup 1 "${CErr}Error${RCol}: Container type '$CNT_TYPE' not supported in installer."
             ;;
     esac
 } # end install_container()
@@ -696,12 +711,12 @@ if [[ $OS_FAMILY == "container" || $CONTAINER == "true" ]]; then
     GEN_MSG="Unsupported mode '$MODE'"
     case $MODE in
         install)
-            echo "Installing Digital Rebar Provision as a container."
+            echo -e "$PREF_OK Installing Digital Rebar Provision as a container."
             install_container
             exit_cleanup $?
             ;;
         upgrade)
-            echo "Upgrading Digital Rebar Provision as a container."
+            echo -e "$PREF_OK Upgrading Digital Rebar Provision as a container."
             UPGRADE=true
             CNT_VOL_REMOVE=false
             remove_container
@@ -720,7 +735,7 @@ case $arch in
     aarch64)      arch=arm64   ;;
     armv7l)       arch=arm_v7  ;;
     ppc64le)      arch=ppc64le ;;
-    *)            exit_cleanup 1 "FATAL: architecture ('$arch') not supported" ;;
+    *)            exit_cleanup 1 "${CErr}FATAL${RCol}: architecture ('$arch') not supported" ;;
 esac
 
 case $(uname -s) in
@@ -756,13 +771,13 @@ case $(uname -s) in
             starter="/etc/init.d/dr-provision start"
             enabler="/etc/init.d/dr-provision enable"
         else
-            echo "No idea how to install startup stuff -- not using systemd, upstart, or sysv init"
+            echo -e "$PREF_ERR No idea how to install startup stuff -- not using systemd, upstart, or sysv init"
             exit_cleanup 1
         fi
         shasum="command sha256sum";;
     *)
         # Someday, support installing on Windows.  Service creation could be tricky.
-        echo "No idea how to check sha256sums"
+        echo -e "$PREF_ERR No idea how to check sha256sums"
         exit_cleanup 1;;
 esac
 
@@ -782,20 +797,20 @@ case $MODE in
 
              if [[ "$ISOLATED" == "false" || "$SKIP_RUN_CHECK" == "false" ]]; then
                  if pgrep dr-provision; then
-                     echo "'dr-provision' service is running, CAN NOT upgrade ... please stop service first"
+                     echo -e "$PREF_ERR 'dr-provision' service is running, CAN NOT upgrade ... please stop service first"
                      exit_cleanup 9
                  else
-                     echo "'dr-provision' service is not running, beginning install process ... "
+                     echo -e "$PREF_INFO 'dr-provision' service is not running, beginning install process ... "
                  fi
              else
-                 echo "Skipping 'dr-provision' service run check as requested ..."
+                 echo -e "$PREF_INFO Skipping 'dr-provision' service run check as requested ..."
              fi
 
-             [[ "$SKIP_DEPENDS" == "false" ]] && ensure_packages || echo "Skipping dependency checks as requested ... "
+             [[ "$SKIP_DEPENDS" == "false" ]] && ensure_packages || echo -e "$PREF_INFO Skipping dependency checks as requested ... "
 
              if [[ "$ISOLATED" == "false" ]]; then
                  TMP_INSTALLER_DIR=$(mktemp -d /tmp/drp.installer.XXXXXX)
-                 echo "Using temp directory to extract artifacts to and install from ('$TMP_INSTALLER_DIR')."
+                 echo -e "$PREF_INFO Using temp directory to extract artifacts to and install from ('$TMP_INSTALLER_DIR')."
                  OLD_PWD=$(pwd)
                  cd $TMP_INSTALLER_DIR
                  TMP_INST=$TMP_INSTALLER_DIR/tools/install.sh
@@ -805,20 +820,20 @@ case $MODE in
              if [ -e server ] ; then
                  if [ ! -e bin/linux/amd64/drpcli ] ; then
                      echo "It appears that nothing has been built."
-                     echo "Please run tools/build.sh and then rerun this command".
+                     echo -e "Please run ${CFlag}tools/build.sh${RCol} and then rerun this command".
                      exit_cleanup 1
                  fi
              else
                  # We aren't a build tree, but are we extracted install yet?
                  # If not, get the requested version.
                  if [[ ! -e sha256sums || $force ]] ; then
-                     echo "Installing Version $DRP_VERSION of Digital Rebar Provision"
+                     echo -e "$PREF_OK Installing Version ${IGre}$DRP_VERSION${RCol} of ${BWhi}Digital Rebar Provision${RCol}"
                      ZIP="dr-provision.zip"
                      SHA="dr-provision.sha256"
                      if [[ -n "$ZIP_FILE" ]]
                      then
                        [[ "$ZIP_FILE" != "dr-provision.zip" ]] && cp "$ZIP_FILE" dr-provision.zip
-                       echo "WARNING:  No sha256sum check performed for '--zip-file' mode."
+                       echo -e "$PREF_WARN  No sha256sum check performed for '${CFlag}--zip-file${RCol}' mode."
                        echo "          We assume you've already verified your download file."
                      else
                        if [[ ! -e rackn-catalog.json ]] ; then
@@ -845,26 +860,26 @@ case $MODE in
 
                      if ! $tar -xf dr-provision.zip; then
                        # try to fall back to bsdtar
-                       echo "Attempting to auto recover from above 'tar' errors."
-                       echo "Newer 'install.sh' script being used with older dr-provision.zip file."
-                       echo "Attempting to locate and use 'bsdtar' as a fallback..."
+                       echo -e "$PREF_INFO Attempting to auto recover from above 'tar' errors."
+                       echo -e "$PREF_INFO Newer 'install.sh' script being used with older dr-provision.zip file."
+                       echo -e "$PREF_INFO Attempting to locate and use 'bsdtar' as a fallback..."
 
                        if which bsdtar > /dev/null; then
                          if ! bsdtar -xf dr-provision.zip; then
-                           echo "!!!  FAILED to extract 'dr-provision.zip' with installed 'bsdtar'."
-                           echo "!!!  Not cleaning up for forensic analysis."
+                           echo -e "$PREF_ERR FAILED to extract 'dr-provision.zip' with installed 'bsdtar'."
+                           echo -e "$PREF_ERR Not cleaning up for forensic analysis."
                            exit 1
                          fi
                        else
-                         echo "'bsdtar' not found in path, attempting to install it... "
+                         echo -e "$PREF_OK 'bsdtar' not found in path, attempting to install it... "
                          if check_pkgs_linux bsdtar; then
                            if ! bsdtar -xf dr-provision.zip; then
-                             echo "!!!  Last ditch attempt FAILED to unpack 'dr-provision.zip' file."
-                             echo "!!!  Not attempting cleanup for debug and troubleshooting reasons."
+                             echo -e "$PREF_ERR Last ditch attempt FAILED to unpack 'dr-provision.zip' file."
+                             echo -e "$PREF_ERR Not attempting cleanup for debug and troubleshooting reasons."
                              exit 1
                            fi
                          else
-                           exit_cleanup 1 "FAILED to install 'bsdtar' to satisfy dependencies.  Please install it and retry."
+                           exit_cleanup 1 "${CErr}Error${RCol}: FAILED to install 'bsdtar' to satisfy dependencies.  Please install it and retry."
                          fi
                        fi
                      fi
@@ -873,10 +888,10 @@ case $MODE in
              fi
 
              if [[ $NO_CONTENT == false ]]; then
-                 echo "Installing Version $DRP_CONTENT_VERSION of Digital Rebar Provision Community Content"
+                 echo -e "$PREF_OK Installing Version ${IGre}$DRP_CONTENT_VERSION${RCol} of ${BWhi}Digital Rebar Provision Community Content${RCol}"
                  if [[ -n "$ZIP_FILE" ]]; then
-                   echo "WARNING: '--zip-file' specified, still trying to download community content..."
-                   echo "         (specify '--no-content' to skip download of community content"
+                   echo -e "$PREF_WARN '${CFlag}--zip-file${RCol}' specified, still trying to download community content..."
+                   echo "         (specify '${CFlag}--no-content${RCol}' to skip download of community content"
                  fi
 
                  if [[ ! -e rackn-catalog.json ]] ; then
@@ -899,32 +914,32 @@ case $MODE in
                  if [[ $initfile ]]; then
                      if [[ -r $initdest ]]
                      then
-                         echo "WARNING ... WARNING ... WARNING"
-                         echo "initfile ('$initfile') exists already, not overwriting it"
-                         echo "please verify 'dr-provision' startup options are correct"
-                         echo "for your environment and the new version .. "
-                         echo ""
-                         echo "specifically verify: '--file-root=<tftpboot directory>'"
+                         echo -e "$PREF_WARN"
+                         echo -e "${CWarn}  initfile ('$initfile') exists already, not overwriting it${RCol}"
+                         echo -e "${CWarn}  please verify 'dr-provision' startup options are correct${RCol}"
+                         echo -e "${CWarn}  for your environment and the new version .. ${RCol}"
+                         echo
+                         echo -e "${CWarn}  specifically verify: '${CFlag}--file-root=${CDef}<tftpboot directory>${CWarn}'${RCol}"
                      else
                          $_sudo sed "s:/usr/local/bin/dr-provision:$PROVISION:g" "$initfile" > "$initdest"
                      fi
                      # output our startup helper messages only if SYSTEMD isn't specified
                      if [[ "$SYSTEMD" == "false" || "$STARTUP" == "false" ]]; then
                         echo
-                        echo "######### You can start the DigitalRebar Provision service with:"
-                        echo "$starter"
-                        echo "######### You can enable the DigitalRebar Provision service with:"
-                        echo "$enabler"
+                        echo -e "$PREF_INFO You can ${BIWhi}start${RCol} the ${ICya}DigitalRebar Provision service${RCol} with:"
+                        echo -e "  ${Yel}$starter${RCol}"
+                        echo -e "$PREF_INFO You can ${BIWhi}enable${RCol} the ${ICya}DigitalRebar Provision service${RCol} with:"
+                        echo -e "  ${Yel}$enabler${RCol}"
                     else
-                        echo "######### Will attempt to execute startup procedures ('--startup' specified)"
-                        echo "$starter"
-                        echo "$enabler"
+                        echo -e "$PREF_INFO Will attempt to execute startup procedures ('${CFlag}--startup${RCol}' specified)"
+                        echo -e "  ${Yel}$starter${RCol}"
+                        echo -e "  ${Yel}$enabler${RCol}"
 
                     fi
                  fi
 
                  if [[ ! -e ${DRP_HOME_DIR}/digitalrebar/tftpboot && -e /var/lib/tftpboot ]] ; then
-                     echo "MOVING /var/lib/tftpboot to ${DRP_HOME_DIR}/tftpboot location ... "
+                     echo -e "$PREF_OK Moving ${CFile}/var/lib/tftpboot${RCol} to ${CFile}${DRP_HOME_DIR}/tftpboot${RCol} location ... "
                      $_sudo mv /var/lib/tftpboot ${DRP_HOME_DIR}
                  fi
 
@@ -940,14 +955,14 @@ case $MODE in
                  # move aside/preserve an existing drpcli - this machine might be under
                  # control of another DRP Endpoint, and this will break the installer (text file busy)
                  if [[ -f "$CLI" ]]; then
-                     echo "SAVING '${BIN_DIR}/drpcli' to backup file ($CLI_BKUP)"
+                     echo -e "$PREF_OK Saving '${CFile}${BIN_DIR}/drpcli${RCol}' to backup file (${CFile}$CLI_BKUP${RCol})"
                      $_sudo mv "$CLI" "$CLI_BKUP"
                  fi
 
                  INST="${BIN_DIR}/drp-install.sh"
                  $_sudo cp $TMP_INST $INST && $_sudo chmod 755 $INST
-                 echo "Install script saved to '$INST'"
-                 echo "(run '$_sudo $INST remove' to uninstall DRP - must be root)"
+                 echo -e  "$PREF_INFO Install script saved to '${CFile}$INST${RCol}'"
+                 echo -e "$PREF_INFO You can ${BIWhi}uninstall${RCol} DRP with '${IRed}$_sudo $INST remove${RCol}' - must be root)"
 
                  TFTP_DIR="${DRP_HOME_DIR}/tftpboot"
                  $_sudo cp "$binpath"/* "$bindest"
@@ -1113,7 +1128,7 @@ EOF
                                      chmod +x /tmp/jq
                                      ID=$(drpcli info get | /tmp/jq .id -r | sed -r 's/:/-/g')
                                      rm /tmp/jq
-                                     echo "Setting initial workflow to '$INITIAL_WORKFLOW' for Machine '$ID'"
+                                     echo -e "$PREF_OK Setting initial workflow to '$INITIAL_WORKFLOW' for Machine '$ID'"
                                      drpcli machines workflow "Name:$ID" "$INITIAL_WORKFLOW" >/dev/null
                                  fi
                              fi
@@ -1124,16 +1139,16 @@ EOF
                                      IFS=',' read -ra subnet_array <<< "$INITIAL_SUBNETS"
                                      for i in "${subnet_array[@]}" ; do
                                        if [[ $i == http* ]] ; then
-                                         echo "Creating subnet from URL '$i'"
+                                         echo -e "$PREF_OK Creating subnet from URL '$i'"
                                          drpcli subnets create ${i}
                                        elif [[ -f ${OLD_PWD}/$i ]] ; then
-                                         echo "Creating subnet from file '${OLD_PWD}/$i'"
+                                         echo -e "$PREF_OK Creating subnet from file '${OLD_PWD}/$i'"
                                          drpcli subnets create ${OLD_PWD}/${i}
                                        elif [[ -f "$i" ]] ; then
-                                         echo "Creating subnet from file '${i}'"
+                                         echo -e "$PREF_OK Creating subnet from file '${i}'"
                                          drpcli subnets create ${i}
                                        else
-                                         echo ">>> WARNING: unable to read subnet file '$i' or '${OLD_PWD}/$i'; no SUBNET created"
+                                         echo -e "$PREF_WARN unable to read subnet file '$i' or '${OLD_PWD}/$i'; no SUBNET created"
                                        fi
                                      done
                                      IFS="${OLD_IFS}"
@@ -1160,7 +1175,7 @@ EOF
                      fi
                  else
                      if [[ "$STARTUP" == "true" ]]; then
-                         echo "######### Attempting startup of 'dr-provision' ('--startup' specified)"
+                         echo -e "$PREF_INFO Attempting startup of 'dr-provision' ('${CFlag}--startup${RCol}' specified)"
                          eval "$enabler"
                          eval "$starter"
 
@@ -1244,8 +1259,8 @@ EOF
                      rm -rf $TMP_INSTALLER_DIR
                  else
                      echo ""
-                     echo "######### Installer artifacts are in '$TMP_INSTALLER_DIR' - to purge:"
-                     echo "$_sudo rm -rf $TMP_INSTALLER_DIR"
+                     echo -e "$PREF_INFO Installer artifacts are in '${CFile}$TMP_INSTALLER_DIR${RCol}' - to purge:"
+                     echo -e "  ${IYel}$_sudo rm -rf $TMP_INSTALLER_DIR${RCol}"
                  fi
 
              # do an "isolated" mode install
@@ -1263,16 +1278,16 @@ EOF
 
                  if [[ "$STARTUP" == "false" ]]; then
                      echo
-                     echo "********************************************************************************"
+                     echo -e "${CInfo}********************************************************************************"
                      echo
-                     echo "# Run the following commands to start up dr-provision in a local isolated way."
-                     echo "# The server will store information and serve files from the drp-data directory."
+                     echo -e "$PREF_INFO Run the following commands to start up dr-provision in a local isolated way."
+                     echo -e "$PREF_INFO The server will store information and serve files from the drp-data directory."
                      echo
                  else
                      echo
-                     echo "********************************************************************************"
+                     echo -e "${CInfo}********************************************************************************"
                      echo
-                     echo "# Will attempt to startup the 'dr-provision' service ... "
+                     echo -e "$PREF_INFO Will attempt to startup the 'dr-provision' service ... "
                  fi
 
                  if [[ $IPADDR == "" ]] ; then
@@ -1303,10 +1318,10 @@ EOF
                  if [[ $OS_FAMILY == darwin ]]; then
                      bcast=$(netstat -rn | grep "255.255.255.255 " | awk '{ print $6 }')
                      if [[ $bcast == "" && $IPADDR ]] ; then
-                             echo "# No broadcast route set - this is required for Darwin < 10.9."
-                             echo "$_sudo route add 255.255.255.255 $IPADDR"
-                             echo "# No broadcast route set - this is required for Darwin > 10.9."
-                             echo "$_sudo route -n add -net 255.255.255.255 $IPADDR"
+                             echo -e "$PREF_INFO No broadcast route set - this is required for Darwin < 10.9."
+                             echo -e "  ${IYel}$_sudo route add 255.255.255.255 $IPADDR${RCol}"
+                             echo -e "$PREF_INFO No broadcast route set - this is required for Darwin > 10.9."
+                             echo -e "  ${IYel}$_sudo route -n add -net 255.255.255.255 $IPADDR${RCol}"
                      fi
                  fi
 
@@ -1320,7 +1335,7 @@ EOF
 
                  if [[ "$STARTUP" == "true" ]]; then
                      eval $STARTER
-                     echo "'dr-provision' running processes:"
+                     echo -e "$PREF_INFO 'dr-provision' running processes:"
                      ps -eo pid,args -o comm  | grep -v grep | grep dr-provision
                      echo
 
@@ -1334,58 +1349,58 @@ EOF
              fi
 
              echo
-             echo "# Once dr-provision is started, setup a base discovery configuration"
-             echo "  ${EP}drpcli bootenvs uploadiso sledgehammer"
-             echo "  ${EP}drpcli prefs set defaultWorkflow discover-base unknownBootEnv discovery defaultBootEnv sledgehammer defaultStage discover"
-
+             echo -e "$PREF_INFO Once dr-provision is started, setup a base discovery configuration"
+             echo -e "  ${IYel}${EP}drpcli bootenvs uploadiso sledgehammer${RCol}"
+             echo -e "  ${IYel}${EP}drpcli prefs set defaultWorkflow discover-base unknownBootEnv discovery defaultBootEnv sledgehammer defaultStage discover${RCol}"
              if [[ $NO_CONTENT == true ]] ; then
-                 echo "# Add common utilities (sourced from RackN)"
-                 echo "  ${EP}drpcli contents upload catalog:task-library-$DRP_CONTENT_VERSION"
+                echo
+                 echo -e "$PREF_INFO Add common utilities (sourced from RackN)"
+                 echo -e "  ${IYel}${EP}drpcli contents upload catalog:task-library-$DRP_CONTENT_VERSION${RCol}"
              fi
              echo
-             echo "# Optionally, locally cache the isos for common community operating systems"
-             echo "  ${EP}drpcli bootenvs uploadiso ubuntu-18.04-install"
-             echo "  ${EP}drpcli bootenvs uploadiso centos-7-install"
+             echo -e "$PREF_INFO Optionally, locally cache the isos for common community operating systems"
+             echo -e "  ${IYel}${EP}drpcli bootenvs uploadiso ubuntu-18.04-install${RCol}"
+             echo -e "  ${IYel}${EP}drpcli bootenvs uploadiso centos-7-install${RCol}"
              echo
              [[ "$FAST_DOWNLOADER" == "true" ]] && show_fast_isos "ubuntu-16.04-install" "centos-7-install" "sledgehammer"
 
          ;;
      remove)
          if [[ $ISOLATED == true ]] ; then
-             echo "Remove the directory that the initial isolated install was done in."
+             echo -e "$PREF_INFO Remove the directory that the initial isolated install was done in."
              exit_cleanup 0
          fi
          if pgrep dr-provision; then
-             echo "'dr-provision' service is running, CAN NOT remove ... please stop service first"
+             echo -e "$PREF_ERR 'dr-provision' service is running, CAN NOT remove ... please stop service first"
              exit_cleanup 9
          else
-             echo "'dr-provision' service is not running, beginning removal process ... "
+             echo -e "$PREF_INFO 'dr-provision' service is not running, beginning removal process ... "
          fi
          if [[ -f "$CLI_BKUP" ]]
          then
-           echo "Restoring original 'drpcli'."
+           echo -e "$PREF_INFO Restoring original 'drpcli'."
            $_sudo mv "$CLI_BKUP" "$CLI"
            RM_CLI=""
          else
            RM_CLI="$bindest/drpcli"
-           echo "No 'drpcli' backup file found ('$CLI_BKUP')."
+           echo -e "No 'drpcli' backup file found ('$CLI_BKUP')."
          fi
-         echo "Removing program and service files"
+         echo -e "$PREF_OK Removing program and service files"
          $_sudo rm -f "$bindest/dr-provision" "$RM_CLI" "$initdest"
          [[ -d /etc/systemd/system/dr-provision.service.d ]] && rm -rf /etc/systemd/system/dr-provision.service.d
          [[ -f ${BIN_DIR}/drp-install.sh ]] && rm -f ${BIN_DIR}/drp-install.sh
          if [[ $REMOVE_DATA == true ]] ; then
-             printf "Removing data files and directories ... "
+             echo -e "$PREF_OK Removing data files and directories ... "
              [[ -d "/usr/share/dr-provision" ]] && RM_DIR="/usr/share/dr-provision " || true
              [[ -d "/etc/dr-provision" ]] && RM_DIR+="/etc/dr-provision " || true
              [[ -d "${DRP_HOME_DIR}" ]] && RM_DIR+="${DRP_HOME_DIR}" || true
-             echo "$RM_DIR"
+             echo -e "${CFile}$RM_DIR${RCol}"
              $_sudo rm -rf $RM_DIR
          fi
          ;;
-     version) echo "Installer Version: $VERSION" ;;
+     version) echo -e "Installer Version: ${CDef}$VERSION${RCol}" ;;
      *)
-         echo "Unknown action \"$1\". Please use '${CFlag}install${RCol}', '${CFlag}upgrade${RCol}', or '${CFlag}remove${RCol}'";;
+         echo -e "Unknown action \"$1\". Please use '${CFlag}install${RCol}', '${CFlag}upgrade${RCol}', or '${CFlag}remove${RCol}'";;
 esac
 
 exit_cleanup 0

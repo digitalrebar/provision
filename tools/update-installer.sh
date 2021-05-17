@@ -16,7 +16,7 @@ usage() {
 #  cat  << EOT
 echo -e "
 ${ICya}USAGE${RCol}:   ${BYel}$0${RCol} ${CFlag}-h${RCol}
-   ${ICya}Or${RCol}:   ${BYel}$0${RCol} ${CFlag}-d dest [ -k key -p password -f file -b bucket -r region ]${RCol}
+   ${ICya}OR${RCol}:   ${BYel}$0${RCol} ${CFlag}-d dest [ -k key -p password -f file -b bucket -r region ]${RCol}
 
 ${ICya}OPTIONS${RCol}:
          ${CFlag}-h${RCol}              Print this help statement
