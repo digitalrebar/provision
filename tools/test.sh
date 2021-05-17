@@ -3,8 +3,6 @@ set -e
 export PATH="$PWD/bin/$(go env GOOS)/$(go env GOARCH):$PATH"
 export GO111MODULE=on
 
-set -x
-
 tools/build-one.sh cmds/drpcli
 tools/build-one.sh cmds/incrementer
 
