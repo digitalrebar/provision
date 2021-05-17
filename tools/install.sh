@@ -457,7 +457,7 @@ get() {
     fi
     for URL in $*; do
         FILE=${URL##*/}
-        echo -e "$PREF_OK Downloading file:  $FILE"
+        echo -e "$PREF_OK Downloading file:  ${BWhi}$FILE${RCol}"
         $GET -o $FILE $URL
     done
 }
@@ -810,7 +810,7 @@ case $MODE in
 
              if [[ "$ISOLATED" == "false" ]]; then
                  TMP_INSTALLER_DIR=$(mktemp -d /tmp/drp.installer.XXXXXX)
-                 echo -e "$PREF_INFO Using temp directory to extract artifacts to and install from ('$TMP_INSTALLER_DIR')."
+                 echo -e "$PREF_INFO Using temp directory to extract artifacts to and install from ('${CFile}$TMP_INSTALLER_DIR${RCol}')."
                  OLD_PWD=$(pwd)
                  cd $TMP_INSTALLER_DIR
                  TMP_INST=$TMP_INSTALLER_DIR/tools/install.sh
@@ -827,7 +827,7 @@ case $MODE in
                  # We aren't a build tree, but are we extracted install yet?
                  # If not, get the requested version.
                  if [[ ! -e sha256sums || $force ]] ; then
-                     echo -e "$PREF_OK Installing Version ${IGre}$DRP_VERSION${RCol} of ${BWhi}Digital Rebar Provision${RCol}"
+                     echo -e "$PREF_OK Installing Version ${IGre}$DRP_VERSION${RCol} of ${ICya}Digital Rebar Provision${RCol}"
                      ZIP="dr-provision.zip"
                      SHA="dr-provision.sha256"
                      if [[ -n "$ZIP_FILE" ]]
@@ -888,7 +888,7 @@ case $MODE in
              fi
 
              if [[ $NO_CONTENT == false ]]; then
-                 echo -e "$PREF_OK Installing Version ${IGre}$DRP_CONTENT_VERSION${RCol} of ${BWhi}Digital Rebar Provision Community Content${RCol}"
+                 echo -e "$PREF_OK Installing Version ${IGre}$DRP_CONTENT_VERSION${RCol} of ${ICya}Digital Rebar Provision Community Content${RCol}"
                  if [[ -n "$ZIP_FILE" ]]; then
                    echo -e "$PREF_WARN '${CFlag}--zip-file${RCol}' specified, still trying to download community content..."
                    echo "         (specify '${CFlag}--no-content${RCol}' to skip download of community content"
@@ -926,9 +926,9 @@ case $MODE in
                      # output our startup helper messages only if SYSTEMD isn't specified
                      if [[ "$SYSTEMD" == "false" || "$STARTUP" == "false" ]]; then
                         echo
-                        echo -e "$PREF_INFO You can ${BIWhi}start${RCol} the ${ICya}DigitalRebar Provision service${RCol} with:"
+                        echo -e "$PREF_INFO You can ${BIYel}start${RCol} the ${ICya}DigitalRebar Provision service${RCol} with:"
                         echo -e "  ${Yel}$starter${RCol}"
-                        echo -e "$PREF_INFO You can ${BIWhi}enable${RCol} the ${ICya}DigitalRebar Provision service${RCol} with:"
+                        echo -e "$PREF_INFO You can ${BIYel}enable${RCol} the ${ICya}DigitalRebar Provision service${RCol} with:"
                         echo -e "  ${Yel}$enabler${RCol}"
                     else
                         echo -e "$PREF_INFO Will attempt to execute startup procedures ('${CFlag}--startup${RCol}' specified)"
@@ -962,7 +962,7 @@ case $MODE in
                  INST="${BIN_DIR}/drp-install.sh"
                  $_sudo cp $TMP_INST $INST && $_sudo chmod 755 $INST
                  echo -e  "$PREF_INFO Install script saved to '${CFile}$INST${RCol}'"
-                 echo -e "$PREF_INFO You can ${BIWhi}uninstall${RCol} DRP with '${IRed}$_sudo $INST remove${RCol}' - must be root)"
+                 echo -e "$PREF_INFO You can ${BIYel}uninstall${RCol} DRP with '${IRed}$_sudo $INST remove${RCol}' - must be root)"
 
                  TFTP_DIR="${DRP_HOME_DIR}/tftpboot"
                  $_sudo cp "$binpath"/* "$bindest"
