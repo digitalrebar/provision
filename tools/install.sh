@@ -29,6 +29,7 @@ Pur='\e[0;35m';     BPur='\e[1;35m';    UPur='\e[4;35m';    IPur='\e[0;95m';    
 Cya='\e[0;36m';     BCya='\e[1;36m';    UCya='\e[4;36m';    ICya='\e[0;96m';    BICya='\e[1;96m';   On_Cya='\e[46m';    On_ICya='\e[0;106m';
 Whi='\e[0;37m';     BWhi='\e[1;37m';    UWhi='\e[4;37m';    IWhi='\e[0;97m';    BIWhi='\e[1;97m';   On_Whi='\e[47m';    On_IWhi='\e[0;107m';
 
+# palette
 CWarn="$BYel"
 CFlag="$IBlu"
 CDef="$IBla"
@@ -40,138 +41,143 @@ COk="$IGre"
 CErr="$IRed"
 }
 
+c_def() { echo -en "$CDef$*$RCol";}
+c_flag() { echo -en "$CFlag$*$RCol";}
+c_err() { echo -en "$CErr$*$RCol";}
+
 usage() {
     [[ "$COLOR_OK" == "true" ]] && set_color
 echo -e "
-  ${ICya}USAGE:${RCol} ${BYel}$0${RCol} ${CFlag}[ install | upgrade | remove | version ] [ <options: see below> ]${RCol}
+  ${ICya}USAGE:${RCol} ${BYel}$0${RCol} $(c_flag "[ install | upgrade | remove | version ] [ <options: see below> ]")
 
-${CWarn}WARNING${RCol}: '${CFlag}install${RCol}' option will OVERWRITE existing installations
+${CWarn}WARNING${RCol}: '$(c_flag "install")' option will OVERWRITE existing installations
 
 ${ICya}OPTIONS${RCol}:
-    ${CFlag}--debug${RCol}=${CDef}[true|false]${RCol}    - Enables debug output
-    ${CFlag}--force${RCol}=${CDef}[true|false]${RCol}    - Forces an overwrite of local install binaries and content
-    ${CFlag}--upgrade${RCol}=${CDef}[true|false]${RCol}  - Turns on 'force' option to overwrite local binaries/content
-    ${CFlag}--isolated${RCol}              - Sets up current directory as install location for drpcli
+    $(c_flag "--debug")=$(c_def "[true|false]")    - Enables debug output
+    $(c_flag "--force")=$(c_def "[true|false]")    - Forces an overwrite of local install binaries and content
+    $(c_flag "--upgrade")=$(c_def "[true|false]")  - Turns on 'force' option to overwrite local binaries/content
+    $(c_flag "--isolated")              - Sets up current directory as install location for drpcli
                               and dr-provision (makes mess in current directory!)
-    ${CFlag}--no-content${RCol}            - Don't add content to the system
-    ${CFlag}--zip-file${RCol}=${CDef}filename.zip${RCol} - Don't download the dr-provision.zip file, instead use
+    $(c_flag "--no-content")            - Don't add content to the system
+    $(c_flag "--zip-file")=$(c_def "filename.zip") - Don't download the dr-provision.zip file, instead use
                               the referenced zip file (useful for airgap deployments)
                               NOTE: disables sha256sum checks - do this manually
-    ${CFlag}--ipaddr${RCol}=${CDef}<ip>${RCol}           - The IP to use for the system identified IP.  The system
+    $(c_flag "--ipaddr")=$(c_def "<ip>")           - The IP to use for the system identified IP.  The system
                               will attempt to discover the value if not specified
-    ${CFlag}--version${RCol}=${CDef}<string>${RCol}      - Version identifier if downloading; stable, tip, or
-                              specific version label, ${CDef}(defaults to: $DEFAULT_DRP_VERSION)${RCol}
-    ${CFlag}--remove-data${RCol}           - Remove data as well as program pieces
-    ${CFlag}--skip-run-check${RCol}        - Skip the process check for 'dr-provision' on new install
-                              only valid in '${CFlag}--isolated${RCol}' install mode
-    ${CFlag}--skip-prereqs${RCol}          - Skip OS dependency checks, for testing '${CFlag}--isolated${RCol}' mode
-    ${CFlag}--no-sudo${RCol}               - Do not use \"sudo\" prefix on commands (assume you're root)
-    ${CFlag}--fast-downloader${RCol}       - (experimental) Use Fast Downloader (uses 'aria2')
-    ${CFlag}--keep-installer${RCol}        - In Production mode, do not purge the tmp installer artifacts
-    ${CFlag}--startup${RCol}               - Attempt to start the dr-provision service
-    ${CFlag}--systemd${RCol}               - Run the systemd enabling commands after installation
-    ${CFlag}--systemd-services${RCol}      - Additional services for systemd to wait for before starting DRP.
-    ${CFlag}--create-self${RCol}           - DRP will create a machine that represents itself.
+    $(c_flag "--version")=$(c_def "<string>")      - Version identifier if downloading; stable, tip, or
+                              specific version label, $(c_def "(defaults to: $DEFAULT_DRP_VERSION)")
+    $(c_flag "--remove-data")           - Remove data as well as program pieces
+    $(c_flag "--skip-run-check")        - Skip the process check for 'dr-provision' on new install
+                              only valid in '$(c_flag "--isolated")' install mode
+    $(c_flag "--skip-prereqs")          - Skip OS dependency checks, for testing '$(c_flag "--isolated")' mode
+    $(c_flag "--no-sudo")               - Do not use \"sudo\" prefix on commands (assume you're root)
+    $(c_flag "--no-colors")             - Installer output will have no terminal colors
+    $(c_flag "--fast-downloader")       - (experimental) Use Fast Downloader (uses 'aria2')
+    $(c_flag "--keep-installer")        - In Production mode, do not purge the tmp installer artifacts
+    $(c_flag "--startup")               - Attempt to start the dr-provision service
+    $(c_flag "--systemd")               - Run the systemd enabling commands after installation
+    $(c_flag "--systemd-services")      - Additional services for systemd to wait for before starting DRP.
+    $(c_flag "--create-self")           - DRP will create a machine that represents itself.
                               Only used with startup/systemd parameters.
-    ${CFlag}--start-runner${RCol}          - DRP will start a runner for itself. Implies create self.
+    $(c_flag "--start-runner")          - DRP will start a runner for itself. Implies create self.
                               Only used with startup/systemd parameters.
-    ${CFlag}--initial-workflow${RCol}=${CDef}<string>${RCol}
+    $(c_flag "--initial-workflow")=$(c_def "<string>")
                             - Workflow to assign to the DRP's self machine as install finishes
                               Only valid with create-self object, only one Workflow may be specified
-    ${CFlag}--initial-profiles${RCol}=${CDef}<string>${RCol}
+    $(c_flag "--initial-profiles")=$(c_def "<string>")
                             - Initial profiles to add to the DRP endpoint before starting the workflow,
                               comma separated list, no spaces, this is only valid with create-self object
-    ${CFlag}--initial-contents${RCol}=${CDef}<string>${RCol}
+    $(c_flag "--initial-contents")=$(c_def "<string>")
                             - Initial content packs to deliver, comma separated with no spaces.
                               A file, URL, or content-pack name
-    ${CFlag}--initial-plugins${RCol}=${CDef}<string>${RCol}
+    $(c_flag "--initial-plugins")=$(c_def "<string>")
                             - Initial plugins to deliver, comma separated list with no spaces.
                               A file, URL, or content-pack name
-    ${CFlag}--initial-parameters${RCol}=${CDef}<string>${RCol}
+    $(c_flag "--initial-parameters")=$(c_def "<string>")
                             - Initial parameters to set on the system.  Simple parameters
                               as a comma separated list, with no spaces.
-    ${CFlag}--initial-subnets${RCol}=${CDef}<string>${RCol}
+    $(c_flag "--initial-subnets")=$(c_def "<string>")
                             - A file or URL containing Subnet definitions in JSON or YAML format,
                               comma separated, no spaces
                               NOTE: Subnets can also be injected in content packs with the
-                                '${CFlag}--initial-contents${RCol}' argument
-    ${CFlag}--bootstrap${RCol}             - Store the install image and the install script in the files bootstrap
-    ${CFlag}--drp-id${RCol}=${CDef}<string>${RCol}       - String to use as the DRP Identifier ${CDef}(only with ${CFlag}--systemd${CDef})${RCol}
-    ${CFlag}--ha-id${RCol}=${CDef}<string>${RCol}        - String to use as the HA Identifier ${CDef}(only with ${CFlag}--systemd${CDef})${RCol}
-    ${CFlag}--ha-enabled${RCol}            - Indicates that the system is HA enabled
-    ${CFlag}--ha-address${RCol}=${CDef}<string>${RCol}   - IP Address to use a VIP for HA system
-    ${CFlag}--ha-interface${RCol}=${CDef}<string>${RCol} - Interrace to use for HA traffic
-    ${CFlag}--ha-passive ${RCol}           - Indicates that the system is starting as passive.
-    ${CFlag}--ha-token${RCol}=${CDef}<string>${RCol}     - The token to use to sync passive to active
-    ${CFlag}--drp-user${RCol}=${CDef}<string>${RCol}     - DRP user to create after system start ${CDef}(only with ${CFlag}--systemd${CDef})${RCol}
-    ${CFlag}--drp-password${RCol}=${CDef}<string>${RCol} - DRP user password to set after system start ${CDef}(only with ${CFlag}--systemd${CDef})${RCol}
-    ${CFlag}--remove-rocketskates${RCol}   - Remove the rocketskates user after system start ${CDef}(only with ${CFlag}--systemd${CDef})${RCol}
-    ${CFlag}--local-ui${RCol}              - Set up DRP to server a local UI
-    ${CFlag}--system-user${RCol}           - System user account to create for DRP to run as
-    ${CFlag}--system-group${RCol}          - System group name
-    ${CFlag}--drp-home-dir${RCol}          - Use with system-user and system-group to set the home directory
+                                '$(c_flag "--initial-contents")' argument
+    $(c_flag "--bootstrap")             - Store the install image and the install script in the files bootstrap
+    $(c_flag "--drp-id")=$(c_def "<string>")       - String to use as the DRP Identifier $(c_def "(only with $(c_flag "--systemd")${CDef})")
+    $(c_flag "--ha-id")=$(c_def "<string>")        - String to use as the HA Identifier $(c_def "(only with $(c_flag "--systemd")${CDef})")
+    $(c_flag "--ha-enabled")            - Indicates that the system is HA enabled
+    $(c_flag "--ha-address")=$(c_def "<string>")   - IP Address to use a VIP for HA system
+    $(c_flag "--ha-interface")=$(c_def "<string>") - Interrace to use for HA traffic
+    $(c_flag "--ha-passive")            - Indicates that the system is starting as passive.
+    $(c_flag "--ha-token")=$(c_def "<string>")     - The token to use to sync passive to active
+    $(c_flag "--drp-user")=$(c_def "<string>")     - DRP user to create after system start $(c_def "(only with $(c_flag "--systemd")${CDef})")
+    $(c_flag "--drp-password")=$(c_def "<string>") - DRP user password to set after system start $(c_def "(only with $(c_flag "--systemd")${CDef})")
+    $(c_flag "--remove-rocketskates")   - Remove the rocketskates user after system start $(c_def "(only with $(c_flag "--systemd")${CDef})")
+    $(c_flag "--local-ui")              - Set up DRP to server a local UI
+    $(c_flag "--system-user")           - System user account to create for DRP to run as
+    $(c_flag "--system-group")          - System group name
+    $(c_flag "--drp-home-dir")          - Use with system-user and system-group to set the home directory
                               for the system-user. This path is where most important drp files live
                               including the tftp root
-    ${CFlag}--bin-dir${RCol}               - Use this as the local of the binaries.  Required for non-root upgrades
-    ${CFlag}--container${RCol}             - Force to install as a container, not zipfile
-    ${CFlag}--container-type${RCol}=${CDef}<string>${RCol}
-                            - Container install type, ${CDef}(defaults to \"$CNT_TYPE\")${RCol}
-    ${CFlag}--container-name${RCol}=${CDef}<string>${RCol}
-                            - Set the \"docker run\" container name, ${CDef}(defaults to \"$CNT_NAME\")${RCol}
-    ${CFlag}--container-restart${RCol}=${CDef}<string>${RCol}
-                            - Set the Docker restart option, ${CDef}(defaults to \"$CNT_RESTART\")${RCol}
+    $(c_flag "--bin-dir")               - Use this as the local of the binaries.  Required for non-root upgrades
+    $(c_flag "--container")             - Force to install as a container, not zipfile
+    $(c_flag "--container-type")=$(c_def "<string>")
+                            - Container install type, $(c_def "(defaults to \"$CNT_TYPE\")")
+    $(c_flag "--container-name")=$(c_def "<string>")
+                            - Set the \"docker run\" container name, $(c_def "(defaults to \"$CNT_NAME\")")
+    $(c_flag "--container-restart")=$(c_def "<string>")
+                            - Set the Docker restart option, $(c_def "(defaults to \"$CNT_RESTART\")")
                               options are:  no, on-failure, always, unless-stopped
                             * see: https://docs.docker.com/config/containers/start-containers-automatically/
-    ${CFlag}--container-volume${RCol}=${CDef}<string>${RCol}
-                            - Volume name to use for backing persistent storage, ${CDef}(default to \"$CNT_VOL\")${RCol}
-    ${CFlag}--container-registry${RCol}=${CDef}\"drp.example.com:5000\"${RCol}
-                            - Alternate registry to get container images from, ${CDef}(default to \"$CNT_REGISTRY\")${RCol}
-    ${CFlag}--container-env${RCol}=${CDef}\"<string> <string> <string>\"${RCol}
+    $(c_flag "--container-volume")=$(c_def "<string>")
+                            - Volume name to use for backing persistent storage, $(c_def "(default to \"$CNT_VOL\")")
+    $(c_flag "--container-registry")=$(c_def "\"drp.example.com:5000\"")
+                            - Alternate registry to get container images from, $(c_def "(default to \"$CNT_REGISTRY\")")
+    $(c_flag "--container-env")=$(c_def "\"<string> <string> <string>\"")
                             - Define a space separated list of environment variables to pass to the
-                              container on start ${CDef}(eg \"RS_METRICS_PORT=8888 RS_DRP_ID=fred\")${RCol}
+                              container on start $(c_def "(eg \"RS_METRICS_PORT=8888 RS_DRP_ID=fred\")")
                               see 'dr-provision --help' for complete list of startup variables
-    ${CFlag}--container-netns${RCol}=${CDef}\"<string>\"${RCol}
-                            - Define Network Namespace to start container in. ${CDef}(defaults to \"$CNT_NETNS\")${RCol}
+    $(c_flag "--container-netns")=$(c_def "\"<string>\"")
+                            - Define Network Namespace to start container in. $(c_def "(defaults to \"$CNT_NETNS\")")
                               If set to empty string (\"\"), then disable setting any network namespace
-    ${CFlag}--universal${RCol}             - Load the universal components and bootstrap the system.
+    $(c_flag "--universal")             - Load the universal components and bootstrap the system.
                               This should be first and implies systemd, startup, start-runner, create-self.
                               Additionally, implies running universal-boostrap and starting discovery.
-                              Subsequent options for '${CFlag}--initial-workflow${RCol}' will be ignored if this is set.
+                              Subsequent options for '$(c_flag "--initial-workflow")' will be ignored if this is set.
 
-    ${CFlag}version${RCol}                 - Show install.sh script version and exit
-    ${CFlag}install${RCol}                 - Sets up an isolated or system 'production' enabled install
-    ${CFlag}upgrade${RCol}                 - Sets the installer to upgrade an existing 'dr-provision', for upgrade of
+    $(c_flag "version")                 - Show install.sh script version and exit
+    $(c_flag "install")                 - Sets up an isolated or system 'production' enabled install
+    $(c_flag "upgrade")                 - Sets the installer to upgrade an existing 'dr-provision', for upgrade of
                               container; kill/rm the DRP container, then upgrade and reattach data volume
-    ${CFlag}remove${RCol}                  - Removes the system enabled install.  Requires no other flags
-                              optional: '${CFlag}--remove-data${RCol}' to wipe all installed data
+    $(c_flag "remove")                  - Removes the system enabled install.  Requires no other flags
+                              optional: '$(c_flag "--remove-data")' to wipe all installed data
 
 ${ICya}DEFAULTS${RCol}:
     |  option:               value:           |  option:               value:
     |  -------------------   ------------     |  ------------------    ------------
-    |  remove-rocketskates = ${CDef}false${RCol}            |  version (*)         = ${CDef}$DEFAULT_DRP_VERSION${RCol}
-    |  isolated            = ${CDef}false${RCol}            |  nocontent           = ${CDef}false${RCol}
-    |  upgrade             = ${CDef}false${RCol}            |  force               = ${CDef}false${RCol}
-    |  debug               = ${CDef}false${RCol}            |  skip-run-check      = ${CDef}false${RCol}
-    |  skip-prereqs        = ${CDef}false${RCol}            |  systemd             = ${CDef}false${RCol}
-    |  create-self         = ${CDef}false${RCol}            |  start-runner        = ${CDef}false${RCol}
-    |  drp-id              = ${CDef}unset${RCol}            |  ha-id               = ${CDef}unset${RCol}
-    |  drp-user            = ${CDef}rocketskates${RCol}     |  drp-password        = ${CDef}r0cketsk8ts${RCol}
-    |  startup             = ${CDef}false${RCol}            |  keep-installer      = ${CDef}false${RCol}
-    |  local-ui            = ${CDef}false${RCol}            |  system-user         = ${CDef}root${RCol}
-    |  system-group        = ${CDef}root${RCol}             |  drp-home-dir        = ${CDef}/var/lib/dr-provision${RCol}
-    |  bin-dir             = ${CDef}/usr/local/bin${RCol}   |  container           = ${CDef}false${RCol}
-    |  container-volume    = ${CDef}$CNT_VOL${RCol}         |  container-registry  = ${CDef}$CNT_REGISTRY${RCol}
-    |  container-type      = ${CDef}$CNT_TYPE${RCol}           |  container-name      = ${CDef}$CNT_NAME${RCol}
-    |  container-netns     = ${CDef}$CNT_NETNS${RCol}             |  container-restart   = ${CDef}$CNT_RESTART${RCol}
-    |  bootstrap           = ${CDef}false${RCol}            |  initial-workflow    = ${CDef}unset${RCol}
-    |  initial-contents    = ${CDef}unset${RCol}            |  initial-profiles    = ${CDef}unset${RCol}
-    |  initial-plugins     = ${CDef}unset${RCol}            |  initial-subnets     = ${CDef}unset${RCol}
-    |  ha-enabled          = ${CDef}false${RCol}            |  ha-address          = ${CDef}unset${RCol}
-    |  ha-passive          = ${CDef}false${RCol}            |  ha-interface        = ${CDef}unset${RCol}
-    |  ha-token            = ${CDef}unset${RCol}            |  universal           = ${CDef}unset${RCol}
-    |  systemd-services    = ${CDef}unset${RCol}
+    |  remove-rocketskates = $(c_def "false")            |  version (*)         = $(c_def "$DEFAULT_DRP_VERSION")
+    |  isolated            = $(c_def "false")            |  nocontent           = $(c_def "false")
+    |  upgrade             = $(c_def "false")            |  force               = $(c_def "false")
+    |  debug               = $(c_def "false")            |  skip-run-check      = $(c_def "false")
+    |  skip-prereqs        = $(c_def "false")            |  systemd             = $(c_def "false")
+    |  create-self         = $(c_def "false")            |  start-runner        = $(c_def "false")
+    |  drp-id              = $(c_def "unset")            |  ha-id               = $(c_def "unset")
+    |  drp-user            = $(c_def "rocketskates")     |  drp-password        = $(c_def "r0cketsk8ts")
+    |  startup             = $(c_def "false")            |  keep-installer      = $(c_def "false")
+    |  local-ui            = $(c_def "false")            |  system-user         = $(c_def "root")
+    |  system-group        = $(c_def "root")             |  drp-home-dir        = $(c_def "/var/lib/dr-provision")
+    |  bin-dir             = $(c_def "/usr/local/bin")   |  container           = $(c_def "false")
+    |  container-volume    = $(c_def "$CNT_VOL")         |  container-registry  = $(c_def "$CNT_REGISTRY")
+    |  container-type      = $(c_def "$CNT_TYPE")           |  container-name      = $(c_def "$CNT_NAME")
+    |  container-netns     = $(c_def "$CNT_NETNS")             |  container-restart   = $(c_def "$CNT_RESTART")
+    |  bootstrap           = $(c_def "false")            |  initial-workflow    = $(c_def "unset")
+    |  initial-contents    = $(c_def "unset")            |  initial-profiles    = $(c_def "unset")
+    |  initial-plugins     = $(c_def "unset")            |  initial-subnets     = $(c_def "unset")
+    |  ha-enabled          = $(c_def "false")            |  ha-address          = $(c_def "unset")
+    |  ha-passive          = $(c_def "false")            |  ha-interface        = $(c_def "unset")
+    |  ha-token            = $(c_def "unset")            |  universal           = $(c_def "unset")
+    |  systemd-services    = $(c_def "unset")
 
-    * version examples: '${CDef}tip${RCol}', '${CDef}v4.6.3${RCol}', '${CDef}v4.7.0-beta1.3${RCol}', or '${CDef}stable${RCol}'
+    * version examples: '$(c_def "tip")', '$(c_def "v4.6.3")', '$(c_def "v4.7.0-beta1.3")', or '$(c_def "stable")'
 
 ${ICya}PREREQUISITES${RCol}:
     ${CNote}NOTE: By default, prerequisite packages will be installed if possible.  You must
@@ -181,9 +187,9 @@ ${ICya}PREREQUISITES${RCol}:
     ${ICya}REQUIRED${RCol}: curl
     ${ICya}OPTIONAL${RCol}: aria2c (if using experimental "fast downloader")
 
-${CWarn}WARNING${RCol}: '${CFlag}install${RCol}' option will OVERWRITE existing installations
+${CWarn}WARNING${RCol}: '$(c_flag "install")' option will OVERWRITE existing installations
 
-${ICya}INSTALLER VERSION${RCol}:  ${CDef}$VERSION${RCol}
+${ICya}INSTALLER VERSION${RCol}:  $(c_def "$VERSION")
 "
 } # end usage()
 
@@ -357,14 +363,14 @@ if [[ $EUID -eq 0 ]]; then
     _sudo=""
 else
     if [[ ! -x "$(command -v sudo)" ]]; then
-        exit_cleanup 1 "${CErr}FATAL${RCol}: Script is not running as root and sudo command is not found. Please be root"
+        exit_cleanup 1 "$(c_err "FATAL"): Script is not running as root and sudo command is not found. Please be root"
     fi
 fi
 
 # verify the container restart directives
 case $CNT_RESTART in
   no|on-failure|always|unless-stopped) true ;;
-  *) exit_cleanup 1 "${CErr}FATAL${RCol}: Container restart directive ('$CNT_RESTART') is not valid. See '${CFlag}--help${CErr}' for details."
+  *) exit_cleanup 1 "$(c_err "FATAL"): Container restart directive ('$CNT_RESTART') is not valid. See '$(c_flag "--help")${CErr}' for details."
     ;;
 esac
 
@@ -388,7 +394,7 @@ elif [[ -f /etc/centos-release || -f /etc/fedora-release || -f /etc/redhat-relea
     done
 
     if [[ ! $OS_TYPE ]]; then
-        exit_cleanup 1 "${CErr}FATAL${RCol}: Cannot determine Linux version we are running on!"
+        exit_cleanup 1 "$(c_err "FATAL"): Cannot determine Linux version we are running on!"
     fi
 elif [[ -f /etc/debian_version ]]; then
     OS_TYPE=debian
@@ -419,7 +425,7 @@ check_drp_ready() {
         # Pre-increment for compatibility with Bash 4.1+
         ((++COUNT))
         if (( $COUNT > 10 )) ; then
-            exit_cleanup 1 "${CErr}FATAL${RCol}: DRP Failed to start"
+            exit_cleanup 1 "$(c_err "FATAL"): DRP Failed to start"
         fi
     done
     echo
@@ -441,19 +447,19 @@ install_epel() {
 # set our downloader GET variable appropriately - supports standard
 # (curl) downloader or (experimental) aria2c fast downloader
 get() {
-    [[ -z "$*" ]] && exit_cleanup 1 "${CErr}FATAL${RCol}: Internal error, get() expects files to get"
+    [[ -z "$*" ]] && exit_cleanup 1 "$(c_err "FATAL"): Internal error, get() expects files to get"
 
     if [[ "$FAST_DOWNLOADER" == "true" ]]; then
         if which aria2c > /dev/null; then
             GET="aria2c --quiet=true --continue=true --max-concurrent-downloads=10 --max-connection-per-server=16 --max-tries=0"
         else
-            exit_cleanup 1 "${CErr}FATAL${RCol}: '--fast-downloader' specified, but couldn't find tool ('aria2c')."
+            exit_cleanup 1 "$(c_err "FATAL"): '--fast-downloader' specified, but couldn't find tool ('aria2c')."
         fi
     else
         if which curl > /dev/null; then
             GET="curl -sfL"
         else
-            exit_cleanup 1 "${CErr}FATAL${RCol}: Unable to find downloader tool ('curl')."
+            exit_cleanup 1 "$(c_err "FATAL"): Unable to find downloader tool ('curl')."
         fi
     fi
     for URL in $*; do
@@ -475,7 +481,7 @@ setup_system_user() {
     RC=0
     $_sudo groupadd --system ${SYSTEM_GROUP} || RC=$?
     if [[ ${RC} != 0 && ${RC} != 9 ]]; then
-        exit_cleanup ${RC} "${CErr}FATAL${RCol}: Unable to create system group ${SYSTEM_GROUP}"
+        exit_cleanup ${RC} "$(c_err "FATAL"): Unable to create system group ${SYSTEM_GROUP}"
     fi
     if [[ ${OS_FAMILY} == "debian" ]]; then
         $_sudo adduser --system --home ${DRP_HOME_DIR} --quiet --group ${SYSTEM_USER}
@@ -489,7 +495,7 @@ setup_system_user() {
     if [[ ${RC} == 0 || ${RC} == 9 ]]; then
         return
     fi
-    exit_cleanup ${RC} "${CErr}FATAL${RCol}: Unable to create system user ${SYSTEM_USER}"
+    exit_cleanup ${RC} "$(c_err "FATAL"): Unable to create system user ${SYSTEM_USER}"
 }
 
 set_ownership_of_drp() {
@@ -498,7 +504,7 @@ set_ownership_of_drp() {
     # Make sure a directory is created so DRP does not hit
     # permissions errors trying to use the home directory.
     if [ ! -d "${DRP_HOME_DIR}" ]; then
-        echo -e "$PREF_OK Creating DRP Home directory ${CDef}(${DRP_HOME_DIR})${RCol}"
+        echo -e "$PREF_OK Creating DRP Home directory $(c_def "(${DRP_HOME_DIR})")"
         $_sudo mkdir -p ${DRP_HOME_DIR}
     fi
     $_sudo chown -R ${SYSTEM_USER}:${SYSTEM_GROUP} ${DRP_HOME_DIR}
@@ -600,7 +606,7 @@ ensure_packages() {
             fi
         ;;
         *)
-            exit_cleanup 1 "${CErr}FATAL${RCol}: Unsupported OS Family ($OS_FAMILY)."
+            exit_cleanup 1 "$(c_err "FATAL"): Unsupported OS Family ($OS_FAMILY)."
         ;;
     esac
 } # end ensure_packages()
@@ -608,7 +614,7 @@ ensure_packages() {
 # output a friendly statement on how to download ISOS via fast downloader
 show_fast_isos() {
     echo -e "
-$PREF_INFO Option '${CFlag}--fast-downloader${RCol}' requested.  You may download the ISO images using
+$PREF_INFO Option '$(c_flag "--fast-downloader")' requested.  You may download the ISO images using
   'aria2c' command to significantly reduce download time of the ISO images.
 
 ${CNote} NOTE: The following genereted scriptlet should download, install, and enable
@@ -650,7 +656,7 @@ remove_container() {
                 fi
             fi
             ;;
-        *)  exit_cleanup 1 "${CErr}Error${RCol}: Container type '$CNT_TYPE' not supported in installer."
+        *)  exit_cleanup 1 "$PREF_ERR Container type '$CNT_TYPE' not supported in installer."
             ;;
     esac
 } # end remove_container()
@@ -664,7 +670,7 @@ install_container() {
     fi
     case $CNT_TYPE in
         docker)
-            ! which docker > /dev/null 2>&1 && exit_cleanup 1 "${CErr}Error${RCol}: Container install requested but no 'docker' in PATH ($PATH)."
+            ! which docker > /dev/null 2>&1 && exit_cleanup 1 "$PREF_ERR Container install requested but no 'docker' in PATH ($PATH)."
             if [[ "$UPGRADE" == "false" ]]; then
                 $_sudo docker volume create $CNT_VOL > /dev/null
                 VOL_MNT=$($_sudo docker volume inspect $CNT_VOL | grep Mountpoint | awk -F\" '{ print $4 }')
@@ -673,7 +679,7 @@ install_container() {
                 if $_sudo docker volume inspect $CNT_VOL > /dev/null 2>&1; then
                     echo -e "$PREF_INFO Attempting to reconnect volume '$CNT_VOL'"
                 else
-                    exit_cleanup 1 "${CErr}Error${RCol}: No existing volume '$CNT_VOL' found to reconnect."
+                    exit_cleanup 1 "$PREF_ERR No existing volume '$CNT_VOL' found to reconnect."
                 fi
             fi
             if [[ -z "$CNT_NETNS" ]]; then
@@ -698,7 +704,7 @@ install_container() {
             echo -e "${CNotice}>>>           same installed results in the upgraded container.  You have been warned!   <<< ${RCol}"
             echo ""
             ;;
-        *)  exit_cleanup 1 "${CErr}Error${RCol}: Container type '$CNT_TYPE' not supported in installer."
+        *)  exit_cleanup 1 "$PREF_ERR Container type '$CNT_TYPE' not supported in installer."
             ;;
     esac
 } # end install_container()
@@ -736,7 +742,7 @@ case $arch in
     aarch64)      arch=arm64   ;;
     armv7l)       arch=arm_v7  ;;
     ppc64le)      arch=ppc64le ;;
-    *)            exit_cleanup 1 "${CErr}FATAL${RCol}: architecture ('$arch') not supported" ;;
+    *)            exit_cleanup 1 "$(c_err "FATAL"): architecture ('$arch') not supported" ;;
 esac
 
 case $(uname -s) in
@@ -821,7 +827,7 @@ case $MODE in
              if [ -e server ] ; then
                  if [ ! -e bin/linux/amd64/drpcli ] ; then
                      echo "It appears that nothing has been built."
-                     echo -e "Please run ${CFlag}tools/build.sh${RCol} and then rerun this command".
+                     echo -e "Please run $(c_flag "tools/build.sh") and then rerun this command".
                      exit_cleanup 1
                  fi
              else
@@ -834,7 +840,7 @@ case $MODE in
                      if [[ -n "$ZIP_FILE" ]]
                      then
                        [[ "$ZIP_FILE" != "dr-provision.zip" ]] && cp "$ZIP_FILE" dr-provision.zip
-                       echo -e "$PREF_WARN  No sha256sum check performed for '${CFlag}--zip-file${RCol}' mode."
+                       echo -e "$PREF_WARN  No sha256sum check performed for '$(c_flag "--zip-file")' mode."
                        echo "          We assume you've already verified your download file."
                      else
                        if [[ ! -e rackn-catalog.json ]] ; then
@@ -880,7 +886,7 @@ case $MODE in
                              exit 1
                            fi
                          else
-                           exit_cleanup 1 "${CErr}Error${RCol}: FAILED to install 'bsdtar' to satisfy dependencies.  Please install it and retry."
+                           exit_cleanup 1 "$PREF_ERR FAILED to install 'bsdtar' to satisfy dependencies.  Please install it and retry."
                          fi
                        fi
                      fi
@@ -891,8 +897,8 @@ case $MODE in
              if [[ $NO_CONTENT == false ]]; then
                  echo -e "$PREF_OK Installing Version ${IGre}$DRP_CONTENT_VERSION${RCol} of ${ICya}Digital Rebar Provision Community Content${RCol}"
                  if [[ -n "$ZIP_FILE" ]]; then
-                   echo -e "$PREF_WARN '${CFlag}--zip-file${RCol}' specified, still trying to download community content..."
-                   echo "         (specify '${CFlag}--no-content${RCol}' to skip download of community content"
+                   echo -e "$PREF_WARN '$(c_flag "--zip-file")' specified, still trying to download community content..."
+                   echo "         (specify '$(c_flag "--no-content")' to skip download of community content"
                  fi
 
                  if [[ ! -e rackn-catalog.json ]] ; then
@@ -920,7 +926,7 @@ case $MODE in
                          echo -e "${CWarn}  please verify 'dr-provision' startup options are correct${RCol}"
                          echo -e "${CWarn}  for your environment and the new version .. ${RCol}"
                          echo
-                         echo -e "${CWarn}  specifically verify: '${CFlag}--file-root=${CDef}<tftpboot directory>${CWarn}'${RCol}"
+                         echo -e "${CWarn}  specifically verify: '${CFlag}--file-root=$(c_def "<tftpboot directory>${CWarn}'")"
                      else
                          $_sudo sed "s:/usr/local/bin/dr-provision:$PROVISION:g" "$initfile" > "$initdest"
                      fi
@@ -932,7 +938,7 @@ case $MODE in
                         echo -e "$PREF_INFO You can ${BIYel}enable${RCol} the ${ICya}DigitalRebar Provision service${RCol} with:"
                         echo -e "  ${IYel}$enabler${RCol}"
                     else
-                        echo -e "$PREF_INFO Will attempt to execute startup procedures ('${CFlag}--startup${RCol}' specified)"
+                        echo -e "$PREF_INFO Will attempt to execute startup procedures ('$(c_flag "--startup")' specified)"
                         echo -e "  ${IYel}$starter${RCol}"
                         echo -e "  ${IYel}$enabler${RCol}"
 
@@ -1176,7 +1182,7 @@ EOF
                      fi
                  else
                      if [[ "$STARTUP" == "true" ]]; then
-                         echo -e "$PREF_INFO Attempting startup of 'dr-provision' ('${CFlag}--startup${RCol}' specified)"
+                         echo -e "$PREF_INFO Attempting startup of 'dr-provision' ('$(c_flag "--startup")' specified)"
                          eval "$enabler"
                          eval "$starter"
 
@@ -1398,9 +1404,9 @@ EOF
              $_sudo rm -rf $RM_DIR
          fi
          ;;
-     version) echo -e "Installer Version: ${CDef}$VERSION${RCol}" ;;
+     version) echo -e "Installer Version: $(c_def "$VERSION")" ;;
      *)
-         echo -e "Unknown action \"$1\". Please use '${CFlag}install${RCol}', '${CFlag}upgrade${RCol}', or '${CFlag}remove${RCol}'";;
+         echo -e "Unknown action \"$1\". Please use '$(c_flag "install")', '$(c_flag "upgrade")', or '$(c_flag "remove")'";;
 esac
 
 exit_cleanup 0
