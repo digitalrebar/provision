@@ -390,6 +390,19 @@ and wind up in a file with the same name as the item + the default file extensio
 					parts := map[string]string{}
 					i := strings.Index(v.Source, "/rebar-catalog/")
 					switch v.ContentType {
+					case "DRP":
+						for arch := range v.Shasum256 {
+							if arch == "any/any" {
+								parts[v.Source], _ = url.QueryUnescape(v.Source[i+1:])
+							} else {
+								archValue := strings.Split(arch, "/")[0]
+								osValue := strings.Split(arch, "/")[1]
+								ts := strings.ReplaceAll(v.Source, ".zip", "."+archValue+"."+osValue+".zip")
+								qs, _ := url.QueryUnescape(v.Source[i+1:])
+								td := strings.ReplaceAll(qs, ".zip", "."+archValue+"."+osValue+".zip")
+								parts[ts] = td
+							}
+						}
 					case "PluginProvider", "DRPCLI":
 						for arch := range v.Shasum256 {
 							ts := fmt.Sprintf("%s/%s/%s", v.Source, arch, v.Name)
