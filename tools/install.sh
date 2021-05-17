@@ -1058,7 +1058,7 @@ EOF
                      else
                          check_drp_ready
                          if [[ $NO_CONTENT == false ]] ; then
-                             drpcli contents upload catalog:task-library-${DRP_CONTENT_VERSION}
+                             drpcli contents upload catalog:task-library-${DRP_CONTENT_VERSION} >/dev/null
 
                              if [[ "$INITIAL_CONTENTS" != "" ]] ; then
                                  OLD_IFS="${IFS}"
@@ -1384,7 +1384,7 @@ EOF
            RM_CLI=""
          else
            RM_CLI="$bindest/drpcli"
-           echo -e "No 'drpcli' backup file found ('$CLI_BKUP')."
+           echo -e "$INFO No 'drpcli' backup file found ('${CFile}$CLI_BKUP${RCol}')."
          fi
          echo -e "$PREF_OK Removing program and service files"
          $_sudo rm -f "$bindest/dr-provision" "$RM_CLI" "$initdest"
