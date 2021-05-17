@@ -3,7 +3,7 @@
 set -e
 
 # BUMP version on updates
-VERSION="v21.05.10-2"
+VERSION="v21.05.17-1"
 
 DEFAULT_DRP_VERSION=${DEFAULT_DRP_VERSION:-"stable"}
 
