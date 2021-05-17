@@ -928,13 +928,13 @@ case $MODE in
                      if [[ "$SYSTEMD" == "false" || "$STARTUP" == "false" ]]; then
                         echo
                         echo -e "$PREF_INFO You can ${BIYel}start${RCol} the ${ICya}DigitalRebar Provision service${RCol} with:"
-                        echo -e "  ${Yel}$starter${RCol}"
+                        echo -e "  ${IYel}$starter${RCol}"
                         echo -e "$PREF_INFO You can ${BIYel}enable${RCol} the ${ICya}DigitalRebar Provision service${RCol} with:"
-                        echo -e "  ${Yel}$enabler${RCol}"
+                        echo -e "  ${IYel}$enabler${RCol}"
                     else
                         echo -e "$PREF_INFO Will attempt to execute startup procedures ('${CFlag}--startup${RCol}' specified)"
-                        echo -e "  ${Yel}$starter${RCol}"
-                        echo -e "  ${Yel}$enabler${RCol}"
+                        echo -e "  ${IYel}$starter${RCol}"
+                        echo -e "  ${IYel}$enabler${RCol}"
 
                     fi
                  fi
@@ -1349,7 +1349,6 @@ EOF
                  EP="./"
              fi
 
-             echo
              echo -e "$PREF_INFO Once dr-provision is started, setup a base discovery configuration"
              echo -e "  ${IYel}${EP}drpcli bootenvs uploadiso sledgehammer${RCol}"
              echo -e "  ${IYel}${EP}drpcli prefs set defaultWorkflow discover-base unknownBootEnv discovery defaultBootEnv sledgehammer defaultStage discover${RCol}"
@@ -1384,7 +1383,7 @@ EOF
            RM_CLI=""
          else
            RM_CLI="$bindest/drpcli"
-           echo -e "$INFO No 'drpcli' backup file found ('${CFile}$CLI_BKUP${RCol}')."
+           echo -e "$PREF_INFO No 'drpcli' backup file found ('${CFile}$CLI_BKUP${RCol}')."
          fi
          echo -e "$PREF_OK Removing program and service files"
          $_sudo rm -f "$bindest/dr-provision" "$RM_CLI" "$initdest"
