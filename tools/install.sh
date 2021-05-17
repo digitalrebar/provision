@@ -411,7 +411,7 @@ check_drp_ready() {
     COUNT=0
     while ! drpcli info get > /dev/null 2>&1 ; do
         if (( $COUNT == 0 )); then
-            echo -e "$PREF_INFO Waiting for dr-provision to start ..."
+            echo -e -n "$PREF_INFO Waiting for dr-provision to start ..."
         else
             echo -n "."
         fi
@@ -422,6 +422,7 @@ check_drp_ready() {
             exit_cleanup 1 "${CErr}FATAL${RCol}: DRP Failed to start"
         fi
     done
+    echo
 }
 
 # install the EPEL repo if appropriate, and not enabled already
@@ -1371,10 +1372,10 @@ EOF
              exit_cleanup 0
          fi
          if pgrep dr-provision; then
-             echo -e "$PREF_ERR 'dr-provision' service is running, CAN NOT remove ... please stop service first"
+             echo -e "$PREF_ERR 'dr-provision' service is running and cannot be removed. Please stop the service first."
              exit_cleanup 9
          else
-             echo -e "$PREF_INFO 'dr-provision' service is not running, beginning removal process ... "
+             echo -e "$PREF_INFO 'dr-provision' service is not running, beginning removal process..."
          fi
          if [[ -f "$CLI_BKUP" ]]
          then
