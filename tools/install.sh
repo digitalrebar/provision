@@ -116,12 +116,12 @@ ${ICya}OPTIONS${RCol}:
     $(c_flag "--drp-password")=$(c_def "<string>") - DRP user password to set after system start $(c_def "(only with $(c_flag "--systemd")${CDef})")
     $(c_flag "--remove-rocketskates")   - Remove the rocketskates user after system start $(c_def "(only with $(c_flag "--systemd")${CDef})")
     $(c_flag "--local-ui")              - Set up DRP to server a local UI
-    $(c_flag "--ha-id")=$(c_def "<string>")        - DEPRECATED pre-v4.6 ONLY: String to use as the HA Identifier $(c_def "(only with $(c_flag "--systemd")${CDef})")
-    $(c_flag "--ha-enabled")            - DEPRECATED pre-v4.6 ONLY: Indicates that the system is HA enabled
-    $(c_flag "--ha-address")=$(c_def "<string>")   - DEPRECATED pre-v4.6 ONLY: IP Address to use a VIP for HA system
-    $(c_flag "--ha-interface")=$(c_def "<string>") - DEPRECATED pre-v4.6 ONLY: Interrace to use for HA traffic
-    $(c_flag "--ha-passive")            - DEPRECATED pre-v4.6 ONLY: Indicates that the system is starting as passive.
-    $(c_flag "--ha-token")=$(c_def "<string>")     - DEPRECATED pre-v4.6 ONLY: The token to use to sync passive to active
+    $(c_flag "--ha-id")=$(c_def "<string>")        - $(c_err "DEPRECATED pre-v4.6 ONLY"): String to use as the HA Identifier $(c_def "(only with $(c_flag "--systemd")${CDef})")
+    $(c_flag "--ha-enabled")            - $(c_err "DEPRECATED pre-v4.6 ONLY"): Indicates that the system is HA enabled
+    $(c_flag "--ha-address")=$(c_def "<string>")   - $(c_err "DEPRECATED pre-v4.6 ONLY"): IP Address to use a VIP for HA system
+    $(c_flag "--ha-interface")=$(c_def "<string>") - $(c_err "DEPRECATED pre-v4.6 ONLY"): Interrace to use for HA traffic
+    $(c_flag "--ha-passive")            - $(c_err "DEPRECATED pre-v4.6 ONLY"): Indicates that the system is starting as passive.
+    $(c_flag "--ha-token")=$(c_def "<string>")     - $(c_err "DEPRECATED pre-v4.6 ONLY"): The token to use to sync passive to active
     $(c_flag "--system-user")           - System user account to create for DRP to run as
     $(c_flag "--system-group")          - System group name
     $(c_flag "--drp-home-dir")          - Use with system-user and system-group to set the home directory
@@ -438,6 +438,8 @@ check_drp_ready() {
         fi
     done
     echo
+    echo -e "${COk}${EP}Digital Rebar $(drpcli info get | jq -r .version) is started!${RCol}"
+    echo
 }
 
 # install the EPEL repo if appropriate, and not enabled already
@@ -702,7 +704,7 @@ install_container() {
             eval $CMD
 
             echo ""
-            echo -e "$PREF_INFO Digital Rebar Provision container is using backing volume: $CNT_VOL"
+            echo -e "$PREF_INFO Digital Rebar container is using backing volume: $CNT_VOL"
             echo "Volume is backed on host filesystem at: $VOL_MNT"
             echo ""
             echo -e "$PREF_INFO Docker container run time information:"
@@ -727,12 +729,12 @@ if [[ $OS_FAMILY == "container" || $CONTAINER == "true" ]]; then
     GEN_MSG="Unsupported mode '$MODE'"
     case $MODE in
         install)
-            echo -e "$PREF_OK Installing Digital Rebar Provision as a container."
+            echo -e "$PREF_OK Installing Digital Rebar as a container."
             install_container
             exit_cleanup $?
             ;;
         upgrade)
-            echo -e "$PREF_OK Upgrading Digital Rebar Provision as a container."
+            echo -e "$PREF_OK Upgrading Digital Rebar as a container."
             UPGRADE=true
             CNT_VOL_REMOVE=false
             remove_container
@@ -813,7 +815,8 @@ case $MODE in
 
              if [[ "$ISOLATED" == "false" || "$SKIP_RUN_CHECK" == "false" ]]; then
                  if pgrep dr-provision; then
-                     echo -e "$PREF_ERR 'dr-provision' service is running, CANNOT upgrade ... please stop service ($(c_flag "systemctl stop dr-provision")) or container first"
+                     echo -e "$PREF_ERR 'dr-provision' service is running, CANNOT upgrade ... please stop service or container first"
+                     echo -e "  Run ${IYel}$_sudo systemctl status dr-provision${RCol}"
                      exit_cleanup 9
                  else
                      echo -e "$PREF_INFO 'dr-provision' service is not running, beginning install process ... "
@@ -843,7 +846,7 @@ case $MODE in
                  # We aren't a build tree, but are we extracted install yet?
                  # If not, get the requested version.
                  if [[ ! -e sha256sums || $force ]] ; then
-                     echo -e "$PREF_OK Installing Version ${IGre}$DRP_VERSION${RCol} of ${ICya}Digital Rebar Provision${RCol}"
+                     echo -e "$PREF_OK Installing Version ${IGre}$DRP_VERSION${RCol} of ${ICya}Digital Rebar${RCol} (dr-provision)"
                      ZIP="dr-provision.zip"
                      SHA="dr-provision.sha256"
                      if [[ -n "$ZIP_FILE" ]]
@@ -904,7 +907,7 @@ case $MODE in
              fi
 
              if [[ $NO_CONTENT == false ]]; then
-                 echo -e "$PREF_OK Installing Version ${IGre}$DRP_CONTENT_VERSION${RCol} of ${ICya}Digital Rebar Provision Community Content${RCol}"
+                 echo -e "$PREF_OK Installing Version ${IGre}$DRP_CONTENT_VERSION${RCol} of ${ICya}Digital Rebar Community Content${RCol}"
                  if [[ -n "$ZIP_FILE" ]]; then
                    echo -e "$PREF_WARN '$(c_flag "--zip-file")' specified, still trying to download community content..."
                    echo "         (specify '$(c_flag "--no-content")' to skip download of community content"
@@ -942,15 +945,15 @@ case $MODE in
                      # output our startup helper messages only if SYSTEMD isn't specified
                      if [[ "$SYSTEMD" == "false" || "$STARTUP" == "false" ]]; then
                         echo
-                        echo -e "$PREF_INFO You can ${BIYel}start${RCol} the ${ICya}DigitalRebar Provision service${RCol} with:"
-                        echo -e "  ${IYel}$starter${RCol}"
-                        echo -e "$PREF_INFO You can ${BIYel}enable${RCol} the ${ICya}DigitalRebar Provision service${RCol} with:"
-                        echo -e "  ${IYel}$enabler${RCol}"
+                        echo -e "$PREF_INFO Tips for ${BIYel}systemd${RCol} management of ${ICya}Digital Rebar${RCol} service:"
+                        echo -e "  Start:  ${IYel}$starter${RCol}"
+                        echo -e "  Enable: ${IYel}$enabler${RCol}"
+                        echo -e "  Status: ${IYel}$_sudo systemctl status dr-provision${RCol}"
+                        echo -e "  Logs:   ${IYel}$_sudo journalctl -u dr-provision${RCol}"
                     else
                         echo -e "$PREF_INFO Will attempt to execute startup procedures ('$(c_flag "--startup")' specified)"
                         echo -e "  ${IYel}$starter${RCol}"
                         echo -e "  ${IYel}$enabler${RCol}"
-
                     fi
                  fi
 
@@ -1364,20 +1367,27 @@ EOF
                  EP="./"
              fi
 
-             echo -e "$PREF_INFO Once dr-provision is started, setup a base discovery configuration"
+             echo -e "$PREF_INFO With Digital Rebar started, complete the setup using the ${ICya}System Install Wizard${RCol}"
+             if [[ $IPADDR ]] ; then
+                 echo -e "  ${IYel}open https://$IPADDR:8092${RCol} (accept self-signed TLS certificate)"
+             else
+                 echo -e "  ${IYel}open https://[host ip]:8092${RCol} (accept self-signed TLS certificate)"
+             fi
+             echo
+             echo -e "$PREF_INFO Or, use the CLI to setup for basic system discovery:"
              echo -e "  ${IYel}${EP}drpcli bootenvs uploadiso sledgehammer${RCol}"
              echo -e "  ${IYel}${EP}drpcli prefs set defaultWorkflow discover-base unknownBootEnv discovery defaultBootEnv sledgehammer defaultStage discover${RCol}"
              if [[ $NO_CONTENT == true ]] ; then
-                echo
+                 echo
                  echo -e "$PREF_INFO Add common utilities (sourced from RackN)"
                  echo -e "  ${IYel}${EP}drpcli contents upload catalog:task-library-$DRP_CONTENT_VERSION${RCol}"
              fi
              echo
-             echo -e "$PREF_INFO Optionally, locally cache the isos for common community operating systems"
-             echo -e "  ${IYel}${EP}drpcli bootenvs uploadiso ubuntu-18.04-install${RCol}"
-             echo -e "  ${IYel}${EP}drpcli bootenvs uploadiso centos-7-install${RCol}"
+             echo -e "$PREF_INFO Optionally, upload popular community operating system ISOs"
+             echo -e "  ${IYel}${EP}drpcli bootenvs uploadiso ubuntu-20.04-install${RCol}"
+             echo -e "  ${IYel}${EP}drpcli bootenvs uploadiso centos-8-install${RCol}"
              echo
-             [[ "$FAST_DOWNLOADER" == "true" ]] && show_fast_isos "ubuntu-16.04-install" "centos-7-install" "sledgehammer"
+             [[ "$FAST_DOWNLOADER" == "true" ]] && show_fast_isos "ubuntu-20.04-install" "centos-8-install" "sledgehammer"
 
          ;;
      remove)
@@ -1386,7 +1396,8 @@ EOF
              exit_cleanup 0
          fi
          if pgrep dr-provision; then
-             echo -e "$PREF_ERR 'dr-provision' service is running and cannot be removed. Please stop the service first."
+             echo -e "$PREF_ERR 'dr-provision' service is running and CANNOT be removed. Please stop service or container first."
+             echo -e "  Run ${IYel}$_sudo systemctl status dr-provision${RCol}"
              exit_cleanup 9
          else
              echo -e "$PREF_INFO 'dr-provision' service is not running, beginning removal process..."
@@ -1412,6 +1423,7 @@ EOF
              echo -e "$(c_file "$RM_DIR")"
              $_sudo rm -rf $RM_DIR
          fi
+         echo -e "${COk}${EP}Digital Rebar has been removed.${RCol}"
          ;;
      version) echo -e "Installer Version: $(c_def "$VERSION")" ;;
      *)
