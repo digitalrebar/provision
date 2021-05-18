@@ -103,16 +103,16 @@ ${ICya}OPTIONS${RCol}:
                                 '$(c_flag "--initial-contents")' argument
     $(c_flag "--bootstrap")             - Store the install image and the install script in the files bootstrap
     $(c_flag "--drp-id")=$(c_def "<string>")       - String to use as the DRP Identifier $(c_def "(only with $(c_flag "--systemd")${CDef})")
-    $(c_flag "--ha-id")=$(c_def "<string>")        - String to use as the HA Identifier $(c_def "(only with $(c_flag "--systemd")${CDef})")
-    $(c_flag "--ha-enabled")            - Indicates that the system is HA enabled
-    $(c_flag "--ha-address")=$(c_def "<string>")   - IP Address to use a VIP for HA system
-    $(c_flag "--ha-interface")=$(c_def "<string>") - Interrace to use for HA traffic
-    $(c_flag "--ha-passive")            - Indicates that the system is starting as passive.
-    $(c_flag "--ha-token")=$(c_def "<string>")     - The token to use to sync passive to active
     $(c_flag "--drp-user")=$(c_def "<string>")     - DRP user to create after system start $(c_def "(only with $(c_flag "--systemd")${CDef})")
     $(c_flag "--drp-password")=$(c_def "<string>") - DRP user password to set after system start $(c_def "(only with $(c_flag "--systemd")${CDef})")
     $(c_flag "--remove-rocketskates")   - Remove the rocketskates user after system start $(c_def "(only with $(c_flag "--systemd")${CDef})")
     $(c_flag "--local-ui")              - Set up DRP to server a local UI
+    $(c_flag "--ha-id")=$(c_def "<string>")        - DEPRECATED pre-v4.6 ONLY: String to use as the HA Identifier $(c_def "(only with $(c_flag "--systemd")${CDef})")
+    $(c_flag "--ha-enabled")            - DEPRECATED pre-v4.6 ONLY: Indicates that the system is HA enabled
+    $(c_flag "--ha-address")=$(c_def "<string>")   - DEPRECATED pre-v4.6 ONLY: IP Address to use a VIP for HA system
+    $(c_flag "--ha-interface")=$(c_def "<string>") - DEPRECATED pre-v4.6 ONLY: Interrace to use for HA traffic
+    $(c_flag "--ha-passive")            - DEPRECATED pre-v4.6 ONLY: Indicates that the system is starting as passive.
+    $(c_flag "--ha-token")=$(c_def "<string>")     - DEPRECATED pre-v4.6 ONLY: The token to use to sync passive to active
     $(c_flag "--system-user")           - System user account to create for DRP to run as
     $(c_flag "--system-group")          - System group name
     $(c_flag "--drp-home-dir")          - Use with system-user and system-group to set the home directory
@@ -804,7 +804,7 @@ case $MODE in
 
              if [[ "$ISOLATED" == "false" || "$SKIP_RUN_CHECK" == "false" ]]; then
                  if pgrep dr-provision; then
-                     echo -e "$PREF_ERR 'dr-provision' service is running, CAN NOT upgrade ... please stop service first"
+                     echo -e "$PREF_ERR 'dr-provision' service is running, CANNOT upgrade ... please stop service ($(c_flag "systemctl stop dr-provision")) or container first"
                      exit_cleanup 9
                  else
                      echo -e "$PREF_INFO 'dr-provision' service is not running, beginning install process ... "
