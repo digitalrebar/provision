@@ -48,9 +48,9 @@ c_err() { echo -en "$CErr$@$RCol";}
 
 _drpcli() {
     if [[ $DBG == true ]]; then
-        command drpcli "$@"
+        drpcli "$@"
     else
-        command drpcli "$@" >/dev/null
+        drpcli "$@" >/dev/null
     fi
 }
 
