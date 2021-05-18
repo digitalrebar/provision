@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"log"
 	"path"
+	"strings"
 )
 
 // CatalogItem structure that handles RawModel instead of dealing with
@@ -100,6 +101,10 @@ func (ci *CatalogItem) DownloadUrl(arch, os string) string {
 		res = res + path.Join("/", arch, os, ci.Name)
 		if os == "windows" {
 			res = res + ".exe"
+		}
+	case "DRP":
+		if _, ok := ci.Shasum256["any/any"]; !ok {
+			res = strings.ReplaceAll(res, ".zip", "."+arch+"."+os+".zip")
 		}
 	}
 	return res
