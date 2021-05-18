@@ -41,12 +41,18 @@ COk="$IGre"
 CErr="$IRed"
 }
 
-c_def() { echo -en "$CDef$*$RCol";}
-c_flag() { echo -en "$CFlag$*$RCol";}
-c_file() { echo -en "$CFile$*$RCol";}
-c_err() { echo -en "$CErr$*$RCol";}
+c_def() { echo -en "$CDef$@$RCol";}
+c_flag() { echo -en "$CFlag$@$RCol";}
+c_file() { echo -en "$CFile$@$RCol";}
+c_err() { echo -en "$CErr$@$RCol";}
 
-_drpcli() { eval "drpcli $* $DBG_OUT"; }
+_drpcli() {
+    if [[ $DBG == true ]]; then
+        command drpcli "$@"
+    else
+        command drpcli "$@" >/dev/null
+    fi
+}
 
 usage() {
     [[ "$COLOR_OK" == "true" ]] && set_color
@@ -200,7 +206,6 @@ ${ICya}INSTALLER VERSION${RCol}:  $(c_def "$VERSION")
 ISOLATED=false
 NO_CONTENT=false
 DBG=false
-DBG_OUT=">/dev/null"
 UPGRADE=false
 REMOVE_DATA=false
 SKIP_RUN_CHECK=false
@@ -257,7 +262,7 @@ while (( $# > 0 )); do
     arg_data="${arg#*=}"
     case $arg_key in
         --help|-h)                  usage; exit_cleanup 0                             ;;
-        --debug)                    DBG=true; DBG_OUT=""                              ;;
+        --debug)                    DBG=true;                                         ;;
         --version|--drp-version)    DRP_VERSION=${arg_data}                           ;;
         --isolated)                 ISOLATED=true                                     ;;
         --skip-run-check)           SKIP_RUN_CHECK=true                               ;;
