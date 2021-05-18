@@ -43,7 +43,10 @@ CErr="$IRed"
 
 c_def() { echo -en "$CDef$*$RCol";}
 c_flag() { echo -en "$CFlag$*$RCol";}
+c_file() { echo -en "$CFile$*$RCol";}
 c_err() { echo -en "$CErr$*$RCol";}
+
+_drpcli() { eval "drpcli $* $DBG_OUT"; }
 
 usage() {
     [[ "$COLOR_OK" == "true" ]] && set_color
@@ -197,6 +200,7 @@ ${ICya}INSTALLER VERSION${RCol}:  $(c_def "$VERSION")
 ISOLATED=false
 NO_CONTENT=false
 DBG=false
+DBG_OUT=">/dev/null"
 UPGRADE=false
 REMOVE_DATA=false
 SKIP_RUN_CHECK=false
@@ -253,7 +257,7 @@ while (( $# > 0 )); do
     arg_data="${arg#*=}"
     case $arg_key in
         --help|-h)                  usage; exit_cleanup 0                             ;;
-        --debug)                    DBG=true                                          ;;
+        --debug)                    DBG=true; DBG_OUT=""                              ;;
         --version|--drp-version)    DRP_VERSION=${arg_data}                           ;;
         --isolated)                 ISOLATED=true                                     ;;
         --skip-run-check)           SKIP_RUN_CHECK=true                               ;;
@@ -453,7 +457,7 @@ get() {
         if which aria2c > /dev/null; then
             GET="aria2c --quiet=true --continue=true --max-concurrent-downloads=10 --max-connection-per-server=16 --max-tries=0"
         else
-            exit_cleanup 1 "$(c_err "FATAL"): '--fast-downloader' specified, but couldn't find tool ('aria2c')."
+            exit_cleanup 1 "$(c_err "FATAL"): '$(c_flag "--fast-downloader")' specified, but couldn't find tool ('aria2c')."
         fi
     else
         if which curl > /dev/null; then
@@ -622,21 +626,21 @@ ${CNote} NOTE: The following genereted scriptlet should download, install, and e
 
       YOU MUST START 'dr-provision' FIRST! Example commands:
 
-###### BEGIN scriptlet
+$(c_def "###### BEGIN scriptlet")
   export CMD=\"aria2c --continue=true --max-concurrent-downloads=10 --max-connection-per-server=16 --max-tries=0\"
 "
 
     for BOOTENV in $*
     do
-        echo "  export URL=$(${EP}drpcli bootenvs show $BOOTENV | grep 'IsoUrl' | cut -d '\"' -f 4)"
-        echo "  export ISO=$(${EP}drpcli bootenvs show $BOOTENV | grep 'IsoFile' | cut -d '\"' -f 4)"
+        echo "  export URL=$(${EP}drpcli bootenvs show $BOOTENV | grep 'IsoUrl' | cut -d '"' -f 4)"
+        echo "  export ISO=$(${EP}drpcli bootenvs show $BOOTENV | grep 'IsoFile' | cut -d '"' -f 4)"
         echo "  \$CMD -o \$ISO \$URL"
     done
     echo "  # this should move the ISOs to the TFTP directory..."
     echo "  $_sudo mv *.tar *.iso $TFTP_DIR/isos/"
     echo "  $_sudo pkill -HUP dr-provision"
     echo "  echo 'NOTICE:  exploding isos may take up to 5 minutes to complete ... '"
-    echo "###### END scriptlet"
+    echo -e $(c_def "###### END scriptlet")
 
     echo
 } # end show_fast_isos()
@@ -687,7 +691,7 @@ install_container() {
             else
               NETNS="--net $CNT_NETNS"
             fi
-            CMD="$_sudo docker run $ENV_OPTS --restart "$CNT_RESTART" --volume $CNT_VOL:/provision/drp-data --name \"$CNT_NAME\" -itd $NETNS ${CNT_REGISTRY}/digitalrebar/provision:$DRP_VERSION"
+            CMD="$_sudo docker run $ENV_OPTS --restart \"$CNT_RESTART\" --volume $CNT_VOL:/provision/drp-data --name \"$CNT_NAME\" -itd $NETNS ${CNT_REGISTRY}/digitalrebar/provision:$DRP_VERSION"
             echo -e "$PREF_INFO Starting container with following run command:"
             echo "$CMD"
             eval $CMD
@@ -817,7 +821,7 @@ case $MODE in
 
              if [[ "$ISOLATED" == "false" ]]; then
                  TMP_INSTALLER_DIR=$(mktemp -d /tmp/drp.installer.XXXXXX)
-                 echo -e "$PREF_INFO Using temp directory to extract artifacts to and install from ('${CFile}$TMP_INSTALLER_DIR${RCol}')."
+                 echo -e "$PREF_INFO Using temp directory to extract artifacts to and install from ('$(c_file "$TMP_INSTALLER_DIR")')."
                  OLD_PWD=$(pwd)
                  cd $TMP_INSTALLER_DIR
                  TMP_INST=$TMP_INSTALLER_DIR/tools/install.sh
@@ -946,7 +950,7 @@ case $MODE in
                  fi
 
                  if [[ ! -e ${DRP_HOME_DIR}/digitalrebar/tftpboot && -e /var/lib/tftpboot ]] ; then
-                     echo -e "$PREF_OK Moving ${CFile}/var/lib/tftpboot${RCol} to ${CFile}${DRP_HOME_DIR}/tftpboot${RCol} location ... "
+                     echo -e "$PREF_OK Moving $(c_file "/var/lib/tftpboot") to $(c_file "$DRP_HOME_DIR/tftpboot") location ... "
                      $_sudo mv /var/lib/tftpboot ${DRP_HOME_DIR}
                  fi
 
@@ -962,13 +966,13 @@ case $MODE in
                  # move aside/preserve an existing drpcli - this machine might be under
                  # control of another DRP Endpoint, and this will break the installer (text file busy)
                  if [[ -f "$CLI" ]]; then
-                     echo -e "$PREF_OK Saving '${CFile}${BIN_DIR}/drpcli${RCol}' to backup file (${CFile}$CLI_BKUP${RCol})"
+                     echo -e "$PREF_OK Saving '$(c_file "${BIN_DIR}/drpcli")' to backup file ($(c_file "$CLI_BKUP"))"
                      $_sudo mv "$CLI" "$CLI_BKUP"
                  fi
 
                  INST="${BIN_DIR}/drp-install.sh"
                  $_sudo cp $TMP_INST $INST && $_sudo chmod 755 $INST
-                 echo -e  "$PREF_INFO Install script saved to '${CFile}$INST${RCol}'"
+                 echo -e  "$PREF_INFO Install script saved to '$(c_file "$INST")'"
                  echo -e "$PREF_INFO You can ${BIYel}uninstall${RCol} DRP with '${IRed}$_sudo $INST remove${RCol}' - must be root)"
 
                  TFTP_DIR="${DRP_HOME_DIR}/tftpboot"
@@ -1064,20 +1068,20 @@ EOF
                      else
                          check_drp_ready
                          if [[ $NO_CONTENT == false ]] ; then
-                             drpcli contents upload catalog:task-library-${DRP_CONTENT_VERSION} >/dev/null
+                             _drpcli contents upload catalog:task-library-${DRP_CONTENT_VERSION}
 
                              if [[ "$INITIAL_CONTENTS" != "" ]] ; then
                                  OLD_IFS="${IFS}"
                                  IFS=',' read -ra contents_array <<< "$INITIAL_CONTENTS"
                                  for i in "${contents_array[@]}" ; do
                                      if [[ -f ${OLD_PWD}/$i ]] ; then
-                                         drpcli contents upload ${OLD_PWD}/${i}
+                                         _drpcli contents upload ${OLD_PWD}/${i}
                                      elif [[ -f "$i" ]] ; then
-                                         drpcli contents upload ${i}
+                                         _drpcli contents upload ${i}
                                      elif [[ $i == http* ]] ; then
-                                         drpcli contents upload ${i}
+                                         _drpcli contents upload ${i}
                                      else
-                                         drpcli catalog item install ${i} --version=${DRP_CONTENT_VERSION} -c $DRP_CATALOG
+                                         _drpcli catalog item install ${i} --version=${DRP_CONTENT_VERSION} -c $DRP_CATALOG
                                      fi
                                  done
                                  IFS="${OLD_IFS}"
@@ -1088,11 +1092,11 @@ EOF
                                  IFS=',' read -ra plugins_array <<< "$INITIAL_PLUGINS"
                                  for i in "${plugins_array[@]}" ; do
                                      if [[ -f ${OLD_PWD}/$i ]] ; then
-                                         drpcli plugin_providers upload ${OLD_PWD}/${i}
+                                         _drpcli plugin_providers upload ${OLD_PWD}/${i}
                                      elif [[ $i == http* ]] ; then
-                                         drpcli plugin_providers upload ${i}
+                                         _drpcli plugin_providers upload ${i}
                                      else
-                                         drpcli catalog item install ${i} --version=${DRP_CONTENT_VERSION} -c $DRP_CATALOG
+                                         _drpcli catalog item install ${i} --version=${DRP_CONTENT_VERSION} -c $DRP_CATALOG
                                      fi
                                  done
                                  IFS="${OLD_IFS}"
@@ -1107,7 +1111,7 @@ EOF
                                    OLD_IFS="${IFS}"
                                    IFS=',' read -ra profiles_array <<< "$INITIAL_PROFILES"
                                    for i in "${profiles_array[@]}" ; do
-                                     drpcli machines addprofile "Name:$ID" "$i" >/dev/null
+                                     _drpcli machines addprofile "Name:$ID" "$i"
                                    done
                                    IFS="${OLD_IFS}"
                                  fi
@@ -1123,7 +1127,7 @@ EOF
                                    IFS=',' read -ra param_array <<< "$INITIAL_PARAMETERS"
                                    for i in "${param_array[@]}" ; do
                                      IFS="=" read -ra data_array <<< "$i"
-                                     drpcli machines set "Name:$ID" param "${data_array[0]}" to "${data_array[1]}" >/dev/null
+                                     _drpcli machines set "Name:$ID" param "${data_array[0]}" to "${data_array[1]}"
                                    done
                                    IFS="${OLD_IFS}"
                                  fi
@@ -1136,7 +1140,7 @@ EOF
                                      ID=$(drpcli info get | /tmp/jq .id -r | sed -r 's/:/-/g')
                                      rm /tmp/jq
                                      echo -e "$PREF_OK Setting initial workflow to '$INITIAL_WORKFLOW' for Machine '$ID'"
-                                     drpcli machines workflow "Name:$ID" "$INITIAL_WORKFLOW" >/dev/null
+                                     _drpcli machines workflow "Name:$ID" "$INITIAL_WORKFLOW"
                                  fi
                              fi
 
@@ -1147,13 +1151,13 @@ EOF
                                      for i in "${subnet_array[@]}" ; do
                                        if [[ $i == http* ]] ; then
                                          echo -e "$PREF_OK Creating subnet from URL '$i'"
-                                         drpcli subnets create ${i}
+                                         _drpcli subnets create ${i}
                                        elif [[ -f ${OLD_PWD}/$i ]] ; then
                                          echo -e "$PREF_OK Creating subnet from file '${OLD_PWD}/$i'"
-                                         drpcli subnets create ${OLD_PWD}/${i}
+                                         _drpcli subnets create ${OLD_PWD}/${i}
                                        elif [[ -f "$i" ]] ; then
                                          echo -e "$PREF_OK Creating subnet from file '${i}'"
-                                         drpcli subnets create ${i}
+                                         _drpcli subnets create ${i}
                                        else
                                          echo -e "$PREF_WARN unable to read subnet file '$i' or '${OLD_PWD}/$i'; no SUBNET created"
                                        fi
@@ -1165,20 +1169,20 @@ EOF
 
                          if [[ $DRP_USER ]] ; then
                              if drpcli users exists $DRP_USER >/dev/null 2>/dev/null ; then
-                                 drpcli users update $DRP_USER "{ \"Name\": \"$DRP_USER\", \"Roles\": [ \"superuser\" ] }"
+                                 _drpcli users update $DRP_USER "{ \"Name\": \"$DRP_USER\", \"Roles\": [ \"superuser\" ] }"
                              else
-                                 drpcli users create "{ \"Name\": \"$DRP_USER\", \"Roles\": [ \"superuser\" ] }"
+                                 _drpcli users create "{ \"Name\": \"$DRP_USER\", \"Roles\": [ \"superuser\" ] }"
                              fi
                              drpcli users password $DRP_USER "$DRP_PASSWORD"
                              export RS_KEY="$DRP_USER:$DRP_PASSWORD"
                              if [[ $REMOVE_RS == true ]] ; then
-                                 drpcli users destroy rocketskates
+                                 _drpcli users destroy rocketskates
                              fi
                          fi
                      fi
                      if [[ "$BOOTSTRAP" == "true" ]] ; then
-                         drpcli files upload dr-provision.zip as bootstrap/dr-provision.zip
-                         drpcli files upload $TMP_INST as bootstrap/install.sh
+                         _drpcli files upload dr-provision.zip as bootstrap/dr-provision.zip
+                         _drpcli files upload $TMP_INST as bootstrap/install.sh
                      fi
                  else
                      if [[ "$STARTUP" == "true" ]]; then
@@ -1195,11 +1199,11 @@ EOF
                                  IFS=',' read -ra contents_array <<< "$INITIAL_CONTENTS"
                                  for i in "${contents_array[@]}" ; do
                                      if [[ -f ${OLD_PWD}/$i ]] ; then
-                                         drpcli contents upload ${OLD_PWD}/${i}
+                                         _drpcli contents upload ${OLD_PWD}/${i}
                                      elif [[ $i == http* ]] ; then
-                                         drpcli contents upload ${i}
+                                         _drpcli contents upload ${i}
                                      else
-                                         drpcli catalog item install ${i} --version=${DRP_CONTENT_VERSION} -c $DRP_CATALOG
+                                         _drpcli catalog item install ${i} --version=${DRP_CONTENT_VERSION} -c $DRP_CATALOG
                                      fi
                                  done
                              fi
@@ -1208,11 +1212,11 @@ EOF
                                  IFS=',' read -ra plugins_array <<< "$INITIAL_PLUGINS"
                                  for i in "${plugins_array[@]}" ; do
                                      if [[ -f ${OLD_PWD}/$i ]] ; then
-                                         drpcli plugin_providers upload ${OLD_PWD}/${i}
+                                         _drpcli plugin_providers upload ${OLD_PWD}/${i}
                                      elif [[ $i == http* ]] ; then
-                                         drpcli plugin_providers upload ${i}
+                                         _drpcli plugin_providers upload ${i}
                                      else
-                                         drpcli catalog item install ${i} --version=${DRP_CONTENT_VERSION} -c $DRP_CATALOG
+                                         _drpcli catalog item install ${i} --version=${DRP_CONTENT_VERSION} -c $DRP_CATALOG
                                      fi
                                  done
                              fi
@@ -1225,7 +1229,7 @@ EOF
                                    rm /tmp/jq
                                    IFS=',' read -ra profiles_array <<< "$INITIAL_PROFILES"
                                    for i in "${profiles_array[@]}" ; do
-                                     drpcli machines addprofile "Name:$ID" "$i" >/dev/null
+                                     _drpcli machines addprofile "Name:$ID" "$i"
                                    done
                                  fi
                              fi
@@ -1239,7 +1243,7 @@ EOF
                                    IFS=',' read -ra param_array <<< "$INITIAL_PARAMETERS"
                                    for i in "${param_array[@]}" ; do
                                      IFS="=" read -ra data_array <<< "$i"
-                                     drpcli machines set "Name:$ID" param "${data_array[0]}" to "${data_array[1]}" >/dev/null
+                                     _drpcli machines set "Name:$ID" param "${data_array[0]}" to "${data_array[1]}"
                                    done
                                  fi
                              fi
@@ -1250,13 +1254,13 @@ EOF
                                      chmod +x /tmp/jq
                                      ID=$(drpcli info get | /tmp/jq .id -r)
                                      rm /tmp/jq
-                                     drpcli machines workflow "Name:$ID" "$INITIAL_WORKFLOW" >/dev/null
+                                     _drpcli machines workflow "Name:$ID" "$INITIAL_WORKFLOW"
                                  fi
                              fi
                          fi
                          if [[ "$BOOTSTRAP" == "true" ]] ; then
-                             drpcli files upload dr-provision.zip as bootstrap/dr-provision.zip
-                             drpcli files upload $TMP_INST as bootstrap/install.sh
+                             _drpcli files upload dr-provision.zip as bootstrap/dr-provision.zip
+                             _drpcli files upload $TMP_INST as bootstrap/install.sh
                          fi
                      fi
                  fi
@@ -1266,7 +1270,7 @@ EOF
                      rm -rf $TMP_INSTALLER_DIR
                  else
                      echo ""
-                     echo -e "$PREF_INFO Installer artifacts are in '${CFile}$TMP_INSTALLER_DIR${RCol}' - to purge:"
+                     echo -e "$PREF_INFO Installer artifacts are in '$(c_file "$TMP_INSTALLER_DIR")' - to purge:"
                      echo -e "  ${IYel}$_sudo rm -rf $TMP_INSTALLER_DIR${RCol}"
                  fi
 
@@ -1347,8 +1351,8 @@ EOF
                      echo
 
                      if [[ "$BOOTSTRAP" == "true" ]] ; then
-                         drpcli files upload dr-provision.zip as bootstrap/dr-provision.zip
-                         drpcli files upload tools/install.sh as bootstrap/install.sh
+                         _drpcli files upload dr-provision.zip as bootstrap/dr-provision.zip
+                         _drpcli files upload tools/install.sh as bootstrap/install.sh
                      fi
                  fi
 
@@ -1389,7 +1393,7 @@ EOF
            RM_CLI=""
          else
            RM_CLI="$bindest/drpcli"
-           echo -e "$PREF_INFO No 'drpcli' backup file found ('${CFile}$CLI_BKUP${RCol}')."
+           echo -e "$PREF_INFO No 'drpcli' backup file found ('$(c_file "$CLI_BKUP")')."
          fi
          echo -e "$PREF_OK Removing program and service files"
          $_sudo rm -f "$bindest/dr-provision" "$RM_CLI" "$initdest"
@@ -1400,7 +1404,7 @@ EOF
              [[ -d "/usr/share/dr-provision" ]] && RM_DIR="/usr/share/dr-provision " || true
              [[ -d "/etc/dr-provision" ]] && RM_DIR+="/etc/dr-provision " || true
              [[ -d "${DRP_HOME_DIR}" ]] && RM_DIR+="${DRP_HOME_DIR}" || true
-             echo -e "${CFile}$RM_DIR${RCol}"
+             echo -e "$(c_file "$RM_DIR")"
              $_sudo rm -rf $RM_DIR
          fi
          ;;
