@@ -438,7 +438,8 @@ check_drp_ready() {
         fi
     done
     echo
-    echo -e "${COk}${EP}Digital Rebar $(drpcli info get | jq -r .version) is started!${RCol}"
+    INFO=$(drpcli info get)
+    echo -e "${COk}${EP}Digital Rebar $(jq -r .version <<< "$INFO") started as Endpoint ID $(jq -r .id <<< "$INFO")${RCol}"
     echo
 }
 
@@ -816,7 +817,7 @@ case $MODE in
              if [[ "$ISOLATED" == "false" || "$SKIP_RUN_CHECK" == "false" ]]; then
                  if pgrep dr-provision; then
                      echo -e "$PREF_ERR 'dr-provision' service is running, CANNOT upgrade ... please stop service or container first"
-                     echo -e "  Run ${IYel}$_sudo systemctl status dr-provision${RCol}"
+                     echo -e "  Run ${IYel}$_sudo systemctl stop dr-provision${RCol}"
                      exit_cleanup 9
                  else
                      echo -e "$PREF_INFO 'dr-provision' service is not running, beginning install process ... "
@@ -847,6 +848,11 @@ case $MODE in
                  # If not, get the requested version.
                  if [[ ! -e sha256sums || $force ]] ; then
                      echo -e "$PREF_OK Installing Version ${IGre}$DRP_VERSION${RCol} of ${ICya}Digital Rebar${RCol} (dr-provision)"
+                     if [[ $DRP_ID ]] ; then
+                        echo -e "$PREF_INFO Using Endpoint ID ${IGre}$DRP_ID${RCol}."
+                     else
+                        echo -e "$PREF_INFO Using MAC based Endpoint ID.  Consider using '$(c_flag "--drp-id")' to set during installation."
+                     fi
                      ZIP="dr-provision.zip"
                      SHA="dr-provision.sha256"
                      if [[ -n "$ZIP_FILE" ]]
@@ -1397,7 +1403,7 @@ EOF
          fi
          if pgrep dr-provision; then
              echo -e "$PREF_ERR 'dr-provision' service is running and CANNOT be removed. Please stop service or container first."
-             echo -e "  Run ${IYel}$_sudo systemctl status dr-provision${RCol}"
+             echo -e "  Run ${IYel}$_sudo systemctl stop dr-provision${RCol}"
              exit_cleanup 9
          else
              echo -e "$PREF_INFO 'dr-provision' service is not running, beginning removal process..."
