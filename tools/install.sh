@@ -1088,6 +1088,7 @@ EOF
                                  OLD_IFS="${IFS}"
                                  IFS=',' read -ra contents_array <<< "$INITIAL_CONTENTS"
                                  for i in "${contents_array[@]}" ; do
+                                     echo -e "$PREF_OK Installing content item '$i'"
                                      if [[ -f ${OLD_PWD}/$i ]] ; then
                                          _drpcli contents upload ${OLD_PWD}/${i}
                                      elif [[ -f "$i" ]] ; then
@@ -1105,6 +1106,7 @@ EOF
                                  OLD_IFS="${IFS}"
                                  IFS=',' read -ra plugins_array <<< "$INITIAL_PLUGINS"
                                  for i in "${plugins_array[@]}" ; do
+                                     echo -e "$PREF_OK Installing plugin item '$i'"
                                      if [[ -f ${OLD_PWD}/$i ]] ; then
                                          _drpcli plugin_providers upload ${OLD_PWD}/${i}
                                      elif [[ $i == http* ]] ; then
@@ -1118,6 +1120,7 @@ EOF
 
                              if [[ "$INITIAL_PROFILES" != "" ]] ; then
                                  if [[ $CREATE_SELF == true ]] ; then
+                                     echo -e "$PREF_OK Installing initial profiles..."
                                    cp $(which drpcli) /tmp/jq
                                    chmod +x /tmp/jq
                                    ID=$(drpcli info get | /tmp/jq .id -r | sed -r 's/:/-/g')
@@ -1133,6 +1136,7 @@ EOF
 
                              if [[ "$INITIAL_PARAMETERS" != "" ]] ; then
                                  if [[ $CREATE_SELF == true ]] ; then
+                                   echo -e "$PREF_OK Installing initial parameters..."
                                    cp $(which drpcli) /tmp/jq
                                    chmod +x /tmp/jq
                                    ID=$(drpcli info get | /tmp/jq .id -r | sed -r 's/:/-/g')
@@ -1351,7 +1355,10 @@ EOF
                  fi
 
                  STARTER="$_sudo ./dr-provision --base-root=`pwd`/drp-data > drp.log 2>&1 &"
-                 [[ "$STARTUP" == "false" ]] && echo "$STARTER"
+                 if [[ "$STARTUP" == "false" ]]; then
+                   echo -e "$PREF_INFO Digital Rebar can be started with the following command:"
+                   echo -e "  ${IYel}$STARTER${RCol}"
+                fi
                  mkdir -p "`pwd`/drp-data/saas-content"
                  if [[ $NO_CONTENT == false ]] ; then
                      DEFAULT_CONTENT_FILE="`pwd`/drp-data/saas-content/default.json"
@@ -1375,9 +1382,9 @@ EOF
 
              echo -e "$PREF_INFO With Digital Rebar started, complete the setup using the ${ICya}System Install Wizard${RCol}"
              if [[ $IPADDR ]] ; then
-                 echo -e "  ${IYel}open https://$IPADDR:8092${RCol} (accept self-signed TLS certificate)"
+                 echo -e "  open ${IBlu}https://$IPADDR:8092${RCol} (accept self-signed TLS certificate)"
              else
-                 echo -e "  ${IYel}open https://[host ip]:8092${RCol} (accept self-signed TLS certificate)"
+                 echo -e "  open ${IBlu}https://[host ip]:8092${RCol} (accept self-signed TLS certificate)"
              fi
              echo
              echo -e "$PREF_INFO Or, use the CLI to setup for basic system discovery:"
