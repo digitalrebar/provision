@@ -22,6 +22,7 @@ Some of these operations are in the :ref:`rs_ui`, but not all.  This will focus 
    operations/backup
    operations/bios
    operations/contexts
+   operations/commands
    operations/drpcli
    operations/esxi-getting-started
    operations/imagedeploy

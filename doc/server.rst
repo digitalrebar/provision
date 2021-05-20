@@ -42,8 +42,6 @@ services including protocols and default ports.  The services are:
 
 .. figure::  images/core_services.png
    :alt: Core Digital Rebar Provision Services
-   :target: https://docs.google.com/drawings/d/1SVGGwQZxopiVEYjIM3FXC92yG4DKCCejRBDNMsHmxKE/edit?usp=sharing
-
 
 .. _rs_arch_ports:
 

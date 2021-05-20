@@ -1,3 +1,9 @@
+.. Copyright (c) 2021 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar documentation under Digital Rebar license
+.. index::
+  pair: Digital Rebar Provision; Swagger
+
 .. _rs_swagger:
 
 Swagger UI

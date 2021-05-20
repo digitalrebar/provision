@@ -6,7 +6,7 @@
 
 .. _rs_install_toc:
 
-Installing Digital Rebar - Options
+Installing Digital Rebar (options)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This is the landing page for ways to install Digital Rebar.

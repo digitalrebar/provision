@@ -17,6 +17,7 @@ Please consult other installation paths for more details:
 
 * :ref:`rs_quickstart` is a basic `systemd <https://en.wikipedia.org/wiki/Systemd>`_ install for new users
 * :ref:`rs_install` details more complex installs including offline/airgap.
+* :ref:`rs_install` details more complex installs including offline/airgap.
 * :ref:`rs_install_docker` for trial users minimizing their install requirements
 * :ref:`rs_install_cloud` is non-PXE / Cloud-Only installation process (no DHCP required)
 * `Edge Lab with RPi <http://edgelab.digital>`_ is self-contained Digital Rebar inexpensive lab using Raspberry Pi computers.
