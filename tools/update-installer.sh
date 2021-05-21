@@ -15,27 +15,28 @@ BKT=${INSTALLER_BUCKET:-"get.rebar.digital"}
 usage() {
 #  cat  << EOT
 echo -e "
-${Gre}USAGE${RCol}:   ${IBlu}$0${RCol} -h
-   ${Gre}OR${RCol}:   ${IBlu}$0${RCol} -d dest [ -k key -p password -f file -b bucket -r region ]
+${ICya}USAGE${RCol}:   ${BYel}$0${RCol} ${CFlag}-h${RCol}
+   ${ICya}OR${RCol}:   ${BYel}$0${RCol} ${CFlag}-d dest [ -k key -p password -f file -b bucket -r region ]${RCol}
 
-${Gre}WHERE${RCol}:   -h              print this help statement
+${ICya}OPTIONS${RCol}:
+         ${CFlag}-h${RCol}              Print this help statement
 
-         -d dest1,dest2  (required) Destination object name(s), multiple with
-                         comma separated list, no spaces
-         -k key          AWS Access Key ID to use (default: '$AWS_ACCESS_KEY_ID')
-         -p password     AWS Secret for Key ID to use (default: '$AWS_SECRET_ACCESS_KEY')
+         ${CFlag}-d${RCol} dest1,dest2  ${BYel}(required)${RCol} Destination object name(s)
+                         multiple with comma separated list, no spaces
+         ${CFlag}-k${RCol} key          AWS Access Key ID to use ${CDef}(default: '$AWS_ACCESS_KEY_ID')${RCol}
+         ${CFlag}-p${RCol} password     AWS Secret for Key ID to use ${CDef}(default: '$AWS_SECRET_ACCESS_KEY')${RCol}
 
-         -f file         source file to upload (default: '$FILE')
-         -b bucket       S3 bucket to upload to (default: '$BKT')
-         -r region       AWS S3 region to upload to (default: '$AWS_DEFAULT_REGION')
+         ${CFlag}-f${RCol} file         Source file to upload ${CDef}(default: '$FILE')${RCol}
+         ${CFlag}-b${RCol} bucket       S3 bucket to upload to ${CDef}(default: '$BKT')${RCol}
+         ${CFlag}-r${RCol} region       AWS S3 region to upload to ${CDef}(default: '$AWS_DEFAULT_REGION')${RCol}
 
-${Gre}MORE${RCol}:    The following shell environment varialbes can be set:
+${CNote}NOTE${RCol}:    The following shell environment variables can be set:
 
          AWS_ACCESS_KEY_ID  AWS_SECRET_ACCESS_KEY  AWS_DEFAULT_REGION
          INSTALLER_FILE     INSTALLER_DESTS         INSTALLER_BUCKET
 
-${Red}WARNING${RCol}: AWS Key and Secret MUST BE SET, either via environment varialbes
-         command line options, or in the $HOME/.aws/credentials file.
+${CWarn}WARNING${RCol}: AWS Key and Secret MUST BE SET, either via environment variables
+         command line options, or in the ${CDef}$HOME/.aws/credentials${RCol} file.
 
 "
 }
@@ -122,7 +123,10 @@ Blu='\e[0;34m';     BBlu='\e[1;34m';    UBlu='\e[4;34m';    IBlu='\e[0;94m';    
 Pur='\e[0;35m';     BPur='\e[1;35m';    UPur='\e[4;35m';    IPur='\e[0;95m';    BIPur='\e[1;95m';   On_Pur='\e[45m';    On_IPur='\e[0;105m';
 Cya='\e[0;36m';     BCya='\e[1;36m';    UCya='\e[4;36m';    ICya='\e[0;96m';    BICya='\e[1;96m';   On_Cya='\e[46m';    On_ICya='\e[0;106m';
 Whi='\e[0;37m';     BWhi='\e[1;37m';    UWhi='\e[4;37m';    IWhi='\e[0;97m';    BIWhi='\e[1;97m';   On_Whi='\e[47m';    On_IWhi='\e[0;107m';
-
+CFlag=$IBlu;
+CWarn="$BYel"
+CDef="$IBla"
+CNote="$Yel"
 }
 
 set_colors
