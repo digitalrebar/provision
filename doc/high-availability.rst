@@ -13,6 +13,8 @@ Digital Rebar v4.6+ supports fully integrated High Availability (HA) in dr-provi
 
 Manual failover via synchronous replication has been supported since v4.3 and will continue to remain available for the foreseeable future to support live backups, multi-site manager and other distributed operations.  This can also be used for HA configuration but is not recommended.
 
+Training Video: https://youtu.be/w4PBZsYr3zE 
+
 .. _rs_high_availability_preq:
 
 Prerequisites

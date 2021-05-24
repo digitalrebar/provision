@@ -13,6 +13,8 @@ This document outlines the RackN limited use and commercial licensing informatio
 
 If you have a license issued before May 1, 2021, please see :ref:`rackn_licensing_pre46`.  You can identify these licenses because they will end in a number sequence greater than 4600000.  Licenses issued prior to v4.6 will continue to function and can be used to create v4.6+ licenses; however, new entitlements cannot be added to earlier licenses.
 
+Training Video: https://youtu.be/Rpy1Tw0-pUE
+
 License Types
 =============
 
