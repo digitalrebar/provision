@@ -1,11 +1,18 @@
 package models
 
 import (
+	"fmt"
 	"net"
 	"reflect"
 	"strings"
 
 	"github.com/pborman/uuid"
+)
+
+const (
+	MACHINE_ASYNC_ACTION      = `async_action`
+	MACHINE_ASYNC_ACTION_SEP  = `async_action:`
+	MACHINE_ASYNC_ACTION_PREF = len(MACHINE_ASYNC_ACTION_SEP)
 )
 
 // SupportedArch normalizes system architectures and returns whether
@@ -212,6 +219,11 @@ type Machine struct {
 	PoolStatus PoolStatus
 	// WorkflowCopmlete indicates if the workflow is complete
 	WorkflowComplete bool
+	// AsyncActionMode indicates if the machine is action mode
+	AsyncActionMode bool
+	// AsyncAction uuid of the last/current AsyncAction
+	// swagger:strfmt uuid
+	AsyncAction uuid.UUID
 }
 
 func (n *Machine) IsLocked() bool {
@@ -320,12 +332,12 @@ func (n *Machine) AuthKey() string {
 	return n.Key()
 }
 
-func (b *Machine) SliceOf() interface{} {
+func (m *Machine) SliceOf() interface{} {
 	s := []*Machine{}
 	return &s
 }
 
-func (b *Machine) ToModels(obj interface{}) []Model {
+func (m *Machine) ToModels(obj interface{}) []Model {
 	items := obj.(*[]*Machine)
 	res := make([]Model, len(*items))
 	for i, item := range *items {
@@ -335,68 +347,68 @@ func (b *Machine) ToModels(obj interface{}) []Model {
 }
 
 // match Param interface
-func (b *Machine) GetParams() map[string]interface{} {
-	return copyMap(b.Params)
+func (m *Machine) GetParams() map[string]interface{} {
+	return copyMap(m.Params)
 }
 
-func (b *Machine) SetParams(p map[string]interface{}) {
-	b.Params = copyMap(p)
+func (m *Machine) SetParams(p map[string]interface{}) {
+	m.Params = copyMap(p)
 }
 
 // match Profiler interface
-func (b *Machine) GetProfiles() []string {
-	return b.Profiles
+func (m *Machine) GetProfiles() []string {
+	return m.Profiles
 }
 
-func (b *Machine) SetProfiles(p []string) {
-	b.Profiles = p
+func (m *Machine) SetProfiles(p []string) {
+	m.Profiles = p
 }
 
 // match BootEnver interface
-func (b *Machine) GetBootEnv() string {
-	return b.BootEnv
+func (m *Machine) GetBootEnv() string {
+	return m.BootEnv
 }
 
-func (b *Machine) SetBootEnv(s string) {
-	b.BootEnv = s
+func (m *Machine) SetBootEnv(s string) {
+	m.BootEnv = s
 }
 
 // match TaskRunner interface
-func (b *Machine) GetTasks() []string {
-	return b.Tasks
+func (m *Machine) GetTasks() []string {
+	return m.Tasks
 }
 
-func (b *Machine) SetTasks(t []string) {
-	b.Tasks = t
+func (m *Machine) SetTasks(t []string) {
+	m.Tasks = t
 }
 
-func (b *Machine) RunningTask() int {
-	return b.CurrentTask
+func (m *Machine) RunningTask() int {
+	return m.CurrentTask
 }
 
-func (b *Machine) SetName(n string) {
-	b.Name = n
+func (m *Machine) SetName(n string) {
+	m.Name = n
 }
 
 // SplitTasks slits the machine's Tasks list into 3 subsets:
 //
-// 1. the immutable past, which cannot be chnaged by task list modification
+// 1. the immutable past, which cannot be changed by task list modification
 //
 // 2. The mutable present, which contains tasks that can be deleted, and where tasks can be added.
 //
 // 3. The immutable future, which also cannot be changed.
-func (b *Machine) SplitTasks() (thePast []string, thePresent []string, theFuture []string) {
+func (m *Machine) SplitTasks() (thePast []string, thePresent []string, theFuture []string) {
 	thePast, thePresent, theFuture = []string{}, []string{}, []string{}
-	if len(b.Tasks) == 0 {
+	if len(m.Tasks) == 0 {
 		return
 	}
-	if b.CurrentTask == -1 {
-		thePresent = b.Tasks[:]
-	} else if b.CurrentTask >= len(b.Tasks) {
-		thePast = b.Tasks[:]
+	if m.CurrentTask == -1 {
+		thePresent = m.Tasks[:]
+	} else if m.CurrentTask >= len(m.Tasks) {
+		thePast = m.Tasks[:]
 	} else {
-		thePast = b.Tasks[:b.CurrentTask+1]
-		thePresent = b.Tasks[b.CurrentTask+1:]
+		thePast = m.Tasks[:m.CurrentTask+1]
+		thePresent = m.Tasks[m.CurrentTask+1:]
 	}
 	for i := 0; i < len(thePresent); i++ {
 		if strings.HasPrefix(thePresent[i], "stage:") {
@@ -410,8 +422,8 @@ func (b *Machine) SplitTasks() (thePast []string, thePresent []string, theFuture
 
 // AddTasks is a helper for adding tasks to the machine Tasks list in
 // the mutable present.
-func (b *Machine) AddTasks(offset int, tasks ...string) error {
-	thePast, thePresent, theFuture := b.SplitTasks()
+func (m *Machine) AddTasks(offset int, tasks ...string) error {
+	thePast, thePresent, theFuture := m.SplitTasks()
 	if offset < 0 {
 		offset += len(thePresent) + 1
 		if offset < 0 {
@@ -448,16 +460,16 @@ func (b *Machine) AddTasks(offset int, tasks ...string) error {
 		thePresent = res
 	}
 	thePresent = append(thePresent, theFuture...)
-	b.Tasks = append(thePast, thePresent...)
+	m.Tasks = append(thePast, thePresent...)
 	return nil
 }
 
 // DelTasks allows you to delete tasks in the mutable present.
-func (b *Machine) DelTasks(tasks ...string) {
+func (m *Machine) DelTasks(tasks ...string) {
 	if len(tasks) == 0 {
 		return
 	}
-	thePast, thePresent, theFuture := b.SplitTasks()
+	thePast, thePresent, theFuture := m.SplitTasks()
 	if len(thePresent) == 0 {
 		return
 	}
@@ -471,9 +483,86 @@ func (b *Machine) DelTasks(tasks ...string) {
 		}
 	}
 	nextThePresent = append(nextThePresent, theFuture...)
-	b.Tasks = append(thePast, nextThePresent...)
+	m.Tasks = append(thePast, nextThePresent...)
 }
 
-func (b *Machine) CanHaveActions() bool {
+func (m *Machine) CanHaveActions() bool {
 	return true
+}
+
+func (m *Machine) SetAsyncMode() error {
+	if !m.WorkflowComplete {
+		return fmt.Errorf("Machine must be complete")
+	}
+	m.AsyncActionMode = true
+	m.Tasks = []string{}
+	m.CurrentTask = -1
+	return nil
+}
+
+func (m *Machine) ClearAsyncMode() ([]uuid.UUID, error) {
+	if !m.AsyncActionMode {
+		return []uuid.UUID{}, nil
+	}
+
+	m.AsyncActionMode = false
+	answer := []uuid.UUID{}
+	if m.AsyncAction != nil {
+		answer = append(answer, m.AsyncAction)
+	}
+	for i := m.CurrentTask; i < len(m.Tasks); i++ {
+		t := m.Tasks[i]
+		if strings.HasPrefix(t, MACHINE_ASYNC_ACTION_SEP) {
+			answer = append(answer, uuid.Parse(t[MACHINE_ASYNC_ACTION_PREF:]))
+		}
+	}
+	m.Tasks = []string{}
+	m.CurrentTask = -1
+	m.AsyncAction = nil
+	return answer, nil
+}
+
+func (m *Machine) AddAsyncAction(asyncAction uuid.UUID) error {
+	if !m.AsyncActionMode {
+		return fmt.Errorf("Machine is not in AsyncAction mode: %s", m.UUID())
+	}
+	m.Tasks = append(m.Tasks, fmt.Sprintf("async_action:%s", asyncAction.String()))
+	return nil
+}
+
+func (m *Machine) RemoveAsyncAction(asyncAction uuid.UUID) error {
+	if !m.AsyncActionMode {
+		return fmt.Errorf("Machine is not in AsyncAction mode")
+	}
+
+	start := -1
+	if m.AsyncAction.String() == asyncAction.String() {
+		start = m.CurrentTask
+		m.AsyncAction = uuid.NIL
+	}
+	end := -1
+	for i := m.CurrentTask; i < len(m.Tasks); i++ {
+		t := m.Tasks[i]
+		if strings.HasPrefix(t, MACHINE_ASYNC_ACTION_SEP) {
+			end = i
+			if start != -1 && end != -1 {
+				break
+			}
+			u := uuid.Parse(t[10:])
+			if u.String() == asyncAction.String() {
+				start = i
+			}
+		}
+	}
+	if end == -1 {
+		end = len(m.Tasks)
+	}
+	if start == -1 {
+		return fmt.Errorf("Failed to find the async_action: %s", asyncAction.String())
+	}
+
+	s := m.Tasks[:start]
+	s = append(s, m.Tasks[end:]...)
+	m.Tasks = s
+	return nil
 }

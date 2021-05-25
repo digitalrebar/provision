@@ -5,6 +5,7 @@ import (
 	"os"
 	"runtime"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/digitalrebar/provision/v4/agent"
@@ -157,6 +158,145 @@ func registerMachine(app *cobra.Command) {
 			return prettyPrint(clone)
 		},
 	})
+	async := &cobra.Command{
+		Use:   "async",
+		Short: "Access commands for manipulating the async actions queue",
+	}
+	async.AddCommand(&cobra.Command{
+		Use:   "on [id]",
+		Short: "Turn on async action mode for [id]",
+		Args: func(c *cobra.Command, args []string) error {
+			if len(args) != 1 {
+				return fmt.Errorf("%v requires 1 argument", c.UseLine())
+			}
+			return nil
+		},
+		RunE: func(c *cobra.Command, args []string) error {
+			m, err := op.refOrFill(args[0])
+			if err != nil {
+				return generateError(err, "Failed to fetch %v: %v", op.singleName, args[0])
+			}
+			clone := models.Clone(m).(*models.Machine)
+			clone.AsyncActionMode = true
+			req := Session.Req().PatchTo(m, clone)
+			if force {
+				req.Params("force", "true")
+			}
+			if err := req.Do(&clone); err != nil {
+				return err
+			}
+			return prettyPrint(clone)
+		},
+	})
+	async.AddCommand(&cobra.Command{
+		Use:   "off [id]",
+		Short: "Turn off async action mode for [id]",
+		Args: func(c *cobra.Command, args []string) error {
+			if len(args) != 1 {
+				return fmt.Errorf("%v requires 1 argument", c.UseLine())
+			}
+			return nil
+		},
+		RunE: func(c *cobra.Command, args []string) error {
+			m, err := op.refOrFill(args[0])
+			if err != nil {
+				return generateError(err, "Failed to fetch %v: %v", op.singleName, args[0])
+			}
+			clone := models.Clone(m).(*models.Machine)
+			clone.AsyncActionMode = false
+			req := Session.Req().PatchTo(m, clone)
+			if force {
+				req.Params("force", "true")
+			}
+			if err := req.Do(&clone); err != nil {
+				return err
+			}
+			return prettyPrint(clone)
+		},
+	})
+	async.AddCommand(&cobra.Command{
+		Use:   "add [id] [json|file|-|template] [params]",
+		Short: "Add an async action to the machine [id]",
+		Long:  `Using an async action object or template name, create an action and append it to the machine's task list`,
+		Args: func(c *cobra.Command, args []string) error {
+			if len(args) < 2 {
+				return fmt.Errorf("%v requires 2 or more arguments", c.UseLine())
+			}
+			return nil
+		},
+		RunE: func(c *cobra.Command, args []string) error {
+			id := args[0]
+			aa := &models.AsyncAction{}
+			var ref models.Model
+			ref = aa
+			if err := into(args[1], ref); err != nil {
+				if args[0] != "-" {
+					aa.AsyncActionTemplate = args[1]
+				} else {
+					return fmt.Errorf("Unable to create a new async_action: %v", err)
+				}
+			}
+			answer := &models.AsyncAction{}
+			if err := Session.Req().Post(aa).UrlFor("machines", id, "async_mode").Do(answer); err != nil {
+				return generateError(err, "Failed to add an async action to %v: %v", op.singleName, id)
+			}
+			return prettyPrint(answer)
+		},
+	})
+	async.AddCommand(&cobra.Command{
+		Use:   "remove [id] [aaid]",
+		Short: "Remove an async action [aaid] from the machine [id]",
+		Long:  `Removes the specified async action from the specified machine's task list`,
+		Args: func(c *cobra.Command, args []string) error {
+			if len(args) != 2 {
+				return fmt.Errorf("%v requires 2 argument", c.UseLine())
+			}
+			return nil
+		},
+		RunE: func(c *cobra.Command, args []string) error {
+			id := args[0]
+			aaid := args[1]
+			answer := &models.AsyncAction{}
+			if err := Session.Req().Del().UrlFor("machines", id, "async_mode", aaid).Do(answer); err != nil {
+				return generateError(err, "Failed to remove async action %v for %v: %v", aaid, op.singleName, id)
+			}
+			return prettyPrint(answer)
+		},
+	})
+	async.AddCommand(&cobra.Command{
+		Use:   "list [id]",
+		Short: "List current and pending async actions",
+		Args: func(c *cobra.Command, args []string) error {
+			if len(args) != 1 {
+				return fmt.Errorf("%v requires 1 argument", c.UseLine())
+			}
+			return nil
+		},
+		RunE: func(c *cobra.Command, args []string) error {
+			ref = ""
+			id := args[0]
+			m, err := op.refOrFill(id)
+			if err != nil {
+				return generateError(err, "Failed to fetch %v: %v", op.singleName, id)
+			}
+			machine := m.(*models.Machine)
+			if !machine.AsyncActionMode {
+				return fmt.Errorf("%s %s is not in async action mode", op.singleName, id)
+			}
+			answer := []string{}
+			if machine.AsyncAction.String() != "" {
+				answer = append(answer, machine.AsyncAction.String())
+			}
+			for _, t := range machine.Tasks {
+				if strings.HasPrefix(t, models.MACHINE_ASYNC_ACTION_SEP) {
+					answer = append(answer, t[models.MACHINE_ASYNC_ACTION_PREF:])
+				}
+			}
+			return prettyPrint(answer)
+		},
+	})
+	op.addCommand(async)
+
 	jobs := &cobra.Command{
 		Use:   "jobs",
 		Short: "Access commands for manipulating the current job",

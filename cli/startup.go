@@ -91,6 +91,7 @@ var ppr = func(c *cobra.Command, a []string) error {
 		}
 		var sessErr error
 		for _, endpoint = range defaultEndpoints {
+			endpoint = strings.TrimSuffix(endpoint, "/")
 			if token != "" {
 				Session, sessErr = api.TokenSession(endpoint, token)
 			} else {

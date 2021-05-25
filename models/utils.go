@@ -95,6 +95,9 @@ func All() []Model {
 		&Endpoint{},
 		&VersionSet{},
 		&CatalogItem{},
+		&AsyncAction{},
+		&AsyncActionTemplate{},
+		&AsyncActionCron{},
 	}
 }
 

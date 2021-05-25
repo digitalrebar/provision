@@ -8,6 +8,9 @@ func TestObject(t *testing.T) {
 	test := &crudTest{
 		name: "get objects",
 		expectRes: []string{
+			"async_action_crons",
+			"async_action_templates",
+			"async_actions",
 			"bootenvs",
 			"catalog_items",
 			"contexts",
