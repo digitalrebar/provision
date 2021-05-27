@@ -12,6 +12,8 @@ Runbooks
 
 Backup
 ------
+.. note:: This document is outdated and should only be used for v4.4.4 and older DRP systems.
+
 For the following commands it is assumed you already have ``drbup`` installed and in your PATH. For full documentation on ``drbup`` please see :ref:`the documentation <rs_drbup>`.
 
 * Create a backup of a running DRP endpoint. Backs up the system to a single file that can be shipped off to a separate server. In this process the dr-provision service will be stopped while the system is backed up. Once the backup is complete the service will be restarted.
