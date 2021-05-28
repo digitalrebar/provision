@@ -14,7 +14,7 @@ About
 -----
 
 In the v4.4.5 release and beyond, there is a preferred method for creating backups.  Using
-the *dr-waltool* program, a incremental backup can be done on a running system.
+the *dr-waltool* program, an incremental backup can be done on a running system.
 
 This backup can be used for archival purposes, restoration on failure, or movement of DRP from
 one machine to another.
