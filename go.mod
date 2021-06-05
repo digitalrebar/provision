@@ -31,7 +31,7 @@ require (
 	github.com/olekukonko/tablewriter v0.0.4
 	github.com/pborman/uuid v1.2.0
 	github.com/pkg/xattr v0.4.1
-	github.com/rackn/gohai v0.5.0
+	github.com/rackn/gohai v0.6.0
 	github.com/rackn/netwrangler v0.7.1
 	github.com/shirou/gopsutil v2.18.12+incompatible
 	github.com/shirou/w32 v0.0.0-20160930032740-bb4de0191aa4 // indirect
