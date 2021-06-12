@@ -1,0 +1,87 @@
+.. Copyright (c) 2021 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+
+.. REFERENCE kb-00000 for an example and information on how to use this template.
+.. If you make EDITS - ensure you update footer release date information.
+
+
+.. _VMware_Custom_ISO:
+
+kb-00065: VMware Custom ISO
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. _rs_kb_00065:
+
+Knowledge Base Article: kb-00065
+--------------------------------
+
+
+Description
+-----------
+When you need to build your own ISO for a VMware release that RackN does not provide a BootEnv for you need to build your own Template and BootEnv for it as well. This document will help you with that process. 
+Future versions of the vmware plugin should not require this process, but as of 4.6 it is still a requirement.
+
+
+Solution
+--------
+
+| To obtain our offline bundles you will need to grab them from here:
+|
+| For ESXi 6.x:
+| Firewall: https://rackn-repo.s3-us-west-2.amazonaws.com/packages/vmware/esxi/6.x/RKN-DRPY-FW-RULE_1.0-0.0.0003-offline_bundle-16370411.zip
+| Agent: https://rackn-repo.s3-us-west-2.amazonaws.com/packages/vmware/esxi/6.x/RKN-DRPY-Agent_1.3-0.0.0000-offline_bundle-17977725.zip
+| 
+| For ESXi 7.x
+| Firewall: https://rackn-repo.s3-us-west-2.amazonaws.com/packages/vmware/esxi/7.0/RKN-DRPY-FW-RULE_1.0-0.0.0003_16333171.zip
+| Agent: https://rackn-repo.s3-us-west-2.amazonaws.com/packages/vmware/esxi/7.0/RKN-DRPY-Agent_1.3-0.0.0000_17977727.zip
+
+For build instructions please refer to the vmware official documentation and select the version of vsphere relevant to what you are working with: https://docs.vmware.com/en/VMware-vSphere/7.0/com.vmware.esxi.install.doc/GUID-48AC6D6A-B936-4585-8720-A1F344E366F9.html
+
+.. note:: We are currently working on enhancements to our product that will make it so isos will not need to be built and the offline bundles we provide will installed during kickstart.
+
+When you build your own ISO that RackN does not provide a BootEnv for you must also build your own BootEnv and Templates (this is the case for anything not just vmware). For ESXi we provide a script to help with that process. To obtain that script you can visit:
+
+http://YOUR_DRP_ENDPOINT:8091/files/plugin_providers/vmware/scripts/make-esxi.sh
+
+This is a bash script that must be run from a Linux machine. Save this file and set it to be executable and run it
+
+..
+  
+    ./make-esxi.sh -x
+
+
+This will provide the full usage instructions with some common examples. This is known to work with the current version of that script, and is a common use case for 1 off ISOs that customers tend to build or need.
+
+..
+    
+    make-esxi.sh -g -c -B -o /tmp/output -i /tmp/isos -s YOUR_ISO_NAME_HERE.iso 
+
+
+Additional Information
+----------------------
+
+Additional resources and information related to this Knowledge Base article.
+
+
+See Also
+========
+
+
+Versions
+========
+
+
+Keywords
+========
+vmware, vib, offline bundle, custom iso
+
+
+Revision Information
+====================
+  ::
+
+    KB Article     :  kb-00065
+    initial release:  Thu 10 Jun 2021 08:49:10 AM CDT
+    updated release:  Thu 10 Jun 2021 08:49:10 AM CDT
+
