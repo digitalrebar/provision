@@ -103,8 +103,8 @@ github.com/pkg/xattr v0.4.1/go.mod h1:W2cGD0TBEus7MkUgv0tNZ9JutLtVO3cXu+IBRuHqnF
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/rackn/gohai v0.0.0-20190619164647-92918a701117/go.mod h1:1NhfVxJ6qD4S5ondz2CobWFiYlODF8ex4pNgQrKYCxc=
-github.com/rackn/gohai v0.6.0 h1:yNULHwYOSlcur9ntVp09tT6AUaZlgFXOoZHIfnKSPcs=
-github.com/rackn/gohai v0.6.0/go.mod h1:L14W5Y4U9zycW/zJlbg75nVbrO6qWj80FWHjiCgxnag=
+github.com/rackn/gohai v0.6.1 h1:Szqy3kaX4Tpw71mYhm5Ns7DKzMN7Z08GhLYXlUFaKyk=
+github.com/rackn/gohai v0.6.1/go.mod h1:L14W5Y4U9zycW/zJlbg75nVbrO6qWj80FWHjiCgxnag=
 github.com/rackn/netwrangler v0.7.1 h1:LzvDBlBOZ7nMvt50HyLeBM9eapRLf8oXRLyn1shGsy0=
 github.com/rackn/netwrangler v0.7.1/go.mod h1:hGj63TX3L7BRiZVZ3jIIsKTwy78VIpDHCoe1tkk//xI=
 github.com/russross/blackfriday v1.5.2 h1:HyvC0ARfnZBqnXwABFeSZHpKvJHJJfPz81GNueLj0oo=
