@@ -3,6 +3,7 @@ package cli
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"runtime"
 	"strconv"
 	"time"
@@ -23,7 +24,7 @@ func init() {
 	if DefaultStateLoc == "" {
 		switch runtime.GOOS {
 		case "windows":
-			DefaultStateLoc = `C:/Windows/System32/config/systemprofile/AppData/Local/rackn/drp-agent`
+			DefaultStateLoc = filepath.Join(os.Getenv("SYSTEMROOT"), `/System32/config/systemprofile/AppData/Local/rackn/drp-agent`)
 		default:
 			DefaultStateLoc = "/var/lib/drp-agent"
 		}
