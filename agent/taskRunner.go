@@ -181,6 +181,9 @@ func (r *runner) perform(action *models.JobAction, taskDir string) error {
 		cmdArray = append(cmdArray, "powershell.exe")
 		cmdArray = append(cmdArray, "-ExecutionPolicy Bypass")
 		cmdArray = append(cmdArray, "-File")
+	} else if strings.HasSuffix(taskFile, ".cmd") || strings.HasSuffix(taskFile, ".bat") {
+		cmdArray = append(cmdArray, "cmd.exe")
+		cmdArray = append(cmdArray, "/c")
 	}
 	cmdArray = append(cmdArray, "./"+path.Base(taskFile))
 	home := os.Getenv("HOME")
