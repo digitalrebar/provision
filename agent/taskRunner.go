@@ -182,11 +182,11 @@ func (r *runner) perform(action *models.JobAction, taskDir string) error {
 		cmdArray = append(cmdArray, "-ExecutionPolicy")
 		cmdArray = append(cmdArray, "Bypass")
 		cmdArray = append(cmdArray, "-File")
-	} else if strings.HasSuffix(taskFile, ".cmd") || strings.HasSuffix(taskFile, ".bat") {
-		cmdArray = append(cmdArray, "cmd.exe")
+	} else if strings.HasSuffix(taskFile, "cmd") || strings.HasSuffix(taskFile, "bat") {
+		cmdArray = append(cmdArray, os.Getenv("ComSpec"))
 		cmdArray = append(cmdArray, "/c")
 	}
-	cmdArray = append(cmdArray, "./"+path.Base(taskFile))
+	cmdArray = append(cmdArray, filepath.FromSlash("./"+path.Base(taskFile)))
 	home := os.Getenv("HOME")
 	if home == "" {
 		home = r.agentDir
