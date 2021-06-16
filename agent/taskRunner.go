@@ -179,6 +179,7 @@ func (r *runner) perform(action *models.JobAction, taskDir string) error {
 		cmdArray = append(cmdArray, interp)
 	} else if strings.HasSuffix(taskFile, "ps1") {
 		cmdArray = append(cmdArray, "powershell.exe")
+		cmdArray = append(cmdArray, "-ExecutionPolicy Bypass")
 		cmdArray = append(cmdArray, "-File")
 	}
 	cmdArray = append(cmdArray, "./"+path.Base(taskFile))
