@@ -25,16 +25,17 @@ type LicenseBundle struct {
 // License is used to authorize acess to extended dr-provision
 // features and functionality.
 type License struct {
-	Name            string
-	Version         string
-	Data            interface{}
-	PurchaseDate    time.Time
-	StartDate       time.Time
-	SoftExpireDate  time.Time
-	HardExpireDate  time.Time
-	ShortLicense    string
-	LongLicense     string
-	Active, Expired bool
+	Name                    string
+	Version                 string
+	Data                    interface{}
+	PurchaseDate            time.Time
+	StartDate               time.Time
+	SoftExpireDate          time.Time
+	HardExpireDate          time.Time
+	ContractTerminationDate time.Time
+	ShortLicense            string
+	LongLicense             string
+	Active, Expired         bool
 }
 
 func (l *License) Check(ref time.Time) (active, expired bool) {
