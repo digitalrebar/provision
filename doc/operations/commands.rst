@@ -4,9 +4,6 @@
 .. index::
   pair: Digital Rebar Provision; Using DRBUP
 
-.. toctree::
-    :glob:
-
 .. _rs_drbup:
 
 Backups Using drbup
