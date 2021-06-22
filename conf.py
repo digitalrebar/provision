@@ -396,6 +396,7 @@ urls = [
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/tenant-controller.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/tower.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/ux-views.rst",
+    "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/universal.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/validation.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/virtualbox-ipmi.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/vmware.rst",
