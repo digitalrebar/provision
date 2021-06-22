@@ -160,7 +160,7 @@ To enable any non-privileged user to start up the dr-provision binary and bind t
 
 Start the "dr-provision" binary as an ordinary user, and now it will have permission to bind to privileged ports 67 and 69.
 
-For automated :ref:`rs_upgrade`_ from within DRP, the user that is running DRP needs to have the following in /etc/sudousers.  In this example, `drp-user` is the user running DRP.  This will allow DRP to update itself.
+For automated :ref:`rs_upgrade` from within DRP, the user that is running DRP needs to have the following in /etc/sudousers.  In this example, `drp-user` is the user running DRP.  This will allow DRP to update itself.
 
   ::
 

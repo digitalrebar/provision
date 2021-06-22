@@ -122,7 +122,7 @@ Table of Contents
 Licenses
 --------
 
-Digital Rebar Server is proprietary licensed software available in compiled binary format from `RackN <rackn.com/rebar/>`_.
+Digital Rebar Server is proprietary licensed software available in compiled binary format from `RackN Rebar <rackn.com/rebar/>`_.
 
 Code for Digital Rebar client and many catalog componets is available from multiple authors under the `Apache 2 license <https://raw.githubusercontent.com/digitalrebar/provision/v4/LICENSE>`_.
 
