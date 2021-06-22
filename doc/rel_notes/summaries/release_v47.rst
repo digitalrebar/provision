@@ -9,7 +9,7 @@
 .. _rs_release_v47:
 
 Digital Rebar version 4.7 [in process]
------------------------------------
+--------------------------------------
 
 Release Date: expected July 2021
 

@@ -127,7 +127,7 @@ We try to filter all sensitive data out of the server logs.  Sensitive data may 
 
 Job logs, which are often operator created content, may contain sensitive information.  They are maintained separately so they can be quickly purged or managed independently of server logs.
 
-.. _rs_security_condidentiality:
+.. _rs_security_confidentiality:
 
 Confidentiality Questions
 -------------------------
@@ -400,7 +400,7 @@ We recommend that operators install a local copy of the RackN UX as a backup.
 What is at risk from a RackN insider threat or 3rd party website compromise?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-A compromise of RackN tracked information would potentially provide an attacker with information about the DRP version installed, it's internal name or IP address (depeending on customer configuration) and number of machines managed by each DRP endpoint.
+A compromise of RackN tracked information would potentially provide an attacker with information about the DRP version installed, it's internal name or IP address (depending on customer configuration) and number of machines managed by each DRP endpoint.
 
 Since RackN has no access or credentials, this information is only of value for an attacker who has already penetrated the customer networks and then discovered customer DRP access information.
 
@@ -415,14 +415,8 @@ Overall security Security
 Does RackN maintaining a Common Vulnerabilities and Exposures (CVE) list?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Yes, see the list below or the Release :ref:`rs_cve` section.  The reporter and RackN customers get advanced notice before public reporting (typically 30 days).  `Create a ticket <https://rackn.zendesk.com/hc/en-us/requests/new>`_ to report an issue.
-
-.. toctree::
-   :maxdepth: 1
-   :glob:
-
-   ../security/*
-
+Yes, the list in the Release :ref:`rs_cve` section.  The reporter and RackN customers get advanced notice before public reporting (typically 30 days).
+`Create a ticket <https://rackn.zendesk.com/hc/en-us/requests/new>`_ to report an issue.
 
 Is DRP protected against Top 10 OWASP?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
