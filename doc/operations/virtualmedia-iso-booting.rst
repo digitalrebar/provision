@@ -38,9 +38,14 @@ path.
 
 Here is a short-ish (10 min) video demonstrating this feature:
 
-aa .. youtube:: YkGbi2jKM18
-aa   :width: 100%
+.. raw:: html
 
+    <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; margin-bottom: 2em; max-width: 100%; height: auto;">
+        <iframe src="https://www.youtube.com/embed/YkGbi2jkM18" frameborder="0" allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe>
+    </div>
+
+.. youtube:: YkGbi2jKM18
+  :width: 100%
 
 Supported Platforms
 -------------------
