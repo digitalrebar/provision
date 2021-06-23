@@ -123,3 +123,4 @@ This section is intended to provide general information about and functional of 
   This deprecated composition simplifies that precedence calculation for Params by making Machines the
   top of the Profiles stack.  All the other fields in the Machines.Profile are ignored.
 
+.. swaggerv2doc:: https://rebar-catalog.s3-us-west-2.amazonaws.com/swagger.json
