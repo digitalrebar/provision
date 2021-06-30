@@ -53,17 +53,17 @@ Universal Workflow UX Helpers
 
 The components of Universal Workflow are all included the the v4.6 release.  v4.7 will include UX tools that help make the feature more accessible.
 
-
-Restricted Access ISOs
-~~~~~~~~~~~~~~~~~~~~~~
-
-Planned, not committed
-
-
-Integrated Simple DNS
+Consolidated BootEnvs
 ~~~~~~~~~~~~~~~~~~~~~
 
-Planned, not committed
+Integrated Billing
+~~~~~~~~~~~~~~~~~~
+
+Hardware Support
+~~~~~~~~~~~~~~~~
+
+* LPAR
+* Super Micro
 
 
 .. _rs_release_v47_otheritems:
@@ -72,4 +72,4 @@ Other Items of Note
 ~~~~~~~~~~~~~~~~~~~
 
 * UX
-* TBD
+* BOOTP Support
