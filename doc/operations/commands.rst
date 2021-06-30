@@ -4,13 +4,13 @@
 .. index::
   pair: Digital Rebar Provision; Using DRBUP
 
-.. toctree::
-    :glob:
-
 .. _rs_drbup:
 
 Backups Using drbup
 ===================
+.. note::
+
+    Please note this tool is deprecated and is no longer supported. You should be using dr-waltool. Information about that tool can be found here: :ref:`rs_backup_restore`
 
 .. code-block:: bash
 

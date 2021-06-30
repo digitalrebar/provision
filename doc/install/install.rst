@@ -25,30 +25,30 @@ Each of these environments requires careful setup up of your network environment
 Get Code
 --------
 
-The code is delivered by zip file with a sha256sum to validate contents.  These are stored in an AWS S3 bucket and referenced by the catalog found at `catalog <https://repo.rackn.io/>`_.  You can view the Catalog contents with a simple ``curl`` command (``curl -s --compressed https://repo.rackn.io``), and with ``jq``, parse it to find the paths where things are stored.  However, parsing the Catalog file is generally not needed.
+The code is delivered by as a TAR GZipped file (though it carries a ``.zip`` filename extension) with a sha256sum to validate contents.  These are stored in an AWS S3 bucket and referenced by the catalog found at `catalog <https://repo.rackn.io/>`_.  You can view the Catalog contents with a simple ``curl`` command (``curl -s --compressed https://repo.rackn.io``), and with ``jq``, parse it to find the paths where things are stored.  However, parsing the Catalog file is generally not needed.
 
 There are at least 3 releases to choose from:
 
   * **tip** - This is the most recent code.  This is the latest build of master.  It is bleeding edge and while the project attempts to be very stable with master, it can have issues.
   * **stable** - This is the most recent **stable** code.
-  * **v4.0.1** - There will be a set of Semantic Versioning (aka semver) named releases.  This is just ane example version string.
+  * **v4.6.4** - There will be a set of Semantic Versioning (aka semver) named releases.  This is just ane example version string.
 
 Previous releases will continue to be available in tag/release history.  For additional information, see :ref:`rs_release_process`.
 
 When using the **install.sh** script, the version can be specified by the **--drp-version** flag,
-e.g. *--drp-version=v4.2.2*.
+e.g. *--drp-version=v4.6.4*.
 
 Updating for current version, an example command sequence for Linux would be:
 
   ::
 
-    export DRPVERSION="v4.2.4"
+    export DRPVERSION="v4.6.4"        # plz check for current ver before blindly using this!!
     mkdir dr-provision-install
     cd dr-provision-install
     curl -fsSL https://rebar-catalog.s3-us-west-2.amazonaws.com/drp/$DRPVERSION.zip -o dr-provision.zip
     curl -fsSL https://rebar-catalog.s3-us-west-2.amazonaws.com/drp/$DRPVERSION.sha256 -o dr-provision.sha256
     sha256sum -c dr-provision.sha256
-    unzip dr-provision.zip
+    tar -xzvf dr-provision.zip        # yes - it's really not a 'zip' file
 
 At this point, the **install.sh** script is available in the **tools** directory.  It can be used to continue the process or continue following the steps in the next sections.
 
@@ -160,7 +160,7 @@ To enable any non-privileged user to start up the dr-provision binary and bind t
 
 Start the "dr-provision" binary as an ordinary user, and now it will have permission to bind to privileged ports 67 and 69.
 
-For automated :ref:`rs_upgrade`_ from within DRP, the user that is running DRP needs to have the following in /etc/sudousers.  In this example, `drp-user` is the user running DRP.  This will allow DRP to update itself.
+For automated :ref:`rs_upgrade` from within DRP, the user that is running DRP needs to have the following in /etc/sudousers.  In this example, `drp-user` is the user running DRP.  This will allow DRP to update itself.
 
   ::
 

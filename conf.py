@@ -379,6 +379,7 @@ urls = [
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/image-builder.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/image-deploy.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/ipmi.rst",
+    "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/kube-lib.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/krib.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/kvm-test.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/lenovo-support.rst",
@@ -396,6 +397,7 @@ urls = [
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/tenant-controller.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/tower.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/ux-views.rst",
+    "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/universal.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/validation.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/virtualbox-ipmi.rst",
     "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/vmware.rst",
@@ -403,11 +405,10 @@ urls = [
 ]
 fetch_n_save(urls, path="doc/content-packages")
 
-urls = [
-    "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/commands.rst",
-]
-
-fetch_n_save(urls, path="doc/operations")
+#urls = [
+#    "https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/commands.rst",
+#]
+#fetch_n_save(urls, path="doc/operations")
 
 urls = fetch_urls("https://s3-us-west-2.amazonaws.com/rebar-catalog/docs/rel-notes/drp.filelist")
 fetch_n_save(urls, path="doc/rel_notes/drp")

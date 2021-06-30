@@ -11,7 +11,7 @@ Digital Rebar is Self-Managed Software
 
 Digital Rebar is software designed to be self-managed by the infrastructure operator, not remotely by RackN as a SaaS. For this reason, users must install a Digital Rebar service endpoint before using the software.  Further, RackN never has access to the endpoint APIs or credentials.
 
-RackN Digital Rebar offers unique approach to delivering infratructure software.  We're proud to be innovating in ways that allow operators to control their own destiny and keep their secret secrets while also providing the very latest feature set and capabilities.
+RackN Digital Rebar offers unique approach to delivering infrastructure software.  We're proud to be innovating in ways that allow operators to control their own destiny and keep their secret secrets while also providing the very latest feature set and capabilities.
 
 This page addresses common questions about Digital Rebar as self-managed software.
 
@@ -49,10 +49,10 @@ We know that a strong infrastructure foundation leaves companies to focus on the
 
 .. _rs_self_managed_ux:
 
-Why doees the RackN UX launch from RackN.io if my install is local?
--------------------------------------------------------------------
+Why does the RackN UX launch from RackN.io if my install is local?
+------------------------------------------------------------------
 
-The RackN UX is a "single page application" based on React.  It does not matter where the inital application is loaded from because that is just downloading the application to your web browser.  Once it's loaded, it connects directly between your client browser and your Digital Rebar endpoint.  Your Digital Rebar API traffic is local to your networks.
+The RackN UX is a "single page application" based on React.  It does not matter where the initial application is loaded from because that is just downloading the application to your web browser.  Once it's loaded, it connects directly between your client browser and your Digital Rebar endpoint.  Your Digital Rebar API traffic is local to your networks.
 
 Our enterprise licensed customers have the option of running the UX, and every other component, completely behind their firewall.  The Digital Rebar has a static webserver integrated specifically for this purpose.
 
@@ -76,13 +76,13 @@ Common Questions about Self-Managed Software
 * I can host the UX myself?  Yes.  Depending on your license tier, RackN makes the UX available for local install.  Digital Rebar is able to host the UX from the Endpoint.
 * Can RackN access my system?  No.  We do not store or maintain any credentials or access to your system.
 * What data does RackN collect?
-  * From the Endpoint, nothing.  The exception is when the the Billing plugin is installed for activity based users.
-  * From the UX, we collect the following types of data:
-    * the data available from ``drpcli info get``
-    * the license in use on the endpoint
-    * app page usage via Google Analytics
-    * synchronization with RackN message queue
-    * For "air-gap" enabled licenses, all of the following are disabled.
+   * From the Endpoint, nothing.  The exception is when the the Billing plugin is installed for activity based users.
+   * From the UX, we collect the following types of data:
+      * the data available from ``drpcli info get``
+      * the license in use on the endpoint
+      * app page usage via Google Analytics
+      * synchronization with RackN message queue
+      * For "air-gap" enabled licenses, all of the following are disabled.
 * How can I secure Digital Rebar?  See :ref:`rs_security_faq`
 
 .. _rs_self_managed_install:

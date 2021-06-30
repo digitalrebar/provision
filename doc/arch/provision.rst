@@ -122,7 +122,7 @@ template.  RenderData has the following fields:
     .ParamAsJSON and .ParamAsYAML below.
 
   - **.ParamCompose <key>** like Param above, except that it returns the
-    composed value of a parameter across _all sources_ instead of choosing the
+    composed value of a parameter across *all sources* instead of choosing the
     first from the Param precedence.
 
   - **.ParamExpand <key>** returns the value for the specified key for this
@@ -138,7 +138,7 @@ template.  RenderData has the following fields:
       each element.
 
   - **.ParamComposeExpand <key>** like ParamExpand above, except that it returns the
-    composed value of a parameter across _all sources_ instead of choosing the
+    composed value of a parameter across *all sources* instead of choosing the
     first from the ParamExpand precedence.
 
   - **.ParamAsJSON <key>** returns the value for the specified key for this

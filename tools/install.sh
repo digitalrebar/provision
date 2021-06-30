@@ -312,7 +312,7 @@ while (( $# > 0 )); do
         --container-netns)          CNT_NETNS="${arg_data}"                           ;;
         --container-env)            CNT_ENV="${arg_data}"                             ;;
         --universal)                UNIVERSAL=true; BOOTSTRAP=true;
-                                    SYSTEMD=true;
+                                    SYSTEMD=true; STARTUP=true;
                                     CREATE_SELF=true; START_RUNNER=true;
                                     INITIAL_WORKFLOW="universal-bootstrap";
                                     INITIAL_CONTENTS="universal,";

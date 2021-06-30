@@ -59,7 +59,7 @@ None at this time.
 Integrated Multi-Site Manager
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-_This is a licensed feature_
+**This is a licensed feature**
 
 This release integrated the Multi-Site Management features directly into DRP core instead of providing it as a plug-in.  While this change only has minor impacts on the API, it significantly improved the performance and resilience of the manager.
 

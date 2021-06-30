@@ -20,14 +20,14 @@ complex, and will generally require a fair amount of trial and error before it i
 working successfully.
 
 This document outlines several **example** configurations as potential starting points
-for building your own customized paritioning scheme.  Please note that each of the
-below examples may have **very specific** requiremens on the number, size, and type
+for building your own customized partitioning scheme.  Please note that each of the
+below examples may have **very specific** requirements on the number, size, and type
 of disks for the example to work correctly.  If these pre-conditions are not
 carefully observed, you are almost guaranteed to not build a successful filesystem
 structure.
 
 .. note:: When you build a successful new partitioning layout, please consider forwarding
-          to RackN Support for inclusing in this document.  Or better yet, open a Pull
+          to RackN Support for including in this document.  Or better yet, open a Pull
           Request to submit the new setup!!
 
 Additional documentation on the Image Deploy capabilities within DRP can be found at the
@@ -79,7 +79,7 @@ Notes:
           path: /
           device: disk0-part1-format-root
 
-.. _id_stor_2_linux_single_paritioned:
+.. _id_stor_2_linux_single_partitioned:
 
 Linux Single Disk, Separate Partitions
 --------------------------------------
@@ -942,14 +942,14 @@ Notes:
        type: mount
 
 
-.. _id_stor_8_linux_two_disks
+.. _id_stor_8_linux_two_disks:
 
 Linux Two Separate Disks
 ------------------------
 
 This example is for two disks.  The first disk is used for boot/root partitions.
 The ``boot`` partition is a GPT partition on disk, while remaining ``root`` and
-``swap` are LVM volumes.
+``swap`` are LVM volumes.
 
 The second disk contains several separate filesystems.  All partition types are
 using EXT4 format.  Note that the *longhorn* named filesystems can be altered to

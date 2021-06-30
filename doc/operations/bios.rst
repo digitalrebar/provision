@@ -124,4 +124,3 @@ video references for more details:
 
 .. youtube:: ABCDEFGHI
    :width: 100%
-
