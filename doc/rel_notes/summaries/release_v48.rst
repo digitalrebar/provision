@@ -51,6 +51,23 @@ The following items are flagged as deprecated in v4.5 and were removed in v4.8.
 FEATURE TBD
 ~~~~~~~~~~~
 
+Asynch Actions
+~~~~~~~~~~~~~
+
+May slip to v4.8
+
+Restricted Access ISOs
+~~~~~~~~~~~~~~~~~~~~~~
+
+Planned, not committed
+
+
+Integrated Simple DNS
+~~~~~~~~~~~~~~~~~~~~~
+
+Planned, not committed
+
+
 
 .. _rs_release_v48_otheritems:
 

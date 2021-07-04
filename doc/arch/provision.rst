@@ -147,6 +147,9 @@ template.  RenderData has the following fields:
 
     Note: .ParamAsJSON will use the .Param lookup order above.
 
+    Note For correct quoting in bash, make sure to use single quotes when setting
+    this value into a variable.  For example: ``VAR='{{ .ParamAsJSON "myparam" }}'``.
+
   - **.ParamAsYAML <key>** returns the value for the specified key for this
     rendering preserved in YAML formatting.  This is important for configuration
     files and templates that need consistent formatting
