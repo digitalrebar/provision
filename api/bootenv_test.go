@@ -462,7 +462,7 @@ Templates:
 			Type:  "PATCH",
 			Messages: []string{
 				"Patch error at line 0: Test op failed.",
-				"Patch line: {\"op\":\"test\",\"path\":\"/OS/Name\",\"from\":\"\",\"value\":\"ffred\"}",
+				"Patch: [\n  {\n    \"op\": \"test\",\n    \"path\": \"/OS/Name\",\n    \"from\": \"\",\n    \"value\": \"ffred\"\n  },\n  {\n    \"op\": \"replace\",\n    \"path\": \"/OS/Name\",\n    \"from\": \"\",\n    \"value\": \"qfred\"\n  }\n]",
 			},
 			Code: 409,
 		},
