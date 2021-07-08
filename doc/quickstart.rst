@@ -43,6 +43,14 @@ For a quick trial, we recommend using a dedicated Virtual Machine using `host on
 * 20 Gb of Disk Space (60 Gb is better because some O/S installation ISOs require much more space)
 * Access to the internet to download components (*not* a requirement for production systems)
 * Provisioning network without a DHCP server (Digital Rebar will provide DHCP by default)
+* Create a rule in firewall for ports 8091 and 8092 
+
+.. code-block:: bash
+
+   firewall-cmd --permanent --add-port=8091-8092/tcp
+
+.. note::
+   you may also need to open the ports for DHCP see :ref:`rs_arch_ports`
 
 If you are concerned about installing Digital Rebar as a service, please review our :ref:`rs_install_dev` guide to run it isolated in a single directory.
 
