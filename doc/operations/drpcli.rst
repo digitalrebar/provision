@@ -7,7 +7,7 @@
 Using the ``drpcli`` tool
 +++++++++++++++++++++++++
 
-.. note:: **drpcli** normally spits out JSON formatted objects or an array of objects.  To help with some of the command line functions, we use the **jq** tool.  This is available for both Linux and Darwin.  You can specify output format to be YAML, with the ``--format=yaml`` flag.
+.. note:: **drpcli** normally outputs JSON formatted objects or an array of objects.  To help with some of the command line functions, we use the **jq** tool.  This is available for both Linux and Darwin.  You can specify output format to be YAML, with the ``--format=yaml`` flag.
 
 In this doc we will assume that ``drpcli`` is already somewhere in the path and have setup the environment variables to access Digital Rebar Provision.  See, :ref:`rs_cli`.
 
@@ -41,7 +41,7 @@ Would be equivalent to the HTTP REST API resource as follows:
 
   ::
 
-    https://127.0.0.1:8092/api/v3/templates/ereate
+    https://127.0.0.1:8092/api/v3/templates/create
 
 .. note:: See the :ref:`rs_autocomplete` for BASH shell auto completion.
 
