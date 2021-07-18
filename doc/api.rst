@@ -10,9 +10,30 @@
 Digital Rebar Provision API
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In general, the Digital Rebar Provision API is documented via the Swagger spec and introspectable for machines via `/swagger.json` and for humans via `/swagger-ui`.  See :ref:`rs_swagger`.
-
 All API calls are available under `/api/v3` based on the Digital Rebar API convention.
+
+.. _rs_api_swagger:
+
+API Call Documentation (swagger.json)
+-------------------------------------
+
+Digital Rebar API documentation is dynamically generated an with each Digital Rebar endpoint in the form of a ``swagger.json`` file.
+
+The Swagger specification file is introspectable for clients via `[endpoint url]/swagger.json` and for humans via the Swagger UX built into all DRP endpoints at `[endpoint url]/swagger-ui`.
+
+For more details, see :ref:`rs_swagger`.
+
+.. _rs_api_patch:
+
+API PUT vs PATCH
+----------------
+
+RackN strongly recommends API consumers to use PATCH wherever possible instead of PUT.
+PATCH allows API calls to change specific object fields and may include tests to prevent race conditions.
+
+For example, the :ref:`rs_drpcli` and RackN UX use JSON PATCH (https://tools.ietf.org/html/rfc6902) instead of PUT extensively.  PATCH allows atomic field-level updates by including tests in the update.  This means that simulataneous upates do not create "last in" race conditions.  Instead, the update will fail in a predictable way that can be used in scripts.
+
+The DRPCLI facilitates use of PATCH for atomic operations by allowing scripts to pass in a reference (aka pre-modified) object.  If the ``-r`` reference object does not match then the update will be rejected.
 
 .. _rs_api_filters:
 
@@ -93,7 +114,12 @@ You can also interact with the API using ``curl``.  The general pattern is:
 
   ::
 
+    # option 1: basic auth user:password
     curl -X <method> -k -u <username>:<password> -H `Content-Type: application/json' -H 'Accept: application/json' https://<endpoint addr>:<port>/api/v3/<opject type>/<object ID>
+
+    # option 2: basic auth with token 
+    export RS_TOKEN=$(drpcli -P <password> users token <username>)
+    curl -X <method> -k --header 'Authorization: Basic $RS_TOKEN' -H `Content-Type: application/json' -H 'Accept: application/json' https://<endpoint addr>:<port>/api/v3/<opject type>/<object ID>
 
 In the remainder of this section, <object type> refers to the lower case, pluralized version of the type of object.  This is `bootenvs` for boot environments, `workflows` for workflows, `machines` for machines, and so on.
 <object id> refers to the unique identifier for this object, which is generally the `Name`, `ID` or `Uuid` field of an object.  You can also use any unique index in this field, in the form of `<index name>:<value>`.
@@ -110,6 +136,7 @@ The API follows the usual REST guidelines:
 * HEAD /spi/v3/<object type>/<object id> tests to see if the requested object exists.
 
 .. _rs_api_notes:
+
 
 API Exception & Deprecation Notes
 ---------------------------------

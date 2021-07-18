@@ -1,5 +1,13 @@
-drpcli
-------
+.. Copyright (c) 2021 RackN Inc.
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. Digital Rebar Provision documentation under Digital Rebar master license
+.. index::
+  pair: Digital Rebar Provision; CLI
+
+.. _rs_drpcli:
+
+Digital Rebar CLI (drpcli)
+--------------------------
 
 A CLI application for interacting with the DigitalRebar Provision API
 
