@@ -19,6 +19,7 @@ Digital Rebar for developers and power users.
    arch/models
    arch/auth
    arch/provision
+   arch/whoami
    arch/dhcp
    arch/sledgehammer
    arch/universal

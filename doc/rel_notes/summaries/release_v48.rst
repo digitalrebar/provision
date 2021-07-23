@@ -68,8 +68,8 @@ Enhance RackN Portal UX to provide additional user guidance for Universal Workfl
 WorkUnits / AsynchActions (Preview)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Create a new operational mode for the Digital Rebar runner that allows tasks to be perforemed
-asynchronusly outside of Workflows.  This allows machines to be addressed 
+Create a new operational mode for the Digital Rebar runner that allows tasks to be performed
+asynchronously outside of Workflows.  This allows machines to be addressed as services.
 
 .. _rs_release_v48_ux:
 
