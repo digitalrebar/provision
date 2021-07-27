@@ -18,8 +18,8 @@ Here is the basic structure of a curl command using an auth token
 
   ::
 
-    export TOKEN=$(./drpcli users token [username] | jq -r .Token)
-    curl -H "Authorization: Bearer $TOKEN" --insecure https//[endpoint url]/api/v3/info
+    export RS_TOKEN=$(./drpcli users token [username] | jq -r .Token)
+    curl -H "Authorization: Bearer $RS_TOKEN" --insecure https//[endpoint url]/api/v3/info
 
 You can also use user security
 
@@ -30,6 +30,8 @@ You can also use user security
 
 .. note: the ``--insecure`` flag is needed if you are using self-signed certificates.
 
+.. _rs_dev_curl_iso:
+
 Uploading ISO, File or Plugin Providers
 ---------------------------------------
 
@@ -37,5 +39,26 @@ For binary items, Digital Rebar Provision expects either and "application/octet-
 
   ::
 
-    export TOKEN=$(./drpcli users token [username] | jq -r .Token)
-    curl -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: multipart/form-data" -F "file=@[filepath]/[filename]" --insecure https://[endpoint url]/api/v3/isos/[filename]
+    export RS_TOKEN=$(./drpcli users token [username] | jq -r .Token)
+    curl -X POST  --insecure \
+      -H "Authorization: Bearer $RS_TOKEN" \
+      -H "Content-Type: multipart/form-data" \
+      -F "file=@[filepath]/[filename]"\
+      https://[endpoint url]/api/v3/isos/[filename]
+
+.. _rs_dev_patch:
+
+Using PATCH with CURL
+---------------------
+
+For updates with the Digital Rebar API, PATCH is strongly prefered over PUT.
+
+Here's an example of updating an object using PATCH
+
+  ::
+
+    curl -X PATCH --insecure \
+        -H "Authorization: Bearer $RS_TOKEN" \
+        -H "Content-Type: application/json" \
+        -d '[{"op":"replace", "path":"/Fingerprint/CloudInstanceID", "value":"cloud:314159265"}]' \
+        {{.ApiURL}}/api/v3/machines/$RS_UUID
