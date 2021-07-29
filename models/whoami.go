@@ -3,7 +3,9 @@ package models
 import (
 	"bytes"
 	"crypto/sha256"
+	"encoding/json"
 	"fmt"
+	"os"
 	"sort"
 	"strings"
 
@@ -26,6 +28,15 @@ type Whoami struct {
 	Fingerprint MachineFingerprint
 	MacAddrs    []string
 	OnDiskUUID  string
+}
+
+// Minimal Cloud Init JSON needed for Fill to collect Cloud ID
+type CloudInit struct {
+	V1 CloudInitv1 `json:"v1,omitempty"`
+}
+type CloudInitv1 struct {
+	CloudName  string `json:"cloud_name,omitempty"`
+	InstanceID string `json:"instance_id,omitempty"`
 }
 
 // From Ubuntu's fwts package.  We should update these every once in a while.
@@ -178,6 +189,17 @@ func (w *Whoami) Fill() error {
 	if err != nil {
 		return err
 	}
+	// Try to open cloud-init file
+	if initFile, err := os.Open("/run/cloud-init/instance-data.json"); err == nil {
+		defer initFile.Close()
+		dec := json.NewDecoder(initFile)
+		var cloudInit CloudInit
+		if err2 := dec.Decode(&cloudInit); err2 == nil {
+			w.Fingerprint.CloudInstanceID = fmt.Sprintf("%s:%s", cloudInit.V1.CloudName, cloudInit.V1.InstanceID)
+		} else {
+			w.Fingerprint.CloudInstanceID = "PARSE ERROR"
+		}
+	}
 	if dmiinfo.Hypervisor == "" {
 		// we can only trust that this information will be unique and independent from
 		// another if running on physical hardware.  This may be a false positive as
@@ -292,6 +314,11 @@ func (w *Whoami) Score(m *Machine) (score int) {
 	if m.Fingerprint.SystemUUID != "" {
 		if w.Fingerprint.SystemUUID == m.Fingerprint.SystemUUID {
 			score += 50
+		}
+	}
+	if m.Fingerprint.CloudInstanceID != "" {
+		if w.Fingerprint.CloudInstanceID == m.Fingerprint.CloudInstanceID {
+			score += 500
 		}
 	}
 	var matched int

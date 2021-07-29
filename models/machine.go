@@ -57,6 +57,9 @@ type MachineFingerprint struct {
 	// DMI.System.Manufacturer + DMI.System.ProductName + DMI.Chassis[0].SerialNumber, SHA256 hashed
 	// Hash must not be zero-length to match. 25 points
 	CSNHash []byte
+	// Cloud-init file in /run/cloud-init/instance-data.json
+	// String from ID of '.v1.cloud_name' + '.v1.instance_id'. 500 point match
+	CloudInstanceID string
 	// DMI.System.UUID, not hashed. Must be non zero length and must be a non-zero UUID. 50 point match
 	SystemUUID string
 	// MemoryIds is an array of SHA256sums if the following fields in each
