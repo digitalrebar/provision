@@ -52,7 +52,8 @@ criteria:
 
 If the score is less than 100 at the end of the scoring process, it is rounded down
 to zero.  The intent is to be resilient in the face of hardware changes:
-  * SSNHash, CSNHash, and SystemUUID come from the motherboard.
-  * MemoryIds are generated deterministically from the DIMMs installed in the system
-  * MacAddrs comes from the physical Ethernet devices in the system.
+
+ * SSNHash, CSNHash, and SystemUUID come from the motherboard.
+ * MemoryIds are generated deterministically from the DIMMs installed in the system
+ * MacAddrs comes from the physical Ethernet devices in the system.
 
