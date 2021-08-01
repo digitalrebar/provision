@@ -1,0 +1,44 @@
+name: Java CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        go_version: [1.16.x]
+
+    runs-on: ubuntu-latest
+
+    steps:
+      # Still need to get go in place
+      - name: Install packages
+        run: sudo apt-get install -y bsdtar
+      - name: GEt AWS CLI
+        run: curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
+      - name: Unpack AWS CLI
+        run: unzip awscli-bundle.zip
+      - name: Install AWS CLI
+        run: "./awscli-bundle/install -b ~/bin/aws"
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Set up Go 1.X
+        uses: actions/setup-go@v1
+        with:
+          go-version: ${{ matrix.go_version }}
+      - name: BUild product
+        run: "./tools/build.sh"
+      - name: Update release notes
+        run: "./tools/build_rel_notes.sh"
+      - name: Publish to directories
+        run: "./tools/publish.sh"
+      - name: Run tests
+        run: "./tools/test.sh"
+
+# For Server
+#      - uses: codecov/codecov-action@v1
+#        with:
+#         file: target/site/jacoco/jacoco.xml
+
