@@ -15,7 +15,7 @@ jobs:
     steps:
       # Still need to get go in place
       - name: Install packages
-        run: sudo apt-get install -y bsdtar
+        run: sudo apt-get install -y libarchive-tools
       - name: GEt AWS CLI
         run: curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
       - name: Unpack AWS CLI
