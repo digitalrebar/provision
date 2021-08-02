@@ -24,6 +24,8 @@ jobs:
         run: "./awscli-bundle/install -b ~/bin/aws"
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 500
       - name: Set up Go 1.X
         uses: actions/setup-go@v2
         with:
