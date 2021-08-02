@@ -15,13 +15,11 @@ elif ! (( ${BASH_REMATCH[1]} > ${WANTED_VER[0]} || ${BASH_REMATCH[2]} >= ${WANTE
     exit -1
 fi
 
-if [[ $TRAVIS = true ]]; then
-    # Sigh.  Work around some rate-limiting hoodoo, hopefully
-    for i in 1 2 3 4 5; do
-        go mod download && break
-        sleep $i
-    done
-fi
+# Sigh.  Work around some rate-limiting hoodoo, hopefully
+for i in 1 2 3 4 5; do
+    go mod download && break
+    sleep $i
+done
 
 go build -o drpcli-docs cmds/drpcli-docs/drpcli-docs.go
 # set our arch:os build pairs to compile for
