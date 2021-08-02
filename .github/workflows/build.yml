@@ -23,9 +23,9 @@ jobs:
       - name: Install AWS CLI
         run: "./awscli-bundle/install -b ~/bin/aws"
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
       - name: Set up Go 1.X
-        uses: actions/setup-go@v1
+        uses: actions/setup-go@v2
         with:
           go-version: ${{ matrix.go_version }}
       - name: BUild product
