@@ -1425,7 +1425,9 @@ EOF
            echo -e "$PREF_INFO No 'drpcli' backup file found ('$(c_file "$CLI_BKUP")')."
          fi
          echo -e "$PREF_OK Removing program and service files"
-         $_sudo rm -f "$bindest/dr-provision" "$RM_CLI" "$initdest"
+         $_sudo rm -f "$bindest/dr-provision" "$RM_CLI" "$bindest/drbundler" "$bindest/drpjoin" "$bindest/dr-waltool" "$bindest/drpjq" "$initdest"
+         # We might not own jq.
+         [[ -L "$bindest/jq" ]] && [[ $(readlink "$bindest/jq") = "$bindest/drpcli" ]] && rm -f "$bindest/jq"
          [[ -d /etc/systemd/system/dr-provision.service.d ]] && rm -rf /etc/systemd/system/dr-provision.service.d
          [[ -f ${BIN_DIR}/drp-install.sh ]] && rm -f ${BIN_DIR}/drp-install.sh
          if [[ $REMOVE_DATA == true ]] ; then
