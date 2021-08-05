@@ -62,10 +62,14 @@ type Info struct {
 	// ApiPort is the TCP port that the API lives on.  Defaults to 8092
 	// required: true
 	ApiPort int `json:"api_port"`
-	// FIlePort is the TCP port that the static file HTTP server lives on.
+	// FilePort is the TCP port that the static file HTTP server lives on.
 	// Defaults to 8091
 	// required: true
 	FilePort int `json:"file_port"`
+	// SecureFilePort is the TCP port that the static file HTTPS server lives on.
+	// Defaults to 8090
+	// required: true
+	SecureFilePort int `json:"secure_file_port"`
 	// DhcpPort is the UDP port that the DHCPv4 server listens on.
 	// Defaults to 67
 	// required: true
@@ -90,6 +94,9 @@ type Info struct {
 	// ProvisionerEnabled is true if the static file HTTP server is enabled.
 	// required: true
 	ProvisionerEnabled bool `json:"prov_enabled"`
+	// SecureProvisionerEnabled is true if the static file HTTPS server is enabled.
+	// required: true
+	SecureProvisionerEnabled bool `json:"secure_prov_enabled"`
 	// Address is the IP address that the system appears to listen on.
 	// If a default address was assigned via environment variable or command line,
 	// it will be that address, otherwise it will be the IP address of the interface

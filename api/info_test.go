@@ -29,16 +29,18 @@ func TestInfo(t *testing.T) {
 	test := &crudTest{
 		name: "get info",
 		expectRes: &models.Info{
-			Address:            net.IPv4(127, 0, 0, 1),
-			ApiPort:            10011,
-			FilePort:           10012,
-			BinlPort:           10015,
-			DhcpPort:           10014,
-			TftpPort:           10013,
-			ProvisionerEnabled: true,
-			TftpEnabled:        true,
-			BinlEnabled:        true,
-			DhcpEnabled:        true,
+			Address:                  net.IPv4(127, 0, 0, 1),
+			ApiPort:                  10011,
+			FilePort:                 10012,
+			BinlPort:                 10015,
+			SecureFilePort:           10017,
+			DhcpPort:                 10014,
+			TftpPort:                 10013,
+			ProvisionerEnabled:       true,
+			SecureProvisionerEnabled: true,
+			TftpEnabled:              true,
+			BinlEnabled:              true,
+			DhcpEnabled:              true,
 			Stats: []models.Stat{
 				{
 					Name:  "machines.count",
