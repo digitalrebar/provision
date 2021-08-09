@@ -448,21 +448,20 @@ func (r *runner) run() error {
 			return finalErr
 		}
 		r.log("Action %s finished", action.Name)
-		// If a non-final action sets the incomplete flag, it actually
-		// means early success and stop processing actions for this task.
-		// This allows actions to be structured in an "early exit"
-		// fashion.
-		//
-		// Only the final action can actually set things as incomplete.
-		if !final && r.incomplete {
-			r.incomplete = !r.incomplete
-			break
-		}
 		if r.failed {
+			// Failed is failed.  The other flags will not be modified.
 			break
 		}
 		if r.reboot || r.poweroff || r.stop {
-			r.incomplete = !final
+			// If we are going to reboot, shut down, or exit the agent,
+			// any early exit means incomplete, and an incomplete flag
+			// in the final template exit also means incomplete.
+			r.incomplete = !final || r.incomplete
+			break
+		}
+		if !final && r.incomplete {
+			// Otherwise, it is early exit time.
+			r.incomplete = false
 			break
 		}
 	}
