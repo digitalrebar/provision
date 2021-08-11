@@ -346,6 +346,7 @@ and wind up in a file with the same name as the item + the default file extensio
 	cmd.AddCommand(itemCmd)
 
 	minVersion := ""
+	tip := false
 	updateCmd := &cobra.Command{
 		Use:   "updateLocal",
 		Short: "Update the local catalog from the upstream catalog",
@@ -364,8 +365,13 @@ and wind up in a file with the same name as the item + the default file extensio
 			srcItems := itemsFromCatalog(srcCatalog, "")
 			localItems := itemsFromCatalog(localCatalog, "")
 
+			requireStable := false
+			if minVersion == "stable" {
+				requireStable = true
+			}
+
 			var mv *semver.Version
-			if minVersion != "" {
+			if !requireStable {
 				var verr error
 				mv, verr = semver.NewVersion(minVersion)
 				if verr != nil {
@@ -374,14 +380,26 @@ and wind up in a file with the same name as the item + the default file extensio
 			}
 
 			for k, v := range srcItems {
-				// Only get things that aren't stable
-				if strings.HasSuffix(k, "-stable") {
-					continue
-				}
-
-				if mv != nil {
-					if o, oerr := semver.NewVersion(v.ActualVersion); oerr != nil || mv.Compare(o) > 0 {
+				if minVersion == "" {
+					// We want to get everything here except tip (unless tip is set to true in which case we include tip)
+					if !tip && v.Tip {
 						continue
+					}
+				} else if requireStable {
+					// Only get things that are stable or tip if tip is set to true
+					if !(v.Version == "stable" || (tip && v.Tip)) {
+						continue
+					}
+				} else {
+					// Only get things that aren't stable
+					if v.Version == "stable" {
+						continue
+					}
+					// Only get versions greater than the input version excluding tip (unless tip is set to true in which case we include tip)
+					if mv != nil {
+						if o, oerr := semver.NewVersion(v.ActualVersion); oerr != nil || mv.Compare(o) > 0 || (!tip && v.Tip) {
+							continue
+						}
 					}
 				}
 
@@ -433,7 +451,8 @@ and wind up in a file with the same name as the item + the default file extensio
 			return nil
 		},
 	}
-	updateCmd.PersistentFlags().StringVar(&minVersion, "version", "", "Minimum version of the items")
+	updateCmd.PersistentFlags().StringVar(&minVersion, "version", "", "Minimum version of the items. If set to 'stable' will only get stable entries.")
+	updateCmd.PersistentFlags().BoolVar(&tip, "tip", false, "Include tip versions of the packages")
 	cmd.AddCommand(updateCmd)
 
 	// Start of create stuff
