@@ -42,6 +42,7 @@ require (
 	github.com/xeipuuv/gojsonschema v1.1.0
 	golang.org/x/crypto v0.0.0-20200414173820-0848c9571904
 	golang.org/x/net v0.0.0-20190724013045-ca1201d0de80
+	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
 	golang.org/x/sys v0.0.0-20210301091718-77cc2087c03b
 	gopkg.in/yaml.v2 v2.2.2
 )

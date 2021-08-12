@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"golang.org/x/sync/errgroup"
 	"io"
 	"net/url"
 	"os"
@@ -347,11 +348,16 @@ and wind up in a file with the same name as the item + the default file extensio
 
 	minVersion := ""
 	tip := false
+	concurrency := 1
 	updateCmd := &cobra.Command{
 		Use:   "updateLocal",
 		Short: "Update the local catalog from the upstream catalog",
 		Args:  cobra.NoArgs,
 		RunE: func(c *cobra.Command, args []string) error {
+			if concurrency > 20 {
+				return fmt.Errorf("Invalid value for concurrency: %d. Max allowed is 20", concurrency)
+			}
+
 			srcCatalog, err := fetchCatalog()
 			if err != nil {
 				return err
@@ -379,73 +385,100 @@ and wind up in a file with the same name as the item + the default file extensio
 				}
 			}
 
-			for k, v := range srcItems {
-				if minVersion == "" {
-					// We want to get everything here except tip (unless tip is set to true in which case we include tip)
-					if !tip && v.Tip {
-						continue
-					}
-				} else if requireStable {
-					// Only get things that are stable or tip if tip is set to true
-					if !(v.Version == "stable" || (tip && v.Tip)) {
-						continue
-					}
-				} else {
-					// Only get things that aren't stable
-					if v.Version == "stable" {
-						continue
-					}
-					// Only get versions greater than the input version excluding tip (unless tip is set to true in which case we include tip)
-					if mv != nil {
-						if o, oerr := semver.NewVersion(v.ActualVersion); oerr != nil || mv.Compare(o) > 0 || (!tip && v.Tip) {
-							continue
-						}
-					}
+			// We want to be able to process `concurrency` number of updates at a time
+			srcItemsKeys := make([]string, 0)
+			srcItemsKeyChunks := make([][]string, 0)
+			for k, _ := range srcItems {
+				srcItemsKeys = append(srcItemsKeys, k)
+			}
+			// Collect chunks of keys to process
+			for i := 0; i < len(srcItemsKeys); i += concurrency {
+				end := i + concurrency
+				// Avoid out of range
+				if end > len(srcItemsKeys) {
+					end = len(srcItemsKeys)
 				}
+				srcItemsKeyChunks = append(srcItemsKeyChunks, srcItemsKeys[i:end])
+			}
 
-				// Get things that aren't in local
-				if nv, ok := localItems[k]; !ok || nv.ActualVersion != v.ActualVersion {
-					parts := map[string]string{}
-					i := strings.Index(v.Source, "/rebar-catalog/")
-					switch v.ContentType {
-					case "DRP":
-						for arch := range v.Shasum256 {
-							if arch == "any/any" {
-								parts[v.Source], _ = url.QueryUnescape(v.Source[i+1:])
-							} else {
-								archValue := strings.Split(arch, "/")[0]
-								osValue := strings.Split(arch, "/")[1]
-								ts := strings.ReplaceAll(v.Source, ".zip", "."+archValue+"."+osValue+".zip")
-								qs, _ := url.QueryUnescape(v.Source[i+1:])
-								td := strings.ReplaceAll(qs, ".zip", "."+archValue+"."+osValue+".zip")
-								parts[ts] = td
+			var g errgroup.Group
+			for _, srcItemsKeys := range srcItemsKeyChunks {
+				// Assign temporary variable that is local to this iteration
+				srcItemsKeysIteration := srcItemsKeys
+				g.Go(func() error {
+					for _, k := range srcItemsKeysIteration {
+						if minVersion == "" {
+							// We want to get everything here except tip (unless tip is set to true in which case we include tip)
+							if !tip && srcItems[k].Tip {
+								continue
+							}
+						} else if requireStable {
+							// Only get things that are stable or tip if tip is set to true
+							if !(srcItems[k].Version == "stable" || (tip && srcItems[k].Tip)) {
+								continue
+							}
+						} else {
+							// Only get things that aren't stable
+							if srcItems[k].Version == "stable" {
+								continue
+							}
+							// Only get versions greater than the input version excluding tip (unless tip is set to true in which case we include tip)
+							if mv != nil {
+								if o, oerr := semver.NewVersion(srcItems[k].ActualVersion); oerr != nil || mv.Compare(o) > 0 || (!tip && srcItems[k].Tip) {
+									continue
+								}
 							}
 						}
-					case "PluginProvider", "DRPCLI":
-						for arch := range v.Shasum256 {
-							ts := fmt.Sprintf("%s/%s/%s", v.Source, arch, v.Name)
-							qs, _ := url.QueryUnescape(v.Source[i+1:])
-							td := fmt.Sprintf("%s/%s/%s", qs, arch, v.Name)
-							parts[ts] = td
-						}
-					default:
-						parts[v.Source], _ = url.QueryUnescape(v.Source[i+1:])
-					}
 
-					for s, d := range parts {
-						fmt.Printf("Downloading %s to store at %s\n", s, d)
-						data, err := urlOrFileAsReadCloser(s)
-						if err != nil {
-							return fmt.Errorf("Error opening src file %s: %v", s, err)
-						}
-						func() {
-							defer data.Close()
-							_, err = Session.PostBlobExplode(data, false, "files", d)
-						}()
-						if err != nil {
-							return generateError(err, "Failed to post %v: %v", "files", d)
+						// Get things that aren't in local
+						if nv, ok := localItems[k]; !ok || nv.ActualVersion != srcItems[k].ActualVersion {
+							parts := map[string]string{}
+							i := strings.Index(srcItems[k].Source, "/rebar-catalog/")
+							switch srcItems[k].ContentType {
+							case "DRP":
+								for arch := range srcItems[k].Shasum256 {
+									if arch == "any/any" {
+										parts[srcItems[k].Source], _ = url.QueryUnescape(srcItems[k].Source[i+1:])
+									} else {
+										archValue := strings.Split(arch, "/")[0]
+										osValue := strings.Split(arch, "/")[1]
+										ts := strings.ReplaceAll(srcItems[k].Source, ".zip", "."+archValue+"."+osValue+".zip")
+										qs, _ := url.QueryUnescape(srcItems[k].Source[i+1:])
+										td := strings.ReplaceAll(qs, ".zip", "."+archValue+"."+osValue+".zip")
+										parts[ts] = td
+									}
+								}
+							case "PluginProvider", "DRPCLI":
+								for arch := range srcItems[k].Shasum256 {
+									ts := fmt.Sprintf("%s/%s/%s", srcItems[k].Source, arch, srcItems[k].Name)
+									qs, _ := url.QueryUnescape(srcItems[k].Source[i+1:])
+									td := fmt.Sprintf("%s/%s/%s", qs, arch, srcItems[k].Name)
+									parts[ts] = td
+								}
+							default:
+								parts[srcItems[k].Source], _ = url.QueryUnescape(srcItems[k].Source[i+1:])
+							}
+
+							for s, d := range parts {
+								fmt.Printf("Downloading %s to store at %s\n", s, d)
+								data, err := urlOrFileAsReadCloser(s)
+								if err != nil {
+									return fmt.Errorf("Error opening src file %s: %v", s, err)
+								}
+								func() {
+									defer data.Close()
+									_, err = Session.PostBlobExplode(data, false, "files", d)
+								}()
+								if err != nil {
+									return generateError(err, "Failed to post %v: %v", "files", d)
+								}
+							}
 						}
 					}
+					return nil
+				})
+				if err := g.Wait(); err != nil {
+					return err
 				}
 			}
 			return nil
@@ -453,6 +486,7 @@ and wind up in a file with the same name as the item + the default file extensio
 	}
 	updateCmd.PersistentFlags().StringVar(&minVersion, "version", "", "Minimum version of the items. If set to 'stable' will only get stable entries.")
 	updateCmd.PersistentFlags().BoolVar(&tip, "tip", false, "Include tip versions of the packages")
+	updateCmd.PersistentFlags().IntVar(&concurrency, "concurrency", 1, "Number of concurrent download options")
 	cmd.AddCommand(updateCmd)
 
 	// Start of create stuff
