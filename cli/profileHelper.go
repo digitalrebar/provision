@@ -10,8 +10,8 @@ import (
 func (o *ops) profiles() {
 	o.addCommand(&cobra.Command{
 		Use:   "addprofile [id] [profile]",
-		Short: fmt.Sprintf("Add profile to the machine's profile list"),
-		Long:  `Helper function to add a profile to the machine's profile list.`,
+		Short: fmt.Sprintf("Add profile to the %v's profile list", o.name),
+		Long:  fmt.Sprintf("Helper function to add a profile to the %v's profile list.", o.name),
 		Args: func(c *cobra.Command, args []string) error {
 			if len(args) != 2 {
 				return fmt.Errorf("%v requires 2 arguments", c.UseLine())
@@ -34,8 +34,8 @@ func (o *ops) profiles() {
 	})
 	o.addCommand(&cobra.Command{
 		Use:   "removeprofile [id] [profile]",
-		Short: fmt.Sprintf("Remove a profile from the machine's list"),
-		Long:  `Helper function to update the machine's profile list by removing one.`,
+		Short: fmt.Sprintf("Remove a profile from the %v's profile list", o.name),
+		Long:  fmt.Sprintf("Helper function to update the %v's profile list by removing one.", o.name),
 		Args: func(c *cobra.Command, args []string) error {
 			if len(args) != 2 {
 				return fmt.Errorf("%v requires 2 arguments", c.UseLine())
