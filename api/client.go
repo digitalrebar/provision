@@ -797,7 +797,7 @@ func (c *Client) GetBlob(dest io.Writer, at ...string) error {
 			startSz = st.Size()
 		}
 		mts := &models.ModTimeSha{}
-		if _, err := mts.Regenerate(fi); err != nil {
+		if _, err := mts.Regenerate(fi); err == nil {
 			shasum = mts.String()
 		}
 	}
