@@ -1,6 +1,6 @@
 module github.com/digitalrebar/provision/v4
 
-go 1.12
+go 1.16
 
 require (
 	github.com/Masterminds/semver v1.4.2
