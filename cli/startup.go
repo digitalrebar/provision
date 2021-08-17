@@ -60,7 +60,6 @@ var (
 	Session         *api.Client
 	noToken         = false
 	force           = false
-	noPretty        = false
 	ref             = ""
 	defaultRef      = ""
 	trace           = ""
@@ -68,6 +67,7 @@ var (
 	defaultUrlProxy = ""
 	urlProxy        = ""
 	registrations   = []registerSection{}
+	objectErrorsAreFatal = false
 )
 
 func addRegistrar(rs registerSection) {
@@ -150,6 +150,57 @@ func NewApp() *cobra.Command {
 	app := &cobra.Command{
 		Use:   "drpcli",
 		Short: "A CLI application for interacting with the DigitalRebar Provision API",
+		Long: `drpcli is a general-purpose command for interacting with a dr-provision endpoint.
+It has several subcommands which have their own help.
+
+It also has several environment variables that control aspects of its operation:
+
+* RS_OBJECT_ERRORS_ARE_FATAL: Have drpcli exit with a non-zero exit
+  status if a returned object has an Errors field that is not empty.
+  Normally it will only exit with a non-zero exit status when the API
+  returns with an error or fatal status code.
+
+* RS_ENDPOINTS: A space-seperated list of URLS that drpcli should try to 
+  communicate with.  The first one that authenticates will be used.
+
+* RS_ENDPOINT: The URL that drpcli should try to communicate.  Ignored if
+  RS_ENDPOINTS exists in the environment.
+  Default to https://127.0.0.1:8092
+
+* RS_URL_PROXY: The HTTP proxy drpcli should use when communicating with the
+  dr-provision endpoint.  It functions like the standard http_proxy
+  environment variable.
+
+* RS_TOKEN: The token to use for authentication with the dr-provision
+  endpoint.  Overrides RS_KEY.
+
+* RS_CATALOG: The URL to use to fetch the artifact catalog.  All commands
+  in the 'drpcli catalog' group of commands use this.
+  Defaults to https://repo.rackn.io
+
+* RS_FORMAT: The output format drpcli will use.
+  Defaults to json
+
+* RS_PRINT_FIELDS: The fields of an object to display in text or table format.
+  Defaults to all of them.
+
+* RS_DOWNLOAD_PROXY: The http proxy to use when downloading bootenv ISO files.
+
+* RS_NO_HEADER: Controls whether to print column headers in text or table
+  output mode.
+
+* RS_NO_COLOR: Controls whether output to a terminal should be stripped.
+
+* RS_COLORS: Controls the 8 ANSI colors that should be used in colorized
+  output.
+
+* RS_TRUNCATE_LENGTH: The max length of an individual column in text or table
+  mode.
+
+* RS_KEY: The default username:password to use when missing a token.`,
+	}
+	if oeaf := os.Getenv("RS_OBJECT_ERRORS_ARE_FATAL"); oeaf == "true" {
+		objectErrorsAreFatal = true
 	}
 	if dep := os.Getenv("RS_ENDPOINTS"); dep != "" {
 		defaultEndpoints = strings.Split(dep, " ")
@@ -321,6 +372,9 @@ func NewApp() *cobra.Command {
 	app.PersistentFlags().BoolVarP(&noToken,
 		"noToken", "x", noToken,
 		"Do not use token auth or token cache")
+	app.PersistentFlags().BoolVarP(&objectErrorsAreFatal,
+		"exitEarly", "X", false,
+		"Cause drpcli to exit if a command results in an object that has errors")
 	app.PersistentFlags().StringVarP(&urlProxy,
 		"url-proxy", "u", defaultUrlProxy,
 		"URL Proxy for passing actions through another DRP")

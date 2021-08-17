@@ -3,6 +3,7 @@ package cli
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/VictorLowther/jsonpatch2"
 	"net/http"
 	"strconv"
 	"strings"
@@ -493,6 +494,31 @@ empty object of that type.  For User, BootEnv, Machine, and Profile, it will be 
 		})
 	}
 	if !o.noUpdate {
+		cmds = append(cmds, &cobra.Command{
+			Use: "patch [id] [jsonpatch]",
+			Short: fmt.Sprintf("Patch %v by ID using the passed-in JSON Patch", o.singleName),
+			Long: "The passed-in patch must be a well-formed JSON Patch. '-' indicates to read from stdin",
+			Args: func(c *cobra.Command, args []string) error {
+				if len(args) != 2 {
+						return fmt.Errorf("%v requires 2 arguments", c.UseLine())
+					}
+					return nil
+			},
+			RunE: func(c *cobra.Command, args []string) error {
+				item := o.example()
+				if o.singleName == "extended" {
+					(*(item.(*models.RawModel)))["Type"] = o.name
+				}
+				patch := jsonpatch2.Patch{}
+				if err := bufOrFileDecode(args[1], &patch); err != nil {
+					return err
+				}
+				if err := Session.Req().Patch(patch).UrlFor(item.Prefix(), args[0]).Do(&item); err != nil {
+					return err
+				}
+				return prettyPrint(item)
+			},
+		})
 		if o.mustPut {
 			cmds = append(cmds, &cobra.Command{
 				Use:   "update [id] [json]",

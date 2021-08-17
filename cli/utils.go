@@ -573,14 +573,14 @@ func prettyPrintBuf(o interface{}) (buf []byte, err error) {
 }
 
 func prettyPrint(o interface{}) (err error) {
-	if noPretty {
-		fmt.Printf("%v", o)
-		return nil
-	}
-	buf, err := prettyPrintBuf(o)
+	var buf []byte
+	buf, err = prettyPrintBuf(o)
 	if err != nil {
-		return err
+		return
 	}
 	fmt.Println(string(buf))
-	return nil
+	if errHaver, ok := o.(models.Validator); ok && objectErrorsAreFatal {
+		err = errHaver.HasError()
+	}
+	return
 }
