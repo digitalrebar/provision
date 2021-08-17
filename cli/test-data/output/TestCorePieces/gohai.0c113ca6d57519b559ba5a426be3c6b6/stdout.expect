@@ -12,6 +12,7 @@ Global Flags:
   -d, --debug                   Whether the CLI should run in debug mode
   -D, --download-proxy string   HTTP Proxy to use for downloading catalog and content
   -E, --endpoint string         The Digital Rebar Provision API endpoint to talk to (default "https://127.0.0.1:10001")
+  -X, --exitEarly               Cause drpcli to exit if a command results in an object that has errors
   -f, --force                   When needed, attempt to force the operation - used on some update/patch calls
   -F, --format string           The serialization we expect for output.  Can be "json" or "yaml" or "text" or "table" (default "json")
   -N, --no-color                Whether the CLI should output colorized strings

@@ -60,7 +60,6 @@ var (
 	Session         *api.Client
 	noToken         = false
 	force           = false
-	noPretty        = false
 	ref             = ""
 	defaultRef      = ""
 	trace           = ""
@@ -68,6 +67,7 @@ var (
 	defaultUrlProxy = ""
 	urlProxy        = ""
 	registrations   = []registerSection{}
+	objectErrorsAreFatal = false
 )
 
 func addRegistrar(rs registerSection) {
@@ -150,6 +150,9 @@ func NewApp() *cobra.Command {
 	app := &cobra.Command{
 		Use:   "drpcli",
 		Short: "A CLI application for interacting with the DigitalRebar Provision API",
+	}
+	if oeaf := os.Getenv("RS_OBJECT_ERRORS_ARE_FATAL"); oeaf == "true" {
+		objectErrorsAreFatal = true
 	}
 	if dep := os.Getenv("RS_ENDPOINTS"); dep != "" {
 		defaultEndpoints = strings.Split(dep, " ")
@@ -321,6 +324,9 @@ func NewApp() *cobra.Command {
 	app.PersistentFlags().BoolVarP(&noToken,
 		"noToken", "x", noToken,
 		"Do not use token auth or token cache")
+	app.PersistentFlags().BoolVarP(&objectErrorsAreFatal,
+		"exitEarly", "X", false,
+		"Cause drpcli to exit if a command results in an object that has errors")
 	app.PersistentFlags().StringVarP(&urlProxy,
 		"url-proxy", "u", defaultUrlProxy,
 		"URL Proxy for passing actions through another DRP")
