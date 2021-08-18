@@ -56,13 +56,6 @@ command on both the server and the cli.
 
 .. note:: If you have performed a previous build and generated assets are updated, you may need to delete `embedded` directory and checkout `git checkout --embedded` then rebuild to ensure that the server can start.  This problem manifests with the error: `No such embedded asset chain.c32: Asset chain.c32 not found`
 
-Serving UI from File System
----------------------------
-
-When working on the Digital Rebar Provision UI, it is possible to skip the generate steps by using the ``--dev-ui`` flag.  Generally, this is started using ``--dev-ui ./embedded/assets/ui/public``.
-
-`Brunch` (``npm install brunch -g``) is required to build new versions of the ui. use ``brunch build --production`` to use minify javascript.
-
 
 .. _rs_testing:
 
