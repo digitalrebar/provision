@@ -32,7 +32,7 @@ require (
 	github.com/pborman/uuid v1.2.0
 	github.com/pkg/xattr v0.4.1
 	github.com/rackn/gohai v0.6.1
-	github.com/rackn/netwrangler v0.7.1
+	github.com/rackn/netwrangler v0.7.2-0.20210813175223-e37cf21b756b
 	github.com/shirou/gopsutil v2.18.12+incompatible
 	github.com/shirou/w32 v0.0.0-20160930032740-bb4de0191aa4 // indirect
 	github.com/spf13/cobra v0.0.4-0.20180722215644-7c4570c3ebeb
