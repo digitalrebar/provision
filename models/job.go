@@ -96,6 +96,9 @@ type Job struct {
 	// required: true
 	// swagger:strfmt uuid
 	Machine uuid.UUID
+	// The async action the job was created for.  This field must be the UUID of the async action.
+	// swagger:strfmt uuid
+	AsyncAction uuid.UUID
 	// The task the job was created for.  This will be the name of the task.
 	// read only: true
 	Task string
@@ -196,6 +199,9 @@ func (j *Job) KeyName() string {
 func (j *Job) Fill() {
 	if j.Meta == nil {
 		j.Meta = Meta{}
+	}
+	if j.AsyncAction == nil {
+		j.AsyncAction = uuid.NIL
 	}
 	j.Validation.fill(j)
 }
