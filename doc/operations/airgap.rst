@@ -177,7 +177,7 @@ Next you need to configure a subnet.
     Click "Use Interface"
     If defaults are acceptable scroll down and click "Add"
 
-If you plan on using the RackN UX in air gapped mode, you will have to download the :ref:`rs_cp_ux_views` plugin if it is not already installed.
+If you plan on using the RackN UX in air gapped mode, you will have to download the :ref:`rs_cp_ux_views` plugin if it is not already installed. You must also have a license with the "enable-airgap" feature enabled.
 
   ::
 
