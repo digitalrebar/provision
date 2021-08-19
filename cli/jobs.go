@@ -56,18 +56,52 @@ You may also pass in a machine UUID or Name to create a new job on that Name.
 			return prettyPrint(ref)
 		},
 	})
-	op.addCommand(&cobra.Command{
+	purgeCmd := &cobra.Command{
 		Use:   "purge",
 		Short: "Purge jobs in excess of the job retention preferences",
 		Args:  cobra.NoArgs,
-		RunE: func(c *cobra.Command, args []string) error {
-			var res interface{}
-			if err := Session.Req().Meth("DELETE").UrlFor("jobs").Do(&res); err != nil {
-				return err
-			}
-			return prettyPrint(res)
-		},
-	})
+	}
+	purgeDryRun := purgeCmd.Flags().Bool("dry-run", false, "Report what would have been purged")
+	purgeMachine := purgeCmd.Flags().String("machine", "",
+		"Purge for a specific machine.  Use 'missing' to purge jobs for deleted machines")
+	purgejobsToKeep := purgeCmd.Flags().String("jobs-to-keep", "",
+		"Per-machine jobs to keep.  Overrides the jobsToKeep preference.")
+	purgefailedAfter := purgeCmd.Flags().String("failed-after", "", "Purge failed jobs older than this duration.  "+
+		"Overrides failedJobsPurgedAfter preference")
+	purgeCompleteAfter := purgeCmd.Flags().String("complete-after", "", "Purge complete jobs older than this duration. "+
+		" "+
+		"Overrides completeJobsPurgedAfter preference")
+	purgeCmd.RunE = func(c *cobra.Command, args []string) error {
+		var res interface{}
+		params := []string{}
+		if *purgeDryRun {
+			params = append(params, "dryrun", "true")
+		}
+		if *purgeMachine != "" {
+			params = append(params, "machine", *purgeMachine)
+		}
+		if *purgejobsToKeep != "" {
+			params = append(params, "jobsToKeep", *purgejobsToKeep)
+		}
+		if *purgefailedAfter != "" {
+			params = append(params, "failedJobsPurgedAfter", *purgefailedAfter)
+		}
+		if *purgeCompleteAfter != "" {
+			params = append(params, "completeJobsPurgedAfter", *purgeCompleteAfter)
+		}
+		info, err := Session.Info()
+		if err != nil {
+			return err
+		}
+		if len(params) > 0 && !info.HasFeature("selective-job-purge") {
+			return fmt.Errorf("Server does not support purge flags.  Command ignored.")
+		}
+		if err = Session.Req().Meth("DELETE").UrlFor("jobs").Params(params...).Do(&res); err != nil {
+			return err
+		}
+		return prettyPrint(res)
+	}
+	op.addCommand(purgeCmd)
 	actionsFor := ""
 	actionsCmd := &cobra.Command{
 		Use:   "actions [id]",
