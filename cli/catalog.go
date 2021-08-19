@@ -304,7 +304,11 @@ and wind up in a file with the same name as the item + the default file extensio
 			return nil
 		},
 	}
+	install.Flags().BoolVar(&replaceWritable, "replace-writable", false, "Replace identically named writable objects")
+	// Flag deprecated due to standardizing on all hyphenated form for persistent flags.
 	install.Flags().BoolVar(&replaceWritable, "replaceWritable", false, "Replace identically named writable objects")
+	install.Flags().MarkHidden("replaceWritable")
+	install.Flags().MarkDeprecated("replaceWritable", "please use --replace-writable")
 	itemCmd.AddCommand(install)
 	itemCmd.AddCommand(&cobra.Command{
 		Use:   "show [item]",
