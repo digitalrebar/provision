@@ -361,7 +361,7 @@ It also has several environment variables that control aspects of its operation:
 		"trace", "t", "",
 		"The log level API requests should be logged at on the server side")
 	app.PersistentFlags().StringVarP(&traceToken,
-		"traceToken", "Z", "",
+		"trace-token", "Z", "",
 		"A token that individual traced requests should report in the server logs")
 	app.PersistentFlags().StringVarP(&catalog,
 		"catalog", "c", defaultCatalog,
@@ -370,14 +370,31 @@ It also has several environment variables that control aspects of its operation:
 		"download-proxy", "D", defaultDownloadProxy,
 		"HTTP Proxy to use for downloading catalog and content")
 	app.PersistentFlags().BoolVarP(&noToken,
-		"noToken", "x", noToken,
+		"no-token", "x", noToken,
 		"Do not use token auth or token cache")
 	app.PersistentFlags().BoolVarP(&objectErrorsAreFatal,
-		"exitEarly", "X", false,
+		"exit-early", "X", false,
 		"Cause drpcli to exit if a command results in an object that has errors")
 	app.PersistentFlags().StringVarP(&urlProxy,
 		"url-proxy", "u", defaultUrlProxy,
 		"URL Proxy for passing actions through another DRP")
+	// Flags deprecated due to standardizing on all hyphenated form for persistent flags.
+	// TODO do the same thing for flags defined by commands
+	app.PersistentFlags().StringVar(&traceToken,
+		"traceToken", "",
+		"A token that individual traced requests should report in the server logs")
+	app.PersistentFlags().BoolVar(&noToken,
+		"noToken", noToken,
+		"Do not use token auth or token cache")
+	app.PersistentFlags().BoolVar(&objectErrorsAreFatal,
+		"exitEarly", false,
+		"Cause drpcli to exit if a command results in an object that has errors")
+	app.PersistentFlags().MarkHidden("traceToken")
+	app.PersistentFlags().MarkDeprecated("traceToken", "please use --trace-token")
+	app.PersistentFlags().MarkHidden("noToken")
+	app.PersistentFlags().MarkDeprecated("noToken", "please use --no-token")
+	app.PersistentFlags().MarkHidden("exitEarly")
+	app.PersistentFlags().MarkDeprecated("exitEarly", "please use --exit-early")
 	if runtime.GOOS != "windows" {
 		app.AddCommand(&cobra.Command{
 			Use:   "proxy [socket]",
