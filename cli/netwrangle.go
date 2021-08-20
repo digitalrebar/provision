@@ -211,8 +211,12 @@ func registerNet(app *cobra.Command) {
 		},
 	}
 	wrangle.Flags().StringVar(&phyLoc, "phys", "", "Location for phy definitions.  If not specified, use the live ones from the kernel")
-	wrangle.Flags().BoolVar(&bindMac, "bindMac", true, "Bind all base nic definitions to their mac address. Defaults to true, otherwise name bindings will be used.")
+	wrangle.Flags().BoolVar(&bindMac, "bind-mac", true, "Bind all base nic definitions to their mac address. Defaults to true, otherwise name bindings will be used.")
 	wrangle.Flags().StringVar(&bootMac, "bootmac", "", "MAC address of the interface the system booted from.")
+	// Flag deprecated due to standardizing on all hyphenated form for persistent flags.
+	wrangle.Flags().BoolVar(&bindMac, "bindMac", true, "Bind all base nic definitions to their mac address. Defaults to true, otherwise name bindings will be used.")
+	wrangle.Flags().MarkHidden("bindMac")
+	wrangle.Flags().MarkDeprecated("bindMac", "please use --bind-mac")
 	net.AddCommand(wrangle)
 	generate := &cobra.Command{
 		Use:   "generate [format] for [machine-id] at [dest]",
@@ -230,7 +234,11 @@ func registerNet(app *cobra.Command) {
 			return writeNetCfg(args[2], args[0], args[4], bindMac)
 		},
 	}
+	generate.Flags().BoolVar(&bindMac, "bind-mac", true, "Bind all base nic definitions to their mac address. Defaults to true, otherwise name bindings will be used.")
+	// Flag deprecated due to standardizing on all hyphenated form for persistent flags.
 	generate.Flags().BoolVar(&bindMac, "bindMac", true, "Bind all base nic definitions to their mac address. Defaults to true, otherwise name bindings will be used.")
+	generate.Flags().MarkHidden("bindMac")
+	generate.Flags().MarkDeprecated("bindMac", "please use --bind-mac")
 	net.AddCommand(generate)
 	autogen := &cobra.Command{
 		Use:   "autogen [machine-id]",
@@ -298,7 +306,11 @@ func registerNet(app *cobra.Command) {
 			return fmt.Errorf("Cannot configure network information for %s", format)
 		},
 	}
+	autogen.Flags().BoolVar(&bindMac, "bind-mac", true, "Bind all base nic definitions to their mac address. Defaults to true, otherwise name bindings will be used.")
+	// Flag deprecated due to standardizing on all hyphenated form for persistent flags.
 	autogen.Flags().BoolVar(&bindMac, "bindMac", true, "Bind all base nic definitions to their mac address. Defaults to true, otherwise name bindings will be used.")
+	autogen.Flags().MarkHidden("bindMac")
+	autogen.Flags().MarkDeprecated("bindMac", "please use --bind-mac")
 	net.AddCommand(autogen)
 	app.AddCommand(net)
 }

@@ -423,9 +423,16 @@ the stage runner wait flag.
 	}
 	processJobs.Flags().BoolVar(&exitOnFailure, "exit-on-failure", false, "Exit on failure of a task")
 	processJobs.Flags().BoolVar(&oneShot, "oneshot", false, "Do not wait for additional tasks to appear")
+	processJobs.Flags().BoolVar(&skipPower, "skip-power", false, "Skip any power cycle actions")
+	processJobs.Flags().StringVar(&runStateLoc, "state-dir", "", "Location to save agent runtime state")
+	processJobs.Flags().StringVar(&runContext, "context", "", "Execution context this agent should pay attention to jobs in")
+	// Flag deprecated due to standardizing on all hyphenated form for persistent flags.
 	processJobs.Flags().BoolVar(&skipPower, "skipPower", false, "Skip any power cycle actions")
 	processJobs.Flags().StringVar(&runStateLoc, "stateDir", "", "Location to save agent runtime state")
-	processJobs.Flags().StringVar(&runContext, "context", "", "Execution context this agent should pay attention to jobs in")
+	processJobs.Flags().MarkHidden("skipPower")
+	processJobs.Flags().MarkHidden("stateDir")
+	processJobs.Flags().MarkDeprecated("skipPower", "please use --skip-power")
+	processJobs.Flags().MarkDeprecated("stateDir", "please use --state-dir")
 	op.addCommand(processJobs)
 	var tokenDuration = ""
 	tokenFetch := &cobra.Command{

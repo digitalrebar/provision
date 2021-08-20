@@ -59,7 +59,11 @@ then the (from [file]) part may be omitted, and [name] should be the path to the
 			return prettyPrint(res)
 		},
 	}
+	upload.Flags().BoolVar(&replaceWritable, "replace-writable", false, "Replace identically named writable objects")
+	// Flag deprecated due to standardizing on all hyphenated form for persistent flags.
 	upload.Flags().BoolVar(&replaceWritable, "replaceWritable", false, "Replace identically named writable objects")
+	upload.Flags().MarkHidden("replaceWritable")
+	upload.Flags().MarkDeprecated("replaceWritable", "please use --replace-writable")
 	op.addCommand(upload)
 	op.addCommand(&cobra.Command{
 		Use:     "download [item] to [dest]",

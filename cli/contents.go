@@ -259,8 +259,12 @@ func registerContent(app *cobra.Command) {
 			}
 		},
 	}
-	create.Flags().BoolVar(&replaceWritable, "replaceWritable", false, "Replace identically named writable objects")
+	create.Flags().BoolVar(&replaceWritable, "replace-writable", false, "Replace identically named writable objects")
 	create.Flags().StringVar(&key, "key", "", "Location of key to use for embedded secure parameters")
+	// Flag deprecated due to standardizing on all hyphenated form for persistent flags.
+	create.Flags().BoolVar(&replaceWritable, "replaceWritable", false, "Replace identically named writable objects")
+	create.Flags().MarkHidden("replaceWritable")
+	create.Flags().MarkDeprecated("replaceWritable", "please use --replace-writable")
 	content.AddCommand(create)
 	update := &cobra.Command{
 		Use:   "update [id] [json]",
@@ -290,8 +294,12 @@ func registerContent(app *cobra.Command) {
 			}
 		},
 	}
-	update.Flags().BoolVar(&replaceWritable, "replaceWritable", false, "Replace identically named writable objects")
+	update.Flags().BoolVar(&replaceWritable, "replace-writable", false, "Replace identically named writable objects")
 	update.Flags().StringVar(&key, "key", "", "Location of key to use for embedded secure parameters")
+	// Flag deprecated due to standardizing on all hyphenated form for persistent flags.
+	update.Flags().BoolVar(&replaceWritable, "replaceWritable", false, "Replace identically named writable objects")
+	update.Flags().MarkHidden("replaceWritable")
+	update.Flags().MarkDeprecated("replaceWritable", "please use --replace-writable")
 	content.AddCommand(update)
 	upload := &cobra.Command{
 		Use:   "upload [json]",
@@ -306,8 +314,12 @@ func registerContent(app *cobra.Command) {
 			return replaceContent(args[0], key, replaceWritable)
 		},
 	}
-	upload.Flags().BoolVar(&replaceWritable, "replaceWritable", false, "Replace identically named writable objects")
+	upload.Flags().BoolVar(&replaceWritable, "replace-writable", false, "Replace identically named writable objects")
 	upload.Flags().StringVar(&key, "key", "", "Location of key to use for embedded secure parameters")
+	// Flag deprecated due to standardizing on all hyphenated form for persistent flags.
+	upload.Flags().BoolVar(&replaceWritable, "replaceWritable", false, "Replace identically named writable objects")
+	upload.Flags().MarkHidden("replaceWritable")
+	upload.Flags().MarkDeprecated("replaceWritable", "please use --replace-writable")
 	content.AddCommand(upload)
 	content.AddCommand(&cobra.Command{
 		Use:   "destroy [id]",
