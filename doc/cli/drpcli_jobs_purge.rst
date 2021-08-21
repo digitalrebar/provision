@@ -1,25 +1,23 @@
-drpcli tasks exists
--------------------
+drpcli jobs purge
+-----------------
 
-See if a tasks exists by id
+Purge jobs in excess of the job retention preferences
 
 Synopsis
 ~~~~~~~~
 
-This will detect if a task exists.
+Purge jobs in excess of the job retention preferences
 
 ::
 
-   drpcli tasks exists [id] [flags]
+   drpcli jobs purge [flags]
 
 Options
 ~~~~~~~
 
 ::
 
-         --etag string   etag to use for waiting.
-     -h, --help          help for exists
-         --wait string   The time to wait for an etag change. This is a time string (default units seconds).  Maximum 10m
+     -h, --help   help for purge
 
 Options inherited from parent commands
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -49,5 +47,5 @@ Options inherited from parent commands
 SEE ALSO
 ~~~~~~~~
 
--  `drpcli tasks <drpcli_tasks.html>`__ - Access CLI commands relating
-   to tasks
+-  `drpcli jobs <drpcli_jobs.html>`__ - Access CLI commands relating to
+   jobs

@@ -11,29 +11,20 @@ Developer Environment
 
 This page is intended for people who are building Digital Rebar Provision from sources or contributing to the code base.  We maintain inline documentation and test environment and contributors are expected to participate in maintenance of those efforts.
 
-.. note:: Prerequisites: go version 1.8 or better.  These documents expect ability to both install and update Golang.
+.. note:: Prerequisites: go version 1.16 or better.  These documents expect ability to both install and update Golang.
 
 .. _re_dev_quick:
 
 Developer Quick Start
 ---------------------
 
-To get started quickly, all the installation steps are rolled into a script.  The script can be run directly from Github by copying the following lines:
+You will need to get the provision source tree.
 
   ::
 
-    curl -fsSL https://raw.githubusercontent.com/digitalrebar/provision/v4/tools/build.sh | bash
-
-The script will use the current **GOPATH** variable for placing the code.  If **GOPATH** isn't set,
-it will be set to *$HOME/go*.
-
-Once the script is complete, it is possible to change the directory to the source area and continue development.
-
-  ::
-
+    go get -u github.com/digitalrebar/provision
     export GOPATH=${GOPATH:-$HOME/go}
     cd "$GOPATH/src/github.com/digitalrebar/provision"
-
 
 If more details on how to run the result are needed, consult the :ref:`rs_install` section.  The **install.sh** script
 can be used to install from the source directory after a build.

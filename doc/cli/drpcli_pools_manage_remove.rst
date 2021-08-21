@@ -29,6 +29,7 @@ Options inherited from parent commands
          --add-profiles string        Comma separated list of profiles to add to the machine
          --all-machines               Selects all available machines
      -c, --catalog string             The catalog file to use to get product information (default "https://repo.rackn.io")
+     -C, --colors string              The colors for JSON and Table/Text colorization.  8 values in the for 0=val,val;1=val,val2... (default "0=32;1=33;2=36;3=90;4=34,1;5=35;6=95;7=32;8=92")
          --count int                  Count of machines to allocate
      -d, --debug                      Whether the CLI should run in debug mode
      -D, --download-proxy string      HTTP Proxy to use for downloading catalog and content
@@ -38,6 +39,7 @@ Options inherited from parent commands
          --machine-list string        Comma separated list of machines UUID or Field:Value
          --minimum int                Minimum number of machines to return - defaults to count
          --new-workflow string        A workflow to set on the machines
+     -N, --no-color                   Whether the CLI should output colorized strings
      -H, --no-header                  Should header be shown in "text" or "table" mode
      -x, --noToken                    Do not use token auth or token cache
      -P, --password string            password of the Digital Rebar Provision user (default "r0cketsk8ts")

@@ -46,11 +46,13 @@ Options inherited from parent commands
 ::
 
      -c, --catalog string          The catalog file to use to get product information (default "https://repo.rackn.io")
+     -C, --colors string           The colors for JSON and Table/Text colorization.  8 values in the for 0=val,val;1=val,val2... (default "0=32;1=33;2=36;3=90;4=34,1;5=35;6=95;7=32;8=92")
      -d, --debug                   Whether the CLI should run in debug mode
      -D, --download-proxy string   HTTP Proxy to use for downloading catalog and content
      -E, --endpoint string         The Digital Rebar Provision API endpoint to talk to (default "https://127.0.0.1:8092")
      -f, --force                   When needed, attempt to force the operation - used on some update/patch calls
      -F, --format string           The serialization we expect for output.  Can be "json" or "yaml" or "text" or "table" (default "json")
+     -N, --no-color                Whether the CLI should output colorized strings
      -H, --no-header               Should header be shown in "text" or "table" mode
      -x, --noToken                 Do not use token auth or token cache
      -P, --password string         password of the Digital Rebar Provision user (default "r0cketsk8ts")
