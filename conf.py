@@ -324,6 +324,7 @@ texinfo_documents = [
 # Skip download
 skip = False
 if os.path.isfile('skip-doc-download'):
+    print("Skipping downloads - remove skip-doc-download file to enable downloads")
     skip = True
 
 # Get the extra pieces - if they exist
