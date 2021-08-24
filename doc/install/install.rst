@@ -207,7 +207,7 @@ Setting up DRP to host the RackN UX locally is trivial.  The DRP server includes
 
 The RackN UX uses the rackn-license content pack for entitlements so no external login to the RacKN SaaS is required.
 
-The RackN UX will still attempt to connect the RackN SaaS for updates and the catalog; however, the system will operate even if these calls fail.  This can be turned off by setting a parameter in the global profile, ``ux-air-gap``, to ``true``.
+The RackN UX will still attempt to connect the RackN SaaS for updates and the catalog; however, the system will operate even if these calls fail.  This can be turned off by setting the ``ux.core.airgap`` option in the UX Config page to ``true``.
 
 Setup
 +++++
