@@ -321,9 +321,16 @@ texinfo_documents = [
 # If true, do not generate a @detailmenu in the "Top" node's menu.
 #texinfo_no_detailmenu = False
 
+# Skip download
+skip = False
+if os.path.isfile('skip-doc-download'):
+    skip = True
+
 # Get the extra pieces - if they exist
 folder = 'doc/content-packages'
 for the_file in os.listdir(folder):
+    if skip:
+        continue
     if the_file == '.keep-me':
         continue
     file_path = os.path.join(folder, the_file)
@@ -335,6 +342,8 @@ for the_file in os.listdir(folder):
 
 
 def fetch_n_save(urls, path):
+    if skip:
+        return
     for url in urls:
         url = url.strip()
         filename = url.rsplit('/', 1)[-1]

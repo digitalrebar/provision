@@ -55,3 +55,4 @@ builddir/
 _build/
 profile*.txt
 rel_notes
+skip-doc-download
