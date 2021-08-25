@@ -258,7 +258,11 @@ Expansion                      Description
 .BootParams                    This renders the **BootParam** field of :ref:`rs_model_bootenv` at that spot.  Template expansion applies to that field as well.
 .ProvisionerAddress            An IP address that is on the provisioner that is the most direct access to the machine.
 .ProvisionerURL                An HTTP URL to access the base file server root
+.SecureProvisionerURL          An HTTPS URL to access the base file server root
 .ApiURL                        An HTTPS URL to access the Digital Rebar Provision API
+.ProvisionerHostURL            An HTTP URL to access the base file server root using the server hostname
+.SecureProvisionerHostURL      An HTTPS URL to access the base file server root using the server hostname
+.ApiHostURL                    An HTTPS URL to access the Digital Rebar Provision API uisng the server hostname
 .GenerateToken                 This generates limited use access token for the machine to either update itself if it exists or create a new machine.  The token's validity is limited in time by global preferences.  See :ref:`rs_model_prefs`.
 .ParseURL <segment> <url>      Parse the specified URL and return the segment requested. Supported segments can be one of *scheme* (eg "https"), *host* (eg "drp.example.com:8092"), or *path* (eg "/api/v3/machines").  *host* does not separate name and port.
 .ParamExists <key>             Returns true if the specified key is a valid parameter available for this rendering.

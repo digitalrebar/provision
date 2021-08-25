@@ -69,6 +69,8 @@ type GlobalHaState struct {
 	// VirtAddr is the IP address that the cluster should appear to have from the
 	// perspective of clients and third parties.
 	VirtAddr string
+	// ServerHostname is the DNS name for the DRP endpoint that managed systems should use.
+	ServerHostname string
 	// ActiveUri is the API URL of cthe cluster as built from the virtual addr.
 	ActiveUri string
 	// Token is an API authentication token that can be sued to perform cluster operations.
