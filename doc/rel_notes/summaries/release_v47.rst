@@ -11,7 +11,7 @@
 Digital Rebar version 4.7 [in process]
 --------------------------------------
 
-Release Date: early August 2021
+Release Date: (target) Early Sept 2021
 
 Release Themes: 
 
@@ -23,6 +23,9 @@ See :ref:`rs_release_summaries` for a complete list of all releases.
 
 Important Notices
 ~~~~~~~~~~~~~~~~~
+
+* Digital Rebar v4.7 adds port 8090 to the list of ports _required_ for provisioning operations. Please verify that port 8090 (default, this can be changed) is accessible for Digital Rebar endpoints.
+* Due to changes in the install zip format, the API-based upgrade of DRP to v4.7+ requires usage of most recent https://portal.RackN.io (v4.7 for self-hosted UX users) or the use of DRPCLI v4.6.7+. The v4.7 ``install.sh upgrade`` process also includes theses changes.
 
 .. _rs_release_v47_vulns:
 
@@ -60,10 +63,10 @@ These are available as applications and pre-defined profiles in Universal Workfl
 
 .. _rs_release_v47_ux_improvements:
 
-Table Refactor for RackN Portal UX (tech preview)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Table Refactor for RackN Portal UX
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The v4.8 release will include significant improvements to the table and panel displays for the UX.  significant effort was made to ensure minimal relearning effort for existing operators.
+The v4.7 release includes significant improvements to the table and panel displays for the UX.  significant effort was made to ensure minimal relearning effort for existing operators.
 
 This update provides long requested features including:
 
@@ -75,7 +78,7 @@ This update provides long requested features including:
 * improved performance and scalability for >10,000 machine customers
 * dramatically reduced Digital Rebar API load based on better use of local cache
 
-This work is available as a preview from https://tip.rackn.io.  Advanced operators are asked to use this version for testing and feedback.
+Advanced operators are asked to use this version for testing and feedback.
 
 As usual, the updated UX maintains compatability with all v4.x versions of Digital Rebar.
 
@@ -111,6 +114,27 @@ SuperMicro
 
 Redfish BMC, firmware and RAID configuration of SuperMicro hardware.
 
+.. _rs_release_v47_splitapi:
+
+Split Static Files & Template Renders for Public Endpoints (Port 8090)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Digital Rebar v4.7 adds enhanced port based access security by splitting the secure dynamic
+file server (port 8090 default) from API server (port 8092 by default).
+
+This change facilitates using public internet facing Digital Rebar endpoints by limiting the
+potential exposure of sensitive data in unauthenticated machine provisioning templates.
+For public facing endpoints in which users need API access, operators are encouraged to
+block access to port 8090 for untrusted access.
+
+Since the Digital Rebar new/discovered machine join process requires access to dynamically
+generated templates; provisioning operations _require_ access to port 8090.
+
+To provide backwards compatibility, v4.7 automatically forwards requests for generated files
+from port 8092 to 8090.  If this port is closed for security, those requests will be blocked.
+
+See :ref:`rs_arch_ports` for more networking details.
+
 .. _rs_release_v47_bootp:
 
 BOOTP Support
@@ -119,18 +143,6 @@ BOOTP Support
 Before there was PXE, there was BOOTP for provisioning!  Digital Rebar now supports BOOTP;
 however this feature requires use of Reservations.
 
-.. _rs_release_v47_terraform:
-
-Terraform and Cloud-Wrapper Updates
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Cloud Wrapper templates were updated to enable better integration into universal workflow
-and simplify importing existing Terraform plans.
-
-1. to use cloud-init instead of relying on Ansible for join-up.
-2. to allow creating many machines from a single plan (uses cluster/profile)
-3. improve controls after Terraform created instances
-4. improve synchronization after Terraform destroys instances
 
 .. _rs_release_v47_bootenv:
 

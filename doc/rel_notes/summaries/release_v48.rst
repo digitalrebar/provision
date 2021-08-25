@@ -24,6 +24,9 @@ See :ref:`rs_release_summaries` for a complete list of all releases.
 Important Notices
 ~~~~~~~~~~~~~~~~~
 
+* Digital Rebar v4.7 added port 8090 to the list of ports _required_ for provisioning operations. Please verify that port 8090 (default, this can be changed) is accessible for Digital Rebar endpoints.
+* Due to changes in the install zip format, the API-based upgrade of DRP to v4.7+ requires usage of most recent https://portal.RackN.io (v4.7 for self-hosted UX users) or the use of DRPCLI v4.6.7+. The v4.7 ``install.sh upgrade`` process also includes theses changes.
+
 .. _rs_release_v48_vulns:
 
 Vulnerabilities
@@ -49,6 +52,19 @@ None known
 FEATURE TBD
 ~~~~~~~~~~~
 
+.. _rs_release_v48_terraform:
+
+Terraform and Cloud-Wrapper Updates
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Cloud Wrapper templates were updated to enable better integration into universal workflow
+and simplify importing existing Terraform plans.
+
+1. to use cloud-init instead of relying on Ansible for join-up.
+2. to allow creating many machines from a single plan (uses cluster/profile)
+3. improve controls after Terraform created instances
+4. improve synchronization after Terraform destroys instances
+
 .. _rs_release_v48_secrets:
 
 External Secrets
@@ -70,13 +86,6 @@ WorkUnits / AsynchActions (Preview)
 
 Create a new operational mode for the Digital Rebar runner that allows tasks to be performed
 asynchronously outside of Workflows.  This allows machines to be addressed as services.
-
-.. _rs_release_v48_ux:
-
-Table Refactor for RackN Portal UX
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Release in v4.8.  Preview in v4.7, See :ref:`_rs_release_v47_ux_improvements` for details.
 
 .. _rs_release_v48_vmware:
 
