@@ -57,6 +57,7 @@ value                  notes
 ``RS_PRINT_FIELDS``    comma separate list of fields to show in output "table" or "text" format
 ``RS_NO_HEADER``       remove the header fields from "table" or "text" format output
 ``RS_TRUNCATE_LENGTH`` limits the length of fields displayed for "table" or "text" output formats
+``RS_DOWNLOAD_PROXY``  sets the http proxy to use when downloading bootenv ISO files
 ====================== ============================================================================
 
 Example:
@@ -64,6 +65,7 @@ Example:
 
     RS_ENDPOINT=https://10.10.10.10.8092
     RS_PASSWORD=super_secure_secret_password_do_not_share_with_anyone
+    RS_DOWNLOAD_PROXY=https://user:password@myproxy.com:3030
 
 .. note:: You can **not** use Shell style ``export`` in front of the variable,
           and **do NOT** surround the value with double or single quotes.
