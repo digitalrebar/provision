@@ -131,7 +131,7 @@ template.  RenderData has the following fields:
     expand internal strings.  Additional similar functions include:
 
     - **.StringExpand** does templating on the contents of a string value
-    
+
     - **.ObjectExpand** using an arbitrary object and does an expand on it recursively.
       If the object does not understand expansion, it will be returned as is.
       If the object is an array or slice or map, the system will recurse on
@@ -182,8 +182,20 @@ template.  RenderData has the following fields:
   - **.ProvisionerURL**  returns a URL to access the file server part of the server using the
     requesting IP address as a basis.
 
+  - **.SecureProvisionerURL**  returns a URL to access the file server part of the server using
+    the requesting IP address as a basis over a secure port.
+
   - **.ApiURL** returns a URL to access the api server part of the server using the
     requesting IP address as a basis.
+
+  - **.ProvisionerHostURL**  returns a URL to access the file server part of the server using the
+    requesting server hostname as a basis.
+
+  - **.SecureProvisionerHostURL**  returns a URL to access the file server part of the server using
+    the requesting server hostname as a basis over a secure port.
+
+  - **.ApiHostURL** returns a URL to access the api server part of the server using the
+    requesting server hostname as a basis.
 
   - **.Info.** models.Info structure
 
@@ -234,8 +246,16 @@ RenderData includes the following helper methods:
   that is the most direct access to the machine.
 - **.ProvisionerURL** returns an HTTP URL to access the base file server
   root
+- **.SecureProvisionerURL** returns an HTTPS URL to access the base file
+  server root
 - **.ApiURL** returns an HTTPS URL to access the Digital Rebar Provision
   API
+- **.ProvisionerHostURL** returns an HTTP URL to access the base file server
+  root using the server hostname
+- **.SecureProvisionerHostURL** returns an HTTPS URL to access the base file
+  server root using the server hostname
+- **.ApiHostURL** returns an HTTPS URL to access the Digital Rebar Provision
+  API using the server hostname
 - **.GenerateToken** generates either a **known token** or an **unknown
   token** for use by the template to update objects in Digital Rebar
   Provision.  The tokens are valid for a limited time as defined by
