@@ -21,6 +21,7 @@ Some of these operations are in the :ref:`rs_ui`, but not all.  This will focus 
    operations/airgap
    operations/backup
    operations/bios
+   operations/certs
    operations/contexts
    operations/commands
    operations/drpcli

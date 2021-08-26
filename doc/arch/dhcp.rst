@@ -25,7 +25,7 @@ local subnets.  Interface objects have the following fields:
 - Name: the name of the interface that the OS assigned.
 
 - Index: The index of the interface.  This is an OS specific index,
-  and does not mena anything to dr-provision directly.
+  and does not mean anything to dr-provision directly.
 
 - Addresses: A list of CIDR addresses that are bound to the interface.
 
