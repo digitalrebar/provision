@@ -38,9 +38,9 @@ Additional References
 RackN has some basic backup management process and scripts that it maintains.  Please
 see the following references for these:
 
-  * v4.4.4 and older See: :ref:`rs_drbup`
   * 4.4.5 and newer See: :ref:`rs_backup_restore`
-
+  * 4.4.4 and older: Stop ``dr-provision`` and make a tarball containing the complete
+    contents of the `--base-root` (usually /var/lib/dr-provision)
 
 Isolated Install
 ----------------
