@@ -13,8 +13,8 @@ Backup and Restore
 About
 -----
 
-In the v4.4.5 release and beyond, there is a preferred method for creating backups.  Using
-the *dr-waltool* program, an incremental backup can be done on a running system.
+In the v4.4.5 release and beyond, the *dr-waltool* program should be used for creating
+backups of a running dr-provision system.
 
 This backup can be used for archival purposes, restoration on failure, or movement of DRP from
 one machine to another.
@@ -25,6 +25,12 @@ Backup
 To generate a back-up, you will need the architecture appropriate *dr-waltool* on the system that
 will receive the backup.  *dr-waltool* runs on linux/amd64 or darwin/amd64.  It may work on
 windows/amd64, but it has not been tested.
+
+.. note::
+
+    Backups created with *dr-waltool* can only be used by *dr-provision* binaries of the same
+    architecture and with the same or higher version. For example, a backup taken with *dr-waltool* version 4.6.x
+    cannot be used by *dr-provision* 4.5.x.
 
 With *dr-waltool* in your path, you can do the following to backup a running DRP endpoint.  *dr-waltool*
 respects the same environment variables as *drpcli*.  It does not follow the .drpclirc or same command
@@ -75,6 +81,12 @@ Restore
 To restore a backup on an running system, you will need to stop DRP, extract the backup into the
 active directories for the system, and restart DRP.
 
+.. note::
+
+    Backups created with *dr-waltool* can only be used by *dr-provision* binaries of the same
+    architecture and with the same or higher version. For example, a backup taken with *dr-waltool* version 4.6.x
+    cannot be used by *dr-provision* 4.5.x.
+
 An example of this for a production installed system would like like this.
 
   ::
@@ -101,7 +113,7 @@ Rebuild / Move
 --------------
 
 To move a system or rebuild a system, you will need to install the version of DRP you want.  This
-should be the same or newer version than your backup.  Do your installation as before.
+must be the same or newer version than your backup.  Do your installation as before.
 Once it is installed, you should follow the *Restore* procedure.
 
 .. note::
