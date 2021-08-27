@@ -6,24 +6,21 @@
 
 .. _rs_quickstart:
 
-Quick Start
-~~~~~~~~~~~
+Quick Start Guide
+~~~~~~~~~~~~~~~~~
 
-This quick start guide provides a streamlined self-trial installation via `systemd <https://en.wikipedia.org/wiki/Systemd>`_ on Mac OS, Linux OS, Linux VMs and Cloud Servers.  Many advanced options are including air-gap, local UX, using another DHCP are available but outside of this scope.
+This document will guide you through installing and configuring Digital Rebar.  It will also walk through provisioning a guest OS using Digital Rebar.  For this guide we are going to show a basic virtual environment where all systems, including the digital rebar instance reside on the same virtual server and network.
 
-We recommend consulting the `video guide <https://youtu.be/v-KcvYrUoE0>`_ of this process during the installation and our `advanced features showcase <https://www.youtube.com/playlist?list=PLXPBeIrpXjfigvrXEQIJxXmFdTHqobooH>`_.
+We also recommend consulting the `video guide <https://youtu.be/v-KcvYrUoE0>`_ of this process.  Other helpful videos are available including our `advanced features showcase <https://www.youtube.com/playlist?list=PLXPBeIrpXjfigvrXEQIJxXmFdTHqobooH>`_.
 
-Most Digital Rebar environments require knowledge of your network and DHCP environment.  Cloud and fully Virtual environments generally require less networking knowledge.
+Prerequisites
+-------------
 
-Other installation paths:
+Digital Rebar endpoints can run on physical, virtual, cloud, or container instances.  All instances should have at least the following minimum requirements.  You must install Digital Rebar to use it, there is no SaaS version.  :ref:`rs_self_managed_why`
 
-* :ref:`rs_install` details more complex installs including offline/airgap.
-* :ref:`rs_install_dev` for developers running DRP interactively
-* :ref:`rs_install_docker` for trial users minimizing their install requirements
-* :ref:`rs_install_cloud` is non-PXE / Cloud-Only installation process (no DHCP required)
-* `Edge Lab with RPi <http://edgelab.digital>`_ is self-contained Digital Rebar inexpensive lab using Raspberry Pi computers.
+This guide will configure Digital Rebar to use systemd to control the service.  If you are concerned about installing Digital Rebar as a service, please review our :ref:`rs_install_dev` guide to install Digital Rebar in an isolated directory.
 
-This graphic shows the basic layout for a quick start system:
+This graphic shows the basic layout for the quick start system example:
 
 .. image:: images/quick_start_network.png
   :width: 100%
@@ -31,58 +28,83 @@ This graphic shows the basic layout for a quick start system:
 
 .. _rs_qs_preparation:
 
-Prepare Your Environment
-------------------------
+Hardware
+========
 
-This quick start guide will install the latest stable release of Digital Rebar onto a Linux or MacOS system as a `systemd <https://en.wikipedia.org/wiki/Systemd>`_ service running on port 8092 (these :ref:`rs_arch_ports` are used by default).
+* 1 or more CPU cores
+* A minimun of 4 GB of memory
+* A minimum of 20 GB of space (60 GB is recommended)
 
-For a quick trial, we recommend using a dedicated Virtual Machine using `host only networking` on one interface for your trial.
+Operating Systems
+=================
 
-* Linux or MacOS system (we recommend Centos 8, Windows is not supported)
-* 4 Gb of RAM (minimum)
-* 20 Gb of Disk Space (60 Gb is better because some O/S installation ISOs require much more space)
-* Access to the internet to download components (*not* a requirement for production systems)
-* Provisioning network without a DHCP server (Digital Rebar will provide DHCP by default)
-* Create a rule in firewall for ports 8091 and 8092 
+* Linux (Centos 8 is recommended)
+* MacOS
 
-.. code-block:: bash
+Software
+========
 
-   firewall-cmd --permanent --add-port=8091-8092/tcp
+The following packages are needed for installation.
 
-.. note::
-   you may also need to open the ports for DHCP see :ref:`rs_arch_ports`
+* bash
+* curl
+* tar
+* sha256sum (linux), shasum (MacOS)
 
-If you are concerned about installing Digital Rebar as a service, please review our :ref:`rs_install_dev` guide to run it isolated in a single directory.
+Network
+=======
 
-You must install Digital Rebar to use it, there is no SaaS version.  :ref:`rs_self_managed_why`
+Most Digital Rebar environments require detailed knowledge of your network and DHCP environments.  For this guide, we will use the following.
+
+All hosts in the subnet should communicate to the DRP instance using the ports listed at :ref:`rs_arch_port`.
+
+Guest VMs
+=========
+
+* 1 or more virtual CPU cores
+* A minimum of 2 GB of memory (4 is recommended)
+* A minimum of 10 GB of space
 
 .. _rs_qs_install:
 
 Install Digital Rebar Endpoint
 ------------------------------
 
-To begin, execute the following commands in a shell or terminal:
+Run the following command in a shell or terminal:
 
 .. code-block:: bash
 
-    curl -fsSL get.rebar.digital/stable | bash -s -- install --systemd --version=stable
+    curl -fsSL get.rebar.digital/stable | bash -s -- install --universal
 
-The command will download the stable Digital Rebar (the ``systemctl`` service name is ``dr-provision``) bundle and checksum from github, extract the files, verify prerequisites are installed, and create needed directories and links under ``/var/lib/dr-provision``.  The ``--systemd`` and ``--version`` flags included for clarity, they are not required for this install.
+.. warning::  It is important that ``--universal`` is the first argument after the ``install`` option.  Any arguments appearing BEFORE ``--universal`` will NOT be processed. 
 
-The `install <http://get.rebar.digital/stable/>`_ script used by our installs has many additional options including ``remove`` that are documented in its help and explored in other install guides.
+The command will download the stable version of Digital Rebar, and content bundles needed to support Universal workflows.  It then extracts files, verifies prerequisites are installed, and creates the needed directories and links under ``/var/lib/dr-provision``.
 
-Once the installation script completes, a Digital Rebar endpoint will be running your local system!
+The `install <http://get.rebar.digital/stable/>`_ script has many additional options including ``remove`` that are documented in its help and explored in other install guides.
+
+Once the installation script completes, a Digital Rebar endpoint will be running your local system.
+
+Other Installation Guides
+=========================
+
+There are other installation options available.  You can find instructions for them below.
+
+* :ref:`rs_install` details more complex installs including offline/airgap.
+* :ref:`rs_install_dev` for developers running DRP interactively.
+* :ref:`rs_install_docker` for trial users minimizing their install requirements.
+* :ref:`rs_install_cloud` for non-PXE / Cloud-Only installation process (no DHCP required)
+* `Edge Lab with RPi <http://edgelab.digital>`_ is a self-contained Digital Rebar lab running on Raspberry Pi computers.
 
 .. _rs_qs_license:
 
-Open the RackN UX & Trial License 
----------------------------------
+UX and License 
+--------------
 
-All Digital Rebar operations are securely local and behind your firewall. RackN *never* has direct access to your DRP endpoint.
+All Digital Rebar operations run locally and behind your firewall. RackN *never* has direct access to your DRP endpoint.
 
-The Digital Rebar UX is hosted at `RackN <https://portal.rackn.io/>`_ as a convenience for new users.  RackN does not have access to your data, credentials or provisioning APIs because The RackN portal runs as a single-page app *locally* in your browser so all DRP API calls remain behind your firewall. 
+The Digital Rebar UX is hosted at `RackN <https://portal.rackn.io/>`_ for most users.  RackN does not have access to your data, credentials, or provisioning APIs.  The RackN portal runs as a single-page app *locally* in your browser.  All DRP API calls remain behind your firewall. 
 
-To start, open new Digital Rebar API:
+To start, open the Digital Rebar API:
 
   ::
 
@@ -92,7 +114,7 @@ To start, open new Digital Rebar API:
 You will be redirected to the `RackN Portal UX <https://portal.rackn.io>`_ after you visit the Digital Rebar API port and accept the self-signed certificate generated by the installation.
 
 
-Then login Digital Rebar:
+Login to Digital Rebar:
 
   ::
 
@@ -100,7 +122,7 @@ Then login Digital Rebar:
     password: r0cketsk8ts
 
 
-After login, you will be promoted to create and download a extendable self-trial license that enables most enterprise feature of Digital Rebar.  If you save the generated license file then you'll be able to use it to bypass this process in the future.
+After login, you will be prompted to create and download a extendable trial license that enables most enterprise feature of Digital Rebar.  If you save the generated license file, you'll be able to use it to bypass this process in the future.
 
 .. _rs_qs_ux_bootstrap:
 
@@ -135,18 +157,7 @@ First, set a more secure password for your endpoint.
     drpcli users password rocketskates $mypass
     export RS_KEY=rocketskates:$mypass
 
-
-Next, upload the discovery O/S (aka "sledgehammer") and set the defaults to use it.
-
-.. code-block:: bash
-
-    drpcli bootenvs uploadiso sledgehammer
-    drpcli prefs set defaultWorkflow discover-base unknownBootEnv discovery
-
-Note that ``drpcli bootenvs uploadiso`` command is a helper command that combines two common steps:  it fetchs the ISO referenced ISO in the bootenv from the internet and then uploads the ISO to Digital Rebar.  If you perform these steps many times, we recommend storing the downloaded ISO media locally and then uploading it using ``drpcli isos upload``.
-
-
-Next, define the provisioning Subnet in Digital Rebar DHCP.  Since you _must_ include all of the necessary DHCP boot options to correctly PXE boot a Machine; we recommend using the UX to create Subnets because it has logic to determine sane defaults.
+Next, define the provisioning Subnet in Digital Rebar DHCP.  Since you _must_ include all of the necessary DHCP boot options to correctly PXE boot a Machine, we recommend using the UX to create Subnets because it has logic to determine sane defaults.
 
 The following command line example contains the JSON Subnet and DHCP definitions.  You *MUST* modify the network parameters to match your environment.
 
@@ -184,8 +195,9 @@ Finally, install one of these popular trial operating systems.
     drpcli bootenvs uploadiso ubuntu-20.04-install # optional, requires at least 3G of free space
     drpcli bootenvs uploadiso centos-8-install # optional, requires at least 30G of free space
 
+Note that ``drpcli bootenvs uploadiso`` command is a helper command that combines two common steps.  It fetchs the ISO referenced in the bootenv from the internet and then uploads the ISO to Digital Rebar.  If you perform these steps many times, we recommend storing the downloaded ISO media locally and then uploading it using ``drpcli isos upload``.
 
-We recommend reviewing the :ref:`rs_qs_ux_bootstrap` to ensure that all steps have been completed.
+Review the :ref:`rs_qs_ux_bootstrap` to ensure that all steps have been completed.
 
 .. _rs_qs_first_machine:
 
@@ -198,9 +210,9 @@ Create network bootable virtual machine (physical machines on the DHCP network w
 * set to network boot first
 * attached to Digital Rebar provisioning network (aka Layer 2 subnet)
 
-Power on the machine!  No further action is required.
+Power on the machine.  No further action is required.
 
-The machine should boot in to the Sledgehammer discovery operating system.  Typically, the machine console looks like (the version signature may differ):
+The machine should boot into the Sledgehammer discovery operating system.  Typically, the machine console looks like:
 
     ::
 
@@ -209,17 +221,23 @@ The machine should boot in to the Sledgehammer discovery operating system.  Typi
 
       d0c-c4-7a-e5-48-b6 login:
 
+Note the version may be different than is listed above.
+
 After the boot is complete, the UX *Machines* page should show the newly discovered machine.
 
 If you have installed another operating system ISO besides Sledgehammer, then you can now provision an operating system by setting the target workflow on the machine:
 
-#. select the target machine (indicated with a check in the left most box)
-#. select the target workflow from the action list at the top of the page (typically centos-base or ubuntu-base)
-#. press the "Run Workflow" button (looks like a play icon next to the workflow list)
+#. Select the target machine (indicated with a check in the left most box)
+#. Click the "Profiles" bulk action tab   
+#. Select the target profile (typically ``universal-application-ubuntu-20.04.2`` or ``universal-application-centos-8``)
+#. Apply the profile to the machine by clicking the ``+`` button to the right of the profile
+#. Click the "Machines" tab
+#. Select the target workflow from the action list at the top of the page (typically ``universal-linux-install``)
+#. Press the "Run Workflow" button (looks like a play icon next to the workflow list)
 
 You should see immediate updates to the machine's stages and tasks as Digital Rebar processes the workflow.
 
-After installation completes, you can quickly return to Sledgehammer by running the ``discover-base`` workflow.
+After installation completes, you can quickly return to Sledgehammer by running the ``universal-discover`` workflow.
 
 .. _rs_qs_next_steps:
 
@@ -234,10 +252,10 @@ Fully automated provisioning control requires use of plugins for Power Managemen
 
 .. _rs_qs_cleanup:
 
-Clean Up
---------
+Uninstall
+---------
 
-Once you are finished exploring Digital Rebar, you can uninstall the service 
+Once you are finished exploring Digital Rebar, you can uninstall the service using the following command:
 
 .. code-block:: bash
 

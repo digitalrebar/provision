@@ -56,3 +56,10 @@ _build/
 profile*.txt
 rel_notes
 skip-doc-download
+
+# For those that don't use pipenv or poetry
+project.toml
+Poetry
+Poetry.lock
+Pipfile
+Pipfile.lock
