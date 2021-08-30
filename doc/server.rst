@@ -57,18 +57,18 @@ Ports
 
 The table describes the ports that need to be available to run Digital Rebar Provision (DRP).  Firewall rules may need to be altered to enable these services.  The feature column indicates when the port is required.  For example, the DHCP server can be turned off and that port is no longer required.
 
-========  =======   =============================
+========  =======   ==============================
 Ports     Feature   Usage
-========  =======   =============================
+========  =======   ==============================
 67/udp    DHCP      DHCP Port
 69/udp    PROV      TFTP Port
 4011/udp  BINL      PXE/BINL port
 8080/tcp  Metrics   Prometheus Metrics
-8090/tcp  PROV      HTTP-base Dynamic File Server
+8090/tcp  PROV      HTTPS-base Dynamic File Server
 8091/tcp  PROV      HTTP-base Static File Server
-8092/tcp  Always    API and Swagger-UI
+8092/tcp  Always    HTTPS API and Swagger-UI
 8093/tcp  RAFT      High Availability Protocol
-========  =======   =============================
+========  =======   ==============================
 
 All default ports can be changed at start up time of the ``dr-provision`` service.  NOTE that changing DHCP and TFTP ports has wide ranging implications and is likely not a good idea (many firmware implementations can not be changed to use alternate port numbers).
 
