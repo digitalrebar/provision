@@ -81,6 +81,86 @@ In the final verification step, it should be clearly identified that the TLS Cer
 is issued by Let's Encrypt.
 
 
+Automatic Certificate Renewals
+------------------------------
+
+To automatically renew certificates, create a monthly cron job, which runs the Certbot
+renewal process.  Then via the use of the post hooks after renewal, trigger an import
+of the newly generated certificate and key.
+
+To create the crontab entry, as root, perform:
+
+  ::
+
+    cat << EOF > /etc/cron.monthly/dr-provision-letsencrypt-renewal.sh
+    #!/bin/sh
+
+    certbot renew
+    exit 0
+    EOF
+
+    chmod 700 /etc/cron.monthly/dr-provision-letsencrypt-renewal.sh
+
+Now create the Certbot post hook so that when a renewal certificate is created, DRP
+updates the Certificate it's using.
+
+This script assumes that you have a ``$HOME/.drpclirc`` with appropriate credentails for
+user, password, and endpoint.  If not, adjust the post-hook script to include the
+appropriate command line argument flags to the ``drpcli`` call.  See :ref:`rs_kb_00010`
+for more details.
+
+This will create the post hook:
+
+  ::
+
+    cat << EOF /etc/letsencrypt/renewal-hooks/post/dr-provision.sh
+    #!/usr/bin/env bash
+
+    # reload the TLS certs in dr-provision, gets cert/key files from the
+    # environment - which assumes injected via systemd
+
+    function xiterr() { [[ $1 =~ ^[0-9]+$ ]] && { XIT=$1; shift; } || XIT=1; printf "FATAL: $*\n"; exit $XIT; }
+
+    PATH=$PATH:/usr/local/bin
+
+    T=$(mktemp /tmp/drp-tls.XXXXXXX)
+    strings /proc/$(pidof dr-provision)/environ | grep RS_TLS > $T
+    source $T
+
+    [[ -n "$RS_TLS_CERT_FILE" ]] \
+      && drpcli system certs set "$RS_TLS_CERT_FILE" "$RS_TLS_KEY_FILE" \
+      || xiterr 1 "Cert/key file variables not defined"
+
+    echo ""
+    echo "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
+    echo ">>> Reloading 'dr-provision' certs from files"
+    drpcli system certs set "$RS_TLS_CERT_FILE" "$RS_TLS_KEY_FILE"
+    if (( $? ))
+    then
+      echo "FATAL:  Failed to load certificate files."
+      exit 1
+    else
+      echo "Certificates successfully reloaded."
+      echo "  cert:  $RS_TLS_CERT_FILE"
+      echo "   key:  $RS_TLS_KEY_FILE"
+    fi
+    echo "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
+    echo ""
+
+    rm -f $T
+    EOF
+
+    chmod 700 /etc/letsencrypt/renewal-hooks/post/dr-provision.sh
+
+This process will search for the Envrionment variables that are usually set in the
+SystemD unit start files for the Certificate locations, then reload the newly
+generated cert and keyfile in to DRP.
+
+In DRP v4.6.0 and newer, the certificate set process will automatically enable the
+DRP Endpoint HTTPS process to serve the new cert/key.  In previous versions,  you will
+have to restart DRP (eg ``systemctl restart dr-provision``).
+
+
 Additional Information
 ----------------------
 
@@ -96,6 +176,7 @@ on the options around certificates and keys.
 See Also
 ========
 
+  * :ref:`rs_kb_00010`
   * https://letsencrypt.org/
   * https://certbot.eff.org/
   * https://www.howtoforge.com/how-to-manage-lets-encrypt-ssl-tls-certificates-with-certbot/
@@ -108,7 +189,7 @@ DRP Endpoints Version v4.x
 Keywords
 ========
 
-ssl, tls, certificate, letsencrypt, systemd, https, Let's Encrypt, certbot, openssl
+ssl, tls, certificate, letsencrypt, systemd, https, Let's Encrypt, certbot, openssl, Lets Encrypt
 
 Revision Information
 ====================
@@ -116,5 +197,5 @@ Revision Information
 
     KB Article     :  kb-00059
     initial release:  Fri Feb 26 10:13:47 PST 2021
-    updated release:  Fri Feb 26 10:13:47 PST 2021
+    updated release:  Fri Aug 26 17:14:00 PST 2021
 

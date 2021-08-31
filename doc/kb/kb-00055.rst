@@ -59,7 +59,7 @@ One of the first things creating during runner bootstrap is the ``/tmp/discovery
 If it is missing, then the basic discovery process failed.  You will need to review how your BootEnv was created.  Additional details may be in the Digital Rebar server logs.
 
 
-Is control.sh avialable?
+Is control.sh available?
 ========================
 
 During discovery or join-up of _known_ machines machines will download the ``control.sh`` bootstrap script from the DRP Server from http://[drp ip]:8091/machines/[machine uuid]/control.sh.  If this file is not avialable at this URL then the process will fail.

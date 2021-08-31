@@ -103,6 +103,10 @@ type Info struct {
 	// that has the default IPv4 route.
 	// required: true
 	Address net.IP `json:"address"`
+	// ServerHostname is the DNS name for the DRP endpoint that managed systems should use.
+	// If a default hostname was assigned via environment variable or command line,
+	// it will be that hostname, otherwise it will be an empty string
+	ServerHostname string `json:"server_hostname"`
 	// Manager indicates whether this dr-provision can act as a manager of
 	// other dr-provision instances.
 	// required: true

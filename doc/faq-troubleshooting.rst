@@ -73,7 +73,7 @@ error messages may appear similarly to:
 
   ::
 
-    May 24 13:48:22 ubuntu dr-provision[7092]: dr-provision2018/05/24 20:48:22.006224 [280:13]static [error]: /home/travis/gopath/src/github.com/rackn/provision-server/v4/midlayer/tftp.go:82
+    May 24 13:48:22 ubuntu dr-provision[7092]: dr-provision2018/05/24 20:48:22.006224 [280:13]static [error]: github.com/rackn/provision-server/v4/midlayer/tftp.go:82
     May 24 13:48:22 ubuntu dr-provision[7092]: [280:13]TFTP: lpxelinux.0: transfer error: sending block 0: code=0, error: TFTP Aborted
 
 
@@ -89,6 +89,19 @@ Sometimes the cert/key pair in the github tree is corrupt or not sufficient for 
     sudo openssl req -new -x509 -keyout server.key -out server.crt -days 365 -nodes
 
 It may be necessary to install the openssl tools.
+
+If you are running dr-provision v4.6 or later, you can then install the new server key and certificate on a running
+endpoint with::
+
+    drpcli system certs set server.crt server.key
+
+The API will start using the new certificate and key for new requests, and if you are running an HA consensus cluster
+the certificate will be distributed to all nodes in the cluster.
+
+If you are running dr-provision v4.7 or later, you can do the same for the HTTPS static file server using::
+
+    sudo openssl req -new -x509 -keyout static.key -out static.crt -days 365 -nodes
+    drpcli static certs set static.crt static.key
 
 
 .. .. _rs_add_ssh:

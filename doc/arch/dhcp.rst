@@ -25,7 +25,7 @@ local subnets.  Interface objects have the following fields:
 - Name: the name of the interface that the OS assigned.
 
 - Index: The index of the interface.  This is an OS specific index,
-  and does not mena anything to dr-provision directly.
+  and does not mean anything to dr-provision directly.
 
 - Addresses: A list of CIDR addresses that are bound to the interface.
 
@@ -57,10 +57,9 @@ Subnet
 
 The Subnet Object defines the configuration of a single subnet for the
 DHCP server to process.  Multiple subnets are allowed.  The Subnet can
-represent a local subnet attached to a local interface (Broadcast
-Subnet) to the Digital Rebar Provision server or a subnet that is
-being forwarded or relayed (Relayed Subnet) to the Digital Rebar
-Provision server.  Subnet objects have the following fields:
+be attached to a local interface on the Digital Rebar Provision server
+or relayed to the Digital Rebar Provision server via a DHCP relay.
+Subnet objects have the following fields:
 
 - Name: The unique name of this Subnet.
 

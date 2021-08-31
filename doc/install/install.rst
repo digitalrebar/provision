@@ -116,6 +116,7 @@ Once running, the following endpoints are available:
 * https://127.0.0.1:8092/api/v3 - Raw api endpoint
 * https://127.0.0.1:8092/ - Redirects to RackN Portal (available for community use)
 * http://127.0.0.1:8091 - Static files served by http from the *test-data/tftpboot* directory
+* https://127.0.0.1:8090 - Static files served by https from the *test-data/tftpboot* directory (4.7 and higher)
 * udp 69 - Static files served from the test-data/tftpboot directory through the tftp protocol
 * udp 67 - DHCP Server listening socket - will only serve addresses when once configured.  By default, silent.
 * udp 4011 - BINL Server listening socket - will only serve bootfiles when once configured.  By default, silent.

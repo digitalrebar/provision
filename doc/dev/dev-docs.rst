@@ -115,6 +115,10 @@ To assist with editing/reviewing your changes, you will want to rebuild the RST 
 
     make html
 
+The documenation build process will attempt to re-download all needed files all the time.  To avoid this, you can touch the file, ``skip-doc-download``,
+to skip the download process.  You should do a full download at least once.
+
+
 If you are making a lot of changes, you will want to use a file watching utility to see watch for file writes, and automatically kick the ``make html`` process off for you.
 
 On Mac OS X - you can install the ``fswatch`` package:

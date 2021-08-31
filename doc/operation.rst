@@ -21,8 +21,9 @@ Some of these operations are in the :ref:`rs_ui`, but not all.  This will focus 
    operations/airgap
    operations/backup
    operations/bios
+   operations/certs
    operations/contexts
-   operations/commands
+   operations/dhcp
    operations/drpcli
    operations/esxi-getting-started
    operations/imagedeploy
@@ -31,7 +32,6 @@ Some of these operations are in the :ref:`rs_ui`, but not all.  This will focus 
    operations/manager
    operations/catalog
    operations/pooling
-   operations/runbooks
    operations/scaling
    operations/security
    operations/virtualmedia-iso-booting
