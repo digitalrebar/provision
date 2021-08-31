@@ -1,9 +1,17 @@
 #!/usr/bin/env bash
+# Copyright (c) 2021 RackN Inc.
 
 set -e
 
+###
+#  Installation, upgrade, and removal script for the Digital Rebar Platform (DRP)
+#  service.  Use '--help' for Usage information.  Supports online and offline (eg
+#  "airgap" installs if the DRP, content, and plugin pieces are local to the installer
+#  script, or accessible via an alternate HTTP/S location.
+###
+
 # BUMP version on updates
-VERSION="v21.05.17-1"
+VERSION="v21.08.30-1"
 
 DEFAULT_DRP_VERSION=${DEFAULT_DRP_VERSION:-"stable"}
 
@@ -43,6 +51,7 @@ CErr="$IRed"
 
 c_def() { echo -en "$CDef$@$RCol";}
 c_flag() { echo -en "$CFlag$@$RCol";}
+c_warn() { echo -en "$CWarn$@$RCol";}
 c_file() { echo -en "$CFile$@$RCol";}
 c_err() { echo -en "$CErr$@$RCol";}
 
@@ -57,11 +66,19 @@ _drpcli() {
 usage() {
     [[ "$COLOR_OK" == "true" ]] && set_color
 echo -e "
-  ${ICya}USAGE:${RCol} ${BYel}$0${RCol} $(c_flag "[ install | upgrade | remove | version ] [ <options: see below> ]")
+  ${ICya}USAGE:${RCol} ${BYel}$0${RCol} $(c_flag "[ install | upgrade | remove | version ] [ <argument flags: see below> ]")
 
 ${CWarn}WARNING${RCol}: '$(c_flag "install")' option will OVERWRITE existing installations
 
 ${ICya}OPTIONS${RCol}:
+    $(c_flag "install")                 - Sets up an isolated or system 'production' enabled install
+    $(c_flag "upgrade")                 - Sets the installer to upgrade an existing 'dr-provision', for upgrade of
+                              container; kill/rm the DRP container, then upgrade and reattach data volume
+    $(c_flag "remove")                  - Removes the system enabled install.  Requires no other flags
+                              optional: '$(c_flag "--remove-data")' to wipe all installed data
+    $(c_flag "version")                 - Show install.sh script version and exit
+
+${ICya}ARGUMENT FLAGS${RCol}:
     $(c_flag "--debug")=$(c_def "[true|false]")    - Enables debug output
     $(c_flag "--force")=$(c_def "[true|false]")    - Forces an overwrite of local install binaries and content
     $(c_flag "--upgrade")=$(c_def "[true|false]")  - Turns on 'force' option to overwrite local binaries/content
@@ -149,19 +166,13 @@ ${ICya}OPTIONS${RCol}:
                             - Define Network Namespace to start container in. $(c_def "(defaults to \"$CNT_NETNS\")")
                               If set to empty string (\"\"), then disable setting any network namespace
     $(c_flag "--universal")             - Load the universal components and bootstrap the system.
-                              This should be first and implies systemd, startup, start-runner, create-self.
-                              Additionally, implies running universal-boostrap and starting discovery.
-                              Subsequent options for '$(c_flag "--initial-workflow")' will be ignored if this is set.
-
-    $(c_flag "version")                 - Show install.sh script version and exit
-    $(c_flag "install")                 - Sets up an isolated or system 'production' enabled install
-    $(c_flag "upgrade")                 - Sets the installer to upgrade an existing 'dr-provision', for upgrade of
-                              container; kill/rm the DRP container, then upgrade and reattach data volume
-    $(c_flag "remove")                  - Removes the system enabled install.  Requires no other flags
-                              optional: '$(c_flag "--remove-data")' to wipe all installed data
+                              $(c_warn "**This must be first**") all other argument flags must be after this flag;
+                              and implies systemd, startup, start-runner, create-self.  Also implies
+                              running universal-boostrap and starting discovery.  Subsequent options for
+                              '$(c_flag "--initial-workflow")' will be ignored if this is set.
 
 ${ICya}DEFAULTS${RCol}:
-    |  option:               value:           |  option:               value:
+    |  argument flag:        def. value:      |  argument flag:        def. value:
     |  -------------------   ------------     |  ------------------    ------------
     |  remove-rocketskates = $(c_def "false")            |  version (*)         = $(c_def "$DEFAULT_DRP_VERSION")
     |  isolated            = $(c_def "false")            |  nocontent           = $(c_def "false")
@@ -193,10 +204,11 @@ ${ICya}PREREQUISITES${RCol}:
           ${CNote}manually install these first on a Mac OS X system. Package names may vary
           ${CNote}depending on your operating system version/distro packaging naming scheme.${RCol}
 
-    ${ICya}REQUIRED${RCol}: curl
+    ${ICya}REQUIRED${RCol}: curl, tar
     ${ICya}OPTIONAL${RCol}: aria2c (if using experimental "fast downloader")
 
-${CWarn}WARNING${RCol}: '$(c_flag "install")' option will OVERWRITE existing installations
+${CWarn}WARNING${RCol}: '$(c_flag "install")' option will OVERWRITE existing installations, use '$(c_flag "update")'
+         flag for inplace upgrades.
 
 ${ICya}INSTALLER VERSION${RCol}:  $(c_def "$VERSION")
 "
@@ -254,6 +266,14 @@ HA_ADDRESS=
 HA_INTERFACE=
 HA_TOKEN=
 HA_PASSIVE=false
+
+###
+#  '--universal' must be first argument flag if specified, make it so
+###
+if [[ "$*" =~ .*--universal.* ]]
+then
+  set -- "--universal" $(echo "$*" | sed 's/ --universal//g')
+fi
 
 args=()
 while (( $# > 0 )); do
@@ -1186,12 +1206,18 @@ EOF
                          fi
 
                          if [[ $DRP_USER ]] ; then
-                             if drpcli users exists $DRP_USER >/dev/null 2>/dev/null ; then
+                             if _drpcli users exists $DRP_USER >/dev/null 2>/dev/null ; then
                                  _drpcli users update $DRP_USER "{ \"Name\": \"$DRP_USER\", \"Roles\": [ \"superuser\" ] }"
                              else
                                  _drpcli users create "{ \"Name\": \"$DRP_USER\", \"Roles\": [ \"superuser\" ] }"
                              fi
-                             drpcli users password $DRP_USER "$DRP_PASSWORD"
+                             _drpcli users password $DRP_USER "$DRP_PASSWORD"
+                             if _drpcli info check; then
+                                 _drpcli users destroy rocketskates
+                             else
+                                 echo -e "$(c_err "FATAL"): Newly created user/pass not working - bailing out."
+                                 exit 1
+                             fi
                              export RS_KEY="$DRP_USER:$DRP_PASSWORD"
                              if [[ $REMOVE_RS == true ]] ; then
                                  _drpcli users destroy rocketskates
