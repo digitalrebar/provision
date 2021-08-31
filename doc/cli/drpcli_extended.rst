@@ -26,17 +26,18 @@ Options inherited from parent commands
      -d, --debug                   Whether the CLI should run in debug mode
      -D, --download-proxy string   HTTP Proxy to use for downloading catalog and content
      -E, --endpoint string         The Digital Rebar Provision API endpoint to talk to (default "https://127.0.0.1:8092")
+     -X, --exit-early              Cause drpcli to exit if a command results in an object that has errors
      -f, --force                   When needed, attempt to force the operation - used on some update/patch calls
      -F, --format string           The serialization we expect for output.  Can be "json" or "yaml" or "text" or "table" (default "json")
      -N, --no-color                Whether the CLI should output colorized strings
      -H, --no-header               Should header be shown in "text" or "table" mode
-     -x, --noToken                 Do not use token auth or token cache
+     -x, --no-token                Do not use token auth or token cache
      -P, --password string         password of the Digital Rebar Provision user (default "r0cketsk8ts")
      -J, --print-fields string     The fields of the object to display in "text" or "table" mode. Comma separated
      -r, --ref string              A reference object for update commands that can be a file name, yaml, or json blob
      -T, --token string            token of the Digital Rebar Provision access
      -t, --trace string            The log level API requests should be logged at on the server side
-     -Z, --traceToken string       A token that individual traced requests should report in the server logs
+     -Z, --trace-token string      A token that individual traced requests should report in the server logs
      -j, --truncate-length int     Truncate columns at this length (default 40)
      -u, --url-proxy string        URL Proxy for passing actions through another DRP
      -U, --username string         Name of the Digital Rebar Provision user to talk to (default "rocketskates")
@@ -70,6 +71,8 @@ SEE ALSO
    for the extended
 -  `drpcli extended params <drpcli_extended_params.html>`__ - Gets/sets
    all parameters for the extended
+-  `drpcli extended patch <drpcli_extended_patch.html>`__ - Patch
+   extended by ID using the passed-in JSON Patch
 -  `drpcli extended remove <drpcli_extended_remove.html>`__ - Remove the
    param *key* from
 -  `drpcli extended runaction <drpcli_extended_runaction.html>`__ - Run
