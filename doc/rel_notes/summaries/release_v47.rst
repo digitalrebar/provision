@@ -8,10 +8,10 @@
 
 .. _rs_release_v47:
 
-Digital Rebar version 4.7 [in process]
---------------------------------------
+Digital Rebar version 4.7
+-------------------------
 
-Release Date: (target) Early Sept 2021
+Release Date: Sept 1, 2021
 
 Release Themes: 
 
@@ -162,4 +162,11 @@ Universal Workflow BootEnvs will leverage this feature.
 Other Items of Note
 ~~~~~~~~~~~~~~~~~~~
 
-* TBD
+* Added Cloud-Init to fingerprint information
+* Improves to NetWrangler to help configure Linux networking
+* Ability to filter deeply into Params and Meta data
+* Improve consistency of CLI flag formats
+* Allow new Multi-Site managers to connect to older Digital Rebar endpoints
+* Fix PATCH against Params
+
+
