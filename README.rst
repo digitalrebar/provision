@@ -145,3 +145,5 @@ Digital Rebar documentation is available from multiple authors under the `Creati
     the user may choose either.
 
 .. Release v4.6.0 Start
+
+.. Release v4.8.0 Start
