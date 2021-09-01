@@ -30,7 +30,7 @@ The following commands can be run from any machine that has access to your DRP e
     drpcli catalog item install vmware
     drpcli bootenvs list|jq ''.[].Name|grep esxi
 
-In the above steps we install the latest stable version of the vmware plugin. Next we list the bootenvs and grep for esxi. The output from that command shows the available bootenv that we have available
+In the above steps we install the latest stable version of the vmware plugin. Next we list the bootenvs and grep for esxi. The output from that command shows the bootenvs that we have available
 for you to install. Look for the version of esxi you want to install. Just like with the CentOS and Ubuntu examples from the quickstart guide, you will need to upload the iso the bootenv depends on. Unlike
 our CentOS and Ubuntu bootenvs with ESXi you have to manually download the ISO file, we can not do that for you. To assist you we include links in the documentation field of the bootenv.
 
@@ -86,28 +86,20 @@ The changes you need to make in this file are to the "Name" and then we will be 
   ::
 
       {
-          "Available": true,
-          "Bundle": "",
-          "Description": "(clone me) Sample profile settings for ESXi kickstart install.",
+          "Name": "esxi-profile-clone",
+          "Description": "(clone) Sample profile settings for ESXi kickstart install.",
           "Documentation": "Sets some basic Param values that are useful for dev/test deployments\nof VMware vSphere ESXi hypervisors.  Generally speaking these aren't\ngood to set for production systems.\n\nThis profile is intended to be cloned and applied to a Machine(s) for\nsubsequent use.  You can then remove/modify the values appropriate to\nyour use case, after you nave cloned it.\n",
-          "Endpoint": "",
-          "Errors": [],
           "Meta": {
             "color": "blue",
             "icon": "world",
             "title": "RackN Content"
           },
-          "Name": "esxi-profile-clone",
           "Params": {
             "esxi/disk-install-options": "--firstdisk --overwritevmfs",
             "esxi/serial-console": "gdbPort=none logPort=none tty2Port=com1",
             "esxi/shell-local": true,
             "esxi/shell-remote": true,
           },
-          "Partial": false,
-          "Profiles": [],
-          "ReadOnly": false,
-          "Validated": true
       }
 
 This profile will enable SSH to assist in troubleshooting should you need it. Next we need to upload this new profile to the endpoint
